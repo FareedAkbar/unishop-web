@@ -1,11 +1,18 @@
 import React from "react"
+import Link from "next/link"
 
 import { Icons } from "../icons"
 
 const CardProduct = () => {
   return (
-    <div className=" h-[25rem] relative group w-[20rem] ">
-      <div className="w-72 h-72  left-0 top-0 absolute bg-neutral-100 rounded group-hover:opacity-90 transition-opacity">
+    <div
+      // href={"/productdetail"}
+      className=" h-[25rem] relative group w-[20rem] font-['Poppins'] "
+    >
+      <Link
+        href={"/productdetail"}
+        className="w-72 h-72  left-0 top-0 absolute bg-[#EEEEEE] rounded group-hover:opacity-90 transition-opacity"
+      >
         <div className="left-[293px] top-[12px] absolute flex-col justify-start items-start gap-2 inline-flex">
           <div className="w-8 h-8 relative right-12 cursor-pointer">
             <div className="w-8 h-8 left-0 top-0 absolute flex dark:text-black justify-center items-center bg-white rounded-full">
@@ -30,8 +37,8 @@ const CardProduct = () => {
         <p className="left-[100px] max-sm:left-[80px]  cursor-pointer top-[269px] items-center  absolute text-white text-base group-hover:block hidden font-medium font-['Poppins'] leading-normal">
           Add To Cart
         </p>
-        <Icons.iPad className="w-[10rem] h-[11rem] left-[69px] top-[55px] absolute" />
-      </div>
+        <Icons.iPad className="w-[10rem] h-[11rem] left-[69px] top-[55px] absolute cursor-pointer" />
+      </Link>
       <div className="w-80 h-8 dark:text-white left-[3.64px] top-[311.78px] absolute text-black text-xl font-medium font-['Poppins'] leading-normal">
         UOW Boxed Gift Pen
       </div>

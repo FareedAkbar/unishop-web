@@ -27,15 +27,15 @@ export const siteConfig = {
 }
 
 export const catogaryList = [
-  { name: "Text Book" },
-  { name: "Books" },
-  { name: "E-Text Book" },
-  { name: "Pluse" },
-  { name: "Graduation" },
-  { name: "Clothing" },
-  { name: "Stationary" },
-  { name: "Art & Gifts" },
-  { name: "Contact" },
+  { category: "Text Book" },
+  { category: "Books" },
+  { category: "E-Text Book" },
+  { category: "Pluse" },
+  { category: "Graduation" },
+  { category: "Clothing" },
+  { category: "Stationary" },
+  { category: "Art & Gifts" },
+  { category: "Contact" },
 ]
 
 export const serviceFeature = [
@@ -53,5 +53,146 @@ export const serviceFeature = [
     title: "MONEY BACK GUARANTEE",
     desc: "We reurn money within 30 days",
     image: Icons.backUp,
+  },
+]
+
+export const footerConfig = [
+  {
+    header: "Support",
+    subItems: [
+      {
+        header: "Building 11, University of Wollongong NSW 2522 Australia",
+      },
+      {
+        header: "ABN 28 915 832 337 ACN 081 114 089",
+      },
+      {
+        header: "UOW Pulse provides top quality campus life and services.",
+      },
+    ],
+  },
+  {
+    header: "Account",
+    subItems: [
+      {
+        header: "Postage & Handling",
+      },
+      {
+        header: "Refunds & Returns",
+      },
+      {
+        header: "About Us",
+      },
+      {
+        header: "Wishlist",
+      },
+    ],
+  },
+  {
+    header: "Quick Link",
+    subItems: [
+      {
+        header: "Privacy Policy",
+      },
+      {
+        header: "Terms Of Use",
+      },
+      {
+        header: "FAQ",
+      },
+      {
+        header: "Contact Us",
+      },
+    ],
+  },
+  {
+    header: "Shop Online",
+    subItems: [
+      {
+        header: "Text Books",
+      },
+      {
+        header: "Books",
+      },
+      {
+        header: "Merchandise",
+      },
+      {
+        header: "Stationery",
+      },
+    ],
+  },
+]
+
+export const catogaryListArray = [
+  {
+    category: "Text Book",
+    subcategories: [
+      {
+        nestedcategory: "Math Textbooks",
+        subnestedcategories: [
+          "Algebra",
+          "Calculus",
+          "Geometry",
+          "Statistics",
+          "Trigonometry",
+        ],
+      },
+      {
+        nestedcategory: "Science Textbooks",
+        subnestedcategories: [
+          "Algebra",
+          "Calculus",
+          "Geometry",
+          "Statistics",
+          "Trigonometry",
+        ],
+      },
+      {
+        nestedcategory: "History Textbookss",
+        subnestedcategories: [
+          "World History",
+          "American History",
+          "Ancient History",
+          "European History",
+          "Asian History",
+        ],
+      },
+    ],
+  },
+  {
+    category: "Art & Gifts",
+    subcategories: [
+      {
+        nestedcategory: "Math Textbooks",
+        subnestedcategories: [
+          "Algebra",
+          "Calculus",
+          "Geometry",
+          "Statistics",
+          "Trigonometry",
+        ],
+      },
+      {
+        nestedcategory: "Science Textbooks",
+        subnestedcategories: [
+          "Algebra",
+          "Calculus",
+          "Geometry",
+          "Statistics",
+          "Trigonometry",
+        ],
+      },
+      {
+        nestedcategory: "History Textbookss",
+        subnestedcategories: [
+          "World History",
+          "American History",
+          "Ancient History",
+          "European History",
+          "Asian History",
+        ],
+      },
+    ],
   },
 ]

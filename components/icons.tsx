@@ -2,16 +2,23 @@ import Image from "next/image"
 import {
   ArrowBigLeft,
   ArrowLeft,
+  Check,
   ChevronRight,
   Eye,
+  Facebook,
   Heart,
+  Instagram,
+  Linkedin,
   LucideProps,
+  Minus,
   Moon,
+  Plus,
   Search,
   ShoppingBagIcon,
   Star,
   SunMedium,
   Twitter,
+  TwitterIcon,
   X,
   type Icon as LucideIcon,
 } from "lucide-react"
@@ -23,8 +30,13 @@ import coat from "../public/coat.png"
 import delivery from "../public/delivery.svg"
 import echo from "../public/echo.png"
 import headphone from "../public/headphone.svg"
+import hodi from "../public/hodi.png"
+import hodiBack from "../public/hodiBack.png"
+import hodiSide from "../public/hodiSide.png"
 import iPad from "../public/ipad.png"
 import paper from "../public/paper.png"
+import registerLogo from "../public/resisterLogo.png"
+import sendHorizone from "../public/sendHorizon.svg"
 import logo from "../public/unishop 1.png"
 
 export type Icon = LucideIcon
@@ -44,6 +56,13 @@ export const Icons = {
   chevronRight: ChevronRight,
   star: Star,
   arrowLeft: ArrowLeft,
+  fb: Facebook,
+  Twitter: TwitterIcon,
+  instagram: Instagram,
+  linkedin: Linkedin,
+  check: Check,
+  plus: Plus,
+  minus: Minus,
   gitHub: (props: LucideProps) => (
     <svg viewBox="0 0 438.549 438.549" {...props}>
       <path
@@ -72,5 +91,20 @@ export const Icons = {
   ),
   book: (props: LucideProps) => (
     <Image src={book} alt="Product Image" className={props.className} />
+  ),
+  sendHorizone: (props: LucideProps) => (
+    <Image src={sendHorizone} alt="Product Image" className={props.className} />
+  ),
+  registerLogo: (props: LucideProps) => (
+    <Image src={registerLogo} alt="Product Image" className={props.className} />
+  ),
+  hodi: (props: LucideProps) => (
+    <Image src={hodi} alt="Product Image" className={props.className} />
+  ),
+  hodiBack: (props: LucideProps) => (
+    <Image src={hodiBack} alt="Product Image" className={props.className} />
+  ),
+  hodiSide: (props: LucideProps) => (
+    <Image src={hodiSide} alt="Product Image" className={props.className} />
   ),
 }

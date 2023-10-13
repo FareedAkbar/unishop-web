@@ -1,6 +1,14 @@
+"use client"
+
 import Link from "next/link"
 
-import { catogaryList, serviceFeature, siteConfig } from "@/config/site"
+import {
+  catogaryList,
+  catogaryListArray,
+  serviceFeature,
+  siteConfig,
+} from "@/config/site"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import SliderTest from "@/components/cardslider/CardSlider"
 import Ads from "@/components/home/Ads"
 import CardCategorie from "@/components/home/CardCategorie"
@@ -13,13 +21,16 @@ import Today from "@/components/home/Today"
 export default function IndexPage() {
   return (
     <div className="container  py-5 gap-5">
-      <div className="flex max-md:flex-col  py-5 gap-5 pb-14">
-        <div className="w-1/6 max-md:w-full">
+      <div className="flex max-md:flex-col  py-2 gap-5 pb-14">
+        <ScrollArea className="w-1/5 border p-5 max-md:w-full h-[26rem]">
           <p className="text-[1.375rem] font-medium">Categories</p>
-          {catogaryList.map((item, index) => (
-            <CardCategorie name={item.name} />
+          {catogaryListArray.map((item, index) => (
+            <CardCategorie
+              category={item.category}
+              subcategories={item.subcategories}
+            />
           ))}
-        </div>
+        </ScrollArea>
         <div className="w-full ">
           <SliderLanding />
         </div>
@@ -28,7 +39,7 @@ export default function IndexPage() {
       <Ads />
       <ThisMonth />
       <Feature />
-      <div className="flex justify-evenly py-20">
+      <div className="flex justify-evenly max-md:flex-col  py-20">
         {serviceFeature.map((item) => (
           <ServicesFeature
             title={item.title}

@@ -1,18 +1,46 @@
 import React from "react"
+import Link from "next/link"
 
-import { catogaryList } from "@/types/nav"
+import { CategoryProps } from "@/types/nav"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 import { Icons } from "../icons"
 
-const CardCategorie = ({ name }: catogaryList) => {
+const CardCategorie = ({ category, subcategories }: CategoryProps) => {
+  console.log(category, subcategories)
+
   return (
-    <div
-      key={name}
-      className="flex pt-2 cursor-pointer hover:text-[#ED1C29 ] justify-between items-center"
-    >
-      <p className="text-[1.375] ">{name}</p>
-      <Icons.chevronRight />
-    </div>
+    <Accordion type="single" collapsible>
+      <AccordionItem value={category}>
+        <AccordionTrigger>{category}</AccordionTrigger>
+        <AccordionContent>
+          {subcategories.map((item, index) => (
+            <Accordion type="single" collapsible className="border borde-b">
+              <AccordionItem key={index} value={item.nestedcategory}>
+                <AccordionTrigger>
+                  <p className="pl-2">{item.nestedcategory}</p>
+                </AccordionTrigger>
+
+                {item.subnestedcategories?.map((subItem, index) => (
+                  <AccordionContent key={index}>
+                    <Link href={"/category"}>
+                      <li className="pl-5 cursor-pointer hover:underline">
+                        {subItem}
+                      </li>
+                    </Link>
+                  </AccordionContent>
+                ))}
+              </AccordionItem>
+            </Accordion>
+          ))}
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   )
 }
 

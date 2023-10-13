@@ -16,3 +16,9 @@ export interface featureServiceProps {
   desc: string
   image: string
 }
+export interface CategoryProps {
+  category: string
+  subcategories: (CategoryProps | string)[]
+  nestedcategory?: string | CategoryProps
+  subnestedcategories?: (CategoryProps | string)[]
+}

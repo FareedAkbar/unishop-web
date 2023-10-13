@@ -14,7 +14,7 @@ export function MainNav({ items }: MainNavProps) {
   return (
     <div className="flex gap-6 md:gap-10 ">
       <Link href="/" className="flex items-center space-x-2">
-        <Icons.logo className="w-[10.25rem] h-[3.25rem] max-md:w-[5rem] max-md:h-[2rem]" />
+        <Icons.logo className="w-[10.25rem] h-[3.25rem] max-md:w-[5rem] max-md:h-[2rem] " />
       </Link>
       {items?.length ? (
         <nav className="flex max-md:hidden gap-6">
@@ -29,7 +29,7 @@ export function MainNav({ items }: MainNavProps) {
                     item.disabled && "cursor-not-allowed opacity-80"
                   )}
                 >
-                  {item.title}
+                  <p className="font-['Poppins']">{item.title}</p>
                 </Link>
               )
           )}

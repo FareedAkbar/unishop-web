@@ -17,7 +17,7 @@ const Today = () => {
       <div className=" gap-5">
         <CardSlider />
       </div>
-      <div className="flex justify-center py-10">
+      <div className="flex justify-center  py-10">
         <button className="w-80 h-16 bg-red-600 rounded-sm text-white text-[1.125rem] font-poppins flex justify-center items-center">
           View All Products
         </button>
