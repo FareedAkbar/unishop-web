@@ -12,9 +12,12 @@ import {
   LucideProps,
   Minus,
   Moon,
+  MoreHorizontal,
   Plus,
+  RefreshCcw,
   Search,
   ShoppingBagIcon,
+  SlidersHorizontal,
   Star,
   SunMedium,
   Twitter,
@@ -63,6 +66,9 @@ export const Icons = {
   check: Check,
   plus: Plus,
   minus: Minus,
+  refresh: RefreshCcw,
+  more: MoreHorizontal,
+  slidersHorizontal: SlidersHorizontal,
   gitHub: (props: LucideProps) => (
     <svg viewBox="0 0 438.549 438.549" {...props}>
       <path

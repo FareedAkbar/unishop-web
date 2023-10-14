@@ -196,3 +196,27 @@ export const catogaryListArray = [
     ],
   },
 ]
+export const colors = [
+  "bg-green-600",
+  "bg-yellow-400",
+  "bg-orange-500",
+  "bg-cyan-400",
+  "bg-blue-700",
+  "bg-violet-700",
+  "bg-red-500",
+  "bg-pink-600",
+  "bg-white",
+  "bg-black",
+  // Add more colors as needed
+]
+export const size = [
+  "XXL",
+  "XXS",
+  "XL",
+  "XS",
+  "M",
+  "L",
+  "S",
+
+  // Add more colors as needed
+]

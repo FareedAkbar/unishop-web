@@ -1,9 +1,14 @@
-import React from "react"
+"use client"
+
+import React, { useState } from "react"
 import { Icon } from "@radix-ui/react-select"
 
 import { Icons } from "@/components/icons"
+import ProductDetail from "@/components/productdetail/ProductDetail"
+import Related from "@/components/productdetail/Related"
 
 const page = () => {
+  const [Count, setCount] = useState(1)
   return (
     <div className="container py-5  ">
       <div className="flex justify-between flex-wrap max-sm:hidden  ">
@@ -126,18 +131,34 @@ const page = () => {
           </div>
           <div className="flex max-sm:flex-col justify-between items-center">
             <div className="w-52 h-14 mt-5 px-5 py-4 dark:text-black bg-zinc-100 rounded justify-between items-center inline-flex">
-              <Icons.plus className="w-6 h-6 relative cursor-pointer hover:text-[#ED1C29] " />
-              <div className="text-black  dark:text-black text-base font-bold font-['Poppins']">
-                1
+              <Icons.plus
+                onClick={() => {
+                  if (Count < 5) {
+                    setCount(Count + 1)
+                  }
+                }}
+                className="w-6 h-6 relative cursor-pointer hover:text-[#ED1C29]"
+              />
+              <div className="text-black dark:text-black text-base font-bold font-['Poppins']">
+                {Count}
               </div>
-              <Icons.minus className="w-6 h-6 relative cursor-pointer hover:text-[#ED1C29]" />
+              <Icons.minus
+                onClick={() => {
+                  if (Count > 1) {
+                    setCount(Count - 1)
+                  }
+                }}
+                className="w-6 h-6 relative cursor-pointer hover:text-[#ED1C29]"
+              />
             </div>
-            <div className="w-72 h-12 px-14 py-4 font-['Poppins'] bg-red-600 cursor-pointer text-white text-lg font-bold  rounded justify-center items-center gap-3 inline-flex">
+            <div className="w-72 h-12 px-14 py-4 font-['Poppins'] max-sm:mt-10 bg-red-600 cursor-pointer text-white text-lg font-bold rounded justify-center items-center gap-3 inline-flex">
               Add to Cart
             </div>
           </div>
         </div>
       </div>
+      <ProductDetail />
+      <Related />
     </div>
   )
 }
