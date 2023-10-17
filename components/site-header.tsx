@@ -23,7 +23,9 @@ export function SiteHeader() {
                 <Icons.search className="h-[1.5rem] w-[1.5rem]" />
               </div>
               <Icons.heart className="dark:text-white" />
-              <Icons.ShoppingBagIcon className="dark:text-white" />
+              <Link href={"/checkout"}>
+                <Icons.ShoppingBagIcon className="dark:text-white cursor-pointer" />
+              </Link>
             </div>
             <ThemeToggle />
           </nav>

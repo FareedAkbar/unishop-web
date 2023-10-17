@@ -2,7 +2,9 @@
 
 import React, { useState } from "react"
 import { Range, getTrackBackground } from "react-range"
+import RangeSlider from "rsuite/RangeSlider"
 
+import "rsuite/dist/rsuite.css"
 import { colors, size } from "@/config/site"
 import {
   Accordion,
@@ -15,11 +17,13 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Icons } from "../icons"
 
 const FilterCard = () => {
-  const [priceRange, setPriceRange] = useState([0, 100])
   const [colorCheck, setcolorCheck] = useState("")
   const [SizeCheck, setSizeCheck] = useState("")
-  const handlePriceChange = (newRange: any) => {
-    setPriceRange(newRange)
+  const [firstValue, setFirstValue] = useState(2)
+  const [secondValue, setSecondValue] = useState(10)
+  function handleFirstRange(value: any) {
+    setFirstValue(value[0])
+    setSecondValue(value[1])
   }
   return (
     <ScrollArea className="h-[40rem]  w-[22rem] rounded-md border p-2">
@@ -61,41 +65,16 @@ const FilterCard = () => {
               Price
             </AccordionTrigger>
             <AccordionContent>
-              <div className="container mx-auto">
-                <div className="pt-5">
-                  <Range
-                    step={10}
-                    min={0}
-                    max={1000}
-                    values={priceRange}
-                    onChange={handlePriceChange}
-                    renderTrack={({ props, children }) => (
-                      <div
-                        {...props}
-                        className="h-2 w-full rounded-full bg-black"
-                        style={{
-                          background: getTrackBackground({
-                            values: priceRange,
-                            colors: ["#F0EEED", "black", "#F0EEED"],
-                            min: 0,
-                            max: 1000,
-                          }),
-                        }}
-                      >
-                        {children}
-                      </div>
-                    )}
-                    renderThumb={({ props }) => (
-                      <div
-                        {...props}
-                        className="h-6 w-6 bg-red-500 dark:bg-white rounded-full shadow-md"
-                      />
-                    )}
+              <div className="mt-3 px-5">
+                <div>
+                  <RangeSlider
+                    defaultValue={[2, 10]}
+                    onChange={handleFirstRange}
                   />
-                </div>
-                <div className="flex justify-between font-['Poppins'] pt-3">
-                  <p className=" ">${priceRange[0]}</p>
-                  <p>${priceRange[1]}</p>
+                  <div className="flex justify-between">
+                    <p>{firstValue}</p>
+                    <p>{secondValue}</p>
+                  </div>
                 </div>
               </div>
             </AccordionContent>
@@ -106,18 +85,20 @@ const FilterCard = () => {
             <AccordionTrigger className="text-black dark:text-white text-xl font-bold font-['Poppins'] w-[15.4rem]">
               Colors
             </AccordionTrigger>
-            <AccordionContent className="flex justify-center">
+            <AccordionContent className="flex justify-center ">
               <div className="w-60 h-auto justify-between items-center flex-wrap gap-3 flex">
                 {colors.map((item) => (
                   <div
                     onClick={() => setcolorCheck(item)}
-                    className={`w-9 h-9 ${item} rounded-full flex justify-center items-center cursor-pointer  border-black border-opacity-20 `}
+                    className={`w-9 h-9 ${item} ${
+                      item === "bg-white" ? "border" : ""
+                    } rounded-full flex justify-center items-center cursor-pointer  border-black border-opacity-20 `}
                   >
                     {colorCheck === item && (
                       <Icons.check
                         className={` font-bold ${
-                          colorCheck === "bg-white "
-                            ? "text-black "
+                          colorCheck === "bg-white"
+                            ? "text-black  "
                             : "text-white"
                         }`}
                       />
@@ -138,7 +119,7 @@ const FilterCard = () => {
                 {size.map((item) => (
                   <div
                     onClick={() => setSizeCheck(item)}
-                    className={`w-12 h-11 py-3 rounded cursor-pointer ${
+                    className={`w-12 h-11 py-3 rounded cursor-pointer  ${
                       SizeCheck === item
                         ? "bg-[#ED1C29] border-none text-white"
                         : "border text-black "
