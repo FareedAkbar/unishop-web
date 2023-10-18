@@ -5,10 +5,12 @@ import {
   ArrowRight,
   Check,
   ChevronRight,
+  CreditCard,
   DeleteIcon,
   Eye,
   Facebook,
   Heart,
+  HelpCircle,
   Instagram,
   Linkedin,
   LucideProps,
@@ -29,7 +31,11 @@ import {
   type Icon as LucideIcon,
 } from "lucide-react"
 
+import bKash from "../public/Bkash.png"
+import mCard from "../public/Mastercard.png"
+import nagad from "../public/Nagad.png"
 import tweeterIcon from "../public/Tweeter.svg"
+import visa from "../public/Visa.png"
 import backUp from "../public/backUp.svg"
 import book from "../public/book.png"
 import cap from "../public/cap.png"
@@ -38,6 +44,7 @@ import coat from "../public/coat.png"
 import delivery from "../public/delivery.svg"
 import echo from "../public/echo.png"
 import fbIcon from "../public/fb.svg"
+import google from "../public/google.svg"
 import headphone from "../public/headphone.svg"
 import hodi from "../public/hodi.png"
 import hodiBack from "../public/hodiBack.png"
@@ -46,9 +53,11 @@ import instagramIcon from "../public/instagram.svg"
 import iPad from "../public/ipad.png"
 import line from "../public/line.svg"
 import paper from "../public/paper.png"
+import paypal from "../public/payPal.png"
 import registerLogo from "../public/resisterLogo.png"
 import sendHorizone from "../public/sendHorizon.svg"
 import smallCircle from "../public/smallCircle.svg"
+import trackingBg from "../public/trackingBg.png"
 import logo from "../public/unishop 1.png"
 import withoutBg from "../public/without-bg.png"
 
@@ -80,6 +89,8 @@ export const Icons = {
   more: MoreHorizontal,
   slidersHorizontal: SlidersHorizontal,
   arrowRight: ArrowRight,
+  creditCard: CreditCard,
+  helpCircle: HelpCircle,
   delete: Trash2,
   gitHub: (props: LucideProps) => (
     <svg viewBox="0 0 438.549 438.549" {...props}>
@@ -144,6 +155,27 @@ export const Icons = {
   ),
   smallCircle: (props: LucideProps) => (
     <Image src={smallCircle} alt="line" className={props.className} />
+  ),
+  bKash: (props: LucideProps) => (
+    <Image src={bKash} alt="line" className={props.className} />
+  ),
+  visa: (props: LucideProps) => (
+    <Image src={visa} alt="line" className={props.className} />
+  ),
+  mCard: (props: LucideProps) => (
+    <Image src={mCard} alt="line" className={props.className} />
+  ),
+  nagad: (props: LucideProps) => (
+    <Image src={nagad} alt="line" className={props.className} />
+  ),
+  google: (props: LucideProps) => (
+    <Image src={google} alt="line" className={props.className} />
+  ),
+  paypal: (props: LucideProps) => (
+    <Image src={paypal} alt="line" className={props.className} />
+  ),
+  trackingBg: (props: LucideProps) => (
+    <Image src={trackingBg} alt="line" className={props.className} />
   ),
   instagramIcon: (props: LucideProps) => (
     <Image

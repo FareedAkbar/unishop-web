@@ -42,25 +42,6 @@ const OrderSummery = () => {
             $467
           </div>
         </div>
-        <div className="flex justify-between max-md:flex-col  items-center mt-5">
-          <div className="text-black dark:text-white text-opacity-60 text-sm font-normal font-['Poppins']">
-            Pulse Perks Members pay $72.86 only.
-          </div>
-          <button className="w-40 h-12 max-md:mt-5  bg-red-600 rounded-sm justify-center items-center gap-3 inline-flex">
-            <div className="text-white text-md font-medium font-['Poppins']">
-              Join Pulse Perk
-            </div>
-          </button>
-        </div>
-        <Link
-          href={"/delievery"}
-          className="w-full h-14 px-10 py-4 mt-5 cursor-pointer bg-red-600 rounded-sm justify-center items-center gap-3 inline-flex"
-        >
-          <div className="text-white text-base font-medium max-sm:text-sm font-['Poppins']">
-            Go to Checkout
-          </div>
-          <Icons.arrowRight className="text-white" />
-        </Link>
       </div>
     </div>
   )
