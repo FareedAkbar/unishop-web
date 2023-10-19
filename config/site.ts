@@ -14,10 +14,15 @@ export const siteConfig = {
     {
       title: "Shop",
       href: "/",
+      subMenu: [
+        { title: "Shope", href: "/category" },
+        { title: "Wishlist", href: "/wishlist" },
+        { title: "Tracking", href: "/ordertracking" },
+      ],
     },
     {
       title: "Contact",
-      href: "/",
+      href: "/contact",
     },
     {
       title: "Signup",
@@ -223,4 +228,27 @@ export const size = [
   "S",
 
   // Add more colors as needed
+]
+
+export const inquries = [
+  {
+    icon: Icons.phoneCall,
+    title: "4221 8050",
+  },
+  {
+    icon: Icons.mail,
+    title: "uow-bookshop@uow.edu.au",
+  },
+  {
+    icon: Icons.mapPin,
+    title: "2 Northfields Avenue Gwynneville NSW 2500",
+  },
+  {
+    icon: Icons.mapPin,
+    title: "2 Northfields Avenue Gwynneville NSW 2500",
+  },
+  {
+    icon: Icons.mapPin,
+    title: "P.O. Box U100 University of Wollongong P.O. NSW 2500",
+  },
 ]

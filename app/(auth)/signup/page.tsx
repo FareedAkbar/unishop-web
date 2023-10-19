@@ -52,7 +52,7 @@ const Signup = () => {
       </div>
       <div className="w-1/2 flex justify-center items-center max-md:w-full">
         <div className="rounded-lg border border-neutral-200 p-5">
-          <div className="  text-neutral-900 text-4xl font-semibold font-['Poppins']">
+          <div className="  text-neutral-900 dark:text-white text-4xl font-semibold font-['Poppins']">
             Sign up now
           </div>
           <form onSubmit={formik.handleSubmit}>
@@ -149,22 +149,22 @@ const Signup = () => {
                 onBlur={formik.handleBlur}
               />
               <div className=" max-md:text-sm">
-                <span className="text-zinc-800 text-sm font-normal font-['Poppins']">
+                <span className="text-zinc-800 dark:text-white text-sm font-normal font-['Poppins']">
                   By creating an account, I agree to our{" "}
                 </span>
-                <span className="text-black text-sm font-normal font-['Poppins'] underline">
+                <span className="text-black dark:text-white text-sm font-normal font-['Poppins'] underline">
                   Terms of use
                 </span>
-                <span className="text-zinc-600 text-sm font-normal font-['Poppins']">
+                <span className="text-zinc-600 dark:text-white text-sm font-normal font-['Poppins']">
                   {" "}
                 </span>
-                <span className="text-zinc-800 text-sm font-normal font-['Poppins']">
+                <span className="text-zinc-800 dark:text-white text-sm font-normal font-['Poppins']">
                   and
                 </span>
-                <span className="text-zinc-600 text-sm font-normal font-['Poppins']">
+                <span className="text-zinc-600 dark:text-white text-sm font-normal font-['Poppins']">
                   {" "}
                 </span>
-                <span className="text-black text-sm font-normal font-['Poppins'] underline">
+                <span className="text-black dark:text-white text-sm font-normal font-['Poppins'] underline">
                   Privacy Policy
                 </span>
                 <span className="text-zinc-600 text-sm font-normal font-['Poppins'] underline">
@@ -190,7 +190,7 @@ const Signup = () => {
           </form>
           <div className="w-52 h-5 justify-start items-start gap-1 inline-flex">
             <div className="justify-center items-center flex">
-              <div className="text-zinc-600 text-xs font-normal font-['Poppins']">
+              <div className="text-zinc-600 dark:text-white text-xs font-normal font-['Poppins']">
                 Already have an account?
               </div>
             </div>

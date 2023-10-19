@@ -20,7 +20,7 @@ const OrderTracking = () => {
         <div className="w-80 h-7 mt-16 max-2xl:mt-3  max-sm:text-sm opacity-80 text-black  text-xl font-medium font-['Poppins'] leading-normal">
           Enter Your Receipt Number
         </div>
-        <div className="w-full h-12 border rounded-lg relative mt-3 flex items-center bg-neutral-100 max-sm:p-2 p-5">
+        <div className="max-md:w-full w-1/4 h-12 border rounded-lg relative mt-3 flex items-center bg-neutral-100 max-sm:p-2 p-5">
           <input
             type="text"
             placeholder="Enter Number "

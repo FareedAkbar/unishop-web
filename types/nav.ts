@@ -2,9 +2,10 @@ import { LucideProps } from "lucide-react"
 
 export interface NavItem {
   title: string
-  href?: string
+  href?: any
   disabled?: boolean
   external?: boolean
+  subMenu?: NavItem[]
 }
 
 export interface catogaryList {

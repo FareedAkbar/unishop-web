@@ -9,14 +9,20 @@ import {
   DeleteIcon,
   Eye,
   Facebook,
+  Globe,
   Heart,
   HelpCircle,
   Instagram,
   Linkedin,
   LucideProps,
+  Mail,
+  Map,
+  MapPin,
+  MapPinIcon,
   Minus,
   Moon,
   MoreHorizontal,
+  PhoneCall,
   Plus,
   RefreshCcw,
   Search,
@@ -27,6 +33,7 @@ import {
   Trash2,
   Twitter,
   TwitterIcon,
+  UserIcon,
   X,
   type Icon as LucideIcon,
 } from "lucide-react"
@@ -45,12 +52,14 @@ import delivery from "../public/delivery.svg"
 import echo from "../public/echo.png"
 import fbIcon from "../public/fb.svg"
 import google from "../public/google.svg"
+import goolgeMap from "../public/goolgemap.png"
 import headphone from "../public/headphone.svg"
 import hodi from "../public/hodi.png"
 import hodiBack from "../public/hodiBack.png"
 import hodiSide from "../public/hodiSide.png"
 import instagramIcon from "../public/instagram.svg"
 import iPad from "../public/ipad.png"
+import letterSend from "../public/letterSend.png"
 import line from "../public/line.svg"
 import paper from "../public/paper.png"
 import paypal from "../public/payPal.png"
@@ -71,6 +80,10 @@ export const Icons = {
   delivery: delivery,
   backUp: backUp,
   search: Search,
+  phoneCall: PhoneCall,
+  mail: Mail,
+  mapPin: MapPin,
+  globe: Globe,
   heart: Heart,
   ShoppingBagIcon: ShoppingBagIcon,
   x: X,
@@ -91,6 +104,8 @@ export const Icons = {
   arrowRight: ArrowRight,
   creditCard: CreditCard,
   helpCircle: HelpCircle,
+  mapPinned: Map,
+  profile: UserIcon,
   delete: Trash2,
   gitHub: (props: LucideProps) => (
     <svg viewBox="0 0 438.549 438.549" {...props}>
@@ -187,5 +202,11 @@ export const Icons = {
 
   withoutBg: (props: LucideProps) => (
     <Image src={withoutBg} alt="Product Image" className={props.className} />
+  ),
+  goolgeMap: (props: LucideProps) => (
+    <Image src={goolgeMap} alt="Product Image" className={props.className} />
+  ),
+  letterSend: (props: LucideProps) => (
+    <Image src={letterSend} alt="Product Image" className={props.className} />
   ),
 }

@@ -63,7 +63,7 @@ const Category = () => {
   )
 
   return (
-    <div>
+    <div className="">
       <div className="container py-5 font-['Poppins']">
         <div className="flex justify-between flex-wrap   ">
           <div className="flex items-center max-sm:hidden">
