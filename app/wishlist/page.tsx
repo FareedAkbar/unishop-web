@@ -19,7 +19,7 @@ const Wishlist = () => {
       <div className="h-14 max-lg:justify-center flex w-full dark:text-white text-black max-sm:text-lg text-2xl mt-20 font-semibold font-['Poppins']">
         Similar to this Collection
       </div>
-      <div className="flex pb-10 flex-wrap max-lg:justify-center max-sm:-ml-5">
+      <div className="flex pb-10 flex-wrap max-lg:justify-center gap-5 max-sm:-ml-5">
         {[1, 2, 3, 4].map((item) => (
           <CardProduct />
         ))}

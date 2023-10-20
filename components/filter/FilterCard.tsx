@@ -1,10 +1,11 @@
 "use client"
 
 import React, { useState } from "react"
-import { Range, getTrackBackground } from "react-range"
 import RangeSlider from "rsuite/RangeSlider"
 
 import "rsuite/dist/rsuite.css"
+import Link from "next/link"
+
 import { colors, size } from "@/config/site"
 import {
   Accordion,
@@ -33,7 +34,10 @@ const FilterCard = () => {
         </div>
         <Icons.slidersHorizontal className="rotate-90" />
       </div>
-      <div className="flex flex-col items-center mt-3 ">
+      <Link
+        href={"/catogaryfilter"}
+        className="flex flex-col items-center  mt-3 "
+      >
         <div className="w-64 h-10 dark:text-white bg-red-600 rounded-sm justify-center items-center flex text-white text-sm font-medium font-['Poppins']">
           Filte by Category
         </div>
@@ -153,7 +157,7 @@ const FilterCard = () => {
             Apply Filter
           </div>
         </button>
-      </div>
+      </Link>
     </ScrollArea>
   )
 }

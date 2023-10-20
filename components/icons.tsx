@@ -19,6 +19,7 @@ import {
   Map,
   MapPin,
   MapPinIcon,
+  Menu,
   Minus,
   Moon,
   MoreHorizontal,
@@ -51,6 +52,10 @@ import coat from "../public/coat.png"
 import delivery from "../public/delivery.svg"
 import echo from "../public/echo.png"
 import fbIcon from "../public/fb.svg"
+import featureCloth from "../public/featureCloth.png"
+import featureShoping from "../public/featureShoping.png"
+import featureStaionry from "../public/featureStaionry.png"
+import featureTextbook from "../public/featureTextbook.png"
 import google from "../public/google.svg"
 import goolgeMap from "../public/goolgemap.png"
 import headphone from "../public/headphone.svg"
@@ -83,6 +88,7 @@ export const Icons = {
   phoneCall: PhoneCall,
   mail: Mail,
   mapPin: MapPin,
+  menu: Menu,
   globe: Globe,
   heart: Heart,
   ShoppingBagIcon: ShoppingBagIcon,
@@ -208,5 +214,29 @@ export const Icons = {
   ),
   letterSend: (props: LucideProps) => (
     <Image src={letterSend} alt="Product Image" className={props.className} />
+  ),
+  featureCloth: (props: LucideProps) => (
+    <Image src={featureCloth} alt="Product Image" className={props.className} />
+  ),
+  featureShoping: (props: LucideProps) => (
+    <Image
+      src={featureShoping}
+      alt="Product Image"
+      className={props.className}
+    />
+  ),
+  featureStaionry: (props: LucideProps) => (
+    <Image
+      src={featureStaionry}
+      alt="Product Image"
+      className={props.className}
+    />
+  ),
+  featureTextbook: (props: LucideProps) => (
+    <Image
+      src={featureTextbook}
+      alt="Product Image"
+      className={props.className}
+    />
   ),
 }

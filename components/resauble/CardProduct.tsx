@@ -7,7 +7,7 @@ const CardProduct = () => {
   return (
     <div
       // href={"/productdetail"}
-      className=" h-[25rem] relative group w-[20rem] font-['Poppins'] "
+      className=" h-[25rem] relative group w-[18rem] font-['Poppins'] "
     >
       <Link
         href={"/productdetail"}

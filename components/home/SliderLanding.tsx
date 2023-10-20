@@ -50,7 +50,7 @@ function CarouselWithContent() {
   )
 
   return (
-    <div className="w-full h-[26rem]  m-auto  relative group">
+    <div className="w-full  h-[26rem]  m-auto  relative group">
       <div
         style={{ backgroundImage: `url(${slides[currentIndex].url})` }}
         className="w-full h-full rounded-2xl bg-center bg-cover duration-500"

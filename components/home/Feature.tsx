@@ -1,4 +1,5 @@
 import React from "react"
+import Link from "next/link"
 
 import { Icons } from "../icons"
 
@@ -15,9 +16,12 @@ const Feature = () => {
             Discover a world of knowledge with our extensive collection of
             textbooks at Unibar.
           </p>
-          <button className="text-white  flex justify-start w-40 cursor-pointer underline text-base font-medium font-['Poppins'] leading-normal">
+          <Link
+            href={"/featurefilter"}
+            className="text-white  flex justify-start w-40 cursor-pointer underline text-base font-medium font-['Poppins'] leading-normal"
+          >
             Shop Now
-          </button>
+          </Link>
         </div>
       </div>
       <div className="w-2/3 max-sm:flex-col flex max-md:w-full flex-col gap-5 ">
@@ -31,9 +35,12 @@ const Feature = () => {
               <div className="w-64 text-neutral-50 text-sm font-normal font-['Poppins'] leading-tight">
                 Featured woman collections that give you another vibe.
               </div>
-              <div className="text-white text-base  max-sm:text-sm font-medium font-['Poppins'] leading-normal underline">
+              <Link
+                href={"/featurefilter"}
+                className="text-white  flex justify-start w-40 cursor-pointer underline text-base font-medium font-['Poppins'] leading-normal"
+              >
                 Shop Now
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -47,13 +54,16 @@ const Feature = () => {
               <div className="w-48 text-neutral-50 text-sm font-normal font-['Poppins'] leading-tight">
                 Amazon wireless speakers
               </div>
-              <div className="text-white text-base font-medium font-['Poppins'] leading-normal underline">
+              <Link
+                href={"/featurefilter"}
+                className="text-white  flex justify-start w-40 cursor-pointer underline text-base font-medium font-['Poppins'] leading-normal"
+              >
                 Shop Now
-              </div>
+              </Link>
             </div>
           </div>
           <div>
-            <Icons.echo className="bg-cover w-[22rem] max-sm:mt-10" />
+            <Icons.echo className="bg-cover w-[22rem] h-[21.11rem]  max-sm:mt-10" />
             <div className=" -mt-28 pl-5">
               <div className="text-neutral-50 text-4xl max-sm:text-lg font-semibold font-['Inter'] leading-normal tracking-wide">
                 Graduation Gift
@@ -61,9 +71,12 @@ const Feature = () => {
               <div className="w-48 text-neutral-50 text-sm font-normal font-['Poppins'] leading-tight">
                 Amazon wireless speakers
               </div>
-              <div className="text-white text-base font-medium font-['Poppins'] leading-normal underline">
+              <Link
+                href={"/featurefilter"}
+                className="text-white  flex justify-start w-40 cursor-pointer underline text-base font-medium font-['Poppins'] leading-normal"
+              >
                 Shop Now
-              </div>
+              </Link>
             </div>
           </div>
         </div>

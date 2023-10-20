@@ -96,7 +96,7 @@ const page = () => {
               Sort by:{"  "}
             </span>
             <Select>
-              <SelectTrigger className="w-[150px] mt-2 max-sm:w-[100px]  h-[0.3rem] outline-none border-none text-black text-base font-medium">
+              <SelectTrigger className="w-[150px] mt-2 max-sm:w-[100px] outline-none  h-[0.3rem]  border-none text-black text-base font-medium">
                 <SelectValue placeholder="Sort" className="outline-none" />
               </SelectTrigger>
               <SelectContent>

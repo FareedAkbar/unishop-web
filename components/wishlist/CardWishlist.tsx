@@ -6,7 +6,7 @@ const FixedTable = () => {
   return (
     <div className="w-full overflow-x-auto mt-5">
       <table className="w-full border">
-        <thead>
+        <thead className="font-['Poppins']">
           <tr className="border">
             <th className="w-16"></th>
             <th className="px-6 py-3 text-left">Unit Name</th>
@@ -17,7 +17,7 @@ const FixedTable = () => {
           </tr>
         </thead>
         <tbody>
-          <tr className="">
+          <tr className="font-['Poppins']">
             <td className="w-20 px-3">
               <div className="flex items-center gap-3 ">
                 <div className="w-5 h-5 rounded-full bg-slate-200 flex justify-center items-center">
@@ -41,7 +41,7 @@ const FixedTable = () => {
               In Stock
             </td>
             <td className="w-16 px-3">
-              <button className=" w-32 max-md:w-20 max-md:text-[12px] text-md text-white h-10 bg-red-600 rounded-sm">
+              <button className=" font-['Poppins'] w-32 max-md:w-20 max-md:text-[12px] text-md text-white h-10 bg-red-600 rounded-sm">
                 Add to Cart
               </button>
             </td>

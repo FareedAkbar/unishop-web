@@ -23,13 +23,13 @@ const CardCategorie = ({ category, subcategories }: CategoryProps) => {
             <Accordion type="single" collapsible className="border borde-b">
               <AccordionItem key={index} value={item.nestedcategory}>
                 <AccordionTrigger>
-                  <p className="pl-2">{item.nestedcategory}</p>
+                  <p className="pl-2 font-['Poppins']">{item.nestedcategory}</p>
                 </AccordionTrigger>
 
                 {item.subnestedcategories?.map((subItem, index) => (
                   <AccordionContent key={index}>
                     <Link href={"/category"}>
-                      <li className="pl-5 cursor-pointer hover:underline">
+                      <li className="pl-5 cursor-pointer font-['Poppins'] hover:underline">
                         {subItem}
                       </li>
                     </Link>

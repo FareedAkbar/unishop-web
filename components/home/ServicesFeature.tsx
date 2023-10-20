@@ -5,7 +5,7 @@ import { featureServiceProps } from "@/types/nav"
 
 const ServicesFeature = ({ title, desc, image }: featureServiceProps) => {
   return (
-    <div className=" flex flex-col items-center  justify-center w-1/4 max-lg:w-full">
+    <div className=" flex flex-col items-center  justify-center w-1/4 max-lg:w-full ">
       <div className="w-32 h-32  bg-slate-400 max-xl:mt-10 rounded-full flex justify-center items-center ">
         <div className="w-24 h-24 bg-black  text-white rounded-full absolute flex justify-center items-center z-10">
           <Image src={image} alt="picture" />

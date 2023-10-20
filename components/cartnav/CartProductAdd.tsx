@@ -19,9 +19,9 @@ const CartProductAdd = () => {
   return (
     <Sheet>
       <SheetTrigger>
-        <Icons.ShoppingBagIcon className="dark:text-white hover:text-[#ED1C29] cursor-pointer" />
+        <Icons.ShoppingBagIcon className="dark:text-white max-sm:w-4 max-sm:h-4  hover:text-[#ED1C29] cursor-pointer" />
       </SheetTrigger>
-      <SheetContent className="h-screen overflow-y-scroll w-[40rem]">
+      <SheetContent>
         <SheetHeader>
           <SheetTitle>
             <div className="w-72 h-14 text-black dark:text-white text-2xl font-semibold font-['Poppins']">
