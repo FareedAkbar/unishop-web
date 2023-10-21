@@ -28,19 +28,19 @@ const FilterCard = () => {
   }
   return (
     <ScrollArea className="h-[40rem]  w-[22rem] rounded-md border p-2">
-      <div className="flex justify-between ">
-        <div className="text-black dark:text-white text-xl font-bold font-['Poppins']">
+      <div className="flex justify-between px-2 ">
+        <div className="text-black dark:text-white text-[1rem] font-bold font-['Poppins']">
           Filters
         </div>
         <Icons.slidersHorizontal className="rotate-90" />
       </div>
-      <Link
-        href={"/catogaryfilter"}
-        className="flex flex-col items-center  mt-3 "
-      >
-        <div className="w-64 h-10 dark:text-white bg-red-600 rounded-sm justify-center items-center flex text-white text-sm font-medium font-['Poppins']">
+      <div className="flex flex-col items-center  mt-3 ">
+        <Link
+          href={"/catogaryfilter"}
+          className="w-64 h-10 dark:text-white decoration-none bg-red-600 rounded-sm justify-center items-center flex text-white text-[0.9rem] font-medium font-['Poppins']"
+        >
           Filte by Category
-        </div>
+        </Link>
         <div className="w-64 h-9 bg-[#F0EEED] gap-3 mt-3 rounded-sm flex items-center justify-center ">
           <input
             type="text"
@@ -50,22 +50,22 @@ const FilterCard = () => {
           <Icons.search className="cursor-pointer w-5 h-5" />
         </div>
         <div className="border-b w-full flex flex-col pl-5 py-3 ">
-          <div className="text-black dark:text-white text-opacity-60 text-base font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
+          <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
             T-shirts
           </div>
-          <div className="text-black dark:text-white text-opacity-60 text-base font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
+          <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
             T-shirts
           </div>
-          <div className="text-black dark:text-white text-opacity-60 text-base font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
+          <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
             T-shirts
           </div>
-          <div className="text-black dark:text-white text-opacity-60 text-base font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
+          <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
             T-shirts
           </div>
         </div>
         <Accordion type="single" className="border-b w-full" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger className="text-black dark:text-white text-xl font-bold font-['Poppins'] w-[15.4rem]">
+            <AccordionTrigger className="text-black dark:text-white text-[1rem] font-bold font-['Poppins'] w-[15.4rem]">
               Price
             </AccordionTrigger>
             <AccordionContent>
@@ -76,8 +76,8 @@ const FilterCard = () => {
                     onChange={handleFirstRange}
                   />
                   <div className="flex justify-between">
-                    <p>{firstValue}</p>
-                    <p>{secondValue}</p>
+                    <p className="dark:text-white mt-2">{firstValue}</p>
+                    <p className="dark:text-white">{secondValue}</p>
                   </div>
                 </div>
               </div>
@@ -86,7 +86,7 @@ const FilterCard = () => {
         </Accordion>{" "}
         <Accordion type="single" className="border-b w-full" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger className="text-black dark:text-white text-xl font-bold font-['Poppins'] w-[15.4rem]">
+            <AccordionTrigger className="text-black dark:text-white text-[1rem] font-bold font-['Poppins'] w-[15.4rem]">
               Colors
             </AccordionTrigger>
             <AccordionContent className="flex justify-center ">
@@ -115,7 +115,7 @@ const FilterCard = () => {
         </Accordion>
         <Accordion type="single" className="border-b w-full" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger className="text-black text-xl font-bold font-['Poppins'] w-[15.4rem]">
+            <AccordionTrigger className="text-black dark:text-white text-[1rem] font-bold font-['Poppins'] w-[15.4rem]">
               Size
             </AccordionTrigger>
             <AccordionContent className="flex justify-center">
@@ -123,11 +123,11 @@ const FilterCard = () => {
                 {size.map((item) => (
                   <div
                     onClick={() => setSizeCheck(item)}
-                    className={`w-12 h-11 py-3 rounded cursor-pointer  ${
+                    className={`w-12 h-11 py-3 rounded text-[0.9rem] cursor-pointer  ${
                       SizeCheck === item
                         ? "bg-[#ED1C29] border-none text-white"
-                        : "border text-black "
-                    } border-opacity-50 justify-center items-center text-black text-base font-medium font-['Poppins'] flex`}
+                        : "border text-black dark:text-white "
+                    } border-opacity-50 justify-center items-center text-black dark:text-white font-medium font-['Poppins'] flex`}
                   >
                     {item}
                   </div>
@@ -138,13 +138,13 @@ const FilterCard = () => {
         </Accordion>
         <Accordion type="single" className="border-b w-full" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger className="text-black text-xl font-bold font-['Poppins'] w-[15.4rem]">
+            <AccordionTrigger className="text-black dark:text-white text-[1rem] font-bold font-['Poppins'] w-[15.4rem]">
               Dress Style
             </AccordionTrigger>
             <AccordionContent className="flex flex-col">
               <div className="w-60 h-auto  flex flex-col ml-3">
                 {size.map((item) => (
-                  <p className="text-[1rem] font-['Poppins'] hover:underline mt-2">
+                  <p className="text-[0.9rem] dark:text-white font-['Poppins'] hover:underline mt-2">
                     Casual
                   </p>
                 ))}
@@ -152,12 +152,14 @@ const FilterCard = () => {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-        <button className="w-60 h-12 px-14 py-4 bg-red-600 rounded-sm justify-center items-center gap-3 inline-flex mt-5">
-          <div className="text-white text-sm font-medium font-['Poppins']">
-            Apply Filter
-          </div>
-        </button>
-      </Link>
+        <div className="pb-5">
+          <button className="w-60 h-12 px-14 py-4 bg-red-600 rounded-sm justify-center items-center gap-3 inline-flex mt-5">
+            <div className="text-white text-sm font-medium font-['Poppins']">
+              Apply Filter
+            </div>
+          </button>
+        </div>
+      </div>
     </ScrollArea>
   )
 }

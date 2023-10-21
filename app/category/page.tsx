@@ -32,7 +32,7 @@ const Category = () => {
         >
           Apply Filter
         </Link>
-        <div className="w-full">
+        <div className="w-full ">
           <ProductCardPaginate />
         </div>
       </div>

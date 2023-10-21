@@ -64,10 +64,10 @@ const ProductCardPaginate = () => {
     currentPage * itemsPerPage
   )
   return (
-    <div className="">
+    <div className="max-md: pt-10">
       <div className="flex justify-end max-sm:justify-center  flex-wrap   ">
         <div className="flex justify-end items-center max-sm:flex-col">
-          <div className="text-black text-opacity-60 text-base font-normal font-['Poppins']">
+          <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal font-['Poppins']">
             Showing{" "}
             {Math.min((currentPage - 1) * itemsPerPage + 1, products.length)}-
             {Math.min(currentPage * itemsPerPage, products.length)} of{" "}
@@ -75,11 +75,11 @@ const ProductCardPaginate = () => {
           </div>
 
           <div className="flex max-sm:mt-3 ">
-            <span className="text-black text-opacity-60 text-base font-normal font-['Poppins']">
+            <span className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal font-['Poppins']">
               Sort by:{"  "}
             </span>
             <Select>
-              <SelectTrigger className="w-[150px] mt-2 max-sm:w-[100px] outline-none  h-[0.3rem]  border-none text-black text-base font-medium">
+              <SelectTrigger className="w-[150px] mt-2 max-sm:w-[100px] outline-none  h-[0.3rem]  border-none text-black dark:text-white text-[0.9rem] font-medium">
                 <SelectValue placeholder="Sort" className="outline-none" />
               </SelectTrigger>
               <SelectContent>
@@ -94,7 +94,7 @@ const ProductCardPaginate = () => {
       </div>
       <div className=" flex  pt-5 max-md:flex-col max-md:items-center gap-5 ">
         <div className=" flex flex-wrap w-full">
-          <div className="flex flex-wrap  font-['Poppins']   gap-14 overflow-hidden  ">
+          <div className="flex flex-wrap items-center font-['Poppins'] max-md:justify-center  gap-5 overflow-hidden  ">
             {visibleProducts.map((product) => (
               <CardProduct />
             ))}
@@ -102,14 +102,14 @@ const ProductCardPaginate = () => {
           <div className="flex justify-center w-full pt-10 ">
             <div className="flex justify-between flex-wrap gap-5 max-sm:justify-center ">
               <button
-                className="w-36 h-12 px-3.5 py-2 bg-white rounded-lg border border-black border-opacity-10 justify-center items-center gap-2 inline-flex"
+                className="w-32 h-12 px-3.5 py-2 bg-white rounded-lg border border-black border-opacity-10 justify-center items-center gap-2 inline-flex"
                 onClick={() =>
                   setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
                 }
                 disabled={currentPage === 1}
               >
                 <Icons.arrowLeft className="w-5 h-5 relative dark:text-black" />
-                <div className="text-black text-lg font-medium font-['Poppins'] leading-tight">
+                <div className="text-black text-[0.9rem] font-medium font-['Poppins'] leading-tight">
                   Previous
                 </div>
               </button>
@@ -120,15 +120,15 @@ const ProductCardPaginate = () => {
                       key={index}
                       className={`w-10 h-10 bg-black bg-opacity-5 dark:text-white  rounded-lg justify-center items-center inline-flex ${
                         currentPage === pageNumber
-                          ? "bg-blue-500 dark:bg-white dark:text-black text-black font-bold"
-                          : "text-black"
+                          ? "bg-blue-500 dark:bg-black dark:border-2 dark:text-black  text-black font-bold"
+                          : "text-black dark:text-white"
                       }`}
                       onClick={() =>
                         typeof pageNumber === "number" &&
                         setCurrentPage(pageNumber)
                       }
                     >
-                      <div className="text-center dark:text-black">
+                      <div className="text-center text-[0.9rem] dark:text-white">
                         {pageNumber}
                       </div>
                     </div>
@@ -136,11 +136,11 @@ const ProductCardPaginate = () => {
                 </div>
               </div>
               <button
-                className="w-32 h-12 px-3.5 py-2 bg-white rounded-lg border border-black border-opacity-10 justify-center items-center gap-2 inline-flex"
+                className="w-24 h-12 px-3.5 py-2 bg-white rounded-lg border border-black border-opacity-10 justify-center items-center gap-2 inline-flex"
                 onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
                 disabled={currentPage === totalPages}
               >
-                <div className="text-black text-lg font-medium font-['Poppins'] leading-tight">
+                <div className="text-black text-[0.9rem] font-medium font-['Poppins'] leading-tight">
                   Next
                 </div>
                 <Icons.arrowLeft className="w-5 h-5 relative rotate-180 dark:text-black" />

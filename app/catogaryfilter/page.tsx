@@ -9,7 +9,7 @@ import ProductCardPaginate from "@/components/resauble/ProductCardPaginate"
 const CatogaryFilter = () => {
   return (
     <div className="container py-5">
-      <div className="flex items-center">
+      <div className="flex items-center max-sm:hidden">
         <div className="text-black dark:text-white text-opacity-60 text-sm font-normal font-['Poppins']">
           Home
         </div>
@@ -26,9 +26,11 @@ const CatogaryFilter = () => {
           Clothing
         </div>
       </div>
-      <div className="flex pt-20">
-        <CategoryFilter />
-        <div className="-mt-12">
+      <div className="flex max-md:flex-col w-full   pt-20 max-sm:pt-5">
+        <div className="w-2/3 max-md:w-full">
+          <CategoryFilter />
+        </div>
+        <div className="-mt-12 max-md:-mt-0 max-md:ml-0  max-sm:justify-center ml-20  flex  ">
           <ProductCardPaginate />
         </div>
       </div>

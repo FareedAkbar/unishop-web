@@ -14,7 +14,7 @@ const ProductDetail = () => {
       <div className="flex justify-between pt-10 ">
         <div
           onClick={() => setRender("Product Detail")}
-          className={`w-1/4 dark:text-white text-black text-2xl cursor-pointer  max-md:text-sm flex-wrap flex justify-center font-semibold font-['Poppins'] leading-snug ${
+          className={`w-1/4 dark:text-white text-black text-[1rem] cursor-pointer  max-md:text-sm flex-wrap flex justify-center font-semibold font-['Poppins'] leading-snug ${
             renderComp === "Product Detail"
               ? "border-b-2 border-black "
               : "text-opacity-60"
@@ -24,7 +24,7 @@ const ProductDetail = () => {
         </div>
         <div
           onClick={() => setRender("Review")}
-          className={`w-1/4 dark:text-white text-center text-black pb-2 cursor-pointer flex justify-center   text-2xl  max-md:text-sm font-semibold font-['Poppins'] leading-snug
+          className={`w-1/4 dark:text-white text-center text-black pb-2 cursor-pointer flex justify-center   text-[1rem]  max-md:text-sm font-semibold font-['Poppins'] leading-snug
           ${
             renderComp === "Review"
               ? "border-b-2 border-black "
@@ -36,7 +36,7 @@ const ProductDetail = () => {
         </div>
         <div
           onClick={() => setRender("FAQs")}
-          className={`w-1/4 dark:text-white text-right cursor-pointer text-black flex justify-center   text-2xl  max-md:text-sm font-semibold font-['Poppins'] leading-snug ${
+          className={`w-1/4 dark:text-white text-right cursor-pointer text-black flex justify-center   text-[1rem]  max-md:text-sm font-semibold font-['Poppins'] leading-snug ${
             renderComp === "FAQs"
               ? "border-b-2 border-black "
               : "text-opacity-60"

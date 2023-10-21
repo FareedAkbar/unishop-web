@@ -14,24 +14,24 @@ const page = () => {
       <div className="flex justify-between flex-wrap max-sm:hidden  ">
         <div className="flex items-center ">
           <div className=" h-4 justify-start items-center gap-1 inline-flex">
-            <div className="text-black dark:text-white  text-opacity-60 text-base  font-normal text-[1rem] font-['Poppins']">
+            <div className="text-black dark:text-white  text-opacity-60   font-normal text-[1rem] font-['Poppins']">
               Home
             </div>
             <Icons.chevronRight className="w-5 h-5 " />
           </div>
           <div className=" h-4 justify-start items-center gap-1 inline-flex">
-            <div className="text-black dark:text-white text-opacity-60 text-base font-normal text-[1rem] font-['Poppins']">
+            <div className="text-black dark:text-white text-opacity-60  font-normal text-[1rem] font-['Poppins']">
               UOW Mercahndise
             </div>
             <Icons.chevronRight className="w-5 h-5 " />
           </div>
-          <div className="text-black dark:text-white text-opacity-60  text-base font-normal font-['Poppins']">
+          <div className="text-black dark:text-white text-opacity-60   font-normal font-['Poppins']">
             Clothing
           </div>
           <Icons.chevronRight className="w-5 h-5 " />
 
           <div className=" h-4 justify-start items-center gap-1 inline-flex">
-            <div className="text-black dark:text-white text-base font-normal text-[1rem] font-['Poppins']">
+            <div className="text-black dark:text-white  font-normal text-[1rem] font-['Poppins']">
               Cart
             </div>
           </div>
@@ -55,7 +55,7 @@ const page = () => {
           </div>
         </div>
         <div className="w-1/2 max-lg:w-full max-lg:mt-10">
-          <div className=" text-black dark:text-white text-4xl max-sm:text-lg font-semibold font-['Poppins']">
+          <div className=" text-black dark:text-white text-[1rem]  font-semibold font-['Poppins']">
             UOW Indigenous Hoodie
           </div>
           <div className="flex mt-5 max-lg:gap-10">
@@ -66,32 +66,32 @@ const page = () => {
               <Icons.star className="w-[1.25rem] h-[1.25rem] text-transparent fill-[#FFAD33]" />
             </div>
             <div>
-              <span className="text-black dark:text-white text-base font-bold font-['Poppins']">
+              <span className="text-black text-[0.9rem] dark:text-white  font-bold font-['Poppins']">
                 4.5/
               </span>
-              <span className="text-black dark:text-white text-opacity-60 text-base font-bold font-['Poppins']">
+              <span className="text-black dark:text-white text-[0.9rem] text-opacity-60  font-bold font-['Poppins']">
                 5
               </span>
             </div>
           </div>
           <div className="flex mt-5 items-center">
-            <div className="text-black dark:text-white text-3xl max-sm:text-lg font-semibold font-['Poppins']">
+            <div className="text-black dark:text-white text-[1rem] max-sm:text-lg font-semibold font-['Poppins']">
               $260
             </div>
-            <div className="text-black dark:text-white text-opacity-30 text-3xl max-sm:text-lg font-semibold ml-3 font-['Poppins'] line-through">
+            <div className="text-black text-[1rem] dark:text-white text-opacity-30 text-3xl max-sm:text-lg font-semibold ml-3 font-['Poppins'] line-through">
               $300
             </div>
             <div className="w-20 h-10 px-[3.5rem] py-[1.5erem] ml-5 bg-red-600 bg-opacity-10 rounded-sm justify-center items-center gap-3 inline-flex">
-              <div className="text-red-600 text-base font-bold font-['Poppins']">
+              <div className="text-red-600 text-[0.9rem] font-bold font-['Poppins']">
                 -40%
               </div>
             </div>
           </div>
-          <div className=" mt-3 text-black dark:text-white text-opacity-60 max-sm:text-sm font-bold font-['Poppins'] ">
+          <div className=" mt-3 text-black dark:text-white text-opacity-60 text-[0.9rem] font-['Poppins'] ">
             Hoodie Essentials Wear Unisex Sleeve Crewneck Hoodie Oversize Hoodie
             Simple Sweatshirt Fall Winter Hoodie
           </div>
-          <div className="mt-8 text-black dark:text-white text-opacity-60 text-base font-bold font-['Poppins']">
+          <div className="mt-4 text-black dark:text-white text-opacity-60 text-[1rem]  font-bold font-['Poppins']">
             Select Colors
           </div>
           <div className="w-44 h-10 justify-start mt-5 items-start gap-4 inline-flex">
@@ -109,28 +109,28 @@ const page = () => {
             </div>
           </div>
 
-          <div className=" text-black dark:text-white mt-5 text-opacity-60 text-base font-bold font-['Poppins']">
+          <div className=" text-black dark:text-white mt-3 text-[0.9rem] text-opacity-60  font-bold font-['Poppins']">
             Choose Size
           </div>
           <div className="flex gap-5 max-sm:gap-1 mt-5 font-['Poppins']">
-            <div className="w-12 h-11  font-bold rounded border border-black dark:border-white hover:bg-[#ED1C29] hover:border-none hover:text-white cursor-pointer border-opacity-50 flex justify-center text-[1rem]  items-center">
+            <div className="w-10 h-9  font-bold rounded border border-black dark:border-white hover:bg-[#ED1C29] hover:border-none hover:text-white cursor-pointer border-opacity-50 flex justify-center text-[0.9rem]  items-center">
               XS
             </div>
-            <div className="w-12 h-11  font-bold rounded border border-black dark:border-white hover:bg-[#ED1C29] hover:border-none hover:text-white cursor-pointer border-opacity-50 flex justify-center text-[1rem]  items-center">
+            <div className="w-10 h-9  font-bold rounded border border-black dark:border-white hover:bg-[#ED1C29] hover:border-none hover:text-white cursor-pointer border-opacity-50 flex justify-center text-[0.9rem]  items-center">
               Xl
             </div>
-            <div className="w-12 h-11  font-bold rounded border border-black dark:border-white hover:bg-[#ED1C29] hover:border-none hover:text-white cursor-pointer border-opacity-50 flex justify-center text-[1rem]  items-center">
+            <div className="w-10 h-9  font-bold rounded border border-black dark:border-white hover:bg-[#ED1C29] hover:border-none hover:text-white cursor-pointer border-opacity-50 flex justify-center text-[0.9rem]  items-center">
               S
             </div>
-            <div className="w-12 h-11  font-bold rounded border border-black dark:border-white hover:bg-[#ED1C29] hover:border-none hover:text-white cursor-pointer border-opacity-50 flex justify-center text-[1rem]  items-center">
+            <div className="w-10 h-9  font-bold rounded border border-black dark:border-white hover:bg-[#ED1C29] hover:border-none hover:text-white cursor-pointer border-opacity-50 flex justify-center text-[0.9rem]  items-center">
               M
             </div>
-            <div className="w-12 h-11  font-bold rounded border border-black dark:border-white hover:bg-[#ED1C29] hover:border-none hover:text-white cursor-pointer border-opacity-50 flex justify-center text-[1rem]  items-center">
+            <div className="w-10 h-9  font-bold rounded border border-black dark:border-white hover:bg-[#ED1C29] hover:border-none hover:text-white cursor-pointer border-opacity-50 flex justify-center text-[0.9rem]  items-center">
               L
             </div>
           </div>
           <div className="flex max-sm:flex-col justify-between items-center">
-            <div className="w-52 h-14 mt-5 px-5 py-4 dark:text-black bg-zinc-100 rounded justify-between items-center inline-flex">
+            <div className="w-52 h-12 mt-5 px-5 py-4 dark:text-black bg-zinc-100 rounded justify-between items-center inline-flex">
               <Icons.plus
                 onClick={() => {
                   if (Count < 5) {
@@ -139,7 +139,7 @@ const page = () => {
                 }}
                 className="w-6 h-6 relative cursor-pointer hover:text-[#ED1C29]"
               />
-              <div className="text-black dark:text-black text-base font-bold font-['Poppins']">
+              <div className="text-black dark:text-black  font-bold font-['Poppins']">
                 {Count}
               </div>
               <Icons.minus
@@ -151,9 +151,9 @@ const page = () => {
                 className="w-6 h-6 relative cursor-pointer hover:text-[#ED1C29]"
               />
             </div>
-            <div className="w-72 h-12 px-14 py-4 font-['Poppins'] max-sm:mt-10 bg-red-600 cursor-pointer text-white text-lg font-bold rounded justify-center items-center gap-3 inline-flex">
+            <button className="w-64 h-12 px-14 py-4 font-['Poppins'] max-sm:mt-10 bg-red-600 cursor-pointer text-white text-[1rem] font-bold rounded justify-center items-center gap-3 inline-flex">
               Add to Cart
-            </div>
+            </button>
           </div>
         </div>
       </div>

@@ -16,10 +16,10 @@ const Review = () => {
     <div className="pt-10">
       <div className="flex justify-between max-md:flex-col">
         <div className="flex items-center gap-3">
-          <div className="text-black text-3xl max-sm:text-lg dark:text-white font-bold font-['Poppins']">
+          <div className="text-black text-[1rem] dark:text-white font-bold font-['Poppins']">
             All Reviews
           </div>
-          <div className="text-black text-opacity-60 dark:text-white text-base font-normal font-['Poppins'] leading-snug">
+          <div className="text-black text-opacity-60 dark:text-white text-[0.9rem] font-normal font-['Poppins'] leading-snug">
             (451)
           </div>
         </div>
@@ -35,11 +35,11 @@ const Review = () => {
               <Icons.chevronRight className="w-4 h-4 rotate-90 dark:text-black relative cursor-pointer" />
             </div>
           </div>
-          <div className="w-44 h-12 py-4 bg-red-600 rounded-sm justify-center items-center gap-3 inline-flex">
-            <div className="text-white dark:text-white text-base font-medium font-['Poppins']">
+          <button className="w-44 h-12 py-4 bg-red-600 rounded-sm justify-center items-center gap-3 inline-flex">
+            <div className="text-white dark:text-white text-[1rem]  font-['Poppins']">
               Write a Review
             </div>
-          </div>
+          </button>
         </div>
       </div>
       <div className="mt-5 flex flex-wrap gap-10 justify-evenly">
@@ -52,23 +52,23 @@ const Review = () => {
                 <Icons.star className="w-[1.25rem] h-[1.25rem] text-transparent fill-[#FFAD33]" />
                 <Icons.star className="w-[1.25rem] h-[1.25rem] text-transparent fill-[#FFAD33]" />
               </div>
-              <Icons.more className="text-slate-400" />
+              <Icons.more className="text-slate-400 cursor-pointer hover:text-red-600" />
             </div>
             <div className="flex items-center gap-2 mt-3">
-              <div className="text-black dark:text-white text-2xl font-bold font-['Poppins'] leading-snug">
+              <div className="text-black dark:text-white text-[1rem] font-bold font-['Poppins'] ">
                 Alex M.
               </div>
               <div className="w-5 h-5 relative bg-green-600 flex justify-center items-center rounded-full">
                 <Icons.check className="w-4 h-4 text-white" />
               </div>
             </div>
-            <div className="text-black dark:text-white pt-2 text-opacity-60 text-lg font-normal font-['Poppins'] leading-relaxed">
+            <div className="text-black dark:text-white pt-2 text-opacity-60 text-[0.9rem] font-normal font-['Poppins'] leading-relaxed">
               "The t-shirt exceeded my expectations! The colors are vibrant and
               the print quality is top-notch. Being a UI/UX designer myself, I'm
               quite picky about aesthetics, and this t-shirt definitely gets a
               thumbs up from me."
             </div>
-            <div className="w-96 text-black dark:text-white text-opacity-60 mt-10 max-sm:mt-3 text-lg font-medium font-['Poppins'] leading-snug">
+            <div className="w-96 text-black dark:text-white text-opacity-60 mt-10 max-sm:mt-3 text-[0.9rem] font-medium font-['Poppins'] leading-snug">
               Posted on August 15, 2023
             </div>
           </div>

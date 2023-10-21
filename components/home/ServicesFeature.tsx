@@ -6,15 +6,15 @@ import { featureServiceProps } from "@/types/nav"
 const ServicesFeature = ({ title, desc, image }: featureServiceProps) => {
   return (
     <div className=" flex flex-col items-center  justify-center w-1/4 max-lg:w-full ">
-      <div className="w-32 h-32  bg-slate-400 max-xl:mt-10 rounded-full flex justify-center items-center ">
-        <div className="w-24 h-24 bg-black  text-white rounded-full absolute flex justify-center items-center z-10">
-          <Image src={image} alt="picture" />
+      <div className="w-24 h-24  bg-slate-400 max-xl:mt-10 rounded-full flex justify-center items-center ">
+        <div className="w-20 h-20 bg-black  text-white rounded-full absolute flex justify-center items-center z-10">
+          <Image src={image} alt="picture" className="w-10 h-10" />
         </div>
       </div>
-      <div className=" text-center text-black dark:text-white text-3xl max-lg:text-lg pt-10 font-semibold font-['Poppins'] leading-7">
+      <div className=" text-center text-black dark:text-white text-[1rem] pt-5   font-semibold font-['Poppins'] ">
         {title}
       </div>
-      <div className=" text-center  text-black dark:text-white  text-lg max-lg:text-sm pt-10  font-normal font-['Poppins'] leading-tight">
+      <div className=" text-center  text-black dark:text-white  text-[0.9rem]  pt-2 font-normal font-['Poppins'] ">
         {desc}
       </div>
     </div>

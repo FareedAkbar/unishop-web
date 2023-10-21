@@ -7,11 +7,11 @@ const CardProductDetail = () => {
   return (
     <div className="pt-10">
       {" "}
-      <div className="w-96 h-14  dark:text-white max-sm:text-lg text-black text-3xl font-semibold font-['Poppins']">
+      <div className="w-96 h-14  dark:text-white  text-black text-[1rem] font-semibold font-['Poppins']">
         UOW Indigenous Hoodie
       </div>
       <div className="flex justify-between max-md:flex-col max-md:gap-5 pl-8 max-sm:pl-5">
-        <div className="text-black dark:text-white text-opacity-60 text-2xl max-lg:text-lg max-sm:text-sm font-bold font-['Poppins'] leading-10">
+        <div className="text-black dark:text-white text-opacity-60 text-[0.9rem]  font-['Poppins'] ">
           <ul style={{ listStyleType: "disc" }}>
             <li>Red colour</li>
             <li>White text on left chest, left arm, and back of garment</li>

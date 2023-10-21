@@ -65,65 +65,59 @@ const CardSlider = () => {
 
   return (
     <div className="">
-      <div className="pt-10 flex max-md:flex-col  ">
-        <div className="text-black  max-md:py-2 text-5xl max-sm:text-xl w-1/3  max-xl:w-full max-md:w-full dark:text-white font-semibold  leading-10 tracking-widest">
+      <div className="pt-10 flex max-md:flex-col items-center  ">
+        <div className="text-black  max-md:py-2 text-[1rem] max-sm:text-xl w-1/3  max-xl:w-full max-md:w-full dark:text-white font-semibold   ">
           Flash Sales
         </div>
-        <div className="flex ">
-          <div className="   justify-center items-start gap-1 pl-10 max-md:pl-0  ">
-            <div className=" dark:text-white  text-black text-sm font-medium font-['Poppins'] leading-none flex justify-center ">
+        <div className="  ">
+          <div className=" flex  justify-center max-md:justify-evenly items-start  max-sm:gap-3  max-md:pl-0   ">
+            <div className=" dark:text-white w-24 max-md:w-20    text-black  font-medium text-[0.9rem] max-sm:text-sm max font-['Poppins'] leading-none flex justify-center ">
               Days
             </div>
-            <div className=" dark:text-white  flex justify-center text-black text-4xl  font-bold font-['Inter'] leading-loose tracking-wider">
-              03
-            </div>
-          </div>
-
-          <p className="text-[3rem] flex items-center text-[#ED1C29]">:</p>
-
-          <div className="  justify-center items-start ">
-            <div className=" dark:text-white text-black text-sm font-medium font-['Poppins'] leading-none flex justify-center ">
+            <div className=" dark:text-white w-24 max-md:w-20   text-black  font-medium text-[0.9rem] max-sm:text-sm  font-['Poppins'] leading-none flex justify-center ">
               Hours
             </div>
-            <div className=" dark:text-white  flex justify-center text-black text-4xl  font-bold font-['Inter'] leading-loose tracking-wider">
-              23
-            </div>
-          </div>
-          <p className="text-[3rem] flex items-center text-[#ED1C29]">:</p>
-
-          <div className="  justify-center items-start gap-1 ">
-            <div className=" dark:text-white text-black text-sm font-medium font-['Poppins'] leading-none flex justify-center ">
+            <div className=" dark:text-white text-black    w-24 max-md:w-20 font-medium text-[0.9rem] max-sm:text-sm  font-['Poppins'] leading-none flex justify-center ">
               Minutes
             </div>
-            <div className="dark:text-white   flex justify-center text-black text-4xl  font-bold font-['Inter'] leading-loose tracking-wider">
-              19
-            </div>
-          </div>
-          <p className="text-[3rem] flex items-center text-[#ED1C29]">:</p>
-
-          <div className="  justify-center items-start gap-1 ">
-            <div className=" dark:text-white text-black text-sm font-medium font-['Poppins'] leading-none flex justify-center ">
+            <div className=" dark:text-white text-black    w-24 max-md:w-20 font-medium text-[0.9rem] max-sm:text-sm  font-['Poppins'] leading-none flex justify-center ">
               Seconds
             </div>
-            <div className=" dark:text-white  flex justify-center text-black text-4xl  font-bold font-['Inter'] leading-loose tracking-wider">
+          </div>
+
+          <div className=" flex  justify-evenly max-sm:gap-3">
+            <div className=" dark:text-white     w-24 max-md:w-20   flex justify-center max-sm:items-center text-black text-[1rem] max-sm:text-sm max-md:text-[0.9rem]  font-bold font-['Inter'] leading-loose tracking-wider">
+              23
+            </div>
+
+            <div className=" dark:text-white     w-24 max-md:w-20 flex justify-center  text-black text-[1rem] max-sm:text-sm max-md:text-[0.9rem]  font-bold font-['Inter'] leading-loose tracking-wider">
+              03
+            </div>
+
+            <div className="dark:text-white    w-24 max-md:w-20  flex justify-center text-black text-[1rem] max-sm:text-sm max-md:text-[0.9rem]  font-bold font-['Inter'] leading-loose tracking-wider">
+              19
+            </div>
+            {/* <p className="text-[1rem] max-md:text-xl max-sm:text-[1rem] flex items-center text-[#ED1C29]">
+              :
+            </p> */}
+
+            <div className=" dark:text-white   w-24 max-md:w-20  flex justify-center text-black text-[1rem] max-sm:text-sm max-md:text-[0.9rem]  font-bold font-['Inter'] leading-loose tracking-wider">
               56
             </div>
           </div>
         </div>
+
         <div className="w-2/3 max-md:w-full  max-md:py-5 flex max-sm:justify-center justify-end gap-5">
-          <div
-            onClick={handlePrev}
-            className="w-11 h-11 relative cursor-pointer"
-          >
-            <div className="w-11 h-11 left-0 hover:bg-[#ED1C29] dark:text-black dark:hover:text-white hover:text-white flex justify-center items-center top-0 absolute bg-neutral-100 rounded-full">
+          <div onClick={handlePrev} className="w-8 h-8 relative cursor-pointer">
+            <div className="w-8 h-8 left-0 hover:bg-[#ED1C29] dark:text-black dark:hover:text-white hover:text-white flex justify-center items-center top-0 absolute bg-neutral-100 rounded-full">
               <Icons.arrowLeft />
             </div>
           </div>
           <div
             onClick={handleNext}
-            className="w-11 h-11 relative cursor-pointer "
+            className="w-8 h-8 relative cursor-pointer "
           >
-            <div className="w-11  rotate-180 h-11 left-0 flex justify-center dark:text-black dark:hover:text-white items-center top-0 absolute bg-neutral-100 hover:bg-[#ED1C29] hover:text-white rounded-full">
+            <div className="w-8  rotate-180 h-8 left-0 flex justify-center dark:text-black dark:hover:text-white items-center top-0 absolute bg-neutral-100 hover:bg-[#ED1C29] hover:text-white rounded-full">
               <Icons.arrowLeft />
             </div>
           </div>
@@ -132,7 +126,7 @@ const CardSlider = () => {
       <div className="relative ">
         <div className="flex  max-sm:flex-col max-sm:pt-2"></div>
         <div className="">
-          <Slider ref={sliderRef} {...settings} className="">
+          <Slider ref={sliderRef} {...settings} className="overflow-hidden">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
               <CardProduct />
             ))}

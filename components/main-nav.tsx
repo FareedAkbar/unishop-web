@@ -24,30 +24,9 @@ interface MainNavProps {
 
 export function MainNav({ items }: MainNavProps) {
   const [Menu, setMenu] = React.useState(false)
-  const [isHidden, setIsHidden] = React.useState(false)
 
-  React.useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 768) {
-        setIsHidden(true)
-      } else {
-        setIsHidden(false)
-      }
-    }
-
-    // Add a resize event listener to check the screen size
-    window.addEventListener("resize", handleResize)
-
-    // Check the screen size initially
-    handleResize()
-
-    // Remove the resize event listener when the component is unmounted
-    return () => {
-      window.removeEventListener("resize", handleResize)
-    }
-  }, [])
   return (
-    <div className="flex gap-6 md:gap-10  ">
+    <div className="flex gap-6 md:gap-10   ">
       <div className="flex items-center gap-5">
         <Icons.menu
           onClick={() => setMenu(true)}
@@ -58,15 +37,15 @@ export function MainNav({ items }: MainNavProps) {
         </Link>
       </div>
       <nav
-        className={`flex gap-6  ${
+        className={`flex gap-6   ${
           Menu
-            ? "block flex-col  bg-white border max-md:block left-0 absolute h-screen  w-2/3 p-5"
+            ? "block flex-col top-0 bg-white dark:bg-black border max-md:block left-0 absolute h-screen  w-2/3 p-5"
             : "max-md:hidden"
         }`}
       >
         {Menu ? (
           <div className="flex justify-between items-center">
-            <p className="font-bold w-full text-lg font-['Poppins'] border-b pb-2">
+            <p className="font-bold w-full  dark:text-white text-lg font-['Poppins'] border-b pb-2">
               Catogery
             </p>
             <div>
@@ -85,7 +64,7 @@ export function MainNav({ items }: MainNavProps) {
                     key={index}
                     href={item.href}
                     className={cn(
-                      "flex items-center top-0 max-md:mt-5 hover:underline text-[1rem]  font-normal",
+                      "flex items-center top-0 max-md:mt-4 hover:underline  p-1 text-[1rem]  font-normal",
                       item.disabled && "cursor-not-allowed opacity-80"
                     )}
                   >
@@ -97,9 +76,10 @@ export function MainNav({ items }: MainNavProps) {
                     </p>
                   </Link>
                 )}
+
                 {item.subMenu && (
                   <NavigationMenu className="   ">
-                    <NavigationMenuList className="w-full black   max-md:-ml-4 max-md:mt-5 flex justify-start">
+                    <NavigationMenuList className="w-full black   max-md:-ml-3 max-md:mt-5 flex justify-start">
                       <NavigationMenuItem>
                         <NavigationMenuTrigger className=" ">
                           <Link
@@ -138,6 +118,12 @@ export function MainNav({ items }: MainNavProps) {
                 )}
               </>
             )
+        )}
+        <div className="h-3"> </div>
+        {Menu && (
+          <Link className="ml-1 text-lg mt-5 font-['Poppins']" href={" /login"}>
+            Login
+          </Link>
         )}
       </nav>
     </div>

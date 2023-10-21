@@ -28,10 +28,6 @@ export const siteConfig = {
       title: "Signup",
       href: "/signup",
     },
-    {
-      title: "Login",
-      href: "/login",
-    },
   ],
 }
 

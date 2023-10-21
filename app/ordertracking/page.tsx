@@ -5,7 +5,7 @@ import { Icons } from "@/components/icons"
 const OrderTracking = () => {
   return (
     <div>
-      <Icons.trackingBg className="bg-cover object-contain -z-10 absolute  max-md:hidden " />
+      <Icons.trackingBg className="bg-cover object-contain w-full -z-10 absolute  max-md:hidden " />
       <div className="container py-20 max-lg:py-5 ">
         <div className="text-black text-xl max-md:dark:text-white font-medium font-['Poppins'] leading-normal">
           Track Your Package

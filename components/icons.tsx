@@ -45,6 +45,7 @@ import nagad from "../public/Nagad.png"
 import tweeterIcon from "../public/Tweeter.svg"
 import visa from "../public/Visa.png"
 import backUp from "../public/backUp.svg"
+import bgSighup from "../public/bgSighup.png"
 import book from "../public/book.png"
 import cap from "../public/cap.png"
 import circle from "../public/circle.svg"
@@ -217,6 +218,9 @@ export const Icons = {
   ),
   featureCloth: (props: LucideProps) => (
     <Image src={featureCloth} alt="Product Image" className={props.className} />
+  ),
+  bgSighup: (props: LucideProps) => (
+    <Image src={bgSighup} alt="Product Image" className={props.className} />
   ),
   featureShoping: (props: LucideProps) => (
     <Image

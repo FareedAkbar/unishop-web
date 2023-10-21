@@ -7,7 +7,7 @@ const GeneralInquiries = () => {
     <>
       <div className="bg-[#ED1C29] w-full  ">
         <div className="p-5">
-          <div className="text-white text-2xl  max-sm:text-sm font-semibold font-['Poppins'] border-b">
+          <div className="text-white text-2xl   max-sm:text-sm font-semibold font-['Poppins'] border-b">
             General Inquiries
           </div>
           <div className="flex gap-3 mt-5">
