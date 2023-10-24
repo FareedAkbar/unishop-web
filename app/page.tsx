@@ -1,6 +1,8 @@
 "use client"
 
+import { useContext } from "react"
 import Link from "next/link"
+import { ContextApiData } from "@/context/ContextGlobal"
 import { Divide } from "lucide-react"
 
 import {
@@ -20,6 +22,8 @@ import Today from "@/components/home/Today"
 import CategoryFilter from "@/components/resauble/CategoryFilter"
 
 export default function IndexPage() {
+  const { data } = useContext(ContextApiData)
+  console.log("first", data)
   return (
     <div className="container  py-5 gap-5">
       <div className="flex max-md:flex-col  py-2 gap-5 pb-14">

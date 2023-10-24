@@ -1,8 +1,10 @@
-import React from "react"
+import React, { useContext } from "react"
+import { ContextApiData } from "@/context/ContextGlobal"
 
 import CardProduct from "../resauble/CardProduct"
 
 const ThisMonth = () => {
+  const { data } = useContext(ContextApiData)
   return (
     <div className="  mt-16 ">
       <div className="flex items-center gap-5">
@@ -22,8 +24,8 @@ const ThisMonth = () => {
         </button>
       </div>
       <div className="flex justify-evenly flex-wrap overflow-hidden w-full mt-16 ">
-        {[1, 2, 3, 4].map((item) => (
-          <CardProduct />
+        {data?.data?.map((item: any) => (
+          <CardProduct data={item} />
         ))}
       </div>
     </div>

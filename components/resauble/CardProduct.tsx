@@ -1,12 +1,14 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 
 import { Icons } from "../icons"
 
-const CardProduct = () => {
+const CardProduct = ({ data }: any) => {
+  // console.log(data.media[0].object_path)
   return (
-    <div
-      // href={"/productdetail"}
+    <Link
+      href={`/productdetail/${data?.food_id}`}
       className=" h-[25rem]  relative group w-[18rem] font-['Poppins']  "
     >
       <div className="w-72 h-72  left-0 top-0 absolute bg-[#EEEEEE] rounded group-hover:opacity-90 transition-opacity">
@@ -34,19 +36,23 @@ const CardProduct = () => {
           Add To Cart
         </button>
 
-        <Link href={"/productdetail"}>
-          <Icons.iPad className="w-[10rem] h-[11rem] left-[69px] top-[55px] absolute cursor-pointer" />
-        </Link>
+        <Image
+          width={400}
+          height={400}
+          src={`http://192.168.18.224:3001/${data?.media[0]?.object_path}`}
+          alt="product image"
+          className="w-[10rem] h-[11rem] left-[69px] top-[55px] absolute cursor-pointer"
+        />
       </div>
       <div className="w-80 h-8 dark:text-white left-[3.64px] top-[311.78px] absolute text-black text-[1rem] font-medium font-['Poppins'] leading-normal">
-        UOW Boxed Gift Pen
+        {data?.item_name}
       </div>
       <div className="w-36 h-8 left-[3.64px] top-[343.71px] absolute justify-start items-start gap-3 inline-flex">
         <div className="text-red-600 text-[1rem] font-medium font-['Poppins'] leading-normal">
-          $120
+          ${data?.price}
         </div>
         <div className="opacity-50 dark:text-white text-black text-[1rem] font-medium font-['Poppins'] line-through leading-normal">
-          $160
+          ${data?.discount_amount}
         </div>
       </div>
       <div className="w-48 h-7 left-[3.64px] top-[374.70px] absolute justify-start items-start gap-2 inline-flex">
@@ -61,7 +67,7 @@ const CardProduct = () => {
           (88)
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 

@@ -1,16 +1,19 @@
 "use client"
 
-import React, { useRef } from "react"
+import React, { useContext, useRef } from "react"
 import Slider from "react-slick"
 
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
+import { ContextApiData } from "@/context/ContextGlobal"
+
 import { Icons } from "../icons"
 import CardProduct from "../resauble/CardProduct"
 
 const CardSlider = () => {
   const sliderRef = useRef<Slider | null>(null)
-
+  const { data } = useContext(ContextApiData)
+  console.log(data)
   const settings = {
     dots: false,
     infinite: false,
@@ -123,10 +126,10 @@ const CardSlider = () => {
           </div>
         </div>
       </div>
-      <div className="relative  max-sm:pt-10  ">
-        <Slider ref={sliderRef} {...settings} className="overflow-hidden    ">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-            <CardProduct />
+      <div className="relative max-sm:pt-10">
+        <Slider ref={sliderRef} {...settings} className="overflow-hidden">
+          {data?.data?.map((item: any) => (
+            <CardProduct data={item} />
           ))}
         </Slider>
       </div>

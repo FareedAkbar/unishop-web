@@ -1,7 +1,5 @@
 "use client"
 
-import React, { useState } from "react"
-
 import FilterCard from "@/components/filter/FilterCard"
 import { Icons } from "@/components/icons"
 import ProductCardPaginate from "@/components/resauble/ProductCardPaginate"

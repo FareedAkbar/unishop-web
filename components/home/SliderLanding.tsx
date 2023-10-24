@@ -42,7 +42,7 @@ function CarouselWithContent() {
       className={`w-2 h-2 rounded-full mx-1 cursor-pointer ${
         index === currentIndex ? "bg-blue-500" : "bg-gray-300"
       }`}
-    ></div>
+  ></div>
   )
 
   return (

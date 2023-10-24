@@ -1,15 +1,22 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import Image from "next/image"
+import { useParams, useRouter } from "next/navigation"
+import { ContextApiData } from "@/context/ContextGlobal"
 
 import { Icons } from "../icons"
 import CardProductDetail from "./CardProductDetail"
 import Faq from "./Faq"
 import Review from "./Review"
 
-const ProductDetail = () => {
+const ProductDetail = ({ params }: any) => {
+  const { data } = useContext(ContextApiData)
+  console.log("api detail", data)
   const [renderComp, setRender] = useState("Product Detail")
   const [count, setCount] = useState(1)
+  console.log("params in detail", params.id)
 
+  const singleData = data?.data?.find((item: any) => item?.food_id == params.id)
+  console.log("single data", singleData)
   return (
     <div>
       <div>
@@ -58,7 +65,7 @@ const ProductDetail = () => {
           </div>
           <div className="w-1/2 max-lg:w-full max-lg:mt-10">
             <div className=" text-black dark:text-white text-[1rem]  font-semibold font-['Poppins']">
-              UOW Indigenous Hoodie
+              {singleData?.food_name}
             </div>
             <div className="flex mt-5 max-lg:gap-10">
               <div className="flex">
@@ -81,17 +88,18 @@ const ProductDetail = () => {
                 $260
               </div>
               <div className="text-black text-[1rem] dark:text-white text-opacity-30  max-sm:text-lg font-semibold ml-3 font-['Poppins'] line-through">
-                $300
+                ${singleData?.price}
               </div>
-              <div className="w-20 h-10 px-[3.5rem] py-[1.5erem] ml-5 bg-red-600 bg-opacity-10 rounded-sm justify-center items-center gap-3 inline-flex">
-                <div className="text-red-600 text-[0.9rem] font-bold font-['Poppins']">
-                  -40%
+              {singleData?.discount_percentage && (
+                <div className="w-20 h-10 px-[3.5rem] py-[1.5erem] ml-5 bg-red-600 bg-opacity-10 rounded-sm justify-center items-center gap-3 inline-flex">
+                  <div className="text-red-600 text-[0.9rem] font-bold font-['Poppins']">
+                    -{singleData?.discount_percentage}%
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
             <div className=" mt-3 text-black dark:text-white text-opacity-60 text-[0.9rem] font-['Poppins'] ">
-              Hoodie Essentials Wear Unisex Sleeve Crewneck Hoodie Oversize
-              Hoodie Simple Sweatshirt Fall Winter Hoodie
+              {singleData?.food_desc}
             </div>
             <div className="mt-4 text-black dark:text-white text-opacity-60 text-[1rem]  font-bold font-['Poppins']">
               Select Colors

@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import Link from "next/link"
+import { ContextApiData } from "@/context/ContextGlobal"
 import { Divide } from "lucide-react"
 
 import {
@@ -16,7 +17,9 @@ import { Icons } from "@/components/icons"
 import CardProduct from "@/components/resauble/CardProduct"
 
 const ProductCardPaginate = () => {
-  const itemsPerPage = 8
+  const { data } = useContext(ContextApiData)
+
+  const itemsPerPage = data?.data?.lenght
   const [currentPage, setCurrentPage] = useState(1)
 
   const products = Array.from({ length: 100 }, (_, index) => ({
@@ -95,8 +98,8 @@ const ProductCardPaginate = () => {
       <div className=" flex  pt-5 max-md:flex-col max-md:items-center gap-5 ">
         <div className=" flex flex-wrap w-full">
           <div className="flex flex-wrap items-center font-['Poppins'] max-md:justify-center  gap-5 overflow-hidden  ">
-            {visibleProducts.map((product) => (
-              <CardProduct />
+            {data?.data?.map((item: any) => (
+              <CardProduct data={item} />
             ))}
           </div>
           <div className="flex justify-center w-full pt-10 ">
