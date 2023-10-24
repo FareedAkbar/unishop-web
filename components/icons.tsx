@@ -19,7 +19,7 @@ import featureStaionry from "@/public/featureStaionry.png"
 import featureTextbook from "@/public/featureTextbook.png"
 import google from "@/public/google.svg"
 import goolgeMap from "@/public/goolgemap.png"
-import headphone from "@/public/headphone.svg"
+import headphone from "@/public/headPhone.svg"
 import hodi from "@/public/hodi.png"
 import hodiBack from "@/public/hodiBack.png"
 import hodiSide from "@/public/hodiSide.png"
@@ -33,16 +33,14 @@ import registerLogo from "@/public/resisterLogo.png"
 import sendHorizone from "@/public/sendHorizon.svg"
 import smallCircle from "@/public/smallCircle.svg"
 import trackingBg from "@/public/trackingBg.png"
-import logo from "@/public/unishop 1.png"
+import logo from "@/public/unishop.png"
 import withoutBg from "@/public/without-bg.png"
 import {
-  ArrowBigLeft,
   ArrowLeft,
   ArrowRight,
   Check,
   ChevronRight,
   CreditCard,
-  DeleteIcon,
   Eye,
   Facebook,
   Globe,
@@ -54,7 +52,6 @@ import {
   Mail,
   Map,
   MapPin,
-  MapPinIcon,
   Menu,
   Minus,
   Moon,
