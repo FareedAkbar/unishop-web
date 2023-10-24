@@ -36,13 +36,13 @@ const CardProduct = ({ data }: any) => {
           Add To Cart
         </button>
 
-        <Image
+        {/* <Image
           width={400}
           height={400}
           src={`http://192.168.18.224:3001/${data?.media[0]?.object_path}`}
           alt="product image"
           className="w-[10rem] h-[11rem] left-[69px] top-[55px] absolute cursor-pointer"
-        />
+        /> */}
       </div>
       <div className="w-80 h-8 dark:text-white left-[3.64px] top-[311.78px] absolute text-black text-[1rem] font-medium font-['Poppins'] leading-normal">
         {data?.item_name}

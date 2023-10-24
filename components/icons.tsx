@@ -82,7 +82,7 @@ export const Icons = {
   sun: SunMedium,
   moon: Moon,
   twitter: Twitter,
-  headphone: headphone,
+  // headphone: headphone,
   delivery: delivery,
   backUp: backUp,
   search: Search,
@@ -242,5 +242,8 @@ export const Icons = {
       alt="Product Image"
       className={props.className}
     />
+  ),
+  headphone: (props: LucideProps) => (
+    <Image src={headphone} alt="Image" className={props.className} />
   ),
 }
