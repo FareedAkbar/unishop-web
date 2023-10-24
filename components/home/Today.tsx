@@ -14,7 +14,7 @@ const Today = () => {
           Today’s
         </div>
       </div>
-      <div className=" gap-5">
+      <div className=" gap-5 flex flex-col">
         <CardSlider />
       </div>
       <div className="flex justify-center  py-10">

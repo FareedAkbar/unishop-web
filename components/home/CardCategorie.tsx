@@ -12,8 +12,6 @@ import {
 import { Icons } from "../icons"
 
 const CardCategorie = ({ category, subcategories }: CategoryProps) => {
-  console.log(category, subcategories)
-
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value={category}>

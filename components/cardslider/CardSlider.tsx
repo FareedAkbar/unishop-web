@@ -40,7 +40,7 @@ const CardSlider = () => {
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
           slidesToScroll: 1,
           initialSlide: 1,
         },
@@ -69,18 +69,18 @@ const CardSlider = () => {
         <div className="text-black  max-md:py-2 text-[1rem] max-sm:text-xl w-1/3  max-xl:w-full max-md:w-full dark:text-white font-semibold   ">
           Flash Sales
         </div>
-        <div className="  ">
-          <div className=" flex  justify-center max-md:justify-evenly items-start  max-sm:gap-3  max-md:pl-0   ">
-            <div className=" dark:text-white w-24 max-md:w-20    text-black  font-medium text-[0.9rem] max-sm:text-sm max font-['Poppins'] leading-none flex justify-center ">
+        <div className=" max-sm:container  ">
+          <div className=" flex  justify-center max-md:justify-evenly items-start  max-sm:gap-3  max-md:pl-0    ">
+            <div className=" dark:text-white w-24 max-md:w-24     text-black  font-medium text-[0.9rem] max-sm:text-sm max font-['Poppins']  flex justify-center ">
               Days
             </div>
-            <div className=" dark:text-white w-24 max-md:w-20   text-black  font-medium text-[0.9rem] max-sm:text-sm  font-['Poppins'] leading-none flex justify-center ">
+            <div className=" dark:text-white w-24 max-md:w-20   text-black  font-medium text-[0.9rem] max-sm:text-sm  font-['Poppins']  flex justify-center ">
               Hours
             </div>
-            <div className=" dark:text-white text-black    w-24 max-md:w-20 font-medium text-[0.9rem] max-sm:text-sm  font-['Poppins'] leading-none flex justify-center ">
+            <div className=" dark:text-white text-black    w-24 max-md:w-20 font-medium text-[0.9rem] max-sm:text-sm  font-['Poppins']  flex justify-center ">
               Minutes
             </div>
-            <div className=" dark:text-white text-black    w-24 max-md:w-20 font-medium text-[0.9rem] max-sm:text-sm  font-['Poppins'] leading-none flex justify-center ">
+            <div className=" dark:text-white text-black    w-24 max-md:w-20 font-medium text-[0.9rem] max-sm:text-sm  font-['Poppins']  flex justify-center ">
               Seconds
             </div>
           </div>
@@ -107,7 +107,7 @@ const CardSlider = () => {
           </div>
         </div>
 
-        <div className="w-2/3 max-md:w-full  max-md:py-5 flex max-sm:justify-center justify-end gap-5">
+        <div className="w-2/3 max-md:w-full max-sm:hidden  max-md:py-5 flex max-sm:justify-center justify-end gap-5">
           <div onClick={handlePrev} className="w-8 h-8 relative cursor-pointer">
             <div className="w-8 h-8 left-0 hover:bg-[#ED1C29] dark:text-black dark:hover:text-white hover:text-white flex justify-center items-center top-0 absolute bg-neutral-100 rounded-full">
               <Icons.arrowLeft />
@@ -123,15 +123,12 @@ const CardSlider = () => {
           </div>
         </div>
       </div>
-      <div className="relative ">
-        <div className="flex  max-sm:flex-col max-sm:pt-2"></div>
-        <div className="">
-          <Slider ref={sliderRef} {...settings} className="overflow-hidden">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-              <CardProduct />
-            ))}
-          </Slider>
-        </div>
+      <div className="relative  max-sm:pt-10  ">
+        <Slider ref={sliderRef} {...settings} className="overflow-hidden    ">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+            <CardProduct />
+          ))}
+        </Slider>
       </div>
     </div>
   )

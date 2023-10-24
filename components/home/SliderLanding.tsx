@@ -2,10 +2,6 @@
 
 import React, { useEffect, useState } from "react"
 
-type Slide = {
-  url: string
-}
-
 function CarouselWithContent() {
   const slides = [
     {

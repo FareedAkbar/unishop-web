@@ -14,7 +14,7 @@ const ThisMonth = () => {
         </div>
       </div>
       <div className="flex justify-between max-md:flex-col items-center pt-5">
-        <div className="text-black dark:text-white max-md:w-full text-[1rem] flex max-md:items-center max-md:justify-center text-2xl pt-5 font-semibold font-['Poppins'] ">
+        <div className="text-black dark:text-white max-md:w-full text-[1rem] flex max-md:items-center max-md:justify-center  pt-5 font-semibold font-['Poppins'] ">
           Best Selling Products
         </div>
         <button className="w-48 h-10 bg-red-600 rounded-sm text-[0.9rem] max-md:mt-4 text-white flex items-center justify-center">

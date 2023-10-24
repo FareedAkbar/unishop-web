@@ -5,8 +5,8 @@ const Googlepay = () => {
   return (
     <div>
       <div className="opacity-80 text-black  dark:text-white text-sm font-normal font-['Poppins'] leading-7">
-        Continuing will take you to your Google account. You'll be able to
-        review and submit your order after you log in.
+        {` Continuing will take you to your Google account. You'll be able to
+        review and submit your order after you log in.`}
       </div>
       <Link
         href={"/orderreview"}

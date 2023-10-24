@@ -20,7 +20,7 @@ const Review = () => {
             All Reviews
           </div>
           <div className="text-black text-opacity-60 dark:text-white text-[0.9rem] font-normal font-['Poppins'] leading-snug">
-            (451)
+            {`(451)`}
           </div>
         </div>
         <div className="flex gap-5 max-md:mt-5 max-sm:flex-col ">
@@ -29,7 +29,7 @@ const Review = () => {
               <Icons.slidersHorizontal className="dark:text-black " />
             </div>
             <div className="w-28 h-12 py-4 bg-zinc-100 rounded-sm justify-center items-center gap-0.5 inline-flex">
-              <div className="text-black dark:text-black text-base font-medium font-['Poppins']">
+              <div className="text-black dark:text-black font-medium font-['Poppins']">
                 Latest
               </div>
               <Icons.chevronRight className="w-4 h-4 rotate-90 dark:text-black relative cursor-pointer" />
@@ -63,19 +63,19 @@ const Review = () => {
               </div>
             </div>
             <div className="text-black dark:text-white pt-2 text-opacity-60 text-[0.9rem] font-normal font-['Poppins'] leading-relaxed">
-              "The t-shirt exceeded my expectations! The colors are vibrant and
+              {`"The t-shirt exceeded my expectations! The colors are vibrant and
               the print quality is top-notch. Being a UI/UX designer myself, I'm
               quite picky about aesthetics, and this t-shirt definitely gets a
-              thumbs up from me."
+              thumbs up from me."`}
             </div>
             <div className="w-96 text-black dark:text-white text-opacity-60 mt-10 max-sm:mt-3 text-[0.9rem] font-medium font-['Poppins'] leading-snug">
-              Posted on August 15, 2023
+              {`  Posted on August 15, 2023`}
             </div>
           </div>
         ))}
         {reviewsToShow < totalReviews && (
           <div
-            className="text-black text-base font-medium font-['Poppins'] hover:text-red-700 cursor-pointer"
+            className="text-black font-medium font-['Poppins'] hover:text-red-700 cursor-pointer"
             onClick={loadMoreReviews}
           >
             Load More Reviews

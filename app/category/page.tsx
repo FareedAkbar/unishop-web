@@ -10,18 +10,18 @@ const Category = () => {
         <div className="flex justify-between flex-wrap   ">
           <div className="flex items-center max-sm:hidden">
             <div className=" h-4 justify-start items-center gap-1 inline-flex">
-              <div className="text-black dark:text-white text-opacity-60 text-base  font-normal text-[1rem] font-['Poppins']">
+              <div className="text-black dark:text-white text-opacity-60   font-normal text-[1rem] font-['Poppins']">
                 Home
               </div>
               <Icons.chevronRight className="w-5 h-5 " />
             </div>
             <div className=" h-4 justify-start items-center gap-1 inline-flex">
-              <div className="text-black dark:text-white text-opacity-60 text-base font-normal text-[1rem] font-['Poppins']">
+              <div className="text-black dark:text-white text-opacity-60  font-normal text-[1rem] font-['Poppins']">
                 Text Books
               </div>
               <Icons.chevronRight className="w-5 h-5 " />
             </div>
-            <div className="text-black text-base dark:text-white font-normal font-['Poppins']">
+            <div className="text-black  dark:text-white font-normal font-['Poppins']">
               Engineering and Information Sciences EIS
             </div>
           </div>

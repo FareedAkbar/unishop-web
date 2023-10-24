@@ -12,31 +12,31 @@ const CheckOut = () => {
       <div className="flex justify-between flex-wrap max-sm:hidden  ">
         <div className="flex items-center ">
           <div className=" h-4 justify-start items-center gap-1 inline-flex">
-            <div className="text-black dark:text-white  text-opacity-60 text-base  font-normal text-[1rem] font-['Poppins']">
+            <div className="text-black dark:text-white  text-opacity-60   font-normal text-[1rem] font-['Poppins']">
               Home
             </div>
             <Icons.chevronRight className="w-5 h-5 " />
           </div>
           <div className=" h-4 justify-start items-center gap-1 inline-flex">
-            <div className="text-black dark:text-white text-opacity-60 text-base font-normal text-[1rem] font-['Poppins']">
+            <div className="text-black dark:text-white text-opacity-60  font-normal text-[1rem] font-['Poppins']">
               UOW Mercahndise
             </div>
             <Icons.chevronRight className="w-5 h-5 " />
           </div>
-          <div className="text-black dark:text-white text-opacity-60  text-base font-normal font-['Poppins']">
+          <div className="text-black dark:text-white text-opacity-60   font-normal font-['Poppins']">
             Clothing
           </div>
           <Icons.chevronRight className="w-5 h-5 " />
 
           <div className=" h-4 justify-start items-center gap-1 inline-flex">
-            <div className="text-black text-opacity-60  dark:text-white text-base font-normal text-[1rem] font-['Poppins']">
+            <div className="text-black text-opacity-60  dark:text-white  font-normal text-[1rem] font-['Poppins']">
               Cart
             </div>
           </div>
           <Icons.chevronRight className="w-5 h-5 " />
 
           <div className=" h-4 justify-start items-center gap-1 inline-flex">
-            <div className="text-black dark:text-white text-base font-normal text-[1rem] font-['Poppins']">
+            <div className="text-black dark:text-white  font-normal text-[1rem] font-['Poppins']">
               Checkout
             </div>
           </div>
@@ -70,7 +70,7 @@ const CheckOut = () => {
               href={"/delievery"}
               className="w-full h-14 px-10 py-4 mt-5 cursor-pointer bg-red-600 rounded-sm justify-center items-center gap-3 inline-flex"
             >
-              <div className="text-white text-base font-medium max-sm:text-sm font-['Poppins']">
+              <div className="text-white  font-medium max-sm:text-sm font-['Poppins']">
                 Go to Checkout
               </div>
               <Icons.arrowRight className="text-white" />

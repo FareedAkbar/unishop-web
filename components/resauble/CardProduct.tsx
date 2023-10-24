@@ -7,7 +7,7 @@ const CardProduct = () => {
   return (
     <div
       // href={"/productdetail"}
-      className=" h-[25rem]  relative group w-[18rem] font-['Poppins'] "
+      className=" h-[25rem]  relative group w-[18rem] font-['Poppins']  "
     >
       <div className="w-72 h-72  left-0 top-0 absolute bg-[#EEEEEE] rounded group-hover:opacity-90 transition-opacity">
         <div className="left-[293px] top-[12px] absolute flex-col justify-start items-start gap-2 inline-flex">
