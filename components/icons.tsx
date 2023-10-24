@@ -1,4 +1,40 @@
 import Image from "next/image"
+import bKash from "@/Bkash.png"
+import mCard from "@/Mastercard.png"
+import nagad from "@/Nagad.png"
+import tweeterIcon from "@/Tweeter.svg"
+import visa from "@/Visa.png"
+import backUp from "@/backUp.svg"
+import bgSighup from "@/bgSighup.png"
+import book from "@/book.png"
+import cap from "@/cap.png"
+import circle from "@/circle.svg"
+import coat from "@/coat.png"
+import delivery from "@/delivery.svg"
+import echo from "@/echo.png"
+import fbIcon from "@/fb.svg"
+import featureCloth from "@/featureCloth.png"
+import featureShoping from "@/featureShoping.png"
+import featureStaionry from "@/featureStaionry.png"
+import featureTextbook from "@/featureTextbook.png"
+import google from "@/google.svg"
+import goolgeMap from "@/goolgemap.png"
+import headphone from "@/headphone.svg"
+import hodi from "@/hodi.png"
+import hodiBack from "@/hodiBack.png"
+import hodiSide from "@/hodiSide.png"
+import instagramIcon from "@/instagram.svg"
+import iPad from "@/ipad.png"
+import letterSend from "@/letterSend.png"
+import line from "@/line.svg"
+import paper from "@/paper.png"
+import paypal from "@/payPal.png"
+import registerLogo from "@/resisterLogo.png"
+import sendHorizone from "@/sendHorizon.svg"
+import smallCircle from "@/smallCircle.svg"
+import trackingBg from "@/trackingBg.png"
+import logo from "@/unishop 1.png"
+import withoutBg from "@/without-bg.png"
 import {
   ArrowBigLeft,
   ArrowLeft,
@@ -39,50 +75,12 @@ import {
   type Icon as LucideIcon,
 } from "lucide-react"
 
-import bKash from "../public/Bkash.png"
-import mCard from "../public/Mastercard.png"
-import nagad from "../public/Nagad.png"
-import tweeterIcon from "../public/Tweeter.svg"
-import visa from "../public/Visa.png"
-import backUp from "../public/backUp.svg"
-import bgSighup from "../public/bgSighup.png"
-import book from "../public/book.png"
-import cap from "../public/cap.png"
-import circle from "../public/circle.svg"
-import coat from "../public/coat.png"
-import delivery from "../public/delivery.svg"
-import echo from "../public/echo.png"
-import fbIcon from "../public/fb.svg"
-import featureCloth from "../public/featureCloth.png"
-import featureShoping from "../public/featureShoping.png"
-import featureStaionry from "../public/featureStaionry.png"
-import featureTextbook from "../public/featureTextbook.png"
-import google from "../public/google.svg"
-import goolgeMap from "../public/goolgemap.png"
-import headphone from "../public/headphone.svg"
-import hodi from "../public/hodi.png"
-import hodiBack from "../public/hodiBack.png"
-import hodiSide from "../public/hodiSide.png"
-import instagramIcon from "../public/instagram.svg"
-import iPad from "../public/ipad.png"
-import letterSend from "../public/letterSend.png"
-import line from "../public/line.svg"
-import paper from "../public/paper.png"
-import paypal from "../public/payPal.png"
-import registerLogo from "../public/resisterLogo.png"
-import sendHorizone from "../public/sendHorizon.svg"
-import smallCircle from "../public/smallCircle.svg"
-import trackingBg from "../public/trackingBg.png"
-import logo from "../public/unishop 1.png"
-import withoutBg from "../public/without-bg.png"
-
 export type Icon = LucideIcon
 
 export const Icons = {
   sun: SunMedium,
   moon: Moon,
   twitter: Twitter,
-  // headphone: headphone,
   delivery: delivery,
   backUp: backUp,
   search: Search,
