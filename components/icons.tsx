@@ -44,6 +44,7 @@ import {
   Eye,
   Facebook,
   Globe,
+  Headphones,
   Heart,
   HelpCircle,
   Instagram,
@@ -80,6 +81,7 @@ export const Icons = {
   twitter: Twitter,
   delivery: delivery,
   backUp: backUp,
+  headphone: headphone,
   search: Search,
   phoneCall: PhoneCall,
   mail: Mail,
@@ -238,7 +240,7 @@ export const Icons = {
       className={props.className}
     />
   ),
-  headphone: (props: LucideProps) => (
-    <Image src={headphone} alt="Image" className={props.className} />
-  ),
+  // headphone: (props: LucideProps) => (
+  //   <Image src={headphone} alt="Image" className={props.className} />
+  // ),
 }

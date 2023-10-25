@@ -1,3 +1,6 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
@@ -9,6 +12,16 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import CartProductAdd from "./cartnav/CartProductAdd"
 
 export function SiteHeader() {
+  const [cartData, setCartData] = useState([])
+
+  useEffect(() => {
+    // Get the cart data from localStorage
+    const existingCartData = localStorage.getItem("wishlist")
+    if (existingCartData) {
+      const parsedCartData = JSON.parse(existingCartData)
+      setCartData(parsedCartData)
+    }
+  }, [])
   return (
     <header className="bg-background sticky py-1 top-0 z-40 w-full border-b">
       <div className="container flex h-16 max-md:gap-5 max-sm:h-12 items-center space-x-4 max-sm:space-x-0 sm:justify-between sm:space-x-0">
@@ -24,9 +37,16 @@ export function SiteHeader() {
                 />
                 <Icons.search className="h-[1.5rem] max-sm:w-4 max-sm:h-4 w-[1.5rem]" />
               </div>
-              <Link href={"/wishlist"}>
-                <Icons.heart className="dark:text-white max-sm:w-4 max-sm:h-4  cursor-pointer hover:text-[#ED1C29]" />
-              </Link>
+              <div className="flex">
+                <Link href={"/wishlist"}>
+                  <Icons.heart className="dark:text-white max-sm:w-4 max-sm:h-4  cursor-pointer hover:text-[#ED1C29]" />
+                </Link>
+                {cartData?.length > 0 && (
+                  <div className="absolute w-4 h-4 rounded-full text-white flex justify-center text-[10px] bg-[#ED1C29]">
+                    {cartData?.length}
+                  </div>
+                )}
+              </div>
 
               <CartProductAdd />
               <Link

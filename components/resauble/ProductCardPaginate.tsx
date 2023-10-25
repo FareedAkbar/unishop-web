@@ -1,9 +1,7 @@
 "use client"
 
-import React, { useContext, useState } from "react"
-import Link from "next/link"
+import React, { useContext, useEffect, useState } from "react"
 import { ContextApiData } from "@/context/ContextGlobal"
-import { Divide } from "lucide-react"
 
 import {
   Select,
@@ -12,20 +10,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import FilterCard from "@/components/filter/FilterCard"
-import { Icons } from "@/components/icons"
 import CardProduct from "@/components/resauble/CardProduct"
+
+import { Icons } from "../icons"
 
 const ProductCardPaginate = () => {
   const { data } = useContext(ContextApiData)
 
-  const itemsPerPage = data?.data?.lenght
+  const [products, setProducts] = useState([]) // State to hold products
   const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 9 // Number of products to display per page
 
-  const products = Array.from({ length: 100 }, (_, index) => ({
-    id: index + 1,
-    name: `Product ${index + 1}`,
-  }))
+  useEffect(() => {
+    // Fetch new data and update the products state when the data changes
+    if (data && data.data) {
+      setProducts(data.data) // Update products with new data
+    }
+  }, [data])
 
   const totalPages = Math.ceil(products.length / itemsPerPage)
 
@@ -66,40 +67,39 @@ const ProductCardPaginate = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   )
-  return (
-    <div className="max-md: pt-10">
-      <div className="flex justify-end max-sm:justify-center  flex-wrap   ">
-        <div className="flex justify-end items-center max-sm:flex-col">
-          <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal font-['Poppins']">
-            Showing{" "}
-            {Math.min((currentPage - 1) * itemsPerPage + 1, products.length)}-
-            {Math.min(currentPage * itemsPerPage, products.length)} of{" "}
-            {products.length} Products
-          </div>
 
-          <div className="flex max-sm:mt-3 ">
-            <span className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal font-['Poppins']">
-              Sort by:{"  "}
-            </span>
-            <Select>
-              <SelectTrigger className="w-[150px] mt-2 max-sm:w-[100px] outline-none  h-[0.3rem]  border-none text-black dark:text-white text-[0.9rem] font-medium">
-                <SelectValue placeholder="Sort" className="outline-none" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Top Sales">Top Sales</SelectItem>
-                <SelectItem value="New Arrivals">New Arrivals</SelectItem>
-                <SelectItem value="Name">Name</SelectItem>
-                <SelectItem value="Price">Price</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+  return (
+    <div className="max-md: py-10">
+      <div className="flex justify-end max-sm:justify-center  flex-wrap   ">
+        <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal font-['Poppins']">
+          Showing{" "}
+          {Math.min((currentPage - 1) * itemsPerPage + 1, products.length)}-
+          {Math.min(currentPage * itemsPerPage, products.length)} of{" "}
+          {products.length} Products
+        </div>
+
+        <div className="flex max-sm:mt-3 ">
+          <span className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal font-['Poppins']">
+            Sort by:{"  "}
+          </span>
+          <Select>
+            <SelectTrigger className="w-[150px] mt-2 max-sm:w-[100px] outline-none  h-[0.3rem]  border-none text-black dark:text-white text-[0.9rem] font-medium">
+              <SelectValue placeholder="Sort" className="outline-none" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Top Sales">Top Sales</SelectItem>
+              <SelectItem value="New Arrivals">New Arrivals</SelectItem>
+              <SelectItem value="Name">Name</SelectItem>
+              <SelectItem value="Price">Price</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <div className=" flex  pt-5 max-md:flex-col max-md:items-center gap-5 ">
         <div className=" flex flex-wrap w-full">
           <div className="flex flex-wrap items-center font-['Poppins'] max-md:justify-center  gap-5 overflow-hidden  ">
-            {data?.data?.map((item: any) => (
-              <CardProduct data={item} />
+            {visibleProducts.map((item, index) => (
+              <CardProduct key={index} data={item} />
             ))}
           </div>
           <div className="flex justify-center w-full pt-10 ">
@@ -131,7 +131,7 @@ const ProductCardPaginate = () => {
                         setCurrentPage(pageNumber)
                       }
                     >
-                      <div className="text-center text-[0.9rem] dark:text-white">
+                      <div className="text-center cursor-pointer text-[0.9rem] dark:text-white">
                         {pageNumber}
                       </div>
                     </div>

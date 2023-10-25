@@ -1,4 +1,5 @@
 import React, { useContext } from "react"
+import Link from "next/link"
 import { ContextApiData } from "@/context/ContextGlobal"
 
 import CardProduct from "../resauble/CardProduct"
@@ -19,9 +20,12 @@ const ThisMonth = () => {
         <div className="text-black dark:text-white max-md:w-full text-[1rem] flex max-md:items-center max-md:justify-center  pt-5 font-semibold font-['Poppins'] ">
           Best Selling Products
         </div>
-        <button className="w-48 h-10 bg-red-600 rounded-sm text-[0.9rem] max-md:mt-4 text-white flex items-center justify-center">
+        <Link
+          href={"/category"}
+          className="w-48 h-10 bg-red-600 rounded-sm text-[0.9rem] max-md:mt-4 text-white flex items-center justify-center"
+        >
           View All
-        </button>
+        </Link>
       </div>
       <div className="flex justify-evenly flex-wrap overflow-hidden w-full mt-16 ">
         {data?.data?.map((item: any) => (

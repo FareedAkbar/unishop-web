@@ -7,7 +7,6 @@ import ProductDetail from "@/components/productdetail/ProductDetail"
 import Related from "@/components/productdetail/Related"
 
 const page = ({ params }: any) => {
-  console.log("oid", params)
   return (
     <div className="container py-5  ">
       <ProductDetail params={params} />

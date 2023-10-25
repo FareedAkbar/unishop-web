@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Image from "next/image"
 import { useParams, useRouter } from "next/navigation"
 import { ContextApiData } from "@/context/ContextGlobal"
@@ -10,13 +10,54 @@ import Review from "./Review"
 
 const ProductDetail = ({ params }: any) => {
   const { data } = useContext(ContextApiData)
-  console.log("api detail", data)
+  // console.log("api detail", data)
   const [renderComp, setRender] = useState("Product Detail")
   const [count, setCount] = useState(1)
-  console.log("params in detail", params.id)
+  // console.log("params in detail", params.id)
+  const [CheckCart, setCheckCart] = useState([])
+  useEffect(() => {
+    // Code inside this useEffect runs on the client side after the component has mounted.
+    const existingCartData = localStorage.getItem("cart")
+    const cartDataArray = existingCartData ? JSON.parse(existingCartData) : []
+    setCheckCart(cartDataArray)
 
+    // Your code that uses cartDataArray goes here
+  }, [])
   const singleData = data?.data?.find((item: any) => item?.food_id == params.id)
-  console.log("single data", singleData)
+  // console.log("single data", singleData)
+  const handleAddCardProduct = (data: any) => {
+    const existingCartData = localStorage.getItem("cart")
+
+    let cartArray = []
+
+    if (existingCartData) {
+      try {
+        cartArray = JSON.parse(existingCartData)
+      } catch (error) {
+        console.error("Error parsing existing cart data:", error)
+      }
+    }
+
+    cartArray.push(data)
+
+    localStorage.setItem("cart", JSON.stringify(cartArray))
+  }
+  const handleRemoveFromCart = (id: any) => {
+    console.log(id)
+    // Get the cart data from localStorage
+    const existingCartData = localStorage.getItem("cart")
+
+    // Check if cart data exists and parse it into an array
+    const cartDataArray = existingCartData ? JSON.parse(existingCartData) : []
+
+    // Use the filter method to remove the item with the specified ID
+    const updatedCartData = cartDataArray.filter(
+      (item: any) => item.food_id != id
+    )
+    console.log("updatedCartData", updatedCartData)
+    // Update the cart data in both state and localStorage
+    localStorage.setItem("cart", JSON.stringify(updatedCartData)) // Update localStorage
+  }
   return (
     <div>
       <div>
@@ -47,20 +88,74 @@ const ProductDetail = ({ params }: any) => {
           </div>
         </div>
         <div className="flex pt-10 max-lg:flex-col">
-          <div className="w-1/2 max-sm:flex-col-reverse max-sm:w-full max-lg:w-full max-lg:justify-center flex gap-3">
+          <div className="w-1/2 max-sm:flex-col-reverse  max-sm:w-full max-lg:w-full max-lg:justify-center flex gap-3">
             <div className="flex flex-col max-sm:flex-row gap-3">
               <div className="bg-[#EEEEEE] flex justify-center items-center max-sm:w-auto max-sm:h-auto w-32 h-32">
-                <Icons.hodi className="w-32 h-32 max-sm:w-auto max-sm:h-auto" />
+                {/* <Image src={""} alt="product image" className="w-32 h-32 max-sm:w-auto max-sm:h-auto" /> */}
+                {singleData?.media[0]?.object_path ? (
+                  <Image
+                    width={400}
+                    height={400}
+                    src={`http://192.168.18.224:3001${singleData?.media[0]?.object_path}`}
+                    alt="product image"
+                    className="w-full h-full object-cover max-sm:w-auto max-sm:h-auto"
+                  />
+                ) : (
+                  // Render a placeholder or alternative content if object_path is undefined
+                  <p>Image not found</p>
+                )}
               </div>
               <div className="bg-[#EEEEEE] flex justify-center items-center w-32 h-28 max-sm:w-auto max-sm:h-auto">
-                <Icons.hodiBack className="w-24 h-24 max-sm:w-auto max-sm:h-auto" />
+                {/* <Icons.hodiBack className="w-24 h-24 max-sm:w-auto max-sm:h-auto" /> */}
+                {singleData?.media[0]?.object_path ? (
+                  <Image
+                    width={400}
+                    height={400}
+                    src={`http://192.168.18.224:3001${singleData?.media[0]?.object_path}`}
+                    alt="product image"
+                    className="w-full h-full max-sm:w-auto object-cover max-sm:h-auto"
+                  />
+                ) : (
+                  // Render a placeholder or alternative content if object_path is undefined
+                  <p>Image not found</p>
+                )}
               </div>
               <div className="bg-[#EEEEEE] flex mt-2 justify-center items-center w-32 h-28 max-sm:w-auto max-sm:h-auto">
-                <Icons.hodiSide className="w-32 h-20 max-sm:w-auto max-sm:h-auto" />
+                {/* <Icons.hodiSide className="w-32 h-20 max-sm:w-auto max-sm:h-auto" /> */}
+                {singleData?.media[0]?.object_path ? (
+                  <Image
+                    width={400}
+                    height={400}
+                    src={`http://192.168.18.224:3001${singleData?.media[0]?.object_path}`}
+                    alt="product image"
+                    className="bg-[#EEEEEE] flex  justify-center items-center w-full h-full object-cover"
+                  />
+                ) : (
+                  // Render a placeholder or alternative content if object_path is undefined
+                  <p>Image not found</p>
+                )}
               </div>
             </div>
             <div className="bg-[#EEEEEE] flex justify-center items-center w-96 max-sm:w-auto max-sm:h-auto h-96">
-              <Icons.hodi className="w-96  h-96 max-sm:w-auto max-sm:h-auto" />
+              {/* <Image
+                src={""}
+                alt="product image"
+                className="w-96  h-96 max-sm:w-auto max-sm:h-auto"
+                
+              /> */}
+
+              {singleData?.media[0]?.object_path ? (
+                <Image
+                  width={400}
+                  height={400}
+                  src={`http://192.168.18.224:3001${singleData?.media[0]?.object_path}`}
+                  alt="product image"
+                  className="w-full h-full object-cover "
+                />
+              ) : (
+                // Render a placeholder or alternative content if object_path is undefined
+                <p>Image not found</p>
+              )}
             </div>
           </div>
           <div className="w-1/2 max-lg:w-full max-lg:mt-10">
@@ -161,9 +256,38 @@ const ProductDetail = ({ params }: any) => {
                   className="w-6 h-6 relative cursor-pointer hover:text-[#ED1C29]"
                 />
               </div>
-              <button className="w-64 h-12 px-14 py-4 font-['Poppins'] max-sm:mt-10 bg-red-600 cursor-pointer text-white text-[1rem] font-bold rounded justify-center items-center gap-3 inline-flex">
-                Add to Cart
-              </button>
+              {CheckCart?.some(
+                (item: any) => item?.food_id === data?.food_id
+              ) ? (
+                <button
+                  onClick={() => handleRemoveFromCart(singleData?.food_id)}
+                  className="w-64 h-12 px-12 py-4 font-['Poppins'] max-sm:mt-10 bg-red-600 cursor-pointer text-white text-[1rem] font-bold rounded justify-center items-center gap-3 inline-flex"
+                >
+                  Remove From Cart
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleAddCardProduct(singleData?.food_id)}
+                  className="w-64 h-12 px-14 py-4 font-['Poppins'] max-sm:mt-10 bg-red-600 cursor-pointer text-white text-[1rem] font-bold rounded justify-center items-center gap-3 inline-flex"
+                >
+                  Add to Cart
+                </button>
+              )}
+            </div>
+            <div>
+              <div className="text-[1rem] font-bold mt-5 dark:text-white">
+                Tages
+              </div>
+              <div className="flex gap-1 rounded-xl mt-2 flex-wrap">
+                {singleData?.tags?.map((item: any, index: any) => (
+                  <div
+                    key={index}
+                    className="bg-slate-100 dark:text-black p-2 w-auto"
+                  >
+                    {item?.tag}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -173,7 +297,7 @@ const ProductDetail = ({ params }: any) => {
           onClick={() => setRender("Product Detail")}
           className={`w-1/4 dark:text-white text-black text-[1rem] cursor-pointer  max-md:text-sm flex-wrap flex justify-center font-semibold font-['Poppins']  ${
             renderComp === "Product Detail"
-              ? "border-b border-black "
+              ? "border-b dark:border-white border-black "
               : "text-opacity-60"
           }`}
         >
@@ -184,7 +308,7 @@ const ProductDetail = ({ params }: any) => {
           className={`w-1/4 dark:text-white text-center text-black pb-2 cursor-pointer flex justify-center   text-[1rem]  max-md:text-sm font-semibold font-['Poppins'] 
           ${
             renderComp === "Review"
-              ? "border-b border-black "
+              ? "border-b dark:border-white border-black "
               : "text-opacity-60"
           }
 `}
@@ -194,7 +318,9 @@ const ProductDetail = ({ params }: any) => {
         <div
           onClick={() => setRender("FAQs")}
           className={`w-1/4 dark:text-white text-right cursor-pointer text-black flex justify-center   text-[1rem]  max-md:text-sm font-semibold font-['Poppins']  ${
-            renderComp === "FAQs" ? "border-b border-black " : "text-opacity-60"
+            renderComp === "FAQs"
+              ? "border-b dark:border-white border-black "
+              : "text-opacity-60"
           }`}
         >
           FAQs

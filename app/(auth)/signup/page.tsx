@@ -67,7 +67,7 @@ const Signup = () => {
       <div className="relative max-md:hidden">
         <Icons.bgSighup className="h-screen" />
       </div>
-      <div className="flex max-md:flex-col absolute  container inset-0">
+      <div className="flex max-md:flex-col absolute   container inset-0">
         <div className="w-1/2 max-md:w-full "></div>
         <div className=" flex w-1/2 items-center max-md:pt-10  justify-center   max-md:w-full">
           <div className="rounded-lg border h-fit border-neutral-200 p-5 ">

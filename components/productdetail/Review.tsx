@@ -42,9 +42,9 @@ const Review = () => {
           </button>
         </div>
       </div>
-      <div className="mt-5 flex flex-wrap gap-10 justify-evenly">
+      <div className="mt-5 flex flex-wrap justify-evenly">
         {[1, 2, 3, 4, 5, 6, 7, 8].slice(0, reviewsToShow).map((item) => (
-          <div className="w-[40rem] max-sm:w-[15rem]" key={item}>
+          <div className="w-[40rem] max-sm:w-[15rem] p-10" key={item}>
             <div className="flex justify-between">
               <div className="flex gap-1 border-">
                 <Icons.star className="w-[1.25rem] h-[1.25rem] text-transparent fill-[#FFAD33]" />
@@ -52,7 +52,7 @@ const Review = () => {
                 <Icons.star className="w-[1.25rem] h-[1.25rem] text-transparent fill-[#FFAD33]" />
                 <Icons.star className="w-[1.25rem] h-[1.25rem] text-transparent fill-[#FFAD33]" />
               </div>
-              <Icons.more className="text-slate-400 cursor-pointer hover:text-red-600" />
+              <Icons.more className="text-slate-400 cursor-pointer  hover:text-red-600" />
             </div>
             <div className="flex items-center gap-2 mt-3">
               <div className="text-black dark:text-white text-[1rem] font-bold font-['Poppins'] ">

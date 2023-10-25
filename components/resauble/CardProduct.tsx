@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -5,44 +7,145 @@ import Link from "next/link"
 import { Icons } from "../icons"
 
 const CardProduct = ({ data }: any) => {
-  // console.log(data.media[0].object_path)
+  // console.log(data?.media[0]?.object_path)
+  const [CheckData, setCheckData] = useState([])
+  const [CheckDataWishlist, setCheckDataWishlist] = useState([])
+  useEffect(() => {
+    // Code inside this useEffect runs on the client side after the component has mounted.
+    const existingCartData = localStorage.getItem("cart")
+    const cartDataArray = existingCartData ? JSON.parse(existingCartData) : []
+    setCheckData(cartDataArray)
+    const existingCartDataWish = localStorage.getItem("wishlist")
+    const cartDataArraywish = existingCartDataWish
+      ? JSON.parse(existingCartDataWish)
+      : []
+    setCheckDataWishlist(cartDataArraywish)
+    // Your code that uses cartDataArray goes here
+  }, [])
+  const handleRemoveFromCart = (id: any) => {
+    console.log(id)
+    // Get the cart data from localStorage
+    const existingCartData = localStorage.getItem("cart")
+
+    // Check if cart data exists and parse it into an array
+    const cartDataArray = existingCartData ? JSON.parse(existingCartData) : []
+
+    // Use the filter method to remove the item with the specified ID
+    const updatedCartData = cartDataArray.filter(
+      (item: any) => item.food_id != id
+    )
+    console.log("updatedCartData", updatedCartData)
+    // Update the cart data in both state and localStorage
+    localStorage.setItem("cart", JSON.stringify(updatedCartData)) // Update localStorage
+  }
+  const handleAddCardProduct = (data: any) => {
+    const existingCartData = localStorage.getItem("cart")
+
+    let cartArray = []
+
+    if (existingCartData) {
+      try {
+        cartArray = JSON.parse(existingCartData)
+      } catch (error) {
+        console.error("Error parsing existing cart data:", error)
+      }
+    }
+
+    cartArray.push(data)
+
+    localStorage.setItem("cart", JSON.stringify(cartArray))
+  }
+  const handleWishlist = (data: any) => {
+    // Retrieve existing wishlist data from localStorage
+    const existingWishlist = localStorage.getItem("wishlist")
+
+    // Parse the existing data as JSON (if it exists)
+    const existingWishlistArray = existingWishlist
+      ? JSON.parse(existingWishlist)
+      : []
+
+    // Check if the data is already in the wishlist
+    const isAlreadyInWishlist = existingWishlistArray.includes(data)
+
+    if (isAlreadyInWishlist) {
+      // If it's already in the wishlist, remove it
+      const updatedWishlist = existingWishlistArray.filter(
+        (item: any) => item !== data
+      )
+      localStorage.setItem("wishlist", JSON.stringify(updatedWishlist))
+    } else {
+      // If it's not in the wishlist, add it
+      const updatedWishlist = [...existingWishlistArray, data]
+      localStorage.setItem("wishlist", JSON.stringify(updatedWishlist))
+    }
+  }
+
   return (
-    <Link
-      href={`/productdetail/${data?.food_id}`}
-      className=" h-[25rem]  relative group w-[18rem] font-['Poppins']  "
-    >
+    <div className=" h-[25rem]  relative group w-[18rem] font-['Poppins']  ">
       <div className="w-72 h-72  left-0 top-0 absolute bg-[#EEEEEE] rounded group-hover:opacity-90 transition-opacity">
         <div className="left-[293px] top-[12px] absolute flex-col justify-start items-start gap-2 inline-flex">
           <div className="w-8 h-8 relative right-12 cursor-pointer">
-            <div className="w-8 h-8 left-0 top-0 absolute flex dark:text-black justify-center items-center bg-white rounded-full">
-              <Icons.heart className="hover:text-red-600 relative z-10" />
+            <div
+              onClick={() => handleWishlist(data)}
+              className="w-8 h-8 left-0 top-0 absolute flex dark:text-black justify-center items-center bg-white rounded-full"
+            >
+              {CheckDataWishlist?.some(
+                (item: any) => item?.food_id === data?.food_id
+              ) ? (
+                <Icons.heart className="text-[#ED1C29] relative z-10" />
+              ) : (
+                <Icons.heart className="hover:text-[#ED1C29] relative z-10" />
+              )}
             </div>
+
             <div className="w-6 h-6 left-[5px] top-[5px] absolute" />
           </div>
           <div className="w-8 h-8 relative right-12  cursor-pointer">
             <div className="w-8 h-8 left-0 top-0 absolute bg-white rounded-full" />
             <div className="w-6 h-6 px-0.5 py-1 left-[5px]  top-[5px] absolute  justify-center items-center inline-flex">
               <div className="w-5 h-3.5 dark:text-black relative flex justify-center items-center">
-                <Icons.eye className="hover:text-red-600 relative z-10" />
+                <Icons.eye className="hover:text-[#ED1C29] relative z-10" />
               </div>
             </div>
           </div>
         </div>
-        <div className="w-14 h-7 px-3 py-1 left-[12px] top-[12px] absolute bg-red-600 rounded" />
-        <div className="left-[24px] top-[17px] absolute text-neutral-50 text-sm font-normal font-['Poppins'] leading-none">
-          -45%
-        </div>
-        <button className="w-72 h-10 left-0 top-[260px] text-white items-center justify-center group-hover:opacity-100 absolute group-hover:block hidden  bg-black dark:bg-slate-600 rounded-bl rounded-br cursor-pointer transition-opacity">
-          Add To Cart
-        </button>
 
-        {/* <Image
-          width={400}
-          height={400}
-          src={`http://192.168.18.224:3001/${data?.media[0]?.object_path}`}
-          alt="product image"
-          className="w-[10rem] h-[11rem] left-[69px] top-[55px] absolute cursor-pointer"
-        /> */}
+        {data?.discount_percentage && (
+          <div className="w-14 h-7 px-3 py-1 left-[12px] top-[12px] absolute bg-[#ED1C29] rounded" />
+        )}
+        <div className="left-[24px] top-[17px] absolute text-neutral-50 text-sm font-normal font-['Poppins'] leading-none">
+          {data?.discount_percentage}
+        </div>
+        {CheckData?.some((item: any) => item?.food_id === data?.food_id) ? (
+          <button
+            onClick={() => handleRemoveFromCart(data?.food_id)}
+            className="w-72 h-10 left-0 top-[260px] text-white items-center justify-center group-hover:opacity-100 absolute group-hover:block hidden  bg-[#ED1C29] dark:bg-slate-600 rounded-bl rounded-br cursor-pointer transition-opacity"
+          >
+            Remove From Cart
+          </button>
+        ) : (
+          <button
+            onClick={() => handleAddCardProduct(data)}
+            className="w-72 h-10 left-0 top-[260px] text-white items-center justify-center group-hover:opacity-100 absolute group-hover:block hidden  bg-black dark:bg-slate-600 rounded-bl rounded-br cursor-pointer transition-opacity"
+          >
+            Add To Cart
+          </button>
+        )}
+
+        <Link href={`/productdetail/${data?.food_id}`}>
+          {data?.media[0]?.object_path ? (
+            <Image
+              width={400}
+              height={400}
+              src={`http://192.168.18.224:3001${data.media[0].object_path}`}
+              alt="product image"
+              className="w-full h-full  object-cover cursor-pointer"
+            />
+          ) : (
+            // Render a placeholder or alternative content if object_path is undefined
+            <p>Image not found</p>
+          )}
+        </Link>
       </div>
       <div className="w-80 h-8 dark:text-white left-[3.64px] top-[311.78px] absolute text-black text-[1rem] font-medium font-['Poppins'] leading-normal">
         {data?.item_name}
@@ -51,9 +154,11 @@ const CardProduct = ({ data }: any) => {
         <div className="text-red-600 text-[1rem] font-medium font-['Poppins'] leading-normal">
           ${data?.price}
         </div>
-        <div className="opacity-50 dark:text-white text-black text-[1rem] font-medium font-['Poppins'] line-through leading-normal">
-          ${data?.discount_amount}
-        </div>
+        {data?.discount_amount && (
+          <div className="opacity-50 dark:text-white text-black text-[1rem] font-medium font-['Poppins'] line-through leading-normal">
+            ${data?.discount_amount}
+          </div>
+        )}
       </div>
       <div className="w-48 h-7 left-[3.64px] top-[374.70px] absolute justify-start items-start gap-2 inline-flex">
         <div className="items-center flex">
@@ -67,7 +172,7 @@ const CardProduct = ({ data }: any) => {
           (88)
         </div>
       </div>
-    </Link>
+    </div>
   )
 }
 

@@ -1,6 +1,7 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { ScrollAreaCorner } from "@radix-ui/react-scroll-area"
 
@@ -17,10 +18,44 @@ import {
 import { Icons } from "../icons"
 
 const CartProductAdd = () => {
+  const [cartData, setCartData] = useState([])
+
+  useEffect(() => {
+    // Get the cart data from localStorage
+    const existingCartData = localStorage.getItem("cart")
+    if (existingCartData) {
+      const parsedCartData = JSON.parse(existingCartData)
+      setCartData(parsedCartData)
+    }
+  }, [])
+  const handleRemoveFromCart = (id: any) => {
+    console.log(id)
+    // Get the cart data from localStorage
+    const existingCartData = localStorage.getItem("cart")
+
+    // Check if cart data exists and parse it into an array
+    const cartDataArray = existingCartData ? JSON.parse(existingCartData) : []
+
+    // Use the filter method to remove the item with the specified ID
+    const updatedCartData = cartDataArray.filter(
+      (item: any) => item.food_id != id
+    )
+    console.log("updatedCartData", updatedCartData)
+    // Update the cart data in both state and localStorage
+    localStorage.setItem("cart", JSON.stringify(updatedCartData)) // Update localStorage
+  }
+
   return (
     <Sheet>
       <SheetTrigger>
-        <Icons.ShoppingBagIcon className="dark:text-white max-sm:w-4 max-sm:h-4  hover:text-[#ED1C29] cursor-pointer" />
+        <div className="flex">
+          <Icons.ShoppingBagIcon className="dark:text-white max-sm:w-4 max-sm:h-4  hover:text-[#ED1C29] cursor-pointer" />
+          {cartData?.length > 0 && (
+            <div className="absolute z-10  text-[10px] w-4 flex justify-center items-center rounded-full h-4 bg-[#ED1C29] text-white">
+              {cartData?.length}
+            </div>
+          )}
+        </div>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -31,30 +66,46 @@ const CartProductAdd = () => {
           </SheetTitle>
           <ScrollArea className="h-screen ">
             <SheetDescription className="mb-36">
-              {[1, 2, 3, 4, 5, 1, 2, 3].map((item) => (
-                <div className="flex gap-5 max-sm:flex-col  justify-between  mt-3 border-b py-3 px-5  ">
-                  <div className=" w-16  h-16 max-sm:justify-center max-sm:w-full px-6  bg-red-100 rounded-lg justify-center items-center flex">
-                    <Icons.hodi className="w-14  h-10" />
+              {cartData?.map((item: any, index) => (
+                <div
+                  key={index}
+                  className="flex gap-5 max-sm:flex-col  justify-between  mt-3 border-b py-3 px-5  "
+                >
+                  <div className=" w-16  h-16 max-sm:justify-center max-sm:w-full  bg-red-100 rounded-lg justify-center items-center flex">
+                    {/* <Icons.hodi className="w-14  h-10" /> */}
+                    {item?.media?.object_path ? (
+                      <Image
+                        width={400}
+                        height={400}
+                        src={`http://192.168.18.224:3001${item?.media[0].object_path}`}
+                        alt="product image"
+                        className="w-full  h-full object-cover"
+                      />
+                    ) : (
+                      // Render a placeholder or alternative content if object_path is undefined
+                      <p>Image not found</p>
+                    )}
                   </div>
                   <div className="">
                     <div className="flex gap-5">
                       <div>
                         <div className="text-black dark:text-white text-md text-[0.9rem] font-semibold font-['Poppins']">
-                          UOW Indigenous Hoodie
+                          {item?.name}
                         </div>
                         <div>
-                          <span className="text-black dark:text-white text-md text-[0.9rem] font-normal font-['Poppins']">
-                            Size:{" "}
-                          </span>
+                          <span className="text-black dark:text-white text-md text-[0.9rem] font-normal font-['Poppins']"></span>
                           <span className="text-black dark:text-white text-opacity-60 text-md text-[0.9rem] font-normal font-['Poppins']">
-                            Large
+                            {item?.food_name}
                           </span>
                         </div>
                         <div className="w-20  text-black dark:text-white text-md text-[0.9rem] font-semibold font-['Poppins']">
-                          $145
+                          ${item?.price}
                         </div>
                       </div>
-                      <div className="flex justify-end  max-sm:items-center">
+                      <div
+                        onClick={() => handleRemoveFromCart(item?.food_id)}
+                        className="flex justify-end  max-sm:items-center"
+                      >
                         <Icons.delete className="w-5 h-5 cursor-pointer text-[#ED1C29]" />
                       </div>
                     </div>

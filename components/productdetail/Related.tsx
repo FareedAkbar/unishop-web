@@ -1,8 +1,11 @@
-import React from "react"
+import React, { useContext } from "react"
+import { ContextApiData } from "@/context/ContextGlobal"
 
 import CardProduct from "../resauble/CardProduct"
 
 const Related = () => {
+  const { data } = useContext(ContextApiData)
+
   return (
     <div className="pt-16">
       <div className="flex items-center gap-5 ">
@@ -13,9 +16,9 @@ const Related = () => {
           Related Items
         </div>
       </div>
-      <div className="flex justify-between py-10">
-        {[1, 2, 3, 4].map((item) => (
-          <CardProduct />
+      <div className="flex justify-between flex-wrap py-10">
+        {data?.data?.map((item: any) => (
+          <CardProduct data={item} />
         ))}
       </div>
     </div>

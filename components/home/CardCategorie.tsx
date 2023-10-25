@@ -11,13 +11,14 @@ import {
 
 import { Icons } from "../icons"
 
-const CardCategorie = ({ category, subcategories }: CategoryProps) => {
+const CardCategorie = ({ category, subcategories }: any) => {
+  console.log("subcategories", subcategories)
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value={category}>
         <AccordionTrigger>{category}</AccordionTrigger>
         <AccordionContent>
-          {subcategories.map((item, index) => (
+          {/* {subcategories.map((item, index) => (
             <Accordion type="single" collapsible className="border borde-b ">
               <AccordionItem key={index} value={item.nestedcategory}>
                 <AccordionTrigger>
@@ -33,6 +34,23 @@ const CardCategorie = ({ category, subcategories }: CategoryProps) => {
                     </Link>
                   </AccordionContent>
                 ))}
+              </AccordionItem>
+            </Accordion>
+          ))} */}
+          {subcategories?.map((item: any, index: any) => (
+            <Accordion type="single" collapsible className="border borde-b ">
+              <AccordionItem key={index} value={item}>
+                <AccordionTrigger>
+                  <p className="pl-2 font-['Poppins']">{item}</p>
+                </AccordionTrigger>
+
+                <AccordionContent key={index}>
+                  <Link href={"/category"}>
+                    <li className="pl-5 cursor-pointer font-['Poppins'] hover:underline">
+                      {subcategories}
+                    </li>
+                  </Link>
+                </AccordionContent>
               </AccordionItem>
             </Accordion>
           ))}

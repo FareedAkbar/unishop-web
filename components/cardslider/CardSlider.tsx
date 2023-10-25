@@ -13,7 +13,7 @@ import CardProduct from "../resauble/CardProduct"
 const CardSlider = () => {
   const sliderRef = useRef<Slider | null>(null)
   const { data } = useContext(ContextApiData)
-  console.log(data)
+  console.log("slider", data)
   const settings = {
     dots: false,
     infinite: false,

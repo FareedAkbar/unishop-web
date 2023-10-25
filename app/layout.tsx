@@ -1,5 +1,6 @@
 import "@/styles/globals.css"
 import { Metadata } from "next"
+import { usePathname } from "next/navigation"
 import { ContextGlobal } from "@/context/ContextGlobal"
 
 import { siteConfig } from "@/config/site"

@@ -1,4 +1,5 @@
 import React from "react"
+import Link from "next/link"
 
 import CardSlider from "../cardslider/CardSlider"
 
@@ -18,9 +19,12 @@ const Today = () => {
         <CardSlider />
       </div>
       <div className="flex justify-center  py-10">
-        <button className="w-64 h-12 bg-red-600 rounded-sm text-white text-[0.9rem] font-poppins flex justify-center items-center">
+        <Link
+          href="/category"
+          className="w-64 h-12 bg-red-600 rounded-sm text-white text-[0.9rem] font-poppins flex justify-center items-center"
+        >
           View All Products
-        </button>
+        </Link>
       </div>
     </>
   )
