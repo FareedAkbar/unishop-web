@@ -33,10 +33,10 @@ export const ContextGlobal = ({ children }: any) => {
 
     // Define the GET and POST API URLs
     const getApiUrl =
-      "http://192.168.18.224:3001/api/v1/ipos/items/getItemsByOutlet"
+      "http://192.168.18.225:3001/api/v1/ipos/items/getItemsByOutlet"
     const categories =
-      "http://192.168.18.224:3001/api/v1/ipos/categories/getMobCategories/173"
-    const postApiUrl = "http://192.168.18.224:3001/api/v1/orders/calculate"
+      "http://192.168.18.225:3001/api/v1/ipos/categories/getMobCategories/173"
+    const postApiUrl = "http://192.168.18.225:3001/api/v1/orders/calculate"
 
     // Function to make a GET request
     const fetchData = (url: string) => {

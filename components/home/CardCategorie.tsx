@@ -13,10 +13,11 @@ import { Icons } from "../icons"
 
 const CardCategorie = ({ category, subcategories }: any) => {
   console.log("subcategories", subcategories)
+  console.log("subcategories", subcategories)
   return (
     <Accordion type="single" collapsible>
-      <AccordionItem value={category}>
-        <AccordionTrigger>{category}</AccordionTrigger>
+      <AccordionItem value={subcategories}>
+        <AccordionTrigger>{subcategories}</AccordionTrigger>
         <AccordionContent>
           {/* {subcategories.map((item, index) => (
             <Accordion type="single" collapsible className="border borde-b ">
@@ -37,23 +38,21 @@ const CardCategorie = ({ category, subcategories }: any) => {
               </AccordionItem>
             </Accordion>
           ))} */}
-          {subcategories?.map((item: any, index: any) => (
-            <Accordion type="single" collapsible className="border borde-b ">
-              <AccordionItem key={index} value={item}>
-                <AccordionTrigger>
-                  <p className="pl-2 font-['Poppins']">{item}</p>
-                </AccordionTrigger>
+          {/* {subcategories?.map((item: any, index: any) => ( */}
+          <Accordion type="single" collapsible className="border borde-b ">
+            <AccordionItem value={category}>
+              <p className="pl-2 font-['Poppins']">{category}</p>
 
-                <AccordionContent key={index}>
+              {/* <AccordionContent key={index}>
                   <Link href={"/category"}>
                     <li className="pl-5 cursor-pointer font-['Poppins'] hover:underline">
                       {subcategories}
                     </li>
                   </Link>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          ))}
+                </AccordionContent> */}
+            </AccordionItem>
+          </Accordion>
+          {/* ))} */}
         </AccordionContent>
       </AccordionItem>
     </Accordion>

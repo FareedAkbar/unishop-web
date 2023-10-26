@@ -24,8 +24,9 @@ const CategoryFilter = () => {
       <p className="text-[1rem] font-medium">Categories</p>
       {uniqueCategoryObjects?.map((item: any, index: any) => (
         <CardCategorie
+          key={index}
           category={item?.category_name}
-          subcategories={item?.immediate_parent}
+          subcategories={item["immediate parent"]}
         />
       ))}
     </ScrollArea>

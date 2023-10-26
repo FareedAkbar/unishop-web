@@ -27,9 +27,13 @@ const Wishlist = () => {
         Guest favourites are only saved to your device for 7 days, or until you
         clear your cache. Sign in or create an account to hang on to your picks.
       </div>
-      {WishlistData?.map((item) => (
-        <CardWishlist data={item} />
-      ))}
+      {WishlistData.length ? (
+        WishlistData?.map((item) => <CardWishlist data={item} />)
+      ) : (
+        <div className="text-lg font-bold text-red-600 mt-10">
+          No Item in Wishlist
+        </div>
+      )}
       <div className="h-14 max-lg:justify-center flex w-full dark:text-white text-black max-sm:text-lg text-2xl mt-20 font-semibold font-['Poppins']">
         Similar to this Collection
       </div>

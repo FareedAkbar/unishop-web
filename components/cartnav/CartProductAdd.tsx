@@ -60,7 +60,7 @@ const CartProductAdd = () => {
       <SheetContent>
         <SheetHeader>
           <SheetTitle>
-            <div className="w-72 max-sm:w-40  h-14 max-sm:h-10 text-black dark:text-white text-2xl max-sm:text-lg font-semibold font-['Poppins']">
+            <div className="w-72 max-sm:w-40  h-14 max-sm:h-10 text-black dark:text-white text-[1rem]  font-semibold font-['Poppins']">
               Your Basket
             </div>
           </SheetTitle>
@@ -73,7 +73,7 @@ const CartProductAdd = () => {
                 >
                   <div className=" w-16  h-16 max-sm:justify-center max-sm:w-full  bg-red-100 rounded-lg justify-center items-center flex">
                     {/* <Icons.hodi className="w-14  h-10" /> */}
-                    {item?.media?.object_path ? (
+                    {item?.media[0]?.object_path ? (
                       <Image
                         width={400}
                         height={400}
@@ -121,40 +121,47 @@ const CartProductAdd = () => {
                   </div>
                 </div>
               ))}
-              <div className=" ">
-                <div className="w-full h-auto rounded-lg border border-neutral-200 p-5">
-                  <div className="w-full h-8 justify-between items-center inline-flex">
-                    <div className="text-black dark:text-white text-opacity-60 text-[1rem] font-normal font-['Poppins']">
-                      Subtotal
+              {cartData.length ? (
+                <div className=" ">
+                  <div className="w-full h-auto rounded-lg border border-neutral-200 p-5">
+                    <div className="w-full h-8 justify-between items-center inline-flex">
+                      <div className="text-black dark:text-white text-opacity-60 text-[1rem] font-normal font-['Poppins']">
+                        Subtotal
+                      </div>
+                      <div className="text-right text-black dark:text-white text-[1rem] font-medium font-['Poppins']">
+                        $565
+                      </div>
                     </div>
-                    <div className="text-right text-black dark:text-white text-[1rem] font-medium font-['Poppins']">
-                      $565
-                    </div>
-                  </div>
 
-                  <div className="w-full h-8 justify-between items-center inline-flex">
-                    <div className="text-black dark:text-white text-opacity-60 text-[1rem]  font-normal font-['Poppins']">
-                      Delivery Fee
+                    <div className="w-full h-8 justify-between items-center inline-flex">
+                      <div className="text-black dark:text-white text-opacity-60 text-[1rem]  font-normal font-['Poppins']">
+                        Delivery Fee
+                      </div>
+                      <div className="text-right text-black dark:text-white text-[1rem] font-medium font-['Poppins']">
+                        $15
+                      </div>
                     </div>
-                    <div className="text-right text-black dark:text-white text-[1rem] font-medium font-['Poppins']">
-                      $15
+                    <div className="w-full h-9 justify-between items-center inline-flex border-t pt-3">
+                      <div className="text-black dark:text-white text-[1rem] font-normal font-['Poppins']">
+                        Total
+                      </div>
+                      <div className="text-right text-black dark:text-white text-[1rem] font-semibold font-['Poppins']">
+                        $467
+                      </div>
                     </div>
+                    <button className="w-full h-12 mt-5 px-12 py-2 bg-[#ED1C29] rounded-sm justify-center items-center gap-3 inline-flex">
+                      <div className="text-white text-[1rem] font-medium font-['Poppins']">
+                        Confirm Order
+                      </div>
+                    </button>
                   </div>
-                  <div className="w-full h-9 justify-between items-center inline-flex border-t pt-3">
-                    <div className="text-black dark:text-white text-[1rem] font-normal font-['Poppins']">
-                      Total
-                    </div>
-                    <div className="text-right text-black dark:text-white text-[1rem] font-semibold font-['Poppins']">
-                      $467
-                    </div>
-                  </div>
-                  <button className="w-full h-12 mt-5 px-12 py-2 bg-[#ED1C29] rounded-sm justify-center items-center gap-3 inline-flex">
-                    <div className="text-white text-[1rem] font-medium font-['Poppins']">
-                      Confirm Order
-                    </div>
-                  </button>
                 </div>
-              </div>
+              ) : (
+                <div className="text-lg font-bold text-red-600">
+                  {" "}
+                  Basket is empty {`(0)`}
+                </div>
+              )}
             </SheetDescription>
           </ScrollArea>
         </SheetHeader>

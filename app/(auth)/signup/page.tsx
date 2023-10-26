@@ -63,19 +63,19 @@ const Signup = () => {
   })
 
   return (
-    <div className="">
+    <div className=" h-screen">
       <div className="relative max-md:hidden">
-        <Icons.bgSighup className="h-screen" />
+        <Icons.bgSighup className="h-auto" />
       </div>
       <div className="flex max-md:flex-col absolute   container inset-0">
         <div className="w-1/2 max-md:w-full "></div>
-        <div className=" flex w-1/2 items-center max-md:pt-10  justify-center   max-md:w-full">
+        <div className=" flex w-1/2 items-center pt-10  justify-center   max-md:w-full">
           <div className="rounded-lg border h-fit border-neutral-200 p-5 ">
             <div className="text-neutral-900 dark:text-white text-[1rem] font-semibold font-['Poppins']">
               Sign up now
             </div>
             <form onSubmit={formik.handleSubmit} className="h-full">
-              <div className="flex max-sm:flex-col gap-8 mt-5">
+              <div className="flex max-sm:flex-col gap-8 mt-4">
                 <div className="w-full">
                   <input
                     type="text"
@@ -87,7 +87,7 @@ const Signup = () => {
                     onBlur={formik.handleBlur}
                   />
                   {formik.touched.firstName && formik.errors.firstName ? (
-                    <div className="text-red-500 text-sm font-normal font-['Poppins']">
+                    <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                       {formik.errors.firstName}
                     </div>
                   ) : null}
@@ -103,7 +103,7 @@ const Signup = () => {
                     onBlur={formik.handleBlur}
                   />
                   {formik.touched.lastName && formik.errors.lastName ? (
-                    <div className="text-red-500 text-sm font-normal font-['Poppins']">
+                    <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                       {formik.errors.lastName}
                     </div>
                   ) : null}
@@ -113,14 +113,14 @@ const Signup = () => {
                 <input
                   type="email"
                   placeholder="Email"
-                  className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-5 border-[#9D9D9D] px-2"
+                  className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-4 border-[#9D9D9D] px-2"
                   name="email"
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.email && formik.errors.email ? (
-                  <div className="text-red-500 text-sm font-normal font-['Poppins']">
+                  <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                     {formik.errors.email}
                   </div>
                 ) : null}
@@ -130,14 +130,14 @@ const Signup = () => {
                   <input
                     type="tel"
                     placeholder="Phone"
-                    className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-5 border-[#9D9D9D] px-2"
+                    className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-4 border-[#9D9D9D] px-2"
                     name="phone"
                     value={formik.values.phone}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
                   {formik.touched.phone && formik.errors.phone ? (
-                    <div className="text-red-500 text-sm font-normal font-['Poppins']">
+                    <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                       {formik.errors.phone}
                     </div>
                   ) : null}
@@ -146,14 +146,14 @@ const Signup = () => {
                   <input
                     type="date"
                     placeholder="DOB"
-                    className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-5 border-[#9D9D9D] px-2"
+                    className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-4 border-[#9D9D9D] px-2"
                     name="dob"
                     value={formik.values.dob}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
                   {formik.touched.dob && formik.errors.dob ? (
-                    <div className="text-red-500 text-sm font-normal font-['Poppins']">
+                    <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                       {formik.errors.dob}
                     </div>
                   ) : null}
@@ -162,7 +162,7 @@ const Signup = () => {
               <div className="flex max-sm:flex-col gap-8 ">
                 <div className="w-full">
                   <Select>
-                    <SelectTrigger className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border  outline-none mt-5 border-[#9D9D9D] px-2">
+                    <SelectTrigger className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border  outline-none mt-4 border-[#9D9D9D] px-2">
                       <SelectValue placeholder="Profile" />
                     </SelectTrigger>
                     <SelectContent>
@@ -182,14 +182,14 @@ const Signup = () => {
                   </Select>
 
                   {formik.touched.profile && formik.errors.profile ? (
-                    <div className="text-red-500 text-sm font-normal font-['Poppins']">
+                    <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                       {formik.errors.profile}
                     </div>
                   ) : null}
                 </div>
                 <div className="w-full max-sm:-mt-8">
                   <Select>
-                    <SelectTrigger className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border  outline-none mt-5 border-[#9D9D9D] px-2">
+                    <SelectTrigger className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border  outline-none mt-4 border-[#9D9D9D] px-2">
                       <SelectValue placeholder="Campus (required)" />
                     </SelectTrigger>
                     <SelectContent>
@@ -227,7 +227,7 @@ const Signup = () => {
                   </Select>
 
                   {formik.touched.campus && formik.errors.campus ? (
-                    <div className="text-red-500 text-sm font-normal font-['Poppins']">
+                    <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                       {formik.errors.campus}
                     </div>
                   ) : null}
@@ -237,14 +237,14 @@ const Signup = () => {
                 <input
                   type="text"
                   placeholder="Student ID (If Applicable)"
-                  className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-5 border-[#9D9D9D] px-2"
+                  className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-4 border-[#9D9D9D] px-2"
                   name="studentID"
                   value={formik.values.studentID}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.studentID && formik.errors.studentID ? (
-                  <div className="text-red-500 text-sm font-normal font-['Poppins']">
+                  <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                     {formik.errors.studentID}
                   </div>
                 ) : null}
@@ -253,14 +253,14 @@ const Signup = () => {
                 <input
                   type="password"
                   placeholder="Password"
-                  className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-5 border-[#9D9D9D] px-2"
+                  className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-4 border-[#9D9D9D] px-2"
                   name="password"
                   value={formik.values.password}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.password && formik.errors.password ? (
-                  <div className="text-red-500 text-sm font-normal font-['Poppins']">
+                  <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                     {formik.errors.password}
                   </div>
                 ) : null}
@@ -269,7 +269,7 @@ const Signup = () => {
                 <input
                   type="password"
                   placeholder="Confirm password"
-                  className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-5 border-[#9D9D9D] px-2"
+                  className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-4 border-[#9D9D9D] px-2"
                   name="confirmPassword"
                   value={formik.values.confirmPassword}
                   onChange={formik.handleChange}
@@ -277,7 +277,7 @@ const Signup = () => {
                 />
                 {formik.touched.confirmPassword &&
                 formik.errors.confirmPassword ? (
-                  <div className="text-red-500 text-sm font-normal font-['Poppins']">
+                  <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                     {formik.errors.confirmPassword}
                   </div>
                 ) : null}
@@ -291,33 +291,33 @@ const Signup = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
-                <div className="max-md:text-sm">
-                  <span className="text-zinc-800 dark:text-white text-sm max-sm:text-[12px] font-normal font-['Poppins']">
+                <div className="max-md:text-[0.9rem]">
+                  <span className="text-zinc-800 dark:text-white text-[0.9rem] max-sm:text-[12px] font-normal font-['Poppins']">
                     By creating an account, I agree to our{" "}
                   </span>
-                  <span className="text-black dark:text-white max-sm:text-[12px] text-sm font-normal font-['Poppins'] underline">
+                  <span className="text-black dark:text-white max-sm:text-[12px] text-[0.9rem] font-normal font-['Poppins'] underline">
                     Terms of use
                   </span>
-                  <span className="text-zinc-600 dark:text-white max-sm:text-[12px] text-sm font-normal font-['Poppins']">
+                  <span className="text-zinc-600 dark:text-white max-sm:text-[12px] text-[0.9rem] font-normal font-['Poppins']">
                     {" "}
                   </span>
-                  <span className="text-zinc-800 dark:text-white max-sm:text-[12px] text-sm font-normal font-['Poppins']">
+                  <span className="text-zinc-800 dark:text-white max-sm:text-[12px] text-[0.9rem] font-normal font-['Poppins']">
                     and
                   </span>
-                  <span className="text-zinc-600 dark:text-white max-sm:text-[12px] text-sm font-normal font-['Poppins']">
+                  <span className="text-zinc-600 dark:text-white max-sm:text-[12px] text-[0.9rem] font-normal font-['Poppins']">
                     {" "}
                   </span>
-                  <span className="text-black dark:text-white text-sm max-sm:text-[12px] font-normal font-['Poppins'] underline">
+                  <span className="text-black dark:text-white text-[0.9rem] max-sm:text-[12px] font-normal font-['Poppins'] underline">
                     Privacy Policy
                   </span>
-                  <span className="text-zinc-600 text-sm font-normal font-['Poppins'] underline">
+                  <span className="text-zinc-600 text-[0.9rem] font-normal font-['Poppins'] underline">
                     {" "}
                   </span>
                 </div>
               </div>
 
               {formik.touched.agreeToTerms && formik.errors.agreeToTerms ? (
-                <div className="text-red-500 text-sm font-normal font-['Poppins']">
+                <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                   {formik.errors.agreeToTerms}
                 </div>
               ) : null}

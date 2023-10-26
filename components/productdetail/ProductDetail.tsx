@@ -43,7 +43,6 @@ const ProductDetail = ({ params }: any) => {
     localStorage.setItem("cart", JSON.stringify(cartArray))
   }
   const handleRemoveFromCart = (id: any) => {
-    console.log(id)
     // Get the cart data from localStorage
     const existingCartData = localStorage.getItem("cart")
 
@@ -257,7 +256,7 @@ const ProductDetail = ({ params }: any) => {
                 />
               </div>
               {CheckCart?.some(
-                (item: any) => item?.food_id === data?.food_id
+                (item: any) => item?.food_id === singleData?.food_id
               ) ? (
                 <button
                   onClick={() => handleRemoveFromCart(singleData?.food_id)}
@@ -267,7 +266,7 @@ const ProductDetail = ({ params }: any) => {
                 </button>
               ) : (
                 <button
-                  onClick={() => handleAddCardProduct(singleData?.food_id)}
+                  onClick={() => handleAddCardProduct(singleData)}
                   className="w-64 h-12 px-14 py-4 font-['Poppins'] max-sm:mt-10 bg-red-600 cursor-pointer text-white text-[1rem] font-bold rounded justify-center items-center gap-3 inline-flex"
                 >
                   Add to Cart
