@@ -9,11 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 
-import { Icons } from "../icons"
-
-const CardCategorie = ({ category, subcategories }: any) => {
-  console.log("subcategories", subcategories)
-  console.log("subcategories", subcategories)
+const CardCategorie = ({ category, subcategories, id }: any) => {
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value={subcategories}>
@@ -40,17 +36,19 @@ const CardCategorie = ({ category, subcategories }: any) => {
           ))} */}
           {/* {subcategories?.map((item: any, index: any) => ( */}
           <Accordion type="single" collapsible className="border borde-b ">
-            <AccordionItem value={category}>
-              <p className="pl-2 font-['Poppins']">{category}</p>
+            <Link href={`/category/${id}`} className="  font-['Poppins']">
+              <AccordionItem value={category}>
+                {category}
 
-              {/* <AccordionContent key={index}>
+                {/* <AccordionContent key={index}>
                   <Link href={"/category"}>
-                    <li className="pl-5 cursor-pointer font-['Poppins'] hover:underline">
-                      {subcategories}
-                    </li>
+                  <li className="pl-5 cursor-pointer font-['Poppins'] hover:underline">
+                  {subcategories}
+                  </li>
                   </Link>
                 </AccordionContent> */}
-            </AccordionItem>
+              </AccordionItem>
+            </Link>
           </Accordion>
           {/* ))} */}
         </AccordionContent>

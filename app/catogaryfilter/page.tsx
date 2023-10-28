@@ -1,12 +1,14 @@
 "use client"
 
-import React from "react"
+import React, { useContext } from "react"
+import { ContextApiData, ContextGlobal } from "@/context/ContextGlobal"
 
 import { Icons } from "@/components/icons"
 import CategoryFilter from "@/components/resauble/CategoryFilter"
 import ProductCardPaginate from "@/components/resauble/ProductCardPaginate"
 
 const CatogaryFilter = () => {
+  const { data } = useContext(ContextApiData)
   return (
     <div className="container py-5">
       <div className="flex items-center max-sm:hidden">
@@ -31,7 +33,7 @@ const CatogaryFilter = () => {
           <CategoryFilter />
         </div>
         <div className="-mt-12 max-md:-mt-0 max-md:ml-0  max-sm:justify-center ml-20  flex  ">
-          <ProductCardPaginate />
+          <ProductCardPaginate data={data?.data} />
         </div>
       </div>
     </div>

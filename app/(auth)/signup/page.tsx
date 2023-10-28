@@ -1,20 +1,33 @@
 "use client"
 
-import React from "react"
+import React, { useContext, useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { ContextApiData } from "@/context/ContextGlobal"
+import { Select } from "@radix-ui/react-select"
+import axios from "axios"
 import { useFormik } from "formik"
 import * as Yup from "yup"
 
 import {
-  Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
 import { Icons } from "@/components/icons"
+import Otp from "@/components/otp/Otp"
 
 const Signup = () => {
+  const { AllCampus, AllProfile } = useContext(ContextApiData)
+
+  // State variables to store selected profile and campus values
+  const [selectedProfile, setSelectedProfile] = useState("")
+  const [selectedCampus, setSelectedCampus] = useState<any>()
+  const [FormState, setFormState] = useState<any>("")
+  const [ResponseStatus, setResponseStatus] = useState<boolean>()
+  const [OtpID, setOtpID] = useState<any>("")
+  const route = useRouter()
   const validationSchema = Yup.object({
     firstName: Yup.string().required("First name is required"),
     lastName: Yup.string().required("Last name is required"),
@@ -23,8 +36,8 @@ const Signup = () => {
       .required("Email is required"),
     phone: Yup.string().required("Phone number is required"),
     dob: Yup.string().required("Date of birth is required"),
-    profile: Yup.string().required("Profile is required"),
-    campus: Yup.string().required("Campus is required"),
+    profile: Yup.string().required("profile is required"),
+    campus: Yup.string().required("campus is required"),
     studentID: Yup.string(),
     password: Yup.string().required("Password is required"),
     confirmPassword: Yup.string()
@@ -34,6 +47,7 @@ const Signup = () => {
       [true],
       "You must agree to the terms and conditions"
     ),
+    membership: Yup.string().required("Please select your membership status"),
   })
 
   const formik = useFormik({
@@ -43,24 +57,95 @@ const Signup = () => {
       email: "",
       phone: "",
       dob: "",
-      profile: "",
-      campus: "",
+      profile: "", // Initialize with an empty string
+      campus: "", // Initialize with an empty string
       studentID: "",
       password: "",
       confirmPassword: "",
       agreeToTerms: false,
+      membership: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (values.agreeToTerms) {
         // Handle form submission if terms are agreed
         console.log("Form values:", values)
+        setFormState(values)
+        submitForm()
       } else {
         // Display an error message or take appropriate action if terms are not agreed
         console.error("You must agree to the terms and conditions.")
       }
     },
   })
+
+  const submitForm = async () => {
+    try {
+      const response = await axios.post(
+        "http://192.168.18.225:3001/api/v1/student/auth/register",
+        {
+          email: formik.values.email, // Send just the email
+        }
+      )
+
+      // Handle the response here (e.g., show a success message)
+      console.log("API response:", response.data)
+      const isSuccess = response.status >= 200 && response.status < 300
+
+      setResponseStatus(isSuccess)
+      setOtpID(response.data.id)
+    } catch (error) {
+      // Handle any errors (e.g., display an error message)
+      console.error("API error:", (error as Error)?.message)
+
+      // Display an alert with the error message
+      window.alert((error as Error)?.message)
+    }
+  }
+  const otpCallback = (opt: any) => {
+    const payload = {
+      userData: {
+        first_name: FormState.firstName,
+        last_name: FormState.lastName,
+        national_ID: FormState.studentID,
+        email: FormState.email,
+        phone_number: FormState.phone,
+        user_name: FormState.firstName,
+        user_password: FormState.password,
+        date_of_birth: FormState.dob,
+        gender: 1,
+        campus: 1,
+        student_number: FormState.studentID,
+        customer_type: 1,
+        membership: 1,
+      },
+      otp: opt,
+      otpId: OtpID,
+    }
+
+    // Make a POST request using Axios
+    axios
+      .post(
+        "http://192.168.18.225:3001/api/v1/student/auth/verifyOTP-and-register",
+        payload
+      )
+      .then((response) => {
+        // Handle the response here
+        // console.log("Response from the POST request:", response.data)
+        const successMessage = "Student Registration successfully"
+        console.log(response)
+        window.alert(successMessage)
+        setTimeout(() => {
+          // Close the alert after 2 seconds
+          window.close()
+        }, 2000) // 2000 milliseconds (2 seconds)
+        route.push("/")
+      })
+      .catch((error) => {
+        // Handle any errors that occurred during the POST request
+        console.error("Error in POST request:", error)
+      })
+  }
 
   return (
     <div className=" h-screen">
@@ -159,73 +244,48 @@ const Signup = () => {
                   ) : null}
                 </div>
               </div>
-              <div className="flex max-sm:flex-col gap-8 ">
+              <div className="flex max-sm:flex-col gap-8">
                 <div className="w-full">
-                  <Select>
-                    <SelectTrigger className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border  outline-none mt-4 border-[#9D9D9D] px-2">
-                      <SelectValue placeholder="Profile" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem className="font-['Poppins']" value="student">
-                        Student
-                      </SelectItem>
-                      <SelectItem className="font-['Poppins']" value="staff">
-                        Staff
-                      </SelectItem>
-                      <SelectItem
-                        className="font-['Poppins']"
-                        value="community"
-                      >
-                        Community
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-
+                  <select
+                    className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-4 border-[#9D9D9D] px-2"
+                    name="profile"
+                    value={formik.values.profile}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  >
+                    <option value="" disabled>
+                      Select profile
+                    </option>
+                    {AllProfile?.data?.map((item: any, index: any) => (
+                      <option key={index} value={item?.type_name}>
+                        {item?.type_name}
+                      </option>
+                    ))}
+                  </select>
                   {formik.touched.profile && formik.errors.profile ? (
                     <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                       {formik.errors.profile}
                     </div>
                   ) : null}
                 </div>
-                <div className="w-full max-sm:-mt-8">
-                  <Select>
-                    <SelectTrigger className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border  outline-none mt-4 border-[#9D9D9D] px-2">
-                      <SelectValue placeholder="Campus (required)" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem
-                        className="font-['Poppins']"
-                        value="Harvard University"
-                      >
-                        Harvard University
-                      </SelectItem>
-                      <SelectItem
-                        className="font-['Poppins']"
-                        value="Stanford University"
-                      >
-                        Stanford University
-                      </SelectItem>
-                      <SelectItem
-                        className="font-['Poppins']"
-                        value="University of Cambridge"
-                      >
-                        University of Cambridge
-                      </SelectItem>
-                      <SelectItem
-                        className="font-['Poppins']"
-                        value="University of Oxford"
-                      >
-                        University of Oxford
-                      </SelectItem>
-                      <SelectItem
-                        className="font-['Poppins']"
-                        value="University of Chicago"
-                      >
-                        University of Chicago
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
 
+                <div className="w-full max-sm:-mt-8">
+                  <select
+                    className="w-full h-10 dark:text-white font-['Poppins'] rounded-lg border outline-none mt-4 border-[#9D9D9D] px-2"
+                    name="campus"
+                    value={formik.values.campus}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  >
+                    <option value="" disabled>
+                      Select campus
+                    </option>
+                    {AllCampus?.data?.map((item: any, index: any) => (
+                      <option key={index} value={item.campus_name}>
+                        {item.campus_name}
+                      </option>
+                    ))}
+                  </select>
                   {formik.touched.campus && formik.errors.campus ? (
                     <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
                       {formik.errors.campus}
@@ -281,6 +341,45 @@ const Signup = () => {
                     {formik.errors.confirmPassword}
                   </div>
                 ) : null}
+              </div>
+              <div className="flex max-sm:flex-col gap-8 ">
+                <div className="w-full ">
+                  <div className="pt-2 items-center flex gap-5">
+                    <div>
+                      <label className="flex gap-1 pt-2">
+                        <input
+                          type="radio"
+                          name="membership"
+                          value={"1"}
+                          checked={formik.values.membership === "1"}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          className="cursor-pointer font-['Poppins']"
+                        />
+                        With Membership
+                      </label>
+                    </div>
+                    <div className="mt-2">
+                      <label className="flex gap-2 items-center">
+                        <input
+                          type="radio"
+                          name="membership"
+                          value="0"
+                          className="cursor-pointer font-['Poppins']"
+                          checked={formik.values.membership === "0"}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        Without Membership
+                      </label>
+                    </div>
+                  </div>
+                  {formik.touched.membership && formik.errors.membership ? (
+                    <div className="text-red-500 text-[0.9rem] font-normal font-['Poppins']">
+                      {formik.errors.membership}
+                    </div>
+                  ) : null}
+                </div>
               </div>
               <div className="flex items-center gap-5 mt-10">
                 <input
@@ -345,6 +444,8 @@ const Signup = () => {
                 </Link>
               </div>
             </div>
+            {ResponseStatus && <Otp otpCallback={otpCallback} />}
+            {/* <Otp otpCallback={otpCallback} /> */}
           </div>
         </div>
       </div>

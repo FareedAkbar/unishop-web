@@ -15,7 +15,7 @@ export const siteConfig = {
       title: "Shop",
       href: "/",
       subMenu: [
-        { title: "Shop", href: "/category" },
+        { title: "Shop", href: "/shopproduct" },
         { title: "Wishlist", href: "/wishlist" },
         { title: "Tracking", href: "/ordertracking" },
       ],

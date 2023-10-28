@@ -29,16 +29,17 @@ const Login = () => {
     onSubmit: async (values) => {
       try {
         const response = await axios.post(
-          "http://192.168.18.224:3001/api/v1/student/auth/login",
+          "http://192.168.18.225:3001/api/v1/student/auth/login",
           values
         )
-
+        console.log("auth/login", response)
         if (response.status === 200) {
           setLoginStatus("success")
-
+          console.log("auth/login success", response.data)
+          // console.log("",response.data)
           // Now send the data to the verify-login-otp API
           const verifyOtpResponse = await axios.post(
-            "http://192.168.18.224:3001/api/v2/student/auth/verify-login-otp",
+            "http://192.168.18.225:3001/api/v2/student/auth/verify-login-otp",
             {
               customer_id: response.data.data.customer_id,
               otp: "7380",
@@ -46,12 +47,12 @@ const Login = () => {
               // Add any other data you need to send to the API
             }
           )
-
           if (verifyOtpResponse.status === 200) {
+            console.log("verifyOtpResponse", verifyOtpResponse)
             // Verification was successful
             if (verifyOtpResponse.data.token) {
               localStorage.setItem("token", verifyOtpResponse.data.token)
-              router.push("/")
+              // router.push("/")
             }
             // You can do something with the response if needed
           } else {
@@ -125,7 +126,7 @@ const Login = () => {
               <div className="flex justify-center pt-10">
                 <button
                   type="submit"
-                  className="w-full h-12 text-[1rem] font-semibold text-white bg-red-600 rounded-lg border flex justify-center items-center"
+                  className="w-full h-12 text-[1rem] font-semibold text-white bg-red-600 rounded-lg border flex justify-center font-['Poppins'] items-center"
                 >
                   Login
                 </button>

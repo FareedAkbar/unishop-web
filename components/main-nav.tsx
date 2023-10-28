@@ -94,7 +94,7 @@ export function MainNav({ items }: MainNavProps) {
                           </Link>
                         </NavigationMenuTrigger>
                         <NavigationMenuContent className=" p-2 dark:bg-white">
-                          {item.subMenu?.map((item) => (
+                          {item.subMenu?.map((item, index) => (
                             <Link
                               key={index}
                               href={item?.href}

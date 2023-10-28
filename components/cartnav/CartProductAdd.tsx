@@ -149,15 +149,18 @@ const CartProductAdd = () => {
                         $467
                       </div>
                     </div>
-                    <button className="w-full h-12 mt-5 px-12 py-2 bg-[#ED1C29] rounded-sm justify-center items-center gap-3 inline-flex">
+                    <Link
+                      href={"/googlepay"}
+                      className="w-full h-12 mt-5 px-12 py-2 bg-[#ED1C29] rounded-sm justify-center items-center gap-3 inline-flex"
+                    >
                       <div className="text-white text-[1rem] font-medium font-['Poppins']">
                         Confirm Order
                       </div>
-                    </button>
+                    </Link>
                   </div>
                 </div>
               ) : (
-                <div className="text-lg font-bold text-red-600">
+                <div className="text-lg font-bold text-red-600 font-['Poppins']">
                   {" "}
                   Basket is empty {`(0)`}
                 </div>

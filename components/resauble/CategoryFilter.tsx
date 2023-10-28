@@ -25,6 +25,7 @@ const CategoryFilter = () => {
       {uniqueCategoryObjects?.map((item: any, index: any) => (
         <CardCategorie
           key={index}
+          id={item?.id}
           category={item?.category_name}
           subcategories={item["immediate parent"]}
         />

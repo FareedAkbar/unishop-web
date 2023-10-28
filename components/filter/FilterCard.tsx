@@ -27,7 +27,7 @@ const FilterCard = () => {
     setSecondValue(value[1])
   }
   return (
-    <ScrollArea className="h-[40rem]  w-[22rem] rounded-md border p-2">
+    <ScrollArea className="h-screen  w-[22rem] rounded-md border p-2">
       <div className="flex justify-between px-2 ">
         <div className="text-black dark:text-white text-[1rem] font-bold font-['Poppins']">
           Filters
@@ -37,7 +37,7 @@ const FilterCard = () => {
       <div className="flex flex-col items-center  mt-3 ">
         <Link
           href={"/catogaryfilter"}
-          className="w-64 h-10 dark:text-white decoration-none bg-red-600 rounded-sm justify-center items-center flex text-white text-[0.9rem] font-medium font-['Poppins']"
+          className="w-64 h-10 dark:text-white decoration-none  bg-red-600 rounded-sm justify-center items-center flex text-white text-[0.9rem] font-medium font-['Poppins']"
         >
           Filte by Category
         </Link>
@@ -50,15 +50,6 @@ const FilterCard = () => {
           <Icons.search className="cursor-pointer w-5 h-5" />
         </div>
         <div className="border-b w-full flex flex-col pl-5 py-3 ">
-          <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
-            T-shirts
-          </div>
-          <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
-            T-shirts
-          </div>
-          <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
-            T-shirts
-          </div>
           <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
             T-shirts
           </div>

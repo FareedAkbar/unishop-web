@@ -14,17 +14,15 @@ import CardProduct from "@/components/resauble/CardProduct"
 
 import { Icons } from "../icons"
 
-const ProductCardPaginate = () => {
-  const { data } = useContext(ContextApiData)
-
+const ProductCardPaginate = ({ data }: any) => {
   const [products, setProducts] = useState([]) // State to hold products
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 9 // Number of products to display per page
 
   useEffect(() => {
     // Fetch new data and update the products state when the data changes
-    if (data && data.data) {
-      setProducts(data.data) // Update products with new data
+    if (data && data) {
+      setProducts(data) // Update products with new data
     }
   }, [data])
 
