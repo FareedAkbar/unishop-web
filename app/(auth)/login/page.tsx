@@ -4,8 +4,10 @@ import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import axios from "axios"
 import { useFormik } from "formik"
+import { ToastContainer, toast } from "react-toastify"
 import * as Yup from "yup"
 
+import "react-toastify/dist/ReactToastify.css"
 import { Icons } from "@/components/icons"
 
 const Login = () => {
@@ -34,25 +36,41 @@ const Login = () => {
         )
         console.log("auth/login", response)
         if (response.status === 200) {
-          setLoginStatus("success")
-          console.log("auth/login success", response.data)
+          // console.log("auth/login success", response.data)
           // console.log("",response.data)
           // Now send the data to the verify-login-otp API
           const verifyOtpResponse = await axios.post(
             "http://192.168.18.225:3001/api/v2/student/auth/verify-login-otp",
             {
               customer_id: response.data.data.customer_id,
-              otp: "7380",
+              otp: "5665",
               email: response.data.data.email,
               // Add any other data you need to send to the API
             }
           )
           if (verifyOtpResponse.status === 200) {
+            setLoginStatus("success")
             console.log("verifyOtpResponse", verifyOtpResponse)
+            console.log(
+              "verifyOtpResponse message",
+              verifyOtpResponse.data.status
+            )
+            if (verifyOtpResponse.data.status == false) {
+              toast.error(verifyOtpResponse.data.message, {
+                position: "top-right",
+              })
+            } else {
+              toast.success(verifyOtpResponse.data.message, {
+                position: "top-right",
+              })
+            }
+
             // Verification was successful
             if (verifyOtpResponse.data.token) {
               localStorage.setItem("token", verifyOtpResponse.data.token)
-              // router.push("/")
+              setLoginStatus("success")
+
+              router.push("/")
             }
             // You can do something with the response if needed
           } else {
@@ -149,6 +167,8 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      <ToastContainer />
     </div>
   )
 }

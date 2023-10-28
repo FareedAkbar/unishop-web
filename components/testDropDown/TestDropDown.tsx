@@ -1,28 +1,37 @@
 "use client"
 
-import React, { useState } from "react"
+import * as React from "react"
 
-function Dropdown() {
-  // Initialize state to store the selected value
-  const [selectedValue, setSelectedValue] = useState("")
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
-  // Function to handle the change event when an option is selected
-  const handleSelectChange = (event: any) => {
-    setSelectedValue(event.target.value)
-  }
-
+export function TestDropDown() {
   return (
-    <div>
-      <label htmlFor="dropdown">Select an option:</label>
-      <select id="dropdown" value={selectedValue} onChange={handleSelectChange}>
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-        <option value="option4">Option 4</option>
-      </select>
-      <p>Selected Value: {selectedValue}</p>
-    </div>
+    <Select
+      onValueChange={(value) => {
+        console.log(value)
+      }}
+    >
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Select a fruit" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Fruits</SelectLabel>
+          <SelectItem value="apple">Apple</SelectItem>
+          <SelectItem value="banana">Banana</SelectItem>
+          <SelectItem value="blueberry">Blueberry</SelectItem>
+          <SelectItem value="grapes">Grapes</SelectItem>
+          <SelectItem value="pineapple">Pineapple</SelectItem>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   )
 }
-
-export default Dropdown

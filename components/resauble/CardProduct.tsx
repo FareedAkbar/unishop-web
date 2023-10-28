@@ -3,7 +3,9 @@
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { ToastContainer, toast } from "react-toastify"
 
+import "react-toastify/dist/ReactToastify.css"
 import { Icons } from "../icons"
 
 const CardProduct = ({ data }: any) => {
@@ -22,8 +24,8 @@ const CardProduct = ({ data }: any) => {
     setCheckDataWishlist(cartDataArraywish)
     // Your code that uses cartDataArray goes here
   }, [])
+  const handleCheck = () => {}
   const handleRemoveFromCart = (id: any) => {
-    console.log(id)
     // Get the cart data from localStorage
     const existingCartData = localStorage.getItem("cart")
 
@@ -34,9 +36,11 @@ const CardProduct = ({ data }: any) => {
     const updatedCartData = cartDataArray.filter(
       (item: any) => item.food_id != id
     )
-    console.log("updatedCartData", updatedCartData)
     // Update the cart data in both state and localStorage
     localStorage.setItem("cart", JSON.stringify(updatedCartData)) // Update localStorage
+    toast.success("Remove From Cart", {
+      position: "top-right",
+    })
   }
   const handleAddCardProduct = (data: any) => {
     const existingCartData = localStorage.getItem("cart")
@@ -54,34 +58,49 @@ const CardProduct = ({ data }: any) => {
     cartArray.push(data)
 
     localStorage.setItem("cart", JSON.stringify(cartArray))
+    toast.success("Add to Cart", {
+      position: "top-right",
+    })
   }
   const handleWishlist = (data: any) => {
     // Retrieve existing wishlist data from localStorage
     const existingWishlist = localStorage.getItem("wishlist")
-
     // Parse the existing data as JSON (if it exists)
     const existingWishlistArray = existingWishlist
       ? JSON.parse(existingWishlist)
       : []
+    console.log(existingWishlistArray)
 
     // Check if the data is already in the wishlist
-    const isAlreadyInWishlist = existingWishlistArray.includes(data)
+    const isAlreadyInWishlist = existingWishlistArray.some((item: any) => {
+      // Replace the condition below with your own comparison logic
+      return item.food_id === data.food_id // Example: Compare based on a specific property
+    })
+    console.log("exist", isAlreadyInWishlist)
 
     if (isAlreadyInWishlist) {
       // If it's already in the wishlist, remove it
       const updatedWishlist = existingWishlistArray.filter(
-        (item: any) => item !== data
+        (item: any) => item.food_id !== data.food_id
       )
       localStorage.setItem("wishlist", JSON.stringify(updatedWishlist))
+      toast.success("Remove From Cart", {
+        position: "top-right",
+      })
     } else {
       // If it's not in the wishlist, add it
       const updatedWishlist = [...existingWishlistArray, data]
       localStorage.setItem("wishlist", JSON.stringify(updatedWishlist))
+      toast.success("Add wishlist", {
+        position: "top-right",
+      })
     }
   }
 
   return (
     <div className=" h-[25rem]  relative group w-[18rem] font-['Poppins']  ">
+      <ToastContainer />
+
       <div className="w-72 h-72  left-0 top-0 absolute bg-[#EEEEEE] rounded group-hover:opacity-90 transition-opacity">
         <div className="left-[293px] top-[12px] absolute flex-col justify-start items-start gap-2 inline-flex">
           <div className="w-8 h-8 relative right-12 cursor-pointer">

@@ -11,6 +11,8 @@ import HeaderSignup from "@/components/header/HeaderSignup"
 import { metadata } from "@/components/metadata/metadata"
 import { SiteHeader } from "@/components/site-header"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
+import { TestDropDown } from "@/components/testDropDown/TestDropDown"
+import ZodTost from "@/components/testDropDown/ZodTost"
 import { ThemeProvider } from "@/components/theme-provider"
 
 interface RootLayoutProps {
@@ -45,6 +47,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 <div className="flex-1">{children}</div>
               </ContextGlobal>
               {isLoginPage || isSignupPage ? null : <Footer />}
+              {/* <TestDropDown />
+              {/* <ZodTost /> */}
             </div>
             <TailwindIndicator />
           </ThemeProvider>

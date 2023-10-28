@@ -7,8 +7,10 @@ import { ContextApiData } from "@/context/ContextGlobal"
 import { Select } from "@radix-ui/react-select"
 import axios from "axios"
 import { useFormik } from "formik"
+import { ToastContainer, toast } from "react-toastify"
 import * as Yup from "yup"
 
+import "react-toastify/dist/ReactToastify.css"
 import {
   SelectContent,
   SelectItem,
@@ -91,15 +93,23 @@ const Signup = () => {
       // Handle the response here (e.g., show a success message)
       console.log("API response:", response.data)
       const isSuccess = response.status >= 200 && response.status < 300
-
+      if (response.data.status == false) {
+        toast.error(response.data.message, {
+          position: "top-right",
+        })
+      } else {
+        toast.success(response.data.message, {
+          position: "top-right",
+        })
+      }
       setResponseStatus(isSuccess)
       setOtpID(response.data.id)
     } catch (error) {
       // Handle any errors (e.g., display an error message)
       console.error("API error:", (error as Error)?.message)
-
-      // Display an alert with the error message
-      window.alert((error as Error)?.message)
+      toast.success((error as Error)?.message, {
+        position: "top-right",
+      })
     }
   }
   const otpCallback = (opt: any) => {
@@ -133,22 +143,31 @@ const Signup = () => {
         // Handle the response here
         // console.log("Response from the POST request:", response.data)
         const successMessage = "Student Registration successfully"
-        console.log(response)
-        window.alert(successMessage)
-        setTimeout(() => {
-          // Close the alert after 2 seconds
-          window.close()
-        }, 2000) // 2000 milliseconds (2 seconds)
-        route.push("/")
+        console.log("otp call back responce", response)
+        if (response.data.status == false) {
+          toast.error(response.data.error, {
+            position: "top-right",
+          })
+        } else {
+          toast.success(response.data.message, {
+            position: "top-right",
+          })
+        }
+
+        // route.push("/")
       })
       .catch((error) => {
         // Handle any errors that occurred during the POST request
-        console.error("Error in POST request:", error)
+        toast.success(error, {
+          position: "top-right",
+        })
       })
   }
 
   return (
     <div className=" h-screen">
+      <ToastContainer />
+
       <div className="relative max-md:hidden">
         <Icons.bgSighup className="h-auto" />
       </div>

@@ -27,7 +27,7 @@ const ThisMonth = () => {
           View All
         </Link>
       </div>
-      <div className="flex justify-evenly flex-wrap overflow-hidden w-full mt-16 ">
+      <div className="flex gap-10 max-md:gap-5 max-md:justify-center flex-wrap overflow-hidden w-full mt-16 ">
         {data?.data?.map((item: any) => (
           <CardProduct data={item} />
         ))}

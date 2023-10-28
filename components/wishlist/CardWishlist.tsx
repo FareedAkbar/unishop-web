@@ -1,6 +1,8 @@
 import React from "react"
+import { ToastContainer, toast } from "react-toastify"
 
 import { Icons } from "../icons"
+import "react-toastify/dist/ReactToastify.css"
 
 const FixedTable = ({ data }: any) => {
   const introducedDate = data?.introduced ? new Date(data.introduced) : null
@@ -25,6 +27,9 @@ const FixedTable = ({ data }: any) => {
     cartArray.push(data)
 
     localStorage.setItem("cart", JSON.stringify(cartArray))
+    toast.success("Add to Cart", {
+      position: "top-right",
+    })
   }
   const handleRemoveFromCart = (id: any) => {
     console.log(id)
@@ -41,9 +46,14 @@ const FixedTable = ({ data }: any) => {
     console.log("updatedCartData", updatedCartData)
     // Update the cart data in both state and localStorage
     localStorage.setItem("wishlist", JSON.stringify(updatedCartData)) // Update localStorage
+    toast.success("Remove From Wishlist", {
+      position: "top-right",
+    })
   }
   return (
     <div className="w-full overflow-x-auto mt-5">
+      <ToastContainer />
+
       <table className="w-full border">
         <thead className="font-['Poppins']">
           <tr className="border">

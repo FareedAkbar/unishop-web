@@ -35,12 +35,14 @@
     "react-hook-form": "^7.47.0",
     "react-range": "^1.8.14",
     "react-slick": "^0.29.0",
+    "react-toastify": "^9.1.3",
     "rsuite": "^5.40.0",
     "sharp": "^0.31.3",
     "slick-carousel": "^1.8.1",
     "tailwind-merge": "^1.13.2",
     "tailwindcss-animate": "^1.0.6",
-    "yup": "^1.3.2"
+    "yup": "^1.3.2",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^3.7.2",
