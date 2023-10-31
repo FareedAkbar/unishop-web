@@ -27,6 +27,7 @@ import instagramIcon from "@/public/instagram.svg"
 import iPad from "@/public/ipad.png"
 import letterSend from "@/public/letterSend.png"
 import line from "@/public/line.svg"
+import outletIcon from "@/public/outlet.svg"
 import paper from "@/public/paper.png"
 import paypal from "@/public/payPal.png"
 import registerLogo from "@/public/resisterLogo.png"
@@ -240,7 +241,7 @@ export const Icons = {
       className={props.className}
     />
   ),
-  // headphone: (props: LucideProps) => (
-  //   <Image src={headphone} alt="Image" className={props.className} />
-  // ),
+  outletIcon: (props: LucideProps) => (
+    <Image src={outletIcon} alt="Image" className={props.className} />
+  ),
 }

@@ -20,7 +20,7 @@ const Today = () => {
       </div>
       <div className="flex justify-center  py-10">
         <Link
-          href="/category"
+          href="/shopproduct"
           className="w-64 h-12 bg-red-600 rounded-sm text-white text-[0.9rem] font-poppins flex justify-center items-center"
         >
           View All Products

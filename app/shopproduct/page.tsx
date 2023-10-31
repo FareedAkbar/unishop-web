@@ -7,10 +7,9 @@ import ProductCardPaginate from "@/components/resauble/ProductCardPaginate"
 
 const Page = () => {
   const { data } = useContext(ContextApiData)
-
   return (
     <div className="container">
-      <ProductCardPaginate data={data.data} />
+      <ProductCardPaginate data={data?.data} />
     </div>
   )
 }

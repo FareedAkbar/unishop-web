@@ -4,7 +4,6 @@ import React, { useContext, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ContextApiData } from "@/context/ContextGlobal"
-import { Select } from "@radix-ui/react-select"
 import axios from "axios"
 import { useFormik } from "formik"
 import { ToastContainer, toast } from "react-toastify"
@@ -27,9 +26,10 @@ const Signup = () => {
   const [selectedProfile, setSelectedProfile] = useState("")
   const [selectedCampus, setSelectedCampus] = useState<any>()
   const [FormState, setFormState] = useState<any>("")
-  const [ResponseStatus, setResponseStatus] = useState<boolean>()
+  const [ResponseStatus, setResponseStatus] = useState<any>(false)
   const [OtpID, setOtpID] = useState<any>("")
-  const route = useRouter()
+  console.log(ResponseStatus, "ResponseStatus")
+
   const validationSchema = Yup.object({
     firstName: Yup.string().required("First name is required"),
     lastName: Yup.string().required("Last name is required"),
@@ -68,12 +68,13 @@ const Signup = () => {
       membership: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       if (values.agreeToTerms) {
         // Handle form submission if terms are agreed
         console.log("Form values:", values)
         setFormState(values)
         submitForm()
+        // resetForm()
       } else {
         // Display an error message or take appropriate action if terms are not agreed
         console.error("You must agree to the terms and conditions.")
@@ -83,36 +84,56 @@ const Signup = () => {
 
   const submitForm = async () => {
     try {
-      const response = await axios.post(
-        "http://192.168.18.225:3001/api/v1/student/auth/register",
+      const checkEmailResponse = await axios.post(
+        "http://192.168.18.225:3001/api/v1/student/auth/check-email",
         {
-          email: formik.values.email, // Send just the email
+          email: formik.values.email,
         }
       )
 
-      // Handle the response here (e.g., show a success message)
-      console.log("API response:", response.data)
-      const isSuccess = response.status >= 200 && response.status < 300
-      if (response.data.status == false) {
-        toast.error(response.data.message, {
+      console.log("API response (Check Email):", checkEmailResponse.data)
+
+      if (checkEmailResponse.data.status == true) {
+        toast.error(checkEmailResponse.data.message, {
           position: "top-right",
         })
       } else {
-        toast.success(response.data.message, {
-          position: "top-right",
-        })
+        const registerResponse = await axios.post(
+          "http://192.168.18.225:3001/api/v1/student/auth/register",
+          {
+            email: formik.values.email,
+          }
+        )
+
+        console.log("API response (Register):", registerResponse.data)
+
+        if (!registerResponse.data.status) {
+          toast.error(registerResponse.data.message, {
+            position: "top-right",
+          })
+          setResponseStatus(false)
+        } else {
+          toast.success(registerResponse.data.message, {
+            position: "top-right",
+          })
+
+          if (ResponseStatus !== true) {
+            setResponseStatus(true)
+          }
+
+          setOtpID(registerResponse.data.id)
+        }
       }
-      setResponseStatus(isSuccess)
-      setOtpID(response.data.id)
     } catch (error) {
-      // Handle any errors (e.g., display an error message)
       console.error("API error:", (error as Error)?.message)
-      toast.success((error as Error)?.message, {
+      toast.error((error as Error)?.message, {
         position: "top-right",
       })
     }
   }
+
   const otpCallback = (opt: any) => {
+    setResponseStatus(false)
     const payload = {
       userData: {
         first_name: FormState.firstName,
@@ -132,7 +153,7 @@ const Signup = () => {
       otp: opt,
       otpId: OtpID,
     }
-
+    console.log("payload final reg", payload)
     // Make a POST request using Axios
     axios
       .post(

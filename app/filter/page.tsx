@@ -35,7 +35,7 @@ const Page = () => {
 
         <div className="flex flex-wrap w-full">
           <div className="flex flex-wrap font-['Poppins'] justify-center gap-5 items-center overflow-hidden">
-            <ProductCardPaginate data={data.data} />
+            <ProductCardPaginate data={data?.data} />
           </div>
         </div>
       </div>

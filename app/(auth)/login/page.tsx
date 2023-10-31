@@ -90,11 +90,11 @@ const Login = () => {
   })
 
   return (
-    <div className=" ">
+    <div className="">
       <div className="relative">
-        <Icons.bgSighup className="h-screen max-md:hidden" />
+        <Icons.bgSighup className="h-screen max-md:hidden mx-10" />
       </div>
-      <div className="flex absolute inset-0">
+      <div className="flex absolute inset-0 ">
         <div className="w-1/2 max-md:hidden"></div>
         <div className="w-1/2 flex justify-center items-center  max-md:w-full   ">
           <div className="rounded-lg border max-sm:w-[18rem] border-neutral-200 p-5">
@@ -120,7 +120,7 @@ const Login = () => {
                 </div>
               )}
               <input
-                type="user_password"
+                type="password"
                 placeholder="password"
                 className="w-full h-12 text-[0.9rem] rounded-lg border outline-none mt-5 border-neutral-400 px-2"
                 name="user_password"
