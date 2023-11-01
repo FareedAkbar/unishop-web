@@ -6,8 +6,9 @@ import CardProduct from "../resauble/CardProduct"
 
 const ThisMonth = () => {
   const { data } = useContext(ContextApiData)
+  console.log("Data...", data)
   return (
-    <div className="  mt-16 ">
+    <div className="  mt-16 container">
       <div className="flex items-center gap-5">
         <div className="w-7 h-12 relative">
           <div className="w-7 h-12 left-0 top-0 absolute bg-red-600 rounded" />

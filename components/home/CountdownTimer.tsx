@@ -62,19 +62,19 @@ const CountdownTimer = () => {
         </div>
 
         <div className=" flex  justify-evenly max-sm:gap-3">
-          <div className=" dark:text-white     w-24 max-md:w-20   flex justify-center max-sm:items-center text-black text-[1rem] max-sm:text-sm max-md:text-[0.9rem]  font-bold font-['Inter'] leading-loose tracking-wider">
+          <div className=" dark:text-white     w-24 max-md:w-20   flex justify-center max-sm:items-center text-black text-[1rem] max-sm:text-sm max-md:text-[0.9rem]  font-bold font-['Inter'] ">
             {timeLeft.days}
           </div>
 
-          <div className=" dark:text-white     w-24 max-md:w-20 flex justify-center  text-black text-[1rem] max-sm:text-sm max-md:text-[0.9rem]  font-bold font-['Inter'] leading-loose tracking-wider">
+          <div className=" dark:text-white     w-10 max-md:w-20 flex justify-center  text-black text-[1rem] max-sm:text-sm max-md:text-[0.9rem]  font-bold font-['Inter'] ">
             {timeLeft.hours}
           </div>
 
-          <div className="dark:text-white    w-24 max-md:w-20  flex justify-center text-black text-[1rem] max-sm:text-sm max-md:text-[0.9rem]  font-bold font-['Inter'] leading-loose tracking-wider">
+          <div className="dark:text-white    w-24 max-md:w-20  flex justify-center text-black text-[1rem] max-sm:text-sm max-md:text-[0.9rem]  font-bold font-['Inter'] ">
             {timeLeft.minutes}
           </div>
 
-          <div className=" dark:text-white   w-24 max-md:w-20  flex justify-center text-black text-[1rem] max-sm:text-sm max-md:text-[0.9rem]  font-bold font-['Inter'] leading-loose tracking-wider">
+          <div className=" dark:text-white   w-24 max-md:w-20  flex justify-center text-black text-[1rem] max-sm:text-sm max-md:text-[0.9rem]  font-bold font-['Inter'] ">
             {timeLeft.seconds}
           </div>
         </div>

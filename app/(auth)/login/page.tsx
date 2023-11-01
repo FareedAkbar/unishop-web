@@ -90,9 +90,9 @@ const Login = () => {
   })
 
   return (
-    <div className="">
+    <div className=" overflow-hidden">
       <div className="relative">
-        <Icons.bgSighup className="h-screen max-md:hidden mx-10" />
+        <Icons.bgSighup className="h-screen w-full object-fill mx-10 max-md:hidden" />
       </div>
       <div className="flex absolute inset-0 ">
         <div className="w-1/2 max-md:hidden"></div>

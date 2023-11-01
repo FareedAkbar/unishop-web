@@ -4,7 +4,7 @@ import { Icons } from "../icons"
 
 const Ads = () => {
   return (
-    <div className="w-full h-auto max-md:h-auto flex max-md:flex-col-reverse bg-gradient-to-r  from-red-800 via-red-700 to-red-700 container py-10">
+    <div className="w-full  h-auto max-md:h-auto flex max-md:flex-col-reverse bg-gradient-to-r  from-red-800 via-red-700 to-red-700 container py-10">
       <div className="w-1/2 max-md:w-full flex flex-col justify-between">
         <p className="text-[0.9rem] text-[#FF0010] font-semibold">Categories</p>
         <p className=" text-white text-3xl max-sm:text-[1rem]  mt-3 leading-normal max-md:text-center font-semibold font-['Poppins']  ">

@@ -5,7 +5,7 @@ import { Icons } from "../icons"
 
 const Feature = () => {
   return (
-    <div className="flex gap-5 max-md:flex-col pt-16">
+    <div className="flex gap-5 max-md:flex-col pt-16 container">
       <div className="w-1/3 max-md:w-full justify-start items-start  gap-7 inline-flex">
         <Icons.book className="bg-cover h-[41.8rem] max-xl:h-[30rem] max-sm:h-[20rem]" />
         <div className="absolute flex flex-col justify-end h-[43rem] max-xl:h-[30rem]  max-sm:h-[22rem] p-5 pb-10">

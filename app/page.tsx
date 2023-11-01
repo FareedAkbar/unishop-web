@@ -15,11 +15,10 @@ import CategoryFilter from "@/components/resauble/CategoryFilter"
 
 export default function IndexPage() {
   const { AllOutlets } = useContext(ContextApiData)
-  // console.log("AllOutlets", AllOutlets)
   return (
-    <div className="container  py-5 gap-5">
+    <div className="  py-5 ">
       <Outlet data={AllOutlets?.data} />
-      <div className="flex max-md:flex-col  py-2 gap-5 pb-14">
+      <div className="flex max-md:flex-col container py-2 gap-5 pb-14">
         <div className="w-1/3 max-md:w-full">
           <CategoryFilter />
         </div>
@@ -31,7 +30,7 @@ export default function IndexPage() {
       <Ads />
       <ThisMonth />
       <Feature />
-      <div className="flex justify-evenly max-md:flex-col  py-20">
+      <div className="flex justify-evenly max-md:flex-col container py-20">
         {serviceFeature.map((item) => (
           <ServicesFeature
             title={item.title}
