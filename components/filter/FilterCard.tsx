@@ -30,7 +30,7 @@ const FilterCard = () => {
     setRange(newRange)
   }
   return (
-    <ScrollArea className="h-screen  w-[22rem] rounded-md border p-2">
+    <ScrollArea className="  w-[22rem] max-sm:w-[18rem]  rounded-md border p-2">
       <div className="flex justify-between px-2 ">
         <div className="text-black dark:text-white text-[1rem] font-bold font-['Poppins']">
           Filters
@@ -56,10 +56,16 @@ const FilterCard = () => {
           <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
             T-shirts
           </div>
+          <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
+            T-shirts
+          </div>
+          <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal pt-3 cursor-pointer hover:underline font-['Poppins']">
+            T-shirts
+          </div>
         </div>
         <Accordion type="single" className="border-b w-full" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger className="text-black dark:text-white text-[1rem] font-bold font-['Poppins'] w-[15.4rem]">
+            <AccordionTrigger className="text-black dark:text-white text-[0.9rem] font-bold font-['Poppins'] w-[15.4rem]">
               Price
             </AccordionTrigger>
             <AccordionContent>
@@ -84,7 +90,7 @@ const FilterCard = () => {
         </Accordion>{" "}
         <Accordion type="single" className="border-b w-full" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger className="text-black dark:text-white text-[1rem] font-bold font-['Poppins'] w-[15.4rem]">
+            <AccordionTrigger className="text-black dark:text-white text-[0.9rem] font-bold font-['Poppins'] w-[15.4rem]">
               Colors
             </AccordionTrigger>
             <AccordionContent className="flex justify-center ">
@@ -113,7 +119,7 @@ const FilterCard = () => {
         </Accordion>
         <Accordion type="single" className="border-b w-full" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger className="text-black dark:text-white text-[1rem] font-bold font-['Poppins'] w-[15.4rem]">
+            <AccordionTrigger className="text-black dark:text-white text-[0.9rem] font-bold font-['Poppins'] w-[15.4rem]">
               Size
             </AccordionTrigger>
             <AccordionContent className="flex justify-center">
@@ -136,7 +142,7 @@ const FilterCard = () => {
         </Accordion>
         <Accordion type="single" className="border-b w-full" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger className="text-black dark:text-white text-[1rem] font-bold font-['Poppins'] w-[15.4rem]">
+            <AccordionTrigger className="text-black dark:text-white text-[0.9rem] font-bold font-['Poppins'] w-[15.4rem]">
               Dress Style
             </AccordionTrigger>
             <AccordionContent className="flex flex-col">
@@ -151,7 +157,7 @@ const FilterCard = () => {
           </AccordionItem>
         </Accordion>
         <div className="pb-5">
-          <button className="w-60 h-12 px-14 py-4 bg-red-600 rounded-sm justify-center items-center gap-3 inline-flex mt-5">
+          <button className="w-60 h-10 px-14 py-4 bg-red-600 rounded-sm justify-center items-center gap-3 inline-flex mt-5">
             <div className="text-white text-sm font-medium font-['Poppins']">
               Apply Filter
             </div>

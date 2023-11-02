@@ -104,7 +104,7 @@ const CardSlider = () => {
   return (
     <div className="">
       <div className="pt-10 flex max-md:flex-col items-center  ">
-        <div className="text-black h-14 max-md:py-2 text-[1rem] max-sm:text-xl w-1/3  max-xl:w-full max-md:w-full dark:text-white font-semibold   ">
+        <div className="text-black h-14 max-md:py-2 text-[1rem] max-sm:text-[1rem] w-1/3  max-xl:w-full max-md:w-full dark:text-white font-semibold   ">
           Flash Sales
         </div>
         <div className=" max-sm:container  ">

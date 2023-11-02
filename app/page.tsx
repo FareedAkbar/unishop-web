@@ -7,6 +7,7 @@ import { serviceFeature } from "@/config/site"
 import Outlet from "@/components/Outlets/Outlet"
 import Ads from "@/components/home/Ads"
 import Feature from "@/components/home/Feature"
+import MobileViewCategoryList from "@/components/home/MobileViewCategoryList"
 import ServicesFeature from "@/components/home/ServicesFeature"
 import SliderLanding from "@/components/home/SliderLanding"
 import ThisMonth from "@/components/home/ThisMonth"
@@ -17,15 +18,21 @@ export default function IndexPage() {
   const { AllOutlets } = useContext(ContextApiData)
   return (
     <div className="  py-5 ">
-      <Outlet data={AllOutlets?.data} />
-      <div className="flex max-md:flex-col container py-2 gap-5 pb-14">
-        <div className="w-1/3 max-md:w-full">
+      <div className="hidden  max-md:block">
+        <MobileViewCategoryList />
+      </div>
+      <div className="flex max-md:flex-col container  py-2 gap-5 pb-14">
+        <div className="w-1/3 max-md:w-full max-md:hidden">
           <CategoryFilter />
         </div>
         <div className="w-full ">
           <SliderLanding />
         </div>
       </div>
+      <div className="p-5">
+        <Outlet data={AllOutlets?.data} />
+      </div>
+
       <Today />
       <Ads />
       <ThisMonth />

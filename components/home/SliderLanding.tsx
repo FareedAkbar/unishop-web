@@ -42,11 +42,11 @@ function CarouselWithContent() {
       className={`w-2 h-2 rounded-full mx-1 cursor-pointer ${
         index === currentIndex ? "bg-blue-500" : "bg-gray-300"
       }`}
-  ></div>
+    ></div>
   )
 
   return (
-    <div className="w-full  h-[26rem]  m-auto  relative group">
+    <div className="w-full   h-[26rem] max-md:h-[10rem]  m-auto  relative group">
       <div
         style={{ backgroundImage: `url(${slides[currentIndex].url})` }}
         className="w-full h-full rounded-2xl bg-center bg-cover duration-500"

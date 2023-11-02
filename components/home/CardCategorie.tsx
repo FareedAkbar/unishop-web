@@ -16,11 +16,13 @@ const CardCategorie = ({ category, subcategories, id }: any) => {
         {subcategories.length > 0 ? (
           <AccordionTrigger>{category}</AccordionTrigger>
         ) : (
-          <div className="pl-2 mt-1 cursor-pointer ">{category}</div>
+          <div className="pl-2 p-1 mt-1 cursor-pointer dark:hover:bg-black  hover:bg-[#F5F5F5] ">
+            {category}
+          </div>
         )}
         <AccordionContent>
           {subcategories?.map((item: any, index: any) => (
-            <Accordion type="single" collapsible className="border borde-b ">
+            <Accordion type="single" collapsible className=" border-b  ml-5">
               <AccordionItem key={index} value={item.title_name}>
                 <p className="p-2 cursor-pointer hover:underline font-['Poppins']">
                   {item.title_name}

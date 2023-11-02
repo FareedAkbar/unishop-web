@@ -1,8 +1,46 @@
-import React from "react"
+"use client"
+
+import React, { useEffect, useState } from "react"
 
 import { Icons } from "../icons"
 
 const Ads = () => {
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  })
+
+  useEffect(() => {
+    // Set the target date and time for the countdown
+    const targetDate = new Date("2023-11-04T00:00:00").getTime()
+
+    const updateTimer = setInterval(() => {
+      const currentDate = new Date().getTime()
+      const timeRemaining = targetDate - currentDate
+
+      if (timeRemaining <= 0) {
+        clearInterval(updateTimer)
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+      } else {
+        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24))
+        const hours = Math.floor(
+          (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        )
+        const minutes = Math.floor(
+          (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+        )
+        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000)
+
+        setTimeLeft({ days, hours, minutes, seconds })
+      }
+    }, 1000)
+
+    return () => {
+      clearInterval(updateTimer)
+    }
+  }, [])
   return (
     <div className="w-full  h-auto max-md:h-auto flex max-md:flex-col-reverse bg-gradient-to-r  from-red-800 via-red-700 to-red-700 container py-10">
       <div className="w-1/2 max-md:w-full flex flex-col justify-between">
@@ -12,19 +50,19 @@ const Ads = () => {
         </p>
         <div className="flex gap-10 max-md:justify-between mt-5  flex-wrap">
           <div className="w-16 h-16 bg-white dark:text-black  rounded-full flex flex-col justify-center items-center">
-            <p className="text-[1rem] font-bold">23</p>
+            <p className="text-[1rem] font-bold"> {timeLeft.days}</p>
             <p className="text-[0.68rem]">Days</p>
           </div>
           <div className="w-16 h-16 bg-white dark:text-black rounded-full flex flex-col justify-center items-center">
-            <p className="text-[1rem] font-bold">23</p>
+            <p className="text-[1rem] font-bold"> {timeLeft.hours}</p>
             <p className="text-[0.68rem]">Hours</p>
           </div>
           <div className="w-16 h-16 bg-white dark:text-black rounded-full flex flex-col justify-center items-center">
-            <p className="text-[1rem] font-bold">59</p>
+            <p className="text-[1rem] font-bold">{timeLeft.minutes}</p>
             <p className="text-[0.68rem]">Minutes</p>
           </div>
           <div className="w-16 h-16 bg-white dark:text-black rounded-full flex flex-col justify-center items-center">
-            <p className="text-[1rem] font-bold">35</p>
+            <p className="text-[1rem] font-bold">{timeLeft.seconds}</p>
             <p className="text-[0.68rem]">Seconds</p>
           </div>
         </div>

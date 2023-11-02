@@ -29,7 +29,7 @@ export function SiteHeader() {
         <div className="flex flex-1   items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">
             <div className="flex flex-1  items-center justify-end space-x-4 max-sm:space-x-2 dark:text-black">
-              <div className="w-[21.6875rem] max-md:w-full max-sm:hidden gap-1 px-2  max-sm:w-full flex justify-evenly items-center h-[2.875rem] max-sm:h-8 bg-[#F0EEED]">
+              <div className="w-[21.6875rem] max-md:w-full max-lg:hidden gap-1 px-2  max-sm:w-full flex justify-evenly items-center h-[2.875rem] max-sm:h-8 bg-[#F0EEED]">
                 <input
                   type="text"
                   placeholder="What are you looking for?"

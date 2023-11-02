@@ -31,7 +31,9 @@ const Page = () => {
       </div>
 
       <div className="flex pt-5 max-md:flex-col max-md:items-center gap-10">
-        <FilterCard />
+        <div className="py-5">
+          <FilterCard />
+        </div>
 
         <div className="flex flex-wrap w-full">
           <div className="flex flex-wrap font-['Poppins'] justify-center gap-5 items-center overflow-hidden">

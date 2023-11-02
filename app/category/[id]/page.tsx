@@ -1,16 +1,17 @@
 "use client"
 
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ContextApiData } from "@/context/ContextGlobal"
 
+import FilterCard from "@/components/filter/FilterCard"
 import { Icons } from "@/components/icons"
 import ProductCardPaginate from "@/components/resauble/ProductCardPaginate"
 
 const Page = ({ params }: any) => {
-  console.log(params.id)
   const { data } = useContext(ContextApiData)
+  const [OpenFilter, setOpenFilter] = useState(false)
   const filterData = data?.data?.filter(
     (item: any) => item?.category == params.id
   )
@@ -36,22 +37,29 @@ const Page = ({ params }: any) => {
             </div>
           </div>
         </div>
-        <Link
-          href="/filter"
-          className="w-40 h-10 mt-5 bg-red-600 rounded-sm flex justify-center text-white text-sm font-medium font-['Poppins'] items-center"
-        >
-          Apply Filter
-        </Link>
-        <div className="w-full">
-          {filterData?.length > 0 ? (
-            <ProductCardPaginate data={filterData} />
-          ) : (
-            <div className="flex justify-center">
-              <p className="text-lg font-bold text-red-600">
-                Category not found
-              </p>
+        <div className="flex max-md:flex-col">
+          <div className=" max-md:w-full  flex flex-col max-md:items-center">
+            <div className="py-5">
+              <button
+                onClick={() => setOpenFilter(OpenFilter ? false : true)}
+                className="w-40 h-10 mt-5 bg-red-600 rounded-sm flex justify-center text-white text-sm font-medium font-['Poppins'] items-center"
+              >
+                Apply Filter
+              </button>
             </div>
-          )}
+            {OpenFilter && <FilterCard />}
+          </div>
+          <div className="w-full">
+            {filterData?.length > 0 ? (
+              <ProductCardPaginate data={filterData} />
+            ) : (
+              <div className="flex justify-center">
+                <p className="text-lg font-bold text-red-600">
+                  Category not found
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

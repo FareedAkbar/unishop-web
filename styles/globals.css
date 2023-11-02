@@ -82,24 +82,23 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
-.animate-scroll {
-  overflow: hidden;
-  white-space: nowrap;
-  animation: scroll 20s linear infinite; /* Adjust the duration as needed */
-}
 
 @keyframes scroll {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
 
 /* Apply the animation to an element */
 .element-to-animate {
-  animation: scroll 50s linear infinite; /* 10s duration for slow scrolling */
+  animation: scroll 20s infinite linear; /* 10s duration for slow scrolling */
+}
+
+.element-to-animate:hover {
+  animation-play-state: paused;
 }
 
 @keyframes spin-slow {

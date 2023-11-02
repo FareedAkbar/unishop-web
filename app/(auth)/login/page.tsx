@@ -108,7 +108,7 @@ const Login = () => {
               <input
                 type="email"
                 placeholder="Email Address"
-                className="w-full h-12 text-[0.9rem] rounded-lg border outline-none border-neutral-400 px-2"
+                className="w-full h-12 max-sm:h-10 text-[0.9rem] rounded-lg border outline-none border-neutral-400 px-2"
                 name="email"
                 value={formik.values.email}
                 onChange={formik.handleChange}
@@ -122,7 +122,7 @@ const Login = () => {
               <input
                 type="password"
                 placeholder="password"
-                className="w-full h-12 text-[0.9rem] rounded-lg border outline-none mt-5 border-neutral-400 px-2"
+                className="w-full h-12 max-sm:h-10 text-[0.9rem] rounded-lg border outline-none mt-5 border-neutral-400 px-2"
                 name="user_password"
                 value={formik.values.user_password}
                 onChange={formik.handleChange}
@@ -144,7 +144,7 @@ const Login = () => {
               <div className="flex justify-center pt-10">
                 <button
                   type="submit"
-                  className="w-full h-12 text-[1rem] font-semibold text-white bg-red-600 rounded-lg border flex justify-center font-['Poppins'] items-center"
+                  className="w-full h-12 max-sm:h-10 text-[1rem] font-semibold text-white bg-red-600 rounded-lg border flex justify-center font-['Poppins'] items-center"
                 >
                   Login
                 </button>

@@ -56,11 +56,11 @@ const ContactForm = () => {
         />
       </div>
       <div className="flex justify-end max-sm:justify-center items-center mt-10">
-        <button className="w-40 flex bg-red-600 rounded shadow justify-center h-12 items-center text-center text-white text-[0.9rem] max-sm:text-sm max-md:text-sm font-medium font-['Poppins']">
+        <button className="w-40 flex bg-red-600 rounded shadow justify-center h-10 items-center text-center text-white text-[0.9rem] max-sm:text-sm max-md:text-sm font-medium font-['Poppins']">
           Send Message
         </button>
       </div>
-      <div>
+      <div className="max-sm:hidden">
         <Icons.letterSend />
       </div>
     </div>

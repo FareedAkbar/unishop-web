@@ -384,7 +384,7 @@ const Signup = () => {
               </div>
               <div className="flex max-sm:flex-col gap-8 ">
                 <div className="w-full ">
-                  <div className="pt-2 items-center flex gap-5">
+                  <div className="pt-2 sm:items-center flex max-sm:flex-col gap-5">
                     <div>
                       <label className="flex gap-1 pt-2">
                         <input
@@ -469,7 +469,7 @@ const Signup = () => {
                 </button>
               </div>
             </form>
-            <div className="w-52 h-5 justify-start items-start gap-1 inline-flex">
+            <div className=" mt-3  justify-start items-start gap-1 inline-flex">
               <div className="justify-center items-center flex">
                 <div className="text-zinc-600 dark:text-white text-xs font-normal font-['Poppins']">
                   Already have an account?
@@ -478,7 +478,7 @@ const Signup = () => {
               <div className="justify-center items-center flex">
                 <Link
                   href="/login"
-                  className="text-black text-xs font-normal font-['Poppins'] underline"
+                  className="text-black text-xs font-bold  font-['Poppins'] underline"
                 >
                   Login
                 </Link>

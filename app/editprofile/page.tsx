@@ -56,9 +56,9 @@ const EditProfile = () => {
       <div className="flex justify-center   pt-10">
         <form
           onSubmit={formik.handleSubmit}
-          className="border  p-10 rounded-xl"
+          className="border max-sm:w-full  p-10 max-sm:p-5 rounded-xl"
         >
-          <div className="flex max-sm:flex-col  max-sm:gap-3 gap-20 ">
+          <div className="flex max-sm:flex-col max-sm:gap-3 gap-20 ">
             <div className="">
               <div className="text-black dark:text-white text-[1rem] font-normal font-['Poppins'] leading-normal">
                 First Name
@@ -94,7 +94,7 @@ const EditProfile = () => {
               )}
             </div>
           </div>
-          <div className="flex max-sm:gap-2 max-sm:flex-col gap-20 mt-5">
+          <div className="flex max-sm:gap-2 max-sm:flex-col gap-20 mt-5 max-sm:mt-3">
             <div className="">
               <div className="text-black dark:text-white text-[1rem] font-normal font-['Poppins'] leading-normal">
                 Email
@@ -130,7 +130,7 @@ const EditProfile = () => {
               )}
             </div>
           </div>
-          <div className="w-full mt-5">
+          <div className="w-full mt-5 max-sm:mt-3">
             <div className="text-black dark:text-white text-[1rem] font-normal font-['Poppins'] leading-normal">
               Current Password
             </div>
@@ -150,7 +150,7 @@ const EditProfile = () => {
                 </div>
               )}
           </div>
-          <div className="flex max-sm:gap-2 max-sm:flex-col gap-20 mt-5">
+          <div className="flex max-sm:gap-2 max-sm:flex-col gap-20 mt-5 max-sm:mt-3">
             <div className="">
               <div className="text-black dark:text-white text-[1rem] font-normal font-['Poppins'] leading-normal">
                 New Password
@@ -189,10 +189,10 @@ const EditProfile = () => {
                 )}
             </div>
           </div>
-          <div className="mt-10 flex  max-sm:justify-center sm:justify-end  gap-5">
+          <div className="mt-10 flex  max-sm:items-center max-sm:flex-col-reverse sm:justify-end  gap-5">
             <Link
               href={"/"}
-              className="w-28  h-10 flex justify-center items-center bg-neutral-100 dark:text-black rounded"
+              className="w-28 max-sm:w-44 h-10 flex justify-center items-center bg-neutral-100 dark:text-black rounded"
             >
               Cancel
             </Link>

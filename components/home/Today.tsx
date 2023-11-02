@@ -11,7 +11,7 @@ const Today = () => {
         <div className="w-7 h-12 relative">
           <div className="w-7 h-12 left-0 top-0 absolute bg-red-600 rounded" />
         </div>
-        <div className="text-red-600 text-[0.9rem] max-sm:text-xl font-semibold font-['Poppins'] leading-tight">
+        <div className="text-red-600 text-[1rem]  font-semibold font-['Poppins'] leading-tight">
           Today’s
         </div>
       </div>
