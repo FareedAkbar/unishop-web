@@ -5,6 +5,11 @@ import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
 import { buttonVariants } from "@/components/ui/button"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { Icons } from "@/components/icons"
 import { MainNav } from "@/components/main-nav"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -24,7 +29,7 @@ export function SiteHeader() {
   }, [])
   return (
     <header className="bg-background sticky py-1 top-0 z-40 w-full border-b">
-      <div className="container flex h-16 max-md:gap-5 max-sm:h-12 items-center space-x-4 max-sm:space-x-0 sm:justify-between sm:space-x-0">
+      <div className=" px-10 max-sm:10 max-md:px-10 max-sm:px-5 flex h-16 max-md:gap-5 max-sm:h-12 items-center space-x-4 max-sm:space-x-0 sm:justify-between sm:space-x-0">
         <MainNav items={siteConfig.mainNav} />
         <div className="flex flex-1   items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">
@@ -50,10 +55,35 @@ export function SiteHeader() {
 
               <CartProductAdd />
               <Link
-                href={"/editprofile"}
+                href={""}
                 className="w-8 max-sm:w-4 max-sm:h-4  h-8   hover:bg-[#ED1C29] flex justify-center items-center rounded-full"
               >
-                <Icons.profile className="text-black dark:text-white hover:text-white " />
+                <Popover>
+                  <PopoverTrigger>
+                    {" "}
+                    <Icons.profile className="text-black dark:text-white hover:text-white " />
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <div className="flex items-center gap-2 hover:bg-slate-100 cursor-pointer rounded-lg px-2 p-1">
+                      <Icons.Settings className="h-4 w-4" />
+                      <Link
+                        href={"/editprofile"}
+                        className=" text-black text-[0.9rem] font-medium font-['Poppins']"
+                      >
+                        Account Setting
+                      </Link>
+                    </div>
+                    <div className="flex items-center gap-2 hover:bg-slate-100 cursor-pointer rounded-lg px-2 p-1">
+                      <Icons.logout className="h-4 w-4" />
+                      <Link
+                        href={"/login"}
+                        className=" text-black text-[0.9rem] font-medium font-['Poppins']"
+                      >
+                        Logout
+                      </Link>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </Link>
             </div>
             <ThemeToggle />

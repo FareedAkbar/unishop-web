@@ -17,11 +17,11 @@ import CategoryFilter from "@/components/resauble/CategoryFilter"
 export default function IndexPage() {
   const { AllOutlets } = useContext(ContextApiData)
   return (
-    <div className="  py-5 ">
-      <div className="hidden  max-md:block">
+    <div className="  py-5 px-10 max-md:px-10 max-sm:px-5">
+      {/* <div className="hidden  max-md:block">
         <MobileViewCategoryList />
-      </div>
-      <div className="flex max-md:flex-col container  py-2 gap-5 pb-14">
+      </div> */}
+      <div className="flex max-md:flex-col   py-2 gap-5 pb-14">
         <div className="w-1/3 max-md:w-full max-md:hidden">
           <CategoryFilter />
         </div>
@@ -29,7 +29,7 @@ export default function IndexPage() {
           <SliderLanding />
         </div>
       </div>
-      <div className="p-5">
+      <div className="">
         <Outlet data={AllOutlets?.data} />
       </div>
 
@@ -37,7 +37,7 @@ export default function IndexPage() {
       <Ads />
       <ThisMonth />
       <Feature />
-      <div className="flex justify-evenly max-md:flex-col container py-20">
+      <div className="flex justify-evenly max-md:flex-col  py-20">
         {serviceFeature.map((item) => (
           <ServicesFeature
             title={item.title}

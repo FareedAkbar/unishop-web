@@ -5,29 +5,33 @@ import { Icons } from "../icons"
 
 const Feature = () => {
   return (
-    <div className="flex gap-5 max-md:flex-col pt-16 container">
-      <div className="w-1/3 max-md:w-full justify-start items-start  gap-7 inline-flex">
-        <Icons.book className="bg-cover h-[41.8rem] max-xl:h-[30rem] max-sm:h-[20rem]" />
-        <div className="absolute flex flex-col justify-end h-[43rem] max-xl:h-[30rem]  max-sm:h-[22rem] p-5 pb-10">
-          <p className="text-neutral-50 text-[1rem] max-sm:text-lg   font-semibold font-['Poppins'] leading-normal ">
+    <div className="flex gap-5 max-lg:flex-col md:pt-16 md:container">
+      <div className="relative w-1/3 max-lg:w-full max-md:w-full justify-start items-start gap-7 inline-flex overflow-hidden">
+        {/* Background Image */}
+        <Icons.book className="absolute inset-0 w-full h-full object-cover max-xl:h-full max-lg:h-[20rem]" />
+
+        {/* Text Content */}
+        <div className="absolute inset-0 flex flex-col justify-end p-5 max-xl:pb-16">
+          <p className="text-neutral-50 text-[1rem] max-sm:text-lg font-semibold font-['Poppins'] leading-normal">
             Text Books
           </p>
-          <p className=" w-96 max-xl:w-64  pr-4  text-neutral-50 text-[0.9rem] font-normal  max-md:w-full font-['Poppins'] ">
+          <p className="w-full max-xl:w-[10rem] max-lg:w-full text-neutral-50 text-[0.9rem] font-normal font-['Poppins']">
             Discover a world of knowledge with our extensive collection of
             textbooks at Unibar.
           </p>
           <Link
             href={"/featurefilter"}
-            className="text-white  flex justify-start w-40 cursor-pointer underline font-medium font-['Poppins'] leading-normal"
+            className="text-white flex justify-start w-40 cursor-pointer underline font-medium font-['Poppins'] leading-normal"
           >
             Shop Now
           </Link>
         </div>
       </div>
-      <div className="w-2/3 max-sm:flex-col flex max-md:w-full flex-col gap-5 ">
+
+      <div className="w-full max-sm:flex-col flex max-md:w-full flex-col gap-5 ">
         <div>
           <div>
-            <Icons.paper className="bg-cover max-sm:h-[10rem] " />
+            <Icons.paper className="bg-cover h-full max-sm:h-[10rem] " />
             <div className="absolute  px-5  -mt-28   ">
               <div className="text-neutral-50 text-[1rem] font-semibold font-['Poppins'] leading-normal tracking-wide">
                 Stationary & Merch
@@ -46,7 +50,7 @@ const Feature = () => {
         </div>
         <div className="flex max-sm:flex-col gap-5">
           <div>
-            <Icons.coat className="bg-cover w-[30.5rem] max-sm:w-full" />
+            <Icons.coat className="bg-cover h-full w-[30.5rem] max-sm:w-full" />
             <div className=" -mt-24 pl-5">
               <div className="text-neutral-50 text-[1rem]  font-semibold font-['Poppins'] ">
                 Cloths
@@ -63,7 +67,7 @@ const Feature = () => {
             </div>
           </div>
           <div>
-            <Icons.echo className="bg-cover w-[22rem] h-[21.11rem] max-md:h-[16rem] max-sm:mt-10" />
+            <Icons.echo className="bg-cover w-[22rem] max-sm:w-full h-full max-md:h-[14rem] max-sm:mt-10" />
             <div className=" -mt-24 pl-5">
               <div className="text-neutral-50 text-[1rem]  font-semibold font-['Poppins'] ">
                 Graduation Gift

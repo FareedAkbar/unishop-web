@@ -67,7 +67,7 @@ const ProductCardPaginate = ({ data }: any) => {
   )
 
   return (
-    <div className="max-md: py-10">
+    <div className="py-10">
       <div className="flex justify-end max-sm:justify-center  flex-wrap   ">
         <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal font-['Poppins']">
           Showing{" "}
@@ -95,7 +95,7 @@ const ProductCardPaginate = ({ data }: any) => {
       </div>
       <div className=" flex  pt-5 max-md:flex-col max-md:items-center gap-5 ">
         <div className=" flex flex-wrap w-full">
-          <div className="flex flex-wrap items-center font-['Poppins'] max-md:justify-center  gap-5 overflow-hidden  ">
+          <div className="flex flex-wrap items-center  font-['Poppins']  2xl:gap-[1.16rem]  max-2xl:justify-between max-sm:justify-center max-lg:justify-evenly overflow-hidden  ">
             {visibleProducts.map((item, index) => (
               <CardProduct key={index} data={item} />
             ))}

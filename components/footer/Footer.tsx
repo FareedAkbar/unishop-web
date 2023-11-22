@@ -7,8 +7,8 @@ import { Icons } from "../icons"
 const Footer = () => {
   return (
     <>
-      <div className="bg-[#EEE] dark:bg-black">
-        <div className="container  p-10 ">
+      <div className="bg-[#EEE] dark:bg-black px-20 max-md:px-10 max-sm:px-5">
+        <div className="  py-10 ">
           <div className="flex max-sm:flex-col gap-16 max-sm:gap-0">
             <div>
               <Icons.logo className="w-32" />
@@ -54,7 +54,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <p className="text-[0.9rem] flex justify-center py-5 font-['Poppins']">
+      <p className="text-[0.9rem] max-sm:text-[12px] flex justify-center py-5 text-center font-['Poppins']">
         Copyright unishop 2023. All right reserved
       </p>
     </>

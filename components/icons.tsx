@@ -7,7 +7,6 @@ import visa from "@/public/Visa.png"
 import backUp from "@/public/backUp.svg"
 import bgSighup from "@/public/bgSighup.png"
 import book from "@/public/book.png"
-import cap from "@/public/cap.png"
 import circle from "@/public/circle.svg"
 import coat from "@/public/coat.png"
 import delivery from "@/public/delivery.svg"
@@ -20,6 +19,7 @@ import featureTextbook from "@/public/featureTextbook.png"
 import google from "@/public/google.svg"
 import goolgeMap from "@/public/goolgemap.png"
 import headphone from "@/public/headPhone.svg"
+import cap from "@/public/highercap.png"
 import hodi from "@/public/hodi.png"
 import hodiBack from "@/public/hodiBack.png"
 import hodiSide from "@/public/hodiSide.png"
@@ -27,6 +27,7 @@ import instagramIcon from "@/public/instagram.svg"
 import iPad from "@/public/ipad.png"
 import letterSend from "@/public/letterSend.png"
 import line from "@/public/line.svg"
+import logout from "@/public/logout.svg"
 import outletIcon from "@/public/outlet.svg"
 import paper from "@/public/paper.png"
 import paypal from "@/public/payPal.png"
@@ -63,6 +64,7 @@ import {
   Plus,
   RefreshCcw,
   Search,
+  Settings,
   ShoppingBagIcon,
   SlidersHorizontal,
   Star,
@@ -114,6 +116,7 @@ export const Icons = {
   mapPinned: Map,
   profile: UserIcon,
   delete: Trash2,
+  Settings: Settings,
   gitHub: (props: LucideProps) => (
     <svg viewBox="0 0 438.549 438.549" {...props}>
       <path
@@ -245,5 +248,8 @@ export const Icons = {
   ),
   outletIcon: (props: LucideProps) => (
     <Image src={outletIcon} alt="Image" className={props.className} />
+  ),
+  logout: (props: LucideProps) => (
+    <Image src={logout} alt="Image" className={props.className} />
   ),
 }

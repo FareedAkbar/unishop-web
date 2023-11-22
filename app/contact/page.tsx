@@ -6,15 +6,15 @@ import { Icons } from "@/components/icons"
 
 const Contact = () => {
   return (
-    <div className="container py-5 ">
+    <div className="px-10 max-sm:px-5 py-5 ">
       <div className="text-black dark:text-white text-[1rem]  max-sm:text-lg max-sm:text-center font-semibold font-['Poppins']">
         Contact Information
       </div>
-      <div className="flex border max-md:flex-col rounded-lg p-5 mt-5">
-        <div className="w-1/2 max-md:w-full">
+      <div className="flex border max-lg:flex-col rounded-lg p-5 mt-5">
+        <div className="w-1/2 max-lg:w-full">
           <GeneralInquiries />
         </div>
-        <div className="w-1/2 max-md:w-full">
+        <div className="w-1/2 max-lg:w-full 2xl:px-20">
           <ContactForm />
         </div>
       </div>

@@ -38,7 +38,7 @@ const EditProfile = () => {
   })
 
   return (
-    <div className="container p-5">
+    <div className=" p-5">
       <div>
         <div className="flex items-center">
           <div className="text-black dark:text-white  text-opacity-60 text-[0.9rem] font-semibold font-['Poppins']">

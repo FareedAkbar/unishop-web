@@ -98,11 +98,11 @@ const CardProduct = ({ data }: any) => {
   }
 
   return (
-    <div className=" h-[25rem]  relative group w-[18rem] font-['Poppins']  ">
+    <div className=" h-[30rem]  relative group w-[18rem] font-['Poppins'] ">
       <ToastContainer />
 
       <div className="w-72 h-72  left-0 top-0 absolute bg-[#EEEEEE] rounded group-hover:opacity-90 transition-opacity">
-        <div className="left-[293px] top-[12px] absolute flex-col justify-start items-start gap-2 inline-flex">
+        <div className="left-[293px] max-sm:left-[250px] top-[12px] absolute flex-col justify-start items-start gap-2 inline-flex">
           <div className="w-8 h-8 relative right-12 cursor-pointer">
             <div
               onClick={() => handleWishlist(data)}

@@ -186,15 +186,15 @@ const Signup = () => {
   }
 
   return (
-    <div className=" h-screen">
+    <div className="  ">
       <ToastContainer />
 
-      <div className="relative max-md:hidden">
+      <div className="relative max-lg:hidden">
         <Icons.bgSighup className="h-auto" />
       </div>
-      <div className="flex max-md:flex-col absolute   container inset-0">
-        <div className="w-1/2 max-md:w-full "></div>
-        <div className=" flex w-1/2 items-center pt-10  justify-center   max-md:w-full">
+      <div className="flex max-lg:flex-col absolute container inset-0">
+        <div className="w-1/2 max-lg:w-full "></div>
+        <div className=" flex w-1/2 items-center pt-10  justify-center max-lg:w-full">
           <div className="rounded-lg border h-fit border-neutral-200 p-5 ">
             <div className="text-neutral-900 dark:text-white text-[1rem] font-semibold font-['Poppins']">
               Sign up now

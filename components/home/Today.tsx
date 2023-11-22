@@ -5,7 +5,7 @@ import CardSlider from "../cardslider/CardSlider"
 
 const Today = () => {
   return (
-    <div className="container">
+    <div className="">
       {" "}
       <div className="flex items-center gap-5 ">
         <div className="w-7 h-12 relative">

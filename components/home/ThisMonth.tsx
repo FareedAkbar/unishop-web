@@ -8,7 +8,7 @@ const ThisMonth = () => {
   const { data } = useContext(ContextApiData)
   console.log("Data...", data)
   return (
-    <div className="  mt-16 container">
+    <div className="  mt-16 ">
       <div className="flex items-center gap-5">
         <div className="w-7 h-12 relative">
           <div className="w-7 h-12 left-0 top-0 absolute bg-red-600 rounded" />
@@ -28,7 +28,7 @@ const ThisMonth = () => {
           View All
         </Link>
       </div>
-      <div className="flex gap-10 max-md:gap-5 max-md:justify-center flex-wrap overflow-hidden w-full mt-16 ">
+      <div className="flex gap-4 justify-between max-md:gap-5 max-md:justify-center flex-wrap overflow-hidden w-full mt-16 ">
         {data?.data?.map((item: any) => (
           <CardProduct data={item} />
         ))}

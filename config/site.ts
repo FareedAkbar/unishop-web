@@ -1,3 +1,5 @@
+import cap from "@/public/cap.png"
+
 import { Icons } from "@/components/icons"
 
 export type SiteConfig = typeof siteConfig
@@ -246,5 +248,89 @@ export const inquries = [
   {
     icon: Icons.mapPin,
     title: "P.O. Box U100 University of Wollongong P.O. NSW 2500",
+  },
+]
+
+export const cardData = [
+  {
+    id: 1,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 2,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 3,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 4,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 5,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 6,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 7,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 8,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 9,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
   },
 ]
