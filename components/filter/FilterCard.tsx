@@ -30,7 +30,7 @@ const FilterCard = () => {
     setRange(newRange)
   }
   return (
-    <ScrollArea className="  w-[22rem] max-sm:w-[18rem]  rounded-md border p-2">
+    <ScrollArea className=" 2xl:w-[18rem] w-[22rem]  max-sm:w-[18rem]  rounded-md border p-2">
       <div className="flex justify-between px-2 ">
         <div className="text-black dark:text-white text-[1rem] font-bold font-['Poppins']">
           Filters

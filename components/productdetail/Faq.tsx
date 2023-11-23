@@ -13,7 +13,7 @@ const Faq = () => {
       <div className="text-black text-[1rem] font-['Poppins'] border-b pb-2 ">
         Frequently Ask Question
       </div>
-      <div className="pt-5  flex flex-col px-64">
+      <div className="pt-5  flex flex-col px-64 max-lg:px-32 max-sm:px-0">
         {[1, 2, 3, 4, 5].map((item) => (
           <Accordion type="single" className="border-b " collapsible>
             <AccordionItem value="item-1">

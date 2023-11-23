@@ -2,6 +2,7 @@
 
 import React, { useContext, useEffect, useState } from "react"
 import { ContextApiData } from "@/context/ContextGlobal"
+import { useMediaQuery } from "react-responsive"
 
 import {
   Select,
@@ -17,7 +18,10 @@ import { Icons } from "../icons"
 const ProductCardPaginate = ({ data }: any) => {
   const [products, setProducts] = useState([]) // State to hold products
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 9 // Number of products to display per page
+  const is2xl = useMediaQuery({ minWidth: 1536 })
+
+  // Number of products to display per page based on screen size
+  const itemsPerPage = is2xl ? 12 : 8
 
   useEffect(() => {
     // Fetch new data and update the products state when the data changes
@@ -67,7 +71,7 @@ const ProductCardPaginate = ({ data }: any) => {
   )
 
   return (
-    <div className="py-10">
+    <div className="pb-10">
       <div className="flex justify-end max-sm:justify-center  flex-wrap   ">
         <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal font-['Poppins']">
           Showing{" "}

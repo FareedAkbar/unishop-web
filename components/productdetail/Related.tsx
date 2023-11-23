@@ -16,7 +16,7 @@ const Related = () => {
           Related Items
         </div>
       </div>
-      <div className="flex justify-between flex-wrap py-10">
+      <div className="flex justify-between max-sm:justify-center flex-wrap py-10">
         {data?.data?.map((item: any) => (
           <CardProduct data={item} />
         ))}

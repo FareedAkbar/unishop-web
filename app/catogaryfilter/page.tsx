@@ -10,7 +10,7 @@ import ProductCardPaginate from "@/components/resauble/ProductCardPaginate"
 const CatogaryFilter = () => {
   const { data } = useContext(ContextApiData)
   return (
-    <div className="container py-5">
+    <div className=" py-5 px-10">
       <div className="flex items-center max-sm:hidden">
         <div className="text-black dark:text-white text-opacity-60 text-sm font-normal font-['Poppins']">
           Home
@@ -28,11 +28,11 @@ const CatogaryFilter = () => {
           Clothing
         </div>
       </div>
-      <div className="flex max-md:flex-col w-full   pt-20 max-sm:pt-5">
-        <div className="w-2/3 max-md:w-full">
+      <div className="flex max-md:flex-col w-full gap-10 pt-20 max-sm:pt-5">
+        <div className="w-1/3 max-md:w-full mt-10">
           <CategoryFilter />
         </div>
-        <div className="-mt-12 max-md:-mt-0 max-md:ml-0  max-sm:justify-center ml-20  flex  ">
+        <div className="flex justify-between max-sm:justify-center    ">
           <ProductCardPaginate data={data?.data} />
         </div>
       </div>

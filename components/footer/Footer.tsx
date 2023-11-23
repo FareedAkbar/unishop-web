@@ -7,7 +7,7 @@ import { Icons } from "../icons"
 const Footer = () => {
   return (
     <>
-      <div className="bg-[#EEE] dark:bg-black px-20 max-md:px-10 max-sm:px-5">
+      <div className="bg-[#EEE] dark:bg-black px-10 max-md:px-10 max-sm:px-5">
         <div className="  py-10 ">
           <div className="flex max-sm:flex-col gap-16 max-sm:gap-0">
             <div>

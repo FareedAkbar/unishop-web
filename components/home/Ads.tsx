@@ -14,7 +14,7 @@ const Ads = () => {
 
   useEffect(() => {
     // Set the target date and time for the countdown
-    const targetDate = new Date("2023-11-22T00:00:00").getTime()
+    const targetDate = new Date("2023-11-24T00:00:00").getTime()
 
     const updateTimer = setInterval(() => {
       const currentDate = new Date().getTime()
@@ -45,7 +45,7 @@ const Ads = () => {
     <div className="w-full  h-auto max-md:h-auto flex max-lg:flex-col-reverse bg-gradient-to-r px-20 max-lg:px-3 from-red-800 via-red-700 to-red-700  py-10">
       <div className="w-1/2 max-lg:w-full flex flex-col justify-between ">
         <p className="text-[0.9rem] text-[#FF0010] font-semibold">Categories</p>
-        <p className=" text-white text-3xl max-sm:text-[1rem]  mt-3 leading-normal max-md:text-center font-semibold font-['Poppins']  ">
+        <p className=" text-white text-3xl max-sm:text-[1rem]  mt-3 leading-normal max-md:text-center font-semibold font-['Poppins'] 2xl:w-[40rem] ">
           Celebrate Success with Memorable Graduation Gifts
         </p>
         <div className="flex gap-10 max-md:gap-x-20 max-md:justify-evenly mt-5  flex-wrap">

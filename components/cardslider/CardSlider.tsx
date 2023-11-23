@@ -6,19 +6,23 @@ import Slider from "react-slick"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import { ContextApiData } from "@/context/ContextGlobal"
+import { useMediaQuery } from "react-responsive"
 
-import CountdownTimer from "../home/CountdownTimer"
 import { Icons } from "../icons"
 import CardProduct from "../resauble/CardProduct"
 
 const CardSlider = () => {
   const sliderRef = useRef<Slider | null>(null)
   const { data } = useContext(ContextApiData)
+  const is2xl = useMediaQuery({ minWidth: 1536 })
+  const isxl = useMediaQuery({ minWidth: 1536 })
+  const slidePerPage = is2xl ? 5 : 4
+
   const settings = {
     dots: false,
     infinite: false,
     speed: 300,
-    slidesToShow: 5,
+    slidesToShow: slidePerPage,
     slidesToScroll: 2,
     initialSlide: 0,
 
@@ -82,7 +86,7 @@ const CardSlider = () => {
 
   useEffect(() => {
     // Set the target date and time for the countdown
-    const targetDate = new Date("2023-11-03T00:00:00").getTime()
+    const targetDate = new Date("2023-11-24T00:00:00").getTime()
 
     const updateTimer = setInterval(() => {
       const currentDate = new Date().getTime()

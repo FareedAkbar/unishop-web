@@ -4,7 +4,7 @@ import { Icon } from "@radix-ui/react-select"
 import { Icons } from "../icons"
 
 const Review = () => {
-  const [reviewsToShow, setReviewsToShow] = useState(4) // Number of reviews to initially show
+  const [reviewsToShow, setReviewsToShow] = useState(3) // Number of reviews to initially show
   const totalReviews = 8 // Total number of reviews available
 
   const loadMoreReviews = () => {
@@ -42,9 +42,9 @@ const Review = () => {
           </button>
         </div>
       </div>
-      <div className="mt-5 flex flex-wrap justify-evenly">
+      <div className="mt-5 flex flex-wrap justify-between">
         {[1, 2, 3, 4, 5, 6, 7, 8].slice(0, reviewsToShow).map((item) => (
-          <div className="w-[40rem] max-sm:w-[15rem] p-10" key={item}>
+          <div className="w-[35rem] max-sm:w-[15rem] p-10" key={item}>
             <div className="flex justify-between">
               <div className="flex gap-1 border-">
                 <Icons.star className="w-[1.25rem] h-[1.25rem] text-transparent fill-[#FFAD33]" />
@@ -73,6 +73,8 @@ const Review = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="flex justify-center">
         {reviewsToShow < totalReviews && (
           <div
             className="text-black font-medium font-['Poppins'] hover:text-red-700 cursor-pointer"

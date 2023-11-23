@@ -22,16 +22,16 @@ export default function IndexPage() {
         <MobileViewCategoryList />
       </div> */}
       <div className="flex max-md:flex-col   py-2 gap-5 pb-14">
-        <div className="w-1/3 max-md:w-full max-md:hidden">
+        <div className="2xl:w-1/4 w-1/3 max-md:w-full max-md:hidden">
           <CategoryFilter />
         </div>
         <div className="w-full ">
           <SliderLanding />
         </div>
       </div>
-      <div className="">
+      {/* <div className="">
         <Outlet data={AllOutlets?.data} />
-      </div>
+      </div> */}
 
       <Today />
       <Ads />

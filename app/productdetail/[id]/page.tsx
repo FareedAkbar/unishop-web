@@ -8,7 +8,7 @@ import Related from "@/components/productdetail/Related"
 
 const page = ({ params }: any) => {
   return (
-    <div className="container py-5  ">
+    <div className="px-10 py-5  ">
       <ProductDetail params={params} />
       <Related />
     </div>

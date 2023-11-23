@@ -24,9 +24,12 @@ const CardCategorie = ({ category, subcategories, id }: any) => {
           {subcategories?.map((item: any, index: any) => (
             <Accordion type="single" collapsible className=" border-b  ml-5">
               <AccordionItem key={index} value={item.title_name}>
-                <p className="p-2 cursor-pointer hover:underline font-['Poppins']">
+                <Link
+                  href={"/filter"}
+                  className="mt-1 cursor-pointer hover:underline font-['Poppins']"
+                >
                   {item.title_name}
-                </p>
+                </Link>
               </AccordionItem>
             </Accordion>
           ))}

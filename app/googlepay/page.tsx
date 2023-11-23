@@ -5,7 +5,7 @@ import { Icons } from "@/components/icons"
 
 const page = () => {
   return (
-    <div className="container  py-5">
+    <div className="px-10  py-5">
       <div className=" flex   ">
         <div>
           <div className="flex items-center justify-center">

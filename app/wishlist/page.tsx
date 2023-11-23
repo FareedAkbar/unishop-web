@@ -19,7 +19,7 @@ const Wishlist = () => {
     }
   }, [])
   return (
-    <div className="container py-5 overflow-hidden">
+    <div className=" px-10 py-5 overflow-hidden">
       <div className="w-96 h-10 dark:text-white text-black text-[1rem] font-semibold font-['Poppins']">
         Favourite items
       </div>
@@ -37,7 +37,7 @@ const Wishlist = () => {
       <div className="h-14 max-lg:justify-center flex w-full dark:text-white text-black max-sm:text-lg text-2xl mt-20 font-semibold font-['Poppins']">
         Similar to this Collection
       </div>
-      <div className="flex pb-10 flex-wrap gap-10 max-lg:justify-center  max-sm:-ml-5">
+      <div className="flex pb-10 flex-wrap gap-3 justify-between max-lg:justify-center  max-sm:-ml-5">
         {data?.data?.map((item: any) => (
           <CardProduct data={item} />
         ))}

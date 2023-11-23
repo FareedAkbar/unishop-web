@@ -9,7 +9,7 @@ const Page = () => {
   const { data } = useContext(ContextApiData)
   console.log("Shoping cart  ...........", data)
   return (
-    <div className="px-10  max-sm:px-5">
+    <div className="px-10 mt-10 max-sm:px-5">
       <ProductCardPaginate data={data?.data} />
     </div>
   )

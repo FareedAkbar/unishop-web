@@ -98,7 +98,7 @@ const FixedTable = ({ data }: any) => {
             <td className="px-6 max-lg:px-1 text-[0.9rem] max-md:text-sm py-4 text-center">
               {data?.tockStatus?.quantity_check}
               <ul>
-                {data.stockStatus.result.map((item: any) => (
+                {data?.stockStatus?.result.map((item: any) => (
                   <li>
                     <div>{item.stock_name}</div>
                   </li>

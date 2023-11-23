@@ -5,8 +5,8 @@ import { Icons } from "../icons"
 
 const Feature = () => {
   return (
-    <div className="flex gap-5 max-lg:flex-col md:pt-16 md:container">
-      <div className="relative w-1/3 max-lg:w-full max-md:w-full justify-start items-start gap-7 inline-flex overflow-hidden">
+    <div className="flex gap-5 max-lg:flex-col justify-center md:pt-16 ">
+      <div className="relative w-1/3 max-lg:w-full max-md:w-full  justify-start items-start gap-7 inline-flex overflow-hidden">
         {/* Background Image */}
         <Icons.book className="absolute inset-0 w-full h-full object-cover max-xl:h-full max-lg:h-[20rem]" />
 
@@ -28,7 +28,7 @@ const Feature = () => {
         </div>
       </div>
 
-      <div className="w-full max-sm:flex-col flex max-md:w-full flex-col gap-5 ">
+      <div className="w-fit max-sm:flex-col  flex max-md:w-full flex-col gap-5 ">
         <div>
           <div>
             <Icons.paper className="bg-cover h-full max-sm:h-[10rem] " />

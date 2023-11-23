@@ -6,9 +6,9 @@ import ProductCardPaginate from "@/components/resauble/ProductCardPaginate"
 
 const FeatureFilter = () => {
   return (
-    <div className="container p-5">
+    <div className=" p-5">
       <div className="relative">
-        <Icons.featureTextbook />
+        <Icons.featureTextbook className="w-full" />
         <div className="absolute inset-0 flex items-center justify-center text-center text-white text-xl font-medium font-[Poppins] leading-normal">
           Home / Featured Products
         </div>

@@ -11,7 +11,7 @@ const Page = () => {
   const { data } = useContext(ContextApiData)
 
   return (
-    <div className="container">
+    <div className="px-10">
       <div className="flex max-md:w-full items-center max-sm:hidden pt-3">
         <div className="h-4 justify-start items-center gap-1 inline-flex">
           <div className="text-black dark:text-white text-opacity-60 font-normal text-[1rem] font-['Poppins']">
@@ -30,13 +30,12 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="flex pt-5 max-md:flex-col max-md:items-center gap-10">
-        <div className="py-5">
+      <div className="flex pt-5 max-md:flex-col max-md:items-center gap-5">
+        <div className="py-5 mt-5">
           <FilterCard />
         </div>
-
-        <div className="flex flex-wrap w-full">
-          <div className="flex flex-wrap font-['Poppins'] justify-center gap-5 items-center overflow-hidden">
+        <div className="flex flex-wrap w-full  justify-center items-center">
+          <div className="flex flex-wrap font-['Poppins'] justify-center gap-0 items-center overflow-hidden">
             <ProductCardPaginate data={data?.data} />
           </div>
         </div>

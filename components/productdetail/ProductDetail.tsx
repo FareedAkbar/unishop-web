@@ -86,8 +86,8 @@ const ProductDetail = ({ params }: any) => {
             </div>
           </div>
         </div>
-        <div className="flex pt-10 max-lg:flex-col">
-          <div className="w-1/2 max-sm:flex-col-reverse  max-sm:w-full max-lg:w-full max-lg:justify-center flex gap-3">
+        <div className="flex pt-10 max-xl:flex-col">
+          <div className="w-[35%] xl:w-[50%] max-sm:flex-col-reverse max-xl:justify-center max-xl:w-full max-lg:justify-center flex gap-3">
             <div className="flex flex-col max-sm:flex-row gap-3">
               <div className="bg-[#EEEEEE] flex justify-center items-center max-sm:w-auto max-sm:h-auto w-32 h-32">
                 {/* <Image src={""} alt="product image" className="w-32 h-32 max-sm:w-auto max-sm:h-auto" /> */}
@@ -157,7 +157,7 @@ const ProductDetail = ({ params }: any) => {
               )}
             </div>
           </div>
-          <div className="w-1/2 max-lg:w-full max-lg:mt-10">
+          <div className="w-1/2 max-xl:w-full max-xl:mt-10">
             <div className=" text-black dark:text-white text-[1rem]  font-semibold font-['Poppins']">
               {singleData?.food_name}
             </div>
