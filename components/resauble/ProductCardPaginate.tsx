@@ -1,0 +1,161 @@
+"use client"
+
+import React, { useContext, useEffect, useState } from "react"
+import { ContextApiData } from "@/context/ContextGlobal"
+import { useMediaQuery } from "react-responsive"
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import CardProduct from "@/components/resauble/CardProduct"
+
+import { Icons } from "../icons"
+
+const ProductCardPaginate = ({ data }: any) => {
+  const [products, setProducts] = useState([]) // State to hold products
+  const [currentPage, setCurrentPage] = useState(1)
+  const is2xl = useMediaQuery({ minWidth: 1536 })
+
+  // Number of products to display per page based on screen size
+  const itemsPerPage = is2xl ? 12 : 8
+
+  useEffect(() => {
+    // Fetch new data and update the products state when the data changes
+    if (data && data) {
+      setProducts(data) // Update products with new data
+    }
+  }, [data])
+
+  const totalPages = Math.ceil(products.length / itemsPerPage)
+
+  const getPageNumbers = () => {
+    const pageNumbers = []
+    const visiblePages = 5 // Number of page numbers to display
+
+    if (totalPages <= visiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i)
+      }
+    } else if (currentPage <= visiblePages - 1) {
+      for (let i = 1; i <= visiblePages - 1; i++) {
+        pageNumbers.push(i)
+      }
+      pageNumbers.push("...")
+      pageNumbers.push(totalPages)
+    } else if (currentPage >= totalPages - visiblePages + 2) {
+      pageNumbers.push(1)
+      pageNumbers.push("...")
+      for (let i = totalPages - visiblePages + 2; i <= totalPages; i++) {
+        pageNumbers.push(i)
+      }
+    } else {
+      pageNumbers.push(1)
+      pageNumbers.push("...")
+      for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+        pageNumbers.push(i)
+      }
+      pageNumbers.push("...")
+      pageNumbers.push(totalPages)
+    }
+
+    return pageNumbers
+  }
+
+  const visibleProducts = products.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
+  return (
+    <div className="pb-10">
+      <div className="flex justify-end max-sm:justify-center  flex-wrap   ">
+        <div className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal font-['Poppins']">
+          Showing{" "}
+          {Math.min((currentPage - 1) * itemsPerPage + 1, products.length)}-
+          {Math.min(currentPage * itemsPerPage, products.length)} of{" "}
+          {products.length} Products
+        </div>
+
+        <div className="flex max-sm:mt-3 ">
+          <span className="text-black dark:text-white text-opacity-60 text-[0.9rem] font-normal font-['Poppins']">
+            Sort by:{"  "}
+          </span>
+          <Select>
+            <SelectTrigger className="w-[150px] mt-2 max-sm:w-[100px] outline-none  h-[0.3rem]  border-none text-black dark:text-white text-[0.9rem] font-medium">
+              <SelectValue placeholder="Sort" className="outline-none" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Top Sales">Top Sales</SelectItem>
+              <SelectItem value="New Arrivals">New Arrivals</SelectItem>
+              <SelectItem value="Name">Name</SelectItem>
+              <SelectItem value="Price">Price</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div className=" flex  pt-5 max-md:flex-col max-md:items-center gap-5 ">
+        <div className=" flex flex-wrap w-full">
+          <div className="flex flex-wrap items-center  font-['Poppins']  2xl:gap-[1.16rem]  max-2xl:justify-between max-sm:justify-center max-lg:justify-evenly overflow-hidden  ">
+            {visibleProducts.map((item, index) => (
+              <CardProduct key={index} data={item} />
+            ))}
+          </div>
+          <div className="flex justify-center w-full pt-10 ">
+            <div className="flex justify-between flex-wrap gap-5 max-sm:justify-center ">
+              <button
+                className="w-32 h-12 px-3.5 py-2 bg-white rounded-lg border border-black border-opacity-10 justify-center items-center gap-2 inline-flex"
+                onClick={() =>
+                  setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
+                }
+                disabled={currentPage === 1}
+              >
+                <Icons.arrowLeft className="w-5 h-5 relative dark:text-black" />
+                <div className="text-black text-[0.9rem] font-medium font-['Poppins'] leading-tight">
+                  Previous
+                </div>
+              </button>
+              <div>
+                <div className="flex gap-2 max-sm:py-5">
+                  {getPageNumbers().map((pageNumber, index) => (
+                    <div
+                      key={index}
+                      className={`w-10 h-10 bg-black bg-opacity-5 dark:text-white  rounded-lg justify-center items-center inline-flex ${
+                        currentPage === pageNumber
+                          ? "bg-blue-500 dark:bg-black dark:border-2 dark:text-black  text-black font-bold"
+                          : "text-black dark:text-white"
+                      }`}
+                      onClick={() =>
+                        typeof pageNumber === "number" &&
+                        setCurrentPage(pageNumber)
+                      }
+                    >
+                      <div className="text-center cursor-pointer text-[0.9rem] dark:text-white">
+                        {pageNumber}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <button
+                className="w-24 h-12 px-3.5 py-2 bg-white rounded-lg border border-black border-opacity-10 justify-center items-center gap-2 inline-flex"
+                onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <div className="text-black text-[0.9rem] font-medium font-['Poppins'] leading-tight">
+                  Next
+                </div>
+                <Icons.arrowLeft className="w-5 h-5 relative rotate-180 dark:text-black" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default ProductCardPaginate

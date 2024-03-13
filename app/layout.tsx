@@ -1,39 +1,38 @@
-import "@/styles/globals.css"
-import { Metadata } from "next"
+"use client"
 
-import { siteConfig } from "@/config/site"
+import "@/styles/globals.css"
+import { usePathname } from "next/navigation"
+import { ContextGlobal } from "@/context/ContextGlobal"
+
 import { fontPoppins } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
+import Footer from "@/components/footer/Footer"
+import HeaderSignup from "@/components/header/HeaderSignup"
+import { metadata } from "@/components/metadata/metadata"
 import { SiteHeader } from "@/components/site-header"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
+import { TestDropDown } from "@/components/testDropDown/TestDropDown"
+import ZodTost from "@/components/testDropDown/ZodTost"
 import { ThemeProvider } from "@/components/theme-provider"
-
-export const metadata: Metadata = {
-  title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
-  },
-}
 
 interface RootLayoutProps {
   children: React.ReactNode
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const path = usePathname()
+  const isLoginPage = path === "/login"
+  const isSignupPage = path === "/signup"
+
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-        <head />
+        <head>
+          {/* Use the metadata object here */}
+          <title>{metadata.title.default}</title>
+          <meta name="description" content={metadata.description} />
+          {/* ...other head elements... */}
+        </head>
         <body
           className={cn(
             "min-h-screen bg-background font-poppins antialiased",
@@ -42,8 +41,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <div className="relative flex min-h-screen flex-col">
-              <SiteHeader />
-              <div className="flex-1">{children}</div>
+              {isLoginPage || isSignupPage ? null : <HeaderSignup />}
+              {isLoginPage || isSignupPage ? null : <SiteHeader />}
+              <ContextGlobal>
+                <div className="flex-1">{children}</div>
+              </ContextGlobal>
+              {isLoginPage || isSignupPage ? null : <Footer />}
+              {/* <TestDropDown />
+              {/* <ZodTost /> */}
             </div>
             <TailwindIndicator />
           </ThemeProvider>

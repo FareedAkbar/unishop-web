@@ -1,48 +1,91 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
 import { buttonVariants } from "@/components/ui/button"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { Icons } from "@/components/icons"
 import { MainNav } from "@/components/main-nav"
 import { ThemeToggle } from "@/components/theme-toggle"
 
+import CartProductAdd from "./cartnav/CartProductAdd"
+
 export function SiteHeader() {
+  const [cartData, setCartData] = useState([])
+
+  useEffect(() => {
+    // Get the cart data from localStorage
+    const existingCartData = localStorage.getItem("wishlist")
+    if (existingCartData) {
+      const parsedCartData = JSON.parse(existingCartData)
+      setCartData(parsedCartData)
+    }
+  }, [])
   return (
-    <header className="bg-background sticky top-0 z-40 w-full border-b">
-      <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
+    <header className="bg-background sticky py-1 top-0 z-40 w-full border-b">
+      <div className=" px-10 max-sm:10 max-md:px-10 max-sm:px-5 flex h-16 max-md:gap-5 max-sm:h-12 items-center space-x-4 max-sm:space-x-0 sm:justify-between sm:space-x-0">
         <MainNav items={siteConfig.mainNav} />
-        <div className="flex flex-1 items-center justify-end space-x-4">
+        <div className="flex flex-1   items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">
-            <Link
-              href={siteConfig.links.github}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div
-                className={buttonVariants({
-                  size: "icon",
-                  variant: "ghost",
-                })}
-              >
-                <Icons.gitHub className="h-5 w-5" />
-                <span className="sr-only">GitHub</span>
+            <div className="flex flex-1  items-center justify-end space-x-4 max-sm:space-x-2 dark:text-black">
+              <div className="w-[21.6875rem] max-md:w-full max-lg:hidden gap-1 px-2  max-sm:w-full flex justify-evenly items-center h-[2.875rem] max-sm:h-8 bg-[#F0EEED]">
+                <input
+                  type="text"
+                  placeholder="What are you looking for?"
+                  className="w-[14.875rem] max-md:w-full  max-sm:w-[5rem] h-[1.8rem] max-sm:text-[12px] max-sm:h-8 outline-none  bg-[#F0EEED]"
+                />
+                <Icons.search className="h-[1.5rem] max-sm:w-4 max-sm:h-4 w-[1.5rem]" />
               </div>
-            </Link>
-            <Link
-              href={siteConfig.links.twitter}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div
-                className={buttonVariants({
-                  size: "icon",
-                  variant: "ghost",
-                })}
-              >
-                <Icons.twitter className="h-5 w-5 fill-current" />
-                <span className="sr-only">Twitter</span>
+              <div className="flex">
+                <Link href={"/wishlist"}>
+                  <Icons.heart className="dark:text-white max-sm:w-4 max-sm:h-4  cursor-pointer hover:text-[#ED1C29]" />
+                </Link>
+                {cartData?.length > 0 && (
+                  <div className="absolute w-4 h-4 rounded-full text-white flex justify-center text-[10px] bg-[#ED1C29]">
+                    {cartData?.length}
+                  </div>
+                )}
               </div>
-            </Link>
+
+              <CartProductAdd />
+              <Link
+                href={""}
+                className="w-8 max-sm:w-4 max-sm:h-4  h-8   hover:bg-[#ED1C29] flex justify-center items-center rounded-full"
+              >
+                <Popover>
+                  <PopoverTrigger>
+                    {" "}
+                    <Icons.profile className="text-black dark:text-white hover:text-white " />
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <div className="flex items-center gap-2 hover:bg-slate-100 cursor-pointer rounded-lg px-2 p-1">
+                      <Icons.Settings className="h-4 w-4" />
+                      <Link
+                        href={"/editprofile"}
+                        className=" text-black text-[0.9rem] font-medium font-['Poppins']"
+                      >
+                        Account Setting
+                      </Link>
+                    </div>
+                    <div className="flex items-center gap-2 hover:bg-slate-100 cursor-pointer rounded-lg px-2 p-1">
+                      <Icons.logout className="h-4 w-4" />
+                      <Link
+                        href={"/login"}
+                        className=" text-black text-[0.9rem] font-medium font-['Poppins']"
+                      >
+                        Logout
+                      </Link>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </Link>
+            </div>
             <ThemeToggle />
           </nav>
         </div>

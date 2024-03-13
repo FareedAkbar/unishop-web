@@ -1,7 +1,11 @@
+import cap from "@/public/cap.png"
+
+import { Icons } from "@/components/icons"
+
 export type SiteConfig = typeof siteConfig
 
 export const siteConfig = {
-  name: "Next.js",
+  name: "UNISHOP",
   description:
     "Beautifully designed components built with Radix UI and Tailwind CSS.",
   mainNav: [
@@ -9,10 +13,324 @@ export const siteConfig = {
       title: "Home",
       href: "/",
     },
+    {
+      title: "Shop",
+      href: "/",
+      subMenu: [
+        { title: "Shop", href: "/shopproduct" },
+        { title: "Wishlist", href: "/wishlist" },
+        { title: "Tracking", href: "/ordertracking" },
+      ],
+    },
+    {
+      title: "Contact",
+      href: "/contact",
+    },
+    {
+      title: "Signup",
+      href: "/signup",
+    },
   ],
-  links: {
-    twitter: "https://twitter.com/shadcn",
-    github: "https://github.com/shadcn/ui",
-    docs: "https://ui.shadcn.com",
-  },
 }
+
+export const catogaryList = [
+  { category: "Text Book" },
+  { category: "Books" },
+  { category: "E-Text Book" },
+  { category: "Pluse" },
+  { category: "Graduation" },
+  { category: "Clothing" },
+  { category: "Stationary" },
+  { category: "Art & Gifts" },
+  { category: "Contact" },
+]
+
+export const serviceFeature = [
+  {
+    title: "FREE AND FAST DELIVERY",
+    desc: "Free delivery for all orders over $140",
+    image: Icons.delivery,
+  },
+  {
+    title: "24/7 CUSTOMER SERVICE",
+    desc: "Friendly 24/7 customer support",
+    image: Icons.headphone,
+  },
+  {
+    title: "MONEY BACK GUARANTEE",
+    desc: "We reurn money within 30 days",
+    image: Icons.backUp,
+  },
+]
+
+export const footerConfig = [
+  {
+    header: "Support",
+    subItems: [
+      {
+        header: "Building 11, University of Wollongong NSW 2522 Australia",
+      },
+      {
+        header: "ABN 28 915 832 337 ACN 081 114 089",
+      },
+      {
+        header: "UOW Pulse provides top quality campus life and services.",
+      },
+    ],
+  },
+  {
+    header: "Account",
+    subItems: [
+      {
+        header: "Postage & Handling",
+      },
+      {
+        header: "Refunds & Returns",
+      },
+      {
+        header: "About Us",
+      },
+      {
+        header: "Wishlist",
+      },
+    ],
+  },
+  {
+    header: "Quick Link",
+    subItems: [
+      {
+        header: "Privacy Policy",
+      },
+      {
+        header: "Terms Of Use",
+      },
+      {
+        header: "FAQ",
+      },
+      {
+        header: "Contact Us",
+      },
+    ],
+  },
+  {
+    header: "Shop Online",
+    subItems: [
+      {
+        header: "Text Books",
+      },
+      {
+        header: "Books",
+      },
+      {
+        header: "Merchandise",
+      },
+      {
+        header: "Stationery",
+      },
+    ],
+  },
+]
+
+export const catogaryListArray = [
+  {
+    category: "Text Book",
+    subcategories: [
+      {
+        nestedcategory: "Math Textbooks",
+        subnestedcategories: [
+          "Algebra",
+          "Calculus",
+          "Geometry",
+          "Statistics",
+          "Trigonometry",
+        ],
+      },
+      {
+        nestedcategory: "Science Textbooks",
+        subnestedcategories: [
+          "Algebra",
+          "Calculus",
+          "Geometry",
+          "Statistics",
+          "Trigonometry",
+        ],
+      },
+      {
+        nestedcategory: "History Textbookss",
+        subnestedcategories: [
+          "World History",
+          "American History",
+          "Ancient History",
+          "European History",
+          "Asian History",
+        ],
+      },
+    ],
+  },
+  {
+    category: "Art & Gifts",
+    subcategories: [
+      {
+        nestedcategory: "Math Textbooks",
+        subnestedcategories: [
+          "Algebra",
+          "Calculus",
+          "Geometry",
+          "Statistics",
+          "Trigonometry",
+        ],
+      },
+      {
+        nestedcategory: "Science Textbooks",
+        subnestedcategories: [
+          "Algebra",
+          "Calculus",
+          "Geometry",
+          "Statistics",
+          "Trigonometry",
+        ],
+      },
+      {
+        nestedcategory: "History Textbookss",
+        subnestedcategories: [
+          "World History",
+          "American History",
+          "Ancient History",
+          "European History",
+          "Asian History",
+        ],
+      },
+    ],
+  },
+]
+export const colors = [
+  "bg-red-600",
+  "bg-blue-700",
+  "bg-cyan-700",
+  "bg-orange-500",
+  "bg-violet-700",
+  "bg-red-500",
+  "bg-pink-600",
+  "bg-white",
+  "bg-black",
+
+  // Add more colors as needed
+]
+export const size = [
+  "XXL",
+  "XXS",
+  "XL",
+  "XS",
+  "M",
+  "L",
+  "S",
+
+  // Add more colors as needed
+]
+
+export const inquries = [
+  {
+    icon: Icons.phoneCall,
+    title: "4221 8050",
+  },
+  {
+    icon: Icons.mail,
+    title: "uow-bookshop@uow.edu.au",
+  },
+  {
+    icon: Icons.mapPin,
+    title: "2 Northfields Avenue Gwynneville NSW 2500",
+  },
+  {
+    icon: Icons.mapPin,
+    title: "2 Northfields Avenue Gwynneville NSW 2500",
+  },
+  {
+    icon: Icons.mapPin,
+    title: "P.O. Box U100 University of Wollongong P.O. NSW 2500",
+  },
+]
+
+export const cardData = [
+  {
+    id: 1,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 2,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 3,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 4,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 5,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 6,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 7,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 8,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+  {
+    id: 9,
+    img: cap,
+    desc: "UOW Cap Brushed Cotton (Other Colours Available)",
+    price: 120,
+    discound: 60,
+    rating: 88,
+    sale: 45,
+  },
+]
