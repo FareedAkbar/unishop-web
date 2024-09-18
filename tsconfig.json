@@ -38,6 +38,6 @@
     "**/*.js",
     ".next/types/**/*.ts",
     "types/*.d.ts"
-, "src/components/ui/navBar/mobileNav.jsx", "src/components/ui/navBar/mobileNav.jsx", "src/components/ui/navBar/mobileNav.jsx"  ],
+, "src/components/ui/navBar/mobileNav.tsx", "src/components/ui/navBar/mobileNav.tsx", "src/components/ui/navBar/mobileNav.tsx"  ],
   "exclude": ["node_modules"]
 }
