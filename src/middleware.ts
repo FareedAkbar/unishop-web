@@ -1,0 +1,54 @@
+import type { NextRequest } from "next/server";
+import { routerReader, saveReqOrigin } from "./utils/middleware-utils";
+
+export function middleware(req: NextRequest) {
+  const {
+    NOT_FOUND,
+    PROTECTED,
+    PUBLIC,
+    IS_LOGGED_IN,
+    IS_PAGE_OR_API,
+    RESPONSE_MAPPER,
+    REQ_ORIGIN,
+    URL,
+  } = routerReader(req);
+
+  console.log("------------------");
+  console.log({ NOT_FOUND, PROTECTED, PUBLIC, IS_LOGGED_IN, IS_PAGE_OR_API, REQ_ORIGIN, URL });
+
+  // -------- NOT FOUND --------
+  if (NOT_FOUND) {
+    console.log("NOT FOUND");
+    return RESPONSE_MAPPER[IS_PAGE_OR_API as keyof typeof RESPONSE_MAPPER]?.NOT_FOUND;
+  }
+
+  // -------- PUBLIC ROUTES --------
+  if (PUBLIC) {
+    console.log("PUBLIC");
+    // STOP USERS FROM ACCESSING ROUTES THAT ARE ONLY FOR PUBLIC USERS
+    if (IS_LOGGED_IN && !PROTECTED) {
+      console.log("LOGGED IN AND NOT PROTECTED");
+      return RESPONSE_MAPPER[IS_PAGE_OR_API as keyof typeof RESPONSE_MAPPER]?.ONLY_PUBLIC;
+    }
+  }
+
+  // -------- PROTECTED ROUTES --------
+  else if (PROTECTED) {
+    console.log("PROTECTED");
+    // STOP USERS FROM ACCESSING ROUTES THAT ARE ONLY FOR LOGGED IN USERS
+    if (!IS_LOGGED_IN) {
+      console.log("NOT LOGGED IN");
+      return RESPONSE_MAPPER[IS_PAGE_OR_API as keyof typeof RESPONSE_MAPPER]?.UNAUTHORIZED;
+    }
+  }
+
+  // SAVE PAGE REQUEST ORIGIN IN COOKIE
+  if (IS_PAGE_OR_API === "PAGE") {
+    console.log("SAVE REQ ORIGIN");
+    return saveReqOrigin(req);
+  }
+}
+
+export const config = {
+  matcher: "/((?!static|.\\..|_next).*)",
+};
