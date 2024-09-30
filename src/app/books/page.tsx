@@ -259,7 +259,7 @@ const MyComponent = () => {
                           ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
                           : BookIcon
                       }
-                      alt={itemDetail?.object_path || ''}
+                      alt={itemDetail?.object_path ?? ''}
                       width="500"
                       height="500"
                       className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-80 md:w-48"

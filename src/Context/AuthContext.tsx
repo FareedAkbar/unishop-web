@@ -347,7 +347,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const CheckoutApiWithUserName = async (payload: Booknet_customer_checkout): Promise<checkoutBooknetResponse> => {
    
     const response = await apiRouter(
-      "CHECKOUT_WITH_USERNAME",
+      "CHECKOUT",
       {
         method: "GET",
         queryParams: `username=${payload.username}&password=${payload.password}`,

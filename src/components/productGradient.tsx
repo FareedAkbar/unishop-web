@@ -20,7 +20,7 @@ interface ProductGradientProps {
   showAddToCart: boolean;
   onAddToCart: () => void;
   onRemoveFromCart: () => void;
-  openDetail: () => void;
+  openDetail?: () => void;
   stock?: stock;
   item: DataCart;
 }
@@ -104,7 +104,7 @@ export default function ProductGradient({
 
           <button
             className="flex items-center justify-end space-x-1 rounded-full bg-blue-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
-            onClick={() => openDetail()}
+            onClick={() => openDetail ? openDetail() : ""}
           >
             <PiEye className="text-lg hover:text-red-400" />
             <div className="pl-2">View Item</div>

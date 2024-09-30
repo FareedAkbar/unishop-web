@@ -85,7 +85,7 @@ const MyComponent = () => {
                   onRemoveFromCart={() => handleRemoveFromCart(item)}
                   stock={item.stock}
                   item={item}
-                openDetail={()=>{}}
+                // openDetail={()=>{}}
                 />
               ))}
           </div>

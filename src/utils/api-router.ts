@@ -70,8 +70,8 @@ const API_TYPE_MAPPER: Record<keyof typeof API_ROUTES, any> = {
   SENDOTP: {} as SendOTP,
   VERIFYOTP: {} as VerifyOTP,
   REGISTER: {} as Register,
-  CHECKOUT: {} as Register,
-  CHECKOUT_WITH_USERNAME: {} as Booknet_customer_checkout,
+  CHECKOUT: {} as Register | Booknet_customer_checkout,
+  // CHECKOUT_WITH_USERNAME: {} as Booknet_customer_checkout | Register,
   GENRE: {} as unknown,
   SIGN_OUT: {} as unknown,
 };

@@ -25,7 +25,7 @@ export enum API_ROUTES {
   VERIFYOTP = "https://ipos-dev.iconsole.com.au/api/v1/student/auth/verify-login-otp",
   GENRE = "https://booknet-dev.iconsole.com.au/api/genre",
   CHECKOUT = "https://booknet-dev.iconsole.com.au/api/customer",
-  CHECKOUT_WITH_USERNAME = "https://booknet-dev.iconsole.com.au/api/customer",
+  // CHECKOUT_WITH_USERNAME = "https://booknet-dev.iconsole.com.au/api/customer",
   REGISTER = "/api/auth/register",
   SIGN_OUT = "/api/auth/sign-out",
 }

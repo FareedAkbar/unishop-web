@@ -1,7 +1,7 @@
 "use client";
 
 // import Header from "~/components/header";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 // import { useSearchParams, usePathname } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 
@@ -48,10 +48,8 @@ const MyComponent = () => {
   const { toast } = useToast();
   const [calculateLoader, setCalculateLoader] = useState<boolean>(false);
   // const [customerId, setCustomerId] = useState<number>();
-  const [paymentSocketResponse, setPaymentSocketResponse] =
-    useState<socketResponse | null>(null);
+ 
   const [isOpenPaymentAlert, setIsOpenPaymentAlert] = useState(false);
-  
   const [transactionData, setTransactionData] =
     useState<trasactionResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -257,22 +255,19 @@ const MyComponent = () => {
   };
 
   const handlePlaceOrder = async () => {
-    if (paymentSocketResponse?.status && paymentSocketResponse.transaction_id) {
-    } else {
-      const x = {
-        customer_id: 123,
-        // guest: checkoutData?.customer_id ? null :checkoutData?.uuid,
-        amount: 0.01,
-      };
+    const x = {
+      customer_id: checkoutData?.customer_id,
+      guest_id: checkoutData?.customer_id ? null :checkoutData?.uuid,
+      amount: 0.01,
+    };
+    console.log(x);
+
+    try {
+      await getLinkForPayment(x);
+
       console.log(x);
-
-      try {
-        await getLinkForPayment(x);
-
-        console.log(x);
-      } catch (error) {
-        console.error("Failed to load data:", error);
-      }
+    } catch (error) {
+      console.error("Failed to load data:", error);
     }
   };
 
@@ -283,7 +278,7 @@ const MyComponent = () => {
     transaction_id: number;
   };
 
-  interface dataResponse {
+  interface dataresponse {
     data: socketResponse;
   }
 
@@ -312,9 +307,11 @@ const MyComponent = () => {
           description:
             "Your order has been processed successfully for this order.",
         });
+        
         setIsOpenPaymentAlert(false);
         try {
           await removeAllCartItems();
+         
         } catch (error) {
           console.error("Failed to load data:", error);
           // Optionally set an error state here
@@ -349,7 +346,7 @@ const MyComponent = () => {
         item_id: item.item_id,
         deal_id: null, // Assuming deal_id is null since it's not provided
         variable_id: null, // Assuming variable_id is null since it's not provided
-        quantity_item: item.quantity,
+        quantity_item:  item.stock?.quantity > 0 &&  item.quantity > item.stock?.quantity ? item.stock?.quantity : item.quantity,
         back_order_quantity: item.stock?.quantity > 0 &&  item.quantity > item.stock?.quantity ? item.quantity - item.stock?.quantity : 0,
         notes: "", // Use additional_notes if present
         is_deal: null, // Assuming is_deal is null since it's not provided
@@ -390,64 +387,103 @@ const MyComponent = () => {
       order_items: await convertPayload(),
     };
     try {
-      // await placeOrderApiCall(x);
+      await placeOrderApiCall(x);
       console.log(x);
     } catch (error) {
       console.error("Failed to load data:", error);
     }
   };
 
-  
+  // useEffect(() => {
+  //   if (uuidLocal) return;
+  //   const addUUid = async () => {
+  //     try {
+  //       setCalculateLoader(true);
+  //       await setUUID(myuuid);
+  //     } catch (error) {
+  //       console.error("Failed to load data:", error);
+  //     }
+  //   };
+  //   addUUid().catch((error) => {
+  //     console.error("Failed to load data in useEffect:", error);
+  //   });
+  // }, [uuidLocal]);
 
   useEffect(() => {
     console.log("Connected to server after");
-    if(!checkoutData?.uuid) return
-    socket.on("connect", () => {
+    if (!checkoutData?.uuid) return;
+  
+    const connectHandler = () => {
       console.log("Connected to server", socket.id);
-
-      socket.emit("/studentHandshake", { student_id: 123 }, () => {
+    
+      socket.emit("/studentHandshake", { student_id: checkoutData?.customer_id ?? checkoutData?.uuid }, () => {
         console.log("studentHandshake");
-        // This should log the response from the server
       });
-    });
+    };
+  
+    socket.on("connect", connectHandler);
+  
+    return () => {
+      socket.off("connect", connectHandler);
+    };
+  }, [checkoutData]);
 
-    socket.on(`paymentStatus`, async (dat: dataResponse) => {
-      console.log(dat);
+  const PaymentStatus = useCallback(() => {
+    if (!checkoutData?.uuid) return;
+    
+    console.log("Payment Socket");
+  
+    const handlePaymentStatus = async (dat: dataresponse) => {
       console.log("PaymentStatus");
       const { data } = dat;
-
-      setPaymentSocketResponse(data);
-
+  
+      console.log(data);
+  
       if (data.status) {
         toast({
           title: "Payment Successful",
-          description:
-            "Your payment has been processed successfully for this order.",
+          description: "Your payment has been processed successfully for this order.",
         });
-        setIsOpenPaymentAlert(false);
+      
+       
         try {
           await placeOrderApi(data.transaction_id);
         } catch (error) {
           console.error("Failed to load data:", error);
         }
-      }
-      if (!data.status) {
+      } else {
         toast({
           title: "Payment Declined",
           variant: "destructive",
-          description:
-            "Unfortunately, your payment could not be processed. Please try again.",
+          description: "Unfortunately, your payment could not be processed. Please try again.",
         });
-        setIsOpenPaymentAlert(false);
+        
+       
       }
-    });
-
+      setTransactionData(null)
+      setIsOpenPaymentAlert(false);
+    };
+  
+    // Register the listener
+    socket.on("paymentStatus", handlePaymentStatus);
+  
     // Cleanup on unmount
     return () => {
-      socket.off("connect");
-      socket.off(`paymentStatus`);
+      socket.off("paymentStatus", handlePaymentStatus);
     };
-  }, [newItems, shipping, total, checkoutData,transactionData ]);
+  }, [checkoutData, transactionData]);
+  
+  useEffect(() => {
+    if (!checkoutData?.uuid) return;
+    
+    
+    console.log("Payment socket initiated");
+    const cleanupPaymentStatus = PaymentStatus();
+  
+    return cleanupPaymentStatus;
+  }, [checkoutData, transactionData]);
+  
+  
 
   const closeModal = () => {
     setIsOpenPaymentAlert(false);
@@ -520,7 +556,7 @@ const MyComponent = () => {
         </div>
               <div className="mt-6 flex justify-end">
                 <Button
-                  onClick={(() => handlePlaceOrder)()}
+                  onClick={(() => handlePlaceOrder())}
                   className="bg-zinc-500 text-white hover:bg-transparent hover:bg-zinc-700"
                   disabled={totalAfterCalculation ? false : true}
                 >
