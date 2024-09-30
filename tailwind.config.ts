@@ -27,9 +27,9 @@ const config: Config = {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ['Lato', ...fontFamily.sans],
+  			sans: ['Poppins', ...fontFamily.sans],
   			serif: ['Libre Baskerville', ...fontFamily.serif],
-			  poppins: ["Poppins", "sans-serif"],
+			poppins: ["Poppins", "sans-serif"],
 
   		},
   		boxShadow: {
@@ -106,7 +106,10 @@ const config: Config = {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out'
   		}
-  	}
+  	},
+	  fontFamily: {
+		DEFAULT: ['Poppins', 'sans-serif'], 
+	  },
   },
   plugins: [addVariablesForColors, require("tailwindcss-animate")],
 };

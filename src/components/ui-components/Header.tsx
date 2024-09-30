@@ -148,7 +148,7 @@ const Header = () => {
         <nav className="flex flex-col md:w-1/2 w-full bg-white p-4 overflow-scroll md:hidden fixed top-0 right-0 z-30 h-[80%]">
             <button
                 onClick={() => {}}
-                className="flex items-center justify-between mb-4 w-full text-black font-poppins text-lg focus:outline-none"
+                className="flex items-center justify-between mb-4 w-full text-black  text-lg focus:outline-none"
             >
                 <span>Home</span>
             </button>
@@ -156,7 +156,7 @@ const Header = () => {
                 <div key={item.label} className="mb-4">
                     <button
                         onClick={() => item.subItems ? toggleDropdown(item.label) : null}
-                        className="flex items-center justify-between w-full text-black font-poppins text-lg focus:outline-none"
+                        className="flex items-center justify-between w-full text-black  text-lg focus:outline-none"
                     >
                         <span>{item.label}</span>
                         {item.subItems ? (
@@ -184,7 +184,7 @@ const Header = () => {
             ))}
             <button
                 onClick={() => {}}
-                className="flex items-center justify-between mb-4 w-full text-black font-poppins text-lg focus:outline-none"
+                className="flex items-center justify-between mb-4 w-full text-black  text-lg focus:outline-none"
             >
                 <span>Logout</span>
             </button>
@@ -213,7 +213,7 @@ const Header = () => {
                 onClick={() => item.subItems ? toggleDropdown(item.label) : handleSectionClick(item.label.toLowerCase())}
                 className={`flex items-center relative ${item.subItems ? 'cursor-pointer' : ''}`}
               >
-                <span className={`font-poppins activeSection === item.label.toLowerCase() ? 'underline text-black' : ''`}>
+                <span className={` activeSection === item.label.toLowerCase() ? 'underline text-black' : ''`}>
                   {item.label}
                 </span>
                 {item.subItems && (
@@ -228,7 +228,7 @@ const Header = () => {
                       key={subItem.label}
                       href={subItem.href}
                       onClick={subItem.onClick} // Call the onClick for subItems
-                      className="block font-poppins px-4 py-2 hover:bg-gray-100"
+                      className="block  px-4 py-2 hover:bg-gray-100"
                     >
                       {subItem.label}
                     </a>
