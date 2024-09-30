@@ -1,18 +1,29 @@
 "use client";
 
 import { Controls, Player } from "@lottiefiles/react-lottie-player";
-import Header from "~/components/header";
+// import Header from "~/components/header";
 import ProductGradient from "../../components/productGradient";
-import { Suspense, useEffect, useState } from "react";
-import Pagination from "~/components/pagination";
-import {useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+// import Pagination from "~/components/pagination";
+import { useSearchParams } from "next/navigation";
 import BookSkelton from "./bookSkelton";
 import { useAuthContext } from "~/Context/AuthContext";
-import BooksImage from '../../../public/book.json';
-import type PaginationData from '~/types/paginationData'
+import BooksImage from "../../../public/book.json";
+// import type PaginationData from '~/types/paginationData'
 import type DataCart from "~/types/book";
-
-
+import Spinner from "~/components/spinner";
+import BookIcon from "../../../public/bookIcon.png";
+import {
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalProvider,
+  useModal,
+} from "~/components/ui/animated-modal";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { FaCartPlus } from "react-icons/fa";
+import moment from "moment";
 
 const requestOptions: RequestInit = {
   method: "GET",
@@ -23,46 +34,51 @@ const requestOptions: RequestInit = {
   redirect: "follow", // Use the correct type for `redirect`
 };
 
-
 interface ApiResponse {
-  meta: PaginationData; // Adjust based on your actual structure
+  // meta: PaginationData; // Adjust based on your actual structure
   data: DataCart[];
+  status: boolean;
 }
 
 const MyComponent = () => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(1);
+  // const [currentPage, setCurrentPage] = useState<number>(1);
+  // const [totalPages, setTotalPages] = useState<number>(1);
   const [loader, setLoader] = useState<boolean>(false);
+  const [description, setDescription] = useState<string>("");
   const [data, setData] = useState<DataCart[]>([]);
-  const [meta, setMeta] = useState<PaginationData>({
-    current_page_url: null,
-    first_page_url: null,
-    from: 1,
-    last_page_url: null,
-    limit: 10,
-    links: [],
-    next_page_url: null,
-    page: 1,
-    pages: 1,
-    pagination: false,
-    prev_page_url: null,
-    to: 1,
-    total: 0,
-  });
+  const isFirstRender = useRef(true);
+  // const [meta, setMeta] = useState<PaginationData>({
+  //   current_page_url: null,
+  //   first_page_url: null,
+  //   from: 1,
+  //   last_page_url: null,
+  //   limit: 10,
+  //   links: [],
+  //   next_page_url: null,
+  //   page: 1,
+  //   pages: 1,
+  //   pagination: false,
+  //   prev_page_url: null,
+  //   to: 1,
+  //   total: 0,
+  // });
   const params = useSearchParams();
   const detail = params.get("detail");
-  const {cartItems, addCartItems, removeCartItems} = useAuthContext();
-  const fetchData = async (page: number) => {
+  const { setOpen } = useModal();
+  const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
+  const { cartItems, addCartItems, removeCartItems, genre } = useAuthContext();
+  const fetchData = async (genre_id: number) => {
+    setLoader(true);
     try {
       const response = await fetch(
-        `https://booknet-dev.iconsole.com.au/api/books?detailed=1&images=1&pagination=1&page=${page}&limit=15&entries=1`,
-        requestOptions
+        `https://booknet-dev.iconsole.com.au/api/books/getBooksByGenreCat?genre_id=${genre_id}&category_id=27&entries=1&images=1&detailed=1`,
+        requestOptions,
       );
-      const result: ApiResponse = await response.json() as ApiResponse;
-  
+      const result: ApiResponse = (await response.json()) as ApiResponse;
+
       // Check if result has the expected structure
-      if (result?.meta) {
-        setMeta(result.meta);
+      if (result?.status) {
+        // setMeta(result.meta);
         setData(result.data);
       } else {
         console.error("Unexpected result structure:", result);
@@ -76,132 +92,102 @@ const MyComponent = () => {
   };
 
   useEffect(() => {
+    if (!genre) return;
+    const genId = genre?.find((item) => item.genre == detail);
+    setDescription(genId?.description ?? "");
     const loadData = async () => {
       try {
-        // setLoader(true);
-        await fetchData(currentPage);
+        await fetchData(genId?.genre_id ?? 1);
         // setData(result);
         // setTotalPages(result.totalPages);
-        setTotalPages(2);
       } catch (error) {
         console.error("Failed to load data:", error);
+        setLoader(false);
         // Optionally set an error state here
       }
     };
-    loadData().catch((error) => {
-      console.error("Failed to load data in useEffect:", error);
-    });
-  }, [currentPage]);
-
+    if (isFirstRender.current) {
+      isFirstRender.current = false; // Prevents further API calls on first render
+    } else {
+      loadData().catch((error) => {
+        console.error("Failed to load data in useEffect:", error);
+      });
+    }
+  }, [genre, detail]);
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
     try {
-      
       await addCartItems(item);
-    
     } catch (error) {
-      console.error('Failed to add item to cart:', error);
+      console.error("Failed to add item to cart:", error);
     }
   };
   const handleRemoveFromCart = async (item: DataCart) => {
     try {
-      
       await removeCartItems(item);
-    
     } catch (error) {
-      console.error('Failed to remove item to cart:', error);
+      console.error("Failed to remove item to cart:", error);
     }
   };
 
-  const isItemInCart = (itemId: number) => {
-    
-    const newItems: DataCart[] = typeof cartItems === 'string' 
-    ? JSON.parse(cartItems) as DataCart[] 
-    : cartItems!;
-    return newItems.findIndex((cartItem: DataCart) => cartItem.item_id === itemId) > -1 ? true : false
+  const openDetail = async (item: DataCart) => {
+    setOpen(true);
+    setItemDetail(item);
   };
-  
-    // Handle pagination
-    useEffect(() => {
-      // const startIndex = (currentPage - 1) * meta.limit;
-      // const endIndex = startIndex + meta.limit;
-      setTotalPages(Math.ceil(meta.total / meta.limit));
-    }, [currentPage, meta]);
 
-    // const smoothScrollTo = (targetPosition: number, duration: number) => {
-    //   const startPosition = window.scrollY;
-    //   const distance = targetPosition - startPosition;
-    //   const startTime = performance.now();
-    
-    //   const easeInOutQuad = (time: number, start: number, change: number, duration: number) => {
-    //     time /= duration / 2;
-    //     if (time < 1) return (change / 2) * time * time + start;
-    //     time--;
-    //     return (-change / 2) * (time * (time - 2) - 1) + start;
-    //   };
-    
-    //   const animation = (currentTime: number) => {
-    //     const timeElapsed = currentTime - startTime;
-    //     const progress = easeInOutQuad(timeElapsed, startPosition, distance, duration);
-    //     window.scrollTo(0, progress);
-    
-    //     if (timeElapsed < duration) {
-    //       requestAnimationFrame(animation);
-    //     } else {
-    //       window.scrollTo(0, targetPosition); // Ensure it ends at the target position
-    //     }
-    //   };
-    
-    //   requestAnimationFrame(animation);
-    // };
- // Scroll to top with smooth animation
- 
- const handlePageChange = (page: number) => {
-  setCurrentPage(page);
-  // smoothScrollTo(0, 1500); //
-};
+  const isItemInCart = (itemId: number) => {
+    const newItems: DataCart[] =
+      typeof cartItems === "string"
+        ? (JSON.parse(cartItems) as DataCart[])
+        : cartItems!;
+    return newItems.findIndex(
+      (cartItem: DataCart) => cartItem.item_id === itemId,
+    ) > -1
+      ? true
+      : false;
+  };
+
+  // Handle pagination
+  // useEffect(() => {
+  //   // const startIndex = (currentPage - 1) * meta.limit;
+  //   // const endIndex = startIndex + meta.limit;
+  //   setTotalPages(Math.ceil(meta.total / meta.limit));
+  // }, [currentPage, meta]);
+
+  //  const handlePageChange = (page: number) => {
+  //   setCurrentPage(page);
+  //   // smoothScrollTo(0, 1500); //
+  // };
 
   return (
     <div>
-       <Header />
-       <main className="flex min-h-screen flex-col items-center justify-center">
-       
-
-       <div className="grid h-[40rem] w-full lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 items-center justify-between">
-         <div className="flex flex-col">
-         <h2 className="font-serif mr-5 ml-5 mx-auto text-xl relative z-20 md:text-4xl lg:text-7xl font-bold text-center text-black dark:text-white tracking-tight">
-         
+      <main className="flex min-h-screen flex-col items-center justify-center">
+        <div className="grid h-[40rem] w-full items-center justify-between sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
+          <div className="flex flex-col">
+            <h2 className="relative z-20 mx-auto mt-32 text-center font-serif text-2xl font-bold tracking-tight text-red-600 dark:text-white md:text-4xl lg:text-5xl">
               {detail}
-         
-        
-          </h2>
-          
-          <p className="font-serif relative left-0 top-[1px] bg-clip-text bg-no-repeat text-transparent
-          bg-gradient-to-r py-4 from-purple-500 via-violet-500 to-pink-500 [text-shadow:0_0_rgba(0,0,0,0.1)] text-1xl inter-var text-center  md:text-2xl lg:text-2xl">
-             Your one-stop shop for all your official UOW Merchandise, study
-             essentials, textbooks, course notes and equipment and graduation
-             memorabilia and gowns.
-           </p>
-         
-         
-      
-         </div>
-         <div className="mx-auto text-left">
-           <Player
-             autoplay
-             loop
-             src={BooksImage}
-             style={{ height: "500px", width: "500px" }}
-           >
-             <Controls buttons={["play", "repeat", "frame", "debug"]} />
-           </Player>
-         </div>
-       </div>
+            </h2>
+
+            <p className="text-1xl inter-var relative left-0 top-[1px] bg-gradient-to-r from-zinc-600 via-zinc-600 to-zinc-500 bg-clip-text bg-no-repeat py-4 text-center font-sans text-transparent [text-shadow:0_0_rgba(0,0,0,0.1)] md:text-2xl lg:text-2xl">
+              {description}
+            </p>
+          </div>
+          <div className="mx-auto text-left">
+            <Player
+              autoplay
+              loop
+              src={BooksImage}
+              style={{ height: "500px", width: "500px" }}
+            >
+              <Controls buttons={["play", "repeat", "frame", "debug"]} />
+            </Player>
+          </div>
+        </div>
         <div className="mx-auto max-w-5xl px-8"></div>
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols2 xs:grid-cols-1 gap-4 md:gap-8">
-            {loader ?? (
+          <div className="sm:grid-cols2 xs:grid-cols-1 grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
+            {loader && (
               <>
                 <BookSkelton />
                 <BookSkelton />
@@ -209,7 +195,8 @@ const MyComponent = () => {
                 <BookSkelton />
               </>
             )}
-            {data?.map((item: DataCart) => (
+            {!loader &&
+              data?.map((item: DataCart) => (
                 <ProductGradient
                   key={item.item_id}
                   book_title={item.book_title}
@@ -220,26 +207,271 @@ const MyComponent = () => {
                   onAddToCart={() => handleAddToCart(item)}
                   onRemoveFromCart={() => handleRemoveFromCart(item)}
                   stock={item.stock}
+                  item={item}
+                  openDetail={() => openDetail(item)}
                 />
               ))}
           </div>
-          {!loader ?? (
+          {/* {!loader ? (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
             />
-          )}
+          ) : ''} */}
         </div>
       </main>
      
+        <ModalBody>
+          <ModalContent>
+            <h4 className="mb-3 text-center font-serif text-lg font-bold text-neutral-600 dark:text-neutral-100 md:text-2xl">
+              {itemDetail?.book_title}
+            </h4>
+            <h6 className="mb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
+              {itemDetail?.description}
+            </h6>
+            <h6 className="mb-8 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
+              {itemDetail?.additional_notes}
+            </h6>
+            <div className="flex">
+              <div>
+                <div className="flex items-center justify-center">
+                  <motion.div
+                    key={"images"}
+                    style={{
+                      rotate: Math.random() * 20 - 10,
+                    }}
+                    whileHover={{
+                      scale: 1.1,
+                      rotate: 0,
+                      zIndex: 100,
+                    }}
+                    whileTap={{
+                      scale: 1.1,
+                      rotate: 0,
+                      zIndex: 100,
+                    }}
+                    className="-mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-neutral-700 dark:bg-neutral-800"
+                  >
+                    <Image
+                      src={
+                        itemDetail?.object_path
+                          ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
+                          : BookIcon
+                      }
+                      alt={itemDetail?.object_path || ''}
+                      width="500"
+                      height="500"
+                      className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-80 md:w-48"
+                    />
+                  </motion.div>
+                </div>
+              </div>
+              <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
+                <div className="flex flex-col">
+                  <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
+                    ${itemDetail?.item_sale_price}
+                  </span>
+                  <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
+                    SKU {itemDetail?.SKU}
+                  </span>
+                </div>
+                <div className="flex items-center justify-center">
+                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                    Series: {itemDetail?.edition}
+                  </span>
+                </div>
+                <div className="flex items-center justify-center">
+                  {/* <ElevatorIcon className="mr-1 h-4 w-4 text-neutral-700 dark:text-neutral-300" /> */}
+                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                    Published: {itemDetail?.introduced ? moment(itemDetail.introduced).format('Do MMMM, YYYY') : ''}
+                  </span>
+                </div>
+                <div className="flex items-center justify-center">
+                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                    Language: {itemDetail?.book_language}
+                  </span>
+                </div>
+                <div className="flex items-center justify-center">
+                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                    Number of Pages: {itemDetail?.pages}
+                  </span>
+                </div>
+                <div className="flex items-center justify-center">
+                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                    Publisher: {itemDetail?.publisher.publisher_name}
+                  </span>
+                </div>
+                <div className="flex items-center justify-center">
+                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                    Country of Publication: {itemDetail?.publisher.country}
+                  </span>
+                </div>
+                {itemDetail?.item_id && !isItemInCart(itemDetail.item_id) && itemDetail?.stock?.quantity ? (
+                  <button
+                    className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
+                    onClick={()=>handleAddToCart(itemDetail)}
+                  >
+                    <FaCartPlus className="text-lg" />
+                    <div className="pl-2">Add to Cart</div>
+                  </button>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          </ModalContent>
+          <ModalFooter className="gap-4">
+            <button
+              onClick={() => setOpen(false)}
+              className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm text-black dark:border-black dark:bg-black dark:text-white"
+            >
+              Close
+            </button>
+            {/* <button className="w-28 rounded-md border border-black bg-black px-2 py-1 text-sm text-white dark:bg-white dark:text-black">
+              Book Now
+            </button> */}
+          </ModalFooter>
+        </ModalBody>
+      
     </div>
+  );
+};
+const PlaneIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M16 10h4a2 2 0 0 1 0 4h-4l-4 7h-3l2 -7h-4l-2 2h-3l2 -4l-2 -4h3l2 2h4l-2 -7h3z" />
+    </svg>
+  );
+};
+
+const VacationIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M17.553 16.75a7.5 7.5 0 0 0 -10.606 0" />
+      <path d="M18 3.804a6 6 0 0 0 -8.196 2.196l10.392 6a6 6 0 0 0 -2.196 -8.196z" />
+      <path d="M16.732 10c1.658 -2.87 2.225 -5.644 1.268 -6.196c-.957 -.552 -3.075 1.326 -4.732 4.196" />
+      <path d="M15 9l-3 5.196" />
+      <path d="M3 19.25a2.4 2.4 0 0 1 1 -.25a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 1 .25" />
+    </svg>
+  );
+};
+
+const ElevatorIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M5 4m0 1a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z" />
+      <path d="M10 10l2 -2l2 2" />
+      <path d="M10 14l2 2l2 -2" />
+    </svg>
+  );
+};
+
+const FoodIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M20 20c0 -3.952 -.966 -16 -4.038 -16s-3.962 9.087 -3.962 14.756c0 -5.669 -.896 -14.756 -3.962 -14.756c-3.065 0 -4.038 12.048 -4.038 16" />
+    </svg>
+  );
+};
+
+const MicIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M15 12.9a5 5 0 1 0 -3.902 -3.9" />
+      <path d="M15 12.9l-3.902 -3.899l-7.513 8.584a2 2 0 1 0 2.827 2.83l8.588 -7.515z" />
+    </svg>
+  );
+};
+
+const ParachuteIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M22 12a10 10 0 1 0 -20 0" />
+      <path d="M22 12c0 -1.66 -1.46 -3 -3.25 -3c-1.8 0 -3.25 1.34 -3.25 3c0 -1.66 -1.57 -3 -3.5 -3s-3.5 1.34 -3.5 3c0 -1.66 -1.46 -3 -3.25 -3c-1.8 0 -3.25 1.34 -3.25 3" />
+      <path d="M2 12l10 10l-3.5 -10" />
+      <path d="M15.5 12l-3.5 10l10 -10" />
+    </svg>
   );
 };
 const BooksPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <MyComponent />
+    <Suspense fallback={<Spinner />}>
+      <ModalProvider>
+        <MyComponent />
+      </ModalProvider>
     </Suspense>
   );
 };

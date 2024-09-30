@@ -1,6 +1,4 @@
-// components/Select.tsx
 import React from "react";
-
 
 interface Option {
   value: string;
@@ -13,8 +11,9 @@ interface SelectProps {
   options: Option[];
   value?: string;
   placeholder?: string;
+  loader?: boolean; // Add loader prop
   error?: string;
-  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void; // Added onChange handler
+  onChange?: (option: Option) => void; // Update onChange type
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -22,11 +21,20 @@ const Select: React.FC<SelectProps> = ({
   name,
   options,
   placeholder,
-
+  loader = false, // Default to false
   error,
   value,
-  onChange // Destructure onChange
+  onChange,
 }) => {
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    const selectedOption = options.find(option => option.value === selectedValue);
+
+    if (selectedOption && onChange) {
+      onChange(selectedOption); // Send the entire option object
+    }
+  };
+
   return (
     <div className="relative">
       <select
@@ -34,16 +42,56 @@ const Select: React.FC<SelectProps> = ({
         name={name}
         className="block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-400 focus:border-indigo-300 sm:text-sm"
         value={value}
-        onChange={onChange} // Attach onChange handler
+        onChange={handleChange}
+        disabled={loader} // Disable select when loader is true
       >
-
-        {placeholder && <option value="" disabled>{placeholder}</option>}
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
+        {/* If loading, show a loading option */}
+        {loader ? (
+          <option value="" disabled>
+            Loading...
           </option>
-        ))}
+        ) : (
+          <>
+            {placeholder && (
+              <option value="" disabled>
+                {placeholder}
+              </option>
+            )}
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </>
+        )}
       </select>
+
+      {/* Display spinner when loading */}
+      {loader && (
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+          <svg
+            className="w-5 h-5 text-gray-500 animate-spin"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            ></path>
+          </svg>
+        </div>
+      )}
+
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );

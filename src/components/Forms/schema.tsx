@@ -142,44 +142,55 @@ const isValidZipCode = (zip: string, country: string): boolean => {
 };
 const LoginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters long" })
+  user_password: z.string().min(6, { message: "Password must be at least 6 characters long" })
+});
+const verifyOtpSchema = z.object({
+  
+  otp: z.string().min(4, { message: "OTP must be at least 4 characters long" })
 });
 
+
 // Define the schema
-const signupSchema = z.object({
-    firstname: z.string().min(1, { message: "First name is required" }),
-    lastname: z.string().min(1, { message: "Last name is required" }),
-    email: z.string().email({ message: "Invalid email address" }),
-    password: z.string().min(6, { message: "Password must be at least 6 characters long" }),
-    confirmPassword: z.string().min(6, { message: "Confirm password must be at least 6 characters long" }),
-  })
-  .superRefine((data, ctx) => {
-    if (data.password !== data.confirmPassword) {
-      ctx.addIssue({
-        path: ['confirmPassword'],
-        message: "Passwords don't match",
-        code: z.ZodIssueCode.custom,
-      });
-    }
-  });
+const SignupSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  address: z.string().min(1, "Address is required"),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  postal_code: z.string().min(1, "Postal code is required"),
+  country: z.string().optional(),
+  phone_number: z.string().min(1, "Phone Number is required")
+  .regex(/^\(0[4]\) \d{4} \d{4}$/, "Invalid mobile number format"),
+}).superRefine((data, ctx) => {
+  const { postal_code, country } = data;
+  
+  // Ensure that country is set
+  if (country && postal_code && !isValidZipCode(postal_code, 'Australia')) {
+    ctx.addIssue({
+      path: ['postal_code'],
+      message: 'Invalid postal code for the given country',
+      code: z.ZodIssueCode.custom,
+    });
+  }
+});
   // Define the Zod schema
 const CehckoutFormSchema = z.object({
   firstname: z.string().min(1, "First name is required"),
   lastname: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address"),
   company: z.string().optional(),
-  streetAddress: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zip: z.string().optional(),
+  streetAddress: z.string(),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  zip: z.string().min(1, "Zip Code is required"),
   country: z.string().optional(),
-  phoneNumber: z.string().optional(),
-  shippingMethod: z.string(),
+  phoneNumber: z.string().min(1, "Phone Number is required")
+  .regex(/^\(0[4]\) \d{4} \d{4}$/, "Invalid mobile number format"),
+  shippingMethod: z.string().min(1, "Shipping Method is required"),
 }).superRefine((data, ctx) => {
   const { zip, country } = data;
   
   // Ensure that country is set
-  if (country && zip && !isValidZipCode(zip, country)) {
+  if (country && zip && !isValidZipCode(zip, 'Australia')) {
     ctx.addIssue({
       path: ['zip'],
       message: 'Invalid ZIP code for the given country',
@@ -188,5 +199,10 @@ const CehckoutFormSchema = z.object({
   }
 });
 
+const booknetFormSchema = z.object({
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(6, { message: "Password must be at least 6 characters long" })
+});
 
-export {LoginSchema,signupSchema,CehckoutFormSchema}
+
+export {LoginSchema,SignupSchema,CehckoutFormSchema,verifyOtpSchema,booknetFormSchema}

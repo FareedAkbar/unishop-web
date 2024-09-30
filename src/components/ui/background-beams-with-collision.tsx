@@ -16,19 +16,19 @@ export const BackgroundBeamsWithCollision = ({
 
   const beams = [
     { initialX: 10, translateX: 10, duration: 7, repeatDelay: 3, delay: 2 },
-    { initialX: 600, translateX: 600, duration: 3, repeatDelay: 3, delay: 4 },
-    { initialX: 100, translateX: 100, duration: 7, repeatDelay: 7, className: "h-6" },
-    { initialX: 400, translateX: 400, duration: 5, repeatDelay: 14, delay: 4 },
-    { initialX: 800, translateX: 800, duration: 11, repeatDelay: 2, className: "h-20" },
-    { initialX: 1000, translateX: 1000, duration: 4, repeatDelay: 2, className: "h-12" },
-    { initialX: 1200, translateX: 1200, duration: 6, repeatDelay: 4, delay: 2, className: "h-6" },
+    { initialX: 600, translateX: 600, duration: 11, repeatDelay: 3, delay: 4 },
+    { initialX: 100, translateX: 100, duration: 11, repeatDelay: 7, className: "h-6" },
+    { initialX: 400, translateX: 400, duration: 9, repeatDelay: 4, delay: 4 },
+    { initialX: 800, translateX: 800, duration: 8, repeatDelay: 2, className: "h-20" },
+    { initialX: 1000, translateX: 1000, duration: 10, repeatDelay: 2, className: "h-12" },
+    { initialX: 1200, translateX: 1200, duration: 7, repeatDelay: 4, delay: 2, className: "h-6" },
   ];
 
   return (
     <div
       ref={parentRef}
       className={cn(
-        "h-full bg-gradient-to-b from-white to-neutral-100 dark:from-neutral-950 dark:to-neutral-800 relative flex items-center w-full justify-center overflow-hidden",
+        "h-max bg-gradient-to-b from-white to-neutral-100 dark:from-neutral-950 dark:to-neutral-800 relative flex items-center w-full justify-center overflow-hidden",
         className
       )}
     >
@@ -142,7 +142,7 @@ const CollisionMechanism = React.forwardRef<HTMLDivElement, CollisionMechanismPr
           }}
           variants={{
             animate: {
-              translateY: beamOptions.translateY ?? "1800px",
+              translateY: beamOptions.translateY ?? "2500px",
               translateX: beamOptions.translateX ?? "0px",
               rotate: beamOptions.rotate ?? 0,
             },

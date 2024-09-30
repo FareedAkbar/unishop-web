@@ -64,13 +64,13 @@ function Footer() {
           <div className="flex flex-col items-center gap-4 md:items-start md:col-span-1">
             <p className="text-lg font-bold text-[#d8d4d4] font-serif">Customer Service</p>
             <span className="block h-[4px] w-20 bg-[#ff0366] mb-2"></span>
-            <Link href="#" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">Contact Us</Link>
-            <Link href="#" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">Postage & Handling</Link>
-            <Link href="#" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">Refunds & Returns</Link>
-            <Link href="#" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">Terms & Conditions</Link>
+            <Link href="contact-us" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">Contact Us</Link>
+            <Link href="postage-and-handling" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">Postage & Handling</Link>
+            <Link href="refunds-and-returns" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">Refunds & Returns</Link>
+            <Link href="terms-and-conditions" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">Terms & Conditions</Link>
             <Link href="#" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">Privacy Policy</Link>
-            <Link href="#" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">About Us</Link>
-            <Link href="#" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">Academic Dress Hire</Link>
+            <Link href="about" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">About Us</Link>
+            <Link href="academic-dress-hire" className="text-sm font-medium text-[#646464] hover:text-[#ff0366]">Academic Dress Hire</Link>
           </div>
 
           {/* shop online */}

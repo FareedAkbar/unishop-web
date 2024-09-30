@@ -1,12 +1,15 @@
 "use client";
 
-import Header from "~/components/header";
+// import Header from "~/components/header";
 import { Suspense, useEffect, useState } from "react";
+import dynamic from 'next/dynamic';
 // import { useSearchParams, usePathname } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 import CheckoutForm from '~/components/Forms/checkout-form' 
-import { ExpandableCardDemo } from "~/components/blocks/card";
+const ExpandableCardDemo = dynamic(() => import('~/components/blocks/card'), { ssr: false });
+
 import type DataCart from "~/types/book";
+import BooknetForm from "~/components/Forms/booknet-form";
 
 
 // const requestOptions: RequestInit = {
@@ -26,6 +29,7 @@ const MyComponent = () => {
 
   const {cartItems } = useAuthContext()
   const [items, setItems] = useState<DataCart[]>([]);
+  const [view, setView] = useState("checkout");
 
   // Handle add to cart
   // const handleAddToCart = async (item: any) => {
@@ -63,13 +67,27 @@ const MyComponent = () => {
 
   return (
     <div>
-       <Header />
+       
        
        <main className="flex min-h-screen flex-col items-center justify-center">
 
 
         <div className="grid grid-cols-2 sm:grid-cols-1  md:grid-cols-2 lg:grid-cols-2 justify-center gap-12 px-4 pt-32">
-          <CheckoutForm />
+          <div className="z-30">
+          {view == 'checkout' ? (
+            <CheckoutForm />
+          ): (
+            <BooknetForm />
+          )}
+         
+          <div className="mt-5 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
+        <div className="flex justify-center text-black mt-2 hover:text-red-400">
+          <div className="cursor-pointer hover:text-red-500" onClick={()=>setView(view == "checkout" ? "booknetForm" : "checkout")}>
+            {view == 'checkout' ? 'I already have booknet account' : "I don't have booknet account yet"}
+           
+            </div>
+        </div>
+        </div>
           <div className="z-30">
               <ExpandableCardDemo data={items}/>
           </div>

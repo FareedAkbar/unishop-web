@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import type { LinkProps } from 'next/link';
+import type { LinkProps } from "next/link";
 import Image from "next/image";
 import { CgProfile } from "react-icons/cg";
 import { PiShoppingCartSimpleDuotone } from "react-icons/pi";
@@ -13,6 +13,22 @@ import { Button } from "../button";
 import { useAuthContext } from "~/Context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
 import type DataCart from "~/types/book";
+import { Avatar, AvatarImage } from "../avatar";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu"
 
 const transition = {
   type: "spring",
@@ -41,7 +57,7 @@ export const MenuItem = ({
     >
       <motion.p
         transition={{ duration: 0.3 }}
-        className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white md:text-xs font-serif"
+        className="cursor-pointer font-sans text-black hover:opacity-[0.9] dark:text-white md:text-xs"
       >
         {item}
       </motion.p>
@@ -58,10 +74,7 @@ export const MenuItem = ({
                 layoutId="active"
                 className="overflow-hidden rounded-2xl border border-black/[0.2] bg-white shadow-xl backdrop-blur-sm dark:border-white/[0.2] dark:bg-black"
               >
-                <motion.div
-                  layout
-                  className="h-full w-max p-4"
-                >
+                <motion.div layout className="h-full w-max p-4 font-sans">
                   {children}
                 </motion.div>
               </motion.div>
@@ -80,19 +93,22 @@ export const Menu = ({
   setActive: (item: string | null) => void;
   children: React.ReactNode;
 }) => {
-  const { cartItems, logout, isLoggedIn } = useAuthContext();
+  const { cartItems, logout, isLoggedIn, userInfo } = useAuthContext();
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [items, setItems] = useState<DataCart[]>([]);
   const path = usePathname();
 
   useEffect(() => {
-    const itemsCart: DataCart[] = typeof cartItems === "string" ? JSON.parse(cartItems) as DataCart[] : cartItems!;
+    const itemsCart: DataCart[] =
+      typeof cartItems === "string"
+        ? (JSON.parse(cartItems) as DataCart[])
+        : cartItems!;
     setItems(itemsCart);
   }, [cartItems]);
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(prev => !prev);
+    setIsSidebarOpen((prev) => !prev);
   };
 
   const handleLogOut = async () => {
@@ -106,7 +122,7 @@ export const Menu = ({
 
   return (
     <>
-      <div className="relative flex justify-between rounded-full border border-transparent bg-white shadow-input dark:border-white/[0.2] dark:bg-black">
+      <div className="relative flex justify-between rounded-full border bg-white shadow-input dark:border-white/[0.2] dark:bg-black">
         <div className="flex justify-between">
           <div className="justify-end px-8 lg:hidden">
             <VerticalDropdownNav />
@@ -131,26 +147,106 @@ export const Menu = ({
         </div>
 
         <div className="flex flex-row">
-          <div className="justify-end px-8 pt-0 hidden lg:block">
+          <div className="hidden justify-end px-8 pt-0 lg:block">
             <div className="flex flex-row">
-              <div className="mt-3 pr-2">
-                <CgProfile size={30} color="#D2A3A3" />
-              </div>
+              {isLoggedIn && userInfo?.object_path ? (
+                <div className="mt-3 pr-2">
+                  <Avatar>
+                    <AvatarImage
+                      src={`https://ipos-storage.s3.amazonaws.com/${userInfo?.object_path}`}
+                      alt=""
+                    />
+                  </Avatar>
+                </div>
+              ) : (
+                <>
+                  <div className="mt-3 pr-2">
+                    <CgProfile size={30} color="#D2A3A3" />
+                  </div>
+                </>
+              )}
 
-              <div className="flex flex-col mt-2">
+              <div className="mt-3 flex flex-col">
                 {isLoggedIn ? (
-                  <div
+                  <>
+                  {userInfo?.first_name && (
+                    <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <div className="cursor-pointer hover:bg-zinc-200 p-2 rounded">
+                    {userInfo.first_name} {userInfo.last_name}
+                    </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>
+                          Profile
+                          <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          Billing
+                          <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          Settings
+                          <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                       
+                      </DropdownMenuGroup>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>Team</DropdownMenuItem>
+                        <DropdownMenuSub>
+                          <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+                          <DropdownMenuPortal>
+                            <DropdownMenuSubContent>
+                              <DropdownMenuItem>Email</DropdownMenuItem>
+                              <DropdownMenuItem>Message</DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem>More...</DropdownMenuItem>
+                            </DropdownMenuSubContent>
+                          </DropdownMenuPortal>
+                        </DropdownMenuSub>
+                        <DropdownMenuItem>
+                          New Team
+                          <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>GitHub</DropdownMenuItem>
+                      <DropdownMenuItem>Support</DropdownMenuItem>
+                      <DropdownMenuItem disabled>API</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={()=>handleLogOut()}>
+                        Log out
+                        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                    
+                  )}
+                   {/* <div
                     onClick={handleLogOut}
-                    className="hover:text-red-400 text-sm cursor-pointer mt-3 font-semibold font-serif"
+                    className="cursor-pointer font-sans text-sm font-semibold hover:text-red-400"
                   >
                     Logout
-                  </div>
+                  </div> */}
+                  </>
+                  
+                 
                 ) : (
                   <>
-                    <Link href="login" className="hover:text-red-400 text-sm font-serif">
+                    <Link
+                      href="login"
+                      className="font-sans text-sm hover:text-red-400"
+                    >
                       Login
                     </Link>
-                    <Link href="signup" className="hover:text-red-400 text-sm font-serif">
+                    <Link
+                      href="signup"
+                      className="font-sans text-sm hover:text-red-400"
+                    >
                       Signup
                     </Link>
                   </>
@@ -158,22 +254,24 @@ export const Menu = ({
               </div>
             </div>
           </div>
-          <div className="justify-end px-8 mt-3 hidden lg:block">
+          <div className="mt-3 hidden justify-end px-8 lg:block">
             <div className="relative flex flex-row items-center">
-              <div className="relative m-auto pr-2 mt-0">
+              <div className="relative m-auto mt-0 pr-2">
                 <PiShoppingCartSimpleDuotone size={30} color="#D2A3A3" />
                 {items.length > 0 && (
-                  <span className="absolute top-0 right-0 w-5 h-5 bg-red-900 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                  <span className="absolute right-0 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-900 text-xs font-bold text-white">
                     {items.length}
                   </span>
                 )}
               </div>
 
-              <div className="flex flex-col mt-0">
+              <div className="mt-0 flex flex-col">
                 <Button
-                  disabled={path.includes("/checkout")}
+                  disabled={
+                    path.includes("/checkout") || path.includes("/placeorder")
+                  }
                   onClick={toggleSidebar}
-                  className="hover:text-red-400 bg-transparent hover:bg-tr text-black text-sm p-0 font-serif"
+                  className="hover:bg-tr bg-transparent p-0 font-sans text-sm text-black hover:text-red-400"
                 >
                   My Cart
                 </Button>
@@ -182,7 +280,10 @@ export const Menu = ({
           </div>
         </div>
       </div>
-      <SidebarCart isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <SidebarCart
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
     </>
   );
 };
@@ -211,7 +312,7 @@ export const ProductItem = ({
           className="flex-shrink-0 rounded-md shadow-2xl"
         />
         <div>
-          <h4 className="mb-1 text-xl font-bold text-black dark:text-white">
+          <h4 className="mb-1 font-sans text-xl font-bold text-black dark:text-white">
             {title}
           </h4>
           <p className="max-w-[10rem] text-sm text-neutral-700 dark:text-neutral-300">
@@ -223,7 +324,7 @@ export const ProductItem = ({
   );
 };
 
-interface HoveredLinkProps extends Omit<LinkProps, 'ref'> {
+interface HoveredLinkProps extends Omit<LinkProps, "ref"> {
   children: React.ReactNode;
 }
 export const HoveredLink = ({ children, ...rest }: HoveredLinkProps) => {
@@ -235,7 +336,7 @@ export const HoveredLink = ({ children, ...rest }: HoveredLinkProps) => {
   return (
     <Link
       {...rest}
-      className="text-neutral-700 hover:text-black dark:text-neutral-200 md:text-xs"
+      className="font-sans text-neutral-700 hover:text-black dark:text-neutral-200 md:text-xs"
     >
       {children}
     </Link>

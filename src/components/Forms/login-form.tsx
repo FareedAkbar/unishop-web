@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form"; // Use import type
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,33 +9,60 @@ import { cn } from "~/lib/utils";
 import Link from "next/link";
 import { LoginSchema } from './schema';
 import { useAuthContext } from "~/Context/AuthContext";
-import { useRouter } from "next/navigation";
+import { useToast } from "~/hooks/use-toast";
+import {  LoginResponse } from "~/types/loginResponse";
+import Spinner from "../spinner";
+
 
 // Define the type of form inputs
 type FormValues = z.infer<typeof LoginSchema>;
+interface LoginFormProps {
+  
+  setView: (payload: string) => void;
+  setLoginResponse: (payload: LoginResponse) => void;
+  
+}
 
-export default function SignupFormDemo() {
+export default function SignupFormDemo({setView,setLoginResponse} :LoginFormProps) {
   const { login } = useAuthContext();
-  const router = useRouter();
-
+  const [loader,setLoader] = useState(false)
+  const { toast } = useToast();
   // Set up React Hook Form
   const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(LoginSchema)
   });
 
   // Handle form submission
-  const onSubmit: SubmitHandler<FormValues> = data => {
-    console.log("Form submitted with data:", data);
-    login({ ...data, outlet_id: "221" }).then((res) => {
-      console.log(res);
-      router.push('/');
-    }).catch((err) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+   
+    try {
+      setLoader(true)
+      const res = await login(data);
+      setLoader(false)
+  
+      // Type guard to ensure res is LoginResponse
+      if (typeof res !== "boolean" && res.status) {
+        console.log(res)
+        setLoginResponse(res)
+        setView("Send-Otp");
+      }
+    } catch (err) {
+      const errorMessage = (err as Error).message || "An unknown error occurred";
+      setLoader(false)
+      toast({
+        title: "Login Failed",
+        variant: "destructive",
+        description: errorMessage, // Use the error message from the thrown error
+      });
       console.log(err);
-    });
+    }
   };
 
   return (
-    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black z-50">
+    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 border shadow-input bg-white dark:bg-black z-30">
+      {loader && (
+        <Spinner />
+      )}
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
         Welcome to Unishop
       </h2>
@@ -60,16 +87,16 @@ export default function SignupFormDemo() {
             id="password"
             placeholder="••••••••"
             type="password"
-            {...register("password")}
+            {...register("user_password")}
           />
-          {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+          {errors.user_password && <p className="text-red-500 text-sm">{errors.user_password.message}</p>}
         </LabelInputContainer>
 
         <button
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
         >
-          Login &rarr;
+          Login &rarr; 
           <BottomGradient />
         </button>
 

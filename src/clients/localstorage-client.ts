@@ -2,6 +2,9 @@
 import type DataCart from "~/types/book";
 import type UserType from "~/types/userType";
 import { isStringified } from "~/utils";
+import type { CheckoutForm} from "~/types/checkoutForm";
+import type { Genre } from "~/types/genre";
+
 
 const STORAGE_MAPPER = {
   USER_INFO: {
@@ -18,6 +21,31 @@ const STORAGE_MAPPER = {
     TYPE:[] as DataCart[],
     KEY:"cart-items",
     DEFAULT:[]
+  },
+  CHECKOUT_DATA:{
+    TYPE: {} as CheckoutForm | null,
+    KEY:"checkout-data",
+    DEFAULT: null
+  },
+  GENRE:{
+    TYPE: [] as Genre[] | null,
+    KEY:"genre",
+    DEFAULT: null
+  },
+  UUID:{
+    TYPE: "" as string | undefined,
+    KEY:"uuid",
+    DEFAULT: null
+  },
+  TOKEN:{
+    TYPE: "" as string,
+    KEY:"token",
+    DEFAULT: null
+  },
+  BOOKENT_CUSTOMER_ID:{
+    TYPE: {} as number | null,
+    KEY: "bookent_customer_id",
+    DEFAULT: null
   }
 };
 
@@ -41,6 +69,11 @@ export const localStorageClient = () => {
     
     localStorage.setItem(STORAGE_MAPPER[key].KEY, JSON.stringify(value));
   };
+  const setEmpty = <T extends keyof typeof STORAGE_MAPPER>(key: T, value: (typeof STORAGE_MAPPER)[T]["TYPE"]) => {
+    
+    
+    localStorage.setItem(STORAGE_MAPPER[key].KEY, JSON.stringify(value));
+  };
 
   const cleanStorage = (key?: keyof typeof STORAGE_MAPPER) => {
     if (key) {
@@ -55,5 +88,5 @@ export const localStorageClient = () => {
     }
   };
 
-  return { getItem, setItem, cleanStorage };
+  return { getItem, setItem, cleanStorage,setEmpty };
 };

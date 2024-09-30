@@ -3,29 +3,55 @@ import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form"; // Use import type
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { boolean, z } from "zod";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "~/lib/utils";
-import { CehckoutFormSchema } from "./schema";
+import { SignupSchema } from "./schema";
 import Select from "../Fields/select";
 import DynamicInput from "../Fields/dynamicInput";
 // import isEmpty from "lodash/isEmpty";
 
-import { getCachedCountriesList } from "~/_actions/country";
-import type { CountriesData, State } from "~/types/country";
+// import { getCachedCountriesList } from "~/_actions/country";
+// import type { CountriesData, Country, State } from "~/types/country";
+import { useAuthContext } from "~/Context/AuthContext";
+import { useRouter } from "next/navigation";
+import shippingOptions from "../constants/shippingMethod";
+import states from "../constants/austrailia";
+import cities from "../constants/cities";
+import { PhoneNumberInput } from "../ui/phoneNumberInput";
+import { v5 as uuidv5 } from "uuid";
+import { checkoutBooknetResponse } from "~/types/checkoutForm";
 
-type CehckoutFormValues = z.infer<typeof CehckoutFormSchema>;
+type CehckoutFormValues = z.infer<typeof SignupSchema>;
 
 export default function CehckoutForm() {
-  const [stateOptions, setStateOptions] = useState<{ value: number; label: string }[]>([]);
+  // const [stateOptions, setStateOptions] = useState<
+  //   { value: number; label: string }[]
+  // >([]);
   const [cityOptions, setCityOptions] = useState<
     { value: number; label: string }[]
   >([]);
+  const { checkoutFormData, checkoutData, CheckoutApi } = useAuthContext();
+  // const [countriesData, setCountriesData] = useState<CountriesData | null>(
+  //   null,
+  // );
 
-  const [countriesData, setCountriesData] = useState<CountriesData | null>(
-    null,
-  );
+  const defaultValues = checkoutData
+    ? {
+        ...checkoutData,
+        city:
+          cities
+            .find((state) => state.stateCode === checkoutData.stateCode)
+            ?.city.find((city) => city.value === Number(checkoutData.cityCode))
+            ?.value.toString() ?? "",
+        state: checkoutData?.state
+          ? states.find((state) => state.label === checkoutData.state)?.value
+          : null,
+      }
+    : {};
+
+  const router = useRouter();
 
   const {
     register,
@@ -34,165 +60,93 @@ export default function CehckoutForm() {
     setValue,
     formState: { errors },
   } = useForm<CehckoutFormValues>({
-    resolver: zodResolver(CehckoutFormSchema),
+    resolver: zodResolver(SignupSchema),
+    defaultValues,
   });
 
-  // Ensure Country interface is imported
-  useEffect(() => {
-    // Define the async function inside the useEffect
-    const loadCountriesData = async () => {
-      try {
-        
-        const data = await getCachedCountriesList();
-      
-        setCountriesData(data);
-        // Set the state with the fetched data
-      } catch (error) {
-        console.error("Failed to fetch countries data:", error);
-      }
-    };
+  const getCitiesForState = (stateId: string | null) => {
+    const foundState = cities.find((city) => city.stateCode === stateId);
+    return foundState ? foundState.city : [];
+  };
 
-    loadCountriesData().catch((error) => {
-      console.error("Error loading countries data:", error);
-    });
+  useEffect(() => {
+    if (!checkoutData) return;
+    setCityOptions(getCitiesForState(checkoutData.stateCode ?? ""));
   }, []);
 
-  const getStatesForCountry = (countryCode: string) => {
-    
-    const x = countriesData?.statesData;
-    return x
-      ? x
-          .filter((state) => state.country_code == countryCode)
-          .map((state) => ({
-            value: Number(state.id),
-            label: state.name,
-          }))
-      : [];
-  };
+  const handleStateChange = (e: string) => {
+    const stateId = e;
 
-  const getCitiesForState = (stateId: string) => {
-    const id = parseInt(stateId)
-    const x = countriesData?.citiesData;
-    return x
-      ? x
-          .filter((city) => city.state_id === id)
-          .map((city) => ({
-            value: city.id,
-            label: city.name,
-          }))
-      : [];
-  };
-
-  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const countryCode = e.target.value;
-    const x = countriesData?.countryData;
-
-    const selectedCountryName = x
-      ? x.find((country) => country.iso2 == e.target.value)?.name ?? ""
-      : "";
-
-    setValue("country", selectedCountryName);
-    setStateOptions(getStatesForCountry(countryCode));
-    // Set human-readable name
-    setValue("state", "");
-    setValue("city", "");
-
-    setCityOptions([]); // Clear city options
-  };
-
-  const handleStateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const stateId = e.target.value;
-  
-    const x = countriesData?.statesData;
+    const x = states;
     const selectedStateName =
-      (x?.find((state: State) => state.id == stateId)?.name) ?? "";
+      x?.find((state) => state.countryCode == stateId)?.label ?? "";
 
     setValue("state", selectedStateName); // Set human-readable name
     setValue("city", "");
     setCityOptions(getCitiesForState(stateId));
   };
 
-  const onSubmit: SubmitHandler<CehckoutFormValues> = (data) => {
-    // Map the selected country, state, and city IDs to their names
+  const onSubmit: SubmitHandler<CehckoutFormValues> = async (data) => {
+    // Map the selected state and city IDs to their names
 
-    const cityId = data.city ? parseInt(data.city, 10) : null;
-    const cD = countriesData ? countriesData.countryData : [];
-    const sD = countriesData ? countriesData.statesData : [];
-    const cityD = countriesData ? countriesData.citiesData : [];
-    // Find the human-readable names
-
-    const selectedCountryName =
-      cD.find((country) => country.iso2 === data.country)?.name ?? "";
-
+    // Get the human-readable state name based on the selected state ID
     const selectedStateName = data.state
-      ? sD.find((state) => state.id == data.state)?.name ?? ""
+      ? (states.find((state) => state.value.toString() === data.state)?.label ??
+        "")
       : "";
-    const selectedCityName =
-      cityId !== null
-        ? cityD.find((city) => city.id === cityId)?.name ?? ""
-        : "";
 
+    // Find the city options based on the selected state code
+    const foundState = cities.find((state) => state.stateCode === data.state);
+
+    // Get the selected city name
+    const selectedCityName = foundState
+      ? (foundState.city.find((city) => city.value.toString() === data.city)
+          ?.label ?? "")
+      : "";
+
+    // Prepare the updated data object for submission
+    const NAMESPACE = uuidv5("uniShop", uuidv5.URL);
+
+    const uuid = uuidv5(data.email, NAMESPACE);
     const updatedData = {
       ...data,
-      country: selectedCountryName,
+      country: "Australia",
+      stateCode: data.state,
+      cityCode: data.city,
       state: selectedStateName,
       city: selectedCityName,
+      customer_id: null,
+      booknet_customer_type_id: 1,
+      uuid: uuid,
     };
 
-    console.log(updatedData)
-    
+    try {
+      await checkoutFormData(updatedData);
+      await CheckoutApi(updatedData)
+        .then((res: checkoutBooknetResponse) => {
+          if (res.status) {
+            router.push("placeorder");
+          }
+        })
+        .catch((err) => console.log(err));
+      // router.push("placeorder");
+
+      console.log(updatedData);
+      // router.push("placeorder");
+    } catch (error) {
+      console.error("Failed to checkout:", error);
+    }
+
     // Handle form submission here
   };
-  const shippingOptions = [
-    {
-      value: "free",
-      amount: "0",
-      type: "free",
-      label:
-        "Click and Collect. Pickup Instore only. you will be notified once the order is ready for collection.",
-    },
-    {
-      value: "fixed",
-      amount: "10",
-      type: "fixed",
-      label: "Flat Rate- Austrlia wide- fixed.",
-    },
-    // { value: 'express', label: 'Express Shipping' },
-  ];
 
   return (
-    <div className="z-30 mx-auto w-full rounded-none bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
+    <div className="mx-auto w-full rounded-none border bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
       <h2 className="font-serif text-xl font-bold text-neutral-800 dark:text-neutral-200">
         Checkout
       </h2>
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
-          <LabelInputContainer>
-            <Label htmlFor="firstname">First name</Label>
-            <Input
-              id="firstname"
-              placeholder="Tyler"
-              type="text"
-              {...register("firstname")}
-            />
-            {errors.firstname && (
-              <p className="text-sm text-red-500">{errors.firstname.message}</p>
-            )}
-          </LabelInputContainer>
-          <LabelInputContainer>
-            <Label htmlFor="lastname">Last name</Label>
-            <Input
-              id="lastname"
-              placeholder="Durden"
-              type="text"
-              {...register("lastname")}
-            />
-            {errors.lastname && (
-              <p className="text-sm text-red-500">{errors.lastname.message}</p>
-            )}
-          </LabelInputContainer>
-        </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
           <Input
@@ -207,45 +161,44 @@ export default function CehckoutForm() {
         </LabelInputContainer>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="company">Company</Label>
+          <Label htmlFor="address">Street Address</Label>
           <Input
-            id="company"
-            placeholder="Your Company (optional)"
-            type="text"
-            {...register("company")}
-          />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="streetAddress">Street Address</Label>
-          <Input
-            id="streetAddress"
+            id="address"
             placeholder="123 Main St"
             type="text"
-            {...register("streetAddress")}
+            {...register("address")}
           />
+          {errors.address && (
+            <p className="text-sm text-red-500">{errors.address.message}</p>
+          )}
         </LabelInputContainer>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
-            <Label htmlFor="zip">Zip/Postal Code</Label>
+            <Label htmlFor="postal_code">Zip/Postal Code</Label>
             <Input
-              id="zip"
+              id="postal_code"
               placeholder="12345"
               type="text"
-              {...register("zip")}
+              {...register("postal_code")}
             />
-            {errors.zip && (
-              <p className="text-sm text-red-500">{errors.zip.message}</p>
+            {errors.postal_code && (
+              <p className="text-sm text-red-500">
+                {errors.postal_code.message}
+              </p>
             )}
           </LabelInputContainer>
           <LabelInputContainer>
             <Label htmlFor="country">Country</Label>
-            <Controller
-              name="country"
-              control={control}
-              
-              render={({ field }) => (
-                <div>
-                  <Select
+
+            <Input
+              id="country"
+              placeholder=""
+              value="Australia"
+              type="text"
+              disabled
+              {...register("country")}
+            />
+            {/* <Select
                     id="country"
                     name="country"
                     options={(countriesData?.countryData ?? []).map(
@@ -254,21 +207,45 @@ export default function CehckoutForm() {
                         label: country.name,
                       }),
                     )}
+                    loader={loader}
                     value={field.value ? field.value : ""}
                     placeholder="Select your country"
-                   
                     error={errors.country?.message}
                     onChange={(value) => {
                       handleCountryChange(value);
                       field.onChange(value);
                     }}
+                  /> */}
+          </LabelInputContainer>
+        </div>
+        <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
+          <LabelInputContainer>
+            <Label htmlFor="state">State/Province</Label>
+            <Controller
+              name="state"
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <Select
+                    id="state"
+                    name="state"
+                    options={states.map((state) => ({
+                      value: state.value.toString(), // Ensure value is a string
+                      label: state.label,
+                    }))}
+                    // loader={loader}
+                    value={field.value ? field.value : ""}
+                    placeholder="Select your state/province"
+                    onChange={(option) => {
+                      handleStateChange(option.value); // Call your existing state change handler
+                      field.onChange(option.value); // Update form state with the selected value
+                    }}
+                    error={errors.state?.message}
                   />
                 </div>
               )}
             />
           </LabelInputContainer>
-        </div>
-        <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
             <Label htmlFor="city">City</Label>
             <Controller
@@ -283,38 +260,11 @@ export default function CehckoutForm() {
                       value: city.value.toString(), // Ensure value is a string
                       label: city.label,
                     }))}
-                    value={field.value}
+                    // loader={loader}
+                    value={field.value ? field.value : ""}
                     placeholder="Select your city"
-                   
                     error={errors.city?.message}
-                    onChange={(e) => field.onChange(e)} // Updated
-                  />
-                </div>
-              )}
-            />
-          </LabelInputContainer>
-          <LabelInputContainer>
-            <Label htmlFor="state">State/Province</Label>
-            <Controller
-              name="state"
-              control={control}
-              render={({ field }) => (
-                <div>
-                  <Select
-                    id="state"
-                    name="state"
-                    options={stateOptions.map((state) => ({
-                      value: state.value.toString(), // Ensure value is a string
-                      label: state.label,
-                    }))}
-                    value={field.value}
-                    placeholder="Select your state/province"
-                   
-                    onChange={(value) => {
-                      handleStateChange(value);
-                      field.onChange(value);
-                    }}
-                    error={errors.state?.message}
+                    onChange={(e) => field.onChange(e.value)} // Updated
                   />
                 </div>
               )}
@@ -323,15 +273,22 @@ export default function CehckoutForm() {
         </div>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="phoneNumber">Phone Number</Label>
-          <Input
-            id="phoneNumber"
+          <Label htmlFor="phone_number">Phone Number</Label>
+          <PhoneNumberInput
+            id="phone_number"
             placeholder="(123) 456-7890"
             type="tel"
-            {...register("phoneNumber")}
+            {...register("phone_number", {
+              required: "Phone Number is required",
+            })}
           />
+          {errors.phone_number && (
+            <p className="text-sm text-red-500">
+              {errors.phone_number.message}
+            </p>
+          )}
         </LabelInputContainer>
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <p className="mb-2 font-serif font-bold">Shipping Method</p>
           <div className="flex flex-col">
             <DynamicInput
@@ -341,19 +298,14 @@ export default function CehckoutForm() {
               error={errors.shippingMethod?.message}
             />
           </div>
-        </div>
+        </div> */}
         <button
-          className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+          className="group/btn relative block h-10 w-full rounded-md bg-zinc-600 to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] hover:bg-zinc-800 dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
         >
           Checkout &rarr;
           <BottomGradient />
         </button>
-
-        <div className="mt-5 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
-        {/* <div className="flex justify-center text-black mt-2 hover:text-red-400">
-          <Link href="/login">I already have an account</Link>
-        </div> */}
       </form>
     </div>
   );

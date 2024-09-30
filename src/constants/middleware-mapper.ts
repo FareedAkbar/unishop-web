@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import {  PAGE_ROUTES } from "./api-routes";
+import { PAGE_ROUTES } from "./api-routes";
 
 export const PAGE_MAPPER: Record<Exclude<PAGE_ROUTES, PAGE_ROUTES.UNKNOWN>, { PUBLIC: boolean; PROTECTED: boolean }> = {
   [PAGE_ROUTES.HOME]: {
@@ -14,7 +14,7 @@ export const PAGE_MAPPER: Record<Exclude<PAGE_ROUTES, PAGE_ROUTES.UNKNOWN>, { PU
     PUBLIC: true,
     PROTECTED: false,
   },
- 
+
   [PAGE_ROUTES.NOT_FOUND]: {
     PUBLIC: true,
     PROTECTED: true,
@@ -28,6 +28,38 @@ export const PAGE_MAPPER: Record<Exclude<PAGE_ROUTES, PAGE_ROUTES.UNKNOWN>, { PU
     PROTECTED: false,
   },
   [PAGE_ROUTES.CHECKOUT]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
+  [PAGE_ROUTES.TEXTBOOKS]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
+  [PAGE_ROUTES.PLACEORDER]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
+  [PAGE_ROUTES.ACADEMIC_DRESS_HIRE]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
+  [PAGE_ROUTES.ABOUT]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
+  [PAGE_ROUTES.CONTACT_US]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
+  [PAGE_ROUTES.POSTAGE_AND_HANDLING]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
+  [PAGE_ROUTES.REFUND_AND_RETURNS]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
+  [PAGE_ROUTES.TERMS_AND_CONDITION]: {
     PUBLIC: true,
     PROTECTED: false,
   },

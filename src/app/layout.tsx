@@ -5,6 +5,8 @@ import { type Metadata } from "next";
 import { BackgroundBeamsWithCollision } from "~/components/ui/background-beams-with-collision";
 import Footer from "~/components/footer";
 import { AuthProvider } from "~/Context/AuthContext";
+import { Toaster } from "~/components/ui/toaster";
+import Header from "~/components/header";
 // import Loading from "./loading";
 
 export const metadata: Metadata = {
@@ -21,8 +23,10 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         {/* <Suspense fallback={<Loading />}> */}
           <AuthProvider>
+            <Header/>
             <BackgroundBeamsWithCollision>
               {children}
+              <Toaster />
             </BackgroundBeamsWithCollision>
           </AuthProvider>
           <Footer />

@@ -1,15 +1,39 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   HoveredLink,
   Menu,
   MenuItem,
 } from "~/components/ui/navBar/navbar-menu";
+import { useAuthContext } from "~/Context/AuthContext";
 import { cn } from "~/lib/utils";
+
 
 export default function Header({ className }: { className?: string }) {
   const [active, setActive] = useState<string | null>(null);
+  const {getGenre,genre} = useAuthContext();
+  const isFirstRender = useRef(true);
+
+  useEffect(()=>{
+    if (isFirstRender.current) {
+      isFirstRender.current = false; // Prevents further API calls on first render
+    } else {
+      getGenre().then((res) => {
+        console.log(res);
+        
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+   
+  },[])
+
+  
+
+ 
+
+
   return (
     <div className={cn("w-xl fixed inset-x-0 top-5 z-50 mx-auto", className)}>
       <div className="">
@@ -17,7 +41,7 @@ export default function Header({ className }: { className?: string }) {
           <Link
             onMouseEnter={() => setActive(null)}
             href="/"
-            className="hidden text-neutral-700 hover:text-black dark:text-neutral-200 md:text-xs lg:block font-serif"
+            className="hidden text-neutral-700 hover:text-black dark:text-neutral-200 md:text-xs lg:block font-sans"
           >
             HOME
           </Link>
@@ -37,17 +61,17 @@ export default function Header({ className }: { className?: string }) {
                 </div>
               </div> */}
              <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink  href={`books?detail=${"Engineering and Information Sciences EIS"}`}>
-              Engineering and Information Sciences EIS
+              <HoveredLink  href={`textbooks?detail=${"Engineering and Information Sciences EIS"}`}>
+              ENGINEERING AND INFORMATION SCIENCES EIS
               </HoveredLink>
-              <HoveredLink  href={`books?detail=${"Science, Medicine & Health SMAH"}`}>
-              Science, Medicine & Health SMAH
+              <HoveredLink  href={`textbooks?detail=${"Science, Medicine & Health SMAH"}`}>
+              SCIENCE, MEDICINE & HEALTH SMAH
               </HoveredLink>
-              <HoveredLink  href={`books?detail=${"Business and Law BAL"}`}>
-              Business and Law BAL
+              <HoveredLink  href={`textbooks?detail=${"Business and Law BAL"}`}>
+              BUSINESS AND LAW BAL
               </HoveredLink>
-              <HoveredLink href={`books?detail=${"Arts, Social Sciences & Humanities ASSH"}`}>
-              Arts, Social Sciences & Humanities ASSH
+              <HoveredLink href={`textbooks?detail=${"Arts, Social Sciences & Humanities ASSH"}`}>
+              ARTS, SOCIAL SCIENCES & HUMANITIES ASSH
               </HoveredLink>
             </div>
               {/* <ProductItem
@@ -83,18 +107,21 @@ export default function Header({ className }: { className?: string }) {
 
           <Link
             onMouseEnter={() => setActive(null)}
-            href={`books?detail=${"E-TEXTBOOKS"}`}
-            className="hidden text-neutral-700 hover:text-black dark:text-neutral-200 md:text-xs lg:block font-serif"
+            href={`https://unishopuow.vitalsource.com/`}
+            className="hidden text-neutral-700 hover:text-black dark:text-neutral-200 md:text-xs lg:block font-sans"
           >
             E-TEXTBOOKS
           </Link>
 
           <MenuItem setActive={setActive} active={active} item="BOOKS">
             <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href={`books?detail=${"GENERAL FICTION"}`}>
-                GENERAL FICTION
+              {genre?.map((item,index)=>
+                <HoveredLink key={index} href={`books?detail=${item.genre}`}>
+                {item.genre}
               </HoveredLink>
-              <HoveredLink href={`books?detail=${"NON-FICTION"}`}>
+              )}
+              
+              {/* <HoveredLink href={`books?detail=${"NON-FICTION"}`}>
                 NON-FICTION
               </HoveredLink>
               <HoveredLink href={`books?detail=${"CHILDREN'S BOOKS"}`}>
@@ -102,7 +129,7 @@ export default function Header({ className }: { className?: string }) {
               </HoveredLink>
               <HoveredLink href={`books?detail=${"TRAVEL GUIIDES"}`}>
                 TRAVEL GUIIDES
-              </HoveredLink>
+              </HoveredLink> */}
             </div>
           </MenuItem>
 

@@ -4,14 +4,14 @@ import { Control, Controller, FieldValues, Path } from "react-hook-form";
 interface InputOption {
   value: string;
   label: string;
-  amount: string;
+  amount: number;
   type: string;
 }
 
 interface DynamicInputProps<T extends FieldValues> {
   name: Path<T>; // Ensure name is a key of the form data type
   options: InputOption[];
-  control: Control<T>; // Use the generic type here
+  control?: Control<T>; // Use the generic type here
   error?: string; // Optional error message
 }
 

@@ -29,9 +29,9 @@ export const COOKIE_MAPPER = {
   },
 };
 
-export const cookieClient = (req: NextRequest, res: undefined | NextResponse = undefined) => {
+export const cookieClient = (req: NextRequest | undefined, res: undefined | NextResponse = undefined) => {
   const getItem = <T extends keyof typeof COOKIE_MAPPER>(key: T): (typeof COOKIE_MAPPER)[T]["TYPE"] => {
-    const item = req.cookies.get(COOKIE_MAPPER[key].KEY)?.value ?? COOKIE_MAPPER[key].DEFAULT;
+    const item = req?.cookies.get(COOKIE_MAPPER[key].KEY)?.value ?? COOKIE_MAPPER[key].DEFAULT;
     try {
       return isStringified(item)
         ? JSON.parse(item) as (typeof COOKIE_MAPPER)[T]["TYPE"]
@@ -62,12 +62,12 @@ export const cookieClient = (req: NextRequest, res: undefined | NextResponse = u
   };
 
   const removeItem = <T extends keyof typeof COOKIE_MAPPER>(key: T) => {
-    req.cookies.delete(COOKIE_MAPPER[key].KEY);
+    req?.cookies.delete(COOKIE_MAPPER[key].KEY);
   };
 
   const cleanCookieStore = () => {
     for (const key in COOKIE_MAPPER) {
-      req.cookies.delete(COOKIE_MAPPER[key as keyof typeof COOKIE_MAPPER].KEY);
+      req?.cookies.delete(COOKIE_MAPPER[key as keyof typeof COOKIE_MAPPER].KEY);
     }
   };
 

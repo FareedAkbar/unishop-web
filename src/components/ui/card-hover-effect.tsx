@@ -1,14 +1,16 @@
-'use client';
+"use client";
 import { cn } from "~/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
+import Image, { StaticImageData } from "next/image";
 
 type itemsType = {
   title: string;
   description: string;
-  link: string
-}
+  link: string;
+  image_path: StaticImageData;
+};
 
 export const HoverEffect = ({
   items,
@@ -21,47 +23,63 @@ export const HoverEffect = ({
 
   return (
     <>
-      <p className="text-xl text-black mt-4 mb-2 dark:text-neutral-200 font-bold font-serif"> Popular Categories</p>
-    <div
-      className={cn(
-        "grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3  py-4",
-        className
-      )}
-    >
-      {items.map((item, idx) => (
-        <Link
-          href={item.link}
-          key={item.link}
-          className="relative group  block p-2 h-full w-full"
-          onMouseEnter={() => setHoveredIndex(idx)}
-          onMouseLeave={() => setHoveredIndex(null)}
-        >
-          <AnimatePresence>
-            {hoveredIndex === idx && (
-              <motion.span
-                className="absolute inset-0 h-full w-full bg-red-500 dark:bg-slate-800/[0.8] block  rounded-3xl"
-                layoutId="hoverBackground"
-                initial={{ opacity: 0 }}
-                animate={{
-                  opacity: 1,
-                  transition: { duration: 0.15 },
-                }}
-                exit={{
-                  opacity: 0,
-                  transition: { duration: 0.15, delay: 0.2 },
-                }}
-              />
-            )}
-          </AnimatePresence>
-          <Card>
-            <CardTitle>{item.title}</CardTitle>
-            <CardDescription>{item.description}</CardDescription>
-          </Card>
-        </Link>
-      ))}
-    </div>
+      <p className="mb-2 mt-4 font-serif text-xl font-bold text-red-600 dark:text-neutral-200">
+        {" "}
+        Popular Categories
+      </p>
+      <div
+        className={cn(
+          "grid grid-cols-1 py-4 md:grid-cols-2 lg:grid-cols-3",
+          className,
+        )}
+      >
+        {items.map((item, idx) => (
+          <Link
+            href={item.link}
+            key={item.link}
+            className="group relative block h-full w-full p-2"
+            onMouseEnter={() => setHoveredIndex(idx)}
+            onMouseLeave={() => setHoveredIndex(null)}
+          >
+            <AnimatePresence>
+              {hoveredIndex === idx && (
+                <motion.span
+                  className="absolute inset-0 block h-full w-full rounded-3xl bg-red-500 dark:bg-slate-800/[0.8]"
+                  layoutId="hoverBackground"
+                  initial={{ opacity: 0 }}
+                  animate={{
+                    opacity: 1,
+                    transition: { duration: 0.15 },
+                  }}
+                  exit={{
+                    opacity: 0,
+                    transition: { duration: 0.15, delay: 0.2 },
+                  }}
+                />
+              )}
+            </AnimatePresence>
+            <Card>
+              <CardTitle>{item.title}</CardTitle>
+              <CardDescription>
+                <div className="grid grid-cols-2">
+                  <div>
+                    <Image
+                      src={item.image_path}
+                      alt={item.title}
+                      // layout="fill"
+                      objectFit="contain"
+                      className="rounded-lg"
+                    />
+                  </div>
+
+                  <div className="pl-2">{item.description}</div>
+                </div>
+              </CardDescription>
+            </Card>
+          </Link>
+        ))}
+      </div>
     </>
-    
   );
 };
 
@@ -75,8 +93,8 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "rounded-2xl h-full w-full p-4 overflow-hidden bg-black border border-transparent dark:border-white/[0.2] group-hover:border-slate-700 relative z-20",
-        className
+        "relative z-20 h-full w-full overflow-hidden rounded-2xl border border-transparent bg-black p-4 group-hover:border-slate-700 dark:border-white/[0.2]",
+        className,
       )}
     >
       <div className="relative z-50">
@@ -93,7 +111,12 @@ export const CardTitle = ({
   children: React.ReactNode;
 }) => {
   return (
-    <h4 className={cn("text-zinc-100 font-bold tracking-wide mt-4 font-serif", className)}>
+    <h4
+      className={cn(
+        "mt-4 font-serif font-bold tracking-wide text-zinc-100",
+        className,
+      )}
+    >
       {children}
     </h4>
   );
@@ -106,13 +129,13 @@ export const CardDescription = ({
   children: React.ReactNode;
 }) => {
   return (
-    <p
+    <div
       className={cn(
-        "mt-8 text-zinc-400 tracking-wide leading-relaxed text-sm font-sans",
-        className
+        "mt-8 font-sans text-sm leading-relaxed tracking-wide text-zinc-400",
+        className,
       )}
     >
       {children}
-    </p>
+    </div>
   );
 };

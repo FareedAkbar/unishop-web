@@ -1,7 +1,7 @@
 "use client";
 
 import { Controls, Player } from "@lottiefiles/react-lottie-player";
-import Header from "~/components/header";
+// import Header from "~/components/header";
 import ProductGradient from "../../components/productGradient";
 import { useSearchParams } from "next/navigation";
 import BooksImage from "../../../public/book.json";
@@ -42,7 +42,7 @@ const MyComponent = () => {
 
   return (
     <div>
-      <Header />
+      
       <main className="flex min-h-screen flex-col items-center justify-center">
         {/* {name}
       <Button onClick={()=>ChangeName()}>change name</Button> */}
@@ -84,6 +84,8 @@ const MyComponent = () => {
                   onAddToCart={() => handleAddToCart(item)}
                   onRemoveFromCart={() => handleRemoveFromCart(item)}
                   stock={item.stock}
+                  item={item}
+                openDetail={()=>{}}
                 />
               ))}
           </div>

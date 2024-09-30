@@ -5,47 +5,43 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "~/components/hooks/outSideClick";
 import { useAuthContext } from "~/Context/AuthContext";
 // import isEmpty from "lodash/isEmpty";
-import BookIcon from '../../../public/bookIcon.png'
+import BookIcon from "../../../public/bookIcon.png";
 import type DataCart from "~/types/book";
+import { MdWarning } from "react-icons/md";
+import { ScrollArea } from "~/components/ui/scroll-area";
+interface DataArray {
+  data: DataCart[];
+}
 
-
-  interface DataArray {
-    data: DataCart[];
-    
-  }
-  
-export function ExpandableCardDemo({data} : DataArray) {
- 
-  const {cartItems} = useAuthContext()
+export default function ExpandableCardDemo({ data }: DataArray) {
+  const { cartItems } = useAuthContext();
   const [items, setItems] = useState<DataCart[]>([]);
   const [active, setActive] = useState<(typeof items)[number] | boolean | null>(
-    null
+    null,
   );
   // const [removeItem, setRemoveItem] = useState({});
   // const [isOpenAlert, setIsOpenAlert] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);
   // const id = useId();
-  
+
   // const handleRemoveFromCart = async (item: any) => {
   //   try {
-      
+
   //     await removeCartItems(item);
-    
+
   //   } catch (error) {
   //     console.error('Failed to remove item to cart:', error);
   //   }
   // };
 
- 
-
   useEffect(() => {
-    const itemsCart: DataCart[] = typeof cartItems === 'string' ? JSON.parse(cartItems) as DataCart[] : cartItems!;
+    const itemsCart: DataCart[] =
+      typeof cartItems === "string"
+        ? (JSON.parse(cartItems) as DataCart[])
+        : cartItems!;
     setItems(itemsCart);
-
   }, [cartItems]);
-
-  
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -59,8 +55,10 @@ export function ExpandableCardDemo({data} : DataArray) {
     } else {
       document.body.style.overflow = "auto";
     }
+    if (typeof window !== "undefined") {
+      window.addEventListener("keydown", onKeyDown);
+    }
 
-    window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [active]);
 
@@ -74,15 +72,15 @@ export function ExpandableCardDemo({data} : DataArray) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 h-full w-full z-10"
+            className="fixed inset-0 z-10 h-full w-full bg-black/20"
           />
         )}
       </AnimatePresence>
       <AnimatePresence>
         {active && typeof active === "object" ? (
-          <div className="fixed inset-0  grid place-items-center z-[100]">
+          <div className="fixed inset-0 z-[100] grid place-items-center">
             <motion.button
-              key={`button-${active.book_title}`}
+              key={`button-${active.book_title}-${active.book_id}`}
               layout
               initial={{
                 opacity: 0,
@@ -96,55 +94,70 @@ export function ExpandableCardDemo({data} : DataArray) {
                   duration: 0.05,
                 },
               }}
-              className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
+              className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-white lg:hidden"
               onClick={() => setActive(null)}
             >
               <CloseIcon />
             </motion.button>
             <motion.div
-              layoutId={`card-${active.book_title}`}
+              layoutId={`card-${active.book_title}-${active.book_id}`}
               ref={ref}
-              className="w-full max-w-[500px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
+              className="flex h-full w-full max-w-[500px] flex-col overflow-hidden bg-white dark:bg-neutral-900 sm:rounded-3xl md:h-fit md:max-h-[90%]"
             >
-              <motion.div layoutId={`image-${active.book_title}`}>
+              <motion.div
+                layoutId={`image-${active.book_title}-${active.book_id}`}
+              >
                 <Image
                   priority
                   width={200}
                   height={200}
-                  src={!active.object_path ? `https://ipos-storage.s3.amazonaws.com/${active.object_path}` : BookIcon}  
+                  src={
+                    active.object_path
+                      ? `https://ipos-storage.s3.amazonaws.com/${active.object_path}`
+                      : BookIcon
+                  }
                   alt={active.book_title}
-                  className="w-full h-80 lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg object-cover object-top"
+                  className="h-80 w-full object-cover object-top sm:rounded-tl-lg sm:rounded-tr-lg lg:h-80"
                 />
               </motion.div>
 
               <div>
-                <div className="flex justify-between items-start p-4">
+                <div className="flex items-start justify-between p-4">
                   <div className="">
                     <motion.h3
-                      layoutId={`title-${active.book_title}`}
-                      className="font-bold text-neutral-700 dark:text-neutral-200 font-serif"
+                      layoutId={`title-${active.book_title}-${active.book_id}`}
+                      className="font-serif font-bold text-neutral-700 dark:text-neutral-200"
                     >
                       {active.book_title}
                     </motion.h3>
                     <motion.p
-                  layoutId={`description-${active.item_sale_price}`}
-                  className="text-neutral-600 dark:text-neutral-400 text-center md:text-left font-sans"
-                >
-                  ${active.item_sale_price}
-                </motion.p>
+                      layoutId={`item_sale_price-${active.item_sale_price}-${active.book_id}`}
+                      className="text-center font-sans text-neutral-600 dark:text-neutral-400 md:text-left"
+                    >
+                      ${active.item_sale_price}
+                    </motion.p>
                     <motion.p
-                      layoutId={`description-${active.description}`}
+                      layoutId={`description-${active.description}-${active.book_id}`}
                       className="text-neutral-600 dark:text-neutral-400"
                     >
                       {active.description}
                     </motion.p>
+                    {active.stock.quantity < active.quantity && (
+                      <motion.p
+                        layoutId={`stock-quantity-${active.quantity}-${active.stock.quantity}`}
+                        className="rounded bg-yellow-200 p-2 text-center text-neutral-700 dark:text-neutral-400 md:text-left"
+                      >
+                        We don&apos;t have as many quantity as you requested, but
+                        we&apos;ll back order the remaining{" "}
+                        {active.quantity - active.stock.quantity}.
+                      </motion.p>
+                    )}
                   </div>
 
                   <motion.button
-                    layoutId={`button-${active.book_title}`}
-                    onClick={()=>setActive(null)}
-                   
-                    className="px-4 py-3 text-sm rounded-full font-bold bg-red-400 text-white"
+                    layoutId={`button-${active.book_title}-${active.book_id}`}
+                    onClick={() => setActive(null)}
+                    className="rounded-full bg-red-400 px-4 py-3 text-sm font-bold text-white"
                   >
                     close
                   </motion.button>
@@ -167,68 +180,81 @@ export function ExpandableCardDemo({data} : DataArray) {
           </div>
         ) : null}
       </AnimatePresence>
-      <ul className="max-w-2xl gap-4 shadow shadow-card  shadow-zinc-400  w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 bg-white dark:bg-black">
+      <ScrollArea className=" h-3/4 rounded-md border mx-auto w-full max-w-2xl gap-4 bg-white p-4 shadow shadow-card shadow-zinc-300 dark:bg-black md:rounded-xl md:p-8">
+     
         <div>
-            <p className="font-bold font-serif text-lg">Order Summary</p>
-            <p>{data.length} items in cart</p>
+          <p className="font-serif text-lg font-bold">Order Summary</p>
+          <p>{data.length} items in cart</p>
         </div>
-        {data.map((card) => (
+        {data.map((card, index) => (
           <motion.div
-            layoutId={`card-${card.book_title}`}
-            key={`card-${card.book_title}`}
+            layoutId={`card-${card.book_title}-${card.book_id}`} // Ensure this is unique
+            key={`card-${card.book_title}-${card.book_id}`} // Same key pattern for consistency
             onClick={() => setActive(card)}
-            className="p-4 flex flex-col md:flex-row justify-between items-center shadow hover:shadow-zinc-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
+            className="flex cursor-pointer flex-col items-center justify-between rounded-xl p-4 shadow hover:bg-neutral-50 hover:shadow-zinc-300 dark:hover:bg-neutral-800 md:flex-row"
           >
-            <div className="flex gap-4 flex-col md:flex-row ">
-              <motion.div layoutId={`image-${card.book_title}`}>
+            <div className="flex flex-col gap-4 md:flex-row">
+              <motion.div layoutId={`image-${card.book_title}-${card.book_id}`}>
                 <Image
                   width={100}
                   height={100}
-                  src={card.object_path ? `https://ipos-storage.s3.amazonaws.com/${card.object_path}` : BookIcon}  
-                  
+                  src={
+                    card.object_path
+                      ? `https://ipos-storage.s3.amazonaws.com/${card.object_path}`
+                      : BookIcon
+                  }
                   alt={card.book_title}
-                  className="h-40 w-40 md:h-14 md:w-14 rounded-lg object-cover object-top"
+                  className="h-40 w-40 rounded-lg object-cover object-top md:h-14 md:w-14"
                 />
               </motion.div>
-              <div className="">
+              <div>
                 <motion.h3
-                  layoutId={`title-${card.book_title}`}
-                  className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left font-serif"
+                  layoutId={`title-${card.book_title}-${card.book_id}`}
+                  className="text-center font-serif font-medium text-neutral-800 dark:text-neutral-200 md:text-left"
                 >
                   {card.book_title}
                 </motion.h3>
                 <motion.p
-                  layoutId={`description-${card.item_sale_price}`}
-                  className="text-neutral-600 dark:text-neutral-400 text-center md:text-left"
+                  layoutId={`item_sale_price-${card.item_sale_price}-${card.book_id}`}
+                  className="text-center text-neutral-600 dark:text-neutral-400 md:text-left"
                 >
                   ${card.item_sale_price}
                 </motion.p>
                 <motion.p
-                  layoutId={`description-${card.description}`}
-                  className="text-neutral-600 dark:text-neutral-400 text-center md:text-left"
+                  layoutId={`quantity-${card.quantity}-${card.book_id}`}
+                  className="text-center text-neutral-600 dark:text-neutral-400 md:text-left"
+                >
+                  Quantity: {card.quantity}
+                </motion.p>
+                <motion.p
+                  layoutId={`description-${card.description}-${card.book_id}`}
+                  className="text-center text-neutral-600 dark:text-neutral-400 md:text-left"
                 >
                   {card.description}
                 </motion.p>
+                {card.stock.quantity < card.quantity && (
+                  <motion.p
+                    layoutId={`stock-quantity-${card.quantity}-${card.stock.quantity}`}
+                    className="rounded bg-yellow-200 p-2 text-center text-neutral-700 dark:text-neutral-400 md:text-left flex"
+                  >
+                   <MdWarning size={23}/> {" "}We don&apos;t have as many quantity as you requested, but we&apos;ll
+                    back order the remaining{" "}
+                    {card.quantity - card.stock.quantity}.
+                  </motion.p>
+                )}
               </div>
             </div>
             <motion.button
-              layoutId={`button-${card.book_title}`}
-              className="px-4 py-2 text-sm rounded-full font-bold bg-gray-100 hover:bg-green-500 hover:text-white text-black mt-4 md:mt-0"
+              layoutId={`button-view-${card.book_title}-${card.book_id}`}
+              className="mt-4 rounded-full bg-gray-100 px-4 py-2 text-sm font-bold text-black hover:bg-green-500 hover:text-white md:mt-0"
             >
               View
             </motion.button>
-            {/* <button
-                onClick={(event)=>{event.stopPropagation(); setRemoveItem(card); setIsOpenAlert(true);}}
-            //   layoutId={`button-${card.book_title}`}
-              className="px-4 py-2 text-sm rounded-full font-bold bg-gray-100 hover:bg-red-500 hover:text-white text-black mt-4 md:mt-0"
-            >
-              Remove
-            </button> */}
           </motion.div>
         ))}
-      </ul>
+     
+      </ScrollArea>
       {/* <AlertBox title="Remove Item" description="Are you sure you want to Remove this item from cart?" open={isOpenAlert} onClose={()=>setIsOpenAlert(false)} onContinue={()=> handleRemoveFromCart(removeItem)}></AlertBox> */}
-    
     </>
   );
 }
@@ -265,5 +291,3 @@ export const CloseIcon = () => {
     </motion.svg>
   );
 };
-
-

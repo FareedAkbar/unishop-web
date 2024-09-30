@@ -1,7 +1,28 @@
-import type UserType from "./userType";
+import UserType from "./userType";
+
+type LoginData = {
+  customer_id?: number;
+  email?: string 
+}
 
 
-export default interface LoginResponse {
+ interface LoginResponse {
     status: boolean;
-    data: UserType
+    data: LoginData;
+    message: string
   }
+
+  interface SendOTPResponse {
+    status: boolean
+  }
+
+  interface VerifyOTPResponse {
+    status: boolean;
+    message: string;
+    data: UserType;
+    token: string;
+  }
+
+
+
+  export type {LoginData, LoginResponse,SendOTPResponse,VerifyOTPResponse}

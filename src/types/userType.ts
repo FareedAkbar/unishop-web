@@ -1,21 +1,24 @@
 export default interface UserType {
-    employeeId: number;
-    profileId: number;
-    profileStatus: number;
-    firstName: string;
-    lastName: string;
-    outlet: string;
-    outletTemplate: number;
-    designation: number;
-    passportNo: string | null;
-    dateOfBirth: string | null; // or Date if you're handling it as a Date object
-    gender: string | null;
-    email: string;
-    phoneNumber: string;
-    signUp: string; // or Date if you're handling it as a Date object
-    createdAt: string; // or Date if you're handling it as a Date object
-    updatedAt: string; // or Date if you're handling it as a Date object
-    salt: string | null;
-    isDeveloper: number; // 1 for true, 0 for false
-    access_token: string;
+  customer_id: number;
+  first_name: string;
+  last_name: string;
+  national_ID: string;
+  email: string;
+  user_name: string;
+  date_of_birth: string; // ISO date string
+  gender: string | null; // Optional, could be null
+  campus: number;
+  country_code: string | null; // Optional, could be null
+  phone_number: string; // Assuming it's a string, change if needed
+  address: string | null; // Optional, could be null
+  city: string | null; // Optional, could be null
+  state: string | null; // Optional, could be null
+  postal_code: string | null; // Optional, could be null
+  country: string | null; // Optional, could be null
+  customer_type: number;
+  membership: string | null; // Optional, could be null
+  object_path: string;
+  check_id: number;
+  check_status: number;
+  uuid: string;
   }
