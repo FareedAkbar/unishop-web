@@ -1,19 +1,8 @@
 "use client";
-// import Header from "~/components/header";
-// import { useState } from "react";
 import dynamic from "next/dynamic";
-import { HoverEffect } from "~/components/ui/card-hover-effect";
 import { Controls, Player } from "@lottiefiles/react-lottie-player";
-import BooksImage from "../../public/book.json";
-import image1 from "../../public/homePage/Textbooks.jpg";
-import image2 from "../../public/homePage/etextbooks.png";
-import image3 from "../../public/homePage/Books-Banner.jpg";
-import image4 from "../../public/homePage/UOW_Merch.jpg";
-import image5 from "../../public/homePage/Graduation.jpg";
-import image6 from "../../public/homePage/Gifts.jpg";
-import ContactImage from "../../public/homePage/about-us-side.jpg";
 
-import Image, {type StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { CardBody, CardContainer, CardItem } from "~/components/ui/3d-card";
 
@@ -28,50 +17,6 @@ interface itemsType {
 }
 
 export default function HomePage() {
-  const projects: itemsType[] = [
-    {
-      title: "Textbooks",
-      description:
-        "Engineering, Science, Business and Arts, Social Sciences & Humanities.",
-      link: "books?detail=Engineering and Information Sciences EIS",
-      image_path: image1,
-    },
-    {
-      title: "E-Textbooks",
-      description:
-        "Read on the device that works for you in Bookshelf, the most used textbook reading app loaded with built-in, interactive features.",
-      link: "books?detail=Engineering and Information Sciences EIS",
-      image_path: image2,
-    },
-    {
-      title: "Books",
-      description:
-        " GENERAL FICTION,NON-FICTION, CHILDREN'S BOOKS and TRAVEL GUIIDES",
-      link: "books?detail=GENERAL FICTION",
-      image_path: image3,
-    },
-    {
-      title: "UHO Merch",
-      description:
-        "A technology company that focuses on building products that advance Facebook's mission of bringing the world closer together.",
-      link: "cloths?detail=MERCHANDISE",
-      image_path: image4,
-    },
-    {
-      title: "Clothing",
-      description:
-        "A multinational technology company focusing on e-commerce, cloud computing, digital streaming, and artificial intelligence.",
-      link: "cloths?detail=CLOTHING",
-      image_path: image5,
-    },
-    {
-      title: "Gifts",
-      description: " ERSTWILDER, INDIGENOUS ART MERCH and  IMAGINE HOMEWARES",
-      link: "gifts?detail=ERSTWILDER",
-      image_path: image6,
-    },
-  ];
-
   return (
     <div>
       {/* <Header /> */}
@@ -93,7 +38,7 @@ export default function HomePage() {
             <Player
               autoplay
               loop
-              src={BooksImage}
+              src={'/book.json'}
               style={{ height: "500px", width: "500px" }}
             >
               <Controls buttons={["play", "repeat", "frame", "debug"]} />
@@ -102,10 +47,6 @@ export default function HomePage() {
         </div>
         <div className="flex justify-center px-8">
           <div className="grid w-full max-w-screen-xl grid-cols-8 gap-4">
-            {/* Your content goes here */}
-            <div className="col-span-8 sm:col-span-12">
-              <HoverEffect items={projects} />
-            </div>
           </div>
         </div>
         <div className="flex justify-center px-8">
@@ -132,7 +73,7 @@ export default function HomePage() {
                       <CardItem translateZ="100">
                         <div className="mt-4 flex w-max justify-center">
                           <Image
-                            src={ContactImage}
+                            src={'/homePage/about-us-side.jpg'}
                             objectFit="contain"
                             className="h-60 w-auto rounded-xl object-cover group-hover/card:shadow-xl"
                             alt="thumbnail"

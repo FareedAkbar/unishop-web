@@ -31,7 +31,7 @@ const Header = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSectionClick = (section: string, isDropdown: boolean = false) => {
+  const handleSectionClick = (section: string, isDropdown = false) => {
     setActiveSection(section);
     if (isDropdown) {
       setOpenDropdown(null); // Close dropdown when clicking a section
@@ -58,7 +58,7 @@ const Header = () => {
       {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
       <div className="flex justify-between items-center border-b pb-4 md:hidden">
         {/* Hamburger Icon */}
-       
+
 
         {/* Logo in the Center */}
         <div className="flex-grow text-center">
@@ -107,13 +107,13 @@ const Header = () => {
           <button
             className={`p-3 z-30 ${isMobileMenuOpen ? 'bg-white' : ''}`} // You can adjust the background color if needed
             onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-            >
+          >
             {/* {isMobileMenuOpen ? (
                 <FaTimes className="text-xl text-red-500" />
             ) : ( */}
-                <FaBars className="text-xl text-red-500" />
+            <FaBars className="text-xl text-red-500" />
             {/* )} */}
-            </button>
+          </button>
 
         </div>
       </div>
@@ -131,66 +131,70 @@ const Header = () => {
 
       {/* Mobile Menu for Navigation Items */}
       {isMobileMenuOpen && (
-    <>
-        {/* Overlay to reduce opacity */}
-        <div
+        <>
+          {/* Overlay to reduce opacity */}
+          <div
             className="fixed inset-0 bg-black bg-opacity-50 z-20 " // Dark overlay
             onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
-        />
-        
-        <button
+          />
+
+          <button
             className={`fixed right-5 top-5  md:hidden sm:block z-40 ${isMobileMenuOpen ? 'bg-white' : ''}`} // Ensure z-30 is applied
             onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-        >
+          >
             <FaTimes className="text-xl text-red-500" />
-        </button>
-        
-        <nav className="flex flex-col md:w-1/2 w-full bg-white p-4 overflow-scroll md:hidden fixed top-0 right-0 z-30 h-[80%]">
+          </button>
+
+          <nav className="flex flex-col md:w-1/2 w-full bg-white p-4 overflow-scroll md:hidden fixed top-0 right-0 z-30 h-[80%]">
             <button
-                onClick={() => {}}
-                className="flex items-center justify-between mb-4 w-full text-black  text-lg focus:outline-none"
+              onClick={() => {
+                //
+              }}
+              className="flex items-center justify-between mb-4 w-full text-black  text-lg focus:outline-none"
             >
-                <span>Home</span>
+              <span>Home</span>
             </button>
             {categories.map((item) => (
-                <div key={item.label} className="mb-4">
-                    <button
-                        onClick={() => item.subItems ? toggleDropdown(item.label) : null}
-                        className="flex items-center justify-between w-full text-black  text-lg focus:outline-none"
-                    >
-                        <span>{item.label}</span>
-                        {item.subItems ? (
-                            openDropdown === item.label ? (
-                                <FaChevronDown />
-                            ) : (
-                                <FaChevronRight />
-                            )
-                        ) : null}
-                    </button>
-                    {item.subItems && openDropdown === item.label && (
-                        <div className="mt-1 ml-4">
-                            {item.subItems.map((subItem) => (
-                                <a
-                                    key={subItem.label}
-                                    href={subItem.href}
-                                    className="block text-sm text-gray-700 py-1 hover:underline"
-                                >
-                                    {subItem.label}
-                                </a>
-                            ))}
-                        </div>
-                    )}
-                </div>
+              <div key={item.label} className="mb-4">
+                <button
+                  onClick={() => item.subItems ? toggleDropdown(item.label) : null}
+                  className="flex items-center justify-between w-full text-black  text-lg focus:outline-none"
+                >
+                  <span>{item.label}</span>
+                  {item.subItems ? (
+                    openDropdown === item.label ? (
+                      <FaChevronDown />
+                    ) : (
+                      <FaChevronRight />
+                    )
+                  ) : null}
+                </button>
+                {item.subItems && openDropdown === item.label && (
+                  <div className="mt-1 ml-4">
+                    {item.subItems.map((subItem) => (
+                      <a
+                        key={subItem.label}
+                        href={subItem.href}
+                        className="block text-sm text-gray-700 py-1 hover:underline"
+                      >
+                        {subItem.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
             <button
-                onClick={() => {}}
-                className="flex items-center justify-between mb-4 w-full text-black  text-lg focus:outline-none"
+              onClick={() => {
+                //
+              }}
+              className="flex items-center justify-between mb-4 w-full text-black  text-lg focus:outline-none"
             >
-                <span>Logout</span>
+              <span>Logout</span>
             </button>
-        </nav>
-    </>
-)}
+          </nav>
+        </>
+      )}
 
       {/* Desktop Layout */}
       <div className="hidden md:flex md:items-center md:justify-between w-full mt-4 pb-4 border-b">

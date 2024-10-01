@@ -8,11 +8,9 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import BookSkelton from "./bookSkelton";
 import { useAuthContext } from "~/Context/AuthContext";
-import BooksImage from "../../../public/book.json";
 // import type PaginationData from '~/types/paginationData'
 import type DataCart from "~/types/book";
 import Spinner from "~/components/spinner";
-import BookIcon from "../../../public/bookIcon.png";
 import {
   ModalBody,
   ModalContent,
@@ -24,6 +22,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { FaCartPlus } from "react-icons/fa";
 import moment from "moment";
+import React from "react";
 
 const requestOptions: RequestInit = {
   method: "GET",
@@ -177,7 +176,7 @@ const MyComponent = () => {
             <Player
               autoplay
               loop
-              src={BooksImage}
+              src={'/book.json'}
               style={{ height: "500px", width: "500px" }}
             >
               <Controls buttons={["play", "repeat", "frame", "debug"]} />
@@ -221,119 +220,119 @@ const MyComponent = () => {
           ) : ''} */}
         </div>
       </main>
-     
-        <ModalBody>
-          <ModalContent>
-            <h4 className="mb-3 text-center font-serif text-lg font-bold text-neutral-600 dark:text-neutral-100 md:text-2xl">
-              {itemDetail?.book_title}
-            </h4>
-            <h6 className="mb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
-              {itemDetail?.description}
-            </h6>
-            <h6 className="mb-8 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
-              {itemDetail?.additional_notes}
-            </h6>
-            <div className="flex">
-              <div>
-                <div className="flex items-center justify-center">
-                  <motion.div
-                    key={"images"}
-                    style={{
-                      rotate: Math.random() * 20 - 10,
-                    }}
-                    whileHover={{
-                      scale: 1.1,
-                      rotate: 0,
-                      zIndex: 100,
-                    }}
-                    whileTap={{
-                      scale: 1.1,
-                      rotate: 0,
-                      zIndex: 100,
-                    }}
-                    className="-mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-neutral-700 dark:bg-neutral-800"
-                  >
-                    <Image
-                      src={
-                        itemDetail?.object_path
-                          ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                          : BookIcon
-                      }
-                      alt={itemDetail?.object_path ?? ''}
-                      width="500"
-                      height="500"
-                      className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-80 md:w-48"
-                    />
-                  </motion.div>
-                </div>
-              </div>
-              <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
-                <div className="flex flex-col">
-                  <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
-                    ${itemDetail?.item_sale_price}
-                  </span>
-                  <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
-                    SKU {itemDetail?.SKU}
-                  </span>
-                </div>
-                <div className="flex items-center justify-center">
-                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                    Series: {itemDetail?.edition}
-                  </span>
-                </div>
-                <div className="flex items-center justify-center">
-                  {/* <ElevatorIcon className="mr-1 h-4 w-4 text-neutral-700 dark:text-neutral-300" /> */}
-                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                    Published: {itemDetail?.introduced ? moment(itemDetail.introduced).format('Do MMMM, YYYY') : ''}
-                  </span>
-                </div>
-                <div className="flex items-center justify-center">
-                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                    Language: {itemDetail?.book_language}
-                  </span>
-                </div>
-                <div className="flex items-center justify-center">
-                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                    Number of Pages: {itemDetail?.pages}
-                  </span>
-                </div>
-                <div className="flex items-center justify-center">
-                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                    Publisher: {itemDetail?.publisher.publisher_name}
-                  </span>
-                </div>
-                <div className="flex items-center justify-center">
-                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                    Country of Publication: {itemDetail?.publisher.country}
-                  </span>
-                </div>
-                {itemDetail?.item_id && !isItemInCart(itemDetail.item_id) && itemDetail?.stock?.quantity ? (
-                  <button
-                    className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
-                    onClick={()=>handleAddToCart(itemDetail)}
-                  >
-                    <FaCartPlus className="text-lg" />
-                    <div className="pl-2">Add to Cart</div>
-                  </button>
-                ) : (
-                  ""
-                )}
+
+      <ModalBody>
+        <ModalContent>
+          <h4 className="mb-3 text-center font-serif text-lg font-bold text-neutral-600 dark:text-neutral-100 md:text-2xl">
+            {itemDetail?.book_title}
+          </h4>
+          <h6 className="mb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
+            {itemDetail?.description}
+          </h6>
+          <h6 className="mb-8 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
+            {itemDetail?.additional_notes}
+          </h6>
+          <div className="flex">
+            <div>
+              <div className="flex items-center justify-center">
+                <motion.div
+                  key={"images"}
+                  style={{
+                    rotate: Math.random() * 20 - 10,
+                  }}
+                  whileHover={{
+                    scale: 1.1,
+                    rotate: 0,
+                    zIndex: 100,
+                  }}
+                  whileTap={{
+                    scale: 1.1,
+                    rotate: 0,
+                    zIndex: 100,
+                  }}
+                  className="-mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-neutral-700 dark:bg-neutral-800"
+                >
+                  <Image
+                    src={
+                      itemDetail?.object_path
+                        ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
+                        : '/bookIcon.png'
+                    }
+                    alt={itemDetail?.object_path ?? ''}
+                    width="500"
+                    height="500"
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-80 md:w-48"
+                  />
+                </motion.div>
               </div>
             </div>
-          </ModalContent>
-          <ModalFooter className="gap-4">
-            <button
-              onClick={() => setOpen(false)}
-              className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm text-black dark:border-black dark:bg-black dark:text-white"
-            >
-              Close
-            </button>
-            {/* <button className="w-28 rounded-md border border-black bg-black px-2 py-1 text-sm text-white dark:bg-white dark:text-black">
+            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
+              <div className="flex flex-col">
+                <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
+                  ${itemDetail?.item_sale_price}
+                </span>
+                <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
+                  SKU {itemDetail?.SKU}
+                </span>
+              </div>
+              <div className="flex items-center justify-center">
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  Series: {itemDetail?.edition}
+                </span>
+              </div>
+              <div className="flex items-center justify-center">
+                {/* <ElevatorIcon className="mr-1 h-4 w-4 text-neutral-700 dark:text-neutral-300" /> */}
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  Published: {itemDetail?.introduced ? moment(itemDetail.introduced).format('Do MMMM, YYYY') : ''}
+                </span>
+              </div>
+              <div className="flex items-center justify-center">
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  Language: {itemDetail?.book_language}
+                </span>
+              </div>
+              <div className="flex items-center justify-center">
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  Number of Pages: {itemDetail?.pages}
+                </span>
+              </div>
+              <div className="flex items-center justify-center">
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  Publisher: {itemDetail?.publisher.publisher_name}
+                </span>
+              </div>
+              <div className="flex items-center justify-center">
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  Country of Publication: {itemDetail?.publisher.country}
+                </span>
+              </div>
+              {itemDetail?.item_id && !isItemInCart(itemDetail.item_id) && itemDetail?.stock?.quantity ? (
+                <button
+                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
+                  onClick={() => handleAddToCart(itemDetail)}
+                >
+                  <FaCartPlus className="text-lg" />
+                  <div className="pl-2">Add to Cart</div>
+                </button>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
+        </ModalContent>
+        <ModalFooter className="gap-4">
+          <button
+            onClick={() => setOpen(false)}
+            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm text-black dark:border-black dark:bg-black dark:text-white"
+          >
+            Close
+          </button>
+          {/* <button className="w-28 rounded-md border border-black bg-black px-2 py-1 text-sm text-white dark:bg-white dark:text-black">
               Book Now
             </button> */}
-          </ModalFooter>
-        </ModalBody>
-      
+        </ModalFooter>
+      </ModalBody>
+
     </div>
   );
 };
