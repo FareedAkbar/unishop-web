@@ -13,6 +13,7 @@ import ContactImage from "../../public/homePage/about-us-side.jpg";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import CategoriesSideBar from "~/components/ui-components/CategoriesSideBar"; // Importing Sidebar component
+import HomePage from "./home/page";
 
 interface itemsType {
   title: string;
@@ -21,7 +22,7 @@ interface itemsType {
   image_path: StaticImageData;
 }
 
-const HomePage = () => {
+const Index = () => {
   const projects: itemsType[] = [
     {
       title: "Textbooks",
@@ -67,11 +68,11 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="flex">
-       <div className="hidden lg:block "> 
+    <div className="">
+       {/* <div className="hidden lg:block "> 
           <CategoriesSideBar />
-        </div>
-
+        </div> */}
+        <HomePage/>
       {/* Main content area to the right of the sidebar */}
       {/* <main className="flex-1 p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -97,4 +98,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Index;
