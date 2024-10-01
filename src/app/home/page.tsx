@@ -13,8 +13,6 @@ const MapContainerComponent = dynamic(() => import("~/components/map"), {
 export default function HomePage() {
   return (
     <div>
-      {/* <Header /> */}
-
       <main className="min-h-screen">
         <div className="grid h-[40rem] w-full items-center justify-between sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
           <div className="flex flex-col">
