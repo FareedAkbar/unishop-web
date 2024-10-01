@@ -2,19 +2,13 @@
 import dynamic from "next/dynamic";
 import { Controls, Player } from "@lottiefiles/react-lottie-player";
 
-import Image, { type StaticImageData } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { CardBody, CardContainer, CardItem } from "~/components/ui/3d-card";
 
 const MapContainerComponent = dynamic(() => import("~/components/map"), {
   ssr: false,
 });
-interface itemsType {
-  title: string;
-  description: string;
-  link: string;
-  image_path: StaticImageData;
-}
 
 export default function HomePage() {
   return (
