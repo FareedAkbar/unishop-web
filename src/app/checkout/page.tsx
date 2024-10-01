@@ -75,9 +75,9 @@ const MyComponent = () => {
         <div className="grid grid-cols-2 sm:grid-cols-1  md:grid-cols-2 lg:grid-cols-2 justify-center gap-12 px-4 pt-32">
           <div className="z-30">
           {view == 'checkout' ? (
-            <CheckoutForm />
+            <CheckoutForm push={true}/>
           ): (
-            <BooknetForm />
+            <BooknetForm push={true} goTo="placeorder"/>
           )}
          
           <div className="mt-5 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />

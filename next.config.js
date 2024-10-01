@@ -7,7 +7,7 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const config = {
     images: {
-        domains: ['assets.aceternity.com', 'ipos-storage.s3.amazonaws.com'],
+        domains: ['assets.aceternity.com', 'ipos-storage.s3.amazonaws.com', 'titlepage-public-images-prod.s3-ap-southeast-2.amazonaws.com', '*titlepage*'],
     },
 
     async headers() {

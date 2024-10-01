@@ -39,11 +39,8 @@ export const apiRouter = async <T extends keyof typeof API_TYPE_MAPPER>(
     apiRouter = API_ROUTES[input] + "/" + init?.routeParam;
   }
   if (init?.queryParams) {
-    console.log(init?.queryParams)
-    const params = new URLSearchParams(init?.queryParams);
-    console.log(params)
-    const paramsString = typeof params === 'string' ? params : JSON.stringify(params);
-    console.log(paramsString)
+    // const params = new URLSearchParams(init?.queryParams);
+    // const paramsString = typeof params === 'string' ? params : JSON.stringify(params);
     apiRouter += "?" + init?.queryParams; // Now you can safely concatenate
   }
 

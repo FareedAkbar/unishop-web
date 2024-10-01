@@ -12,7 +12,7 @@ import { cn } from "~/lib/utils";
 
 export default function Header({ className }: { className?: string }) {
   const [active, setActive] = useState<string | null>(null);
-  const {getGenre,genre} = useAuthContext();
+  const {getGenre,genre, checkoutData} = useAuthContext();
   const isFirstRender = useRef(true);
 
   useEffect(()=>{
@@ -45,7 +45,16 @@ export default function Header({ className }: { className?: string }) {
           >
             HOME
           </Link>
-
+          {checkoutData && checkoutData.booknet_customer_id && (
+            <Link
+            onMouseEnter={() => setActive(null)}
+            href={`my-orders`}
+            className="hidden text-neutral-700 hover:text-black dark:text-neutral-200 md:text-xs lg:block font-sans"
+          >
+            MY ORDERS
+          </Link>
+          )}
+          
           <MenuItem setActive={setActive} active={active} item="TEXTBOOKS">
             {/* <div className="grid gap-6 p-4 text-sm xs:grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 overflow-y-auto max-h-[80vh]"> */}
               {/* <div className="animate-pulse rounded-lg bg-white p-4 shadow-md">
@@ -104,7 +113,7 @@ export default function Header({ className }: { className?: string }) {
               /> */}
             {/* </div> */}
           </MenuItem>
-
+          
           <Link
             onMouseEnter={() => setActive(null)}
             href={`https://unishopuow.vitalsource.com/`}

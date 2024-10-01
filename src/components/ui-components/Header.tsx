@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaUserCircle, FaChevronDown, FaChevronUp, FaBars, FaChevronRight, FaTimes } from 'react-icons/fa';
 import Input from './Input'; // Assuming you have an Input component
 import Image from 'next/image';
@@ -11,13 +11,19 @@ import { FiSearch } from "react-icons/fi";
 import { TbSettings } from "react-icons/tb";
 import { HiLogin } from "react-icons/hi";
 import { categories } from '~/constants/categories';
+import { useAuthContext } from '~/Context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
+  const { logout,getGenre } = useAuthContext();
+  const router = useRouter()
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSection, setActiveSection] = useState('home');
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for hamburger menu
+  
+  const isFirstRender = useRef(true);
 
   const toggleUserDropdown = () => {
     setUserDropdownOpen(!isUserDropdownOpen);
@@ -33,6 +39,9 @@ const Header = () => {
 
   const handleSectionClick = (section: string, isDropdown = false) => {
     setActiveSection(section);
+    if(section == 'home'){
+      router.push('/')
+    }
     if (isDropdown) {
       setOpenDropdown(null); // Close dropdown when clicking a section
     }
@@ -41,7 +50,7 @@ const Header = () => {
 
   // Navigation items array with nested structure for Shop
   const navItems = [
-    { label: 'Home', href: '#home' },
+    { label: 'Home', href: '/' },
     {
       label: 'Shop',
       subItems: [
@@ -52,6 +61,28 @@ const Header = () => {
     { label: 'Contact', href: '#contact', onClick: () => handleSectionClick('contact') },
     { label: 'Signup', href: '#signup', onClick: () => handleSectionClick('signup') },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await logout(); // Await the logout promise
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error); // Handle the error as needed
+    }
+  };
+  useEffect(()=>{
+    if (isFirstRender.current) {
+      isFirstRender.current = false; // Prevents further API calls on first render
+    } else {
+      getGenre().then((res) => {
+        console.log(res);
+        
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+   
+  },[])
 
   return (
     <header className="bg-white  p-4 flex flex-col md:flex-row md:items-center">
@@ -148,7 +179,7 @@ const Header = () => {
           <nav className="flex flex-col md:w-1/2 w-full bg-white p-4 overflow-scroll md:hidden fixed top-0 right-0 z-30 h-[80%]">
             <button
               onClick={() => {
-                //
+                router.push('/')
               }}
               className="flex items-center justify-between mb-4 w-full text-black  text-lg focus:outline-none"
             >
@@ -270,7 +301,7 @@ const Header = () => {
                   <TbSettings className="mr-2" />
                   Account Setting
                 </a>
-                <a href="#logout" className="flex items-center p-1 font-medium hover:bg-gray-100 text-[9px]">
+                <a onClick={()=>handleLogout()} href="#logout" className="flex items-center p-1 font-medium hover:bg-gray-100 text-[9px]">
                   <HiLogin className="mr-2" />
                   Logout
                 </a>

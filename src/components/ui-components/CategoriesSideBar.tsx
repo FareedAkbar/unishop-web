@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { FaChevronRight, FaChevronDown } from 'react-icons/fa';
 import { categories } from '~/constants/categories';
+import { useAuthContext } from '~/Context/AuthContext';
 
 const CategoriesSidebar = () => {
   
 
   // State to keep track of open dropdowns
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const { genre } = useAuthContext();
 
   // Toggle dropdown function
   const toggleDropdown = (label: string) => {
@@ -36,7 +38,20 @@ const CategoriesSidebar = () => {
                 )
               ) : null}
             </button>
-            {item.subItems && openDropdown === item.label && (
+            <div className="mt-1 ml-4">
+            {item.label == 'Books' && openDropdown === item.label && (
+              genre?.map((subItem)=>(
+                <a
+                    key={subItem.genre}
+                    href={`books?detail=${subItem.genre}`}
+                    className="block text-sm  py-1 hover:underline"
+                  >
+                    {subItem.genre}
+                  </a>
+              ))
+            )}
+            </div>
+            {item.label != 'Books' && item.subItems && openDropdown === item.label && (
               <div className="mt-1 ml-4">
                 {item.subItems.map((subItem) => (
                   <a
