@@ -6,7 +6,7 @@ import { BackgroundBeamsWithCollision } from "~/components/ui/background-beams-w
 import Footer from "~/components/footer";
 import { AuthProvider } from "~/Context/AuthContext";
 import { Toaster } from "~/components/ui/toaster";
-import Header from "~/components/header";
+import Header from "~/components/ui-components/Header";
 // import Loading from "./loading";
 
 export const metadata: Metadata = {
@@ -24,10 +24,10 @@ export default function RootLayout({
         {/* <Suspense fallback={<Loading />}> */}
           <AuthProvider>
             <Header/>
-            <BackgroundBeamsWithCollision>
+            {/* <BackgroundBeamsWithCollision> */}
               {children}
               <Toaster />
-            </BackgroundBeamsWithCollision>
+            {/* </BackgroundBeamsWithCollision> */}
           </AuthProvider>
           <Footer />
         {/* </Suspense> */}
