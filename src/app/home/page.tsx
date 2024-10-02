@@ -5,6 +5,7 @@ import ImageSlider from "./ImageSlider";
 import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
 import ProductsSection from "./ProductsSection";
 import GraduationBanner from "./GraduationBanner";
+import NewArrivals from "./NewArrivals";
 
 const images = [
   "/images/home/home1.png",
@@ -150,6 +151,7 @@ const HomePage: React.FC = () => {
         headingPartOne="Best Selling"
         headingPartTwo="Products This Month"
       />
+      <NewArrivals/>
     </div>
   );
 };
