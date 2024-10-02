@@ -14,7 +14,6 @@ const nextConfig = {
         },
     },
     images: {
-<<<<<<< HEAD
         remotePatterns: [
             {
                 protocol: "https",
@@ -36,9 +35,6 @@ const nextConfig = {
             "corcel.b-cdn.net",
             "zvrnzrrlmeldhhirsqiz.supabase.co",
         ],
-=======
-        domains: ['assets.aceternity.com', 'ipos-storage.s3.amazonaws.com', 'titlepage-public-images-prod.s3-ap-southeast-2.amazonaws.com', '*titlepage*'],
->>>>>>> refs/remotes/origin/Stagging
     },
 
     async headers() {
