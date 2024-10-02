@@ -29,11 +29,6 @@ export default function Header({ className }: { className?: string }) {
    
   },[])
 
-  
-
- 
-
-
   return (
     <div className={cn("w-xl fixed inset-x-0 top-5 z-50 mx-auto", className)}>
       <div className="">

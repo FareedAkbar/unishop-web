@@ -1,15 +1,18 @@
 "use client";
 import CategoriesSideBar from "~/components/ui-components/CategoriesSideBar"; // Importing Sidebar component
 
+
+
 const HomePage = () => {
+
   return (
     <div className="flex">
-      <div className="hidden lg:block ">
-        <CategoriesSideBar />
-      </div>
+       <div className="hidden lg:block "> 
+          <CategoriesSideBar />
+        </div>
 
-      {/* Main content area to the right of the sidebar */}
-      {/* <main className="flex-1 p-6">
+        {/* Main content area to the right of the sidebar */}
+        {/* <main className="flex-1 p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
             <div key={project.title} className="bg-white shadow-lg rounded-lg overflow-hidden">
@@ -29,8 +32,8 @@ const HomePage = () => {
           ))}
         </div>
       </main> */}
-    </div>
-  );
+      </div>
+      );
 };
 
 export default HomePage;

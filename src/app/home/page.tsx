@@ -1,136 +1,159 @@
-"use client";
-import dynamic from "next/dynamic";
-import { Controls, Player } from "@lottiefiles/react-lottie-player";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { CardBody, CardContainer, CardItem } from "~/components/ui/3d-card";
+import React from "react";
+import ImageSlider from "./ImageSlider";
+import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
+import ProductsSection from "./ProductsSection";
+import GraduationBanner from "./GraduationBanner";
+import NewArrivals from "./NewArrivals";
 
-const MapContainerComponent = dynamic(() => import("~/components/map"), {
-  ssr: false,
-});
+const images = [
+  "/images/home/home1.png",
+  "/images/home/home1.png",
+  "/images/home/home1.png",
+  "/images/home/home1.png",
+  "/images/home/home1.png",
+];
+const flashSaleProducts = [
+  {
+    id: 1,
+    name: "UOW Boxed Gift Pen",
+    price: 120,
+    originalPrice: 160,
+    image: "/images/products/product.png",
+    rating: 4.5,
+    reviews: 88,
+  },
+  {
+    id: 2,
+    name: "Red North Coat",
+    price: 180,
+    originalPrice: 250,
+    image: "/images/products/product.png",
+    rating: 4.8,
+    reviews: 120,
+  },
+  {
+    id: 3,
+    name: "ents Engineering for Software and Systems",
+    price: 90,
+    originalPrice: 120,
+    image: "/images/products/product.png",
+    rating: 4.2,
+    reviews: 50,
+  },
+  {
+    id: 4,
+    name: "Gaming Laptop",
+    price: 800,
+    originalPrice: 1000,
+    image: "/images/products/product.png",
+    rating: 4.7,
+    reviews: 200,
+  },
+  {
+    id: 5,
+    name: "Smartwatch",
+    price: 150,
+    originalPrice: 200,
+    image: "/images/products/product.png",
+    rating: 4.3,
+    reviews: 100,
+  },
+  {
+    id: 6,
+    name: "Wireless Headphones",
+    price: 100,
+    originalPrice: 150,
+    image: "/images/products/product.png",
+    rating: 4.6,
+    reviews: 80,
+  },
+];
+const bestSellingProducts = [
+  {
+    id: 1,
+    name: "Red North Coat",
+    price: 120,
+    originalPrice: 160,
+    memberPrice: 78.99,
+    discount: 40,
+    image: "/images/products/product.png",
+    reviews: 88,
+    rating: 4.5,
+  },
+  {
+    id: 2,
+    name: "Red North Coat",
+    price: 120,
+    originalPrice: 160,
+    memberPrice: 78.99,
+    discount: 45,
+    image: "/images/products/product.png",
+    reviews: 88,
+    rating: 4.5,
+  },
+  {
+    id: 3,
+    name: "Red North Coat",
+    price: 120,
+    originalPrice: 160,
+    memberPrice: 78.99,
+    discount: 40,
+    image: "/images/products/product.png",
+    reviews: 88,
+    rating: 4.5,
+  },
+  {
+    id: 4,
+    name: "Red North Coat",
+    price: 120,
+    originalPrice: 160,
+    memberPrice: 78.99,
+    discount: 45,
+    image: "/images/products/product.png",
+    reviews: 88,
+    rating: 4.5,
+  },
+  {
+    id: 5,
+    name: "Red North Coat",
+    price: 120,
+    originalPrice: 160,
+    memberPrice: 78.99,
+    discount: 45,
+    image: "/images/products/product.png",
+    reviews: 88,
+    rating: 4.5,
+  },
+];
 
-export default function HomePage() {
+const HomePage: React.FC = () => {
   return (
-    <div>
-      <main className="min-h-screen">
-        <div className="grid h-[40rem] w-full items-center justify-between sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
-          <div className="flex flex-col">
-            <h2 className="relative z-20 mx-auto mt-32 text-center font-serif text-2xl font-bold tracking-tight text-red-600 dark:text-white md:text-4xl lg:text-5xl">
-              Welcome to UniShop
-            </h2>
+    <div className="flex flex-col">
+      <div className="flex lg:flex-row">
+        <div className="hidden lg:block">
+          <CategoriesSidebar />
+        </div>
 
-            <p className="text-1xl inter-var relative left-0 top-[1px] bg-gradient-to-r from-zinc-600 via-zinc-600 to-zinc-500 bg-clip-text bg-no-repeat py-4 text-center font-sans text-transparent [text-shadow:0_0_rgba(0,0,0,0.1)] md:text-2xl lg:text-2xl">
-              Your one-stop shop for all your official UOW Merchandise, study
-              essentials, textbooks, course notes and equipment and graduation
-              memorabilia and gowns.
-            </p>
-          </div>
-          <div className="mx-auto text-left">
-            <Player
-              autoplay
-              loop
-              src={'/book.json'}
-              style={{ height: "500px", width: "500px" }}
-            >
-              <Controls buttons={["play", "repeat", "frame", "debug"]} />
-            </Player>
-          </div>
-        </div>
-        <div className="flex justify-center px-8">
-          <div className="grid w-full max-w-screen-xl grid-cols-8 gap-4">
-          </div>
-        </div>
-        <div className="flex justify-center px-8">
-          <div className="grid w-full max-w-screen-xl grid-cols-8 gap-4">
-            {/* Your content goes here */}
-            <div className="col-span-8 sm:col-span-12">
-              <div className="grid grid-cols-12 gap-3">
-                <div className="col-span-12 md:col-span-6">
-                  <CardContainer className="inter-var">
-                    <CardBody className="group/card relative h-auto w-auto rounded-xl border border-black/[0.1] bg-gray-50 p-6 dark:border-white/[0.2] dark:bg-black dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] sm:w-[30rem]">
-                      <CardItem translateZ="50">
-                        <div className="font-serif text-xl font-bold text-red-600 dark:text-white">
-                          ABOUT UNISHOP
-                        </div>
-                      </CardItem>
-                      <CardItem as="div" translateZ="60">
-                        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-300">
-                          Welcome to UniShop, your one-stop shop for all your
-                          official UOW Merchandise, study essentials, textbooks,
-                          course notes, equipment, and graduation memorabilia
-                          and gowns.
-                        </p>
-                      </CardItem>
-                      <CardItem translateZ="100">
-                        <div className="mt-4 flex w-max justify-center">
-                          <Image
-                            src={'/homePage/about-us-side.jpg'}
-                            objectFit="contain"
-                            className="h-60 w-auto rounded-xl object-cover group-hover/card:shadow-xl"
-                            alt="thumbnail"
-                          />
-                        </div>
-                      </CardItem>
-                      <CardItem as="div" translateZ="60">
-                        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-300">
-                          UniShop is a UOW Pulse business, with all proceeds
-                          from everything you buy going straight back to
-                          enhancing the student experience on campus. Whether
-                          that’s through events, festivals, competitions, or
-                          through our clubs and societies. Thank you for
-                          supporting the UOW campus experience.
-                        </p>
-                      </CardItem>
-                      <div className="mt-20 flex items-center justify-between">
-                        <CardItem translateZ={20} as={Link} href="/about">
-                          <div className="rounded-xl bg-zinc-600 to-neutral-600 px-4 py-2 text-xs font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] hover:bg-zinc-800 dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:text-white dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]">
-                            ABOUT
-                          </div>
-                        </CardItem>
-                      </div>
-                    </CardBody>
-                  </CardContainer>
-                </div>
-
-                <div className="col-span-12 md:col-span-6">
-                  <CardContainer className="inter-var">
-                    <CardBody className="group/card relative h-auto w-auto rounded-xl border border-black/[0.1] bg-gray-50 p-6 dark:border-white/[0.2] dark:bg-black dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] sm:w-[30rem]">
-                      <CardItem translateZ="50">
-                        <div className="font-serif text-xl font-bold text-red-600 dark:text-white">
-                          CONTACT US
-                        </div>
-                      </CardItem>
-                      <CardItem as="div" translateZ="60">
-                        <p className="mt-2 max-w-sm text-sm text-neutral-500 dark:text-neutral-300">
-                          The UniShop team are here to help! Providing friendly,
-                          personalised service to make sure you’re fully
-                          satisfied with your shopping experience from start to
-                          finish.
-                        </p>
-                      </CardItem>
-                      <MapContainerComponent height={400} />
-                      <CardItem as="div" translateZ="60">
-                        <p className="mt-2 max-w-sm text-sm text-neutral-500 dark:text-neutral-300">
-                          Give us a call or send us an email if you have an
-                          enquiry.
-                        </p>
-                      </CardItem>
-                      <div className="mt-5 flex items-center justify-between">
-                        <CardItem translateZ={20} as={Link} href="/contact-us">
-                          <div className="rounded-xl bg-zinc-600 to-neutral-600 px-4 py-2 text-xs font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] hover:bg-zinc-800 dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:text-white dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]">
-                            CONTACT US
-                          </div>
-                        </CardItem>
-                      </div>
-                    </CardBody>
-                  </CardContainer>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
+        {/* Image Slider */}
+        <ImageSlider images={images} />
+      </div>
+      <ProductsSection
+        products={flashSaleProducts}
+        targetDate={new Date("2024-10-25T10:00:00")}
+        headingPartOne="Today's"
+        headingPartTwo="Flash Sales"
+      />
+      <GraduationBanner />
+      <ProductsSection
+        products={bestSellingProducts}
+        headingPartOne="Best Selling"
+        headingPartTwo="Products This Month"
+      />
+      <NewArrivals/>
     </div>
   );
-}
+};
+
+export default HomePage;
