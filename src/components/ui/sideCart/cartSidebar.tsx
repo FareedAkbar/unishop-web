@@ -205,7 +205,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         </ScrollArea>
 
         {/* Cart Footer */}
-        <div className="p-3">
+        <div className="fixed bottom-0 w-full p-3">
           {/* Subtotal and Fees */}
           <div className="mb-2 flex justify-between">
             <span className="text-sm text-gray-500">Subtotal</span>
@@ -223,11 +223,18 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Confirm Order Button */}
-          <button className="mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white">
+          <button
+            className="mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white"
+            onClick={() => {
+              if (!isOpenAlert) {
+                // Check if alert is not already open
+                opencart();
+              }
+            }}
+          >
             Confirm Order
           </button>
         </div>
-
         {/* Header */}
         {/* <div className="relative border-b border-gray-200 p-4">
           <h2 className="text-xl font-semibold font-serif">UNISHOP Cart</h2>
@@ -300,7 +307,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
           </Button>
         </div> */}
       </div>
-      {/* <AlertBox
+      <AlertBox
         title="Complete Your Order"
         description="Are you sure you want to proceed with the checkout? Please review your cart items and ensure everything is correct before finalizing your purchase."
         open={isOpenAlert}
@@ -320,7 +327,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         open={loginAlert}
         onClose={() => setLoginAlert(false)}
         onContinue={() => goToLogin()}
-      /> */}
+      />
     </>
   );
 };

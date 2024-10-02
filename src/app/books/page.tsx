@@ -11,6 +11,7 @@ import { useAuthContext } from "~/Context/AuthContext";
 // import type PaginationData from '~/types/paginationData'
 import type DataCart from "~/types/book";
 import Spinner from "~/components/spinner";
+import ProductCardSkeleton from "~/components/ui-components/ProductCardSkeleton";
 import {
   ModalBody,
   ModalContent,
@@ -178,20 +179,32 @@ const MyComponent = () => {
   };
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center justify-center">
-        <div className="flex  flex-row">
-          <div className="hidden lg:block">
+      <main className="flex min-h-screen flex-col items-center">
+        <div className="flex flex-row">
+          <div className="lg:flex-start lg: hidden lg:static lg:left-0 lg:flex">
             <CategoriesSidebar />
           </div>
-          <div className="flex-1  p-4">
+          <div className="flex flex-col  p-4 ">
             <h1 className="m-4 text-end font-bold">
               Showing {dummyProducts.length} of {totalPages * 10} Products
             </h1>
             <ScrollArea className="h-screen">
               <div className="flex flex-wrap justify-between">
-                {dummyProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
+                {dummyProducts && dummyProducts.length > 0 ? (
+                  dummyProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))
+                ) : loader ? (
+                  // Show skeleton loaders if loading
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <ProductCardSkeleton key={index} />
+                  ))
+                ) : (
+                  // Optionally, you can show a message or empty state when no products are available and not loading
+                  <div className="w-full text-center text-gray-500">
+                    No products available.
+                  </div>
+                )}
               </div>
             </ScrollArea>
             {/* <div className="mt-4 flex justify-between">
@@ -239,9 +252,9 @@ const MyComponent = () => {
           </div>
         </div>
         <div className="mx-auto max-w-5xl px-8"/> */}
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <div className="sm:grid-cols2 xs:grid-cols-1 grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
-            {loader && (
+        <div className="container flex flex-col items-center px-4 py-16">
+          <div className="sm:grid-cols2 xs:grid-cols-1 grid w-3/4 gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4 xl:gap-10">
+            {!loader && (
               <>
                 <BookSkelton />
                 <BookSkelton />
@@ -249,7 +262,7 @@ const MyComponent = () => {
                 <BookSkelton />
               </>
             )}
-            {!loader &&
+            {loader &&
               data?.map((item: DataCart) => (
                 <ProductGradient
                   key={item.item_id}

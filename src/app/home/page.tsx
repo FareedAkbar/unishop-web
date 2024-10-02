@@ -130,7 +130,7 @@ const bestSellingProducts = [
 
 const HomePage: React.FC = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex-1">
       <div className="flex lg:flex-row">
         <div className="hidden lg:block">
           <CategoriesSidebar />
@@ -151,7 +151,7 @@ const HomePage: React.FC = () => {
         headingPartOne="Best Selling"
         headingPartTwo="Products This Month"
       />
-      <NewArrivals/>
+      {/* <NewArrivals/> */}
     </div>
   );
 };

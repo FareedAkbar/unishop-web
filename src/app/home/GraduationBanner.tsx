@@ -9,7 +9,7 @@ import CountdownTimer from "~/components/countdownTimer";
 
 const GraduationBanner: React.FC = () => {
   return (
-    <div className="flex flex-row items-center justify-between bg-gradient-to-r from-red-900 to-red-400 p-4 sm:p-8 lg:mx-4">
+    <div className="flex flex-row w-full items-center justify-between bg-gradient-to-r from-red-900 to-red-400 p-4 sm:p-8 ">
       <div className="flex max-w-xl flex-col justify-center text-left">
         <h3 className="text-xs font-semibold text-red-500 sm:text-sm">
           Categories
@@ -23,7 +23,7 @@ const GraduationBanner: React.FC = () => {
         </button>
       </div>
 
-      <div className="mt-8 lg:mt-0 flex w-1/2 lg:justify-end">
+      <div className="mt-8 lg:mt-0 flex w-1/3 lg:justify-end">
         <Image
           src={graduationImage}
           alt="Graduation"

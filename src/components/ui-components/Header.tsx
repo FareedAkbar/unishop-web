@@ -293,7 +293,7 @@ const Header = () => {
         )}
 
         {/* Desktop Layout */}
-        <div className="mt-4 hidden w-full border-b pb-4 md:flex md:items-center md:justify-between">
+        <div className="mt-4 hidden w-full border-b pb-4 md:flex md:items-center md:justify-between ">
           <div className="flex w-full items-center justify-between">
             <div className="flex-grow text-left">
               <Image
