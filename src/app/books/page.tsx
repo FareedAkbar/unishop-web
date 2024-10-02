@@ -23,6 +23,9 @@ import { motion } from "framer-motion";
 import { FaCartPlus } from "react-icons/fa";
 import moment from "moment";
 import React from "react";
+import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
+import ProductCard from "~/components/ui-components/ProductCard";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
 const requestOptions: RequestInit = {
   method: "GET",
@@ -38,20 +41,30 @@ interface ApiResponse {
   data: DataCart[];
   status: boolean;
 }
+const dummyProducts = Array.from({ length: 10 }, (_, index) => ({
+  id: index + 1,
+  name: `Product ${index + 1}`,
+  price: parseFloat((Math.random() * 100).toFixed(2)), // Random price between 0 and 100
+  originalPrice: parseFloat((Math.random() * 150).toFixed(2)), // Random original price between 0 and 150
+  image: `https://via.placeholder.com/150?text=Product+${index + 1}`, // Placeholder image
+  rating: parseFloat((Math.random() * 5).toFixed(1)), // Random rating between 0 and 5
+  reviews: Math.floor(Math.random() * 100), // Random number of reviews
+}));
+
+const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
-
   const [loader, setLoader] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
   const [data, setData] = useState<DataCart[]>([]);
   const isFirstRender = useRef(true);
- 
+
   const params = useSearchParams();
   const detail = params.get("detail");
   const { setOpen } = useModal();
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const { cartItems, addCartItems, removeCartItems, genre } = useAuthContext();
-  
+
   const fetchData = async (genre_id: number) => {
     setLoader(true);
     try {
@@ -144,11 +157,66 @@ const MyComponent = () => {
   //   setCurrentPage(page);
   //   // smoothScrollTo(0, 1500); //
   // };
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(dummyProducts.length / PRODUCTS_PER_PAGE);
 
+  // Get the products for the current page
+  const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+  const end = start + PRODUCTS_PER_PAGE;
+  const currentProducts = dummyProducts.slice(start, end);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center justify-center">
-     
+        <div className="flex  flex-row">
+          <div className="hidden lg:block">
+            <CategoriesSidebar />
+          </div>
+          <div className="flex-1  p-4">
+            <h1 className="m-4 text-end font-bold">
+              Showing {dummyProducts.length} of {totalPages * 10} Products
+            </h1>
+            <ScrollArea className="h-screen">
+              <div className="flex flex-wrap justify-between">
+                {dummyProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            </ScrollArea>
+            {/* <div className="mt-4 flex justify-between">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className={`rounded bg-red-500 px-4 py-2 text-white ${
+                  currentPage === 1 ? "cursor-not-allowed" : ""
+                }`}
+              >
+                Previous
+              </button>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className={`rounded bg-red-500 px-4 py-2 text-white ${
+                  currentPage === totalPages ? "cursor-not-allowed" : ""
+                }`}
+              >
+                Next
+              </button>
+            </div> */}
+          </div>
+        </div>
+        {/*      
         <div className="grid h-[40rem] w-full items-center justify-between sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
           <div className="flex flex-col">
             <h2 className="relative z-20 mx-auto mt-32 text-center font-serif text-2xl font-bold tracking-tight text-red-600 dark:text-white md:text-4xl lg:text-5xl">
@@ -170,7 +238,7 @@ const MyComponent = () => {
             </Player>
           </div>
         </div>
-        <div className="mx-auto max-w-5xl px-8"></div>
+        <div className="mx-auto max-w-5xl px-8"/> */}
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           <div className="sm:grid-cols2 xs:grid-cols-1 grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
             {loader && (
@@ -243,9 +311,9 @@ const MyComponent = () => {
                     src={
                       itemDetail?.object_path
                         ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                        : '/bookIcon.png'
+                        : "/bookIcon.png"
                     }
-                    alt={itemDetail?.object_path ?? ''}
+                    alt={itemDetail?.object_path ?? ""}
                     width="500"
                     height="500"
                     className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-80 md:w-48"
@@ -270,7 +338,10 @@ const MyComponent = () => {
               <div className="flex items-center justify-center">
                 {/* <ElevatorIcon className="mr-1 h-4 w-4 text-neutral-700 dark:text-neutral-300" /> */}
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Published: {itemDetail?.introduced ? moment(itemDetail.introduced).format('Do MMMM, YYYY') : ''}
+                  Published:{" "}
+                  {itemDetail?.introduced
+                    ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
+                    : ""}
                 </span>
               </div>
               <div className="flex items-center justify-center">
@@ -293,7 +364,9 @@ const MyComponent = () => {
                   Country of Publication: {itemDetail?.publisher.country}
                 </span>
               </div>
-              {itemDetail?.item_id && !isItemInCart(itemDetail.item_id) && itemDetail?.stock?.quantity ? (
+              {itemDetail?.item_id &&
+              !isItemInCart(itemDetail.item_id) &&
+              itemDetail?.stock?.quantity ? (
                 <button
                   className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
                   onClick={() => handleAddToCart(itemDetail)}
@@ -319,7 +392,6 @@ const MyComponent = () => {
             </button> */}
         </ModalFooter>
       </ModalBody>
-
     </div>
   );
 };

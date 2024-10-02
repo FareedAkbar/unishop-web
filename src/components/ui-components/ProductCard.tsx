@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react"; // Import useState
 import { AiOutlineHeart, AiOutlineEye } from "react-icons/ai";
 import { FaStar } from "react-icons/fa6";
 
@@ -16,6 +16,16 @@ interface Product {
 }
 
 const ProductCard = ({ product }: { product: Product }) => {
+  const [inCart, setInCart] = useState(false); // State to track if product is in cart
+
+  const handleAddToCart = () => {
+    setInCart(true); // Set to true when added to cart
+  };
+
+  const handleRemoveFromCart = () => {
+    setInCart(false); // Set to false when removed from cart
+  };
+
   return (
     <div className="group relative flex w-1/2 flex-shrink-0 flex-col p-2 sm:w-1/2 sm:p-4 md:w-1/3 lg:w-72">
       <div className="relative flex h-40 items-center justify-center rounded-sm bg-gray-200 sm:h-48 lg:h-64">
@@ -42,8 +52,13 @@ const ProductCard = ({ product }: { product: Product }) => {
             <AiOutlineEye />
           </button>
         </div>
-        <button className="absolute bottom-0 z-20 mt-4 hidden w-full rounded-b-md bg-black py-1 text-xs text-white group-hover:block sm:py-2 sm:text-sm">
-          Add To Cart
+        <button 
+          onClick={inCart ? handleRemoveFromCart : handleAddToCart} 
+          className={`absolute bottom-0 z-20 mt-4 w-full rounded-b-md py-1 text-xs text-white sm:py-2 sm:text-sm transition-colors ${
+            inCart ? 'bg-red-500' : 'bg-black'
+          } group-hover:block hidden`}
+        >
+          {inCart ? 'Remove From Cart' : 'Add To Cart'}
         </button>
       </div>
       <h2 className="mt-2 truncate text-sm font-bold sm:mt-4 sm:text-base lg:text-lg">

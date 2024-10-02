@@ -161,7 +161,7 @@ const Header = () => {
               </span>
             </div>
 
-            <div className="relative">
+            <div className="relative" onClick={() => toggleSidebar()}>
               <IoCartOutline className="cursor-pointer text-xl" />
               <span className="absolute -right-0 -top-0 flex h-2 w-2 items-center justify-center rounded-full bg-red-500 text-[6px] text-white">
                 5
