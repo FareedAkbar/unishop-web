@@ -13,15 +13,17 @@ import { HiLogin } from "react-icons/hi";
 import { categories } from '~/constants/categories';
 import { useAuthContext } from '~/Context/AuthContext';
 import { useRouter } from 'next/navigation';
+import SidebarCart from '../ui/sideCart/cartSidebar';
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
-  const { logout,getGenre } = useAuthContext();
+  const { logout,getGenre,cartItems } = useAuthContext();
   const router = useRouter()
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSection, setActiveSection] = useState('home');
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for hamburger menu
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const isFirstRender = useRef(true);
 
@@ -84,7 +86,14 @@ const Header = () => {
    
   },[])
 
+  const toggleSidebar = () => {
+    console.log("hit")
+    setIsSidebarOpen((prev) => !prev);
+  };
+
+
   return (
+    <>
     <header className="bg-white  p-4 flex flex-col md:flex-row md:items-center">
       {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
       <div className="flex justify-between items-center border-b pb-4 md:hidden">
@@ -283,13 +292,13 @@ const Header = () => {
             icon={<FiSearch />}
             width="w-64"
           />
-          <div className="relative">
-            <GoHeart className="cursor-pointer text-xl" />
-            <span className="absolute -top-0 -right-0 bg-red-500 text-white text-[6px] rounded-full w-2 h-2 flex items-center justify-center">3</span>
+          <div className="relative" >
+            <GoHeart className="cursor-pointer text-3xl" />
+            <span className="absolute -top-0 -right-0 bg-red-500 text-white text-[6px] text-sm rounded-full w-4 h-4 flex items-center justify-center">3</span>
           </div>
-          <div className="relative">
-            <IoCartOutline className="cursor-pointer text-xl" />
-            <span className="absolute -top-0 -right-0 bg-red-500 text-white text-[6px] rounded-full w-2 h-2 flex items-center justify-center">5</span>
+          <div className="relative" onClick={()=>toggleSidebar()}>
+            <IoCartOutline className="cursor-pointer text-3xl" />
+            <span className="absolute -top-0 -right-0 bg-red-500 text-white text-[6px] text-sm rounded-full w-4 h-4 flex items-center justify-center"> {cartItems?.length}</span>
           </div>
           <div className="relative">
             <div className="bg-red-500 rounded-full cursor-pointer" onClick={toggleUserDropdown}>
@@ -310,7 +319,13 @@ const Header = () => {
           </div>
         </div>
       </div>
+      
     </header>
+    <SidebarCart
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
+    </>
   );
 };
 
