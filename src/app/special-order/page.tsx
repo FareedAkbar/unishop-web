@@ -183,7 +183,7 @@ const MyComponent = () => {
     const date = new Date();
     const newData = {
       tracking_id: generateOTP(12).toString(),
-      order_type: 0,
+      order_type: 2,
       order_status: 66,
       completed_date: formatDate(date),
       started: formatDateTime(date),

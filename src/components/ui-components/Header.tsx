@@ -126,9 +126,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false; // Prevents further API calls on first render
-    } else {
+  
       getGenre()
         .then((res) => {
           console.log(res);
@@ -136,7 +134,7 @@ const Header = () => {
         .catch((err) => {
           console.log(err);
         });
-    }
+    
   }, []);
 
   const toggleSidebar = () => {
@@ -379,12 +377,12 @@ const Header = () => {
               </div>
               <div className="relative" onClick={() => toggleSidebar()}>
                 <IoCartOutline className="cursor-pointer text-3xl" />
-                {cartItems?.length && cartItems?.length > 0 && (
+                {cartItems?.length && cartItems?.length > 0 ? (
                   <span className="absolute -right-0 -top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[6px] text-sm text-white">
                     {" "}
                     {cartItems?.length}
                   </span>
-                )}
+                ):""}
               </div>
               <div className="relative">
                 <div

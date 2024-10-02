@@ -124,7 +124,7 @@ export default function CehckoutForm({ push, handleData }: checkout) {
     };
 
     try {
-      await checkoutFormData(updatedData);
+      // await checkoutFormData(updatedData);
       setLoader(true);
       await CheckoutApi(updatedData)
         .then((res: checkoutBooknetResponse) => {
@@ -134,6 +134,7 @@ export default function CehckoutForm({ push, handleData }: checkout) {
               router.push("placeorder");
             }
             if (!push && handleData) {
+              
               handleData(res?.data);
             }
           }

@@ -7,16 +7,16 @@ import { FaStar } from "react-icons/fa6";
 import DataCart from "~/types/book";
 
 interface ProductGradientProps {
-  showAddToCart: boolean;
-  onAddToCart: () => void;
-  onRemoveFromCart: () => void;
+  showAddToCart?: boolean;
+  onAddToCart?: () => void;
+  onRemoveFromCart?: () => void;
   openDetail?: () => void;
   // stock?: stock;
-  product: DataCart;
+  product?: DataCart | null;
 }
 
 
-const ProductCard = ({ product,onAddToCart,onRemoveFromCart,showAddToCart,openDetail }: ProductGradientProps ) => {
+const ProductCard = ({ product, onAddToCart,onRemoveFromCart,showAddToCart,openDetail }: ProductGradientProps ) => {
   
 
 
@@ -29,13 +29,13 @@ const ProductCard = ({ product,onAddToCart,onRemoveFromCart,showAddToCart,openDe
             ((product.originalPrice - product.price) / product.originalPrice) *
             100,
           )}
-          % */}{product.item_sale_price}
+          % */}{product?.item_sale_price}
         </div>
         <Image
-          src={ product.object_path
+          src={ product?.object_path
             ? `https://ipos-storage.s3.amazonaws.com/${product.object_path}`
             : '/images/products/product.png'}
-          alt={product.SKU_title}
+          alt={product?.SKU_title ?? ""}
           width={100}
           height={100}
           className="object-cover p-4"
@@ -58,11 +58,11 @@ const ProductCard = ({ product,onAddToCart,onRemoveFromCart,showAddToCart,openDe
         </button>
       </div>
       <h2 className="mt-2 truncate text-sm font-bold sm:mt-4 sm:text-base lg:text-lg">
-        {product.book_title}
+        {product?.book_title}
       </h2>
       <div className="mt-1 flex gap-1 sm:mt-2 sm:gap-2">
         <span className="text-sm font-bold text-red-500 sm:text-lg">
-          ${product.item_sale_price}
+          ${product?.item_sale_price}
         </span>
         {/* <span className="text-sm text-gray-500 line-through sm:text-lg">
           ${product.originalPrice}
