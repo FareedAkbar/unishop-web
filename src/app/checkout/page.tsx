@@ -6,30 +6,27 @@ import dynamic from 'next/dynamic';
 // import { useSearchParams, usePathname } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 import CheckoutForm from '~/components/Forms/checkout-form' 
-const ExpandableCardDemo = dynamic(() => import('~/components/blocks/card'), { ssr: false });
 
 import type DataCart from "~/types/book";
 import BooknetForm from "~/components/Forms/booknet-form";
+import CartItem from "~/components/ui-components/CartItem";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import AlertBox from "~/components/alertBox/alert";
 
 
-// const requestOptions: RequestInit = {
-//   method: "GET",
-//   headers: {
-//     Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzQ5LCJwcm9maWxlX2lkIjoxOTgsIm91dGxldF9pZCI6IjIyMSIsImZpcnN0X25hbWUiOiJTaGFtcyIsImxhc3RfbmFtZSI6IlFhemkiLCJ0ZW1wbGF0ZV9pZCI6NSwicGFzc3BvcnRfbm8iOm51bGwsImRhdGVfb2ZfYmlydGgiOm51bGwsImdlbmRlciI6bnVsbCwiZGVzaWduYXRpb25faWQiOlsxXSwiZW1haWwiOiJzaGFtcy5xYXppQGdtYWlsLmNvbSIsInBob25lX251bWJlciI6Iis5MjMyMTk1NjUwMjUiLCJzaWduX3VwIjoiMjAyMy0xMi0yMVQwNToxMTo0OC4wMDBaIiwiY3JlYXRlZF9hdCI6IjIwMjMtMTItMjFUMDU6MTE6NDguMDAwWiIsInNlc3Npb25faWQiOjExNjg1LCJzYWx0IjpudWxsLCJpYXQiOjE3MjU5NTgyMDJ9.R-8jJlaDp2ExXVWLJa_X-fgc4lMAsjlWq3DhPjBXs2U`,
-//     "Content-Type": "application/json", // Optional, depending on your API
-//   },
-//   redirect: "follow", // Use the correct type for `redirect`
-// };
 
 
 
 const MyComponent = () => {
   
-  // const params = useSearchParams();
 
-  const {cartItems } = useAuthContext()
+
+  const { cartItems, removeCartItems, increaseCartItemQuantity, isLoggedIn } =
+    useAuthContext();
   const [items, setItems] = useState<DataCart[]>([]);
   const [view, setView] = useState("checkout");
+  const [removeItem, setRemoveItem] = useState<DataCart | null>(null);
+  const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState<boolean>(false);
 
   // Handle add to cart
   // const handleAddToCart = async (item: any) => {
@@ -63,7 +60,32 @@ const MyComponent = () => {
     setItems(itemsCart);
   }, [cartItems]);
 
+  const onChangeQuantity = async (id: number, number: number) => {
+    console.log(id, number);
+    await increaseCartItemQuantity(id, number);
+  };
 
+  // Handlers for increasing, decreasing, and removing items
+  const handleIncrease = async (id: number, number: number) => {
+    console.log(`Increase quantity for item ${id}`);
+    await increaseCartItemQuantity(id, number);
+  };
+
+  const handleDecrease = async (id: number, number: number) => {
+    console.log(`Decrease quantity for item ${id}`);
+    await increaseCartItemQuantity(id, number);
+  };
+
+  const handleRemoveFromCart = async (item: DataCart) => {
+    if (item) {
+      try {
+        await removeCartItems(item);
+        setIsOpenDeleteAlert(false);
+      } catch (error) {
+        console.error("Failed to remove item from cart:", error);
+      }
+    }
+  };
 
   return (
     <div>
@@ -89,11 +111,39 @@ const MyComponent = () => {
         </div>
         </div>
           <div className="z-10">
-              <ExpandableCardDemo data={items}/>
+          <ScrollArea className="h-3/5 flex-1 p-4">
+          {items.map((item: DataCart) => (
+            <CartItem
+              key={item.item_id}
+              title={item.book_title}
+              imageSrc={item?.object_path}
+              price={item.item_sale_price}
+              size={"aa"}
+              color={"red"}
+              showRemove={true}
+              onChangeQuantity={(id, number) => onChangeQuantity(id, number)}
+              onIncrease={() => handleIncrease(item.item_id, item.quantity + 1)}
+              onDecrease={() => handleDecrease(item.item_id, item.quantity - 1)}
+              itemQuantity={item.quantity}
+              showQuantityIncriment={true}
+              stock={item.stock}
+              onRemove={() => {
+                setRemoveItem(item);
+                setIsOpenDeleteAlert(true);
+              }}
+            />
+          ))}
+        </ScrollArea>
           </div>
         </div>
       </main>
-     
+      <AlertBox
+        title="Remove Item"
+        description="Are you sure you want to remove this item from cart?"
+        open={isOpenDeleteAlert}
+        onClose={() => setIsOpenDeleteAlert(false)}
+        onContinue={() => handleRemoveFromCart(removeItem!)}
+      />
     </div>
   );
 };
