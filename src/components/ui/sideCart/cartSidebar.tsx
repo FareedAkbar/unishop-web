@@ -7,6 +7,9 @@ import { Button } from "../button";
 import { useRouter } from "next/navigation";
 import AlertBox from "~/components/alertBox/alert";
 import type DataCart from "~/types/book";
+import CartItem from "~/components/ui-components/CartItem";
+import { FaTimes } from "react-icons/fa";
+import { ScrollArea } from "../scroll-area";
 
 interface SidebarCartProps {
   isOpen: boolean;
@@ -14,7 +17,8 @@ interface SidebarCartProps {
 }
 
 const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
-  const { cartItems, removeCartItems, increaseCartItemQuantity, isLoggedIn } = useAuthContext();
+  const { cartItems, removeCartItems, increaseCartItemQuantity, isLoggedIn } =
+    useAuthContext();
   const [items, setItems] = useState<DataCart[]>([]);
   const [subTotal, setSubtotal] = useState<number>(0);
   const [isOpenAlert, setIsOpenAlert] = useState<boolean>(false);
@@ -27,7 +31,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
     if (item) {
       try {
         await removeCartItems(item);
-        setIsOpenDeleteAlert(false)
+        setIsOpenDeleteAlert(false);
       } catch (error) {
         console.error("Failed to remove item from cart:", error);
       }
@@ -35,8 +39,10 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
   };
 
   useEffect(() => {
-    
-    const itemsCart: DataCart[] = typeof cartItems === 'string' ? JSON.parse(cartItems) as DataCart[] : cartItems!;
+    const itemsCart: DataCart[] =
+      typeof cartItems === "string"
+        ? (JSON.parse(cartItems) as DataCart[])
+        : cartItems!;
     setItems(itemsCart);
   }, [cartItems]);
 
@@ -55,36 +61,123 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
     //   setLoginAlert(true)
     // }
     setIsOpenAlert(true);
-    
   };
 
   const goToCheckout = () => {
     setIsOpenAlert(false);
-    onClose()
+    onClose();
     router.push("checkout");
   };
   const goToLogin = () => {
     setLoginAlert(false);
-    onClose()
+    onClose();
     router.push("login");
   };
 
+  const onChangeQuantity = async (id: number, number: number) => {
+    await increaseCartItemQuantity(id, number);
+  };
 
-const onChangeQuantity = async (id: number, number: number)=>{
-  await increaseCartItemQuantity(id,number)
-}
+  const myCartItems = [
+    {
+      id: 1,
+      title: "UOW Indigenous Hoodie",
+      size: "Large",
+      color: "White",
+      price: 145,
+      quantity: 1,
+      imageSrc: "/images/products/product.png",
+    },
+    {
+      id: 2,
+      title: "Checkered Shirt",
+      size: "Medium",
+      color: "Red",
+      price: 180,
+      quantity: 1,
+      imageSrc: "/images/products/product.png",
+    },
+    {
+      id: 3,
+      title: "Skinny Fit Jeans",
+      size: "Large",
+      color: "Blue",
+      price: 240,
+      quantity: 1,
+      imageSrc: "/images/products/product.png",
+    },
+    {
+      id: 3,
+      title: "Skinny Fit Jeans",
+      size: "Large",
+      color: "Blue",
+      price: 240,
+      quantity: 1,
+      imageSrc: "/images/products/product.png",
+    },
+    {
+      id: 3,
+      title: "Skinny Fit Jeans",
+      size: "Large",
+      color: "Blue",
+      price: 240,
+      quantity: 1,
+      imageSrc: "/images/products/product.png",
+    },
+    {
+      id: 3,
+      title: "Skinny Fit Jeans",
+      size: "Large",
+      color: "Blue",
+      price: 240,
+      quantity: 1,
+      imageSrc: "/images/products/product.png",
+    },
+  ];
 
+  // Handlers for increasing, decreasing, and removing items
+  const handleIncrease = (id: number) => {
+    console.log(`Increase quantity for item ${id}`);
+  };
+
+  const handleDecrease = (id: number) => {
+    console.log(`Decrease quantity for item ${id}`);
+  };
+
+  const handleRemove = (id: number) => {
+    console.log(`Remove item ${id}`);
+  };
+  useEffect(() => {
+    // Prevent background scrolling when the sidebar is open
+    if (isOpen) {
+      document.body.style.overflow = "hidden"; // Disable scrolling
+    } else {
+      document.body.style.overflow = ""; // Enable scrolling when sidebar is closed
+    }
+
+    return () => {
+      document.body.style.overflow = ""; // Clean up on component unmount
+    };
+  }, [isOpen]);
 
   return (
     <>
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black bg-opacity-50"
+          onClick={onClose}
+        />
+      )}
+
       <div
-        className={`fixed right-0 top-0 border-l-2 h-screen w-96 transform overflow-hidden bg-white shadow-lg transition-transform ${
+        className={`fixed right-0 top-0 z-30 h-screen w-full transform overflow-hidden border-l-2 bg-white shadow-lg transition-transform lg:w-2/5 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Header */}
-        <div className="relative border-b border-gray-200 p-4">
-          <h2 className="text-xl font-semibold font-serif">UNISHOP Cart</h2>
+        {/* Cart Sidebar */}
+        {/* Cart Header */}
+        <div className="flex items-center justify-between border-b bg-gray-100 p-4">
+          <h2 className="text-xl font-semibold">Your Basket</h2>
           <button
             onClick={onClose}
             className="absolute right-4 top-4 text-gray-600 hover:text-gray-900"
@@ -93,9 +186,62 @@ const onChangeQuantity = async (id: number, number: number)=>{
           </button>
         </div>
 
+        {/* Cart Items List */}
+        <ScrollArea className="h-3/5 flex-1 p-4">
+          {myCartItems.map((item) => (
+            <CartItem
+              key={item.id}
+              title={item.title}
+              size={item.size}
+              color={item.color}
+              price={item.price}
+              quantity={item.quantity}
+              imageSrc={item.imageSrc}
+              onIncrease={() => handleIncrease(item.id)}
+              onDecrease={() => handleDecrease(item.id)}
+              onRemove={() => handleRemove(item.id)}
+            />
+          ))}
+        </ScrollArea>
+
+        {/* Cart Footer */}
+        <div className="p-3">
+          {/* Subtotal and Fees */}
+          <div className="mb-2 flex justify-between">
+            <span className="text-sm text-gray-500">Subtotal</span>
+            <span className="text-sm">$565</span>
+          </div>
+          <div className="mb-2 flex justify-between">
+            <span className="text-sm text-gray-500">Delivery Fee</span>
+            <span className="text-sm">$15</span>
+          </div>
+
+          {/* Total Amount */}
+          <div className="flex justify-between text-lg font-bold">
+            <span>Total</span>
+            <span>$467</span>
+          </div>
+
+          {/* Confirm Order Button */}
+          <button className="mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white">
+            Confirm Order
+          </button>
+        </div>
+
+        {/* Header */}
+        {/* <div className="relative border-b border-gray-200 p-4">
+          <h2 className="text-xl font-semibold font-serif">UNISHOP Cart</h2>
+          <button
+            onClick={onClose}
+            className="absolute right-4 top-4 text-gray-600 hover:text-gray-900"
+          >
+            <CgClose className="h-6 w-6" />
+          </button>
+        </div> */}
+
         {/* Cart Content */}
         <div className="h-[calc(100vh-96px)] overflow-y-auto px-4 pb-20 pt-16">
-          <div className="mb-4 flex flex-row justify-between">
+          {/* <div className="mb-4 flex flex-row justify-between">
             <h3 className="text-md font-semibold pl-2">
               Items in cart: {items.length}
             </h3>
@@ -103,10 +249,10 @@ const onChangeQuantity = async (id: number, number: number)=>{
               <h3 className="text-md font-semibold">Cart subtotal:</h3>
               <h3 className="text-md font-semibold">${subTotal.toFixed(2)}</h3>
             </div>
-          </div>
+          </div> */}
 
           {/* Cart items */}
-          {items.length > 0 ? (
+          {/* {items.length > 0 ? (
             items.map((item: DataCart, index: number) => (
               <CartItemCard
                 key={`${index}-${item.item_id}`}
@@ -129,11 +275,11 @@ const onChangeQuantity = async (id: number, number: number)=>{
             <div>
               <p>You have no items in your shopping cart.</p>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Buttons */}
-        <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-2 p-4">
+        {/* <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-2 p-4">
           <Button
             disabled={items.length === 0}
             className="w-full rounded-lg bg-zinc-600 p-3 font-semibold text-white shadow-lg transition-colors hover:bg-black"
@@ -152,9 +298,9 @@ const onChangeQuantity = async (id: number, number: number)=>{
           >
             Edit Cart
           </Button>
-        </div>
+        </div> */}
       </div>
-      <AlertBox
+      {/* <AlertBox
         title="Complete Your Order"
         description="Are you sure you want to proceed with the checkout? Please review your cart items and ensure everything is correct before finalizing your purchase."
         open={isOpenAlert}
@@ -174,7 +320,7 @@ const onChangeQuantity = async (id: number, number: number)=>{
         open={loginAlert}
         onClose={() => setLoginAlert(false)}
         onContinue={() => goToLogin()}
-      />
+      /> */}
     </>
   );
 };

@@ -40,11 +40,11 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
       </div>
       <div className="relative h-28 w-full sm:h-72 lg:h-[400px]">
         <Image
-          src={"/images/home/graduation.png"}
+          src={images[currentImageIndex]!}
           alt={`Image ${currentImageIndex + 1}`}
-          width={100}
-          height={100}
-          objectFit="cover"
+          width={1000}
+          height={1000}
+          objectFit="cover relative h-28 w-full sm:h-72 lg:h-[400px]"
         />
       </div>
       {/* Dots Indicator */}
