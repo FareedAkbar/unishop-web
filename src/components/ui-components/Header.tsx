@@ -18,14 +18,14 @@ import { FiSearch } from "react-icons/fi";
 import { TbSettings } from "react-icons/tb";
 import { HiLogin } from "react-icons/hi";
 import { categories } from "~/constants/categories";
-import { useAuthContext } from '~/Context/AuthContext';
-import { useRouter } from 'next/navigation';
-import SidebarCart from '../ui/sideCart/cartSidebar';
+import { useAuthContext } from "~/Context/AuthContext";
+import { useRouter } from "next/navigation";
+import SidebarCart from "../ui/sideCart/cartSidebar";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
-  const { logout, getGenre, cartItems } = useAuthContext();
-  const router = useRouter()
+  const { logout, getGenre, cartItems, checkoutData } = useAuthContext();
+  const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSection, setActiveSection] = useState("home");
@@ -49,8 +49,11 @@ const Header = () => {
 
   const handleSectionClick = (section: string, isDropdown = false) => {
     setActiveSection(section);
-    if (section == 'home') {
-      router.push('/')
+    if (section == "home") {
+      router.push("/");
+    }
+    if (section == "login") {
+      router.push("/login");
     }
     if (isDropdown) {
       setOpenDropdown(null); // Close dropdown when clicking a section
@@ -98,14 +101,22 @@ const Header = () => {
       href: "#contact",
       onClick: () => handleSectionClick("contact"),
     },
+    
+    {
+      label: "login",
+      href: "/login",
+      onClick: () => handleSectionClick("signup"),
+    },
     {
       label: "Signup",
       href: "#signup",
       onClick: () => handleSectionClick("signup"),
     },
+
   ];
 
   const handleLogout = async () => {
+    console.log("Logout")
     try {
       await logout(); // Await the logout promise
       router.push("/login");
@@ -118,18 +129,18 @@ const Header = () => {
     if (isFirstRender.current) {
       isFirstRender.current = false; // Prevents further API calls on first render
     } else {
-      getGenre().then((res) => {
-        console.log(res);
-
-      }).catch((err) => {
-        console.log(err);
-      });
+      getGenre()
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-
-  }, [])
+  }, []);
 
   const toggleSidebar = () => {
-    console.log("hit")
+    console.log("hit");
     setIsSidebarOpen((prev) => !prev);
   };
 
@@ -139,7 +150,6 @@ const Header = () => {
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
         <div className="flex items-center justify-between border-b pb-4 md:hidden">
           {/* Hamburger Icon */}
-
 
           {/* Logo in the Center */}
           <div className="flex-grow text-center">
@@ -242,7 +252,7 @@ const Header = () => {
             <nav className="fixed right-0 top-0 z-30 flex h-[80%] w-full flex-col overflow-scroll bg-white p-4 md:hidden md:w-1/2">
               <button
                 onClick={() => {
-                  router.push('/')
+                  router.push("/");
                 }}
                 className="mb-4 flex w-full items-center justify-between text-lg text-black focus:outline-none"
               >
@@ -280,6 +290,7 @@ const Header = () => {
                   )}
                 </div>
               ))}
+
               <button
                 onClick={() => {
                   //
@@ -306,29 +317,42 @@ const Header = () => {
             </div>
 
             {/* Navigation Items in the Center */}
-            <nav className="flex-grow flex justify-center space-x-6">
+            <nav className="flex flex-grow justify-center space-x-6">
               {navItems.map((item) => (
-                <div key={item.label} className="relative group">
+
+                <div key={item.label} className="group relative">
                   <button
-                    onClick={() => item.subItems ? toggleDropdown(item.label) : handleSectionClick(item.label.toLowerCase())}
-                    className={`flex items-center relative ${item.subItems ? 'cursor-pointer' : ''}`}
+                    onClick={() =>
+                      item.subItems
+                        ? toggleDropdown(item.label)
+                        : handleSectionClick(item.label.toLowerCase())
+                    }
+                    className={`relative flex items-center ${item.subItems ? "cursor-pointer" : ""}`}
                   >
-                    <span className={` activeSection === item.label.toLowerCase() ? 'underline text-black' : ''`}>
+                    <span
+                      className={`activeSection === item.label.toLowerCase() ? 'underline text-black' : ''`}
+                    >
                       {item.label}
                     </span>
                     {item.subItems && (
-                      <span className="ml-1">{openDropdown === item.label ? <FaChevronUp /> : <FaChevronDown />}</span>
+                      <span className="ml-1">
+                        {openDropdown === item.label ? (
+                          <FaChevronUp />
+                        ) : (
+                          <FaChevronDown />
+                        )}
+                      </span>
                     )}
                   </button>
                   {/* Render dropdown menu if subItems exist */}
                   {item.subItems && openDropdown === item.label && (
-                    <div className="absolute bg-white shadow-md mt-1 w-40 z-10">
+                    <div className="absolute z-10 mt-1 w-40 bg-white shadow-md">
                       {item.subItems.map((subItem) => (
                         <a
                           key={subItem.label}
                           href={subItem.href}
                           onClick={subItem.onClick} // Call the onClick for subItems
-                          className="block  px-4 py-2 hover:bg-gray-100"
+                          className="block px-4 py-2 hover:bg-gray-100"
                         >
                           {subItem.label}
                         </a>
@@ -337,6 +361,7 @@ const Header = () => {
                   )}
                 </div>
               ))}
+            
             </nav>
 
             {/* Right Section: Search Bar and Icons */}
@@ -348,25 +373,40 @@ const Header = () => {
                 icon={<FiSearch />}
                 width="w-64"
               />
-              <div className="relative" >
+              <div className="relative">
                 <GoHeart className="cursor-pointer text-3xl" />
-                <span className="absolute -top-0 -right-0 bg-red-500 text-white text-[6px] text-sm rounded-full w-4 h-4 flex items-center justify-center">3</span>
+                {/* <span className="absolute -top-0 -right-0 bg-red-500 text-white text-[6px] text-sm rounded-full w-4 h-4 flex items-center justify-center">3</span> */}
               </div>
               <div className="relative" onClick={() => toggleSidebar()}>
                 <IoCartOutline className="cursor-pointer text-3xl" />
-                <span className="absolute -top-0 -right-0 bg-red-500 text-white text-[6px] text-sm rounded-full w-4 h-4 flex items-center justify-center"> {cartItems?.length}</span>
+                {cartItems?.length && cartItems?.length > 0 && (
+                  <span className="absolute -right-0 -top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[6px] text-sm text-white">
+                    {" "}
+                    {cartItems?.length}
+                  </span>
+                )}
               </div>
               <div className="relative">
-                <div className="bg-red-500 rounded-full cursor-pointer" onClick={toggleUserDropdown}>
-                  <MdOutlinePersonOutline className="text-white text-xl" />
+                <div
+                  className="cursor-pointer rounded-full bg-red-500"
+                  onClick={toggleUserDropdown}
+                >
+                  <MdOutlinePersonOutline className="text-xl text-white" />
                 </div>
                 {isUserDropdownOpen && (
-                  <div className="absolute right-0 bg-white shadow-md mt-1 w-24 z-10 py-2 px-1 rounded-md">
-                    <a href="#account-settings" className="flex items-center font-medium p-1 hover:bg-gray-100 text-[9px]">
+                  <div ref={userDropdownRef} className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md">
+                    <a
+                      href="#account-settings"
+                      className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100"
+                    >
                       <TbSettings className="mr-2" />
                       Account Setting
                     </a>
-                    <a onClick={() => handleLogout()} href="#logout" className="flex items-center p-1 font-medium hover:bg-gray-100 text-[9px]">
+                    <a
+                      onClick={() => handleLogout()}
+                      href="#logout"
+                      className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100"
+                    >
                       <HiLogin className="mr-2" />
                       Logout
                     </a>
@@ -376,7 +416,6 @@ const Header = () => {
             </div>
           </div>
         </div>
-
       </header>
       <SidebarCart
         isOpen={isSidebarOpen}

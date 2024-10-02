@@ -179,18 +179,25 @@ const MyComponent = () => {
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center justify-center">
-        <div className="flex  flex-row">
+        <div className="flex flex-row">
           <div className="hidden lg:block">
             <CategoriesSidebar />
           </div>
-          <div className="flex-1  p-4">
+          <div className="flex-1 p-4">
             <h1 className="m-4 text-end font-bold">
               Showing {dummyProducts.length} of {totalPages * 10} Products
             </h1>
             <ScrollArea className="h-screen">
               <div className="flex flex-wrap justify-between">
-                {dummyProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                {data?.map((item: DataCart) => (
+                  <ProductCard
+                    key={item.book_id}
+                    product={item}
+                    showAddToCart={!isItemInCart(item.item_id)}
+                    onAddToCart={() => handleAddToCart(item)}
+                    onRemoveFromCart={() => handleRemoveFromCart(item)}
+                    openDetail={() => openDetail(item)}
+                  />
                 ))}
               </div>
             </ScrollArea>
@@ -240,7 +247,10 @@ const MyComponent = () => {
         </div>
         <div className="mx-auto max-w-5xl px-8"/> */}
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <div className="sm:grid-cols2 xs:grid-cols-1 grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
+          
+          
+          
+          {/* <div className="sm:grid-cols2 xs:grid-cols-1 grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
             {loader && (
               <>
                 <BookSkelton />
@@ -265,7 +275,9 @@ const MyComponent = () => {
                   openDetail={() => openDetail(item)}
                 />
               ))}
-          </div>
+          </div> */}
+
+
           {/* {!loader ? (
             <Pagination
               currentPage={currentPage}

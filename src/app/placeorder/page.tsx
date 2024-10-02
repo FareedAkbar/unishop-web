@@ -504,8 +504,8 @@ const MyComponent = () => {
     >Loading...</span>
   </div> */}
 
-      <main className="mb-8 flex min-h-screen max-w-5xl justify-center pt-32">
-        <div className="z-30 rounded border-b border-l border-r border-t bg-white px-4 shadow shadow-card shadow-zinc-300">
+      <main className="mb-8 flex min-h-screen  justify-center al pt-32">
+        <div className="max-w-5xl z-10 rounded border-b border-l border-r border-t bg-white px-4 shadow shadow-card shadow-zinc-300">
           <h2 className="mt-6 font-serif text-xl font-bold text-neutral-800 dark:text-neutral-200">
             Payment Method
           </h2>

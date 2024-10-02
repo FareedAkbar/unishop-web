@@ -195,10 +195,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           return item;
         });
         lsClient.setItem("CART_ITEM", updatedItems);
+       
         return updatedItems;
       } else {
         // Item does not exist, add as new entry
         const updatedItems = [...prev, newItem];
+     
         lsClient.setItem("CART_ITEM", updatedItems);
         return updatedItems;
       }

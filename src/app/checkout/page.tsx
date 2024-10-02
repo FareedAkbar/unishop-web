@@ -69,11 +69,11 @@ const MyComponent = () => {
     <div>
        
        
-       <main className="flex min-h-screen flex-col items-center justify-center">
+       <main className="flex min-h-screen flex-col items-center justify-center z-10">
 
 
         <div className="grid grid-cols-2 sm:grid-cols-1  md:grid-cols-2 lg:grid-cols-2 justify-center gap-12 px-4 pt-32">
-          <div className="z-30">
+          <div className="z-10">
           {view == 'checkout' ? (
             <CheckoutForm push={true}/>
           ): (
@@ -88,7 +88,7 @@ const MyComponent = () => {
             </div>
         </div>
         </div>
-          <div className="z-30">
+          <div className="z-10">
               <ExpandableCardDemo data={items}/>
           </div>
         </div>

@@ -2,17 +2,25 @@ import Image from "next/image";
 import React from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { HiOutlineMinus, HiOutlinePlus } from "react-icons/hi";
+interface Stock {
+  quantity: number; // Just use number; 0 is included
+}
 
 interface CartItemProps {
   title: string;
   size: string;
   color: string;
   price: number;
-  quantity: number;
-  imageSrc: string;
+  
+  imageSrc?: string | null;
   onIncrease: () => void;
   onDecrease: () => void;
   onRemove: () => void;
+  showRemove: boolean;
+  onChangeQuantity?: (id: number, quantity: number) => void;
+  itemQuantity: number;
+  showQuantityIncriment?: boolean,
+  stock: Stock
 }
 
 const CartItem: React.FC<CartItemProps> = ({
@@ -20,17 +28,25 @@ const CartItem: React.FC<CartItemProps> = ({
   size,
   color,
   price,
-  quantity,
+ 
   imageSrc,
   onIncrease,
   onDecrease,
   onRemove,
+  showRemove,
+  onChangeQuantity,
+  itemQuantity,
+  showQuantityIncriment,
+  stock
 }) => {
   return (
+    <>
     <div className="flex flex-row items-start space-x-4 border-b py-4">
       {/* Image */}
       <Image
-        src={imageSrc}
+        src={ imageSrc
+          ? `https://ipos-storage.s3.amazonaws.com/${imageSrc}`
+          : '/images/products/product.png'}
         alt={title}
         className="h-20 w-20 rounded bg-gray-200 object-contain mb-4 md:mb-0"
         width={800}
@@ -52,22 +68,31 @@ const CartItem: React.FC<CartItemProps> = ({
       {/* Delete and Plus/Minus buttons */}
       <div className="flex flex-col gap-6 items-end w-auto">
         {/* Delete button at the top-right */}
-        <button className="self-end text-red-500 mb-2 text-sm" onClick={onRemove}>
+        <button className="self-end text-red-500 mb-2 text-sm" onClick={()=>onRemove()}>
           <FaTrashAlt size={16} />
         </button>
 
         {/* Plus and minus buttons at the bottom */}
         <div className="flex items-center space-x-2 rounded bg-gray-200 p-1  justify-between mt-auto w-auto">
-          <button className="p-1" onClick={onDecrease}>
+          <button className="p-1" disabled={itemQuantity < 2} onClick={onDecrease}>
             <HiOutlineMinus size={14} />
           </button>
-          <span className="text-sm">{quantity}</span>
+          <span className="text-sm">{itemQuantity}</span>
           <button className="p-1" onClick={onIncrease}>
             <HiOutlinePlus size={14} />
           </button>
         </div>
       </div>
+      
     </div>
+    {stock.quantity < itemQuantity && (
+      <p className="bg-yellow-200 p-3 text-sm">
+        {/* <MdWarning size={23} /> */}
+        We don&apos;t have as many quantity as you requested, but we&apos;ll back order
+        the remaining {itemQuantity - stock.quantity}.
+      </p>
+    )}
+    </>
   );
 };
 
