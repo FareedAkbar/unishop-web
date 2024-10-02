@@ -1,6 +1,9 @@
+'use client';
+
 import React, { useEffect, useRef, useState } from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { HiArrowSmallRight, HiArrowSmallLeft } from "react-icons/hi2";
+import CountdownTimer from "~/components/countdownTimer";
 
 type Product = {
   id: number;
@@ -18,64 +21,6 @@ interface ProductsSectionProps {
   headingPartOne: string; // New prop for the first part of the heading
   headingPartTwo: string; // New prop for the second part of the heading
 }
-
-const CountdownTimer = ({ targetDate }: { targetDate: Date }) => {
-  const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining(targetDate));
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeRemaining(calculateTimeRemaining(targetDate));
-    }, 1000); // Update every second
-
-    return () => clearInterval(timer); // Cleanup on unmount
-  }, [targetDate]);
-
-  function calculateTimeRemaining(targetDate: Date) {
-    const now = new Date();
-    const difference = targetDate.getTime() - now.getTime();
-
-    if (difference <= 0) {
-      return {
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-      };
-    } else {
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-      return {
-        days,
-        hours,
-        minutes,
-        seconds,
-      };
-    }
-  }
-
-  return (
-    <div className="countdown-timer flex sm:gap-4">
-      {["Days", "Hours", "Minutes", "Seconds"].map((label, idx) => (
-        <React.Fragment key={label}>
-          <div className="time-unit flex flex-col items-center">
-            <span className="time-label text-sm sm:text-lg">{label}</span>
-            <span className="time-value text-2xl font-bold sm:text-4xl">
-              {Object.values(timeRemaining)[idx]}
-            </span>
-          </div>
-          {idx < 3 && (
-            <span className="separator pt-3 text-2xl font-bold text-red-500 sm:pt-6 sm:text-4xl">
-              :
-            </span>
-          )}
-        </React.Fragment>
-      ))}
-    </div>
-  );
-};
 
 const ProductsSection: React.FC<ProductsSectionProps> = ({ products, targetDate, headingPartOne, headingPartTwo }) => {
   const productContainerRef = useRef<HTMLDivElement>(null);

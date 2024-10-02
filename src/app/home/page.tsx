@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import ImageSlider from "./ImageSlider";
 import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
@@ -142,7 +144,7 @@ const HomePage: React.FC = () => {
         headingPartOne="Today's"
         headingPartTwo="Flash Sales"
       />
-      <GraduationBanner/>
+      <GraduationBanner />
       <ProductsSection
         products={bestSellingProducts}
         headingPartOne="Best Selling"

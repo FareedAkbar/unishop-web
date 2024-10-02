@@ -4,7 +4,7 @@ import { PiBooksBold } from "react-icons/pi";
 import { IoIosArrowRoundForward } from "react-icons/io";
 
 interface ImageSliderProps {
-  images: any[];
+  images: string[];
 }
 
 const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
@@ -40,7 +40,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
       </div>
       <div className="relative h-28 w-full sm:h-72 lg:h-[400px]">
         <Image
-          src={"/images/home/home1.png"}
+          src={"/images/home/graduation.png"}
           alt={`Image ${currentImageIndex + 1}`}
           width={100}
           height={100}

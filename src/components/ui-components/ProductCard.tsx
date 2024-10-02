@@ -1,3 +1,5 @@
+'use client';
+
 import Image from "next/image";
 import React from "react";
 import { AiOutlineHeart, AiOutlineEye } from "react-icons/ai";
@@ -21,7 +23,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           -
           {Math.floor(
             ((product.originalPrice - product.price) / product.originalPrice) *
-              100,
+            100,
           )}
           %
         </div>
