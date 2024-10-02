@@ -11,6 +11,7 @@ import { useAuthContext } from "~/Context/AuthContext";
 // import type PaginationData from '~/types/paginationData'
 import type DataCart from "~/types/book";
 import Spinner from "~/components/spinner";
+import ProductCardSkeleton from "~/components/ui-components/ProductCardSkeleton";
 import {
   ModalBody,
   ModalContent,
@@ -178,12 +179,12 @@ const MyComponent = () => {
   };
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center justify-center">
+      <main className="flex min-h-screen flex-col items-center">
         <div className="flex flex-row">
-          <div className="hidden lg:block">
+          <div className="lg:flex-start lg: hidden lg:static lg:left-0 lg:flex">
             <CategoriesSidebar />
           </div>
-          <div className="flex-1 p-4">
+          <div className="flex flex-col  p-4 ">
             <h1 className="m-4 text-end font-bold">
               Showing {dummyProducts.length} of {totalPages * 10} Products
             </h1>
@@ -259,7 +260,7 @@ const MyComponent = () => {
                 <BookSkelton />
               </>
             )}
-            {!loader &&
+            {loader &&
               data?.map((item: DataCart) => (
                 <ProductGradient
                   key={item.item_id}

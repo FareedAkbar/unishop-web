@@ -155,7 +155,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         </ScrollArea>
 
         {/* Cart Footer */}
-        <div className="p-3">
+        <div className="fixed bottom-0 w-full p-3">
           {/* Subtotal and Fees */}
           <div className="mb-2 flex justify-between">
             <span className="text-sm text-gray-500">Subtotal</span>
@@ -185,7 +185,6 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
             Confirm Order
           </button>
         </div>
-
         {/* Header */}
         {/* <div className="relative border-b border-gray-200 p-4">
           <h2 className="text-xl font-semibold font-serif">UNISHOP Cart</h2>

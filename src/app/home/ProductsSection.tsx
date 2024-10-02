@@ -51,8 +51,8 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({ products, targetDate,
   };
 
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
+    <div className="bg-white w-screen">
+      <div className="mx-auto   py-8 sm:px-6 sm:py-16  lg:py-24">
         <div className="flex flex-row items-center justify-between md:flex-row">
           <div className="flex flex-row items-end justify-between gap-5 md:flex-row md:gap-10">
             <h2 className="text-2xl font-extrabold text-gray-900 sm:text-5xl">
@@ -80,7 +80,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({ products, targetDate,
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap overflow-x-auto lg:flex-nowrap scrollbar-hidden" ref={productContainerRef}>
+        <div className="mt-6 flex flex-wrap  overflow-x-auto lg:flex-nowrap xl:flex-nowrap scrollbar-hidden" ref={productContainerRef}>
           {products.map((product, ind) => (
             <ProductCard key={ind} product={product} />
           ))}
