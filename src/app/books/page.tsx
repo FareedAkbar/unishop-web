@@ -40,32 +40,18 @@ interface ApiResponse {
 }
 
 const MyComponent = () => {
-  // const [currentPage, setCurrentPage] = useState<number>(1);
-  // const [totalPages, setTotalPages] = useState<number>(1);
+
   const [loader, setLoader] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
   const [data, setData] = useState<DataCart[]>([]);
   const isFirstRender = useRef(true);
-  // const [meta, setMeta] = useState<PaginationData>({
-  //   current_page_url: null,
-  //   first_page_url: null,
-  //   from: 1,
-  //   last_page_url: null,
-  //   limit: 10,
-  //   links: [],
-  //   next_page_url: null,
-  //   page: 1,
-  //   pages: 1,
-  //   pagination: false,
-  //   prev_page_url: null,
-  //   to: 1,
-  //   total: 0,
-  // });
+ 
   const params = useSearchParams();
   const detail = params.get("detail");
   const { setOpen } = useModal();
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const { cartItems, addCartItems, removeCartItems, genre } = useAuthContext();
+  
   const fetchData = async (genre_id: number) => {
     setLoader(true);
     try {
@@ -162,6 +148,7 @@ const MyComponent = () => {
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center justify-center">
+     
         <div className="grid h-[40rem] w-full items-center justify-between sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
           <div className="flex flex-col">
             <h2 className="relative z-20 mx-auto mt-32 text-center font-serif text-2xl font-bold tracking-tight text-red-600 dark:text-white md:text-4xl lg:text-5xl">

@@ -63,6 +63,14 @@ export const PAGE_MAPPER: Record<Exclude<PAGE_ROUTES, PAGE_ROUTES.UNKNOWN>, { PU
     PUBLIC: true,
     PROTECTED: false,
   },
+  [PAGE_ROUTES.SPECIAL_ORDER]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
+  [PAGE_ROUTES.MY_ORDERS]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
 };
 
 

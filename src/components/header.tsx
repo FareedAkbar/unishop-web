@@ -12,22 +12,22 @@ import { cn } from "~/lib/utils";
 
 export default function Header({ className }: { className?: string }) {
   const [active, setActive] = useState<string | null>(null);
-  const {getGenre,genre} = useAuthContext();
+  const { getGenre, genre, checkoutData } = useAuthContext();
   const isFirstRender = useRef(true);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false; // Prevents further API calls on first render
     } else {
       getGenre().then((res) => {
         console.log(res);
-        
+
       }).catch((err) => {
         console.log(err);
       });
     }
-   
-  },[])
+
+  }, [])
 
   return (
     <div className={cn("w-xl fixed inset-x-0 top-5 z-50 mx-auto", className)}>
@@ -40,10 +40,19 @@ export default function Header({ className }: { className?: string }) {
           >
             HOME
           </Link>
+          {checkoutData?.booknet_customer_id && (
+            <Link
+              onMouseEnter={() => setActive(null)}
+              href={`my-orders`}
+              className="hidden text-neutral-700 hover:text-black dark:text-neutral-200 md:text-xs lg:block font-sans"
+            >
+              MY ORDERS
+            </Link>
+          )}
 
           <MenuItem setActive={setActive} active={active} item="TEXTBOOKS">
             {/* <div className="grid gap-6 p-4 text-sm xs:grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 overflow-y-auto max-h-[80vh]"> */}
-              {/* <div className="animate-pulse rounded-lg bg-white p-4 shadow-md">
+            {/* <div className="animate-pulse rounded-lg bg-white p-4 shadow-md">
                 <div className="flex gap-2">
                   <div>
                     <div className="mb-2 h-32 w-28 rounded bg-gray-300"></div>
@@ -55,21 +64,21 @@ export default function Header({ className }: { className?: string }) {
                   </div>
                 </div>
               </div> */}
-             <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink  href={`textbooks?detail=${"Engineering and Information Sciences EIS"}`}>
-              ENGINEERING AND INFORMATION SCIENCES EIS
+            <div className="flex flex-col space-y-4 text-sm">
+              <HoveredLink href={`textbooks?detail=${"Engineering and Information Sciences EIS"}`}>
+                ENGINEERING AND INFORMATION SCIENCES EIS
               </HoveredLink>
-              <HoveredLink  href={`textbooks?detail=${"Science, Medicine & Health SMAH"}`}>
-              SCIENCE, MEDICINE & HEALTH SMAH
+              <HoveredLink href={`textbooks?detail=${"Science, Medicine & Health SMAH"}`}>
+                SCIENCE, MEDICINE & HEALTH SMAH
               </HoveredLink>
-              <HoveredLink  href={`textbooks?detail=${"Business and Law BAL"}`}>
-              BUSINESS AND LAW BAL
+              <HoveredLink href={`textbooks?detail=${"Business and Law BAL"}`}>
+                BUSINESS AND LAW BAL
               </HoveredLink>
               <HoveredLink href={`textbooks?detail=${"Arts, Social Sciences & Humanities ASSH"}`}>
-              ARTS, SOCIAL SCIENCES & HUMANITIES ASSH
+                ARTS, SOCIAL SCIENCES & HUMANITIES ASSH
               </HoveredLink>
             </div>
-              {/* <ProductItem
+            {/* <ProductItem
                 title="Engineering and Information Sciences EIS"
                 href={`books?detail=${"Engineering and Information Sciences EIS"}`}
                 src="https://assets.aceternity.com/demos/algochurn.webp"
@@ -110,12 +119,12 @@ export default function Header({ className }: { className?: string }) {
 
           <MenuItem setActive={setActive} active={active} item="BOOKS">
             <div className="flex flex-col space-y-4 text-sm">
-              {genre?.map((item,index)=>
+              {genre?.map((item, index) =>
                 <HoveredLink key={index} href={`books?detail=${item.genre}`}>
-                {item.genre}
-              </HoveredLink>
+                  {item.genre}
+                </HoveredLink>
               )}
-              
+
               {/* <HoveredLink href={`books?detail=${"NON-FICTION"}`}>
                 NON-FICTION
               </HoveredLink>

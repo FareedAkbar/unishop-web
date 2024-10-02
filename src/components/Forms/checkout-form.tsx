@@ -21,11 +21,16 @@ import states from "../constants/austrailia";
 import cities from "../constants/cities";
 import { PhoneNumberInput } from "../ui/phoneNumberInput";
 import { v5 as uuidv5 } from "uuid";
-import { checkoutBooknetResponse } from "~/types/checkoutForm";
+import { checkoutBooknetResponse, CheckoutForm } from "~/types/checkoutForm";
 
 type CehckoutFormValues = z.infer<typeof SignupSchema>;
 
-export default function CehckoutForm() {
+interface checkout {
+  push?: boolean;
+  handleData?: (data: CheckoutForm) => void;
+}
+
+export default function CehckoutForm({ push, handleData }: checkout) {
   // const [stateOptions, setStateOptions] = useState<
   //   { value: number; label: string }[]
   // >([]);
@@ -125,7 +130,12 @@ export default function CehckoutForm() {
       await CheckoutApi(updatedData)
         .then((res: checkoutBooknetResponse) => {
           if (res.status) {
-            router.push("placeorder");
+            if (push) {
+              router.push("placeorder");
+            }
+            if (!push && handleData) {
+              handleData(res?.data);
+            }
           }
         })
         .catch((err) => console.log(err));
@@ -299,13 +309,15 @@ export default function CehckoutForm() {
             />
           </div>
         </div> */}
-        <button
-          className="group/btn relative block h-10 w-full rounded-md bg-zinc-600 to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] hover:bg-zinc-800 dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-          type="submit"
-        >
-          Checkout &rarr;
-          <BottomGradient />
-        </button>
+        <div className="flex max-w-sm justify-center mx-auto">
+          <button
+            className="group/btn relative block h-10 w-full rounded-md bg-zinc-600 to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] hover:bg-zinc-800 dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+            type="submit"
+          >
+            Checkout &rarr;
+            <BottomGradient />
+          </button>
+        </div>
       </form>
     </div>
   );
