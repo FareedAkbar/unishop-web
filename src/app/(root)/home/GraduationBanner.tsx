@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import graduationImage from "../../../public/images/home/graduation.png";
 import CountdownTimer from "~/components/countdownTimer";
 
 const GraduationBanner: React.FC = () => {
@@ -23,7 +22,7 @@ const GraduationBanner: React.FC = () => {
 
       <div className="mt-8 flex w-1/3 lg:mt-0 lg:justify-end">
         <Image
-          src={graduationImage}
+          src={"/images/home/graduation.png"}
           alt="Graduation"
           width={1000}
           height={1000}

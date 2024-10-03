@@ -3,10 +3,10 @@
 import { Controls, Player } from "@lottiefiles/react-lottie-player";
 
 // import Header from "~/components/header";
-import ProductGradient from "../../components/productGradient";
+import ProductGradient from "../../../components/productGradient";
 import { useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
-import BooksImage from "../../../public/book.json";
+import BooksImage from "../../../../public/book.json";
 import type DataCart from "~/types/book";
 import { Suspense } from "react";
 

@@ -1,6 +1,6 @@
 "use client";
 import CategoriesSideBar from "~/components/ui-components/CategoriesSideBar"; // Importing Sidebar component
-import HomePage from "./home/page";
+import HomePage from "./(root)/home/page";
 import { Suspense } from "react";
 import Spinner from "~/components/spinner";
 

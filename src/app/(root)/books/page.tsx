@@ -2,7 +2,7 @@
 
 import { Controls, Player } from "@lottiefiles/react-lottie-player";
 // import Header from "~/components/header";
-import ProductGradient from "../../components/productGradient";
+import ProductGradient from "../../../components/productGradient";
 import { Suspense, useEffect, useRef, useState } from "react";
 // import Pagination from "~/components/pagination";
 import { useSearchParams } from "next/navigation";
