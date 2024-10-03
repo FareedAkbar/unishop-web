@@ -12,6 +12,7 @@ import type {Booknet_customer_checkout, booknet_customer_id, checkoutBooknetResp
 import type {Genre, GenreResponse} from "~/types/genre";
 import type { LoginData,LoginResponse, SendOTPResponse, VerifyOTPResponse } from "~/types/loginResponse";
 import { cookieClient } from "~/clients/cookie-client";
+import { Category, CategoryResponse } from "~/types/category";
 interface AuthContextProps {
   isLoggedIn: boolean;
   userInfo?: UserType;
@@ -23,12 +24,14 @@ interface AuthContextProps {
   logout: () => Promise<void>;
   getcheckoutFormData: () => Promise<boolean>;
   getGenre: () => Promise<boolean>;
+  getCategory: () => Promise<boolean>;
   addCartItems: (payload: DataCart) => Promise<boolean>;
   checkoutFormData: (payload: CheckoutForm) => Promise<boolean>;
   removeCartItems: (payload: DataCart) => Promise<boolean>;
   increaseCartItemQuantity: (item_id: number, quantity: number) => Promise<boolean>;
   cartItems?: DataCart[];
   genre?: Genre[] | null;
+  category?: Category[] | null;
   checkoutData: CheckoutForm | null;
   appId: string;
   removeAllCartItems: () => Promise<boolean>;
@@ -57,6 +60,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [token, setToken] = useState<string | undefined>();
   const [cartItems, setItems] = useState<DataCart[]>([]);
   const [genre, setGenre] = useState<Genre[] | null>([]);
+  const [category, setCategory] = useState<Category[] | null>([]);
   const [uuidLocal, setUuidLocal] = useState<string | undefined>();
   const [checkoutData, setCheckoutData] = useState<CheckoutForm | null>(null);
   const [bookentcustomerId, setBookentcustomerId] = useState<number | null>(null);
@@ -161,6 +165,29 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setGenre(responsePayload.data)
 
     lsClient.setItem("GENRE", responsePayload.data);
+    
+    return true;
+  };
+
+  const getCategory = async (): Promise<boolean> => {
+    const response = await apiRouter(
+      "CATEGORY",
+      {
+        method: "GET",
+      },
+      // { skipAuthorization: true },
+    );
+
+    if (!response.ok) return false;
+
+    const responsePayload: { status: boolean; data: Category[] } =
+      (await response.json()) as CategoryResponse;
+    if (!responsePayload.status) return false;
+
+    
+    setCategory(responsePayload.data)
+
+    lsClient.setItem("CATEGORY", responsePayload.data);
     
     return true;
   };
@@ -286,6 +313,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const cartItems = lsClient.getItem("CART_ITEM");
     const checkoutData = lsClient.getItem("CHECKOUT_DATA");
     const GENRE = lsClient.getItem("GENRE");
+    const CATEGORY = lsClient.getItem("CATEGORY");
     const UUID = lsClient.getItem("UUID");
     const TOKEN = lsClient.getItem("TOKEN");
     const BOOKENT_CUSTOMER_ID = lsClient.getItem("BOOKENT_CUSTOMER_ID");
@@ -300,6 +328,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setBookentcustomerId(BOOKENT_CUSTOMER_ID);
     setToken(TOKEN);
     setGenre(GENRE);
+    setCategory(CATEGORY);
     setCheckoutData(checkoutData);
     
     if (isLoggedIn && userInfo) {
@@ -393,6 +422,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         increaseCartItemQuantity,
         removeAllCartItems,
         getGenre,
+        getCategory,
+        category,
         genre,
         setUUID,
         uuidLocal,

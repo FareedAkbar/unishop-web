@@ -7,7 +7,7 @@ import { useAuthContext } from "~/Context/AuthContext";
 const CategoriesSidebar = () => {
   // State to keep track of open dropdowns
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const { genre, checkoutData } = useAuthContext();
+  const { genre, checkoutData,category } = useAuthContext();
   const router = useRouter();
 
   // Toggle dropdown function
@@ -52,8 +52,19 @@ const CategoriesSidebar = () => {
                     {subItem.genre}
                   </a>
                 ))}
+                {item.label == "Text Book" &&
+                openDropdown === item.label &&
+                category?.map((subItem) => ( subItem.parent == 0 &&
+                  <a
+                    key={subItem.id}
+                    href={`textbooks?detail=${subItem.category_name}`}
+                    className="block py-1 text-sm hover:underline"
+                  >
+                    {subItem.category_name}
+                  </a>
+                ))}
             </div>
-            {item.label != "Books" &&
+            {item.label != "Books" && item.label != "Text Book" &&
               item.subItems &&
               openDropdown === item.label && (
                 <div className="ml-4 mt-1">

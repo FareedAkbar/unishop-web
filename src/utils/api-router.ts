@@ -70,5 +70,6 @@ const API_TYPE_MAPPER: Record<keyof typeof API_ROUTES, any> = {
   CHECKOUT: {} as Register | Booknet_customer_checkout,
   // CHECKOUT_WITH_USERNAME: {} as Booknet_customer_checkout | Register,
   GENRE: {} as unknown,
+  CATEGORY: {} as unknown,
   SIGN_OUT: {} as unknown,
 };

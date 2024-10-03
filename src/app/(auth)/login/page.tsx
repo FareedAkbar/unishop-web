@@ -30,7 +30,7 @@ const MyComponent = () => {
         />
       </div>
       <main className="absolute right-0 z-10 p-10">
-        {view == "booknet" && (
+        {/* {view == "booknet" && (
           <div className="w">
             <BooknetFormLogin push={true} goTo="/" title="Customer Login" />
           </div>
@@ -40,10 +40,10 @@ const MyComponent = () => {
         )}
         {view == "Send-Otp" && (
           <SendOTPForm setView={setView} loginResponse={loginResponse} />
-        )}
-        {view == "Verify-Otp" && (
+        )} */}
+        {/* {view == "Verify-Otp" && ( */}
           <VerifyOTPForm loginResponse={loginResponse} />
-        )}
+        {/* )} */}
       </main>
     </div>
   );

@@ -348,8 +348,10 @@ const MyComponent = () => {
         item_id: item.item_id,
         deal_id: null, // Assuming deal_id is null since it's not provided
         variable_id: null, // Assuming variable_id is null since it's not provided
-        quantity_item:  item.stock?.quantity > 0 &&  item.quantity > item.stock?.quantity ? item.stock?.quantity : item.quantity,
-        back_order_quantity: item.stock?.quantity > 0 &&  item.quantity > item.stock?.quantity ? item.quantity - item.stock?.quantity : 0,
+        quantity_item: item.quantity,
+        // quantity_item:  item.stock?.quantity > 0 &&  item.quantity > item.stock?.quantity ? item.stock?.quantity : item.quantity,
+        // back_order_quantity: item.stock?.quantity > 0 &&  item.quantity > item.stock?.quantity ? item.quantity - item.stock?.quantity : 0,
+        back_order_quantity: 0,
         notes: "", // Use additional_notes if present
         is_deal: null, // Assuming is_deal is null since it's not provided
         item_price: item.item_sale_price,
