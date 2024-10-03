@@ -83,7 +83,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
 
   return (
     <div className="max-w-screen overflow-hidden bg-white pl-2">
-      <div className="py-8 sm:px-6 sm:py-16 lg:py-24 ">
+      <div className="py-8 sm:px-6 sm:py-16 lg:py-24">
         <div className="flex flex-row items-center justify-between md:flex-row">
           <div className="flex flex-row items-end justify-between gap-5 md:flex-row md:gap-10">
             <h2 className="text-2xl font-extrabold text-gray-900 sm:text-5xl">
@@ -133,14 +133,14 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
           </div>
         </div>
 
-        <div className="mt-8 sm:mt-12 flex justify-center">
-      <Button
-        title="View all products"
-        onClick={() => {
-          // Add your onClick functionality here
-        }}
-      />
-    </div>
+        <div className="mt-8 flex justify-center sm:mt-12">
+          <Button
+            title="View all products"
+            onClick={() => {
+              // Add your onClick functionality here
+            }}
+          />
+        </div>
       </div>
     </div>
   );
