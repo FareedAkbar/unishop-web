@@ -1,4 +1,5 @@
 "use client";
+
 import CategoriesSideBar from "~/components/ui-components/CategoriesSideBar"; // Importing Sidebar component
 import HomePage from "./home/page";
 import { Suspense } from "react";
@@ -39,9 +40,9 @@ const Page = () => {
 const BooksPage = () => {
   return (
     <Suspense fallback={<Spinner />}>
-      
-        <Page />
-    
+
+      <Page />
+
     </Suspense>
   );
 };

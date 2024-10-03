@@ -1,19 +1,20 @@
+"use client";
 import React from "react";
 
-const ProductCardSkeleton = () => {
+export default function ProductCardSkeleton() {
   return (
-    <div className="group relative flex flex-col w-32 flex-shrink-0 p-1 sm:w-1/2 sm:p-4 md:w-1/3 lg:w-72">
-      {/* Image Skeleton */}
-      <div className="relative flex h-32 animate-pulse items-center justify-center rounded-sm bg-gray-200">
-        <div className="absolute left-1 top-1 z-10 h-3 w-10 rounded bg-gray-300"></div>
-        <div className="h-full w-full rounded-sm bg-gray-300 p-2"></div>
+    <div className="mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md xl:max-w-lg">
+      {/* Image Placeholder */}
+      <div className="relative w-full animate-pulse">
+        <div className="mb-2 h-40 w-40 rounded bg-gray-200 sm:h-48 sm:w-48 lg:h-56 lg:w-56 xl:h-64 xl:w-64"></div>
       </div>
 
-      {/* Text Skeletons */}
-      <div className="mt-1 h-3 w-full animate-pulse rounded bg-gray-300" style={{ width: '90%' }}></div>
-      <div className="mt-1 h-3 w-full animate-pulse rounded bg-gray-300" style={{ width: '80%' }}></div>
+      {/* Text Section */}
+      <div className="flex flex-col items-start justify-start">
+        <div className="mb-2 h-6 w-28 rounded bg-gray-200 sm:h-4 sm:w-36 lg:h-6 lg:w-40 xl:h-6 xl:w-48"></div>
+        <div className="mb-2 h-4 w-28 rounded bg-gray-200 sm:h-2 sm:w-36 lg:h-4 lg:w-40 xl:h-4 xl:w-48"></div>
+        <div className="mb-2 h-4 w-40 rounded bg-gray-200 sm:h-2 sm:w-48 lg:h-4 lg:w-52 xl:h-4 xl:w-64"></div>
+      </div>
     </div>
   );
-};
-
-export default ProductCardSkeleton;
+}

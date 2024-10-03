@@ -2,16 +2,20 @@
 
 import { Controls, Player } from "@lottiefiles/react-lottie-player";
 // import Header from "~/components/header";
-import ProductGradient from "../../components/productGradient";
+import ProductGradient from "../../../components/productGradient";
 import { useRouter, useSearchParams } from "next/navigation";
-import BooksImage from "../../../public/book.json";
+import BooksImage from "../../../../public/book.json";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
 import { Suspense, useState } from "react";
 import SearchInput from "~/components/Fields/search";
 import { FiSearch } from "react-icons/fi";
 import SpecialOrderCard from "~/components/specialOrderCard";
-import { BookDetailType, SpecialBookType, SpecialOrderPayload } from "~/types/specialOrderBook";
+import {
+  BookDetailType,
+  SpecialBookType,
+  SpecialOrderPayload,
+} from "~/types/specialOrderBook";
 import Spinner from "~/components/spinner";
 import Image from "next/image";
 import moment from "moment";
@@ -23,8 +27,6 @@ import type { CheckoutForm as checkoutFormValue } from "~/types/checkoutForm";
 import { formatDate, formatDateTime } from "~/utils/dateAndTime";
 import { useToast } from "~/hooks/use-toast";
 import { generateOTP } from "~/utils/generateOTP";
-
-
 
 interface ApiResponse {
   // meta: PaginationData; // Adjust based on your actual structure
@@ -55,7 +57,9 @@ const MyComponent = () => {
   const { toast } = useToast();
   const [dataDetail, setDataDetail] = useState<BookDetailType | null>(null);
   const [searchValue, setSearchValue] = useState<string>("");
-  const [bookeSearched, setBookSearched] = useState<SpecialBookType | null>(null);
+  const [bookeSearched, setBookSearched] = useState<SpecialBookType | null>(
+    null,
+  );
   const [view, setView] = useState("checkout");
   const [showCheckout, setShowCheckout] = useState(false);
 
@@ -208,16 +212,14 @@ const MyComponent = () => {
     };
     try {
       await placeOrderApiCall(newData);
-      
     } catch (error) {
       console.error("Failed to load data:", error);
     }
-  
   };
 
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center ">
+      <main className="flex min-h-screen flex-col items-center">
         {/* {name}
       <Button onClick={()=>ChangeName()}>change name</Button> */}
         {loader && <Spinner />}
@@ -233,7 +235,7 @@ const MyComponent = () => {
                 icon={<FiSearch />}
               />
             </div>
-            
+
             <div className="mx-auto max-w-5xl px-8"></div>
             <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
               <div className="xs:grid-cols-1 grid gap-4 sm:grid-cols-2 md:gap-8 lg:grid-cols-4">

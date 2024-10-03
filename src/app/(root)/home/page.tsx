@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import ImageSlider from "./ImageSlider";
@@ -157,8 +157,6 @@ const HomePage: React.FC = () => {
         <div className="hidden lg:block">
           <CategoriesSidebar />
         </div>
-
-        {/* Image Slider */}
         <ImageSlider images={images} />
       </div>
       <ProductsSection
