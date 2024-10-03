@@ -181,25 +181,31 @@ const MyComponent = () => {
     <div>
       <main className="flex min-h-screen flex-col items-center">
         <div className="flex flex-row">
-          <div className="lg:flex-start lg: hidden lg:static lg:left-0 lg:flex">
+          <div className="lg:flex-start hidden lg:static lg:left-0 lg:flex lg:self-start">
             <CategoriesSidebar />
           </div>
-          <div className="flex flex-col  p-4 ">
+          <div className="flex flex-col p-4">
             <h1 className="m-4 text-end font-bold">
-              Showing {dummyProducts.length} of {totalPages * 10} Products
+              Showing {data.length} of {totalPages * 10} Products
             </h1>
             <ScrollArea className="h-screen">
               <div className="flex flex-wrap justify-between">
-                {data?.map((item: DataCart) => (
-                  <ProductCard
-                    key={item.book_id}
-                    product={item}
-                    showAddToCart={!isItemInCart(item.item_id)}
-                    onAddToCart={() => handleAddToCart(item)}
-                    onRemoveFromCart={() => handleRemoveFromCart(item)}
-                    openDetail={() => openDetail(item)}
-                  />
-                ))}
+                {loader
+                  ? [...Array(6)].map((_, index) => (
+                      <div key={index} className="w-1/3 p-2">
+                        <ProductCardSkeleton />
+                      </div>
+                    ))
+                  : data?.map((item: DataCart) => (
+                      <ProductCard
+                        key={item.book_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={() => handleAddToCart(item)}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        openDetail={() => openDetail(item)}
+                      />
+                    ))}
               </div>
             </ScrollArea>
             {/* <div className="mt-4 flex justify-between">
@@ -248,9 +254,6 @@ const MyComponent = () => {
         </div>
         <div className="mx-auto max-w-5xl px-8"/> */}
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          
-          
-          
           {/* <div className="sm:grid-cols2 xs:grid-cols-1 grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
             {loader && (
               <>
@@ -277,7 +280,6 @@ const MyComponent = () => {
                 />
               ))}
           </div> */}
-
 
           {/* {!loader ? (
             <Pagination

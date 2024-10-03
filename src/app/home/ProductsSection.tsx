@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { HiArrowSmallRight, HiArrowSmallLeft } from "react-icons/hi2";
 import CountdownTimer from "~/components/countdownTimer";
+import Button from "~/components/ui-components/Button";
 
 type Product = {
-  book_title: string,
-  item_sale_price: number,
+  book_title: string;
+  item_sale_price: number;
   id: number;
   name: string;
   price: number;
@@ -24,47 +25,81 @@ interface ProductsSectionProps {
   headingPartTwo: string; // New prop for the second part of the heading
 }
 
-const ProductsSection: React.FC<ProductsSectionProps> = ({ products, targetDate, headingPartOne, headingPartTwo }) => {
+const ProductsSection: React.FC<ProductsSectionProps> = ({
+  products,
+  targetDate,
+  headingPartOne,
+  headingPartTwo,
+}) => {
   const productContainerRef = useRef<HTMLDivElement>(null);
   const [listInStart, setListInStart] = useState(true);
 
   const handleScrollLeft = () => {
     if (productContainerRef.current) {
-      const minScrollLeft = 0;
       productContainerRef.current.scrollTo({
-        left: minScrollLeft,
+        left: 0,
         behavior: "smooth",
       });
     }
-    setListInStart(true);
   };
 
   const handleScrollRight = () => {
     if (productContainerRef.current) {
       const maxScrollLeft =
-        productContainerRef.current.scrollWidth - productContainerRef.current.clientWidth;
+        productContainerRef.current.scrollWidth -
+        productContainerRef.current.clientWidth;
 
       productContainerRef.current.scrollTo({
         left: maxScrollLeft,
         behavior: "smooth",
       });
     }
-    setListInStart(false);
   };
 
+  const updateIsListInStart = () => {
+    if (productContainerRef.current) {
+      const scrollLeft = productContainerRef.current.scrollLeft;
+      const maxScrollLeft =
+        productContainerRef.current.scrollWidth -
+        productContainerRef.current.clientWidth;
+
+      // Update listInStart dynamically based on scroll position
+      setListInStart(scrollLeft <= 0);
+    }
+  };
+
+  useEffect(() => {
+    const ref = productContainerRef.current;
+    if (ref) {
+      // Add the scroll event listener
+      ref.addEventListener("scroll", updateIsListInStart);
+
+      // Clean up the event listener on unmount
+      return () => {
+        ref.removeEventListener("scroll", updateIsListInStart);
+      };
+    }
+  }, []);
+
   return (
-    <div className="bg-white w-screen">
-      <div className="mx-auto   py-8 sm:px-6 sm:py-16  lg:py-24">
+    <div className="max-w-screen overflow-hidden bg-white pl-2">
+      <div className="py-8 sm:px-6 sm:py-16 lg:py-24 ">
         <div className="flex flex-row items-center justify-between md:flex-row">
           <div className="flex flex-row items-end justify-between gap-5 md:flex-row md:gap-10">
             <h2 className="text-2xl font-extrabold text-gray-900 sm:text-5xl">
               <div className="flex items-center pb-2 sm:pb-4">
                 <div className="mr-2 h-8 w-4 rounded bg-red-500 sm:h-12 sm:w-6" />
-                <span className="text-xl text-red-500 sm:text-3xl">{headingPartOne}</span>
+                <span className="text-xl text-red-500 sm:text-3xl">
+                  {headingPartOne}
+                </span>
               </div>
               {headingPartTwo}
             </h2>
-            <CountdownTimer targetDate={targetDate ? targetDate : new Date} />
+            {targetDate && (
+              <CountdownTimer
+                targetDate={targetDate ? targetDate : new Date()}
+              />
+            )}
           </div>
           <div className="mt-4 hidden items-center md:mt-0 lg:block">
             <button
@@ -82,28 +117,30 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({ products, targetDate,
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap  overflow-x-auto lg:flex-nowrap xl:flex-nowrap scrollbar-hidden" ref={productContainerRef}>
-          {/* {products.map((product, ind) => (
-           <ProductCard key={ind} product={product} />
-          ))} */}
-           <ProductCard key={1} />
-           <ProductCard key={1} />
-           <ProductCard key={1} />
-           <ProductCard key={1} />
-           <ProductCard key={1} />
-           <ProductCard key={1} />
-           <ProductCard key={1} />
-           <ProductCard key={1} />
+        <div className="w-[92vw]">
+          <div
+            className="scrollbar-hidden mt-6 flex flex-wrap lg:flex-nowrap lg:overflow-x-auto xl:flex-nowrap xl:overflow-x-auto"
+            ref={productContainerRef}
+          >
+            <ProductCard key={1} />
+            <ProductCard key={1} />
+            <ProductCard key={1} />
+            <ProductCard key={1} />
+            <ProductCard key={1} />
+            <ProductCard key={1} />
+            <ProductCard key={1} />
+            <ProductCard key={1} />
+          </div>
         </div>
 
-        <div className="mt-8 text-center sm:mt-12">
-          <a
-            href="#"
-            className="inline-block rounded bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 sm:px-6 sm:py-3"
-          >
-            View All Products
-          </a>
-        </div>
+        <div className="mt-8 sm:mt-12 flex justify-center">
+      <Button
+        title="View all products"
+        onClick={() => {
+          // Add your onClick functionality here
+        }}
+      />
+    </div>
       </div>
     </div>
   );
