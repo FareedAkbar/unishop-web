@@ -11,7 +11,6 @@ const ExpandableCardDemo = dynamic(() => import('~/components/blocks/card'), { s
 import type DataCart from "~/types/book";
 import BooknetForm from "~/components/Forms/booknet-form";
 
-
 // const requestOptions: RequestInit = {
 //   method: "GET",
 //   headers: {
