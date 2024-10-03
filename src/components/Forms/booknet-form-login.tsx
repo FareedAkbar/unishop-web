@@ -15,6 +15,7 @@ import type { CheckoutForm } from "~/types/checkoutForm";
 import Spinner from "../spinner";
 import Button from "../ui-components/Button";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import Link from "next/link";
 
 interface checkoutBooknet {
   push?: boolean;
@@ -69,12 +70,14 @@ export default function BooknetFormLogin({
   };
 
   return (
-    <div className="mx-auto w-full rounded-none border bg-transparent p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
+    <div className="mx-auto rounded-xl border bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8 lg:w-full">
       {loader && <Spinner />}
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         {title}
       </h2>
-      <p>If you have an account, sign in with your email address.</p>
+      <p className="pt-2 text-sm text-gray-500">
+        If you have an account, sign in with your email address.
+      </p>
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="address">Username</Label>
@@ -101,16 +104,23 @@ export default function BooknetFormLogin({
           )}
         </LabelInputContainer>
 
-        <div className="mx-auto flex max-w-sm justify-center">
+        <div className="mx-auto flex flex-col justify-center">
           <Button
             title="Login"
             onClick={() => {
               //
             }}
             width="w-full"
+            type="submit"
           />
+          <div className="mt-2 flex flex-col items-center justify-center text-black sm:flex-row">
+            <p>I don't have an account, </p>
+            <Link href="signup" className="ml-1 underline hover:text-red-500">
+              signup
+            </Link>
+          </div>
         </div>
-        <div className="mt-6 flex flex-col items-center">
+        {/* <div className="mt-6 flex flex-col items-center">
           <div className="mb-2 text-gray-500">Sign In With</div>
           <div className="flex space-x-4">
             <button className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 transition hover:bg-blue-600">
@@ -123,7 +133,7 @@ export default function BooknetFormLogin({
               <FaFacebook className="text-white" />
             </button>
           </div>
-        </div>
+        </div> */}
       </form>
     </div>
   );
