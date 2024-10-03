@@ -93,7 +93,7 @@ const MyComponent = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://api.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
+        "https://ipos-dev.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {

@@ -119,7 +119,11 @@ const MyComponent = () => {
   };
 
   const handleDetail = (item: SpecialBookType) => {
-    setBookSearched(item);
+
+    let title = item.title.slice(0,10)
+    const newItem = {...item, title: title}
+    setBookSearched(newItem);
+    console.log(newItem)
     fetchDetail(item.link);
     setShowCheckout(true);
   };
@@ -184,6 +188,7 @@ const MyComponent = () => {
     const newData = {
       tracking_id: generateOTP(12).toString(),
       order_type: 2,
+      online_order_type: true,
       order_status: 66,
       completed_date: formatDate(date),
       started: formatDateTime(date),

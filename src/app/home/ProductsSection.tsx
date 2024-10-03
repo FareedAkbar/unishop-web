@@ -64,7 +64,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({ products, targetDate,
               </div>
               {headingPartTwo}
             </h2>
-            <CountdownTimer targetDate={targetDate ? targetDate : new Date} />
+            {/* <CountdownTimer targetDate={targetDate ? targetDate : new Date} /> */}
           </div>
           <div className="mt-4 hidden items-center md:mt-0 lg:block">
             <button
