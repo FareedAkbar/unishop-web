@@ -17,8 +17,10 @@ const images = [
 const flashSaleProducts = [
   {
     id: 1,
-    name: "UOW Boxed Gift Pen",
-    price: 120,
+    book_title: "UOW Boxed Gift Pen",
+    name: "Red North Coat",
+    price: 180,
+    item_sale_price: 120,
     originalPrice: 160,
     image: "/images/products/product.png",
     rating: 4.5,
@@ -26,6 +28,8 @@ const flashSaleProducts = [
   },
   {
     id: 2,
+    book_title: "Red North Coat",
+    item_sale_price: 180,
     name: "Red North Coat",
     price: 180,
     originalPrice: 250,
@@ -35,6 +39,8 @@ const flashSaleProducts = [
   },
   {
     id: 3,
+    book_title: "ents Engineering for Software and Systems",
+    item_sale_price: 90,
     name: "ents Engineering for Software and Systems",
     price: 90,
     originalPrice: 120,
@@ -44,6 +50,8 @@ const flashSaleProducts = [
   },
   {
     id: 4,
+    book_title: "Gaming Laptop",
+    item_sale_price: 800,
     name: "Gaming Laptop",
     price: 800,
     originalPrice: 1000,
@@ -53,6 +61,8 @@ const flashSaleProducts = [
   },
   {
     id: 5,
+    book_title: "Smartwatch",
+    item_sale_price: 150,
     name: "Smartwatch",
     price: 150,
     originalPrice: 200,
@@ -62,6 +72,8 @@ const flashSaleProducts = [
   },
   {
     id: 6,
+    book_title: "Wireless Headphones",
+    item_sale_price: 100,
     name: "Wireless Headphones",
     price: 100,
     originalPrice: 150,
@@ -73,6 +85,8 @@ const flashSaleProducts = [
 const bestSellingProducts = [
   {
     id: 1,
+    book_title: "Red North Coat",
+    item_sale_price: 180,
     name: "Red North Coat",
     price: 120,
     originalPrice: 160,
@@ -84,6 +98,8 @@ const bestSellingProducts = [
   },
   {
     id: 2,
+    book_title: "UOW Boxed Gift Pen",
+    item_sale_price: 120,
     name: "Red North Coat",
     price: 120,
     originalPrice: 160,
@@ -95,6 +111,8 @@ const bestSellingProducts = [
   },
   {
     id: 3,
+    book_title: "UOW Boxed Gift Pen",
+    item_sale_price: 120,
     name: "Red North Coat",
     price: 120,
     originalPrice: 160,
@@ -106,6 +124,8 @@ const bestSellingProducts = [
   },
   {
     id: 4,
+    book_title: "UOW Boxed Gift Pen",
+    item_sale_price: 120,
     name: "Red North Coat",
     price: 120,
     originalPrice: 160,
@@ -117,6 +137,8 @@ const bestSellingProducts = [
   },
   {
     id: 5,
+    book_title: "UOW Boxed Gift Pen",
+    item_sale_price: 120,
     name: "Red North Coat",
     price: 120,
     originalPrice: 160,
@@ -130,7 +152,7 @@ const bestSellingProducts = [
 
 const HomePage: React.FC = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex-1">
       <div className="flex lg:flex-row">
         <div className="hidden lg:block">
           <CategoriesSidebar />
@@ -151,7 +173,7 @@ const HomePage: React.FC = () => {
         headingPartOne="Best Selling"
         headingPartTwo="Products This Month"
       />
-      <NewArrivals/>
+      {/* <NewArrivals/> */}
     </div>
   );
 };

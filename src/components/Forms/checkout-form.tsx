@@ -38,9 +38,7 @@ export default function CehckoutForm({ push, handleData }: checkout) {
     { value: number; label: string }[]
   >([]);
   const { checkoutFormData, checkoutData, CheckoutApi } = useAuthContext();
-  // const [countriesData, setCountriesData] = useState<CountriesData | null>(
-  //   null,
-  // );
+  const [loader, setLoader] = useState(false);
 
   const defaultValues = checkoutData
     ? {
@@ -126,24 +124,31 @@ export default function CehckoutForm({ push, handleData }: checkout) {
     };
 
     try {
-      await checkoutFormData(updatedData);
+      // await checkoutFormData(updatedData);
+      setLoader(true);
       await CheckoutApi(updatedData)
         .then((res: checkoutBooknetResponse) => {
+          setLoader(false);
           if (res.status) {
             if (push) {
               router.push("placeorder");
             }
             if (!push && handleData) {
+              
               handleData(res?.data);
             }
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          setLoader(false);
+          console.log(err);
+        });
       // router.push("placeorder");
 
       console.log(updatedData);
       // router.push("placeorder");
     } catch (error) {
+      setLoader(false);
       console.error("Failed to checkout:", error);
     }
 
@@ -309,9 +314,9 @@ export default function CehckoutForm({ push, handleData }: checkout) {
             />
           </div>
         </div> */}
-        <div className="flex max-w-sm justify-center mx-auto">
+        <div className="mx-auto flex max-w-sm justify-center">
           <button
-            className="group/btn relative block h-10 w-full rounded-md bg-zinc-600 to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] hover:bg-zinc-800 dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+            className="group/btn relative block h-10 w-full rounded-md bg-red-600 to-red-700 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] hover:bg-red-700 dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
             type="submit"
           >
             Checkout &rarr;
@@ -326,8 +331,8 @@ export default function CehckoutForm({ push, handleData }: checkout) {
 const BottomGradient = () => {
   return (
     <>
-      <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
-      <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
+      <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+      <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
     </>
   );
 };

@@ -26,6 +26,7 @@ import { useToast } from "~/hooks/use-toast";
 import type { placeOrderPayload } from "~/types/placeOrderPayload";
 import { formatDate, formatDateTime } from "~/utils/dateAndTime";
 import { useRouter } from "next/navigation";
+import { generateOTP } from "~/utils/generateOTP";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -255,12 +256,13 @@ const MyComponent = () => {
   };
 
   const handlePlaceOrder = async () => {
+    // await placeOrderApi(797498821);
     const x = {
       customer_id: checkoutData?.customer_id,
       guest_id: checkoutData?.customer_id ? null :checkoutData?.uuid,
       amount: 0.01,
     };
-    console.log(x);
+   
 
     try {
       await getLinkForPayment(x);
@@ -270,7 +272,7 @@ const MyComponent = () => {
       console.error("Failed to load data:", error);
     }
   };
-
+  
   type socketResponse = {
     customer_id: number;
     message: string;
@@ -291,7 +293,7 @@ const MyComponent = () => {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzMzLCJwcm9maWxlX2lkIjoxODIsIm91dGxldF9pZCI6MjIxLCJmaXJzdF9uYW1lIjoiUHVsc2VlIiwibGFzdF9uYW1lIjoiQ2FzaGllciIsInRlbXBsYXRlX2lkIjo1LCJwYXNzcG9ydF9ubyI6bnVsbCwiZGF0ZV9vZl9iaXJ0aCI6bnVsbCwiZ2VuZGVyIjpudWxsLCJkZXNpZ25hdGlvbl9pZCI6WzRdLCJlbWFpbCI6InB1bHNlY2FzaGllcjFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMDQ1MDQ1Njc4OTMiLCJzaWduX3VwIjoiMjAyMy0xMS0yOVQxOTo1NzoxNy4wMDBaIiwiY3JlYXRlZF9hdCI6IjIwMjMtMTEtMjlUMTk6NTc6MTcuMDAwWiIsInNlc3Npb25faWQiOjM2MjcsInNhbHQiOm51bGwsImlhdCI6MTcxMDQ5NzkyMn0.wX3RQZzOiNkWWdMUWFCdl1B3j1oTjIg7DLZqDqFZR6w`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
@@ -363,8 +365,8 @@ const MyComponent = () => {
   const placeOrderApi = async (id: number) => {
     const date = new Date();
     const x = {
-      order_type: 1,
-      // tracking_id: id.toString(),
+      order_type: shipping?.type == 'free' ? 1 : 2,
+      tracking_id: generateOTP(12).toString(),
       order_status: 7,
       completed_date: formatDate(date),
       started: formatDateTime(date),
@@ -383,7 +385,7 @@ const MyComponent = () => {
       member_id: null,
       transaction_id: id.toString(),
       booknet_customer_id: bookentcustomerId,
-      guest: checkoutData?.uuid,
+      // guest: checkoutData?.uuid ? checkoutData?.uuid : null,
       order_items: await convertPayload(),
     };
     try {
@@ -504,8 +506,8 @@ const MyComponent = () => {
     >Loading...</span>
   </div> */}
 
-      <main className="mb-8 flex min-h-screen max-w-5xl justify-center pt-32">
-        <div className="z-30 rounded border-b border-l border-r border-t bg-white px-4 shadow shadow-card shadow-zinc-300">
+      <main className="mb-8 flex min-h-screen  justify-center al pt-32">
+        <div className="max-w-5xl z-10 rounded border-b border-l border-r border-t bg-white px-4 shadow shadow-card shadow-zinc-300">
           <h2 className="mt-6 font-serif text-xl font-bold text-neutral-800 dark:text-neutral-200">
             Payment Method
           </h2>

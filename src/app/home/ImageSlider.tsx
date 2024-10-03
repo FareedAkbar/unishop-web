@@ -19,7 +19,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
   }, []);
 
   return (
-    <div className="flex w-full flex-col pb-4 lg:px-4">
+    <div className="flex flex-col pb-4 w-full lg:px-4">
       <div className="absolute z-10 w-2/5 p-1 lg:block lg:pl-10 lg:pt-10">
         <div className="flex h-24 flex-col justify-between px-2 py-2 sm:h-52 md:h-60 md:px-6 lg:h-80 lg:px-10">
           <div className="flex items-center lg:mb-4">
@@ -38,13 +38,14 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
           </button>
         </div>
       </div>
-      <div className="relative h-28 w-full sm:h-72 lg:h-[400px]">
+      <div >
         <Image
-          src={"/images/home/graduation.png"}
+          src={images[currentImageIndex]!}
           alt={`Image ${currentImageIndex + 1}`}
-          width={100}
-          height={100}
-          objectFit="cover"
+          width={1000}
+          height={1000}
+          objectFit="cover "
+          className="relative h-28 w-full sm:h-72 lg:h-[400px]"
         />
       </div>
       {/* Dots Indicator */}

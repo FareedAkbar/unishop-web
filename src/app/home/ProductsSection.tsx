@@ -6,6 +6,8 @@ import { HiArrowSmallRight, HiArrowSmallLeft } from "react-icons/hi2";
 import CountdownTimer from "~/components/countdownTimer";
 
 type Product = {
+  book_title: string,
+  item_sale_price: number,
   id: number;
   name: string;
   price: number;
@@ -51,8 +53,8 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({ products, targetDate,
   };
 
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
+    <div className="bg-white w-screen">
+      <div className="mx-auto   py-8 sm:px-6 sm:py-16  lg:py-24">
         <div className="flex flex-row items-center justify-between md:flex-row">
           <div className="flex flex-row items-end justify-between gap-5 md:flex-row md:gap-10">
             <h2 className="text-2xl font-extrabold text-gray-900 sm:text-5xl">
@@ -62,7 +64,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({ products, targetDate,
               </div>
               {headingPartTwo}
             </h2>
-            {targetDate && <CountdownTimer targetDate={targetDate} />}
+            <CountdownTimer targetDate={targetDate ? targetDate : new Date} />
           </div>
           <div className="mt-4 hidden items-center md:mt-0 lg:block">
             <button
@@ -80,10 +82,18 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({ products, targetDate,
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap overflow-x-auto lg:flex-nowrap scrollbar-hidden" ref={productContainerRef}>
-          {products.map((product, ind) => (
-            <ProductCard key={ind} product={product} />
-          ))}
+        <div className="mt-6 flex flex-wrap  overflow-x-auto lg:flex-nowrap xl:flex-nowrap scrollbar-hidden" ref={productContainerRef}>
+          {/* {products.map((product, ind) => (
+           <ProductCard key={ind} product={product} />
+          ))} */}
+           <ProductCard key={1} />
+           <ProductCard key={1} />
+           <ProductCard key={1} />
+           <ProductCard key={1} />
+           <ProductCard key={1} />
+           <ProductCard key={1} />
+           <ProductCard key={1} />
+           <ProductCard key={1} />
         </div>
 
         <div className="mt-8 text-center sm:mt-12">

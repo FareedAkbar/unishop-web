@@ -195,10 +195,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           return item;
         });
         lsClient.setItem("CART_ITEM", updatedItems);
+       
         return updatedItems;
       } else {
         // Item does not exist, add as new entry
         const updatedItems = [...prev, newItem];
+     
         lsClient.setItem("CART_ITEM", updatedItems);
         return updatedItems;
       }
@@ -307,7 +309,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const checkoutFormData = async (payload: CheckoutForm): Promise<boolean> => {
-    lsClient.setItem("CHECKOUT_DATA", null);
+    
     lsClient.setItem("CHECKOUT_DATA", payload);
     return true;
   };
@@ -332,9 +334,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const responsePayload: { status: boolean, data: CheckoutForm} =
       (await response.json()) as checkoutBooknetResponse;
     if (responsePayload.status){
-        setBookentcustomerId(responsePayload.data.booknet_customer_id ?? null)
+      let x = responsePayload.data.booknet_customer_id ?? null
+        setBookentcustomerId(x)
         setCheckoutData(responsePayload.data)
+        console.log(responsePayload)
         lsClient.setItem("BOOKENT_CUSTOMER_ID", responsePayload?.data.booknet_customer_id ?? null);
+        lsClient.setItem("CHECKOUT_DATA", responsePayload?.data ?? null);
       return responsePayload
     } else {
       throw new Error("failed"); // Throw an error with the message
@@ -362,7 +367,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (responsePayload.status){
         setCheckoutData(responsePayload.data)
         lsClient.setItem("CHECKOUT_DATA", responsePayload.data)
-        lsClient.setItem("BOOKENT_CUSTOMER_ID", responsePayload?.data?.booknet_customer_id ?? null);
+        // lsClient.setItem("BOOKENT_CUSTOMER_ID", responsePayload?.data?.booknet_customer_id ?? null);
       return responsePayload
     } else {
       throw new Error("failed"); // Throw an error with the message
