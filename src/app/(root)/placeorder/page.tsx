@@ -259,7 +259,7 @@ const MyComponent = () => {
     // await placeOrderApi(797498821);
     const x = {
       customer_id: checkoutData?.customer_id,
-      guest_id: checkoutData?.customer_id ? null :checkoutData?.uuid,
+      guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
       amount: 0.01,
     };
    
@@ -288,7 +288,7 @@ const MyComponent = () => {
     console.log(requestOptions);
     try {
       const response = await fetch(
-        "https://booknet-dev.iconsole.com.au/api/orders",
+        "https://booknet-dev.iconsole.com.au/api/orders/web",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
@@ -307,10 +307,10 @@ const MyComponent = () => {
         toast({
           title: "Order Successful",
           description:
-            "Your order has been processed successfully for this order.",
+            "Your order has been processed successfully.",
         });
         
-        setIsOpenPaymentAlert(false);
+       
         try {
           await removeAllCartItems();
          
@@ -348,8 +348,10 @@ const MyComponent = () => {
         item_id: item.item_id,
         deal_id: null, // Assuming deal_id is null since it's not provided
         variable_id: null, // Assuming variable_id is null since it's not provided
-        quantity_item:  item.stock?.quantity > 0 &&  item.quantity > item.stock?.quantity ? item.stock?.quantity : item.quantity,
-        back_order_quantity: item.stock?.quantity > 0 &&  item.quantity > item.stock?.quantity ? item.quantity - item.stock?.quantity : 0,
+        quantity_item: item.quantity,
+        // quantity_item:  item.stock?.quantity > 0 &&  item.quantity > item.stock?.quantity ? item.stock?.quantity : item.quantity,
+        // back_order_quantity: item.stock?.quantity > 0 &&  item.quantity > item.stock?.quantity ? item.quantity - item.stock?.quantity : 0,
+        back_order_quantity: 0,
         notes: "", // Use additional_notes if present
         is_deal: null, // Assuming is_deal is null since it's not provided
         item_price: item.item_sale_price,
@@ -366,6 +368,8 @@ const MyComponent = () => {
     const date = new Date();
     const x = {
       order_type: shipping?.type == 'free' ? 1 : 2,
+      online_order_type: true,
+      outlet_id: 221,
       tracking_id: generateOTP(12).toString(),
       order_status: 7,
       completed_date: formatDate(date),
@@ -417,8 +421,9 @@ const MyComponent = () => {
   
     const connectHandler = () => {
       console.log("Connected to server", socket.id);
+      console.log("Connected to Id", checkoutData?.customer_id ?checkoutData?.customer_id : checkoutData?.uuid);
     
-      socket.emit("/studentHandshake", { student_id: checkoutData?.customer_id ?? checkoutData?.uuid }, () => {
+      socket.emit("/studentHandshake", { student_id: checkoutData?.customer_id ?checkoutData?.customer_id : checkoutData?.uuid }, () => {
         console.log("studentHandshake");
       });
     };
@@ -442,6 +447,7 @@ const MyComponent = () => {
       console.log(data);
   
       if (data.status) {
+        setIsOpenPaymentAlert(false);
         toast({
           title: "Payment Successful",
           description: "Your payment has been processed successfully for this order.",
@@ -459,11 +465,11 @@ const MyComponent = () => {
           variant: "destructive",
           description: "Unfortunately, your payment could not be processed. Please try again.",
         });
-        
+        setIsOpenPaymentAlert(false);
        
       }
       setTransactionData(null)
-      setIsOpenPaymentAlert(false);
+     
     };
   
     // Register the listener

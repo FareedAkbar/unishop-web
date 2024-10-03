@@ -4,6 +4,7 @@ import type UserType from "~/types/userType";
 import { isStringified } from "~/utils";
 import type { CheckoutForm} from "~/types/checkoutForm";
 import type { Genre } from "~/types/genre";
+import { Category } from "~/types/category";
 
 
 const STORAGE_MAPPER = {
@@ -30,6 +31,11 @@ const STORAGE_MAPPER = {
   GENRE:{
     TYPE: [] as Genre[] | null,
     KEY:"genre",
+    DEFAULT: null
+  },
+  CATEGORY:{
+    TYPE: [] as Category[] | null,
+    KEY:"category",
     DEFAULT: null
   },
   UUID:{

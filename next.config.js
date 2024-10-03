@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    webpack: config => {
+    webpack: (/** @type {{ externals: string[]; }} */ config) => {
         config.externals.push('pino-pretty', 'lokijs', 'encoding')
         return config
     },

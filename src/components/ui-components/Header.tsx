@@ -24,7 +24,7 @@ import SidebarCart from "../ui/sideCart/cartSidebar";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
-  const { logout, getGenre, cartItems, checkoutData } = useAuthContext();
+  const { logout, getGenre, cartItems, genre, getCategory, category } = useAuthContext();
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -126,7 +126,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-  
+    if(genre) return;
       getGenre()
         .then((res) => {
           console.log(res);
@@ -135,7 +135,18 @@ const Header = () => {
           console.log(err);
         });
     
-  }, []);
+  }, [genre]);
+  useEffect(() => {
+    if(category) return;
+      getCategory()
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    
+  }, [category]);
 
   const toggleSidebar = () => {
     console.log("hit");

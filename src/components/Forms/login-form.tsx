@@ -10,59 +10,48 @@ import Link from "next/link";
 import { LoginSchema } from './schema';
 import { useAuthContext } from "~/Context/AuthContext";
 import { useToast } from "~/hooks/use-toast";
-import {  LoginResponse } from "~/types/loginResponse";
+import { LoginResponse } from "~/types/loginResponse";
 import Spinner from "../spinner";
-
 
 // Define the type of form inputs
 type FormValues = z.infer<typeof LoginSchema>;
 interface LoginFormProps {
-  
   setView: (payload: string) => void;
   setLoginResponse: (payload: LoginResponse) => void;
-  
 }
 
-export default function SignupFormDemo({setView,setLoginResponse} :LoginFormProps) {
+export default function SignupFormDemo({ setView, setLoginResponse }: LoginFormProps) {
   const { login } = useAuthContext();
-  const [loader,setLoader] = useState(false)
+  const [loader, setLoader] = useState(false);
   const { toast } = useToast();
-  // Set up React Hook Form
   const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
-    resolver: zodResolver(LoginSchema)
+    resolver: zodResolver(LoginSchema),
   });
 
-  // Handle form submission
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-   
     try {
-      setLoader(true)
+      setLoader(true);
       const res = await login(data);
-      setLoader(false)
-  
-      // Type guard to ensure res is LoginResponse
+      setLoader(false);
+
       if (typeof res !== "boolean" && res.status) {
-        console.log(res)
-        setLoginResponse(res)
+        setLoginResponse(res);
         setView("Send-Otp");
       }
     } catch (err) {
       const errorMessage = (err as Error).message || "An unknown error occurred";
-      setLoader(false)
+      setLoader(false);
       toast({
         title: "Login Failed",
         variant: "destructive",
-        description: errorMessage, // Use the error message from the thrown error
+        description: errorMessage,
       });
-      console.log(err);
     }
   };
 
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 border shadow-input bg-white dark:bg-black z-30">
-      {loader && (
-        <Spinner />
-      )}
+      {loader && <Spinner />}
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
         Welcome to Unishop
       </h2>
@@ -96,7 +85,7 @@ export default function SignupFormDemo({setView,setLoginResponse} :LoginFormProp
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="submit"
         >
-          Login &rarr; 
+          Login &rarr;
           <BottomGradient />
         </button>
 
@@ -112,8 +101,8 @@ export default function SignupFormDemo({setView,setLoginResponse} :LoginFormProp
 const BottomGradient = () => {
   return (
     <>
-      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
+      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-red-500 to-transparent" />
+      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-red-500 to-transparent" />
     </>
   );
 };

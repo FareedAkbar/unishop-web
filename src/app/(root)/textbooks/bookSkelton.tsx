@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { BackgroundGradient } from "../../components/ui/background-gradient";
+import { BackgroundGradient } from "../../../components/ui/background-gradient";
 
 export default function BookSkelton() {
   return (

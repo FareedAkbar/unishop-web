@@ -22,14 +22,12 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body suppressHydrationWarning>
         {/* <Suspense fallback={<Loading />}> */}
-          <AuthProvider>
-            <Header/>
-            {/* <BackgroundBeamsWithCollision> */}
-              {children}
-              <Toaster />
-            {/* </BackgroundBeamsWithCollision> */}
-          </AuthProvider>
-          <Footer />
+        <AuthProvider>
+          {/* <BackgroundBeamsWithCollision> */}
+          {children}
+          <Toaster />
+          {/* </BackgroundBeamsWithCollision> */}
+        </AuthProvider>
         {/* </Suspense> */}
       </body>
     </html>

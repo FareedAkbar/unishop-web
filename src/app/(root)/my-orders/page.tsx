@@ -2,9 +2,9 @@
 
 import { Controls, Player } from "@lottiefiles/react-lottie-player";
 // import Header from "~/components/header";
-import ProductGradient from "../../components/productGradient";
+import ProductGradient from "../../../components/productGradient";
 import { useRouter, useSearchParams } from "next/navigation";
-import BooksImage from "../../../public/book.json";
+import BooksImage from "../../../../public/book.json";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
 import { Suspense, useCallback, useEffect, useState } from "react";
@@ -93,7 +93,7 @@ const MyComponent = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://api.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
+        "https://ipos-dev.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {

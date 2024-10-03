@@ -45,14 +45,21 @@ export default function CehckoutForm({ push, handleData }: checkout) {
         ...checkoutData,
         city:
           cities
-            .find((state) => state.stateCode === checkoutData.stateCode)
-            ?.city.find((city) => city.value === Number(checkoutData.cityCode))
+            .find((state) => state.stateCode == states.find((state) => state.label === checkoutData.state)?.value)
+            ?.city.find((city) => city.label == checkoutData.city)
             ?.value.toString() ?? "",
         state: checkoutData?.state
           ? states.find((state) => state.label === checkoutData.state)?.value
           : null,
       }
     : {};
+    // console.log(cities)
+    // console.log(states)
+    // console.log(checkoutData)
+    // console.log( cities
+    //   .find((state) => state.stateCode == states.find((state) => state.label === checkoutData?.state)?.value)
+    //   ?.city.find((city) => city.label == checkoutData?.city)
+    //   ?.value.toString() ?? "",)
 
   const router = useRouter();
 
@@ -74,8 +81,8 @@ export default function CehckoutForm({ push, handleData }: checkout) {
 
   useEffect(() => {
     if (!checkoutData) return;
-    setCityOptions(getCitiesForState(checkoutData.stateCode ?? ""));
-  }, []);
+    setCityOptions(getCitiesForState(states.find((state) => state.label === checkoutData.state)?.value ?? ""));
+  }, [checkoutData]);
 
   const handleStateChange = (e: string) => {
     const stateId = e;
@@ -119,9 +126,10 @@ export default function CehckoutForm({ push, handleData }: checkout) {
       state: selectedStateName,
       city: selectedCityName,
       customer_id: null,
-      booknet_customer_type_id: 1,
+      booknet_customer_type_id: checkoutData?.customer_id ? 1 : 4,
       uuid: uuid,
     };
+   
 
     try {
       // await checkoutFormData(updatedData);
