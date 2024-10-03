@@ -190,21 +190,16 @@ const MyComponent = () => {
             </h1>
             <ScrollArea className="h-screen">
               <div className="flex flex-wrap justify-between">
-                {dummyProducts && dummyProducts.length > 0 ? (
-                  dummyProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))
-                ) : loader ? (
-                  // Show skeleton loaders if loading
-                  Array.from({ length: 3 }).map((_, index) => (
-                    <ProductCardSkeleton key={index} />
-                  ))
-                ) : (
-                  // Optionally, you can show a message or empty state when no products are available and not loading
-                  <div className="w-full text-center text-gray-500">
-                    No products available.
-                  </div>
-                )}
+                {data?.map((item: DataCart) => (
+                  <ProductCard
+                    key={item.book_id}
+                    product={item}
+                    showAddToCart={!isItemInCart(item.item_id)}
+                    onAddToCart={() => handleAddToCart(item)}
+                    onRemoveFromCart={() => handleRemoveFromCart(item)}
+                    openDetail={() => openDetail(item)}
+                  />
+                ))}
               </div>
             </ScrollArea>
             {/* <div className="mt-4 flex justify-between">
@@ -252,9 +247,12 @@ const MyComponent = () => {
           </div>
         </div>
         <div className="mx-auto max-w-5xl px-8"/> */}
-        <div className="container flex flex-col items-center px-4 py-16">
-          <div className="sm:grid-cols2 xs:grid-cols-1 grid w-3/4 gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4 xl:gap-10">
-            {!loader && (
+        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
+          
+          
+          
+          {/* <div className="sm:grid-cols2 xs:grid-cols-1 grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
+            {loader && (
               <>
                 <BookSkelton />
                 <BookSkelton />
@@ -278,7 +276,9 @@ const MyComponent = () => {
                   openDetail={() => openDetail(item)}
                 />
               ))}
-          </div>
+          </div> */}
+
+
           {/* {!loader ? (
             <Pagination
               currentPage={currentPage}

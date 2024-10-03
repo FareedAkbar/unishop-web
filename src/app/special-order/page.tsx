@@ -183,8 +183,8 @@ const MyComponent = () => {
     const date = new Date();
     const newData = {
       tracking_id: generateOTP(12).toString(),
-      order_type: 0,
-      order_status: 7,
+      order_type: 2,
+      order_status: 66,
       completed_date: formatDate(date),
       started: formatDateTime(date),
       booknet_customer_id: item?.booknet_customer_id,
@@ -212,7 +212,7 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center justify-center">
+      <main className="flex min-h-screen flex-col items-center ">
         {/* {name}
       <Button onClick={()=>ChangeName()}>change name</Button> */}
         {loader && <Spinner />}
@@ -228,29 +228,7 @@ const MyComponent = () => {
                 icon={<FiSearch />}
               />
             </div>
-            <div className="w-md grid h-[40rem] items-center justify-between sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
-              <div className="flex flex-col">
-                <h2 className="relative z-20 mx-auto ml-5 mr-5 text-center font-serif text-xl font-bold tracking-tight text-black dark:text-white md:text-4xl lg:text-7xl">
-                  {detail}
-                </h2>
-
-                <p className="text-1xl inter-var relative left-0 top-[1px] bg-gradient-to-r from-purple-500 via-violet-500 to-pink-500 bg-clip-text bg-no-repeat py-4 text-center font-serif text-transparent [text-shadow:0_0_rgba(0,0,0,0.1)] md:text-2xl lg:text-2xl">
-                  Your one-stop shop for all your official UOW Merchandise,
-                  study essentials, textbooks, course notes and equipment and
-                  graduation memorabilia and gowns.
-                </p>
-              </div>
-              <div className="mx-auto text-left">
-                <Player
-                  autoplay
-                  loop
-                  src={BooksImage}
-                  style={{ height: "500px", width: "500px" }}
-                >
-                  <Controls buttons={["play", "repeat", "frame", "debug"]} />
-                </Player>
-              </div>
-            </div>
+            
             <div className="mx-auto max-w-5xl px-8"></div>
             <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
               <div className="xs:grid-cols-1 grid gap-4 sm:grid-cols-2 md:gap-8 lg:grid-cols-4">

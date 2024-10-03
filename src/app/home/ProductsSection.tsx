@@ -6,6 +6,8 @@ import { HiArrowSmallRight, HiArrowSmallLeft } from "react-icons/hi2";
 import CountdownTimer from "~/components/countdownTimer";
 
 type Product = {
+  book_title: string,
+  item_sale_price: number,
   id: number;
   name: string;
   price: number;
@@ -62,7 +64,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({ products, targetDate,
               </div>
               {headingPartTwo}
             </h2>
-            {targetDate && <CountdownTimer targetDate={targetDate} />}
+            <CountdownTimer targetDate={targetDate ? targetDate : new Date} />
           </div>
           <div className="mt-4 hidden items-center md:mt-0 lg:block">
             <button
@@ -81,9 +83,17 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({ products, targetDate,
         </div>
 
         <div className="mt-6 flex flex-wrap  overflow-x-auto lg:flex-nowrap xl:flex-nowrap scrollbar-hidden" ref={productContainerRef}>
-          {products.map((product, ind) => (
-            <ProductCard key={ind} product={product} />
-          ))}
+          {/* {products.map((product, ind) => (
+           <ProductCard key={ind} product={product} />
+          ))} */}
+           <ProductCard key={1} />
+           <ProductCard key={1} />
+           <ProductCard key={1} />
+           <ProductCard key={1} />
+           <ProductCard key={1} />
+           <ProductCard key={1} />
+           <ProductCard key={1} />
+           <ProductCard key={1} />
         </div>
 
         <div className="mt-8 text-center sm:mt-12">

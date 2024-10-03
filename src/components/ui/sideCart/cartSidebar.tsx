@@ -48,7 +48,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     const total = items.reduce(
-      (acc, item) => acc + (item.item_sale_price || 0),
+      (acc, item) => acc + (item.item_sale_price * item.quantity || 0),
       0,
     );
     setSubtotal(total);
@@ -75,78 +75,21 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
   };
 
   const onChangeQuantity = async (id: number, number: number) => {
+    console.log(id, number);
     await increaseCartItemQuantity(id, number);
   };
 
-  const myCartItems = [
-    {
-      id: 1,
-      title: "UOW Indigenous Hoodie",
-      size: "Large",
-      color: "White",
-      price: 145,
-      quantity: 1,
-      imageSrc: "/images/products/product.png",
-    },
-    {
-      id: 2,
-      title: "Checkered Shirt",
-      size: "Medium",
-      color: "Red",
-      price: 180,
-      quantity: 1,
-      imageSrc: "/images/products/product.png",
-    },
-    {
-      id: 3,
-      title: "Skinny Fit Jeans",
-      size: "Large",
-      color: "Blue",
-      price: 240,
-      quantity: 1,
-      imageSrc: "/images/products/product.png",
-    },
-    {
-      id: 3,
-      title: "Skinny Fit Jeans",
-      size: "Large",
-      color: "Blue",
-      price: 240,
-      quantity: 1,
-      imageSrc: "/images/products/product.png",
-    },
-    {
-      id: 3,
-      title: "Skinny Fit Jeans",
-      size: "Large",
-      color: "Blue",
-      price: 240,
-      quantity: 1,
-      imageSrc: "/images/products/product.png",
-    },
-    {
-      id: 3,
-      title: "Skinny Fit Jeans",
-      size: "Large",
-      color: "Blue",
-      price: 240,
-      quantity: 1,
-      imageSrc: "/images/products/product.png",
-    },
-  ];
-
   // Handlers for increasing, decreasing, and removing items
-  const handleIncrease = (id: number) => {
+  const handleIncrease = async (id: number, number: number) => {
     console.log(`Increase quantity for item ${id}`);
+    await increaseCartItemQuantity(id, number);
   };
 
-  const handleDecrease = (id: number) => {
+  const handleDecrease = async (id: number, number: number) => {
     console.log(`Decrease quantity for item ${id}`);
+    await increaseCartItemQuantity(id, number);
   };
 
-  const handleRemove = (id: number) => {
-    console.log(`Remove item ${id}`);
-  };
   useEffect(() => {
     // Prevent background scrolling when the sidebar is open
     if (isOpen) {
@@ -188,18 +131,25 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
 
         {/* Cart Items List */}
         <ScrollArea className="h-3/5 flex-1 p-4">
-          {myCartItems.map((item) => (
+          {items.map((item: DataCart) => (
             <CartItem
-              key={item.id}
-              title={item.title}
-              size={item.size}
-              color={item.color}
-              price={item.price}
-              quantity={item.quantity}
-              imageSrc={item.imageSrc}
-              onIncrease={() => handleIncrease(item.id)}
-              onDecrease={() => handleDecrease(item.id)}
-              onRemove={() => handleRemove(item.id)}
+              key={item.item_id}
+              title={item.book_title}
+              imageSrc={item?.object_path}
+              price={item.item_sale_price}
+              size={"aa"}
+              color={"red"}
+              showRemove={true}
+              onChangeQuantity={(id, number) => onChangeQuantity(id, number)}
+              onIncrease={() => handleIncrease(item.item_id, item.quantity + 1)}
+              onDecrease={() => handleDecrease(item.item_id, item.quantity - 1)}
+              itemQuantity={item.quantity}
+              showQuantityIncriment={true}
+              stock={item.stock}
+              onRemove={() => {
+                setRemoveItem(item);
+                setIsOpenDeleteAlert(true);
+              }}
             />
           ))}
         </ScrollArea>
@@ -209,28 +159,28 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
           {/* Subtotal and Fees */}
           <div className="mb-2 flex justify-between">
             <span className="text-sm text-gray-500">Subtotal</span>
-            <span className="text-sm">$565</span>
+            <span className="text-sm">${subTotal.toFixed(2)}</span>
           </div>
-          <div className="mb-2 flex justify-between">
+          {/* <div className="mb-2 flex justify-between">
             <span className="text-sm text-gray-500">Delivery Fee</span>
             <span className="text-sm">$15</span>
-          </div>
+          </div> */}
 
           {/* Total Amount */}
-          <div className="flex justify-between text-lg font-bold">
+          {/* <div className="flex justify-between text-lg font-bold">
             <span>Total</span>
             <span>$467</span>
-          </div>
+          </div> */}
 
           {/* Confirm Order Button */}
           <button
-            className="mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white"
             onClick={() => {
               if (!isOpenAlert) {
                 // Check if alert is not already open
                 opencart();
               }
             }}
+            className="mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white"
           >
             Confirm Order
           </button>
