@@ -179,17 +179,17 @@ const MyComponent = () => {
   };
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center">
+      <main className="flex min-h-screen flex-col items-center py-20">
         <div className="flex flex-row">
-          <div className="lg:flex-start hidden lg:static lg:left-0 lg:flex lg:self-start">
+          <div className="lg:flex-start hidden lg:fixed lg:w-72 lg:left-0 lg:flex lg:self-start">
             <CategoriesSidebar />
           </div>
-          <div className="flex flex-col p-4">
+          <div className="flex flex-col px-4  lg:left-72 lg:fixed lg:right-0">
             <h1 className="m-4 text-end font-bold">
               Showing {data.length} of {totalPages * 10} Products
             </h1>
-            <ScrollArea className="h-screen">
-              <div className="flex flex-wrap justify-between">
+            <ScrollArea className="h-screen pb-32">
+              <div className="flex flex-wrap justify-between ">
                 {loader
                   ? [...Array(6)].map((_, index) => (
                       <div key={index} className="w-1/3 p-2">

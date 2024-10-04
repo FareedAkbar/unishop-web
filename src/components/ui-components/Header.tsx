@@ -24,7 +24,8 @@ import SidebarCart from "../ui/sideCart/cartSidebar";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
-  const { logout, getGenre, cartItems, genre, getCategory, category } = useAuthContext();
+  const { logout, getGenre, cartItems, genre, getCategory, category } =
+    useAuthContext();
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -101,7 +102,7 @@ const Header = () => {
       href: "#contact",
       onClick: () => handleSectionClick("contact"),
     },
-    
+
     {
       label: "login",
       href: "/login",
@@ -112,11 +113,10 @@ const Header = () => {
       href: "#signup",
       onClick: () => handleSectionClick("signup"),
     },
-
   ];
 
   const handleLogout = async () => {
-    console.log("Logout")
+    console.log("Logout");
     try {
       await logout(); // Await the logout promise
       router.push("/login");
@@ -127,25 +127,23 @@ const Header = () => {
 
   useEffect(() => {
     // if(genre) return;
-      getGenre()
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    
+    getGenre()
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
   useEffect(() => {
     // if(category) return;
-      getCategory()
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    
+    getCategory()
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   const toggleSidebar = () => {
@@ -154,8 +152,8 @@ const Header = () => {
   };
 
   return (
-    <>
-      <header className="flex flex-col bg-white p-4 md:flex-row md:items-center">
+    <nav className="fixed left-0 top-0 z-10 h-fit w-full">
+      <header className="flex flex-col bg-white px-4 pt-4 md:flex-row md:items-center">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
         <div className="flex items-center justify-between border-b pb-4 md:hidden">
           {/* Hamburger Icon */}
@@ -188,13 +186,11 @@ const Header = () => {
             </div>
 
             <div className="relative" ref={userDropdownRef}>
-              {" "}
-              {/* Attach the ref here */}
               <div
                 className="cursor-pointer rounded-full bg-red-500"
                 onClick={toggleUserDropdown}
               >
-                <MdOutlinePersonOutline className="text-xl text-white" />
+                <MdOutlinePersonOutline className="text-2xl text-white" />
               </div>
               {isUserDropdownOpen && (
                 <div className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md">
@@ -313,7 +309,7 @@ const Header = () => {
         )}
 
         {/* Desktop Layout */}
-        <div className="mt-4 hidden w-full border-b pb-4 md:flex md:items-center md:justify-between ">
+        <div className="mt-4 hidden w-full border-b pb-4 md:flex md:items-center md:justify-between">
           <div className="flex w-full items-center justify-between">
             <div className="flex-grow text-left">
               <Image
@@ -328,7 +324,6 @@ const Header = () => {
             {/* Navigation Items in the Center */}
             <nav className="flex flex-grow justify-center space-x-6">
               {navItems.map((item) => (
-
                 <div key={item.label} className="group relative">
                   <button
                     onClick={() =>
@@ -370,7 +365,6 @@ const Header = () => {
                   )}
                 </div>
               ))}
-            
             </nav>
 
             {/* Right Section: Search Bar and Icons */}
@@ -393,7 +387,9 @@ const Header = () => {
                     {" "}
                     {cartItems?.length}
                   </span>
-                ):""}
+                ) : (
+                  ""
+                )}
               </div>
               <div className="relative">
                 <div
@@ -403,7 +399,10 @@ const Header = () => {
                   <MdOutlinePersonOutline className="text-xl text-white" />
                 </div>
                 {isUserDropdownOpen && (
-                  <div ref={userDropdownRef} className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md">
+                  <div
+                    ref={userDropdownRef}
+                    className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md"
+                  >
                     <a
                       href="#account-settings"
                       className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100"
@@ -430,7 +429,7 @@ const Header = () => {
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
-    </>
+    </nav>
   );
 };
 
