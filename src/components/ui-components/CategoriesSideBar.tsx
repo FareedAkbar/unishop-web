@@ -116,7 +116,7 @@ const CategoriesSidebar = () => {
                       subItem.parent === 0 && (
                         <a
                           key={subItem.id}
-                          href={`textbooks?detail=${subItem.category_name}`}
+                          href={`textbooks?detail=${subItem.id}`}
                           className="block py-1 text-sm hover:underline"
                         >
                           {subItem.category_name}

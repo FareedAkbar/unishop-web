@@ -13,9 +13,9 @@ interface Category {
 export const categories: Category[] = [
     {
       label: 'Text Book',
-      subItems: [{ label: 'Math Textbook', href: '#' }, { label: 'Science Textbook', href: '#' }],
+      subItems: [],
     },
-    { label: 'Books', subItems: [{ label: 'Fiction', href: '#' }, { label: 'Non-fiction', href: '#' }] },
+    { label: 'Books', subItems: [] },
     { label: 'E-Text Book',href:"" },
     { label: 'Pulse', href:"" },
     { label: 'Graduation', subItems: [{ label: 'Caps', href: '#' }, { label: 'Gowns', href: '#' }] },

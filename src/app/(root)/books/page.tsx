@@ -186,7 +186,7 @@ const MyComponent = () => {
           </div>
           <div className="flex flex-col px-4  lg:left-72 lg:fixed lg:right-0">
             <h1 className="m-4 text-end font-bold">
-              Showing {data.length} of {totalPages * 10} Products
+              Showing {data.length} of {data.length} Products
             </h1>
             <ScrollArea className="h-screen pb-32">
               <div className="flex flex-wrap justify-between ">

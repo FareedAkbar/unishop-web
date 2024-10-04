@@ -34,6 +34,7 @@ import {
   SelectContent,
   SelectItem,
 } from "~/components/ui/select";
+import { Category } from "~/types/category";
 
 const requestOptions: RequestInit = {
   method: "GET",
@@ -65,6 +66,7 @@ const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
   const [data, setData] = useState<DataCart[]>([]);
+  const [subCategory, setSubCategory] = useState<Category[]>([]);
   const isFirstRender = useRef(true);
 
   const params = useSearchParams();
@@ -76,6 +78,7 @@ const MyComponent = () => {
 
   const fetchData = async (cat_id: number) => {
     setLoader(true);
+
     try {
       const response = await fetch(
         `https://booknet-dev.iconsole.com.au/api/books/getBooksByGenreCat?category_id=${cat_id}&entries=1&images=1&detailed=1`,
@@ -100,9 +103,15 @@ const MyComponent = () => {
 
   useEffect(() => {
     if (!category) return;
-    const catId = category?.find((item) => item.category_name == detail);
+    if (!detail) return;
+   
+
+    const catId = category?.find((item) => item.id == parseInt(detail));
+
     setDescription(catId?.category_description ?? "");
     const loadData = async () => {
+      const x = category?.filter((item) => item.parent == catId?.id);
+      setSubCategory(x);
       try {
         await fetchData(catId?.id ?? 1);
         // setData(result);
@@ -185,6 +194,19 @@ const MyComponent = () => {
       setCurrentPage((prev) => prev - 1);
     }
   };
+
+  const handleChangeSubCategory = async (x: string) => {
+    try {
+      await fetchData(parseInt(x) ?? 1);
+      // setData(result);
+      // setTotalPages(result.totalPages);
+    } catch (error) {
+      console.error("Failed to load data:", error);
+      setLoader(false);
+      // Optionally set an error state here
+    }
+  };
+
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center pt-20">
@@ -194,19 +216,16 @@ const MyComponent = () => {
           </div>
           <div className="flex flex-col px-4 py-10 lg:fixed lg:left-64 lg:right-0">
             <div className="m-4 flex items-center justify-end gap-4">
-              <Select>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Sort by" />
+              <Select onValueChange={(x)=>handleChangeSubCategory(x)}>
+                <SelectTrigger className="w-72">
+                  <SelectValue placeholder="" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="popularity">Popularity</SelectItem>
-                  <SelectItem value="price_low_to_high">
-                    Price: Low to High
-                  </SelectItem>
-                  <SelectItem value="price_high_to_low">
-                    Price: High to Low
-                  </SelectItem>
-                  <SelectItem value="newest">Newest</SelectItem>
+                <SelectContent >
+                  {subCategory?.map((item) => (
+                    <SelectItem key={item.id} value={item.id.toString()} >
+                     {item.category_name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
 
