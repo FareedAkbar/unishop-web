@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import Button from "../ui-components/Button";
 
-const OTPVerificationForm: React.FC = () => {
+
+interface Props {
+  email?: string
+}
+
+const OTPVerificationForm = ({email}: Props) => {
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
 
   // Handle OTP input change
@@ -29,7 +34,7 @@ const OTPVerificationForm: React.FC = () => {
       <div className="bg-white p-8 border rounded-2xl  max-w-sm w-full">
         <h2 className="text-2xl font-bold text-center mb-4">OTP Verification</h2>
         <p className="text-center mb-6 text-gray-600">
-          Enter the verification code we just sent to your number +233 ******53.
+          Enter the verification code we just sent to your email {email}.
         </p>
 
         {/* OTP Inputs */}

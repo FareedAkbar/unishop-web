@@ -26,7 +26,7 @@ export default function SignupFormDemo({
   setView,
   setLoginResponse,
 }: LoginFormProps) {
-  const { login } = useAuthContext();
+  const { login,sendOTP } = useAuthContext();
   const [loader, setLoader] = useState(false);
   const { toast } = useToast();
   const {
@@ -44,8 +44,16 @@ export default function SignupFormDemo({
       setLoader(false);
 
       if (typeof res !== "boolean" && res.status) {
+        const response = await sendOTP({
+          customer_id: res?.data.customer_id,
+          email: res?.data.email,
+        });
+        if (typeof response !== "boolean" && response.status) {
+          console.log(res);
+          setView("Verify-Otp");
+        }
         setLoginResponse(res);
-        setView("Send-Otp");
+        // setView("Send-Otp");
       }
     } catch (err) {
       const errorMessage =
@@ -63,7 +71,7 @@ export default function SignupFormDemo({
     <div className="z-30 mx-auto w-full max-w-md rounded-xl border bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
       {loader && <Spinner />}
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-        Welcome to Unishop
+        Login as a pulse member
       </h2>
       <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
         Login to Unishop if you can because we don&apos;t have a login flow yet
