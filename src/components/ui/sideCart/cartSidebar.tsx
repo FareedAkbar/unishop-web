@@ -173,7 +173,8 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
           </div> */}
 
           {/* Confirm Order Button */}
-          <button
+          <Button
+          disabled={items.length === 0}
             onClick={() => {
               if (!isOpenAlert) {
                 // Check if alert is not already open
@@ -183,7 +184,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
             className="mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white"
           >
             Confirm Order
-          </button>
+          </Button>
         </div>
         {/* Header */}
         {/* <div className="relative border-b border-gray-200 p-4">

@@ -22,9 +22,9 @@ const MyComponent = () => {
 
   const tabs = [
     {
-      title: "Customer Login",
+      title: "Booknet Guest Login",
       value: "customerLogin",
-      content: <BooknetFormLogin push={true} goTo="/" title="Customer Login" />,
+      content: <BooknetFormLogin push={true} goTo="/" title="Login as a booknet guest" />,
     },
     {
       title: "UOW Login",
@@ -47,7 +47,7 @@ const MyComponent = () => {
         />
       </div>
       <main className="absolute top-32 z-10 lg:right-10 lg:top-3 lg:w-1/3">
-        {/* {view == "login" && (
+        {view == "login" && (
           <div className="relative">
             <button
               onClick={() => router.push("/")} 
@@ -57,7 +57,7 @@ const MyComponent = () => {
             </button>
             <Tabs tabs={tabs} />
           </div>
-        )} */}
+        )}
         
         {/* {view == "booknet" && (
           <div className="w">
@@ -73,8 +73,8 @@ const MyComponent = () => {
         {view == "Verify-Otp" && (
         <VerifyOTPForm loginResponse={loginResponse} />
         )} */}
-        {view == "login" && (
-          <OTPVerificationForm/>
+        {view == "Verify-Otp" && (
+          <OTPVerificationForm email={loginResponse?.data.email}/>
           // <VerifyOTPForm loginResponse={loginResponse} />
         )}
       </main>

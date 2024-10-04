@@ -126,7 +126,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if(genre) return;
+    // if(genre) return;
       getGenre()
         .then((res) => {
           console.log(res);
@@ -135,9 +135,9 @@ const Header = () => {
           console.log(err);
         });
     
-  }, [genre]);
+  }, []);
   useEffect(() => {
-    if(category) return;
+    // if(category) return;
       getCategory()
         .then((res) => {
           console.log(res);
@@ -146,7 +146,7 @@ const Header = () => {
           console.log(err);
         });
     
-  }, [category]);
+  }, []);
 
   const toggleSidebar = () => {
     console.log("hit");

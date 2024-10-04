@@ -76,7 +76,7 @@ export default function BooknetFormLogin({
         {title}
       </h2>
       <p className="pt-2 text-sm text-gray-500">
-        If you have an account, sign in with your email address.
+        If you have an account, sign in with your username and password.
       </p>
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
