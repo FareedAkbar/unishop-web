@@ -12,6 +12,7 @@ import { useAuthContext } from "~/Context/AuthContext";
 import { useToast } from "~/hooks/use-toast";
 import { LoginResponse } from "~/types/loginResponse";
 import Spinner from "../spinner";
+import Button from "../ui-components/Button";
 
 // Define the type of form inputs
 type FormValues = z.infer<typeof LoginSchema>;
@@ -51,7 +52,7 @@ export default function SignupFormDemo({ setView, setLoginResponse }: LoginFormP
 
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 border shadow-input bg-white dark:bg-black z-30">
-      {loader && <Spinner />}
+      {/* {loader && <Spinner />} */}
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
         Welcome to Unishop
       </h2>
@@ -81,14 +82,18 @@ export default function SignupFormDemo({ setView, setLoginResponse }: LoginFormP
           {errors.user_password && <p className="text-red-500 text-sm">{errors.user_password.message}</p>}
         </LabelInputContainer>
 
-        <button
-          className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+        <Button
+          title="Login"
+          onClick={() => {
+            //
+          }}
+          loading={loader}
+          width="w-full"
           type="submit"
-        >
-          Login &rarr;
-          <BottomGradient />
-        </button>
-
+        />
+         
+        
+       
         <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent mt-5 h-[1px] w-full" />
         <div className="flex justify-center text-black mt-2 hover:text-red-400">
           <Link href="signup">I don&apos;t have an account</Link>

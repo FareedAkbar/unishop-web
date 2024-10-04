@@ -71,7 +71,7 @@ export default function BooknetFormLogin({
 
   return (
     <div className="mx-auto rounded-xl border bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8 lg:w-full">
-      {loader && <Spinner />}
+      {/* {loader && <Spinner />} */}
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         {title}
       </h2>
@@ -110,6 +110,7 @@ export default function BooknetFormLogin({
             onClick={() => {
               //
             }}
+            loading={loader}
             width="w-full"
             type="submit"
           />

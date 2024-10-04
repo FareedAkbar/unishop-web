@@ -41,7 +41,7 @@ export default function SignupFormDemo({
     try {
       setLoader(true);
       const res = await login(data);
-      setLoader(false);
+     
 
       if (typeof res !== "boolean" && res.status) {
         const response = await sendOTP({
@@ -53,7 +53,7 @@ export default function SignupFormDemo({
           setView("Verify-Otp");
         }
         setLoginResponse(res);
-        // setView("Send-Otp");
+        setLoader(false);
       }
     } catch (err) {
       const errorMessage =
@@ -69,7 +69,7 @@ export default function SignupFormDemo({
 
   return (
     <div className="z-30 mx-auto w-full max-w-md rounded-xl border bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
-      {loader && <Spinner />}
+      {/* {loader && <Spinner />} */}
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         Login as a pulse member
       </h2>
@@ -113,6 +113,7 @@ export default function SignupFormDemo({
             }}
             width="w-full"
             type="submit"
+            loading={loader}
           />
           <div className="mt-2 flex flex-col items-center justify-center text-black sm:flex-row">
             <p>I don't have an account, </p>

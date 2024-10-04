@@ -74,7 +74,7 @@ const MyComponent = () => {
         <VerifyOTPForm loginResponse={loginResponse} />
         )} */}
         {view == "Verify-Otp" && (
-          <OTPVerificationForm email={loginResponse?.data.email}/>
+          <OTPVerificationForm loginResponse={loginResponse}/>
           // <VerifyOTPForm loginResponse={loginResponse} />
         )}
       </main>
