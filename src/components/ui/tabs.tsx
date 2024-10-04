@@ -40,7 +40,7 @@ export const Tabs = ({
     <>
       <div
         className={cn(
-          "no-visible-scrollbar relative flex w-full max-w-full flex-row items-center justify-start overflow-auto [perspective:1000px] sm:overflow-visible",
+          "no-visible-scrollbar relative flex w-full max-w-full flex-row items-center justify-center overflow-auto [perspective:1000px] sm:overflow-visible",
           containerClassName,
         )}
       >
@@ -107,7 +107,7 @@ export const FadeInDiv = ({
           layoutId={tab.value}
           style={{
             scale: 1 - idx * 0.1,
-            top: hovering ? idx * -50 : 0,
+            top: hovering ? idx * -60 : 0,
             zIndex: -idx,
             opacity: idx < 3 ? 1 - idx * 0.1 : 0,
           }}

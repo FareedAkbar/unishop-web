@@ -12,12 +12,12 @@ import BooknetForm from "~/components/Forms/booknet-form";
 import CartItem from "~/components/ui-components/CartItem";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import AlertBox from "~/components/alertBox/alert";
+import { Tabs } from "~/components/ui/tabs";
 
 const MyComponent = () => {
   const { cartItems, removeCartItems, increaseCartItemQuantity, isLoggedIn } =
     useAuthContext();
   const [items, setItems] = useState<DataCart[]>([]);
-  const [view, setView] = useState("checkout");
   const [removeItem, setRemoveItem] = useState<DataCart | null>(null);
   const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState<boolean>(false);
 
@@ -81,34 +81,28 @@ const MyComponent = () => {
       }
     }
   };
+  const tabs = [
+    {
+      title: "Checkout",
+      value: "checkout",
+      content: <CheckoutForm push={true} />,
+    },
+    {
+      title: "Booknet Account",
+      value: "booknetForm",
+      content: <BooknetForm push={true} goTo="placeorder" />,
+    },
+  ];
 
   return (
     <div>
-      <main className="z-10 flex min-h-screen flex-col items-center justify-center">
-        <div className="grid grid-cols-2 justify-center gap-12 px-4 pt-32 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
-          <div className="z-10">
-            {view == "checkout" ? (
-              <CheckoutForm push={true} />
-            ) : (
-              <BooknetForm push={true} goTo="placeorder" />
-            )}
-
-            <div className="mt-5 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
-            <div className="mt-2 flex justify-center text-black hover:text-red-400">
-              <div
-                className="cursor-pointer hover:text-red-500"
-                onClick={() =>
-                  setView(view == "checkout" ? "booknetForm" : "checkout")
-                }
-              >
-                {view == "checkout"
-                  ? "I already have booknet account"
-                  : "I don't have booknet account yet"}
-              </div>
-            </div>
+      <main className="flex min-h-screen flex-col items-center justify-start pt-24">
+        <div className="grid w-full grid-cols-1 gap-12 px-4  lg:grid-cols-2">
+          <div className="z-10 w-full">
+            <Tabs tabs={tabs} />
           </div>
-          <div className="z-10">
-            <ScrollArea className="h-3/5 flex-1 p-4">
+          <div className="z-10 h-2/3 pt-10">
+            <ScrollArea className="h-2/3 flex-1 p-4">
               {items.map((item: DataCart) => (
                 <CartItem
                   key={item.item_id}

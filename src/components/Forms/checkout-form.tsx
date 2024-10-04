@@ -22,6 +22,7 @@ import cities from "../constants/cities";
 import { PhoneNumberInput } from "../ui/phoneNumberInput";
 import { v5 as uuidv5 } from "uuid";
 import { checkoutBooknetResponse, CheckoutForm } from "~/types/checkoutForm";
+import Button from "../ui-components/Button";
 
 type CehckoutFormValues = z.infer<typeof SignupSchema>;
 
@@ -165,7 +166,7 @@ export default function CehckoutForm({ push, handleData }: checkout) {
 
   return (
     <div className="mx-auto w-full rounded-none border bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
-      <h2 className="font-serif text-xl font-bold text-neutral-800 dark:text-neutral-200">
+      <h2 className=" text-xl font-bold text-neutral-800 dark:text-neutral-200">
         Checkout
       </h2>
 
@@ -322,15 +323,15 @@ export default function CehckoutForm({ push, handleData }: checkout) {
             />
           </div>
         </div> */}
-        <div className="mx-auto flex max-w-sm justify-center">
-          <button
-            className="group/btn relative block h-10 w-full rounded-md bg-red-600 to-red-700 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] hover:bg-red-700 dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+        <Button
+            title="Checkout &rarr;"
             type="submit"
-          >
-            Checkout &rarr;
-            <BottomGradient />
-          </button>
-        </div>
+            width="w-full"
+            onClick={() => {
+              //
+            }}
+          />
+       
       </form>
     </div>
   );

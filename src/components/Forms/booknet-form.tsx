@@ -13,6 +13,7 @@ import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter } from "next/navigation";
 import type { CheckoutForm } from "~/types/checkoutForm";
 import Spinner from "../spinner";
+import Button from "../ui-components/Button";
 
 interface checkoutBooknet {
   push?: boolean;
@@ -58,8 +59,6 @@ export default function BooknetForm({
           setLoader(false);
           console.log(err);
         });
-
-      
     } catch (error) {
       setLoader(false);
       console.error("Failed to checkout:", error);
@@ -69,10 +68,9 @@ export default function BooknetForm({
   };
 
   return (
-   
     <div className="mx-auto w-full rounded-none border bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
-       {loader && <Spinner/>}
-      <h2 className="font-serif text-xl font-bold text-neutral-800 dark:text-neutral-200">
+      {loader && <Spinner />}
+      <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         {title}
       </h2>
 
@@ -113,16 +111,14 @@ export default function BooknetForm({
             />
           </div>
         </div> */}
-        <div className="mx-auto flex max-w-sm justify-center">
-          <button
-          disabled={loader}
-            className="group/btn relative block h-10 w-full rounded-md bg-zinc-600 to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] hover:bg-zinc-800 dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-            type="submit"
-          >
-            Checkout &rarr;
-            <BottomGradient />
-          </button>
-        </div>
+        <Button
+          title="Checkout &rarr;"
+          type="submit"
+          width="w-full"
+          onClick={() => {
+            //
+          }}
+        />
       </form>
     </div>
   );
