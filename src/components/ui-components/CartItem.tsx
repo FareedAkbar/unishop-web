@@ -41,7 +41,7 @@ const CartItem: React.FC<CartItemProps> = ({
 }) => {
   return (
     <>
-    <div className="flex flex-row items-start space-x-4 border-b py-4">
+    <div className="flex flex-row items-start space-x-4 border-b py-4 bg-white">
       {/* Image */}
       <Image
         src={ imageSrc
