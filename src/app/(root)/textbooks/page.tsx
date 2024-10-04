@@ -27,6 +27,13 @@ import React from "react";
 import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "~/components/ui/select";
 
 const requestOptions: RequestInit = {
   method: "GET",
@@ -64,7 +71,8 @@ const MyComponent = () => {
   const detail = params.get("detail");
   const { setOpen } = useModal();
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
-  const { cartItems, addCartItems, removeCartItems, category } = useAuthContext();
+  const { cartItems, addCartItems, removeCartItems, category } =
+    useAuthContext();
 
   const fetchData = async (cat_id: number) => {
     setLoader(true);
@@ -179,16 +187,35 @@ const MyComponent = () => {
   };
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center">
+      <main className="flex min-h-screen flex-col items-center pt-20">
         <div className="flex flex-row">
-          <div className="lg:flex-start hidden lg:static lg:left-0 lg:flex lg:self-start">
+          <div className="lg:flex-start hidden lg:fixed lg:left-0 lg:flex lg:w-64 lg:self-start">
             <CategoriesSidebar />
           </div>
-          <div className="flex flex-col p-4">
-            <h1 className="m-4 text-end font-bold">
-              Showing {data.length} of {data.length} Products
-            </h1>
-            <ScrollArea className="h-screen">
+          <div className="flex flex-col px-4 py-10 lg:fixed lg:left-64 lg:right-0">
+            <div className="m-4 flex items-center justify-end gap-4">
+              <Select>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="popularity">Popularity</SelectItem>
+                  <SelectItem value="price_low_to_high">
+                    Price: Low to High
+                  </SelectItem>
+                  <SelectItem value="price_high_to_low">
+                    Price: High to Low
+                  </SelectItem>
+                  <SelectItem value="newest">Newest</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Heading */}
+              <h1 className="text-end font-bold">
+                Showing {data.length} of {data.length} Products
+              </h1>
+            </div>
+            <ScrollArea className="h-screen pb-32">
               <div className="flex flex-wrap justify-between">
                 {loader
                   ? [...Array(6)].map((_, index) => (
@@ -230,10 +257,8 @@ const MyComponent = () => {
             </div> */}
           </div>
         </div>
-       
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          
 
+        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           {/* {!loader ? (
             <Pagination
               currentPage={currentPage}
@@ -363,7 +388,6 @@ const MyComponent = () => {
     </div>
   );
 };
-
 
 const TextBookPage = () => {
   return (

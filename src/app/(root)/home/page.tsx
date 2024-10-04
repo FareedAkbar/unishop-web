@@ -152,7 +152,7 @@ const bestSellingProducts = [
 
 const HomePage: React.FC = () => {
   return (
-    <div className="flex-1">
+    <div className="flex-1 pt-20">
       <div className="flex lg:flex-row">
         <div className="hidden lg:block">
           <CategoriesSidebar />

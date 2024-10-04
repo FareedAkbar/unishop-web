@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 import { CgClose } from "react-icons/cg";
 import { useAuthContext } from "~/Context/AuthContext";
 import CartItemCard from "./cartItemCard";
-import { Button } from "../button";
 import { useRouter } from "next/navigation";
 import AlertBox from "~/components/alertBox/alert";
 import type DataCart from "~/types/book";
 import CartItem from "~/components/ui-components/CartItem";
 import { FaTimes } from "react-icons/fa";
 import { ScrollArea } from "../scroll-area";
+import Button from "~/components/ui-components/Button";
 
 interface SidebarCartProps {
   isOpen: boolean;
@@ -174,17 +174,18 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
 
           {/* Confirm Order Button */}
           <Button
-          disabled={items.length === 0}
+            
             onClick={() => {
               if (!isOpenAlert) {
                 // Check if alert is not already open
                 opencart();
               }
             }}
-            className="mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white"
-          >
-            Confirm Order
-          </Button>
+            className={`mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white  ${items.length === 0?"disabled":""}`}
+            title="Confirm Order"
+          />
+          {/* Confirm Order
+          </Button> */}
         </div>
         {/* Header */}
         {/* <div className="relative border-b border-gray-200 p-4">

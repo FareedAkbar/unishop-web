@@ -9,7 +9,7 @@ const graduationGiftImage = '/images/home/grad.png'; // Ensure it starts with a 
 
 const NewArrivals: React.FC = () => {
   return (
-    <div className="c">
+    <div className="p-4">
       {/* Featured Section */}
       <div className="my-8">
         <h2 className="text-2xl font-bold text-red-500">Featured</h2>
