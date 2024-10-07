@@ -65,19 +65,19 @@ const CategoriesSidebar = () => {
   const router = useRouter();
   const [headerCategory, setHeaderCategory] = useState<CategoryTreeNode[] | null>(null);
   // Toggle category function
-  const subcategoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({}); // Create a ref for subcategories
+  const subcategoryRefs = useRef<Record<string, HTMLDivElement | null>>({}); // Create a ref for subcategories
 
   const toggleCategory = (label: string) => {
     setOpenCategory((prev) => (prev === label ? null : label));
   };
- 
-  
-  
-  
+
+
+
+
   function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
-    const categoryMap: { [key: number]: CategoryTreeNode } = {};
+    const categoryMap: Record<number, CategoryTreeNode> = {};
     const tree: CategoryTreeNode[] = [];
-  
+
     // Initialize the map
     categories.forEach((category) => {
       categoryMap[category.id] = {
@@ -91,10 +91,10 @@ const CategoriesSidebar = () => {
         children: [],
       };
     });
-  
+
     // Build the tree structure
     categories.forEach((category) => {
-    
+
       if (category.parent == 0 && category.outlet == 223) {
         // Root category
         console.log(category)
@@ -113,19 +113,19 @@ const CategoriesSidebar = () => {
         }
       }
     });
-  
+
     return tree;
   }
-  
+
   // Usage Example
-  useEffect(()=>{
-    if(!category) return
+  useEffect(() => {
+    if (!category) return
     const categoryTree = buildCategoryTree(category ? category : []);
     setHeaderCategory(categoryTree ? categoryTree : null);
-    
-  },[category])
- 
-  
+
+  }, [category])
+
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -155,8 +155,8 @@ const CategoriesSidebar = () => {
             <button
               onClick={() =>
                 item.subItems ||
-                item.label === "Books" ||
-                item.label === "Text Book"
+                  item.label === "Books" ||
+                  item.label === "Text Book"
                   ? toggleCategory(item.label)
                   : null
               }
@@ -164,8 +164,8 @@ const CategoriesSidebar = () => {
             >
               <span>{item.label}</span>
               {item.subItems ||
-              item.label === "Books" ||
-              item.label === "Text Book" ? (
+                item.label === "Books" ||
+                item.label === "Text Book" ? (
                 openCategory === item.label ? (
                   <FaChevronDown />
                 ) : (
@@ -192,17 +192,17 @@ const CategoriesSidebar = () => {
                     </a>
                   ))}
                 {item.label === "Text Book" &&
-                  headerCategory && headerCategory[0]?.children?.map(
+                  headerCategory?.[0]?.children?.map(
                     (subItem) =>
-                      (
-                        <a
-                          key={subItem.id}
-                          href={`textbooks?detail=${subItem.id}`}
-                          className="block py-1 text-sm hover:underline"
-                        >
-                          {subItem.category_name}
-                        </a>
-                      ),
+                    (
+                      <a
+                        key={subItem.id}
+                        href={`textbooks?detail=${subItem.id}`}
+                        className="block py-1 text-sm hover:underline"
+                      >
+                        {subItem.category_name}
+                      </a>
+                    ),
                   )}
                 {item.subItems && (
                   <SubcategoryList

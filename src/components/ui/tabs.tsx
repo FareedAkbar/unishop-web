@@ -7,7 +7,7 @@ import { cn } from "~/lib/utils";
 type Tab = {
   title: string;
   value: string;
-  content?: string | React.ReactNode | any;
+  content?: string | React.ReactNode;
 };
 
 export const Tabs = ({
@@ -16,8 +16,8 @@ export const Tabs = ({
   activeTabClassName,
   tabClassName,
   contentClassName,
- 
- 
+
+
 }: {
   tabs: Tab[];
   containerClassName?: string;
@@ -34,7 +34,7 @@ export const Tabs = ({
     const selectedTab = newTabs.splice(idx, 1);
     newTabs.unshift(selectedTab[0]!);
     setTabs(newTabs);
-   
+
     setActive(newTabs[0]!);
   };
 
@@ -81,7 +81,7 @@ export const Tabs = ({
       <FadeInDiv
         tabs={tabs}
         active={active}
-     
+
         key={active.value}
         hovering={hovering}
         className={cn("mt-16", contentClassName)}
@@ -106,7 +106,7 @@ export const FadeInDiv = ({
   const isActive = (tab: Tab) => {
     return tab.value === tabs[0]!.value;
   };
- 
+
   return (
     <div className="relative h-full w-full" >
       {tabs.map((tab, idx) => (
@@ -123,7 +123,7 @@ export const FadeInDiv = ({
           animate={{
             y: isActive(tab) ? [0, 40, 0] : 0,
           }}
-          className={cn("absolute left-0 top-0 h-full w-full", className, tab.value != active.value ? 'pointer-events-none opacity-50' : '' )}
+          className={cn("absolute left-0 top-0 h-full w-full", className, tab.value != active.value ? 'pointer-events-none opacity-50' : '')}
         >
           {tab.content}
         </motion.div>
