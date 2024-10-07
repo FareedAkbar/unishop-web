@@ -6,7 +6,7 @@ import {
 } from "react-icons/fa";
 import { AiOutlineTwitter, AiFillYoutube } from "react-icons/ai";
 import { BiLogoPinterestAlt } from "react-icons/bi";
-import Logo from "../../public/pulseFooter.png";
+import Logo from "../../public/pulseFooter2.png";
 import Image from "next/image";
 import Link from "next/link";
 
