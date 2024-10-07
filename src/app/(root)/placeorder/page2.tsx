@@ -10,6 +10,7 @@ import shippingOptions from "~/components/constants/shippingMethod";
 
 import type ShippingType from "~/types/shipping";
 import CartItemCard from "~/components/ui/sideCart/cartItemCard";
+import { Button } from "~/components/ui/button";
 import type TaxCalculationApiResponse from "~/types/taxCalculationApiResponse";
 import type CreatePayloadBooksForTax from "~/types/createPayloadBooksForTax";
 import {
@@ -26,7 +27,6 @@ import type { placeOrderPayload } from "~/types/placeOrderPayload";
 import { formatDate, formatDateTime } from "~/utils/dateAndTime";
 import { useRouter } from "next/navigation";
 import { generateOTP } from "~/utils/generateOTP";
-import Button from "~/components/ui-components/Button";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -40,18 +40,16 @@ const MyComponent = () => {
     token,
     userInfo,
     // isLoggedIn,
-    bookentcustomerId,
+    bookentcustomerId
   } = useAuthContext();
   const [items, setItems] = useState<DataCart[]>([]);
   const [newItems, setNewItems] = useState<DataCart[]>([]);
-  const [shipping, setShipping] = useState<ShippingType | null>(
-    shippingOptions[0] ?? null,
-  );
+  const [shipping, setShipping] = useState<ShippingType | null>(shippingOptions[0] ?? null);
   const [total, setTotal] = useState<number>(0);
   const { toast } = useToast();
   const [calculateLoader, setCalculateLoader] = useState<boolean>(false);
   // const [customerId, setCustomerId] = useState<number>();
-
+ 
   const [isOpenPaymentAlert, setIsOpenPaymentAlert] = useState(false);
   const [transactionData, setTransactionData] =
     useState<trasactionResponse | null>(null);
@@ -194,7 +192,7 @@ const MyComponent = () => {
 
         if (!itemsPayload[0]) return;
         setCalculateLoader(true);
-
+        
         await fetchData(itemsPayload);
       } catch (error) {
         console.error("Failed to load data:", error);
@@ -264,6 +262,7 @@ const MyComponent = () => {
       guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
       amount: 0.01,
     };
+   
 
     try {
       await getLinkForPayment(x);
@@ -273,7 +272,7 @@ const MyComponent = () => {
       console.error("Failed to load data:", error);
     }
   };
-
+  
   type socketResponse = {
     customer_id: number;
     message: string;
@@ -307,11 +306,14 @@ const MyComponent = () => {
       if (result?.status) {
         toast({
           title: "Order Successful",
-          description: "Your order has been processed successfully.",
+          description:
+            "Your order has been processed successfully.",
         });
-
+        
+       
         try {
           await removeAllCartItems();
+         
         } catch (error) {
           console.error("Failed to load data:", error);
           // Optionally set an error state here
@@ -365,7 +367,7 @@ const MyComponent = () => {
   const placeOrderApi = async (id: number) => {
     const date = new Date();
     const x = {
-      order_type: shipping?.type == "free" ? 1 : 2,
+      order_type: shipping?.type == 'free' ? 1 : 2,
       online_order_type: true,
       outlet_id: 221,
       tracking_id: generateOTP(12).toString(),
@@ -416,31 +418,18 @@ const MyComponent = () => {
   useEffect(() => {
     console.log("Connected to server after");
     if (!checkoutData?.uuid) return;
-
+  
     const connectHandler = () => {
       console.log("Connected to server", socket.id);
-      console.log(
-        "Connected to Id",
-        checkoutData?.customer_id
-          ? checkoutData?.customer_id
-          : checkoutData?.uuid,
-      );
-
-      socket.emit(
-        "/studentHandshake",
-        {
-          student_id: checkoutData?.customer_id
-            ? checkoutData?.customer_id
-            : checkoutData?.uuid,
-        },
-        () => {
-          console.log("studentHandshake");
-        },
-      );
+      console.log("Connected to Id", checkoutData?.customer_id ?checkoutData?.customer_id : checkoutData?.uuid);
+    
+      socket.emit("/studentHandshake", { student_id: checkoutData?.customer_id ?checkoutData?.customer_id : checkoutData?.uuid }, () => {
+        console.log("studentHandshake");
+      });
     };
-
+  
     socket.on("connect", connectHandler);
-
+  
     return () => {
       socket.off("connect", connectHandler);
     };
@@ -448,23 +437,23 @@ const MyComponent = () => {
 
   const PaymentStatus = useCallback(() => {
     if (!checkoutData?.uuid) return;
-
+    
     console.log("Payment Socket");
-
+  
     const handlePaymentStatus = async (dat: dataresponse) => {
       console.log("PaymentStatus");
       const { data } = dat;
-
+  
       console.log(data);
-
+  
       if (data.status) {
         setIsOpenPaymentAlert(false);
         toast({
           title: "Payment Successful",
-          description:
-            "Your payment has been processed successfully for this order.",
+          description: "Your payment has been processed successfully for this order.",
         });
-
+      
+       
         try {
           await placeOrderApi(data.transaction_id);
         } catch (error) {
@@ -474,40 +463,44 @@ const MyComponent = () => {
         toast({
           title: "Payment Declined",
           variant: "destructive",
-          description:
-            "Unfortunately, your payment could not be processed. Please try again.",
+          description: "Unfortunately, your payment could not be processed. Please try again.",
         });
         setIsOpenPaymentAlert(false);
+       
       }
-      setTransactionData(null);
+      setTransactionData(null)
+     
     };
-
+  
     // Register the listener
     socket.on("paymentStatus", handlePaymentStatus);
-
+  
     // Cleanup on unmount
     return () => {
       socket.off("paymentStatus", handlePaymentStatus);
     };
   }, [checkoutData, transactionData]);
-
+  
   useEffect(() => {
     if (!checkoutData?.uuid) return;
-
+    
+    
     console.log("Payment socket initiated");
     const cleanupPaymentStatus = PaymentStatus();
-
+  
     return cleanupPaymentStatus;
   }, [checkoutData, transactionData]);
+  
+  
 
   const closeModal = () => {
     setIsOpenPaymentAlert(false);
   };
 
-  const onChange = (val: ShippingType) => {
-    console.log(val);
-    setShipping(val);
-  };
+  const onChange = (val: ShippingType) =>{
+    console.log(val)
+    setShipping(val)
+  }
 
   return (
     <div>
@@ -519,15 +512,16 @@ const MyComponent = () => {
     >Loading...</span>
   </div> */}
 
-      <main className="al mb-8 flex min-h-screen justify-center pt-20">
-        <div className="z-10  bg-white px-6">
-          <h2 className="mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
+      <main className="mb-8 flex min-h-screen  justify-center al pt-32">
+        <div className="max-w-5xl z-10 rounded border-b border-l border-r border-t bg-white px-4 shadow shadow-card shadow-zinc-300">
+          <h2 className="mt-6 font-serif text-xl font-bold text-neutral-800 dark:text-neutral-200">
             Payment Method
           </h2>
-          <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-            <div className="col-span-2 rounded-xl border p-4">
-              <span className="text-md mt-2">Credit Card - eWAY</span>
-              <div className="ml-6 mt-3 flex flex-col">
+          <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+            <div>
+              <span className="text-md mt-2 font-sans">Credit Card - eWAY</span>
+              <div className="ml-8 mt-3 flex flex-col">
+                
                 <span className="mt-4">{checkoutData?.address}</span>
                 <span>
                   {checkoutData?.country} {checkoutData?.city}{" "}
@@ -542,42 +536,49 @@ const MyComponent = () => {
                   </a>
                 </span>
               </div>
-              <div className="mb-4 mt-10">
-                <p className="mb-2 font-bold">Shipping Method</p>
-                <div className="flex flex-col">
-                  <div>
-                    {shippingOptions.map((option) => (
-                      <div key={option.value}>
-                        <div className="my-4 border-t border-gray-300"></div>
-                        <label className="flex">
-                          <input
-                            type="radio"
-                            value={option.value}
-                            checked={shipping?.value === option.value}
-                            onChange={() => onChange(option)} // Handle change
-                            className="form-radio"
-                          />
-                          <div className="flex flex-1">
-                            <span className="flex-1 text-center">
-                              {option.amount}
-                            </span>
-                            <span className="flex-1 text-center">
-                              {option.type}
-                            </span>
-                            <span className="flex-1 text-center">
-                              {option.label}
-                            </span>
-                          </div>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
+               <div className="mb-4 mt-10">
+          <p className="mb-2 font-serif font-bold">Shipping Method</p>
+          <div className="flex flex-col">
+          <div>
+              {shippingOptions.map((option) => (
+                <div key={option.value}>
+                  <div className="border-t border-gray-300 my-4"></div>
+                  <label className="flex">
+                    <input
+                      type="radio"
+                      value={option.value}
+                      checked={shipping?.value === option.value}
+                      onChange={() => onChange(option)} // Handle change
+                      className="form-radio"
+                    />
+                    <div className="flex flex-1">
+                      <span className="flex-1 text-center">{option.amount}</span>
+                      <span className="flex-1 text-center">{option.type}</span>
+                      <span className="flex-1 text-center">{option.label}</span>
+                    </div>
+                  </label>
                 </div>
-              </div>
+              ))}
             </div>
-            <div className="rounded-xl border p-4">
-              {/* <div className="my-4 border-t border-gray-500"></div> */}
-              <h2 className="text-xl font-bold">Order Summary</h2>
+          </div>
+        </div>
+              <div className="mt-6 flex justify-end">
+                <Button
+                  onClick={(() => handlePlaceOrder())}
+                  className="bg-zinc-500 text-white hover:bg-transparent hover:bg-zinc-700"
+                  disabled={totalAfterCalculation ? false : true}
+                >
+                  Place Order
+                </Button>
+              </div>
+              <div className="my-4 border-t border-gray-500"></div>
+            </div>
+
+            <div className="mb-2 rounded bg-zinc-200 p-3">
+              <div className="my-4 border-t border-gray-500"></div>
+              <h2 className="mt-6 font-serif text-xl font-bold text-neutral-800 dark:text-neutral-200">
+                Order Summary
+              </h2>
               {calculateLoader && (
                 <div>
                   <div className="flex flex-col items-center justify-between">
@@ -595,58 +596,53 @@ const MyComponent = () => {
                 <>
                   <div className="my-4 border-t border-gray-300"></div>
                   <div className="grid grid-cols-2 justify-between">
-                    <span className="text-sm">Cart Subtotal</span>
-                    <span className="flex justify-end text-sm">
+                    <span className="font-sans text-sm">Cart Subtotal</span>
+                    <span className="flex justify-end font-sans text-sm">
                       ${totalAfterCalculation?.original_price.toFixed(2)}
                     </span>
                   </div>
                   <div className="mt-2 grid grid-cols-2 justify-between">
-                    <span className="text-sm">Tax</span>
-                    <span className="flex justify-end text-sm">
+                    <span className="font-sans text-sm">Tax</span>
+                    <span className="flex justify-end font-sans text-sm">
                       ${totalAfterCalculation?.item_tax_price.toFixed(2)}
                     </span>
                   </div>
                   <div className="mt-2 grid grid-cols-2 justify-between">
-                    <span className="text-sm">Discounted Subtotal</span>
-                    <span className="flex justify-end text-sm">
+                    <span className="font-sans text-sm">
+                      Discounted Subtotal
+                    </span>
+                    <span className="flex justify-end font-sans text-sm">
                       $
                       {totalAfterCalculation?.final_price_including_tax.toFixed(
                         2,
                       )}
                     </span>
                   </div>
-                  <div className="mt-6 grid grid-cols-3 justify-between">
-                    <div className="flex flex-col col-span-2">
-                      <span className="text-sm">Shipping</span>
-                      <span className="text-sm text-gray-600">
+                  <div className="mt-6 grid grid-cols-2 justify-between">
+                    <div className="flex flex-col">
+                      <span className="font-sans text-sm">Shipping</span>
+                      <span className="font-sans text-sm text-gray-600">
                         {shipping?.label} - {shipping?.type}
                       </span>
                     </div>
 
-                    <span className="flex justify-end text-sm">
+                    <span className="flex justify-end font-sans text-sm">
                       ${shipping?.amount.toFixed(2)}
                     </span>
                   </div>
                   <div className="mt-6 grid grid-cols-2 justify-between">
                     <div className="flex flex-col">
-                      <span className="text-md font-bold">Order Total</span>
+                      <span className="text-md font-serif font-bold">
+                        Order Total
+                      </span>
                     </div>
 
-                    <span className="text-md flex justify-end  font-bold">
+                    <span className="text-md flex justify-end font-sans font-bold">
                       ${total.toFixed(2)}
                     </span>
-
                   </div>
-                    <div className="my-4 border-t border-gray-300"></div>
-                  <div className="mt-6 flex">
-                    <Button
-                      onClick={() => handlePlaceOrder()}
-                      loading={totalAfterCalculation ? false : true}
-                      width="w-full"
-                      title="Place Order"
-                    />
-                  </div>
-                  {/* <Accordion type="single" collapsible className="w-full">
+                  <div className="my-4 border-t border-gray-300"></div>
+                  <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="item-1">
                       <AccordionTrigger>
                         <div className="grid grid-cols-2 justify-between">
@@ -688,7 +684,7 @@ const MyComponent = () => {
                         </ScrollArea>
                       </AccordionContent>
                     </AccordionItem>
-                  </Accordion> */}
+                  </Accordion>
                   {/* <div className="mt-6 grid grid-cols-2 justify-between">
                     <div className="flex flex-col">
                       <span className="font-sans text-sm">
