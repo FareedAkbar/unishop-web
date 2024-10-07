@@ -14,21 +14,12 @@ interface stock {
 }
 
 interface ProductGradientProps {
- 
- 
- 
-  
   openDetail?: () => void;
   stock?: stock;
   item: SpecialBookType;
 }
 
 export default function SpecialOrderCard({
- 
-
- 
-
- 
   stock,
   item,
   openDetail,
@@ -36,15 +27,12 @@ export default function SpecialOrderCard({
   const [show, setShow] = useState(false);
 
   function getApproximatePrices(books: SpecialBookType) {
-    
     const price = parseFloat(books.price.replace(/[^0-9.-]+/g, "")); // Extract numeric value
-    if(price < 6 ){
-      return `$${(price).toFixed(2)} AUD`
+    if (price < 6) {
+      return `$${price.toFixed(2)} AUD`;
     }
     return `$${(price - 5).toFixed(2)} to $${(price + 5).toFixed(2)} AUD`;
-
-}
-
+  }
 
   return (
     <div
@@ -59,7 +47,7 @@ export default function SpecialOrderCard({
               // object_path
               //   ? `https://ipos-storage.s3.amazonaws.com/${object_path}`
               //   :
-                 BookIcon
+              BookIcon
             }
             alt={item.title}
             layout="fill"
@@ -68,13 +56,15 @@ export default function SpecialOrderCard({
           />
         </div>
         <div className="flex flex-col items-center justify-between">
-          <p className="mb-2 mt-4 text-lg  whitespace-nowrap overflow-hidden w-32 text-black dark:text-neutral-200 sm:text-xl">
+          <p className="mb-2 mt-4 w-32 overflow-hidden whitespace-nowrap text-lg text-black dark:text-neutral-200 sm:text-xl">
             {item.title}
           </p>
-          <p className="text-center overflow-hidden w-32 text-sm text-neutral-600 dark:text-neutral-400">
+          <p className="w-32 overflow-hidden text-center text-sm text-neutral-600 dark:text-neutral-400">
             {item.distributor}
           </p>
-          <p className="mb-2 mt-1 text-md font-bold">{getApproximatePrices(item)}</p>
+          <p className="text-md mb-2 mt-1 font-bold">
+            {getApproximatePrices(item)}
+          </p>
         </div>
         <div
           className={`absolute bottom-1 left-1/2 flex w-full -translate-x-1/2 transform justify-between gap-3 space-x-2 pl-2 pr-2 ${
@@ -88,13 +78,11 @@ export default function SpecialOrderCard({
                 <div className="pl-1">Out of stock</div>
               </div>
             )}
-            
-          
           </div>
 
           <button
             className="flex items-center justify-end space-x-1 rounded-full bg-blue-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
-            onClick={() => openDetail ? openDetail() : ""}
+            onClick={() => (openDetail ? openDetail() : "")}
           >
             <PiEye className="text-lg hover:text-red-400" />
             <div className="pl-2">View Item</div>

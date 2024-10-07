@@ -519,13 +519,13 @@ const MyComponent = () => {
     >Loading...</span>
   </div> */}
 
-      <main className="al mb-8 flex min-h-screen justify-center pt-28">
+      <main className=" mb-8  min-h-screen justify-center pt-28">
         <div className="z-10 bg-white px-6">
           <h2 className="mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
             Payment Method
           </h2>
           <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-            <div className="md:col-span- rounded-xl border p-4 lg:col-span-2 xl:col-span-2">
+            <div className=" rounded-xl border p-4 lg:col-span-2 xl:col-span-2">
               <span className="text-md mt-2">Credit Card - eWAY</span>
               <div className="ml-6 mt-3 flex flex-col">
                 <span className="mt-4">{checkoutData?.address}</span>
@@ -576,7 +576,6 @@ const MyComponent = () => {
               </div>
             </div>
             <div className="rounded-xl border p-4">
-              {/* <div className="my-4 border-t border-gray-500"></div> */}
               <h2 className="text-xl font-bold">Order Summary</h2>
               {calculateLoader && (
                 <div>
@@ -615,8 +614,8 @@ const MyComponent = () => {
                       )}
                     </span>
                   </div>
-                  <div className="mt-6 grid grid-cols-3 justify-between">
-                    <div className="col-span-2 flex flex-col">
+                  <div className="mt-6 grid grid-cols-2 justify-between">
+                    <div className="  flex flex-col">
                       <span className="text-sm">Shipping</span>
                       <span className="text-sm text-gray-600">
                         {shipping?.label} - {shipping?.type}

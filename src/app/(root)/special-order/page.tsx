@@ -10,7 +10,7 @@ import type DataCart from "~/types/book";
 import { Suspense, useState } from "react";
 import SearchInput from "~/components/Fields/search";
 import { FiSearch } from "react-icons/fi";
-import SpecialOrderCard from "~/components/specialOrderCard";
+// import SpecialOrderCard from "~/components/specialOrderCard";
 import {
   BookDetailType,
   SpecialBookType,
@@ -28,6 +28,8 @@ import { formatDate, formatDateTime } from "~/utils/dateAndTime";
 import { useToast } from "~/hooks/use-toast";
 import { generateOTP } from "~/utils/generateOTP";
 import { Tabs } from "~/components/ui/tabs";
+import SpecialOrderCard from "~/components/ui-components/SpecialOrderCard";
+import { AiOutlineArrowLeft, AiOutlineClose } from "react-icons/ai";
 
 interface ApiResponse {
   // meta: PaginationData; // Adjust based on your actual structure
@@ -231,11 +233,13 @@ const MyComponent = () => {
     {
       title: "Booknet Account",
       value: "booknetForm",
-      content: <BooknetForm
-      push={false}
-      handleData={(d) => handleCheckoutSubmit(d)}
-      goTo="/"
-    />,
+      content: (
+        <BooknetForm
+          push={false}
+          handleData={(d) => handleCheckoutSubmit(d)}
+          goTo="/"
+        />
+      ),
     },
   ];
 
@@ -247,154 +251,127 @@ const MyComponent = () => {
         {loader && <Spinner />}
         {!dataDetail && (
           <>
-            <div className="mt-32">
-              {" "}
-              <SearchInput
-                placeholder="book search"
-                onChange={(val) => setSearchValue(val.target.value)}
-                onIconClick={() => handleSearch()}
-                width="w-64"
-                icon={<FiSearch />}
-              />
+            <div className="flex flex-col items-center justify-center pt-32">
+              <h1 className="text-md mb-6 text-center font-semibold text-gray-800 md:text-3xl">
+                Discover Your Next Favorite Book
+              </h1>
+              <div className="w-full">
+                <SearchInput
+                  placeholder="Search books..."
+                  onChange={(val) => setSearchValue(val.target.value)}
+                  onIconClick={() => handleSearch()}
+                  width="w-full"
+                  icon={<FiSearch />}
+                />
+              </div>
             </div>
 
-            <div className="mx-auto max-w-5xl px-8"></div>
-            <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-              <div className="xs:grid-cols-1 grid gap-4 sm:grid-cols-2 md:gap-8 lg:grid-cols-4">
-                {data?.map((item: SpecialBookType) => (
-                  <SpecialOrderCard
-                    key={item.link}
-                    // stock={item.stock}
-                    item={item}
-                    openDetail={() => handleDetail(item)}
-                  />
-                ))}
-              </div>
+            <div className="flex flex-wrap items-center justify-center py-10">
+              {data?.map((item: SpecialBookType) => (
+                <SpecialOrderCard
+                  key={item.link}
+                  // stock={item.stock}
+                  item={item}
+                  openDetail={() => handleDetail(item)}
+                />
+              ))}
             </div>
           </>
         )}
 
         {dataDetail && (
-          <div className="mt-32 w-2/3">
-            <div>
-              <div>
-                <h4 className="mb-3 text-center font-serif text-lg font-bold text-neutral-600 dark:text-neutral-100 md:text-2xl">
-                  {dataDetail?.title}
-                </h4>
-                <h6 className="mb-2 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-xl">
-                  {dataDetail?.mainDescription}
-                </h6>
-                <h6 className="mb-8 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
-                  {dataDetail?.shortDescription}
-                </h6>
-                <div className="flex justify-evenly">
-                  <div className="mx-auto flex items-center justify-end">
-                    <motion.div
-                      key={"images"}
-                      style={{
-                        rotate: Math.random() * 20 - 10,
-                      }}
-                      whileHover={{
-                        scale: 1.1,
-                        rotate: 0,
-                        zIndex: 100,
-                      }}
-                      whileTap={{
-                        scale: 1.1,
-                        rotate: 0,
-                        zIndex: 100,
-                      }}
-                      className="-mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-neutral-700 dark:bg-neutral-800"
-                    >
-                      <img
-                        src={
-                          dataDetail?.coverImageUrl
-                            ? dataDetail.coverImageUrl
-                            : ""
-                        }
-                        alt={dataDetail?.coverImageUrl ?? ""}
-                        width="500"
-                        height="500"
-                        className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-96 md:w-64"
-                      />
-                    </motion.div>
-                  </div>
-
-                  <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
-                    <div className="flex flex-col">
-                      <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
-                        ${dataDetail?.price}
-                      </span>
-                      <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
-                        Format: {dataDetail?.format}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                        Series: {dataDetail?.edition}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-center">
-                      {/* <ElevatorIcon className="mr-1 h-4 w-4 text-neutral-700 dark:text-neutral-300" /> */}
-                      <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                        Published:{" "}
-                        {dataDetail?.publicationDate
-                          ? moment(dataDetail.publicationDate).format(
-                              "Do MMMM, YYYY",
-                            )
-                          : ""}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                        Subject: {dataDetail?.subject}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                        Number of Pages: {dataDetail?.numberOfPages}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                        Publisher: {dataDetail?.originalPublisher}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                        Author: {dataDetail?.author}
-                      </span>
-                    </div>
-
-                    <button
-                      className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
-                      onClick={() => handleCreateOrder(dataDetail)}
-                    >
-                      <FaCartPlus className="text-lg" />
-                      <div className="pl-2">Make Special Order</div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-4 mt-10 flex justify-center gap-4">
-                <button
-                  onClick={() => setDataDetail(null)}
-                  className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm text-black dark:border-black dark:bg-black dark:text-white"
-                >
-                  Close
-                </button>
-                {/* <button className="w-28 rounded-md border border-black bg-black px-2 py-1 text-sm text-white dark:bg-white dark:text-black">
-              Book Now
-            </button> */}
-              </div>
+          <div className="w-full rounded-lg bg-white p-4 pt-32 dark:bg-gray-800">
+            {/* Header with Close and Back buttons */}
+            <div className="mb-6 flex items-center justify-between">
+              <button
+                className="transform p-2 transition-transform duration-200 ease-in-out hover:scale-105 dark:text-gray-300 md:p-3 lg:p-4"
+                onClick={() => setDataDetail(null)} // Back button action
+              >
+                <AiOutlineArrowLeft size={24} />
+              </button>
+              <h4 className="mx-4 flex-1 text-center font-bold dark:text-neutral-100 lg:text-lg">
+                {dataDetail?.title}
+              </h4>
+              <button
+                className="transform p-2 transition-transform duration-200 ease-in-out hover:scale-105 dark:text-gray-300 md:p-3 lg:p-4"
+                onClick={() => setDataDetail(null)} // Close button action
+              >
+                <AiOutlineClose size={24} />
+              </button>
             </div>
-            <div className="mb-4 flex flex-col justify-center">
-              {showCheckout && (
-                <div className="z-10 w-full">
-                <Tabs tabs={tabs} />
+
+            <h5 className="mb-4 text-center text-sm text-neutral-800 dark:text-neutral-100 md:text-lg lg:px-10">
+              {dataDetail?.mainDescription}
+            </h5>
+            <h5 className="md:text-md mb-6 text-center text-sm text-neutral-600 dark:text-neutral-100 lg:px-16">
+              {dataDetail?.shortDescription}
+            </h5>
+
+            <div className="flex flex-col lg:items-start justify-between md:flex-row lg:justify-between">
+              {/* Details Section */}
+              <div className="flex flex-col items-start justify-start gap-y-2 lg:w-1/2">
+                <motion.div
+                  key={"images"}
+                  style={{ rotate: Math.random() * 25 - 10 }}
+                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 100 }}
+                  whileTap={{ scale: 1.1, rotate: 0, zIndex: 100 }}
+                  className="mb-4 self-center overflow-hidden rounded-xl border border-neutral-100 bg-white dark:border-neutral-700 dark:bg-neutral-800 md:mb-0"
+                >
+                  <img
+                    src={dataDetail?.coverImageUrl ?? ""}
+                    alt={dataDetail?.title ?? "Cover Image"}
+                    width="500"
+                    height="500"
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-64 md:w-48"
+                  />
+                </motion.div>
+                <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
+                  ${dataDetail?.price}
+                </span>
+                <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
+                  <span className="font-bold">Format:</span>
+                  {dataDetail?.format}
+                </span>
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  <span className="font-bold">Series:</span>
+                  {dataDetail?.edition}
+                </span>
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  <span className="font-bold">Published:</span>
+                  {dataDetail?.publicationDate
+                    ? moment(dataDetail.publicationDate).format("Do MMMM, YYYY")
+                    : ""}
+                </span>
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  <span className="font-bold">Subject:</span>
+                  {dataDetail?.subject}
+                </span>
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  <span className="font-bold">Number of Pages:</span>
+                  {dataDetail?.numberOfPages}
+                </span>
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  <span className="font-bold">Publisher:</span>
+                  {dataDetail?.originalPublisher}
+                </span>
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  <span className="font-bold">Author:</span>
+                  {dataDetail?.author}
+                </span>
+
+                <button
+                  className="mt-4 flex items-center space-x-1 self-center rounded-full bg-green-500 px-2 py-1 text-xs font-bold text-white hover:bg-green-600 dark:bg-zinc-800"
+                  onClick={() => handleCreateOrder(dataDetail)}
+                >
+                  <FaCartPlus className="text-lg" />
+                  <div className="pl-2">Make Special Order</div>
+                </button>
               </div>
-              )}
-             
+
+              {/* Tabs Section */}
+              <div className="z-10 mb-4 mt-10 lg:w-1/2 lg:px-10">
+                {showCheckout && <Tabs tabs={tabs} />}
+              </div>
             </div>
           </div>
         )}

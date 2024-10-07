@@ -180,9 +180,13 @@ const Header = () => {
 
             <div className="relative" onClick={() => toggleSidebar()}>
               <IoCartOutline className="cursor-pointer text-xl" />
-              <span className="absolute -right-0 -top-0 flex h-2 w-2 items-center justify-center rounded-full bg-red-500 text-[6px] text-white">
-                5
-              </span>
+              {cartItems?.length && cartItems?.length > 0 ? (
+                <span className="absolute -right-0 -top-0 flex h-2 w-2 items-center justify-center rounded-full bg-red-500 text-[6px] text-white">
+                  {cartItems?.length}
+                </span>
+              ) : (
+                ""
+              )}
             </div>
 
             <div className="relative" ref={userDropdownRef}>
@@ -190,7 +194,7 @@ const Header = () => {
                 className="cursor-pointer rounded-full bg-red-500"
                 onClick={toggleUserDropdown}
               >
-                <MdOutlinePersonOutline className="text-2xl text-white" />
+                <MdOutlinePersonOutline className="text-xl text-white" />
               </div>
               {isUserDropdownOpen && (
                 <div className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md">
@@ -384,7 +388,6 @@ const Header = () => {
                 <IoCartOutline className="cursor-pointer text-3xl" />
                 {cartItems?.length && cartItems?.length > 0 ? (
                   <span className="absolute -right-0 -top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[6px] text-sm text-white">
-                    {" "}
                     {cartItems?.length}
                   </span>
                 ) : (
@@ -396,7 +399,7 @@ const Header = () => {
                   className="cursor-pointer rounded-full bg-red-500"
                   onClick={toggleUserDropdown}
                 >
-                  <MdOutlinePersonOutline className="text-xl text-white" />
+                  <MdOutlinePersonOutline className="text-2xl text-white" />
                 </div>
                 {isUserDropdownOpen && (
                   <div
