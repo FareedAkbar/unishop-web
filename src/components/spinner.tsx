@@ -1,21 +1,41 @@
-"use client"
-import React from 'react';
+"use client";
+import React from "react";
 
-// components/Spinner.tsx
 const Spinner = () => {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
+      <div className="relative flex items-center justify-center">
+        {/* SVG Circular Loader with Red Gradient */}
         <svg
-          className="animate-spin h-10 w-10 text-blue-600"
+          className="h-16 w-16 animate-spin"
+          viewBox="0 0 50 50"
           xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
         >
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0116 0 8 8 0 11-16 0z"></path>
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop
+                offset="0%"
+                style={{ stopColor: "#f32f05", stopOpacity: 1 }}
+              />
+              <stop
+                offset="100%"
+                style={{ stopColor: "#f58971", stopOpacity: 1 }}
+              />
+            </linearGradient>
+          </defs>
+          <circle
+            cx="25"
+            cy="25"
+            r="20"
+            stroke="url(#grad1)"
+            strokeWidth="5"
+            fill="none"
+            strokeLinecap="round"
+          />
         </svg>
       </div>
-    );
-  };
-  
-  export default Spinner;
+    </div>
+  );
+};
+
+export default Spinner;

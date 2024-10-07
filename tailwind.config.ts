@@ -27,9 +27,11 @@ const config: Config = {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ['Poppins', ...fontFamily.sans],
+			sans:['Montserrat',...fontFamily.sans],
+  			// sans: ['Poppins', ...fontFamily.sans],
   			serif: ['Libre Baskerville', ...fontFamily.serif],
 			poppins: ["Poppins", "sans-serif"],
+			// montserrat:['Montserrat','sans-serif']
 
   		},
   		boxShadow: {
