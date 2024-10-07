@@ -450,7 +450,7 @@ const MyComponent = () => {
         {loader && <Spinner />}
 
         <div className="z-10 w-full rounded-md border card">
-          <Tabs tabs={tabs}/>
+          <Tabs tabs={tabs} key={dataOrders.toString()}/>
         </div>
       </main>
       {isOpenPaymentAlert ? (
