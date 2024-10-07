@@ -3,16 +3,15 @@ import { useParams } from "next/navigation";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { localStorageClient } from "~/clients/localstorage-client";
 import type DataCart from "~/types/book";
-import type {Login, SendOTP, VerifyOTP} from "~/types/login";
+import type { Login, SendOTP, VerifyOTP } from "~/types/login";
 
 import type Register from "~/types/register";
 import type UserType from "~/types/userType";
 import { apiRouter } from "~/utils/api-router";
-import type {Booknet_customer_checkout, booknet_customer_id, checkoutBooknetResponse, CheckoutForm } from "~/types/checkoutForm";
-import type {Genre, GenreResponse} from "~/types/genre";
-import type { LoginData,LoginResponse, SendOTPResponse, VerifyOTPResponse } from "~/types/loginResponse";
-import { cookieClient } from "~/clients/cookie-client";
-import { Category, CategoryResponse } from "~/types/category";
+import type { Booknet_customer_checkout, checkoutBooknetResponse, CheckoutForm } from "~/types/checkoutForm";
+import type { Genre, GenreResponse } from "~/types/genre";
+import type { LoginData, LoginResponse, SendOTPResponse, VerifyOTPResponse } from "~/types/loginResponse";
+import { type Category, type CategoryResponse } from "~/types/category";
 interface AuthContextProps {
   isLoggedIn: boolean;
   userInfo?: UserType;
@@ -48,15 +47,15 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const lsClient = localStorageClient();
-  
-  
+
+
   const slugParams = useParams();
   const appId = (slugParams["app-id"] as string) || "";
-  
-  
+
+
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
-  
+
   const [token, setToken] = useState<string | undefined>();
   const [cartItems, setItems] = useState<DataCart[]>([]);
   const [genre, setGenre] = useState<Genre[] | null>([]);
@@ -75,19 +74,19 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       { skipAuthorization: true },
     );
 
-    
+
 
     const responsePayload: { status: boolean; data: LoginData, message: string } =
       (await response.json()) as LoginResponse;
-    if (responsePayload.status){
-     
+    if (responsePayload.status) {
+
       lsClient.setItem("IS_LOGGED_IN", true);
       return responsePayload
     } else {
       throw new Error(responsePayload.message); // Throw an error with the message
     }
 
-   
+
     // lsClient.setItem("TOKEN", responsePayload.token);
 
   };
@@ -104,14 +103,14 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const responsePayload: { status: boolean } =
       (await response.json()) as SendOTPResponse;
-    if (responsePayload.status){
-    
+    if (responsePayload.status) {
+
       return responsePayload
     } else {
       throw new Error("failed"); // Throw an error with the message
     }
 
-   
+
 
   };
   const verifyOTP = async (payload: VerifyOTP): Promise<VerifyOTPResponse | boolean> => {
@@ -124,16 +123,16 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       { skipAuthorization: true },
     );
 
-    
+
 
     const responsePayload: { status: boolean; data: UserType, message: string, token: string } =
       (await response.json()) as VerifyOTPResponse;
-    if (responsePayload.status){
+    if (responsePayload.status) {
       setIsLoggedIn(true);
-  
+
       setToken(responsePayload.token);
-       setUserInfo(responsePayload.data);
-       lsClient.setItem("USER_INFO", responsePayload.data);
+      setUserInfo(responsePayload.data);
+      lsClient.setItem("USER_INFO", responsePayload.data);
       lsClient.setItem("TOKEN", responsePayload.token);
       lsClient.setItem("IS_LOGGED_IN", true);
       return responsePayload
@@ -141,7 +140,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       throw new Error(responsePayload.message); // Throw an error with the message
     }
 
-   
+
     // lsClient.setItem("TOKEN", responsePayload.token);
 
   };
@@ -161,11 +160,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       (await response.json()) as GenreResponse;
     if (!responsePayload.status) return false;
 
-    
+
     setGenre(responsePayload.data)
 
     lsClient.setItem("GENRE", responsePayload.data);
-    
+
     return true;
   };
 
@@ -184,32 +183,32 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       (await response.json()) as CategoryResponse;
     if (!responsePayload.status) return false;
 
-    
+
     setCategory(responsePayload.data)
 
     lsClient.setItem("CATEGORY", responsePayload.data);
-    
+
     return true;
   };
 
   const setUUID = async (payload: string): Promise<boolean> => {
-        lsClient.setItem("UUID",payload);
-        setUuidLocal(payload)
+    lsClient.setItem("UUID", payload);
+    setUuidLocal(payload)
     return true;
   };
-  
+
 
   const addCartItems = async (payload: DataCart): Promise<boolean> => {
     setItems((prev) => {
       // Check if the item already exists in the cart
       const existingItemIndex = prev.findIndex(item => item.item_id === payload.item_id);
-     
+
       // Prepare new or updated item
       const newItem = {
         ...payload,
         quantity: payload.quantity || 1  // Default to 1 if no quantity specified
       };
-  
+
       if (existingItemIndex > -1) {
         // If item exists, update the quantity
         const updatedItems = prev.map((item, index) => {
@@ -222,12 +221,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           return item;
         });
         lsClient.setItem("CART_ITEM", updatedItems);
-       
+
         return updatedItems;
       } else {
         // Item does not exist, add as new entry
         const updatedItems = [...prev, newItem];
-     
+
         lsClient.setItem("CART_ITEM", updatedItems);
         return updatedItems;
       }
@@ -258,14 +257,14 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const updatedItems = newItems.filter(
       (item: DataCart) => item.item_id !== payload.item_id,
     );
-    
+
     lsClient.setItem("CART_ITEM", updatedItems);
     setItems(updatedItems);
 
     return true;
   };
   const removeAllCartItems = async (): Promise<boolean> => {
-   
+
     lsClient.setItem("CART_ITEM", []);
     setItems([]);
 
@@ -288,8 +287,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       (await response.json()) as LoginResponse;
     if (!responsePayload.status) return false;
 
-    
-    
+
+
     // setUserInfo(responsePayload.data);
     // lsClient.setItem("USER_INFO", responsePayload.data);
 
@@ -304,7 +303,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoggedIn(false);
     setUserInfo(undefined);
     setToken(undefined);
-    
+
   };
 
   useEffect(() => {
@@ -330,7 +329,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setGenre(GENRE);
     setCategory(CATEGORY);
     setCheckoutData(checkoutData);
-    
+
     if (isLoggedIn && userInfo) {
       setIsLoggedIn(true);
       setUserInfo(userInfo);
@@ -338,7 +337,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const checkoutFormData = async (payload: CheckoutForm): Promise<boolean> => {
-    
+
     lsClient.setItem("CHECKOUT_DATA", payload);
     return true;
   };
@@ -360,43 +359,43 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 
 
-    const responsePayload: { status: boolean, data: CheckoutForm} =
+    const responsePayload: { status: boolean, data: CheckoutForm } =
       (await response.json()) as checkoutBooknetResponse;
-    if (responsePayload.status){
-      let x = responsePayload.data.booknet_customer_id ?? null
-        setBookentcustomerId(x)
-        setCheckoutData(responsePayload.data)
-        console.log(responsePayload)
-        lsClient.setItem("BOOKENT_CUSTOMER_ID", responsePayload?.data.booknet_customer_id ?? null);
-        lsClient.setItem("CHECKOUT_DATA", responsePayload?.data ?? null);
+    if (responsePayload.status) {
+      const x = responsePayload.data.booknet_customer_id ?? null
+      setBookentcustomerId(x)
+      setCheckoutData(responsePayload.data)
+      console.log(responsePayload)
+      lsClient.setItem("BOOKENT_CUSTOMER_ID", responsePayload?.data.booknet_customer_id ?? null);
+      lsClient.setItem("CHECKOUT_DATA", responsePayload?.data ?? null);
       return responsePayload
     } else {
       throw new Error("failed"); // Throw an error with the message
     }
 
-   
+
 
   };
 
   const CheckoutApiWithUserName = async (payload: Booknet_customer_checkout): Promise<checkoutBooknetResponse> => {
-   
+
     const response = await apiRouter(
       "CHECKOUT",
       {
         method: "GET",
         queryParams: `username=${payload.username}&password=${payload.password}`,
       },
-      
+
       { skipAuthorization: true },
     );
 
 
-    const responsePayload: { status: boolean, data: CheckoutForm} =
+    const responsePayload: { status: boolean, data: CheckoutForm } =
       (await response.json()) as checkoutBooknetResponse;
-    if (responsePayload.status){
-        setCheckoutData(responsePayload.data)
-        lsClient.setItem("CHECKOUT_DATA", responsePayload.data)
-        // lsClient.setItem("BOOKENT_CUSTOMER_ID", responsePayload?.data?.booknet_customer_id ?? null);
+    if (responsePayload.status) {
+      setCheckoutData(responsePayload.data)
+      lsClient.setItem("CHECKOUT_DATA", responsePayload.data)
+      // lsClient.setItem("BOOKENT_CUSTOMER_ID", responsePayload?.data?.booknet_customer_id ?? null);
       return responsePayload
     } else {
       throw new Error("failed"); // Throw an error with the message

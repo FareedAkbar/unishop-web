@@ -194,9 +194,9 @@ const MyComponent = () => {
 
   useEffect(() => {
     if (!bookentcustomerId) return;
-    fetchDataSpecialOrders();
-    fetchDataOrders();
-    fetchOrderStatus();
+    void fetchDataSpecialOrders();
+    void fetchDataOrders();
+    void fetchOrderStatus();
   }, [bookentcustomerId]);
 
   function getOrderStatusById(orderStatusId: number) {
@@ -425,7 +425,7 @@ const MyComponent = () => {
       hovering: false,
       content: (
         <OrdersTable
-          
+
           handlePayment={(x) => handlePayment(x)}
           data={dataSpecialOrders}
           orderStatus={orderStatus}
@@ -439,7 +439,7 @@ const MyComponent = () => {
       hovering: false,
       content: (
         <OrdersTable
-         
+
           handlePayment={(x) => handlePayment(x)}
           data={dataOrders}
           orderStatus={orderStatus}
@@ -460,7 +460,7 @@ const MyComponent = () => {
           <Tabs
             tabs={tabs}
             key={dataSpecialOrders.toString()}
-           
+
           />
         </div>
       </main>
