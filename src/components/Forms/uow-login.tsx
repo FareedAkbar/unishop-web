@@ -19,22 +19,22 @@ import Button from "../ui-components/Button";
 type FormValues = z.infer<typeof LoginSchema>;
 interface LoginFormProps {
   setView: (payload: string) => void;
-  
+
   setLoginResponse: (payload: LoginResponse) => void;
 }
 
 export default function SignupFormDemo({
   setView,
   setLoginResponse,
-  
+
 }: LoginFormProps) {
-  const { login,sendOTP } = useAuthContext();
+  const { login, sendOTP } = useAuthContext();
   const [loader, setLoader] = useState(false);
   const { toast } = useToast();
   const {
     register,
     handleSubmit,
-    
+
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(LoginSchema),
@@ -44,7 +44,7 @@ export default function SignupFormDemo({
     try {
       setLoader(true);
       const res = await login(data);
-     
+
 
       if (typeof res !== "boolean" && res.status) {
         const response = await sendOTP({
@@ -114,13 +114,13 @@ export default function SignupFormDemo({
             onClick={() => {
               //
             }}
-           
+
             width="w-full"
             type="submit"
             loading={loader}
           />
           <div className="mt-2 flex flex-col items-center justify-center text-black sm:flex-row">
-            <p>I don't have an account, </p>
+            <p>{`I don't have an account, `}</p>
             <Link href="signup" className="ml-1 underline hover:text-red-500">
               signup
             </Link>
