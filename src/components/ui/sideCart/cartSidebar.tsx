@@ -174,7 +174,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
 
           {/* Confirm Order Button */}
           <Button
-            
+            disabled={items && items[0] ? false : true}
             onClick={() => {
               if (!isOpenAlert) {
                 // Check if alert is not already open
@@ -260,8 +260,8 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         </div> */}
       </div>
       <AlertBox
-        title="Complete Your Order"
-        description="Are you sure you want to proceed with the checkout? Please review your cart items and ensure everything is correct before finalizing your purchase."
+        title="Confirmation"
+        description="Are you sure you want to proceed with the checkout?"
         open={isOpenAlert}
         onClose={() => setIsOpenAlert(false)}
         onContinue={() => goToCheckout()}

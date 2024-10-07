@@ -94,8 +94,10 @@ const CategoriesSidebar = () => {
   
     // Build the tree structure
     categories.forEach((category) => {
-      if (category.category_name === 'Impact Pulse' && category.parent == 0) {
+    
+      if (category.parent == 0 && category.outlet == 223) {
         // Root category
+        console.log(category)
         const rootCategory = categoryMap[category.id];
         if (rootCategory) {
           tree.push(rootCategory);

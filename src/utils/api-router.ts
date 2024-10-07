@@ -21,7 +21,7 @@ export const apiRouter = async <T extends keyof typeof API_TYPE_MAPPER>(
   },
 ) => {
   const headers = new Headers(init?.headers);
-  const token = localStorageClient().getItem("TOKEN") ? localStorageClient().getItem("TOKEN") : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzI3LCJwcm9maWxlX2lkIjoxNzYsIm91dGxldF9pZCI6MjIxLCJmaXJzdF9uYW1lIjoiSW1wYWN0IiwibGFzdF9uYW1lIjoiQWRtaW4iLCJ0ZW1wbGF0ZV9pZCI6NSwicGFzc3BvcnRfbm8iOm51bGwsImRhdGVfb2ZfYmlydGgiOm51bGwsImdlbmRlciI6bnVsbCwiZGVzaWduYXRpb25faWQiOls4LDgsOCw4LDgsOF0sImVtYWlsIjoic2hhbXMucWF6aUBpaXRzb2xzLmNvbSIsInBob25lX251bWJlciI6bnVsbCwic2lnbl91cCI6bnVsbCwiY3JlYXRlZF9hdCI6bnVsbCwic2Vzc2lvbl9pZCI6OTk5OCwic2FsdCI6bnVsbCwiaWF0IjoxNzIzMDA0Nzg4fQ.v53sa7lIH1NnkxnYhxIwTeQIt1juzSwKEVQ3Z_cq-Nw';
+  const token = localStorageClient().getItem("TOKEN") ? localStorageClient().getItem("TOKEN") : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM';
 
   if (!options?.skipAuthorization && token) {
     headers.set("Authorization",`Bearer ${token}`);

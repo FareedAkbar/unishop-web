@@ -157,7 +157,7 @@ const MyComponent = () => {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzI3LCJwcm9maWxlX2lkIjoxNzYsIm91dGxldF9pZCI6MjIxLCJmaXJzdF9uYW1lIjoiSW1wYWN0IiwibGFzdF9uYW1lIjoiQWRtaW4iLCJ0ZW1wbGF0ZV9pZCI6NSwicGFzc3BvcnRfbm8iOm51bGwsImRhdGVfb2ZfYmlydGgiOm51bGwsImdlbmRlciI6bnVsbCwiZGVzaWduYXRpb25faWQiOls4LDgsOCw4LDgsOF0sImVtYWlsIjoic2hhbXMucWF6aUBpaXRzb2xzLmNvbSIsInBob25lX251bWJlciI6bnVsbCwic2lnbl91cCI6bnVsbCwiY3JlYXRlZF9hdCI6bnVsbCwic2Vzc2lvbl9pZCI6OTk5OCwic2FsdCI6bnVsbCwiaWF0IjoxNzIzMDA0Nzg4fQ.v53sa7lIH1NnkxnYhxIwTeQIt1juzSwKEVQ3Z_cq-Nw`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM`,
           },
           body: JSON.stringify({ items: requestOptions, member_id: null }), // Send the payload as JSON
         },
@@ -224,7 +224,7 @@ const MyComponent = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://api.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
+        "https://ipos-dev.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
@@ -294,7 +294,7 @@ const MyComponent = () => {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzMzLCJwcm9maWxlX2lkIjoxODIsIm91dGxldF9pZCI6MjIxLCJmaXJzdF9uYW1lIjoiUHVsc2VlIiwibGFzdF9uYW1lIjoiQ2FzaGllciIsInRlbXBsYXRlX2lkIjo1LCJwYXNzcG9ydF9ubyI6bnVsbCwiZGF0ZV9vZl9iaXJ0aCI6bnVsbCwiZ2VuZGVyIjpudWxsLCJkZXNpZ25hdGlvbl9pZCI6WzRdLCJlbWFpbCI6InB1bHNlY2FzaGllcjFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMDQ1MDQ1Njc4OTMiLCJzaWduX3VwIjoiMjAyMy0xMS0yOVQxOTo1NzoxNy4wMDBaIiwiY3JlYXRlZF9hdCI6IjIwMjMtMTEtMjlUMTk6NTc6MTcuMDAwWiIsInNlc3Npb25faWQiOjM2MjcsInNhbHQiOm51bGwsImlhdCI6MTcxMDQ5NzkyMn0.wX3RQZzOiNkWWdMUWFCdl1B3j1oTjIg7DLZqDqFZR6w`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },

@@ -19,17 +19,17 @@ const Button: React.FC<ButtonProps> = ({
   color = "bg-red-500",
   height = "h-full",
   width = "w-fit",
-  disabled = false,
+  disabled,
   className = "", // Default value for className
   type = "button", // Default value for type
 }) => {
-  
+ 
   return (
     <button
       type={type} // Use the type prop here
       onClick={onClick}
       className={`${width} ${height} ${color} flex items-center justify-center rounded-md px-4 py-2 font-medium text-white transition-opacity duration-300 hover:opacity-90 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70 sm:px-6 sm:py-3 ${className}`}
-      disabled={loading ?? disabled}
+      disabled={disabled ?? loading ? true : false}
       style={{ minWidth: loading ? `${title.length * 11}px` : "auto" }} // Ensures consistent width
     >
       {loading ? (
