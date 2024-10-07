@@ -121,16 +121,16 @@ const MyComponent = () => {
 
   // Handle add to cart
 
-  const handleSearch = () => {
-    fetchData(searchValue);
+  const handleSearch = async () => {
+    await fetchData(searchValue);
   };
 
-  const handleDetail = (item: SpecialBookType) => {
-    let title = item.title.slice(0, 10);
+  const handleDetail = async (item: SpecialBookType) => {
+    const title = item.title.slice(0, 10);
     const newItem = { ...item, title: title };
     setBookSearched(newItem);
     console.log(newItem);
-    fetchDetail(item.link);
+    await fetchDetail(item.link);
     setShowCheckout(true);
   };
 

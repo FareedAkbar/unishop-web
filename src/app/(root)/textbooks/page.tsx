@@ -100,7 +100,7 @@ const MyComponent = () => {
   useEffect(() => {
     if (!category) return;
     if (!detail) return;
-   
+
 
     const catId = category?.find((item) => item.id == parseInt(detail));
 
@@ -204,8 +204,8 @@ const MyComponent = () => {
     }
   };
 
-    
- 
+
+
 
   return (
     <div>
@@ -216,14 +216,14 @@ const MyComponent = () => {
           </div>
           <div className="flex flex-col px-4 py-10 lg:fixed lg:left-64 lg:right-0">
             <div className="m-4 flex items-center justify-end gap-4">
-              <Select onValueChange={(x)=>handleChangeSubCategory(x)}>
+              <Select onValueChange={(x: string) => handleChangeSubCategory(x)}>
                 <SelectTrigger className="w-72">
                   <SelectValue placeholder="" />
                 </SelectTrigger>
                 <SelectContent >
                   {subCategory?.map((item) => (
                     <SelectItem key={item.id} value={item.id.toString()} >
-                     {item.category_name}
+                      {item.category_name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -237,21 +237,21 @@ const MyComponent = () => {
             <ScrollArea className="h-screen pb-32">
               <div className="flex flex-wrap justify-between">
                 {loader
-                  ? [...Array(6)].map((_, index) => (
-                      <div key={index} className="w-1/3 p-2">
-                        <ProductCardSkeleton />
-                      </div>
-                    ))
+                  ? Array.from({ length: 6 }, (_, index) => (
+                    <div key={index} className="w-1/3 p-2">
+                      <ProductCardSkeleton />
+                    </div>
+                  ))
                   : data?.map((item: DataCart) => (
-                      <ProductCard
-                        key={item.book_id}
-                        product={item}
-                        showAddToCart={!isItemInCart(item.item_id)}
-                        onAddToCart={() => handleAddToCart(item)}
-                        onRemoveFromCart={() => handleRemoveFromCart(item)}
-                        openDetail={() => openDetail(item)}
-                      />
-                    ))}
+                    <ProductCard
+                      key={item.book_id}
+                      product={item}
+                      showAddToCart={!isItemInCart(item.item_id)}
+                      onAddToCart={() => handleAddToCart(item)}
+                      onRemoveFromCart={() => handleRemoveFromCart(item)}
+                      openDetail={() => openDetail(item)}
+                    />
+                  ))}
               </div>
             </ScrollArea>
             {/* <div className="mt-4 flex justify-between">
@@ -377,8 +377,8 @@ const MyComponent = () => {
                 </span>
               </div>
               {itemDetail?.item_id &&
-              !isItemInCart(itemDetail.item_id) &&
-              itemDetail?.stock?.quantity ? (
+                !isItemInCart(itemDetail.item_id) &&
+                itemDetail?.stock?.quantity ? (
                 <button
                   className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
                   onClick={() => handleAddToCart(itemDetail)}

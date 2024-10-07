@@ -7,14 +7,14 @@ import { toast } from "~/hooks/use-toast";
 
 
 interface Props {
-  
+
   loginResponse?: LoginResponse | null
 }
 
-const OTPVerificationForm = ({ loginResponse}: Props) => {
+const OTPVerificationForm = ({ loginResponse }: Props) => {
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
   const [loader, setLoader] = useState(false);
-  const {verifyOTP,sendOTP} = useAuthContext();
+  const { verifyOTP, sendOTP } = useAuthContext();
   const router = useRouter();
 
   // Handle OTP input change
@@ -32,11 +32,11 @@ const OTPVerificationForm = ({ loginResponse}: Props) => {
     }
   };
 
-  const handleVerify =  async () => {
+  const handleVerify = async () => {
     // Your verification logic here
     console.log("Verifying OTP:", otp.join(""));
     console.log(otp)
-    if(otp && otp.join("").length == 4){
+    if (otp && otp.join("").length == 4) {
       try {
         const x = {
           customer_id: loginResponse?.data.customer_id, email: loginResponse?.data.email, otp: parseInt(otp.join(""))
@@ -44,7 +44,7 @@ const OTPVerificationForm = ({ loginResponse}: Props) => {
         setLoader(true)
         const res = await verifyOTP(x);
         setLoader(false)
-    
+
         // Type guard to ensure res is LoginResponse
         if (typeof res !== "boolean" && res.status) {
           console.log(res)
@@ -58,16 +58,16 @@ const OTPVerificationForm = ({ loginResponse}: Props) => {
           variant: "destructive",
           description: errorMessage, // Use the error message from the thrown error
         });
-        
+
       }
-    }else{
+    } else {
       toast({
         title: "Invalid OTP",
         variant: "destructive",
         description: "Please enter 4 digit OTP", // Use the error message from the thrown error
       });
     }
-   
+
 
 
   };
@@ -75,21 +75,21 @@ const OTPVerificationForm = ({ loginResponse}: Props) => {
   const ResentOtp = async () => {
     try {
       setLoader(true);
-      
-        const response = await sendOTP({
-          customer_id: loginResponse?.data.customer_id,
-          email: loginResponse?.data.email,
+
+      const response = await sendOTP({
+        customer_id: loginResponse?.data.customer_id,
+        email: loginResponse?.data.email,
+      });
+      // Type guard to ensure res is LoginResponse
+      if (typeof response !== "boolean" && response.status) {
+        toast({
+          title: "OTP Resend",
+          variant: "default",
         });
-         // Type guard to ensure res is LoginResponse
-         if (typeof response !== "boolean" && response.status) {
-          toast({
-            title: "OTP Resend",
-            variant: "default",
-          });
-        }
-        
-        setLoader(false);
-      
+      }
+
+      setLoader(false);
+
     } catch (err) {
       const errorMessage =
         (err as Error).message || "An unknown error occurred";
@@ -128,12 +128,12 @@ const OTPVerificationForm = ({ loginResponse}: Props) => {
 
         {/* Resend Link */}
         <div className="text-center mb-4">
-          <p  className="text-gray-600">
-            Don't Receive Code Yet?{" "}
-            <a  href="#" onClick={()=> {
-              !loader ? ResentOtp() :
-              ''
-            } } className="text-red-500 underline">
+          <p className="text-gray-600">
+            {`Don't Receive Code Yet?`}{" "}
+            <a href="#" onClick={async () => {
+              await (!loader ? ResentOtp() :
+                '')
+            }} className="text-red-500 underline">
               Resend
             </a>
           </p>
