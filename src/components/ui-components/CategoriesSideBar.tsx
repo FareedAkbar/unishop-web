@@ -124,7 +124,7 @@ const CategoriesSidebar = () => {
     setHeaderCategory(categoryTree ? categoryTree : null);
 
   }, [category])
-
+    console.log(headerCategory)
 
 
   useEffect(() => {
@@ -192,7 +192,7 @@ const CategoriesSidebar = () => {
                     </a>
                   ))}
                 {item.label === "Text Book" &&
-                  headerCategory?.[0]?.children?.map(
+                  headerCategory?.map(
                     (subItem) =>
                     (
                       <a
