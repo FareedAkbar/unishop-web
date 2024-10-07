@@ -40,9 +40,7 @@ const Page = () => {
 const BooksPage = () => {
   return (
     <Suspense fallback={<Spinner />}>
-
       <Page />
-
     </Suspense>
   );
 };

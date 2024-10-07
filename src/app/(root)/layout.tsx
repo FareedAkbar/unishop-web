@@ -1,3 +1,4 @@
+import Footer from "~/components/footer";
 import Header from "~/components/ui-components/Header";
 
 export default function RootLayout({
@@ -7,6 +8,7 @@ export default function RootLayout({
     <>
       <Header />
       {children}
+      <Footer/>
     </>
   );
 }

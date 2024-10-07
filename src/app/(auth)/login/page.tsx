@@ -23,15 +23,15 @@ const MyComponent = () => {
 
   const tabs = [
     {
-      title: "Booknet Guest Login",
+      title: "Guest Login",
       value: "customerLogin",
-      content: <BooknetFormLogin disabled={activeTabeName == 'uowLogin' ? true: false} push={true} goTo="/" title="Login as a booknet guest" />,
+      content: <BooknetFormLogin push={true} goTo="/" title="Login as a booknet guest" />,
     },
     {
       title: "UOW Login",
       value: "uowLogin",
       content: (
-        <LoginForm setView={setView} disabled={activeTabeName == 'customerLogin' ? true: false} setLoginResponse={setLoginResponse} />
+        <LoginForm setView={setView} setLoginResponse={setLoginResponse} />
       ),
     },
   ];
@@ -56,7 +56,7 @@ const MyComponent = () => {
             >
               <FaArrowLeft className="text-black" />
             </button>
-            <Tabs tabs={tabs} setActiveTabeName={(val)=>setActiveTabeName(val)} activeTab={activeTabeName}/>
+            <Tabs tabs={tabs} />
           </div>
         )}
         

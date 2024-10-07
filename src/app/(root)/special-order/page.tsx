@@ -259,7 +259,7 @@ const MyComponent = () => {
           <>
             <div className="flex flex-col items-center justify-center pt-32">
               <h1 className="text-md mb-6 text-center font-semibold text-gray-800 md:text-3xl">
-                Discover Your Next Favorite Book
+                Discover Your Next Favourite Book
               </h1>
               <div className="w-full">
                 <SearchInput
@@ -366,7 +366,7 @@ const MyComponent = () => {
                 </span>
 
                 <button
-                  className="mt-4 flex items-center space-x-1 self-center rounded-full bg-green-500 px-2 py-1 text-xs font-bold text-white hover:bg-green-600 dark:bg-zinc-800"
+                  className="mt-4 flex items-center space-x-1 self-center rounded bg-green-500 p-2 text-xs font-bold text-white hover:bg-green-600 dark:bg-zinc-800"
                   onClick={() => handleCreateOrder(dataDetail)}
                 >
                   <FaCartPlus className="text-lg" />
@@ -375,7 +375,7 @@ const MyComponent = () => {
               </div>
 
               {/* Tabs Section */}
-              <div className="z-10 mb-4 mt-10 lg:w-1/2 lg:px-10">
+              <div className=" mb-4 mt-10 lg:w-1/2 lg:px-10">
                 {showCheckout && <Tabs tabs={tabs} />}
               </div>
             </div>

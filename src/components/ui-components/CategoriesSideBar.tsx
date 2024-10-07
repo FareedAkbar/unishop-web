@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
@@ -15,12 +15,14 @@ interface SubcategoryListProps {
   subItems: Category[];
   openCategory: string | null;
   toggleCategory: (label: string) => void;
+  isOpen: boolean; // Track if this subcategory is open
 }
 
 const SubcategoryList = ({
   subItems,
   openCategory,
   toggleCategory,
+  isOpen,
 }: SubcategoryListProps) => {
   return (
     <div className="ml-4">
@@ -47,6 +49,7 @@ const SubcategoryList = ({
                 subItems={subItem.subItems}
                 openCategory={openCategory}
                 toggleCategory={toggleCategory}
+                isOpen={openCategory === subItem.label}
               />
             </div>
           )}
@@ -57,18 +60,15 @@ const SubcategoryList = ({
 };
 
 const CategoriesSidebar = () => {
-  // State to keep track of open category for subcategories
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const { genre, checkoutData, category } = useAuthContext();
   const router = useRouter();
   const [headerCategory, setHeaderCategory] = useState<CategoryTreeNode[] | null>(null);
   // Toggle category function
+  const subcategoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({}); // Create a ref for subcategories
+
   const toggleCategory = (label: string) => {
-    if (openCategory === label) {
-      setOpenCategory(null); // Close if already open
-    } else {
-      setOpenCategory(label); // Open the selected category
-    }
+    setOpenCategory((prev) => (prev === label ? null : label));
   };
  
   
@@ -125,6 +125,25 @@ const CategoriesSidebar = () => {
  
   
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const isSubcategoryOpen = Object.keys(subcategoryRefs.current).some(
+        (key) =>
+          subcategoryRefs.current[key]?.contains(event.target as Node) &&
+          openCategory === key,
+      );
+
+      if (!isSubcategoryOpen) {
+        setOpenCategory(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside); // Clean up the event listener
+    };
+  }, [openCategory]);
+
   return (
     <aside className="static left-0 w-64 border-r p-4">
       <h2 className="text-lg font-bold">Categories</h2>
@@ -154,7 +173,12 @@ const CategoriesSidebar = () => {
             </button>
 
             {openCategory === item.label && (
-              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border border-gray-200 bg-white p-4 shadow-lg">
+              <div
+                ref={(el) => {
+                  if (el) subcategoryRefs.current[item.label] = el; // Assign ref without returning
+                }}
+                className="absolute left-10 top-8 z-50 w-60 rounded-xl border border-gray-200 bg-white p-4 shadow-lg"
+              >
                 {item.label === "Books" &&
                   genre?.map((subItem) => (
                     <a
@@ -183,6 +207,7 @@ const CategoriesSidebar = () => {
                     subItems={item.subItems}
                     openCategory={openCategory}
                     toggleCategory={toggleCategory}
+                    isOpen={openCategory === item.label}
                   />
                 )}
               </div>

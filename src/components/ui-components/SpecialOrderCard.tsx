@@ -27,7 +27,7 @@ export default function SpecialOrderCard({
   function getPriceRange(books: SpecialBookType) {
     const price = parseFloat(books.price.replace(/[^0-9.-]+/g, ""));
     // Return a range of ±5 AUD
-    return `$${(price - 5).toFixed(2)} - $${(price + 5).toFixed(2)} AUD`;
+    return `$${(price - 5).toFixed(2)} - $${(price + 5).toFixed(2)}`;
   }
 
   return (
