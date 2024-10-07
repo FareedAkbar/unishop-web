@@ -211,7 +211,7 @@ const MyComponent = () => {
           </div>
           <div className="flex flex-col px-4 py-10 lg:fixed lg:left-64 lg:right-0">
             <div className="m-4 flex items-center justify-end gap-4">
-              {subCategory && (
+              {subCategory && subCategory[0] && (
                 <Select
                   onValueChange={(x: string) => handleChangeSubCategory(x)}
                 >
