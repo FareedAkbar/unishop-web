@@ -46,17 +46,17 @@ const OrdersTable = ({
   return (
     <Table className={`rounded-lg ${title == "orders" ? "bg-red-100" : 'bg-blue-200'}`}>
       {/* <TableCaption>{title ? title : 'A list of your recent Special Orders.'}</TableCaption> */}
-      <TableHeader>
+      <TableHeader className={`rounded-lg ${title == "orders" ? 'bg-blue-200' : "bg-red-100"}`}>
         <TableRow>
-          <TableHead>Order Status</TableHead>
+          <TableHead className="text-zinc-950">Order Status</TableHead>
 
-          <TableHead>Price</TableHead>
-          <TableHead>Created</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead className="text-zinc-950">Price</TableHead>
+          <TableHead className="text-zinc-950">Created</TableHead>
+          <TableHead className="text-right text-zinc-950">Amount</TableHead>
           {title == "specialOrders" ? (
             <>
-              <TableHead className="text-center">items</TableHead>
-              <TableHead className="text-center">Action</TableHead>
+              <TableHead className="text-center text-zinc-950">items</TableHead>
+              <TableHead className="text-center text-zinc-950">Action</TableHead>
             </>
           ) : (
             ""
