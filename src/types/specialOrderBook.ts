@@ -62,7 +62,7 @@ interface SpecialOrderItem {
 
 interface SpecialOrderPayload {
     order_type?: number;
-    online_order_type?: boolean;
+    online_order_type?: number;
     tracking_id?: string;
     completed_date?: string;
     started?: string;

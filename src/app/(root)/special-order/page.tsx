@@ -27,6 +27,7 @@ import type { CheckoutForm as checkoutFormValue } from "~/types/checkoutForm";
 import { formatDate, formatDateTime } from "~/utils/dateAndTime";
 import { useToast } from "~/hooks/use-toast";
 import { generateOTP } from "~/utils/generateOTP";
+import { Tabs } from "~/components/ui/tabs";
 
 interface ApiResponse {
   // meta: PaginationData; // Adjust based on your actual structure
@@ -123,11 +124,10 @@ const MyComponent = () => {
   };
 
   const handleDetail = (item: SpecialBookType) => {
-
-    let title = item.title.slice(0,10)
-    const newItem = {...item, title: title}
+    let title = item.title.slice(0, 10);
+    const newItem = { ...item, title: title };
     setBookSearched(newItem);
-    console.log(newItem)
+    console.log(newItem);
     fetchDetail(item.link);
     setShowCheckout(true);
   };
@@ -192,7 +192,7 @@ const MyComponent = () => {
     const newData = {
       tracking_id: generateOTP(12).toString(),
       order_type: 2,
-      online_order_type: true,
+      online_order_type: 1,
       order_status: 66,
       completed_date: formatDate(date),
       started: formatDateTime(date),
@@ -216,6 +216,28 @@ const MyComponent = () => {
       console.error("Failed to load data:", error);
     }
   };
+
+  const tabs = [
+    {
+      title: "Checkout",
+      value: "checkout",
+      content: (
+        <CheckoutForm
+          push={false}
+          handleData={(d) => handleCheckoutSubmit(d)}
+        />
+      ),
+    },
+    {
+      title: "Booknet Account",
+      value: "booknetForm",
+      content: <BooknetForm
+      push={false}
+      handleData={(d) => handleCheckoutSubmit(d)}
+      goTo="/"
+    />,
+    },
+  ];
 
   return (
     <div>
@@ -367,33 +389,12 @@ const MyComponent = () => {
               </div>
             </div>
             <div className="mb-4 flex flex-col justify-center">
-              {showCheckout && view == "checkout" ? (
-                <div className="col-span-2 grid">
-                  <CheckoutForm
-                    push={false}
-                    handleData={(d) => handleCheckoutSubmit(d)}
-                  />
-                </div>
-              ) : (
-                <BooknetForm
-                  push={false}
-                  handleData={(d) => handleCheckoutSubmit(d)}
-                  goTo="/"
-                />
-              )}
-              <div className="mt-5 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
-              <div className="mt-2 flex justify-center text-black hover:text-red-400">
-                <div
-                  className="cursor-pointer hover:text-red-500"
-                  onClick={() =>
-                    setView(view == "checkout" ? "booknetForm" : "checkout")
-                  }
-                >
-                  {view == "checkout"
-                    ? "I already have booknet account"
-                    : "I don't have booknet account yet"}
-                </div>
+              {showCheckout && (
+                <div className="z-10 w-full">
+                <Tabs tabs={tabs} />
               </div>
+              )}
+             
             </div>
           </div>
         )}

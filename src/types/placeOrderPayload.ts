@@ -27,7 +27,7 @@ interface OrderItem {
 
 interface placeOrderPayload {
   order_type: number;
-  online_order_type: boolean;
+  online_order_type: number;
   outlet_id: number;
   // tracking_id: string;
   order_status: number;
