@@ -101,8 +101,8 @@ const MyComponent = () => {
           <div className="z-10 w-full">
             <Tabs tabs={tabs} />
           </div>
-          <div className="z-10 h-2/3 pt-10">
-            <ScrollArea className="h-2/3 flex-1 p-4">
+          <div className="z-10 h-screen pt-10">
+            <ScrollArea className="lg:h-4/5 flex-1 p-4">
               {items.map((item: DataCart) => (
                 <CartItem
                   key={item.item_id}
