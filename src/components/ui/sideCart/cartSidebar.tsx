@@ -120,7 +120,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         {/* Cart Sidebar */}
         {/* Cart Header */}
         <div className="flex items-center justify-between border-b bg-gray-100 p-4">
-          <h2 className="text-xl font-semibold">Your Basket</h2>
+          <h2 className="text-xl font-semibold">Your Cart</h2>
           <button
             onClick={onClose}
             className="absolute right-4 top-4 text-gray-600 hover:text-gray-900"

@@ -365,13 +365,13 @@ const MyComponent = () => {
                   {dataDetail?.author}
                 </span>
 
-                <button
+                {/* <button
                   className="mt-4 flex items-center space-x-1 self-center rounded bg-green-500 p-2 text-xs font-bold text-white hover:bg-green-600 dark:bg-zinc-800"
                   onClick={() => handleCreateOrder(dataDetail)}
                 >
                   <FaCartPlus className="text-lg" />
                   <div className="pl-2">Make Special Order</div>
-                </button>
+                </button> */}
               </div>
 
               {/* Tabs Section */}

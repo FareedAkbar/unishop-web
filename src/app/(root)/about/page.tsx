@@ -2,7 +2,6 @@
 
 // import Header from "~/components/header";
 import { Suspense } from "react";
-import AboutImage from "../../../public/homePage/About_us.jpg";
 import { CardContainer, CardItem } from "~/components/ui/3d-card";
 import Image from "next/image";
 const MyComponent = () => {
@@ -18,7 +17,7 @@ const MyComponent = () => {
           <CardContainer className="inter-var w-full">
           <CardItem translateZ="100" className="mt-4 w-full">
                         <Image
-                          src={AboutImage}
+                          src={'/homePage/About_us.jpg'}
                           objectFit="contain"
                           className="h-auto w-full rounded-xl object-cover group-hover/card:shadow-xl"
                           alt="thumbnail"

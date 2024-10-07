@@ -30,10 +30,9 @@ const Header = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSection, setActiveSection] = useState("home");
-  const [headerCategory, setHeaderCategory] = useState<CategoryTreeNode[] | null>(null);
+
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for hamburger menu
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null); // Ref for navitem's sub-items dropdown
 
   const isFirstRender = useRef(true);
   const userDropdownRef = useRef<HTMLDivElement | null>(null); // Reference for user dropdown
@@ -72,12 +71,6 @@ const Header = () => {
         !userDropdownRef.current.contains(event.target as Node)
       ) {
         setUserDropdownOpen(false);
-      }
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setOpenDropdown(null);
       }
     };
 
@@ -153,82 +146,12 @@ const Header = () => {
         console.log(err);
       });
   }, []);
-  type Category = {
-    id: number;
-    outlet: number;
-    category_name: string;
-    category_description: string;
-    deleted: number;
-    parent: number;
-    media_id: number;
-    booknet: number;
-  };
-  
-  type CategoryTreeNode = {
-    id: number;
-    outlet: number;
-    category_name: string;
-    category_description: string;
-    deleted: number;
-    media_id: number;
-    booknet: number;
-    children?: CategoryTreeNode[];
-  };
-  
-  function buildCategoryTree(categories: Category[]): CategoryTreeNode[] {
-    const categoryMap: { [key: number]: CategoryTreeNode } = {};
-    const tree: CategoryTreeNode[] = [];
-  
-    // Initialize the map
-    categories.forEach((category) => {
-      categoryMap[category.id] = {
-        id: category.id,
-        outlet: category.outlet,
-        category_name: category.category_name,
-        category_description: category.category_description,
-        deleted: category.deleted,
-        media_id: category.media_id,
-        booknet: category.booknet,
-        children: [],
-      };
-    });
-  
-    // Build the tree structure
-    categories.forEach((category) => {
-      if (category.parent === 0) {
-        // Root category
-        const rootCategory = categoryMap[category.id];
-        if (rootCategory) {
-          tree.push(rootCategory);
-        }
-      } else {
-        // Find parent and add this category to its children
-        const parent = categoryMap[category.parent];
-        if (parent) {
-          const childCategory = categoryMap[category.id];
-          if (childCategory) {
-            parent.children!.push(childCategory);
-          }
-        }
-      }
-    });
-  
-    return tree;
-  }
-  
-  // Usage Example
-  useEffect(()=>{
-    if(!category) return
-    const categoryTree = buildCategoryTree(category ? category : []);
-    setHeaderCategory(categoryTree ? categoryTree : null);
-  },[category])
  
-  
   
   
 
   const toggleSidebar = () => {
-    console.log("hit");
+    
     setIsSidebarOpen((prev) => !prev);
   };
 
@@ -416,7 +339,7 @@ const Header = () => {
                         ? toggleDropdown(item.label)
                         : handleSectionClick(item.label.toLowerCase())
                     }
-                    className={`relative flex items-center ${item.subItems ? "cursor-pointer" : ""} ${activeSection === item.label.toLowerCase() ? "text-black underline" : ""}`}
+                    className={`relative flex items-center ${item.subItems ? "cursor-pointer" : ""}`}
                   >
                     <span
                       className={`activeSection === item.label.toLowerCase() ? 'underline text-black' : ''`}
@@ -435,10 +358,7 @@ const Header = () => {
                   </button>
                   {/* Render dropdown menu if subItems exist */}
                   {item.subItems && openDropdown === item.label && (
-                    <div
-                      className="absolute z-10 mt-1 w-40 bg-white rounded shadow-md"
-                      ref={dropdownRef}
-                    >
+                    <div className="absolute z-10 mt-1 w-40 bg-white shadow-md">
                       {item.subItems.map((subItem) => (
                         <a
                           key={subItem.label}
@@ -480,10 +400,10 @@ const Header = () => {
               </div>
               <div className="relative">
                 <div
-                  className="cursor-pointer rounded-full bg-red-500 p-1"
+                  className="cursor-pointer rounded-full bg-red-500"
                   onClick={toggleUserDropdown}
                 >
-                  <MdOutlinePersonOutline className="text-xl text-white" />
+                  <MdOutlinePersonOutline className="text-2xl text-white" />
                 </div>
                 {isUserDropdownOpen && (
                   <div

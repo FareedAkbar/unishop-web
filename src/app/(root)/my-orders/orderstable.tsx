@@ -17,12 +17,13 @@ import {
   AccordionTrigger,
 } from "~/components/ui/accordion";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { Button } from "~/components/ui/button";
+
 import {
   GetSpecialOrder,
   OrderStatus,
   SpecialOrderItem,
 } from "~/types/getSpecialBackOrders";
+import Button from "~/components/ui-components/Button";
 interface OrdersData {
   data: GetSpecialOrder[];
   orderStatus: OrderStatus[];
@@ -127,9 +128,10 @@ const OrdersTable = ({
                   <Button
                     onClick={() => handlePayment(invoice)}
                     disabled={invoice?.special_order_items?.length == 0}
-                  >
-                    Payment
-                  </Button>
+                    title="Payment"
+                  />
+                    
+                  
                 )}
               </TableCell>
             ) : (

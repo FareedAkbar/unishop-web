@@ -84,7 +84,7 @@ const MyComponent = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://ipos-dev.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
+        "https://api.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
@@ -425,7 +425,7 @@ const MyComponent = () => {
       hovering: false,
       content: (
         <OrdersTable
-          disabled={activeTabName == "specialOrders" ? false : true}
+          
           handlePayment={(x) => handlePayment(x)}
           data={dataSpecialOrders}
           orderStatus={orderStatus}
@@ -439,7 +439,7 @@ const MyComponent = () => {
       hovering: false,
       content: (
         <OrdersTable
-          disabled={activeTabName == "orders" ? false : true}
+         
           handlePayment={(x) => handlePayment(x)}
           data={dataOrders}
           orderStatus={orderStatus}

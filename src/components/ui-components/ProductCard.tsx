@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useState } from "react"; // Import useState
 import { AiOutlineHeart, AiOutlineEye } from "react-icons/ai";
 import { FaStar } from "react-icons/fa6";
-import DataCart from "~/types/book";
+import type DataCart from "~/types/book";
 
 interface ProductProps {
   showAddToCart?: boolean;
@@ -23,16 +23,16 @@ const ProductCard = ({
   openDetail,
 }: ProductProps) => {
   return (
-    <div className="group relative flex w-1/2 flex-grow-0 flex-shrink-0 flex-col p-2 sm:w-1/2 sm:p-4 md:w-1/3 lg:w-72 hover:scale-110 transition-transform duration-300">
+    <div className="group relative flex w-1/2 flex-shrink-0 flex-grow-0 flex-col p-2 transition-transform duration-300 hover:scale-110 sm:w-1/2 sm:p-4 md:w-1/3 lg:w-72">
       <div className="relative flex h-40 items-center justify-center rounded-sm bg-gray-200 sm:h-48 lg:h-64">
-        <div className="absolute left-2 top-2 z-20 rounded bg-red-500 px-1 py-0.5 text-[6px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1 sm:text-sm">
+        <div className="z-15 absolute left-2 top-2 rounded bg-red-500 px-1 py-0.5 text-[6px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1 sm:text-sm">
           {/* -
           {Math.floor(
             ((product.originalPrice - product.price) / product.originalPrice) *
             100,
           )}
           % */}
-          {product?.item_sale_price}
+          {product?.item_sale_price ? product?.item_sale_price : 26}
         </div>
         <Image
           src={
@@ -56,21 +56,25 @@ const ProductCard = ({
             <AiOutlineEye />
           </button>
         </div>
-        <button
-          onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
-          className={`absolute bottom-0 z-20 mt-4 w-full rounded-b-md py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${
-            !showAddToCart ? "bg-red-500" : "bg-black"
-          } hidden group-hover:block`}
-        >
-          {!showAddToCart ? "Remove From Cart" : "Add To Cart"}
-        </button>
+        {product?.item_sale_price ? (
+          <button
+            onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
+            className={`absolute bottom-0 z-20 mt-4 w-full rounded-b-md py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${
+              !showAddToCart ? "bg-red-500" : "bg-black"
+            } hidden group-hover:block`}
+          >
+            {!showAddToCart ? "Remove From Cart" : "Add To Cart"}
+          </button>
+        ) : (
+          ""
+        )}
       </div>
       <h2 className="mt-2 truncate text-sm font-bold sm:mt-4 sm:text-base lg:text-lg">
         {product?.book_title}
       </h2>
       <div className="mt-1 flex gap-1 sm:mt-2 sm:gap-2">
         <span className="text-sm font-bold text-red-500 sm:text-lg">
-          ${product?.item_sale_price}
+          ${product?.item_sale_price ? product?.item_sale_price : 26}
         </span>
         {/* <span className="text-sm text-gray-500 line-through sm:text-lg">
           ${product.originalPrice}

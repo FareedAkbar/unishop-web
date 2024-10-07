@@ -24,7 +24,76 @@ interface ProductsSectionProps {
   headingPartOne: string; // New prop for the first part of the heading
   headingPartTwo: string; // New prop for the second part of the heading
 }
+const data = {
+  book_id: 28,
+  item_id: 2089,
+  quantity: 0,
+  genre_id: 1,
+  book_title: "The Great Gatsby",
+  subtitle: "new subtitle",
+  edition: "12",
+  author_first_name: "F. Scott",
+  author_last_name: "Fitzgerald",
+  book_ISBN: "9780743273565",
+  pages: 180,
+  hardcover: 1,
+  publisher_id: 1,
+  book_language: "English",
+  additional_notes:
+    "A novel set in the Jazz Age exploring themes of wealth, love, and the American Dream.",
+  outlet: 221,
+  media_id: 0,
+  item_name: "The Great Gatsby",
+  expiry_date: "2025-12-31 05:00:00",
+  barcode: "1234567890123",
 
+
+  deleted: 0,
+  item_sale_price: 25.99,
+  
+ 
+  items_type: 3,
+ 
+  SKU: "GATSBY-001",
+  SKU_title: "Gatsby Hardcover Edition",
+  tax_id: 5,
+  event_price: 20,
+  event_check: 1,
+  cost_price: "12.5000",
+  weighable: 0,
+  tax_exempted: 1,
+  stockable_item: 1,
+  readyMade: 1,
+
+  returnable: 1,
+  product_id: "PROD-12345",
+
+  genre: "Comedy",
+  description: "1 Chandler is the best example of a comedy person",
+  stock: {
+    suppliers: [],
+    quantity_check: false,
+    quantity: 0,
+    stock_entry: [],
+  },
+  media: [],
+  publisher: {
+    publisher_id: 1,
+    supplier_id: 370,
+    outlet_id: 221,
+    publisher_name: "Test Publisher without supplier and supplier Id",
+    address: "new address",
+    city: "Sydney",
+    state: "Sydney",
+    country: "AUS",
+    postal_code: "2222",
+    phone: "12345",
+    email: "2345",
+    website: "2345",
+    created_at: "2024-08-30T01:37:45.000Z",
+    updated_at: "2024-09-04T07:56:32.000Z",
+  },
+};
 const ProductsSection: React.FC<ProductsSectionProps> = ({
   products,
   targetDate,
@@ -135,7 +204,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
 
         <div className="mt-8 flex justify-center sm:mt-12">
           <Button
-            title="View all products"
+            title="View all"
             onClick={() => {
               // Add your onClick functionality here
             }}

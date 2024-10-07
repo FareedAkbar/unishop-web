@@ -39,7 +39,7 @@ export default function SpecialOrderCard({
       {/* Main Product Image Section */}
       <div className="relative flex h-40 items-center justify-center rounded-sm bg-gray-200 sm:h-48 lg:h-64">
         <Image
-          src="/images/bookicon.png" // Assuming placeholder book image
+          src="/images/products/product.png" // Assuming placeholder book image
           alt={item.title}
           layout="fill"
           objectFit="contain"
@@ -66,7 +66,7 @@ export default function SpecialOrderCard({
 
         {/* Conditional Button for Placing Order */}
         <button
-          onClick={() => alert("Place order")} // Replace with actual functionality
+          onClick={() => (openDetail ? openDetail() : "")} // Replace with actual functionality
           className="absolute bottom-0 z-20 mt-4 w-full rounded-b-md py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm bg-black hidden group-hover:block"
         >
           Place Order

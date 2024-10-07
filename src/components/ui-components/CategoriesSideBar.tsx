@@ -120,7 +120,7 @@ const CategoriesSidebar = () => {
     if(!category) return
     const categoryTree = buildCategoryTree(category ? category : []);
     setHeaderCategory(categoryTree ? categoryTree : null);
-    console.log(categoryTree)
+    
   },[category])
  
   

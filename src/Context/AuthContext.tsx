@@ -258,7 +258,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const updatedItems = newItems.filter(
       (item: DataCart) => item.item_id !== payload.item_id,
     );
-    console.log(updatedItems)
+    
     lsClient.setItem("CART_ITEM", updatedItems);
     setItems(updatedItems);
 
