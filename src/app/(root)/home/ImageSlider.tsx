@@ -9,14 +9,19 @@ interface ImageSliderProps {
 
 const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isFading, setIsFading] = useState(false); // State to trigger fade effect
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000);
+      setIsFading(true); // Start fading out before changing the image
+      setTimeout(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+        setIsFading(false); // Reset fade state after changing the image
+      }, 500); // Set timeout matching fade-out duration
+    }, 3500); // Adjusted timing to account for fade effect
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   return (
     <div className="flex flex-col pb-4 w-full lg:px-4">
@@ -38,14 +43,14 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
           </button>
         </div>
       </div>
-      <div >
+      <div className="relative">
         <Image
           src={images[currentImageIndex]!}
           alt={`Image ${currentImageIndex + 1}`}
           width={1000}
           height={1000}
-          objectFit="cover "
-          className="relative h-28 w-full sm:h-72 lg:h-[400px]"
+          objectFit="cover"
+          className={`relative h-28 w-full sm:h-72 lg:h-[400px] transition-opacity duration-500 ease-in-out ${isFading ? 'opacity-0' : 'opacity-100'}`}
         />
       </div>
       {/* Dots Indicator */}

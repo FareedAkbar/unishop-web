@@ -22,9 +22,9 @@ const MyComponent = () => {
 
   const tabs = [
     {
-      title: "Booknet Guest Login",
+      title: "Guest Login",
       value: "customerLogin",
-      content: <BooknetFormLogin push={true} goTo="/" title="Login as a booknet guest" />,
+      content: <BooknetFormLogin push={true} goTo="/" title="Login as a  guest" />,
     },
     {
       title: "UOW Login",

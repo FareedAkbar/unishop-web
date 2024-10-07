@@ -253,7 +253,7 @@ const MyComponent = () => {
           <>
             <div className="flex flex-col items-center justify-center pt-32">
               <h1 className="text-md mb-6 text-center font-semibold text-gray-800 md:text-3xl">
-                Discover Your Next Favorite Book
+                Discover Your Next Favourite Book
               </h1>
               <div className="w-full">
                 <SearchInput

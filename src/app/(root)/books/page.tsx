@@ -181,10 +181,10 @@ const MyComponent = () => {
     <div>
       <main className="flex min-h-screen flex-col items-center py-20">
         <div className="flex flex-row">
-          <div className="lg:flex-start hidden lg:fixed lg:w-72 lg:left-0 lg:flex lg:self-start">
+          <div className="lg:flex-start hidden lg:absolute lg:w-72 lg:left-0 lg:flex lg:self-start">
             <CategoriesSidebar />
           </div>
-          <div className="flex flex-col px-4  lg:left-72 lg:fixed lg:right-0">
+          <div className="flex flex-col px-4  lg:left-72 lg:absolute lg:right-0">
             <h1 className="m-4 text-end font-bold">
               Showing {data.length} of {data.length} Products
             </h1>

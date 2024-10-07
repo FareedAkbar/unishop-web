@@ -9,10 +9,10 @@ import NewArrivals from "./NewArrivals";
 
 const images = [
   "/images/home/home1.png",
+  "/images/home/stationary-and-merch.png",
+  "/images/home/graduation-gift.png",
   "/images/home/home1.png",
-  "/images/home/home1.png",
-  "/images/home/home1.png",
-  "/images/home/home1.png",
+  "/images/home/text-books.png",
 ];
 const flashSaleProducts = [
   {
@@ -152,7 +152,7 @@ const bestSellingProducts = [
 
 const HomePage: React.FC = () => {
   return (
-    <div className="flex-1 pt-20">
+    <div className="flex-1 pt-32">
       <div className="flex lg:flex-row">
         <div className="hidden lg:block">
           <CategoriesSidebar />

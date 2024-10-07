@@ -19,7 +19,7 @@ function Footer() {
   ];
 
   return (
-    <footer className="bg-slate-20 bg-zinc-100">
+    <footer className=" bg-zinc-100">
       <div className="container mx-auto py-10">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {/* logo side */}

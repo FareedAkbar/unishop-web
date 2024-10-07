@@ -23,7 +23,7 @@ const ProductCard = ({
   openDetail,
 }: ProductProps) => {
   return (
-    <div className="group relative flex w-1/2 flex-grow-0 flex-shrink-0 flex-col p-2 sm:w-1/2 sm:p-4 md:w-1/3 lg:w-72">
+    <div className="group relative flex w-1/2 flex-grow-0 flex-shrink-0 flex-col p-2 sm:w-1/2 sm:p-4 md:w-1/3 lg:w-72 hover:scale-110 transition-transform duration-300">
       <div className="relative flex h-40 items-center justify-center rounded-sm bg-gray-200 sm:h-48 lg:h-64">
         <div className="absolute left-2 top-2 z-20 rounded bg-red-500 px-1 py-0.5 text-[6px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1 sm:text-sm">
           {/* -
