@@ -368,7 +368,7 @@ const MyComponent = () => {
     const date = new Date();
     const x = {
       order_type: shipping?.type == 'free' ? 1 : 2,
-      online_order_type: true,
+      online_order_type: 1,
       outlet_id: 221,
       tracking_id: generateOTP(12).toString(),
       order_status: 7,
