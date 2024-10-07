@@ -22,6 +22,7 @@ interface checkoutBooknet {
   handleData?: (data: CheckoutForm) => void;
   goTo: string;
   title?: string;
+  disabled?: boolean;
 }
 type CehckoutFormValues = z.infer<typeof booknetFormSchema>;
 
@@ -30,6 +31,7 @@ export default function BooknetFormLogin({
   handleData,
   goTo,
   title = "Checkout",
+  disabled
 }: checkoutBooknet) {
   const { CheckoutApiWithUserName } = useAuthContext();
   const router = useRouter();
@@ -110,6 +112,7 @@ export default function BooknetFormLogin({
             onClick={() => {
               //
             }}
+            disabled={disabled}
             loading={loader}
             width="w-full"
             type="submit"

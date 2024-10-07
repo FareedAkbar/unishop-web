@@ -1,8 +1,9 @@
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
+import type { CategoryTreeNode, Category as CAT } from "~/types/category";
 
 interface Category {
   label: string;
@@ -60,7 +61,7 @@ const CategoriesSidebar = () => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const { genre, checkoutData, category } = useAuthContext();
   const router = useRouter();
-
+  const [headerCategory, setHeaderCategory] = useState<CategoryTreeNode[] | null>(null);
   // Toggle category function
   const toggleCategory = (label: string) => {
     if (openCategory === label) {
@@ -69,6 +70,60 @@ const CategoriesSidebar = () => {
       setOpenCategory(label); // Open the selected category
     }
   };
+ 
+  
+  
+  
+  function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
+    const categoryMap: { [key: number]: CategoryTreeNode } = {};
+    const tree: CategoryTreeNode[] = [];
+  
+    // Initialize the map
+    categories.forEach((category) => {
+      categoryMap[category.id] = {
+        id: category.id,
+        outlet: category.outlet,
+        category_name: category.category_name,
+        category_description: category.category_description,
+        deleted: category.deleted,
+        media_id: category.media_id,
+        booknet: category.booknet,
+        children: [],
+      };
+    });
+  
+    // Build the tree structure
+    categories.forEach((category) => {
+      if (category.category_name === 'Impact Pulse' && category.parent == 0) {
+        // Root category
+        const rootCategory = categoryMap[category.id];
+        if (rootCategory) {
+          tree.push(rootCategory);
+        }
+      } else {
+        // Find parent and add this category to its children
+        const parent = categoryMap[category.parent];
+        if (parent) {
+          const childCategory = categoryMap[category.id];
+          if (childCategory) {
+            parent.children!.push(childCategory);
+          }
+        }
+      }
+    });
+  
+    return tree;
+  }
+  
+  // Usage Example
+  useEffect(()=>{
+    if(!category) return
+    const categoryTree = buildCategoryTree(category ? category : []);
+    setHeaderCategory(categoryTree ? categoryTree : null);
+    console.log(categoryTree)
+  },[category])
+ 
+  
 
   return (
     <aside className="static left-0 w-64 border-r p-4">
@@ -111,9 +166,9 @@ const CategoriesSidebar = () => {
                     </a>
                   ))}
                 {item.label === "Text Book" &&
-                  category?.map(
+                  headerCategory && headerCategory[0]?.children?.map(
                     (subItem) =>
-                      subItem.parent === 0 && (
+                      (
                         <a
                           key={subItem.id}
                           href={`textbooks?detail=${subItem.id}`}

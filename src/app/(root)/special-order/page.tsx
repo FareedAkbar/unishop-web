@@ -243,6 +243,12 @@ const MyComponent = () => {
     },
   ];
 
+  function getPriceRange(books: SpecialBookType) {
+    const price = parseFloat(books.price.replace(/[^0-9.-]+/g, ""));
+    // Return a range of ±5 AUD
+    return `$${(price - 5).toFixed(2)} - $${(price + 5).toFixed(2)} AUD`;
+  }
+
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center">
@@ -326,7 +332,7 @@ const MyComponent = () => {
                   />
                 </motion.div>
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
-                  ${dataDetail?.price}
+                  {bookeSearched ? getPriceRange(bookeSearched) : ''}
                 </span>
                 <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
                   <span className="font-bold">Format:</span>

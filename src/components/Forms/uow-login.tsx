@@ -19,12 +19,14 @@ import Button from "../ui-components/Button";
 type FormValues = z.infer<typeof LoginSchema>;
 interface LoginFormProps {
   setView: (payload: string) => void;
+  disabled: boolean;
   setLoginResponse: (payload: LoginResponse) => void;
 }
 
 export default function SignupFormDemo({
   setView,
   setLoginResponse,
+  disabled
 }: LoginFormProps) {
   const { login,sendOTP } = useAuthContext();
   const [loader, setLoader] = useState(false);
@@ -32,6 +34,7 @@ export default function SignupFormDemo({
   const {
     register,
     handleSubmit,
+    
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(LoginSchema),
@@ -111,6 +114,7 @@ export default function SignupFormDemo({
             onClick={() => {
               //
             }}
+            disabled={disabled}
             width="w-full"
             type="submit"
             loading={loader}

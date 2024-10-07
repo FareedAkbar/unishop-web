@@ -53,12 +53,15 @@ const MyComponent = () => {
   const { bookentcustomerId, checkoutData } = useAuthContext();
   const router = useRouter();
   const [loader, setLoader] = useState(false);
-  const [dataSpecialOrders, setDataSpecialOrders] = useState<GetSpecialOrder[]>([]);
+  const [dataSpecialOrders, setDataSpecialOrders] = useState<GetSpecialOrder[]>(
+    [],
+  );
   const [dataOrders, setDataOrders] = useState<GetSpecialOrder[]>([]);
   const [selectedItem, setSelectedItem] = useState<GetSpecialOrder | null>(
     null,
   );
   const [orderStatus, setOrderStatus] = useState<OrderStatus[]>([]);
+  const [activeTabName, setActiveTabeName] = useState("orders");
   const { toast } = useToast();
   const [transactionData, setTransactionData] =
     useState<trasactionResponse | null>(null);
@@ -419,8 +422,10 @@ const MyComponent = () => {
     {
       title: "A list of your recent Special Orders.",
       value: "specialOrders",
+      hovering: false,
       content: (
         <OrdersTable
+          disabled={activeTabName == "specialOrders" ? false : true}
           handlePayment={(x) => handlePayment(x)}
           data={dataSpecialOrders}
           orderStatus={orderStatus}
@@ -431,8 +436,10 @@ const MyComponent = () => {
     {
       title: "A list of your recent Orders.",
       value: "orders",
+      hovering: false,
       content: (
         <OrdersTable
+          disabled={activeTabName == "orders" ? false : true}
           handlePayment={(x) => handlePayment(x)}
           data={dataOrders}
           orderStatus={orderStatus}
@@ -444,13 +451,17 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center mt-32">
+      <main className="mt-32 flex min-h-screen flex-col items-center">
         {/* {name}
       <Button onClick={()=>ChangeName()}>change name</Button> */}
         {loader && <Spinner />}
 
-        <div className="z-10 w-full rounded-md border card">
-          <Tabs tabs={tabs} key={dataSpecialOrders.toString()}/>
+        <div className="card z-10 w-full rounded-md border">
+          <Tabs
+            tabs={tabs}
+            key={dataSpecialOrders.toString()}
+           
+          />
         </div>
       </main>
       {isOpenPaymentAlert ? (

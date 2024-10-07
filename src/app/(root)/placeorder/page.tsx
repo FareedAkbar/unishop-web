@@ -152,7 +152,7 @@ const MyComponent = () => {
   const fetchData = async (requestOptions: CreatePayloadBooksForTax[]) => {
     try {
       const response = await fetch(
-        "https://booknet-dev.iconsole.com.au/api/calculate",
+        "https://booknet-dev.iconsole.com.au/api/calculate?check_availability=0",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
@@ -583,7 +583,7 @@ const MyComponent = () => {
                     <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-300"></div>
                     <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-300"></div>
                     <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-300"></div>
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-300"></div>
+                    {/* <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-300"></div> */}
                     <div className="relative h-2/3 w-full animate-pulse">
                       <div className="mb-2 h-64 w-full rounded bg-gray-300"></div>
                     </div>
@@ -597,6 +597,12 @@ const MyComponent = () => {
                     <span className="text-sm">Cart Subtotal</span>
                     <span className="flex justify-end text-sm">
                       ${totalAfterCalculation?.original_price.toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="mt-2 grid grid-cols-2 justify-between">
+                    <span className="text-sm">Discounted Price</span>
+                    <span className="flex justify-end text-sm">
+                      ${totalAfterCalculation?.final_price_excluding_tax.toFixed(2)}
                     </span>
                   </div>
                   <div className="mt-2 grid grid-cols-2 justify-between">

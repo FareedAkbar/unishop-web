@@ -30,6 +30,7 @@ const Header = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSection, setActiveSection] = useState("home");
+  const [headerCategory, setHeaderCategory] = useState<CategoryTreeNode[] | null>(null);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for hamburger menu
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -145,6 +146,79 @@ const Header = () => {
         console.log(err);
       });
   }, []);
+  type Category = {
+    id: number;
+    outlet: number;
+    category_name: string;
+    category_description: string;
+    deleted: number;
+    parent: number;
+    media_id: number;
+    booknet: number;
+  };
+  
+  type CategoryTreeNode = {
+    id: number;
+    outlet: number;
+    category_name: string;
+    category_description: string;
+    deleted: number;
+    media_id: number;
+    booknet: number;
+    children?: CategoryTreeNode[];
+  };
+  
+  function buildCategoryTree(categories: Category[]): CategoryTreeNode[] {
+    const categoryMap: { [key: number]: CategoryTreeNode } = {};
+    const tree: CategoryTreeNode[] = [];
+  
+    // Initialize the map
+    categories.forEach((category) => {
+      categoryMap[category.id] = {
+        id: category.id,
+        outlet: category.outlet,
+        category_name: category.category_name,
+        category_description: category.category_description,
+        deleted: category.deleted,
+        media_id: category.media_id,
+        booknet: category.booknet,
+        children: [],
+      };
+    });
+  
+    // Build the tree structure
+    categories.forEach((category) => {
+      if (category.parent === 0) {
+        // Root category
+        const rootCategory = categoryMap[category.id];
+        if (rootCategory) {
+          tree.push(rootCategory);
+        }
+      } else {
+        // Find parent and add this category to its children
+        const parent = categoryMap[category.parent];
+        if (parent) {
+          const childCategory = categoryMap[category.id];
+          if (childCategory) {
+            parent.children!.push(childCategory);
+          }
+        }
+      }
+    });
+  
+    return tree;
+  }
+  
+  // Usage Example
+  useEffect(()=>{
+    if(!category) return
+    const categoryTree = buildCategoryTree(category ? category : []);
+    setHeaderCategory(categoryTree ? categoryTree : null);
+  },[category])
+ 
+  
+  
+  
 
   const toggleSidebar = () => {
     console.log("hit");

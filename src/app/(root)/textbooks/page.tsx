@@ -1,12 +1,8 @@
 "use client";
 
-import { Controls, Player } from "@lottiefiles/react-lottie-player";
-// import Header from "~/components/header";
-import ProductGradient from "../../../components/productGradient";
 import { Suspense, useEffect, useRef, useState } from "react";
 // import Pagination from "~/components/pagination";
 import { useSearchParams } from "next/navigation";
-import BookSkelton from "./bookSkelton";
 import { useAuthContext } from "~/Context/AuthContext";
 // import type PaginationData from '~/types/paginationData'
 import type DataCart from "~/types/book";
@@ -34,7 +30,7 @@ import {
   SelectContent,
   SelectItem,
 } from "~/components/ui/select";
-import { Category } from "~/types/category";
+import type { Category } from "~/types/category";
 
 const requestOptions: RequestInit = {
   method: "GET",
@@ -178,6 +174,7 @@ const MyComponent = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(dummyProducts.length / PRODUCTS_PER_PAGE);
 
+
   // Get the products for the current page
   const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
   const end = start + PRODUCTS_PER_PAGE;
@@ -206,6 +203,9 @@ const MyComponent = () => {
       // Optionally set an error state here
     }
   };
+
+    
+ 
 
   return (
     <div>

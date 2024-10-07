@@ -16,12 +16,15 @@ export const Tabs = ({
   activeTabClassName,
   tabClassName,
   contentClassName,
+ 
+ 
 }: {
   tabs: Tab[];
   containerClassName?: string;
   activeTabClassName?: string;
   tabClassName?: string;
   contentClassName?: string;
+
 }) => {
   const [active, setActive] = useState<Tab>(propTabs[0]!);
   const [tabs, setTabs] = useState<Tab[]>(propTabs);
@@ -31,6 +34,7 @@ export const Tabs = ({
     const selectedTab = newTabs.splice(idx, 1);
     newTabs.unshift(selectedTab[0]!);
     setTabs(newTabs);
+   
     setActive(newTabs[0]!);
   };
 
@@ -77,6 +81,7 @@ export const Tabs = ({
       <FadeInDiv
         tabs={tabs}
         active={active}
+     
         key={active.value}
         hovering={hovering}
         className={cn("mt-16", contentClassName)}
@@ -89,20 +94,24 @@ export const FadeInDiv = ({
   className,
   tabs,
   hovering,
+  active,
 }: {
   className?: string;
   key?: string;
   tabs: Tab[];
   active: Tab;
   hovering?: boolean;
+
 }) => {
   const isActive = (tab: Tab) => {
     return tab.value === tabs[0]!.value;
   };
+ 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full" >
       {tabs.map((tab, idx) => (
         <motion.div
+
           key={tab.value}
           layoutId={tab.value}
           style={{
@@ -114,7 +123,7 @@ export const FadeInDiv = ({
           animate={{
             y: isActive(tab) ? [0, 40, 0] : 0,
           }}
-          className={cn("absolute left-0 top-0 h-full w-full", className)}
+          className={cn("absolute left-0 top-0 h-full w-full", className, tab.value != active.value ? 'pointer-events-none opacity-50' : '' )}
         >
           {tab.content}
         </motion.div>

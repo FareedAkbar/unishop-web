@@ -14,6 +14,7 @@ import OTPVerificationForm from "~/components/Forms/otp-form";
 
 const MyComponent = () => {
   const [view, setView] = useState("login");
+  const [activeTabeName, setActiveTabeName] = useState("customerLogin");
   const router = useRouter();
 
   const [loginResponse, setLoginResponse] = useState<LoginResponse | null>(
@@ -24,13 +25,13 @@ const MyComponent = () => {
     {
       title: "Booknet Guest Login",
       value: "customerLogin",
-      content: <BooknetFormLogin push={true} goTo="/" title="Login as a booknet guest" />,
+      content: <BooknetFormLogin disabled={activeTabeName == 'uowLogin' ? true: false} push={true} goTo="/" title="Login as a booknet guest" />,
     },
     {
       title: "UOW Login",
       value: "uowLogin",
       content: (
-        <LoginForm setView={setView} setLoginResponse={setLoginResponse} />
+        <LoginForm setView={setView} disabled={activeTabeName == 'customerLogin' ? true: false} setLoginResponse={setLoginResponse} />
       ),
     },
   ];
@@ -55,7 +56,7 @@ const MyComponent = () => {
             >
               <FaArrowLeft className="text-black" />
             </button>
-            <Tabs tabs={tabs} />
+            <Tabs tabs={tabs} setActiveTabeName={(val)=>setActiveTabeName(val)} activeTab={activeTabeName}/>
           </div>
         )}
         

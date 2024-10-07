@@ -28,6 +28,7 @@ interface OrdersData {
   orderStatus: OrderStatus[];
   handlePayment: (invoice: GetSpecialOrder) => void;
   title: string;
+ 
 }
 
 const OrdersTable = ({
@@ -35,6 +36,7 @@ const OrdersTable = ({
   orderStatus,
   handlePayment,
   title,
+ 
 }: OrdersData) => {
   function getOrderStatusById(orderStatusId: number) {
     return orderStatus.find((status) => status.status_id === orderStatusId);
@@ -89,7 +91,7 @@ const OrdersTable = ({
                         </div>
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="w-3/4">
+                    <AccordionContent className="w-3/4" >
                       <ScrollArea className="h-sm rounded-md border">
                         {invoice?.special_order_items?.length > 0 ? (
                           invoice?.special_order_items?.map(
