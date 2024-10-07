@@ -327,6 +327,7 @@ export default function CehckoutForm({ push, handleData }: checkout) {
             title="Checkout &rarr;"
             type="submit"
             width="w-full"
+            loading={loader}
             onClick={() => {
               //
             }}

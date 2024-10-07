@@ -114,6 +114,7 @@ export default function BooknetForm({
         <Button
           title="Checkout &rarr;"
           type="submit"
+          loading={loader}
           width="w-full"
           onClick={() => {
             //
