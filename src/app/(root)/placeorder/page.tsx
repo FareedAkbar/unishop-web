@@ -459,11 +459,6 @@ const MyComponent = () => {
 
       if (data.status) {
         setIsOpenPaymentAlert(false);
-        toast({
-          title: "Payment Successful",
-          description:
-            "Your payment has been processed successfully for this order.",
-        });
 
         try {
           await placeOrderApi(data.transaction_id);
