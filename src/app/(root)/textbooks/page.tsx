@@ -206,10 +206,10 @@ const MyComponent = () => {
     <div>
       <main className="flex min-h-screen flex-col items-center pt-20">
         <div className="flex flex-row">
-          <div className="lg:flex-start hidden lg:fixed lg:left-0 lg:flex lg:w-64 lg:self-start">
+          <div className="lg:flex-start hidden lg:absolute lg:left-0 lg:flex lg:w-64 lg:self-start">
             <CategoriesSidebar />
           </div>
-          <div className="flex flex-col px-4 py-10 lg:fixed lg:left-64 lg:right-0">
+          <div className="flex flex-col px-4 py-10 lg:absolute lg:left-64 lg:right-0">
             <div className="m-4 flex items-center justify-end gap-4">
               {subCategory && subCategory[0] && (
                 <Select
@@ -234,7 +234,7 @@ const MyComponent = () => {
               </h1>
             </div>
             <ScrollArea className="h-screen pb-32">
-              <div className="flex flex-wrap justify-between">
+              <div className="flex flex-wrap ">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
                       <div key={index} className="w-1/3 p-2">

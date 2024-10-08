@@ -145,7 +145,9 @@ const CategoriesSidebar = () => {
       document.removeEventListener("mousedown", handleClickOutside); // Clean up the event listener
     };
   }, [openCategory]);
+
 console.log(headerCategory)
+
   return (
     <aside className="static left-0 w-64 border-r p-4">
       <h2 className="text-lg font-bold">Categories</h2>

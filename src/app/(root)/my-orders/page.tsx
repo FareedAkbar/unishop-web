@@ -418,36 +418,34 @@ const MyComponent = () => {
     setIsOpenPaymentAlert(false);
   };
 
-  const tabs = [
-    {
-      title: "A list of your recent Special Orders.",
-      value: "specialOrders",
-      hovering: false,
-      content: (
-        <OrdersTable
-
-          handlePayment={(x) => handlePayment(x)}
-          data={dataSpecialOrders}
-          orderStatus={orderStatus}
-          title="specialOrders"
-        />
-      ),
-    },
-    {
-      title: "A list of your recent Orders.",
-      value: "orders",
-      hovering: false,
-      content: (
-        <OrdersTable
-
-          handlePayment={(x) => handlePayment(x)}
-          data={dataOrders}
-          orderStatus={orderStatus}
-          title="orders"
-        />
-      ),
-    },
-  ];
+  // const tabs = [
+  //   {
+  //     title: "A list of your recent Special Orders.",
+  //     value: "specialOrders",
+  //     hovering: false,
+  //     content: (
+  //       <OrdersTable
+  //         handlePayment={(x) => handlePayment(x)}
+  //         data={dataSpecialOrders}
+  //         orderStatus={orderStatus}
+  //         title="specialOrders"
+  //       />
+  //     ),
+  //   },
+  //   {
+  //     title: "A list of your recent Orders.",
+  //     value: "orders",
+  //     hovering: false,
+  //     content: (
+  //       <OrdersTable
+  //         handlePayment={(x) => handlePayment(x)}
+  //         data={dataOrders}
+  //         orderStatus={orderStatus}
+  //         title="orders"
+  //       />
+  //     ),
+  //   },
+  // ];
 
   return (
     <div>
@@ -455,12 +453,13 @@ const MyComponent = () => {
         {/* {name}
       <Button onClick={()=>ChangeName()}>change name</Button> */}
         {loader && <Spinner />}
-
-        <div className="card z-10 w-full rounded-md border">
-          <Tabs
-            tabs={tabs}
-            key={dataSpecialOrders.toString()}
-
+        <div className="z-10 w-full p-4">
+          <h1 className="pb-3 text-center text-2xl font-bold">My Orders</h1>
+          <OrdersTable
+            handlePayment={(x) => handlePayment(x)}
+            data={dataOrders}
+            orderStatus={orderStatus}
+            title="orders"
           />
         </div>
       </main>

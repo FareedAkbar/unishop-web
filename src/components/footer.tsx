@@ -19,8 +19,8 @@ function Footer() {
   ];
 
   return (
-    <footer className=" bg-zinc-100">
-      <div className="container mx-auto py-10">
+    <footer className="bg-zinc-100">
+      <div className="container mx-auto py-8">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {/* logo side */}
           <div className="flex flex-col items-center gap-8 text-center md:col-span-1 md:items-start md:text-left">
@@ -29,12 +29,12 @@ function Footer() {
               width={600}
               height={350}
               alt="footer_logo"
-              className="w-[18rem]"
+              className="w-[18rem] pl-3"
             />
             <div className="flex flex-col gap-3">
               <p className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464]">
-                <FaMapMarkerAlt className="text-[#646464]" /> Suite 5, Level 3,
-                5-7 Littleton St, Riverwood NSW 2210
+                <FaMapMarkerAlt className="text-2xl text-[#646464]" /> Suite 5,
+                Level 3, 5-7 Littleton St, Riverwood NSW 2210
               </p>
               <a
                 href="tel:+61 2 9534 8744"
@@ -59,64 +59,57 @@ function Footer() {
               {iconsTab.map(({ icon }, index) => (
                 <div
                   key={index}
-                  className="cursor-pointer rounded-full bg-[#efefef] p-2 transition-all hover:bg-red-500 hover:text-white"
+                  className="cursor-pointer rounded-full bg-red-200 p-2 transition-all hover:bg-red-500 hover:text-white"
                 >
                   {icon}
                 </div>
               ))}
             </div>
-            <p className="pl-4 text-sm font-medium text-[#646464]">
-              Privacy Policy | © {new Date().getFullYear()} PULSE <br />
-              Design by{" "}
-              <a target="_blank" rel="noreferrer" href="https://iitsols.com/" className="text-xs">
-                IMPACT SOLUTIONS
-              </a>
-            </p>
           </div>
 
           {/* middle div */}
           <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Customer Service</p>
-            <span className="mb-2 block h-[4px] w-20 bg-[#ff0366]"></span>
+            <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <Link
               href="contact-us"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Contact Us
             </Link>
             <Link
               href="postage-and-handling"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Postage & Handling
             </Link>
             <Link
               href="refunds-and-returns"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Refunds & Returns
             </Link>
             <Link
               href="terms-and-conditions"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Terms & Conditions
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Privacy Policy
             </Link>
             <Link
               href="about"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               About Us
             </Link>
             <Link
               href="academic-dress-hire"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Academic Dress Hire
             </Link>
@@ -125,34 +118,34 @@ function Footer() {
           {/* shop online */}
           <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Shop Online</p>
-            <span className="mb-2 block h-[4px] w-20 bg-[#ff0366]"></span>
+            <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Textbooks
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Books
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               UOW Merchandise
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Stationery & Tech
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Graduation
             </Link>
@@ -161,7 +154,7 @@ function Footer() {
           {/* gifts & merch */}
           <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Gifts & Merch</p>
-            <span className="mb-2 block h-[4px] w-20 bg-[#ff0366]"></span>
+            <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <Link
               href="#"
               className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
@@ -185,7 +178,7 @@ function Footer() {
           {/* working hours */}
           <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Working Hours</p>
-            <span className="mb-2 block h-[4px] w-20 bg-[#ff0366]"></span>
+            <span className="mb-2 block h-[4px] w-20 bg-[#ff0366]" />
             <p className="text-sm font-bold text-[#646464]">Monday - Friday:</p>
             <p className="text-sm font-medium text-[#646464]">
               8:00am - 5:00pm
@@ -194,6 +187,18 @@ function Footer() {
               Delivery and Click & Collect available
             </p>
           </div>
+        </div>
+        {/* bottom center */}
+        <div className="flex flex-col items-center text-center">
+          <p className="text-sm font-medium text-[#646464]">
+            Privacy Policy | © {new Date().getFullYear()} PULSE
+          </p>
+          <p className="text-sm font-medium text-[#646464]">
+            Design by{" "}
+            <a target="_blank" rel="noreferrer" href="https://iitsols.com/">
+              IMPACT SOLUTIONS
+            </a>
+          </p>
         </div>
       </div>
     </footer>

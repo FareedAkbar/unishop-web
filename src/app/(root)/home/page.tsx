@@ -6,6 +6,7 @@ import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
 import ProductsSection from "./ProductsSection";
 import GraduationBanner from "./GraduationBanner";
 import NewArrivals from "./NewArrivals";
+import BackgroundWords from "~/components/ui-components/BackgroundWords";
 
 const images = [
   "/images/home/home1.png",
@@ -149,10 +150,10 @@ const bestSellingProducts = [
     rating: 4.5,
   },
 ];
-
 const HomePage: React.FC = () => {
   return (
-    <div className="flex-1 pt-32">
+    <div className="relative flex-1 pt-32 lg:pt-24 overflow-hidden">
+      <BackgroundWords />
       <div className="flex lg:flex-row">
         <div className="hidden lg:block">
           <CategoriesSidebar />

@@ -9,27 +9,26 @@ interface ImageSliderProps {
 
 const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false); // State to trigger fade effect
+  const [isFlipping, setIsFlipping] = useState(false); // State to trigger flip effect
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsFading(true); // Start fading out before changing the image
+      setIsFlipping(true); // Start flipping out before changing the image
       setTimeout(() => {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-        setIsFading(false); // Reset fade state after changing the image
-      }, 500); // Set timeout matching fade-out duration
-    }, 3500); // Adjusted timing to account for fade effect
+        setIsFlipping(false); // Reset flip state after changing the image
+      }, 500); // Duration matching the flip-out animation
+    }, 3500); // Adjusted timing to account for flip effect
 
     return () => clearInterval(interval);
   }, [images.length]);
 
   return (
-    <div className="flex flex-col pb-4 w-full lg:px-4">
+    <div className="flex w-full flex-col pb-4 lg:px-4">
       <div className="absolute z-10 w-2/5 p-1 lg:block lg:pl-10 lg:pt-10">
         <div className="flex h-24 flex-col justify-between px-2 py-2 sm:h-52 md:h-60 md:px-6 lg:h-80 lg:px-10">
           <div className="flex items-center lg:mb-4">
             <PiBooksBold className="sm:2xl mr-2 text-xl text-white lg:text-4xl" />
-            {/* Book icon */}
             <span className="text-[8px] text-white sm:text-xl lg:text-lg">
               E-Text-books
             </span>
@@ -37,9 +36,9 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
           <div className="text-xl text-white sm:text-3xl lg:mb-4 lg:text-4xl">
             Up to 10% off Voucher
           </div>
-          <button className="flex flex-row rounded-lg border-none bg-transparent text-[10px] text-white underline md:px-3 md:py-1.5 lg:px-4 lg:py-2">
+          <button className="flex flex-row rounded-lg border-none bg-transparent text-sm text-white underline md:px-3 md:py-1.5 lg:px-4 lg:py-2">
             <span>Shop Now</span>
-            <IoIosArrowRoundForward className="ml-1 text-sm text-white lg:mb-1 lg:text-base" />
+            <IoIosArrowRoundForward className="ml-1 pt-2 text-sm text-white lg:text-base" />
           </button>
         </div>
       </div>
@@ -50,7 +49,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
           width={1000}
           height={1000}
           objectFit="cover"
-          className={`relative h-28 w-full sm:h-72 lg:h-[400px] transition-opacity duration-500 ease-in-out ${isFading ? 'opacity-0' : 'opacity-100'}`}
+          className={`relative h-28 w-full transition-transform duration-700 ease-in-out sm:h-72 lg:h-[400px] ${isFlipping ? "animate-flip-out" : "animate-flip-in"}`}
         />
       </div>
       {/* Dots Indicator */}

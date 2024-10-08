@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  FaUserCircle,
   FaChevronDown,
   FaChevronUp,
   FaBars,
@@ -16,7 +15,7 @@ import { IoCartOutline } from "react-icons/io5";
 import { MdOutlinePersonOutline } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
 import { TbSettings } from "react-icons/tb";
-import { HiLogin } from "react-icons/hi";
+import { HiLogin, HiLogout } from "react-icons/hi";
 import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -34,7 +33,6 @@ const Header = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for hamburger menu
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const isFirstRender = useRef(true);
   const userDropdownRef = useRef<HTMLDivElement | null>(null); // Reference for user dropdown
 
   const toggleUserDropdown = () => {
@@ -60,7 +58,6 @@ const Header = () => {
     if (isDropdown) {
       setOpenDropdown(null); // Close dropdown when clicking a section
     }
-    // Implement any other logic, e.g., scrolling to the section
   };
 
   // Close the dropdown if clicked outside
@@ -103,17 +100,6 @@ const Header = () => {
       href: "#contact",
       onClick: () => handleSectionClick("contact"),
     },
-
-    {
-      label: "login",
-      href: "/login",
-      onClick: () => handleSectionClick("signup"),
-    },
-    {
-      label: "Signup",
-      href: "#signup",
-      onClick: () => handleSectionClick("signup"),
-    },
   ];
 
   const handleLogout = async () => {
@@ -146,18 +132,14 @@ const Header = () => {
         console.log(err);
       });
   }, []);
- 
-  
-  
 
   const toggleSidebar = () => {
-    
     setIsSidebarOpen((prev) => !prev);
   };
 
   return (
     <nav className="fixed left-0 top-0 z-[15] h-fit w-full">
-      <header className="flex flex-col bg-white px-4 pt-4 md:flex-row md:items-center">
+      <header className="flex flex-col bg-transparent backdrop-blur px-4 pt-4 md:flex-row md:items-center">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
         <div className="flex items-center justify-between border-b pb-4 md:hidden">
           {/* Hamburger Icon */}
@@ -215,6 +197,13 @@ const Header = () => {
                   >
                     <HiLogin className="mr-2" />
                     Sign Up
+                  </a>
+                  <a
+                    href="#login"
+                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100"
+                  >
+                    <HiLogout className="mr-2" />
+                    Login
                   </a>
                   <a
                     href="#logout"
@@ -342,7 +331,7 @@ const Header = () => {
                     className={`relative flex items-center ${item.subItems ? "cursor-pointer" : ""}`}
                   >
                     <span
-                      className={`activeSection === item.label.toLowerCase() ? 'underline text-black' : ''`}
+                      className={`${activeSection === item.label.toLowerCase() ? "font-bold text-red-500 underline" : ""}`}
                     >
                       {item.label}
                     </span>
@@ -403,16 +392,16 @@ const Header = () => {
                   className="cursor-pointer rounded-full bg-red-500"
                   onClick={toggleUserDropdown}
                 >
-                  <MdOutlinePersonOutline className="text-2xl text-white" />
+                  <MdOutlinePersonOutline className="text-3xl text-white p-0.5" />
                 </div>
                 {isUserDropdownOpen && (
                   <div
                     ref={userDropdownRef}
-                    className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md"
+                    className="absolute right-0 z-10 mt-1 w-40 rounded-md bg-white px-1 py-2 shadow-md"
                   >
                     <a
                       href="#account-settings"
-                      className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100"
+                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
                     >
                       <TbSettings className="mr-2" />
                       Account Setting
@@ -420,10 +409,26 @@ const Header = () => {
                     <a
                       onClick={() => handleLogout()}
                       href="#logout"
-                      className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100"
+                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
                     >
                       <HiLogin className="mr-2" />
                       Logout
+                    </a>
+                    <a
+                      onClick={() => handleLogout()}
+                      href="#login"
+                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
+                    >
+                      <HiLogout className="mr-2" />
+                      Login
+                    </a>
+                    <a
+                      onClick={() => handleLogout()}
+                      href="#signup"
+                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
+                    >
+                      <HiLogin className="mr-2" />
+                      Signup
                     </a>
                   </div>
                 )}

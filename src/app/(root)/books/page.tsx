@@ -189,7 +189,7 @@ const MyComponent = () => {
               Showing {data.length} of {data.length} Products
             </h1>
             <ScrollArea className="h-screen pb-32">
-              <div className="flex flex-wrap justify-between ">
+              <div className="flex flex-wrap  ">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
                     <div key={index} className="w-1/3 p-2">

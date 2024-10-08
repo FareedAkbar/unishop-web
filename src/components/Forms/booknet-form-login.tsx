@@ -78,7 +78,7 @@ export default function BooknetFormLogin({
         {title}
       </h2>
       <p className="pt-2 text-sm text-gray-500">
-        If you have an account, sign in with your username and password.
+        Sign in with your username and password.
       </p>
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
@@ -119,8 +119,8 @@ export default function BooknetFormLogin({
           />
           <div className="mt-2 flex flex-col items-center justify-center text-black sm:flex-row">
             <p>{`I don't have an account,`} </p>
-            <Link href="signup" className="ml-1 underline hover:text-red-500">
-              signup
+            <Link href="signup" className="ml-1 underline text-red-500">
+              Signup
             </Link>
           </div>
         </div>

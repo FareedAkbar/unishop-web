@@ -43,7 +43,7 @@ const CountdownTimer = ({ targetDate }: { targetDate: Date }) => {
             {["Days", "Hours", "Minutes", "Seconds"].map((label, idx) => (
                 <Fragment key={label}>
                     <div className="time-unit flex flex-col items-center w-8 h-8 justify-center rounded-full bg-white p-1 lg:h-16 lg:w-16">
-                        <span className="time-value text-xs font-semibold sm:text-xl">
+                        <span className="time-value text-xs font-semibold sm:text-lg">
                             {Object.values(timeRemaining)[idx]}
                         </span>
                         <span className="time-label text-[5px] lg:text-xs">{label}</span>
