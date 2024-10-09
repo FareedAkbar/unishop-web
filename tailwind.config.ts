@@ -123,7 +123,7 @@ const config: Config = {
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
-			'swing': 'swing 3s ease-in-out infinite',
+			'swing': 'swing 5s ease-in-out infinite',
 			'flip-in': 'flip-in 0.5s ease-in-out forwards',
         	'flip-out': 'flip-out 0.5s ease-in-out forwards',
 		},	

@@ -204,12 +204,18 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center pt-20">
+      <motion.main
+        className="flex min-h-screen flex-col items-center py-20"
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -100 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="flex flex-row">
           <div className="lg:flex-start hidden lg:absolute lg:left-0 lg:flex lg:w-64 lg:self-start">
             <CategoriesSidebar />
           </div>
-          <div className="flex flex-col px-4 py-10 lg:absolute lg:left-64 lg:right-0">
+          <div className="flex flex-col px-4 py-5 lg:absolute lg:left-64 lg:right-0">
             <div className="m-4 flex items-center justify-end gap-4">
               {subCategory && subCategory[0] && (
                 <Select
@@ -233,8 +239,8 @@ const MyComponent = () => {
                 Showing {data.length} of {data.length} Products
               </h1>
             </div>
-            <ScrollArea className="h-screen pb-32">
-              <div className="flex flex-wrap ">
+            <ScrollArea className="h-[75vh] pb-10">
+              <div className="flex flex-wrap">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
                       <div key={index} className="w-1/3 p-2">
@@ -275,7 +281,6 @@ const MyComponent = () => {
             </div> */}
           </div>
         </div>
-
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
           {/* {!loader ? (
             <Pagination
@@ -285,7 +290,7 @@ const MyComponent = () => {
             />
           ) : ''} */}
         </div>
-      </main>
+      </motion.main>
 
       <ModalBody>
         <ModalContent>

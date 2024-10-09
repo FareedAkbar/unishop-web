@@ -21,9 +21,9 @@ const ProductCard = ({
   openDetail,
 }: ProductProps) => {
   return (
-    <div className="group relative flex w-1/2 flex-shrink-0 flex-grow-0 flex-col p-2 transition-transform duration-300 hover:scale- sm:w-1/2 sm:p-4 md:w-1/3 lg:w-72">
+    <div className="hover:scale-110 group relative flex w-1/2 flex-shrink-0 flex-grow-0 flex-col p-2 transition-transform duration-300 sm:w-1/2 sm:p-4 md:w-1/3 lg:w-72">
       <div className="relative flex h-40 items-center justify-center rounded-sm bg-gray-200 sm:h-48 lg:h-64">
-        <div className="z-[15] absolute left-2 top-2 rounded bg-red-500 px-1 py-0.5 text-[6px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1 sm:text-sm">
+        <div className="absolute left-2 top-2 z-[12] rounded bg-red-500 px-1 py-0.5 text-[6px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1 sm:text-sm">
           {product?.item_sale_price ? product?.item_sale_price : 26}
         </div>
         <Image
@@ -35,9 +35,9 @@ const ProductCard = ({
           alt={product?.SKU_title ?? ""}
           width={1000}
           height={1000}
-          className="h-32 object-contain lg:h-56 lg:w-56 transition-transform duration-300 group-hover:scale-110" // Scale on hover
+          className="h-32 object-contain transition-transform duration-300 group-hover:scale-110 lg:h-56 lg:w-56" // Scale on hover
         />
-        <div className="absolute right-5 top-10 flex flex-col gap-1 translate-y-[-50%] transition-transform duration-300 transform opacity-0 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-[-50%]">
+        <div className="absolute right-5 top-10 flex translate-x-[100%] transform flex-col gap-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
           <button className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 sm:p-1 sm:text-xl">
             <AiOutlineHeart />
           </button>

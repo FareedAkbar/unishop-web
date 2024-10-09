@@ -139,13 +139,18 @@ const Header = () => {
 
   return (
     <nav className="fixed left-0 top-0 z-[15] h-fit w-full">
-      <header className="flex flex-col bg-transparent backdrop-blur px-4 pt-4 md:flex-row md:items-center">
+      <header className="flex flex-col bg-red-100 px-4 pt-4 backdrop-blur md:flex-row md:items-center">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
         <div className="flex items-center justify-between border-b pb-4 md:hidden">
           {/* Hamburger Icon */}
 
           {/* Logo in the Center */}
-          <div className="flex-grow text-center">
+          <div
+            className="flex-grow cursor-pointer text-center"
+            onClick={() => {
+              router.push("/");
+            }}
+          >
             <Image
               src={Logo}
               width={140}
@@ -308,7 +313,12 @@ const Header = () => {
         {/* Desktop Layout */}
         <div className="mt-4 hidden w-full border-b pb-4 md:flex md:items-center md:justify-between">
           <div className="flex w-full items-center justify-between">
-            <div className="flex-grow text-left">
+            <div
+              className="flex-grow cursor-pointer text-left"
+              onClick={() => {
+                router.push("/");
+              }}
+            >
               <Image
                 src={Logo}
                 width={140}
@@ -392,7 +402,7 @@ const Header = () => {
                   className="cursor-pointer rounded-full bg-red-500"
                   onClick={toggleUserDropdown}
                 >
-                  <MdOutlinePersonOutline className="text-3xl text-white p-0.5" />
+                  <MdOutlinePersonOutline className="p-0.5 text-3xl text-white" />
                 </div>
                 {isUserDropdownOpen && (
                   <div

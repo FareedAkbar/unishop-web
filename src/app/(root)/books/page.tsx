@@ -179,33 +179,39 @@ const MyComponent = () => {
   };
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center py-20">
+      <motion.main
+        className="flex min-h-screen flex-col items-center py-20"
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -100 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="flex flex-row">
-          <div className="lg:flex-start hidden lg:absolute lg:w-72 lg:left-0 lg:flex lg:self-start">
+          <div className="lg:flex-start hidden lg:absolute lg:left-0 lg:flex lg:w-72 lg:self-start">
             <CategoriesSidebar />
           </div>
-          <div className="flex flex-col px-4  lg:left-72 lg:absolute lg:right-0">
+          <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
             <h1 className="m-4 text-end font-bold">
               Showing {data.length} of {data.length} Products
             </h1>
-            <ScrollArea className="h-screen pb-32">
-              <div className="flex flex-wrap  ">
+            <ScrollArea className="h-[75vh] pb-10">
+              <div className="flex flex-wrap">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
-                    <div key={index} className="w-1/3 p-2">
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
+                      <div key={index} className="w-1/3 p-2">
+                        <ProductCardSkeleton />
+                      </div>
+                    ))
                   : data?.map((item: DataCart) => (
-                    <ProductCard
-                      key={item.book_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={() => handleAddToCart(item)}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
-                    />
-                  ))}
+                      <ProductCard
+                        key={item.book_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={() => handleAddToCart(item)}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        openDetail={() => openDetail(item)}
+                      />
+                    ))}
               </div>
             </ScrollArea>
             {/* <div className="mt-4 flex justify-between">
@@ -289,7 +295,7 @@ const MyComponent = () => {
             />
           ) : ''} */}
         </div>
-      </main>
+      </motion.main>
 
       <ModalBody>
         <ModalContent>
@@ -380,8 +386,8 @@ const MyComponent = () => {
                 </span>
               </div>
               {itemDetail?.item_id &&
-                !isItemInCart(itemDetail.item_id) &&
-                itemDetail?.stock?.quantity ? (
+              !isItemInCart(itemDetail.item_id) &&
+              itemDetail?.stock?.quantity ? (
                 <button
                   className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
                   onClick={() => handleAddToCart(itemDetail)}

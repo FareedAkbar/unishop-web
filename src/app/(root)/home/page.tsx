@@ -7,6 +7,8 @@ import ProductsSection from "./ProductsSection";
 import GraduationBanner from "./GraduationBanner";
 import NewArrivals from "./NewArrivals";
 import BackgroundWords from "~/components/ui-components/BackgroundWords";
+import BackgroundImages from "~/components/ui-components/BackgroundImages";
+import { FlipWords } from "~/components/ui/flip-words";
 
 const images = [
   "/images/home/home1.png",
@@ -151,21 +153,33 @@ const bestSellingProducts = [
   },
 ];
 const HomePage: React.FC = () => {
+  const words = ["Imagine", "Create", "Inspire", "Transform"];
+
   return (
-    <div className="relative flex-1 pt-32 lg:pt-24 overflow-hidden">
+    <div className="relative flex-1 overflow-hidden pt-32 lg:pt-24">
       <BackgroundWords />
-      <div className="flex lg:flex-row">
+      <BackgroundImages />
+      <div className="container mx-auto flex justify-center">
+        <ImageSlider images={images} />
+      </div>
+      <div className="flex">
         <div className="hidden lg:block">
           <CategoriesSidebar />
         </div>
-        <ImageSlider images={images} />
+        <div className="flex flex-col pl-6 pt-3">
+          <div className="self-start text-3xl">
+            <FlipWords words={words} />
+            your reading adventure!
+          </div>
+
+          <ProductsSection
+            products={flashSaleProducts}
+            targetDate={new Date("2024-10-25T10:00:00")}
+            headingPartOne="Today's"
+            headingPartTwo="Flash Sales"
+          />
+        </div>
       </div>
-      <ProductsSection
-        products={flashSaleProducts}
-        targetDate={new Date("2024-10-25T10:00:00")}
-        headingPartOne="Today's"
-        headingPartTwo="Flash Sales"
-      />
       <GraduationBanner />
       <ProductsSection
         products={bestSellingProducts}
