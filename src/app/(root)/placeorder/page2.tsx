@@ -33,14 +33,14 @@ const MyComponent = () => {
   const {
     cartItems,
     checkoutData,
-    getcheckoutFormData,
+    getCheckoutFormData,
     removeAllCartItems,
     uuidLocal,
     // setUUID,
     token,
     userInfo,
     // isLoggedIn,
-    bookentcustomerId
+    booknetCustomerId
   } = useAuthContext();
   const [items, setItems] = useState<DataCart[]>([]);
   const [newItems, setNewItems] = useState<DataCart[]>([]);
@@ -65,7 +65,7 @@ const MyComponent = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        await getcheckoutFormData();
+        await getCheckoutFormData();
       } catch (error) {
         console.error("Failed to load data:", error);
         // Optionally set an error state here
@@ -388,7 +388,7 @@ const MyComponent = () => {
       },
       member_id: null,
       transaction_id: id.toString(),
-      booknet_customer_id: bookentcustomerId,
+      booknet_customer_id: booknetCustomerId,
       // guest: checkoutData?.uuid ? checkoutData?.uuid : null,
       order_items: await convertPayload(),
     };

@@ -3,17 +3,14 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form"; // Use import type
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { type z } from "zod";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "~/lib/utils";
-import Link from "next/link";
 import { SignupSchema } from "./schema";
 import { PhoneNumberInput } from "../ui/phoneNumberInput";
-import DynamicInput from "../Fields/dynamicInput";
 import Select from "../Fields/select";
-import shippingOptions from "../constants/shippingMethod";
-import states from "../constants/austrailia";
+import states from "../constants/Australia";
 import cities from "../constants/cities";
 
 

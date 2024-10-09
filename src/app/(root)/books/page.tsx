@@ -1,12 +1,9 @@
 "use client";
 
-import { Controls, Player } from "@lottiefiles/react-lottie-player";
 // import Header from "~/components/header";
-import ProductGradient from "../../../components/productGradient";
 import { Suspense, useEffect, useRef, useState } from "react";
 // import Pagination from "~/components/pagination";
 import { useSearchParams } from "next/navigation";
-import BookSkelton from "./bookSkelton";
 import { useAuthContext } from "~/Context/AuthContext";
 // import type PaginationData from '~/types/paginationData'
 import type DataCart from "~/types/book";
@@ -27,21 +24,8 @@ import React from "react";
 import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { getBooks } from "~/_actions/getbooks";
 
-const requestOptions: RequestInit = {
-  method: "GET",
-  headers: {
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM`,
-    "Content-Type": "application/json", // Optional, depending on your API
-  },
-  redirect: "follow", // Use the correct type for `redirect`
-};
-
-interface ApiResponse {
-  // meta: PaginationData; // Adjust based on your actual structure
-  data: DataCart[];
-  status: boolean;
-}
 const dummyProducts = Array.from({ length: 10 }, (_, index) => ({
   id: index + 1,
   name: `Product ${index + 1}`,
@@ -56,47 +40,35 @@ const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>("");
   const [data, setData] = useState<DataCart[]>([]);
   const isFirstRender = useRef(true);
 
   const params = useSearchParams();
-  const detail = params.get("detail");
   const { setOpen } = useModal();
+  const [detail, setDetail] = useState<string | null>(null);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const { cartItems, addCartItems, removeCartItems, genre } = useAuthContext();
 
-  const fetchData = async (genre_id: number) => {
-    setLoader(true);
-    try {
-      const response = await fetch(
-        `https://booknet-dev.iconsole.com.au/api/books/getBooksByGenreCat?genre_id=${genre_id}&category_id=27&entries=1&images=1&detailed=1`,
-        requestOptions,
-      );
-      const result: ApiResponse = (await response.json()) as ApiResponse;
 
-      // Check if result has the expected structure
-      if (result?.status) {
-        // setMeta(result.meta);
-        setData(result.data);
-      } else {
-        console.error("Unexpected result structure:", result);
-        // Handle unexpected structure here
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoader(false);
-    }
-  };
+  useEffect(() => {
+    const d = params.get("detail");
+    setDetail(d);
+  }, [params]);
+
+
 
   useEffect(() => {
     if (!genre) return;
     const genId = genre?.find((item) => item.genre == detail);
-    setDescription(genId?.description ?? "");
+   
     const loadData = async () => {
       try {
-        await fetchData(genId?.genre_id ?? 1);
+        setLoader(true);
+        const x = await getBooks(genId?.genre_id ?? 1);
+        if (typeof x !== "boolean" && x.status) {
+          setData(x.data);
+        }
+        setLoader(false);
         // setData(result);
         // setTotalPages(result.totalPages);
       } catch (error) {
@@ -112,7 +84,7 @@ const MyComponent = () => {
         console.error("Failed to load data in useEffect:", error);
       });
     }
-  }, [genre, detail]);
+  }, [genre]);
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
@@ -181,31 +153,31 @@ const MyComponent = () => {
     <div>
       <main className="flex min-h-screen flex-col items-center py-20">
         <div className="flex flex-row">
-          <div className="lg:flex-start hidden lg:absolute lg:w-72 lg:left-0 lg:flex lg:self-start">
+          <div className="lg:flex-start hidden lg:absolute lg:left-0 lg:flex lg:w-72 lg:self-start">
             <CategoriesSidebar />
           </div>
-          <div className="flex flex-col px-4  lg:left-72 lg:absolute lg:right-0">
+          <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
             <h1 className="m-4 text-end font-bold">
               Showing {data.length} of {data.length} Products
             </h1>
             <ScrollArea className="h-screen pb-32">
-              <div className="flex flex-wrap justify-between ">
+              <div className="flex flex-wrap justify-between">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
-                    <div key={index} className="w-1/3 p-2">
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
+                      <div key={index} className="w-1/3 p-2">
+                        <ProductCardSkeleton />
+                      </div>
+                    ))
                   : data?.map((item: DataCart) => (
-                    <ProductCard
-                      key={item.book_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={() => handleAddToCart(item)}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
-                    />
-                  ))}
+                      <ProductCard
+                        key={item.book_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={() => handleAddToCart(item)}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        openDetail={() => openDetail(item)}
+                      />
+                    ))}
               </div>
             </ScrollArea>
             {/* <div className="mt-4 flex justify-between">
@@ -380,8 +352,8 @@ const MyComponent = () => {
                 </span>
               </div>
               {itemDetail?.item_id &&
-                !isItemInCart(itemDetail.item_id) &&
-                itemDetail?.stock?.quantity ? (
+              !isItemInCart(itemDetail.item_id) &&
+              itemDetail?.stock?.quantity ? (
                 <button
                   className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
                   onClick={() => handleAddToCart(itemDetail)}

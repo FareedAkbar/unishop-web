@@ -21,7 +21,7 @@ interface AuthContextProps {
   CheckoutApi: (payload: CheckoutForm) => Promise<checkoutBooknetResponse>;
   register: (payload: Register) => Promise<boolean>;
   logout: () => Promise<void>;
-  getcheckoutFormData: () => Promise<boolean>;
+  getCheckoutFormData: () => Promise<boolean>;
   getGenre: () => Promise<boolean>;
   getCategory: () => Promise<boolean>;
   addCartItems: (payload: DataCart) => Promise<boolean>;
@@ -35,10 +35,12 @@ interface AuthContextProps {
   appId: string;
   removeAllCartItems: () => Promise<boolean>;
   setUUID: (payload: string) => Promise<boolean>;
+  setTheme: (payload: string) => Promise<boolean>;
   CheckoutApiWithUserName: (payload: Booknet_customer_checkout) => Promise<checkoutBooknetResponse>;
   uuidLocal: string | undefined;
   token: string | undefined;
-  bookentcustomerId?: number | null
+  themeMode: string;
+  booknetCustomerId?: number | null
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -57,12 +59,13 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
 
   const [token, setToken] = useState<string | undefined>();
+  const [themeMode, setThemeMode] = useState<string>("Light");
   const [cartItems, setItems] = useState<DataCart[]>([]);
   const [genre, setGenre] = useState<Genre[] | null>([]);
   const [category, setCategory] = useState<Category[] | null>([]);
   const [uuidLocal, setUuidLocal] = useState<string | undefined>();
   const [checkoutData, setCheckoutData] = useState<CheckoutForm | null>(null);
-  const [bookentcustomerId, setBookentcustomerId] = useState<number | null>(null);
+  const [booknetCustomerId, setBooknetCustomerId] = useState<number | null>(null);
 
   const login = async (payload: Login): Promise<LoginResponse | boolean> => {
     const response = await apiRouter(
@@ -197,6 +200,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return true;
   };
 
+  const setTheme = async (payload: string): Promise<boolean> => {
+    // lsClient.setItem("UUID", payload);
+    setThemeMode(payload)
+    return true;
+  };
+
 
   const addCartItems = async (payload: DataCart): Promise<boolean> => {
     setItems((prev) => {
@@ -315,7 +324,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const CATEGORY = lsClient.getItem("CATEGORY");
     const UUID = lsClient.getItem("UUID");
     const TOKEN = lsClient.getItem("TOKEN");
-    const BOOKENT_CUSTOMER_ID = lsClient.getItem("BOOKENT_CUSTOMER_ID");
+    const BOOKNET_CUSTOMER_ID = lsClient.getItem("BOOKNET_CUSTOMER_ID");
     setItems(
       cartItems
         ? typeof cartItems === "string"
@@ -324,7 +333,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         : [],
     );
     setUuidLocal(UUID);
-    setBookentcustomerId(BOOKENT_CUSTOMER_ID);
+    setBooknetCustomerId(BOOKNET_CUSTOMER_ID);
     setToken(TOKEN);
     setGenre(GENRE);
     setCategory(CATEGORY);
@@ -341,7 +350,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     lsClient.setItem("CHECKOUT_DATA", payload);
     return true;
   };
-  const getcheckoutFormData = async (): Promise<boolean> => {
+  const getCheckoutFormData = async (): Promise<boolean> => {
     const checkoutData = lsClient.getItem("CHECKOUT_DATA");
     setCheckoutData(checkoutData);
     return true
@@ -363,10 +372,10 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       (await response.json()) as checkoutBooknetResponse;
     if (responsePayload.status) {
       const x = responsePayload.data.booknet_customer_id ?? null
-      setBookentcustomerId(x)
+      setBooknetCustomerId(x)
       setCheckoutData(responsePayload.data)
       console.log(responsePayload)
-      lsClient.setItem("BOOKENT_CUSTOMER_ID", responsePayload?.data.booknet_customer_id ?? null);
+      lsClient.setItem("BOOKNET_CUSTOMER_ID", responsePayload?.data.booknet_customer_id ?? null);
       lsClient.setItem("CHECKOUT_DATA", responsePayload?.data ?? null);
       return responsePayload
     } else {
@@ -395,7 +404,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (responsePayload.status) {
       setCheckoutData(responsePayload.data)
       lsClient.setItem("CHECKOUT_DATA", responsePayload.data)
-      // lsClient.setItem("BOOKENT_CUSTOMER_ID", responsePayload?.data?.booknet_customer_id ?? null);
+      // lsClient.setItem("BOOKNET_CUSTOMER_ID", responsePayload?.data?.booknet_customer_id ?? null);
       return responsePayload
     } else {
       throw new Error("failed"); // Throw an error with the message
@@ -417,7 +426,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         removeCartItems,
         checkoutFormData,
         checkoutData,
-        getcheckoutFormData,
+        getCheckoutFormData,
         increaseCartItemQuantity,
         removeAllCartItems,
         getGenre,
@@ -425,13 +434,15 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         category,
         genre,
         setUUID,
+        setTheme,
         uuidLocal,
         token,
         sendOTP,
         verifyOTP,
         CheckoutApi,
-        bookentcustomerId,
-        CheckoutApiWithUserName
+        booknetCustomerId,
+        CheckoutApiWithUserName,
+        themeMode
       }}
     >
       {children}

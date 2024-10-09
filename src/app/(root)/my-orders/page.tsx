@@ -50,7 +50,7 @@ const requestOptions: RequestInit = {
 };
 
 const MyComponent = () => {
-  const { bookentcustomerId, checkoutData } = useAuthContext();
+  const { booknetCustomerId, checkoutData } = useAuthContext();
   const router = useRouter();
   const [loader, setLoader] = useState(false);
   const [dataSpecialOrders, setDataSpecialOrders] = useState<GetSpecialOrder[]>(
@@ -145,7 +145,7 @@ const MyComponent = () => {
     setLoader(true);
     try {
       const response = await fetch(
-        `https://booknet-dev.iconsole.com.au/api/special/customer?booknet_customer_id=${bookentcustomerId}&special=1`,
+        `https://booknet-dev.iconsole.com.au/api/special/customer?booknet_customer_id=${booknetCustomerId}&special=1`,
         requestOptions,
       );
       const result: GetSpecialOrderApiResponse =
@@ -169,7 +169,7 @@ const MyComponent = () => {
     setLoader(true);
     try {
       const response = await fetch(
-        `https://booknet-dev.iconsole.com.au/api/special/customer?booknet_customer_id=${bookentcustomerId}&special=0`,
+        `https://booknet-dev.iconsole.com.au/api/special/customer?booknet_customer_id=${booknetCustomerId}&special=0`,
         requestOptions,
       );
       const result: GetSpecialOrderApiResponse =
@@ -193,11 +193,11 @@ const MyComponent = () => {
   // Handle add to cart
 
   useEffect(() => {
-    if (!bookentcustomerId) return;
+    if (!booknetCustomerId) return;
     void fetchDataSpecialOrders();
     void fetchDataOrders();
     void fetchOrderStatus();
-  }, [bookentcustomerId]);
+  }, [booknetCustomerId]);
 
   function getOrderStatusById(orderStatusId: number) {
     return orderStatus.find((status) => status.status_id === orderStatusId);
@@ -318,7 +318,7 @@ const MyComponent = () => {
         outlet_id: selectedItem?.outlet,
         final_price_including_tax: selectedItem?.total_discounted_price,
         transaction_id: id.toString(),
-        booknet_customer_id: bookentcustomerId,
+        booknet_customer_id: booknetCustomerId,
         customer_id: checkoutData?.customer_id,
         special_order_items: await convertPayload(),
       };

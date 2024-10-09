@@ -31,21 +31,8 @@ import {
   SelectItem,
 } from "~/components/ui/select";
 import type { Category } from "~/types/category";
+import { getBooks } from "~/_actions/gettextbooks";
 
-const requestOptions: RequestInit = {
-  method: "GET",
-  headers: {
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM`,
-    "Content-Type": "application/json", // Optional, depending on your API
-  },
-  redirect: "follow", // Use the correct type for `redirect`
-};
-
-interface ApiResponse {
-  // meta: PaginationData; // Adjust based on your actual structure
-  data: DataCart[];
-  status: boolean;
-}
 const dummyProducts = Array.from({ length: 10 }, (_, index) => ({
   id: index + 1,
   name: `Product ${index + 1}`,
@@ -60,42 +47,23 @@ const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>("");
+
   const [data, setData] = useState<DataCart[]>([]);
   const [subCategory, setSubCategory] = useState<Category[] | null>(null);
   const isFirstRender = useRef(true);
 
   const params = useSearchParams();
-  const detail = params.get("detail");
+
   const { setOpen } = useModal();
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
+  const [detail, setDetail] = useState<string | null>(null);
   const { cartItems, addCartItems, removeCartItems, category } =
     useAuthContext();
 
-  const fetchData = async (cat_id: number) => {
-    setLoader(true);
-
-    try {
-      const response = await fetch(
-        `https://booknet-dev.iconsole.com.au/api/books/getBooksByGenreCat?category_id=${cat_id}&entries=1&images=1&detailed=1`,
-        requestOptions,
-      );
-      const result: ApiResponse = (await response.json()) as ApiResponse;
-
-      // Check if result has the expected structure
-      if (result?.status) {
-        // setMeta(result.meta);
-        setData(result.data);
-      } else {
-        console.error("Unexpected result structure:", result);
-        // Handle unexpected structure here
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoader(false);
-    }
-  };
+  useEffect(() => {
+    const d = params.get("detail");
+    setDetail(d);
+  }, [params]);
 
   useEffect(() => {
     if (!category) return;
@@ -103,12 +71,16 @@ const MyComponent = () => {
 
     const catId = category?.find((item) => item.id == parseInt(detail));
 
-    setDescription(catId?.category_description ?? "");
     const loadData = async () => {
       const x = category?.filter((item) => item.parent == catId?.id);
       setSubCategory(x);
       try {
-        await fetchData(catId?.id ?? 1);
+        setLoader(true);
+        const x = await getBooks(catId?.id ?? 1);
+        if (typeof x !== "boolean" && x.status) {
+          setData(x.data);
+        }
+        setLoader(false);
         // setData(result);
         // setTotalPages(result.totalPages);
       } catch (error) {
@@ -124,7 +96,7 @@ const MyComponent = () => {
         console.error("Failed to load data in useEffect:", error);
       });
     }
-  }, [category, detail]);
+  }, [category]);
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
@@ -190,9 +162,15 @@ const MyComponent = () => {
     }
   };
 
-  const handleChangeSubCategory = async (x: string) => {
+  const handleChangeSubCategory = async (id: string) => {
     try {
-      await fetchData(parseInt(x) ?? 1);
+      setLoader(true);
+      const x = await getBooks(parseInt(id) ?? 1);
+      if (typeof x !== "boolean" && x.status) {
+        setData(x.data);
+      }
+      setLoader(false);
+      // await fetchData(parseInt(x) ?? 1);
       // setData(result);
       // setTotalPages(result.totalPages);
     } catch (error) {
@@ -211,7 +189,7 @@ const MyComponent = () => {
           </div>
           <div className="flex flex-col px-4 py-10 lg:fixed lg:left-64 lg:right-0">
             <div className="m-4 flex items-center justify-end gap-4">
-              {subCategory && subCategory[0] && (
+              {subCategory?.[0] && (
                 <Select
                   onValueChange={(x: string) => handleChangeSubCategory(x)}
                 >

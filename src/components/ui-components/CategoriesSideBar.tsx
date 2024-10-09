@@ -226,14 +226,15 @@ console.log(headerCategory)
           </button>
         )}
 
-        {checkoutData?.booknet_customer_id && (
+        {/* {checkoutData?.booknet_customer_id && (
           <button
             onClick={() => router.push("/special-order")}
             className="flex w-full items-center justify-between font-poppins text-lg text-black focus:outline-none"
           >
             <span>Special Order</span>
           </button>
-        )}
+        )} */}
+        
       </nav>
     </aside>
   );

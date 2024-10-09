@@ -3,25 +3,26 @@ import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form"; // Use import type
 import { zodResolver } from "@hookform/resolvers/zod";
-import { boolean, z } from "zod";
+import { type z } from "zod";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "~/lib/utils";
 import { SignupSchema } from "./schema";
 import Select from "../Fields/select";
-import DynamicInput from "../Fields/dynamicInput";
 // import isEmpty from "lodash/isEmpty";
 
 // import { getCachedCountriesList } from "~/_actions/country";
 // import type { CountriesData, Country, State } from "~/types/country";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter } from "next/navigation";
-import shippingOptions from "../constants/shippingMethod";
-import states from "../constants/austrailia";
+import states from "../constants/Australia";
 import cities from "../constants/cities";
 import { PhoneNumberInput } from "../ui/phoneNumberInput";
 import { v5 as uuidv5 } from "uuid";
-import { checkoutBooknetResponse, CheckoutForm } from "~/types/checkoutForm";
+import {
+  type checkoutBooknetResponse,
+  type CheckoutForm,
+} from "~/types/checkoutForm";
 import Button from "../ui-components/Button";
 
 type CehckoutFormValues = z.infer<typeof SignupSchema>;
@@ -38,7 +39,7 @@ export default function CehckoutForm({ push, handleData }: checkout) {
   const [cityOptions, setCityOptions] = useState<
     { value: number; label: string }[]
   >([]);
-  const { checkoutFormData, checkoutData, CheckoutApi } = useAuthContext();
+  const { checkoutData, CheckoutApi } = useAuthContext();
   const [loader, setLoader] = useState(false);
 
   const defaultValues = checkoutData
@@ -46,7 +47,12 @@ export default function CehckoutForm({ push, handleData }: checkout) {
         ...checkoutData,
         city:
           cities
-            .find((state) => state.stateCode == states.find((state) => state.label === checkoutData.state)?.value)
+            .find(
+              (state) =>
+                state.stateCode ==
+                states.find((state) => state.label === checkoutData.state)
+                  ?.value,
+            )
             ?.city.find((city) => city.label == checkoutData.city)
             ?.value.toString() ?? "",
         state: checkoutData?.state
@@ -54,13 +60,13 @@ export default function CehckoutForm({ push, handleData }: checkout) {
           : null,
       }
     : {};
-    // console.log(cities)
-    // console.log(states)
-    // console.log(checkoutData)
-    // console.log( cities
-    //   .find((state) => state.stateCode == states.find((state) => state.label === checkoutData?.state)?.value)
-    //   ?.city.find((city) => city.label == checkoutData?.city)
-    //   ?.value.toString() ?? "",)
+  // console.log(cities)
+  // console.log(states)
+  // console.log(checkoutData)
+  // console.log( cities
+  //   .find((state) => state.stateCode == states.find((state) => state.label === checkoutData?.state)?.value)
+  //   ?.city.find((city) => city.label == checkoutData?.city)
+  //   ?.value.toString() ?? "",)
 
   const router = useRouter();
 
@@ -82,7 +88,11 @@ export default function CehckoutForm({ push, handleData }: checkout) {
 
   useEffect(() => {
     if (!checkoutData) return;
-    setCityOptions(getCitiesForState(states.find((state) => state.label === checkoutData.state)?.value ?? ""));
+    setCityOptions(
+      getCitiesForState(
+        states.find((state) => state.label === checkoutData.state)?.value ?? "",
+      ),
+    );
   }, [checkoutData]);
 
   const handleStateChange = (e: string) => {
@@ -130,7 +140,6 @@ export default function CehckoutForm({ push, handleData }: checkout) {
       booknet_customer_type_id: checkoutData?.customer_id ? 1 : 4,
       uuid: uuid,
     };
-   
 
     try {
       // await checkoutFormData(updatedData);
@@ -143,7 +152,6 @@ export default function CehckoutForm({ push, handleData }: checkout) {
               router.push("placeorder");
             }
             if (!push && handleData) {
-              
               handleData(res?.data);
             }
           }
@@ -166,7 +174,7 @@ export default function CehckoutForm({ push, handleData }: checkout) {
 
   return (
     <div className="mx-auto w-full rounded-none border bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
-      <h2 className=" text-xl font-bold text-neutral-800 dark:text-neutral-200">
+      <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         Checkout
       </h2>
 
@@ -324,15 +332,14 @@ export default function CehckoutForm({ push, handleData }: checkout) {
           </div>
         </div> */}
         <Button
-            title="Checkout &rarr;"
-            type="submit"
-            width="w-full"
-            loading={loader}
-            onClick={() => {
-              //
-            }}
-          />
-       
+          title="Checkout &rarr;"
+          type="submit"
+          width="w-full"
+          loading={loader}
+          onClick={() => {
+            //
+          }}
+        />
       </form>
     </div>
   );

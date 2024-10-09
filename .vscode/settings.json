@@ -3,6 +3,10 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "cSpell.words": [
     "Booknet",
-    "localstorage"
+    "Cehckout",
+    "hookform",
+    "localstorage",
+    "placeorder",
+    "uuidv"
   ]
 }

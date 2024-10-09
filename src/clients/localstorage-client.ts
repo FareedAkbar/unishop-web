@@ -48,9 +48,9 @@ const STORAGE_MAPPER = {
     KEY:"token",
     DEFAULT: null
   },
-  BOOKENT_CUSTOMER_ID:{
+  BOOKNET_CUSTOMER_ID:{
     TYPE: {} as number | null,
-    KEY: "bookent_customer_id",
+    KEY: "BOOKNET_CUSTOMER_ID",
     DEFAULT: null
   }
 };
