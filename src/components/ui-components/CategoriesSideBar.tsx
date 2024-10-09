@@ -4,6 +4,27 @@ import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
 import type { CategoryTreeNode, Category as CAT } from "~/types/category";
+import {
+  FaBook,
+  FaGraduationCap,
+  FaTshirt,
+  FaPen,
+  FaGift,
+  FaClipboardList,
+} from "react-icons/fa";
+import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
+
+// Create a mapping of icon names to their corresponding components
+const iconMap: { [key: string]: JSX.Element } = {
+  FaBook: <FaBook />,
+  FaGraduationCap: <FaGraduationCap />,
+  FaTshirt: <FaTshirt />,
+  FaPen: <FaPen />,
+  FaGift: <FaGift />,
+  FaClipboardList: <FaClipboardList />,
+  AiOutlineFileText: <AiOutlineFileText />,
+  AiOutlineContacts: <AiOutlineContacts />,
+};
 
 interface Category {
   label: string;
@@ -157,9 +178,14 @@ const CategoriesSidebar = () => {
                   ? toggleCategory(item.label)
                   : null
               }
-              className="flex w-full items-center justify-between font-poppins text-lg text-black focus:outline-none"
+              className="flex w-full items-center hover:scale-110 transition-transform duration-300 justify-between font-poppins text-lg text-black focus:outline-none"
             >
-              <span>{item.label}</span>
+              <div className="flex items-center">
+                {item.icon && (
+                  <span className="mr-3">{iconMap[item.icon]}</span>
+                )}
+                <span>{item.label}</span>
+              </div>
               {item.subItems ||
               item.label === "Books" ||
               item.label === "Text Book" ? (
