@@ -162,23 +162,17 @@ const HomePage: React.FC = () => {
       <div className="container mx-auto flex justify-center">
         <ImageSlider images={images} />
       </div>
-      <div className="flex">
-        <div className="hidden lg:block">
-          <CategoriesSidebar />
-        </div>
-        <div className="flex flex-col pl-6 pt-3">
-          <div className="self-start text-3xl">
+      <div className="flex flex-col py-5">
+          <div className="self-center text-5xl">
             <FlipWords words={words} />
             your reading adventure!
           </div>
-
-          <ProductsSection
-            products={flashSaleProducts}
-            targetDate={new Date("2024-10-25T10:00:00")}
-            headingPartOne="Today's"
-            headingPartTwo="Flash Sales"
-          />
         </div>
+      <div className="flex">
+        <div className="hidden lg:block lg:pl-20">
+          <CategoriesSidebar />
+        </div>
+      
       </div>
       <GraduationBanner />
       <ProductsSection

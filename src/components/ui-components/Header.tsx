@@ -139,7 +139,7 @@ const Header = () => {
 
   return (
     <nav className="fixed left-0 top-0 z-[15] h-fit w-full">
-      <header className="flex flex-col bg-red-100 px-4 pt-4 backdrop-blur md:flex-row md:items-center">
+      <header className="flex flex-col bg-white px-4 pt-4 backdrop-blur md:flex-row md:items-center">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
         <div className="flex items-center justify-between border-b pb-4 md:hidden">
           {/* Hamburger Icon */}

@@ -49,7 +49,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
           width={1000}
           height={1000}
           objectFit="cover"
-          className={`relative h-28 w-full transition-transform duration-700 ease-in-out sm:h-72 lg:h-[400px] ${isFlipping ? "animate-flip-out" : ""}`}
+          className={`relative h-28 w-full transition-transform duration-700 rounded-lg ease-in-out sm:h-72 lg:h-[400px] ${isFlipping ? "animate-flip-out" : ""}`}
         />
       </div>
       {/* Dots Indicator */}
