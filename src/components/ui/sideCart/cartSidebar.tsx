@@ -113,8 +113,9 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
       )}
 
       <div
-        className={`fixed right-0 top-0 z-30 h-screen w-full transform overflow-hidden border-l-2 bg-white shadow-lg transition-transform lg:w-2/5 ${isOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+        className={`fixed right-0 top-0 z-30 h-screen w-full transform overflow-hidden border-l-2 bg-white shadow-lg transition-transform lg:w-2/5 ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
       >
         {/* Cart Sidebar */}
         {/* Cart Header */}
@@ -180,7 +181,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
                 opencart();
               }
             }}
-            className={`mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white  ${items.length === 0 ? "disabled" : ""}`}
+            className={`mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white ${items.length === 0 ? "disabled" : ""}`}
             title="Confirm Order"
           />
           {/* Confirm Order

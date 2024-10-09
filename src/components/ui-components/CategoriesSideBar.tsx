@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { FaChevronRight, FaChevronDown } from "react-icons/fa";
+import { FaChevronRight, FaChevronDown, FaReceipt } from "react-icons/fa";
 import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
 import type { CategoryTreeNode, Category as CAT } from "~/types/category";
@@ -53,7 +53,7 @@ const SubcategoryList = ({
             onClick={() =>
               subItem.subItems ? toggleCategory(subItem.label) : null
             }
-            className="flex w-full items-center justify-between font-poppins text-sm text-black focus:outline-none"
+            className="flex w-full items-center justify-between    text-sm text-black focus:outline-none"
           >
             <span>{subItem.label}</span>
             {subItem.subItems &&
@@ -163,7 +163,7 @@ const CategoriesSidebar = () => {
 
 
   return (
-    <aside className="static left-0 w-64 border-r bg-red-50 rounded-r-xl p-4">
+    <aside className="static left-0 w-64 border-r bg-red-100 rounded-r-xl p-4">
       <h2 className="text-lg font-bold">Categories</h2>
       <nav className="relative mt-4">
         {categories.map((item) => (
@@ -176,7 +176,7 @@ const CategoriesSidebar = () => {
                   ? toggleCategory(item.label)
                   : null
               }
-              className="flex w-full items-center justify-between font-poppins text-lg text-black transition-transform duration-300 hover:scale-110 focus:outline-none"
+              className="flex w-full items-center justify-between  text-lg text-black transition-transform duration-300 hover:scale-110 focus:outline-none"
             >
               <div className="flex items-center">
                 {item.icon && (
@@ -238,8 +238,9 @@ const CategoriesSidebar = () => {
         {checkoutData?.booknet_customer_id && (
           <button
             onClick={() => router.push("/my-orders")}
-            className="mb-2 flex w-full items-center justify-between font-poppins text-lg text-black focus:outline-none"
+            className="mb-2 flex w-full items-center  transition-transform duration-300 hover:scale-110  text-lg text-black focus:outline-none"
           >
+            <FaReceipt className="text-indigo-600 mr-3" />
             <span>My Orders</span>
           </button>
         )}
@@ -247,7 +248,7 @@ const CategoriesSidebar = () => {
         {/* {checkoutData?.booknet_customer_id && (
           <button
             onClick={() => router.push("/special-order")}
-            className="flex w-full items-center justify-between font-poppins text-lg text-black focus:outline-none"
+            className="flex w-full items-center justify-between    text-lg text-black focus:outline-none"
           >
             <span>Special Order</span>
           </button>

@@ -156,14 +156,14 @@ const HomePage: React.FC = () => {
   const words = ["Imagine", "Create", "Inspire", "Transform"];
 
   return (
-    <div className="relative flex-1 overflow-hidden pt-32 lg:pt-24">
-      <BackgroundWords />
-      <BackgroundImages />
+    <div className="relative flex-1 overflow-hidden pt-32 lg:pt-24 bg-red-50">
+      {/* <BackgroundWords /> */}
+      {/* <BackgroundImages /> */}
       <div className="container mx-auto flex justify-center">
         <ImageSlider images={images} />
       </div>
       <div className="flex flex-col py-5">
-          <div className="self-center text-5xl">
+          <div className="self-center lg:text-5xl">
             <FlipWords words={words} />
             your reading adventure!
           </div>

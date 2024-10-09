@@ -42,7 +42,7 @@ const AlertBox: React.FC<AlertBoxProps> = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={()=>onClose()}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={()=>onContinue()}>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={()=>onContinue()} className="bg-red-500 hover:bg-red-400">Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
