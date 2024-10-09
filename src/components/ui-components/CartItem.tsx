@@ -60,6 +60,9 @@ const CartItem: React.FC<CartItemProps> = ({
           Size:<span className="pl-1 text-gray-500">{size}</span>
         </p>
         <p className="text-xs">
+        Available Stock: :<span className="pl-1 text-gray-500">{stock?.quantity}</span>
+        </p>
+        <p className="text-xs">
           Color:<span className="pl-1 text-gray-500">{color}</span>
         </p>
         <p className="font-bold text-md">${price}</p>
@@ -88,8 +91,7 @@ const CartItem: React.FC<CartItemProps> = ({
     {stock?.quantity < itemQuantity && (
       <p className="bg-yellow-200 p-3 text-sm">
         {/* <MdWarning size={23} /> */}
-        We don&apos;t have as many quantity as you requested, but we&apos;ll back order
-        the remaining {itemQuantity - stock.quantity}.
+        {`Although we can't fulfill your request for quantity, we'll backorder the remaining ${itemQuantity - stock.quantity}.`}
       </p>
     )}
     </>

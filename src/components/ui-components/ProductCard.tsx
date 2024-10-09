@@ -64,12 +64,15 @@ const ProductCard = ({
       <h2 className="mt-2 truncate text-sm font-bold sm:mt-4 sm:text-base lg:text-lg">
         {product?.book_title}
       </h2>
+      <span className="truncate text-sm sm:text-sm lg:text-sm">
+        Available Stock: {product?.stock.quantity}
+      </span>
       <div className="mt-1 flex gap-1 sm:mt-2 sm:gap-2">
         <span className="text-sm font-bold text-red-500 sm:text-lg">
           ${product?.item_sale_price ? product?.item_sale_price : 26}
         </span>
       </div>
-      <div className="mt-1 flex flex-row justify-between sm:mt-2">
+      <div className="flex flex-row justify-between sm:mt-1">
         {/* Additional details like rating can go here */}
       </div>
     </div>

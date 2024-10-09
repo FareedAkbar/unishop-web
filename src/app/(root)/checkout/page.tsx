@@ -85,12 +85,12 @@ const MyComponent = () => {
     {
       title: "Checkout",
       value: "checkout",
-      content: <CheckoutForm push={true} />,
+      content: <CheckoutForm push={true} disabled={!items?.[0] ? true : false}/>,
     },
     {
       title: "Booknet Account",
       value: "booknetForm",
-      content: <BooknetForm push={true} goTo="placeorder" />,
+      content: <BooknetForm push={true} goTo="placeorder" disabled={!items?.[0] ? true : false} />,
     },
   ];
 
@@ -99,7 +99,7 @@ const MyComponent = () => {
       <main className="flex min-h-screen flex-col items-center justify-start pt-24">
         <div className="grid w-full grid-cols-1 gap-12 px-4  lg:grid-cols-2">
           <div className="z-10 w-full">
-            <Tabs tabs={tabs} />
+            <Tabs tabs={tabs} key={items?.toString()}/>
           </div>
           <div className="z-10 h-screen pt-10">
             <ScrollArea className="lg:h-4/5 flex-1 p-4">

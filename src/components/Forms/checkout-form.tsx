@@ -29,10 +29,11 @@ type CehckoutFormValues = z.infer<typeof SignupSchema>;
 
 interface checkout {
   push?: boolean;
+  disabled?: boolean;
   handleData?: (data: CheckoutForm) => void;
 }
 
-export default function CehckoutForm({ push, handleData }: checkout) {
+export default function CehckoutForm({ push, handleData, disabled = false }: checkout) {
   // const [stateOptions, setStateOptions] = useState<
   //   { value: number; label: string }[]
   // >([]);
@@ -336,6 +337,7 @@ export default function CehckoutForm({ push, handleData }: checkout) {
           type="submit"
           width="w-full"
           loading={loader}
+          disabled={disabled}
           onClick={() => {
             //
           }}

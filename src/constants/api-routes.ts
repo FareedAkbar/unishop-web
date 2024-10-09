@@ -19,6 +19,7 @@ export enum PAGE_ROUTES {
   ACADEMIC_DRESS_HIRE = "/academic-dress-hire",
   SPECIAL_ORDER = "/special-order",
   MY_ORDERS = "/my-orders",
+  ORDER_CONFIRMED = "/order-confirmed",
 }
 
 export enum API_ROUTES {

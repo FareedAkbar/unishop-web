@@ -79,7 +79,9 @@ const MyComponent = () => {
         const x = await getBooks(catId?.id ?? 1);
         if (typeof x !== "boolean" && x.status) {
           setData(x.data);
+          console.log(x.data)
         }
+
         setLoader(false);
         // setData(result);
         // setTotalPages(result.totalPages);

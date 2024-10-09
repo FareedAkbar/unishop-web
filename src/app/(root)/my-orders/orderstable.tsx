@@ -77,9 +77,9 @@ const OrdersTable = ({
               {invoice.total_discounted_price}
             </TableCell>
 
-            {title == "specialOrders" &&
+            {/* {title == "specialOrders" &&
             invoice?.special_order_items &&
-            invoice?.special_order_items?.length > 0 ? (
+            invoice?.special_order_items?.length > 0 && (
               <TableCell>
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="item-1">
@@ -120,10 +120,8 @@ const OrdersTable = ({
                   </AccordionItem>
                 </Accordion>
               </TableCell>
-            ) : (
-              ""
             )}
-            {invoice?.special_order_items?.length > 0 ? (
+            {invoice?.special_order_items?.length > 0 && (
               <TableCell className="text-center">
                 {invoice.order_status == 67 && (
                   <Button
@@ -133,9 +131,7 @@ const OrdersTable = ({
                   />
                 )}
               </TableCell>
-            ) : (
-              ""
-            )}
+            )} */}
           </TableRow>
         ))}
       </TableBody>

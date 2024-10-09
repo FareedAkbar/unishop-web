@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import BooksImage from "../../../../public/book.json";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import SearchInput from "~/components/Fields/search";
 import { FiSearch } from "react-icons/fi";
 import SpecialOrderCard from "~/components/specialOrderCard";
@@ -62,6 +62,7 @@ const MyComponent = () => {
   );
   const [orderStatus, setOrderStatus] = useState<OrderStatus[]>([]);
   const [activeTabName, setActiveTabeName] = useState("orders");
+  const isFirstRender = useRef(true);
   const { toast } = useToast();
   const [transactionData, setTransactionData] =
     useState<trasactionResponse | null>(null);
@@ -166,6 +167,7 @@ const MyComponent = () => {
     }
   };
   const fetchDataOrders = async () => {
+    console.log("dasdasd")
     setLoader(true);
     try {
       const response = await fetch(
@@ -191,12 +193,29 @@ const MyComponent = () => {
   };
 
   // Handle add to cart
-
+console.log(booknetCustomerId)
   useEffect(() => {
     if (!booknetCustomerId) return;
-    void fetchDataSpecialOrders();
-    void fetchDataOrders();
-    void fetchOrderStatus();
+    const loadData = async () => {
+      try {
+        setLoader(true);
+        await fetchDataOrders();
+        await fetchOrderStatus();
+        setLoader(false);
+        // setData(result);
+        // setTotalPages(result.totalPages);
+      } catch (error) {
+        console.error("Failed to load data:", error);
+        setLoader(false);
+        // Optionally set an error state here
+      }
+    };
+   
+      loadData().catch((error) => {
+        console.error("Failed to load data in useEffect:", error);
+      });
+    
+    // void fetchDataSpecialOrders();
   }, [booknetCustomerId]);
 
   function getOrderStatusById(orderStatusId: number) {
@@ -331,88 +350,88 @@ const MyComponent = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("Connected to server after");
-    if (!checkoutData?.uuid) return;
+  // useEffect(() => {
+  //   console.log("Connected to server after");
+  //   if (!checkoutData?.uuid) return;
 
-    const connectHandler = () => {
-      console.log("Connected to server", socket.id);
+  //   const connectHandler = () => {
+  //     console.log("Connected to server", socket.id);
 
-      socket.emit(
-        "/studentHandshake",
-        { student_id: checkoutData?.customer_id ?? checkoutData?.uuid },
-        () => {
-          console.log("studentHandshake");
-        },
-      );
-    };
+  //     socket.emit(
+  //       "/studentHandshake",
+  //       { student_id: checkoutData?.customer_id ?? checkoutData?.uuid },
+  //       () => {
+  //         console.log("studentHandshake");
+  //       },
+  //     );
+  //   };
 
-    socket.on("connect", connectHandler);
+  //   socket.on("connect", connectHandler);
 
-    return () => {
-      socket.off("connect", connectHandler);
-    };
-  }, [checkoutData]);
+  //   return () => {
+  //     socket.off("connect", connectHandler);
+  //   };
+  // }, [checkoutData]);
 
-  type socketResponse = {
-    customer_id: number;
-    message: string;
-    status: boolean;
-    transaction_id: number;
-  };
+  // type socketResponse = {
+  //   customer_id: number;
+  //   message: string;
+  //   status: boolean;
+  //   transaction_id: number;
+  // };
 
-  interface dataresponse {
-    data: socketResponse;
-  }
-  const PaymentStatus = useCallback(() => {
-    if (!checkoutData?.uuid) return;
+  // interface dataresponse {
+  //   data: socketResponse;
+  // }
+  // const PaymentStatus = useCallback(() => {
+  //   if (!checkoutData?.uuid) return;
 
-    console.log("Payment Socket");
+  //   console.log("Payment Socket");
 
-    const handlePaymentStatus = async (dat: dataresponse) => {
-      const { data } = dat;
+  //   const handlePaymentStatus = async (dat: dataresponse) => {
+  //     const { data } = dat;
 
-      if (data.status) {
-        toast({
-          title: "Payment Successful",
-          description:
-            "Your payment has been processed successfully for this order.",
-        });
+  //     if (data.status) {
+  //       toast({
+  //         title: "Payment Successful",
+  //         description:
+  //           "Your payment has been processed successfully for this order.",
+  //       });
 
-        try {
-          await placeOrderApi(data.transaction_id);
-        } catch (error) {
-          console.error("Failed to load data:", error);
-        }
-      } else {
-        toast({
-          title: "Payment Declined",
-          variant: "destructive",
-          description:
-            "Unfortunately, your payment could not be processed. Please try again.",
-        });
-      }
-      setTransactionData(null);
-      setIsOpenPaymentAlert(false);
-    };
+  //       try {
+  //         await placeOrderApi(data.transaction_id);
+  //       } catch (error) {
+  //         console.error("Failed to load data:", error);
+  //       }
+  //     } else {
+  //       toast({
+  //         title: "Payment Declined",
+  //         variant: "destructive",
+  //         description:
+  //           "Unfortunately, your payment could not be processed. Please try again.",
+  //       });
+  //     }
+  //     setTransactionData(null);
+  //     setIsOpenPaymentAlert(false);
+  //   };
 
-    // Register the listener
-    socket.on("paymentStatus", handlePaymentStatus);
+  //   // Register the listener
+  //   socket.on("paymentStatus", handlePaymentStatus);
 
-    // Cleanup on unmount
-    return () => {
-      socket.off("paymentStatus", handlePaymentStatus);
-    };
-  }, [checkoutData, transactionData]);
+  //   // Cleanup on unmount
+  //   return () => {
+  //     socket.off("paymentStatus", handlePaymentStatus);
+  //   };
+  // }, [checkoutData, transactionData]);
 
-  useEffect(() => {
-    if (!checkoutData?.uuid) return;
+  // useEffect(() => {
+  //   if (!checkoutData?.uuid) return;
 
-    console.log("Payment socket initiated");
-    const cleanupPaymentStatus = PaymentStatus();
+  //   console.log("Payment socket initiated");
+  //   const cleanupPaymentStatus = PaymentStatus();
 
-    return cleanupPaymentStatus;
-  }, [checkoutData, transactionData]);
+  //   return cleanupPaymentStatus;
+  // }, [checkoutData, transactionData]);
 
   const closeModal = () => {
     setIsOpenPaymentAlert(false);

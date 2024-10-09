@@ -374,7 +374,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const x = responsePayload.data.booknet_customer_id ?? null
       setBooknetCustomerId(x)
       setCheckoutData(responsePayload.data)
-      console.log(responsePayload)
+     
       lsClient.setItem("BOOKNET_CUSTOMER_ID", responsePayload?.data.booknet_customer_id ?? null);
       lsClient.setItem("CHECKOUT_DATA", responsePayload?.data ?? null);
       return responsePayload
@@ -403,6 +403,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       (await response.json()) as checkoutBooknetResponse;
     if (responsePayload.status) {
       setCheckoutData(responsePayload.data)
+      console.log(responsePayload.data)
+      const x = responsePayload.data.booknet_customer_id ?? null
+      setBooknetCustomerId(x)
       lsClient.setItem("CHECKOUT_DATA", responsePayload.data)
       // lsClient.setItem("BOOKNET_CUSTOMER_ID", responsePayload?.data?.booknet_customer_id ?? null);
       return responsePayload

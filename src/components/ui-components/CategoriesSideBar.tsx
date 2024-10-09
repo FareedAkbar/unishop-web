@@ -95,7 +95,6 @@ const CategoriesSidebar = () => {
     categories.forEach((category) => {
       if (category.parent == 0 && category.outlet == 223) {
         // Root category
-        console.log(category);
         const rootCategory = categoryMap[category.id];
         if (rootCategory) {
           tree.push(rootCategory);
@@ -141,7 +140,6 @@ const CategoriesSidebar = () => {
     };
   }, [openCategory]);
 
-  console.log(headerCategory);
 
   return (
     <aside className="static left-0 w-64 border-r bg-red-50 p-4">
