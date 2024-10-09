@@ -63,16 +63,15 @@ const CategoriesSidebar = () => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const { genre, checkoutData, category } = useAuthContext();
   const router = useRouter();
-  const [headerCategory, setHeaderCategory] = useState<CategoryTreeNode[] | null>(null);
+  const [headerCategory, setHeaderCategory] = useState<
+    CategoryTreeNode[] | null
+  >(null);
   // Toggle category function
   const subcategoryRefs = useRef<Record<string, HTMLDivElement | null>>({}); // Create a ref for subcategories
 
   const toggleCategory = (label: string) => {
     setOpenCategory((prev) => (prev === label ? null : label));
   };
-
-
-
 
   function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
     const categoryMap: Record<number, CategoryTreeNode> = {};
@@ -94,10 +93,9 @@ const CategoriesSidebar = () => {
 
     // Build the tree structure
     categories.forEach((category) => {
-
       if (category.parent == 0 && category.outlet == 223) {
         // Root category
-        console.log(category)
+        console.log(category);
         const rootCategory = categoryMap[category.id];
         if (rootCategory) {
           tree.push(rootCategory);
@@ -119,13 +117,10 @@ const CategoriesSidebar = () => {
 
   // Usage Example
   useEffect(() => {
-    if (!category) return
+    if (!category) return;
     const categoryTree = buildCategoryTree(category ? category : []);
     setHeaderCategory(categoryTree ? categoryTree : null);
-
-  }, [category])
-
-
+  }, [category]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -145,9 +140,11 @@ const CategoriesSidebar = () => {
       document.removeEventListener("mousedown", handleClickOutside); // Clean up the event listener
     };
   }, [openCategory]);
-console.log(headerCategory)
+
+  console.log(headerCategory);
+
   return (
-    <aside className="static left-0 w-64 border-r p-4">
+    <aside className="static left-0 w-64 border-r bg-red-50 p-4">
       <h2 className="text-lg font-bold">Categories</h2>
       <nav className="relative mt-4">
         {categories.map((item) => (
@@ -155,8 +152,8 @@ console.log(headerCategory)
             <button
               onClick={() =>
                 item.subItems ||
-                  item.label === "Books" ||
-                  item.label === "Text Book"
+                item.label === "Books" ||
+                item.label === "Text Book"
                   ? toggleCategory(item.label)
                   : null
               }
@@ -164,8 +161,8 @@ console.log(headerCategory)
             >
               <span>{item.label}</span>
               {item.subItems ||
-                item.label === "Books" ||
-                item.label === "Text Book" ? (
+              item.label === "Books" ||
+              item.label === "Text Book" ? (
                 openCategory === item.label ? (
                   <FaChevronDown />
                 ) : (
@@ -179,7 +176,7 @@ console.log(headerCategory)
                 ref={(el) => {
                   if (el) subcategoryRefs.current[item.label] = el; // Assign ref without returning
                 }}
-                className="absolute left-10 top-8 z-50 w-60 rounded-xl border border-gray-200 bg-white p-4 shadow-lg"
+                className="absolute left-10 top-8 z-50 w-60 rounded-xl border border-black bg-red-100 p-4 shadow-lg"
               >
                 {item.label === "Books" &&
                   genre?.map((subItem) => (
@@ -192,18 +189,15 @@ console.log(headerCategory)
                     </a>
                   ))}
                 {item.label === "Text Book" &&
-                  headerCategory?.[0]?.children?.map(
-                    (subItem) =>
-                    (
-                      <a
-                        key={subItem.id}
-                        href={`textbooks?detail=${subItem.id}`}
-                        className="block py-1 text-sm hover:underline"
-                      >
-                        {subItem.category_name}
-                      </a>
-                    ),
-                  )}
+                  headerCategory?.[0]?.children?.map((subItem) => (
+                    <a
+                      key={subItem.id}
+                      href={`textbooks?detail=${subItem.id}`}
+                      className="block py-1 text-sm hover:underline"
+                    >
+                      {subItem.category_name}
+                    </a>
+                  ))}
                 {item.subItems && (
                   <SubcategoryList
                     subItems={item.subItems}

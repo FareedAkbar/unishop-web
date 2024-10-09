@@ -29,7 +29,6 @@ interface OrdersData {
   orderStatus: OrderStatus[];
   handlePayment: (invoice: GetSpecialOrder) => void;
   title: string;
- 
 }
 
 const OrdersTable = ({
@@ -37,30 +36,31 @@ const OrdersTable = ({
   orderStatus,
   handlePayment,
   title,
- 
 }: OrdersData) => {
   function getOrderStatusById(orderStatusId: number) {
     return orderStatus.find((status) => status.status_id === orderStatusId);
   }
 
   return (
-    <Table className={`rounded-lg ${title == "orders" ? "bg-red-100" : 'bg-blue-200'}`}>
-      {/* <TableCaption>{title ? title : 'A list of your recent Special Orders.'}</TableCaption> */}
-      <TableHeader className={`rounded-lg ${title == "orders" ? 'bg-blue-200' : "bg-red-100"}`}>
+    <Table className={`rounded-lg border-2`}>
+      {/* <TableCaption>{ 'A list of your recent Special Orders.'}</TableCaption> */}
+      <TableHeader className={`rounded-lg bg-red-500 text-white text-lg w-full`}>
         <TableRow>
-          <TableHead className="text-zinc-950">Order Status</TableHead>
+          <TableHead className="font-bold text-white">Order Status</TableHead>
 
-          <TableHead className="text-zinc-950">Price</TableHead>
-          <TableHead className="text-zinc-950">Created</TableHead>
-          <TableHead className="text-right text-zinc-950">Amount</TableHead>
-          {title == "specialOrders" ? (
+          <TableHead className="font-bold text-white">Price</TableHead>
+          <TableHead className="font-bold text-white">Created</TableHead>
+          <TableHead className="text-end font-bold text-white">
+            Amount
+          </TableHead>
+          {/* {title == "specialOrders" ? (
             <>
-              <TableHead className="text-center text-zinc-950">items</TableHead>
-              <TableHead className="text-center text-zinc-950">Action</TableHead>
+              <TableHead className="text-center text-white">items</TableHead>
+              <TableHead className="text-center text-white">Action</TableHead>
             </>
           ) : (
             ""
-          )}
+          )} */}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -77,7 +77,8 @@ const OrdersTable = ({
               {invoice.total_discounted_price}
             </TableCell>
 
-            {title == "specialOrders" && invoice?.special_order_items &&
+            {title == "specialOrders" &&
+            invoice?.special_order_items &&
             invoice?.special_order_items?.length > 0 ? (
               <TableCell>
                 <Accordion type="single" collapsible className="w-full">
@@ -92,7 +93,7 @@ const OrdersTable = ({
                         </div>
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="w-3/4" >
+                    <AccordionContent className="w-3/4">
                       <ScrollArea className="h-sm rounded-md border">
                         {invoice?.special_order_items?.length > 0 ? (
                           invoice?.special_order_items?.map(
@@ -130,8 +131,6 @@ const OrdersTable = ({
                     disabled={invoice?.special_order_items?.length == 0}
                     title="Payment"
                   />
-                    
-                  
                 )}
               </TableCell>
             ) : (

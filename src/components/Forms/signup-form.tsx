@@ -12,15 +12,14 @@ import { PhoneNumberInput } from "../ui/phoneNumberInput";
 import Select from "../Fields/select";
 import states from "../constants/Australia";
 import cities from "../constants/cities";
-
+import Button from "../ui-components/Button";
 
 type CehckoutFormValues = z.infer<typeof SignupSchema>;
 
-
 export default function SignupFormDemo() {
   const [cityOptions, setCityOptions] = useState<
-  { value: number; label: string }[]
->([]);
+    { value: number; label: string }[]
+  >([]);
   const {
     register,
     handleSubmit,
@@ -74,7 +73,7 @@ export default function SignupFormDemo() {
     try {
       // await checkoutFormData(updatedData);
       // await CheckoutApi(updatedData);
-      console.log(updatedData)
+      console.log(updatedData);
       // router.push("placeorder");
     } catch (error) {
       console.error("Failed to checkout:", error);
@@ -83,16 +82,15 @@ export default function SignupFormDemo() {
   };
 
   return (
-    <div className="max-w-2xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input border bg-white dark:bg-black z-30">
-      <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
+    <div className="z-30 mx-auto w-full max-w-2xl rounded-none border bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
+      <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         Welcome to Unishop
       </h2>
-      <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-      Create New Customer Account
+      <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
+        Create New Customer Account
       </p>
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
-        
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
           <Input
@@ -106,7 +104,6 @@ export default function SignupFormDemo() {
           )}
         </LabelInputContainer>
 
-        
         <LabelInputContainer className="mb-4">
           <Label htmlFor="address">Street Address</Label>
           <Input
@@ -115,9 +112,9 @@ export default function SignupFormDemo() {
             type="text"
             {...register("address")}
           />
-           {errors.address && (
-              <p className="text-sm text-red-500">{errors.address.message}</p>
-            )}
+          {errors.address && (
+            <p className="text-sm text-red-500">{errors.address.message}</p>
+          )}
         </LabelInputContainer>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
@@ -129,7 +126,9 @@ export default function SignupFormDemo() {
               {...register("postal_code")}
             />
             {errors.postal_code && (
-              <p className="text-sm text-red-500">{errors.postal_code.message}</p>
+              <p className="text-sm text-red-500">
+                {errors.postal_code.message}
+              </p>
             )}
           </LabelInputContainer>
           <LabelInputContainer>
@@ -223,39 +222,39 @@ export default function SignupFormDemo() {
             id="phone_number"
             placeholder="(123) 456-7890"
             type="tel"
-            
-            {...register("phone_number", { required: "Phone Number is required" })}
+            {...register("phone_number", {
+              required: "Phone Number is required",
+            })}
           />
-             {errors.phone_number && (
-              <p className="text-sm text-red-500">{errors.phone_number.message}</p>
-            )}
+          {errors.phone_number && (
+            <p className="text-sm text-red-500">
+              {errors.phone_number.message}
+            </p>
+          )}
         </LabelInputContainer>
-        
-        <button
-          className="group/btn relative block h-10 w-full rounded-md bg-zinc-600 to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] hover:bg-zinc-800 dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-          type="submit"
-        >
-          Signup &rarr;
-          <BottomGradient />
-        </button>
 
-        <div className="mt-5 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
-        {/* <div className="flex justify-center text-black mt-2 hover:text-red-400">
-          <Link href="/login">I already have an account</Link>
-        </div> */}
+        <div className="mx-auto flex flex-col justify-center">
+          <Button
+            title="Signup"
+            onClick={() => {
+              //
+            }}
+            // disabled={disabled}
+            // loading={loader}
+            width="w-full"
+            type="submit"
+          />
+          <div className="mt-2 flex flex-col items-center justify-center text-black sm:flex-row">
+            <p>{`I already have an account,`} </p>
+            <Link href="login" className="ml-1 underline hover:text-red-500">
+              login
+            </Link>
+          </div>
+        </div>
       </form>
     </div>
   );
 }
-
-const BottomGradient = () => {
-  return (
-    <>
-      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-    </>
-  );
-};
 
 const LabelInputContainer = ({
   children,
@@ -265,7 +264,7 @@ const LabelInputContainer = ({
   className?: string;
 }) => {
   return (
-    <div className={cn("flex flex-col space-y-2 w-full", className)}>
+    <div className={cn("flex w-full flex-col space-y-2", className)}>
       {children}
     </div>
   );

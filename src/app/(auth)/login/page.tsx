@@ -25,7 +25,7 @@ const MyComponent = () => {
     {
       title: "Guest Login",
       value: "customerLogin",
-      content: <BooknetFormLogin push={true} goTo="/" title="Login as a guest" />,
+      content: <BooknetFormLogin push={true} goTo="/" title="Login as a Guest" />,
     },
     {
       title: "UOW Login",

@@ -102,12 +102,31 @@ const config: Config = {
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+			  rotate: {
+				'0%': { transform: 'rotate(0deg)' },
+				'100%': { transform: 'rotate(360deg)' },
+			  },
+			  swing: {
+				'0%, 100%': { transform: 'rotate(-5deg)' },
+				'50%': { transform: 'rotate(5deg)' },
+			  },
+			  'flip-in': {
+				'0%': { transform: 'rotateY(-180deg)', opacity: '0' },
+				'100%': { transform: 'rotateY(0deg)', opacity: '1' },
+			  },
+			  'flip-out': {
+				'0%': { transform: 'rotateY(0deg)', opacity: '1' },
+				'100%': { transform: 'rotateY(180deg)', opacity: '0' },
+			  },
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
-  		}
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+			'swing': 'swing 5s ease-in-out infinite',
+			'flip-in': 'flip-in 0.5s ease-in-out forwards',
+        	'flip-out': 'flip-out 0.5s ease-in-out forwards',
+		},	
   	},
 	  fontFamily: {
 		DEFAULT: ['Poppins', 'sans-serif'], 

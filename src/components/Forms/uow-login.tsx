@@ -74,10 +74,10 @@ export default function SignupFormDemo({
     <div className="z-30 mx-auto w-full max-w-md rounded-xl border bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
       {/* {loader && <Spinner />} */}
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-        Login as a pulse member
+        Login as a Pulse Member
       </h2>
       <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-        Login to Unishop if you can because we don&apos;t have a login flow yet
+        Login to Unishop with your Email and Password
       </p>
 
       <form className="mb-2 mt-8" onSubmit={handleSubmit(onSubmit)}>

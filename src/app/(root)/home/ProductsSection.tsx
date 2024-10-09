@@ -151,7 +151,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
   }, []);
 
   return (
-    <div className="max-w-screen overflow-hidden bg-white pl-2">
+    <div className="max-w-screen overflow-hidden bg-transparent pl-2">
       <div className="py-8 sm:px-6 sm:py-16 lg:py-24">
         <div className="flex flex-row items-center justify-between md:flex-row">
           <div className="flex flex-row items-end justify-between gap-5 md:flex-row md:gap-10">
@@ -164,11 +164,11 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
               </div>
               {headingPartTwo}
             </h2>
-            {targetDate && (
+            {/* {targetDate && (
               <CountdownTimer
                 targetDate={targetDate ? targetDate : new Date()}
               />
-            )}
+            )} */}
           </div>
           <div className="mt-4 hidden items-center md:mt-0 lg:block">
             <button
