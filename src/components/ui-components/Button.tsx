@@ -28,7 +28,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       type={type} // Use the type prop here
       onClick={onClick}
-      className={`${width} ${height} ${color} flex items-center justify-center rounded-md px-4 py-2 font-medium text-white transition-opacity duration-300 hover:opacity-90 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70 sm:px-6 sm:py-3 ${className}`}
+      className={`${width} ${height} ${color} flex items-center justify-center rounded-md py-2 font-medium text-white transition-opacity duration-300 hover:opacity-90 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70 sm:px-6 sm:py-3 ${className}`}
       disabled={disabled ?? loading ? true : false}
       style={{ minWidth: loading ? `${title.length * 11}px` : "auto" }} // Ensures consistent width
     >

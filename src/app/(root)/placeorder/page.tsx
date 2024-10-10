@@ -591,8 +591,7 @@ const MyComponent = () => {
         toast({
           title: "discount Declined",
           variant: "destructive",
-          description:
-            result.message,
+          description: result.message,
         });
         // Handle unexpected structure here
       }
@@ -604,7 +603,6 @@ const MyComponent = () => {
   };
 
   const handleclick = () => {
-
     if (discountType == "Voucher") {
       const xData = {
         code: discountValue.trim(),
@@ -679,7 +677,9 @@ const MyComponent = () => {
                         // type="number"
                       />
                       <Button
-                        title={"Apply"}
+                        height="h-8"
+                        title={"Apply discount"}
+                        className="text-xs"
                         onClick={() => {
                           handleclick();
                         }}
