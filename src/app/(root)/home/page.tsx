@@ -192,7 +192,7 @@ const HomePage: React.FC = () => {
           your reading adventure!
         </div>
       </div>
-      <div className="flex h-full">
+      <div className="flex">
         <div className="hidden lg:block lg:pl-20">
           <CategoriesSidebar />
         </div>
@@ -200,6 +200,7 @@ const HomePage: React.FC = () => {
           <ProductList products={products} />
         </div>
       </div>
+      
       <GraduationBanner />
       <ProductsSection
         products={bestSellingProducts}

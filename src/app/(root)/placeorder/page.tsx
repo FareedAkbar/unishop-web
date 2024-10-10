@@ -28,6 +28,8 @@ import { useRouter } from "next/navigation";
 import { generateOTP } from "~/utils/generateOTP";
 import Button from "~/components/ui-components/Button";
 import { token221 } from "~/types/tokens";
+import { Tabs } from "~/components/ui/tabs";
+import Input from "~/components/ui-components/Input";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -55,6 +57,8 @@ const MyComponent = () => {
   // const [customerId, setCustomerId] = useState<number>();
 
   const [isOpenPaymentAlert, setIsOpenPaymentAlert] = useState(false);
+  const [discountType, setDicountType] = useState("Voucher");
+  const [discountValue, setDiscountValue] = useState("");
   const [transactionData, setTransactionData] =
     useState<trasactionResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -121,8 +125,9 @@ const MyComponent = () => {
     if (!totalAfterCalculation) return;
 
     const amount = shipping?.amount ?? 0;
+    const ship = shipping?.amount ?? 0;
 
-    setTotal(amount + totalAfterCalculation?.final_price_including_tax);
+    setTotal(amount + totalAfterCalculation?.final_price_including_tax + ship);
     const x = mergedArray;
     setNewItems(x);
   }, [totalAfterCalculation]);
@@ -214,8 +219,8 @@ const MyComponent = () => {
     customer_id: number | null;
     link: string;
     unique_id: number | null;
-    order_id?: number | null
-    tracking_id?: number | null
+    order_id?: number | null;
+    tracking_id?: number | null;
   };
 
   interface ApiResponseForTrasactionLink {
@@ -319,8 +324,8 @@ const MyComponent = () => {
           const x = {
             trasaction_id: requestOptions.transaction_id,
             order_id: result?.data?.order_id,
-            tracking_id: result.data?.tracking_id
-          }
+            tracking_id: result.data?.tracking_id,
+          };
           await setTrasactionData(x);
         } catch (error) {
           console.error("Failed to load data:", error);
@@ -511,8 +516,29 @@ const MyComponent = () => {
   };
 
   const onChange = (val: ShippingType) => {
-    console.log(val);
     setShipping(val);
+    if (val.amount > 0) {
+      setTotal(val.amount + total);
+    } else {
+      setTotal(total - 10);
+    }
+  };
+
+  const tabs = [
+    {
+      title: "Voucher",
+      value: "Voucher",
+      content: <div></div>,
+    },
+    {
+      title: "Coupen",
+      value: "Coupen",
+      content: <div></div>,
+    },
+  ];
+  const handleclick = () => {
+    console.log(discountValue);
+    console.log(discountType);
   };
 
   return (
@@ -532,22 +558,51 @@ const MyComponent = () => {
           </h2>
           <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
             <div className="rounded-xl border p-4 lg:col-span-2 xl:col-span-2">
-              <span className="text-md mt-2">Credit Card - eWAY</span>
-              <div className="ml-6 mt-3 flex flex-col">
-                <span className="mt-4">{checkoutData?.address}</span>
-                <span>
-                  {checkoutData?.country} {checkoutData?.city}{" "}
-                  {checkoutData?.state} {checkoutData?.postal_code}
-                </span>
-                <span className="mt-6">
-                  <a
-                    href={`tel:${checkoutData?.phone_number}`}
-                    className="mt-5 hover:text-red-400"
-                  >
-                    {checkoutData?.phone_number}
-                  </a>
-                </span>
+              <div className="flex justify-between">
+                <div>
+                  <span className="text-md mt-2">Credit Card - eWAY</span>
+                  <div className="ml-6 mt-3 flex flex-col">
+                    <span className="mt-4">{checkoutData?.address}</span>
+                    <span>
+                      {checkoutData?.country} {checkoutData?.city}{" "}
+                      {checkoutData?.state} {checkoutData?.postal_code}
+                    </span>
+                    <span className="mt-6">
+                      <a
+                        href={`tel:${checkoutData?.phone_number}`}
+                        className="mt-5 hover:text-red-400"
+                      >
+                        {checkoutData?.phone_number}
+                      </a>
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <div className="w-48">
+                      <Tabs tabs={tabs} changeTabName={setDicountType} />
+                    </div>
+
+                    <div className="mt-2 flex h-10">
+                      <Input
+                        value={discountValue}
+                        icon
+                        onChange={(e) => {
+                          setDiscountValue(e.target.value);
+                        }}
+                        // type="number"
+                      />
+                      <Button
+                        title={"Apply"}
+                        onClick={() => {
+                          handleclick();
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
+
               <div className="mb-4 mt-10">
                 <p className="mb-2 font-bold">Shipping Method</p>
                 <div className="flex flex-col">
@@ -581,6 +636,7 @@ const MyComponent = () => {
                 </div>
               </div>
             </div>
+
             <div className="rounded-xl border p-4">
               <h2 className="text-xl font-bold">Order Summary</h2>
               {calculateLoader && (

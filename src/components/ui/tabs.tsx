@@ -4,19 +4,22 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "~/lib/utils";
 
+
 type Tab = {
   title: string;
   value: string;
   content?: string | React.ReactNode;
 };
-
+type Value ={
+  val: string
+}
 export const Tabs = ({
   tabs: propTabs,
   containerClassName,
   activeTabClassName,
   tabClassName,
   contentClassName,
-
+  changeTabName
 
 }: {
   tabs: Tab[];
@@ -24,6 +27,7 @@ export const Tabs = ({
   activeTabClassName?: string;
   tabClassName?: string;
   contentClassName?: string;
+  changeTabName?: (payload: string) => void;
 
 }) => {
   const [active, setActive] = useState<Tab>(propTabs[0]!);
@@ -34,7 +38,9 @@ export const Tabs = ({
     const selectedTab = newTabs.splice(idx, 1);
     newTabs.unshift(selectedTab[0]!);
     setTabs(newTabs);
-
+    if(changeTabName){
+      changeTabName(newTabs[0]?.value ?? "")
+    }
     setActive(newTabs[0]!);
   };
 
