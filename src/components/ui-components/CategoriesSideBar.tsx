@@ -197,7 +197,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
             </button>
 
             {openCategory === item.label && (
-              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border border-black bg-red-100 p-4 shadow-lg">
+              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border  bg-red-100 p-4 shadow-lg">
                 {item.label === "Books" &&
                   genre?.map((subItem) => (
                     <a

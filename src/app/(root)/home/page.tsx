@@ -10,6 +10,7 @@ import BackgroundWords from "~/components/ui-components/BackgroundWords";
 import BackgroundImages from "~/components/ui-components/BackgroundImages";
 import { FlipWords } from "~/components/ui/flip-words";
 import ProductList from "~/components/ui-components/ProductList";
+import { Player } from "@lottiefiles/react-lottie-player";
 
 const images = [
   "/images/home/home1.png",
@@ -180,11 +181,11 @@ const HomePage: React.FC = () => {
   const words = ["Imagine", "Create", "Inspire", "Transform"];
 
   return (
-    <div className="relative flex-1 overflow-hidden bg-red-50 pt-32 lg:pt-24">
+    <div className="relative flex-1 overflow-hidden bg-red-50 z-[-2] pt-32 lg:pt-24">
       {/* <BackgroundWords /> */}
       {/* <BackgroundImages /> */}
       <div className="container mx-auto flex justify-center">
-        <ImageSlider images={images} />
+        <ImageSlider />
       </div>
       <div className="flex flex-col py-5">
         <div className="self-center lg:text-5xl">
@@ -192,20 +193,28 @@ const HomePage: React.FC = () => {
           your reading adventure!
         </div>
       </div>
-      <div className="flex gap-3 pb-20">
+      <div className="absolute inset-0 z-[-1] blur overflow-hidden">
+        <Player
+            src={"assets/gifs/lists-bg.json"}
+            loop 
+          autoplay 
+          style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }} 
+        />
+      </div>
+      <div className="flex">
         <div className="hidden lg:block lg:pl-20">
           <CategoriesSidebar />
         </div>
-        <div className="pl-0 lg:pl-64">
-          <h2 className="mb-4 text-2xl font-bold text-gray-800">Trending</h2>
-          <ProductList products={products} />
-        </div>
-        <div className="pl-0 lg:pl-64">
-          <h2 className="mb-4 text-2xl font-bold text-gray-800">Top Rated</h2>
-          <ProductList products={products} />
+        <div className="flex w-full justify-evenly lg:flex-row flex-col p-5">
+          <div className="pl-0 lg:pl-44">
+            <ProductList products={products} title="Trending" width="lg:w-80 w-full"/>
+          </div>
+          <div className="pl-0">
+            <ProductList products={products} title="Top Rated" width="lg:w-80 w-full"/>
+          </div>
         </div>
       </div>
-      
+
       <GraduationBanner />
       <ProductsSection
         products={bestSellingProducts}
