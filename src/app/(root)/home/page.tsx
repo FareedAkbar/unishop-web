@@ -192,11 +192,16 @@ const HomePage: React.FC = () => {
           your reading adventure!
         </div>
       </div>
-      <div className="flex">
+      <div className="flex gap-3 pb-20">
         <div className="hidden lg:block lg:pl-20">
           <CategoriesSidebar />
         </div>
         <div className="pl-0 lg:pl-64">
+          <h2 className="mb-4 text-2xl font-bold text-gray-800">Trending</h2>
+          <ProductList products={products} />
+        </div>
+        <div className="pl-0 lg:pl-64">
+          <h2 className="mb-4 text-2xl font-bold text-gray-800">Top Rated</h2>
           <ProductList products={products} />
         </div>
       </div>
