@@ -65,7 +65,7 @@ const ProductCard = ({
         {product?.book_title}
       </h2>
       <span className="truncate text-sm sm:text-sm lg:text-sm">
-        Available Stock: {product?.stock.quantity}
+        Available Stock: {product?.stock?.quantity}
       </span>
       <div className="mt-1 flex gap-1 sm:mt-2 sm:gap-2">
         <span className="text-sm font-bold text-red-500 sm:text-lg">

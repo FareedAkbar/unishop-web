@@ -12,6 +12,12 @@ import type { Booknet_customer_checkout, checkoutBooknetResponse, CheckoutForm }
 import type { Genre, GenreResponse } from "~/types/genre";
 import type { LoginData, LoginResponse, SendOTPResponse, VerifyOTPResponse } from "~/types/loginResponse";
 import { type Category, type CategoryResponse } from "~/types/category";
+
+type trasactionData = {
+  trasaction_id?: string | null,
+  order_id?: number | null,
+  tracking_id?: number | null
+}
 interface AuthContextProps {
   isLoggedIn: boolean;
   userInfo?: UserType;
@@ -34,13 +40,15 @@ interface AuthContextProps {
   checkoutData: CheckoutForm | null;
   appId: string;
   removeAllCartItems: () => Promise<boolean>;
+  setTrasactionData: (payload: trasactionData | null) => Promise<boolean>;
   setUUID: (payload: string) => Promise<boolean>;
   setTheme: (payload: string) => Promise<boolean>;
   CheckoutApiWithUserName: (payload: Booknet_customer_checkout) => Promise<checkoutBooknetResponse>;
   uuidLocal: string | undefined;
   token: string | undefined;
   themeMode: string;
-  booknetCustomerId?: number | null
+  booknetCustomerId?: number | null,
+  orderTrasactionData?: trasactionData | null
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -61,6 +69,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [token, setToken] = useState<string | undefined>();
   const [themeMode, setThemeMode] = useState<string>("Light");
   const [cartItems, setItems] = useState<DataCart[]>([]);
+  const [orderTrasactionData, setOrderTrasactionData] = useState<trasactionData | null>(null);
   const [genre, setGenre] = useState<Genre[] | null>([]);
   const [category, setCategory] = useState<Category[] | null>([]);
   const [uuidLocal, setUuidLocal] = useState<string | undefined>();
@@ -191,6 +200,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     lsClient.setItem("CATEGORY", responsePayload.data);
 
+    return true;
+  };
+
+  const setTrasactionData = async (payload: trasactionData | null): Promise<boolean> => {
+    setOrderTrasactionData(payload)
     return true;
   };
 
@@ -445,7 +459,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         CheckoutApi,
         booknetCustomerId,
         CheckoutApiWithUserName,
-        themeMode
+        setTrasactionData,
+        themeMode,
+        orderTrasactionData
       }}
     >
       {children}

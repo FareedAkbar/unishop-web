@@ -1,49 +1,43 @@
 "use client";
 
-import { Controls, Player } from "@lottiefiles/react-lottie-player";
 // import Header from "~/components/header";
-import ProductGradient from "../../../components/productGradient";
-import { useRouter, useSearchParams } from "next/navigation";
-import BooksImage from "../../../../public/book.json";
+import { useRouter } from "next/navigation";
+
 import { useAuthContext } from "~/Context/AuthContext";
-import type DataCart from "~/types/book";
-import { Suspense, useCallback, useEffect, useRef, useState } from "react";
-import SearchInput from "~/components/Fields/search";
-import { FiSearch } from "react-icons/fi";
-import SpecialOrderCard from "~/components/specialOrderCard";
-import type { BookDetailType } from "~/types/specialOrderBook";
+// import type DataCart from "~/types/book";
+import { Suspense, useEffect, useRef, useState } from "react";
+// import SearchInput from "~/components/Fields/search";
+// import { FiSearch } from "react-icons/fi";
+// import SpecialOrderCard from "~/components/specialOrderCard";
+// import type { BookDetailType } from "~/types/specialOrderBook";
 
 import Spinner from "~/components/spinner";
-import Image from "next/image";
-import moment from "moment";
-import { FaCartPlus } from "react-icons/fa";
-import { motion } from "framer-motion";
-import BooknetForm from "~/components/Forms/booknet-form";
-import CheckoutForm from "~/components/Forms/checkout-form";
-import type { CheckoutForm as checkoutFormValue } from "~/types/checkoutForm";
-import { formatDate, formatDateTime } from "~/utils/dateAndTime";
+// import Image from "next/image";
+// import moment from "moment";
+// import { FaCartPlus } from "react-icons/fa";
+// import { motion } from "framer-motion";
+// import BooknetForm from "~/components/Forms/booknet-form";
+// import CheckoutForm from "~/components/Forms/checkout-form";
 import { useToast } from "~/hooks/use-toast";
 
-import {
+import type {
   GetSpecialOrder,
   GetSpecialOrderApiResponse,
   OrderStatus,
   OrderStatusResponse,
-  SpecialOrderItem,
   UpdateSpecialOrderPayload,
 } from "~/types/getSpecialBackOrders";
 
-import PayloadForTrasactionLink from "~/types/payloadForTrasactionLink";
-import socket from "~/utils/socket";
+import type PayloadForTrasactionLink from "~/types/payloadForTrasactionLink";
 import OrdersTable from "./orderstable";
-import { Tabs } from "~/components/ui/tabs";
+import { token221 } from "~/types/tokens";
 
 const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM`;
 
 const requestOptions: RequestInit = {
   method: "GET",
   headers: {
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${token221}`,
     "Content-Type": "application/json", // Optional, depending on your API
   },
   redirect: "follow", // Use the correct type for `redirect`
@@ -53,16 +47,15 @@ const MyComponent = () => {
   const { booknetCustomerId, checkoutData } = useAuthContext();
   const router = useRouter();
   const [loader, setLoader] = useState(false);
-  const [dataSpecialOrders, setDataSpecialOrders] = useState<GetSpecialOrder[]>(
-    [],
-  );
+  // const [dataSpecialOrders, setDataSpecialOrders] = useState<GetSpecialOrder[]>(
+  //   [],
+  // );
   const [dataOrders, setDataOrders] = useState<GetSpecialOrder[]>([]);
   const [selectedItem, setSelectedItem] = useState<GetSpecialOrder | null>(
     null,
   );
   const [orderStatus, setOrderStatus] = useState<OrderStatus[]>([]);
-  const [activeTabName, setActiveTabeName] = useState("orders");
-  const isFirstRender = useRef(true);
+
   const { toast } = useToast();
   const [transactionData, setTransactionData] =
     useState<trasactionResponse | null>(null);
@@ -90,7 +83,7 @@ const MyComponent = () => {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token221}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
@@ -155,7 +148,7 @@ const MyComponent = () => {
       // Check if result has the expected structure
       if (result?.status) {
         // setMeta(result.meta);
-        setDataSpecialOrders(result.data);
+        // setDataSpecialOrders(result.data);
       } else {
         console.error("Unexpected result structure:", result);
         // Handle unexpected structure here
@@ -167,7 +160,7 @@ const MyComponent = () => {
     }
   };
   const fetchDataOrders = async () => {
-    console.log("dasdasd")
+    console.log("dasdasd");
     setLoader(true);
     try {
       const response = await fetch(
@@ -193,7 +186,7 @@ const MyComponent = () => {
   };
 
   // Handle add to cart
-console.log(booknetCustomerId)
+  console.log(booknetCustomerId);
   useEffect(() => {
     if (!booknetCustomerId) return;
     const loadData = async () => {
@@ -210,11 +203,11 @@ console.log(booknetCustomerId)
         // Optionally set an error state here
       }
     };
-   
-      loadData().catch((error) => {
-        console.error("Failed to load data in useEffect:", error);
-      });
-    
+
+    loadData().catch((error) => {
+      console.error("Failed to load data in useEffect:", error);
+    });
+
     // void fetchDataSpecialOrders();
   }, [booknetCustomerId]);
 

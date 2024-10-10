@@ -27,6 +27,7 @@ import { formatDate, formatDateTime } from "~/utils/dateAndTime";
 import { useRouter } from "next/navigation";
 import { generateOTP } from "~/utils/generateOTP";
 import Button from "~/components/ui-components/Button";
+import { token221 } from "~/types/tokens";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -36,6 +37,7 @@ const MyComponent = () => {
     getCheckoutFormData,
     removeAllCartItems,
     uuidLocal,
+    setTrasactionData,
     // setUUID,
     token,
     userInfo,
@@ -157,7 +159,7 @@ const MyComponent = () => {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM`,
+            Authorization: `Bearer ${token221}`,
           },
           body: JSON.stringify({ items: requestOptions, member_id: null }), // Send the payload as JSON
         },
@@ -212,6 +214,8 @@ const MyComponent = () => {
     customer_id: number | null;
     link: string;
     unique_id: number | null;
+    order_id?: number | null
+    tracking_id?: number | null
   };
 
   interface ApiResponseForTrasactionLink {
@@ -229,7 +233,7 @@ const MyComponent = () => {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token221}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
@@ -294,7 +298,7 @@ const MyComponent = () => {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM`,
+            Authorization: `Bearer ${token221}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
@@ -312,11 +316,17 @@ const MyComponent = () => {
 
         try {
           await removeAllCartItems();
+          const x = {
+            trasaction_id: requestOptions.transaction_id,
+            order_id: result?.data?.order_id,
+            tracking_id: result.data?.tracking_id
+          }
+          await setTrasactionData(x);
         } catch (error) {
           console.error("Failed to load data:", error);
           // Optionally set an error state here
         }
-        router.push("/");
+        router.push("/order-confirmed");
       } else {
         toast({
           title: "Payment Declined",
@@ -363,11 +373,12 @@ const MyComponent = () => {
   }
 
   const placeOrderApi = async (id: number) => {
+    await setTrasactionData(null);
     const date = new Date();
     const x = {
       order_type: shipping?.type == "free" ? 1 : 2,
       online_order_type: 1,
-      outlet_id: 221,
+      outlet_id: 223,
       tracking_id: generateOTP(12).toString(),
       order_status: 7,
       completed_date: formatDate(date),
@@ -597,7 +608,10 @@ const MyComponent = () => {
                   <div className="mt-2 grid grid-cols-2 justify-between">
                     <span className="text-sm">Discounted Price</span>
                     <span className="flex justify-end text-sm">
-                      ${totalAfterCalculation?.final_price_excluding_tax.toFixed(2)}
+                      $
+                      {totalAfterCalculation?.final_price_excluding_tax.toFixed(
+                        2,
+                      )}
                     </span>
                   </div>
                   <div className="mt-2 grid grid-cols-2 justify-between">
@@ -640,7 +654,7 @@ const MyComponent = () => {
                   <div className="mt-6 flex">
                     <Button
                       onClick={() => handlePlaceOrder()}
-                      loading={totalAfterCalculation ? false : true}
+                      disabled={totalAfterCalculation ? false : true}
                       width="w-full"
                       title="Place Order"
                     />

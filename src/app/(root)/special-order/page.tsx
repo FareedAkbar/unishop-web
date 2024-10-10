@@ -30,6 +30,7 @@ import { generateOTP } from "~/utils/generateOTP";
 import { Tabs } from "~/components/ui/tabs";
 import SpecialOrderCard from "~/components/ui-components/SpecialOrderCard";
 import { AiOutlineArrowLeft, AiOutlineClose } from "react-icons/ai";
+import { token221 } from "~/types/tokens";
 
 interface ApiResponse {
   // meta: PaginationData; // Adjust based on your actual structure
@@ -41,12 +42,11 @@ interface ApiBookDetailResponse {
   data: BookDetailType;
   status: boolean;
 }
-const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM`;
 
 const requestOptions: RequestInit = {
   method: "GET",
   headers: {
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${token221}`,
     "Content-Type": "application/json", // Optional, depending on your API
   },
   redirect: "follow", // Use the correct type for `redirect`
@@ -151,7 +151,7 @@ const MyComponent = () => {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token221}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },

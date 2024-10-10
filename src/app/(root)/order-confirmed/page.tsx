@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 import Button from "~/components/ui-components/Button";
 import { motion } from "framer-motion";
+import { useAuthContext } from "~/Context/AuthContext";
 
 const MyComponent = () => {
   const router = useRouter();
+  const {orderTrasactionData} = useAuthContext()
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-16 dark:bg-gray-900 sm:px-8">
@@ -42,7 +44,7 @@ const MyComponent = () => {
               transition={{ delay: 0.4 }}
               className="text-md text-zinc-500 dark:text-gray-400"
             >
-              <strong>Tracking ID:</strong> 123456789
+              <strong>Order ID:</strong> {orderTrasactionData?.order_id}
             </motion.p>
 
             <motion.p
@@ -51,7 +53,15 @@ const MyComponent = () => {
               transition={{ delay: 0.5 }}
               className="text-md text-zinc-500 dark:text-gray-400"
             >
-              <strong>Transaction ID:</strong> ABC123456
+              <strong>Tracking ID:</strong> {orderTrasactionData?.tracking_id}
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5 }}
+              className="text-md text-zinc-500 dark:text-gray-400"
+            >
+              <strong>Transaction ID:</strong> {orderTrasactionData?.trasaction_id}
             </motion.p>
           </div>
         </div>

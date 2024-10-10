@@ -2,7 +2,6 @@
 
 // import Header from "~/components/header";
 import { Suspense, useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 // import { useSearchParams, usePathname } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 import CheckoutForm from "~/components/Forms/checkout-form";
@@ -13,10 +12,13 @@ import CartItem from "~/components/ui-components/CartItem";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import AlertBox from "~/components/alertBox/alert";
 import { Tabs } from "~/components/ui/tabs";
+import Button from "~/components/ui-components/Button";
+import { useRouter } from "next/navigation";
 
 const MyComponent = () => {
-  const { cartItems, removeCartItems, increaseCartItemQuantity, isLoggedIn } =
+  const { cartItems, removeCartItems, increaseCartItemQuantity } =
     useAuthContext();
+  const router = useRouter();
   const [items, setItems] = useState<DataCart[]>([]);
   const [removeItem, setRemoveItem] = useState<DataCart | null>(null);
   const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState<boolean>(false);
@@ -85,51 +87,73 @@ const MyComponent = () => {
     {
       title: "Checkout",
       value: "checkout",
-      content: <CheckoutForm push={true} disabled={!items?.[0] ? true : false}/>,
+      content: (
+        <CheckoutForm push={true} disabled={!items?.[0] ? true : false} />
+      ),
     },
     {
       title: "Booknet Account",
       value: "booknetForm",
-      content: <BooknetForm push={true} goTo="placeorder" disabled={!items?.[0] ? true : false} />,
+      content: (
+        <BooknetForm
+          push={true}
+          goTo="placeorder"
+          disabled={!items?.[0] ? true : false}
+        />
+      ),
     },
   ];
 
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center justify-start pt-24">
-        <div className="grid w-full grid-cols-1 gap-12 px-4  lg:grid-cols-2">
+        <div className="grid w-full grid-cols-1 gap-12 px-4 lg:grid-cols-2">
           <div className="z-10 w-full">
-            <Tabs tabs={tabs} key={items?.toString()}/>
+            <Tabs tabs={tabs} key={items?.toString()} />
           </div>
           <div className="z-10 h-screen pt-10">
-            <ScrollArea className="lg:h-4/5 flex-1 p-4">
-              {items.map((item: DataCart) => (
-                <CartItem
-                  key={item.item_id}
-                  title={item.book_title}
-                  imageSrc={item?.object_path}
-                  price={item.item_sale_price}
-                  size={"aa"}
-                  color={"red"}
-                  showRemove={true}
-                  onChangeQuantity={(id, number) =>
-                    onChangeQuantity(id, number)
-                  }
-                  onIncrease={() =>
-                    handleIncrease(item.item_id, item.quantity + 1)
-                  }
-                  onDecrease={() =>
-                    handleDecrease(item.item_id, item.quantity - 1)
-                  }
-                  itemQuantity={item.quantity}
-                  showQuantityIncriment={true}
-                  stock={item.stock}
-                  onRemove={() => {
-                    setRemoveItem(item);
-                    setIsOpenDeleteAlert(true);
-                  }}
-                />
-              ))}
+            <ScrollArea className="flex-1 p-4 lg:h-4/5">
+              {items?.[0] ? (
+                items.map((item: DataCart) => (
+                  <CartItem
+                    key={item.item_id}
+                    title={item.book_title}
+                    imageSrc={item?.object_path}
+                    price={item.item_sale_price}
+                    size={"aa"}
+                    color={"red"}
+                    showRemove={true}
+                    onChangeQuantity={(id, number) =>
+                      onChangeQuantity(id, number)
+                    }
+                    onIncrease={() =>
+                      handleIncrease(item.item_id, item.quantity + 1)
+                    }
+                    onDecrease={() =>
+                      handleDecrease(item.item_id, item.quantity - 1)
+                    }
+                    itemQuantity={item.quantity}
+                    showQuantityIncriment={true}
+                    stock={item.stock}
+                    onRemove={() => {
+                      setRemoveItem(item);
+                      setIsOpenDeleteAlert(true);
+                    }}
+                  />
+                ))
+              ) : (
+                <div>
+                  <span className="text-lg font-bold text-red-600 dark:text-white">
+                  It appears that your cart is empty. Please choose items before proceeding to checkout.
+                  </span>
+                  <div className="mt-2">
+                    <Button
+                      title="Continue Shoping"
+                      onClick={() => router.push("/")}
+                    />
+                  </div>
+                </div>
+              )}
             </ScrollArea>
           </div>
         </div>
