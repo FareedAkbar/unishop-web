@@ -531,14 +531,100 @@ const MyComponent = () => {
       content: <div></div>,
     },
     {
-      title: "Coupen",
-      value: "Coupen",
+      title: "Coupon",
+      value: "Coupon",
       content: <div></div>,
     },
   ];
+
+  type discounVoucherType = {
+    code: string;
+    total_order_price: number;
+    order_id: null;
+    till: number;
+    cus_id: number;
+    membership: null;
+    outlet_id: number;
+  };
+  type discounCouponType = {
+    cus_id: number;
+    code: string;
+    // "till" : 1,
+    outlet_id: number;
+  };
+
+  type discount = {
+    verify: boolean;
+  };
+  type dicountResponse = {
+    status: boolean;
+    message: string;
+    data: discount;
+  };
+
+  const getDiscounts = async (
+    requestOptions: discounVoucherType | discounCouponType,
+  ) => {
+    try {
+      const response = await fetch(
+        discountType == "Voucher"
+          ? "https://ipos-dev.iconsole.com.au/api/v1/ipos/discounts/verifyVoucher"
+          : "https://ipos-dev.iconsole.com.au/api/v1/ipos/discounts/verifyCoupon",
+        {
+          method: "POST", // Assuming you're making a POST request
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token221}`,
+          },
+          body: JSON.stringify(requestOptions), // Send the payload as JSON
+        },
+      );
+
+      const result: dicountResponse =
+        (await response.json()) as dicountResponse;
+
+      // Check if result has the expected structure
+      if (result?.status) {
+        // window.open(result.data.link);
+        console.log(result);
+      } else {
+        toast({
+          title: "discount Declined",
+          variant: "destructive",
+          description:
+            result.message,
+        });
+        // Handle unexpected structure here
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      // setCalculateLoader(false);
+    }
+  };
+
   const handleclick = () => {
-    console.log(discountValue);
-    console.log(discountType);
+
+    if (discountType == "Voucher") {
+      const xData = {
+        code: discountValue.trim(),
+        total_order_price: total,
+        order_id: null,
+        till: 0,
+        cus_id: 165,
+        membership: null,
+        outlet_id: 223,
+      };
+      // getDiscounts(x).catch((err) => console.log(err));
+    } else {
+      const xData = {
+        cus_id: 162,
+        code: discountValue.trim(),
+        // "till" : 1,
+        outlet_id: 223,
+      };
+      // getDiscounts(x).catch((err) => console.log(err));
+    }
   };
 
   return (
