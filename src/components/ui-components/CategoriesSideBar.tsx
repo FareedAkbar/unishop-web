@@ -36,7 +36,7 @@ interface SubcategoryListProps {
   subItems: Category[];
   openCategory: string | null;
   toggleCategory: (label: string) => void;
-  isOpen: boolean; // Track if this subcategory is open
+  isOpen: boolean;
 }
 
 const SubcategoryList = ({
@@ -53,7 +53,7 @@ const SubcategoryList = ({
             onClick={() =>
               subItem.subItems ? toggleCategory(subItem.label) : null
             }
-            className="flex w-full items-center justify-between    text-sm text-black focus:outline-none"
+            className="flex w-full items-center justify-between text-sm text-black focus:outline-none"
           >
             <span>{subItem.label}</span>
             {subItem.subItems &&
@@ -80,25 +80,29 @@ const SubcategoryList = ({
   );
 };
 
-const CategoriesSidebar = () => {
-  const [openCategory, setOpenCategory] = useState<string | null>(null);
+interface CategoriesSidebarProps {
+  className?: string; // Adding the className prop
+}
+
+const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
+    const [openCategory, setOpenCategory] = useState<string | null>(null);
   const { genre, checkoutData, category } = useAuthContext();
   const router = useRouter();
   const [headerCategory, setHeaderCategory] = useState<
     CategoryTreeNode[] | null
   >(null);
-  // Toggle category function
-  const subcategoryRefs = useRef<Record<string, HTMLDivElement | null>>({}); // Create a ref for subcategories
+  const sidebarRef = useRef<HTMLDivElement>(null); // Ref for sidebar
 
+  // Toggle category function
   const toggleCategory = (label: string) => {
     setOpenCategory((prev) => (prev === label ? null : label));
   };
 
+  // Build the category tree
   function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
     const categoryMap: Record<number, CategoryTreeNode> = {};
     const tree: CategoryTreeNode[] = [];
 
-    // Initialize the map
     categories.forEach((category) => {
       categoryMap[category.id] = {
         id: category.id,
@@ -112,16 +116,13 @@ const CategoriesSidebar = () => {
       };
     });
 
-    // Build the tree structure
     categories.forEach((category) => {
-      if (category.parent == 0 && category.outlet == 223) {
-        // Root category
+      if (category.parent === 0 && category.outlet === 223) {
         const rootCategory = categoryMap[category.id];
         if (rootCategory) {
           tree.push(rootCategory);
         }
       } else {
-        // Find parent and add this category to its children
         const parent = categoryMap[category.parent];
         if (parent) {
           const childCategory = categoryMap[category.id];
@@ -135,36 +136,36 @@ const CategoriesSidebar = () => {
     return tree;
   }
 
-  // Usage Example
+  // Initialize category tree on mount
   useEffect(() => {
     if (!category) return;
-    const categoryTree = buildCategoryTree(category ? category : []);
-    setHeaderCategory(categoryTree ? categoryTree : null);
+    const categoryTree = buildCategoryTree(category);
+    setHeaderCategory(categoryTree);
   }, [category]);
 
+  // Close subcategories on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const isSubcategoryOpen = Object.keys(subcategoryRefs.current).some(
-        (key) =>
-          subcategoryRefs.current[key]?.contains(event.target as Node) &&
-          openCategory === key,
-      );
-
-      if (!isSubcategoryOpen) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
         setOpenCategory(null);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside); // Clean up the event listener
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [openCategory]);
-
+  }, []);
 
   return (
-    <aside className="static left-0 w-64 border-r bg-red-100 rounded-r-xl p-4">
-      <h2 className="text-lg font-bold">Categories</h2>
+    <aside
+      ref={sidebarRef}
+      className={`absolute left-0 w-64 rounded-r-xl border-r bg-red-100 p-4 my-4 ${className}`} 
+    >
+      <h2 className="text-lg font-bold">CATEGORIES</h2>
       <nav className="relative mt-4">
         {categories.map((item) => (
           <div key={item.label} className="relative mb-2">
@@ -176,7 +177,7 @@ const CategoriesSidebar = () => {
                   ? toggleCategory(item.label)
                   : null
               }
-              className="flex w-full items-center justify-between  text-lg text-black transition-transform duration-300 hover:scale-110 focus:outline-none"
+              className="flex w-full items-center justify-between text-lg text-black transition-transform duration-300 hover:scale-110 focus:outline-none"
             >
               <div className="flex items-center">
                 {item.icon && (
@@ -196,12 +197,7 @@ const CategoriesSidebar = () => {
             </button>
 
             {openCategory === item.label && (
-              <div
-                ref={(el) => {
-                  if (el) subcategoryRefs.current[item.label] = el; // Assign ref without returning
-                }}
-                className="absolute left-10 top-8 z-50 w-60 rounded-xl border border-black bg-red-100 p-4 shadow-lg"
-              >
+              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border border-black bg-red-100 p-4 shadow-lg">
                 {item.label === "Books" &&
                   genre?.map((subItem) => (
                     <a
@@ -238,22 +234,12 @@ const CategoriesSidebar = () => {
         {checkoutData?.booknet_customer_id && (
           <button
             onClick={() => router.push("/my-orders")}
-            className="mb-2 flex w-full items-center  transition-transform duration-300 hover:scale-110  text-lg text-black focus:outline-none"
+            className="mb-2 flex w-full items-center text-lg text-black transition-transform duration-300 hover:scale-110 focus:outline-none"
           >
-            <FaReceipt className="text-indigo-600 mr-3" />
+            <FaReceipt className="mr-3 text-indigo-600" />
             <span>My Orders</span>
           </button>
         )}
-
-        {/* {checkoutData?.booknet_customer_id && (
-          <button
-            onClick={() => router.push("/special-order")}
-            className="flex w-full items-center justify-between    text-lg text-black focus:outline-none"
-          >
-            <span>Special Order</span>
-          </button>
-        )} */}
-        
       </nav>
     </aside>
   );

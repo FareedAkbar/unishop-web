@@ -9,6 +9,7 @@ import NewArrivals from "./NewArrivals";
 import BackgroundWords from "~/components/ui-components/BackgroundWords";
 import BackgroundImages from "~/components/ui-components/BackgroundImages";
 import { FlipWords } from "~/components/ui/flip-words";
+import ProductList from "~/components/ui-components/ProductList";
 
 const images = [
   "/images/home/home1.png",
@@ -152,27 +153,52 @@ const bestSellingProducts = [
     rating: 4.5,
   },
 ];
+const products = [
+  {
+    id: 1,
+    name: "Product 1",
+    category: "Category 1",
+    image: "/images/bookicon.png",
+    price: 29.99,
+  },
+  {
+    id: 2,
+    name: "Product 2",
+    category: "Category 2",
+    image: "/images/bookicon.png",
+    price: 39.99,
+  },
+  {
+    id: 3,
+    name: "Product 3",
+    category: "Category 3",
+    image: "/images/bookicon.png",
+    price: 19.99,
+  },
+];
 const HomePage: React.FC = () => {
   const words = ["Imagine", "Create", "Inspire", "Transform"];
 
   return (
-    <div className="relative flex-1 overflow-hidden pt-32 lg:pt-24 bg-red-50">
+    <div className="relative flex-1 overflow-hidden bg-red-50 pt-32 lg:pt-24">
       {/* <BackgroundWords /> */}
       {/* <BackgroundImages /> */}
       <div className="container mx-auto flex justify-center">
         <ImageSlider images={images} />
       </div>
       <div className="flex flex-col py-5">
-          <div className="self-center lg:text-5xl">
-            <FlipWords words={words} />
-            your reading adventure!
-          </div>
+        <div className="self-center lg:text-5xl">
+          <FlipWords words={words} />
+          your reading adventure!
         </div>
-      <div className="flex">
+      </div>
+      <div className="flex h-full">
         <div className="hidden lg:block lg:pl-20">
           <CategoriesSidebar />
         </div>
-      
+        <div className="pl-0 lg:pl-64">
+          <ProductList products={products} />
+        </div>
       </div>
       <GraduationBanner />
       <ProductsSection

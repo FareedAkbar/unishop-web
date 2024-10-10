@@ -33,12 +33,13 @@ const Header = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for hamburger menu
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const userDropdownRef = useRef<HTMLDivElement | null>(null); // Reference for user dropdown
+  const userDropdownRef = useRef<HTMLDivElement | null>(null);
+  const dropdownToggleRef = useRef<HTMLButtonElement | null>(null);
+  const dropdownRef = useRef<HTMLButtonElement | null>(null); // Ref for other dropdowns
 
   const toggleUserDropdown = () => {
-    setUserDropdownOpen(!isUserDropdownOpen);
+    setUserDropdownOpen((prevState) => !prevState);
   };
-
   const toggleDropdown = (section: string) => {
     setOpenDropdown(openDropdown === section ? null : section);
   };
@@ -65,9 +66,17 @@ const Header = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         userDropdownRef.current &&
-        !userDropdownRef.current.contains(event.target as Node)
+        !userDropdownRef.current.contains(event.target as Node) &&
+        dropdownToggleRef.current &&
+        !dropdownToggleRef.current.contains(event.target as Node)
       ) {
         setUserDropdownOpen(false);
+      }
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpenDropdown(null);
       }
     };
 
@@ -181,12 +190,13 @@ const Header = () => {
             </div>
 
             <div className="relative" ref={userDropdownRef}>
-              <div
+              <button
+                ref={dropdownToggleRef}
                 className="cursor-pointer rounded-full bg-red-500"
                 onClick={toggleUserDropdown}
               >
                 <MdOutlinePersonOutline className="text-xl text-white" />
-              </div>
+              </button>
               {isUserDropdownOpen && (
                 <div className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md">
                   <a
@@ -339,6 +349,7 @@ const Header = () => {
                         : handleSectionClick(item.label.toLowerCase())
                     }
                     className={`relative flex items-center ${item.subItems ? "cursor-pointer" : ""}`}
+                    ref={dropdownRef}
                   >
                     <span
                       className={`${activeSection === item.label.toLowerCase() ? "font-bold text-red-500 underline" : ""}`}
@@ -398,12 +409,13 @@ const Header = () => {
                 )}
               </div>
               <div className="relative">
-                <div
+                <button
                   className="cursor-pointer rounded-full bg-red-500"
                   onClick={toggleUserDropdown}
+                  ref={dropdownToggleRef}
                 >
                   <MdOutlinePersonOutline className="p-0.5 text-3xl text-white" />
-                </div>
+                </button>
                 {isUserDropdownOpen && (
                   <div
                     ref={userDropdownRef}

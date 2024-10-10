@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface InputProps {
   placeholder?: string;
@@ -12,35 +12,36 @@ interface InputProps {
 
 const SearchInput: React.FC<InputProps> = ({
   placeholder,
-  type = 'text',
+  type = "text",
   value,
   onChange,
   icon,
   onIconClick,
-  width = 'full' // Default to full width if no width prop is provided
+  width = "full", // Default to full width if no width prop is provided
 }) => {
-  
   // Function to handle key press (specifically Enter key)
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && onIconClick) {
+    if (event.key === "Enter" && onIconClick) {
       onIconClick();
     }
   };
 
   return (
-    <div className={`flex items-center rounded overflow-hidden bg-inputbg border ${width}`}>
+    <div
+      className={`flex items-center overflow-hidden rounded border bg-inputbg ${width}`}
+    >
       <input
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
         onKeyDown={handleKeyDown} // Listening for key presses
-        className="flex-1 p-1 focus:outline-none bg-transparent text-base font-poppins"
+        className="flex-1 bg-transparent p-1 text-base focus:outline-none"
       />
       {icon && (
         <button
           type="button"
-          className="p-1 mr-2 text-red-400"
+          className="mr-2 p-1 text-red-400"
           onClick={onIconClick} // Handle icon click
         >
           {icon}

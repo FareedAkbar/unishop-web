@@ -79,7 +79,7 @@ const MyComponent = () => {
         const x = await getBooks(catId?.id ?? 1);
         if (typeof x !== "boolean" && x.status) {
           setData(x.data);
-          console.log(x.data)
+          console.log(x.data);
         }
 
         setLoader(false);
@@ -192,9 +192,6 @@ const MyComponent = () => {
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-row">
-          <div className="lg:flex-start hidden lg:absolute lg:left-0 lg:flex lg:w-64 lg:self-start">
-            <CategoriesSidebar />
-          </div>
           <div className="flex flex-col px-4 py-5 lg:absolute lg:left-64 lg:right-0">
             <div className="m-4 flex items-center justify-end gap-4">
               {subCategory?.[0] && (
@@ -274,7 +271,7 @@ const MyComponent = () => {
 
       <ModalBody>
         <ModalContent>
-          <h4 className="mb-3 text-center font-serif text-lg font-bold text-neutral-600 dark:text-neutral-100 md:text-2xl">
+          <h4 className="mb-3 text-center font-serif text-lg font-bold text-red-600 dark:text-neutral-100 md:text-2xl">
             {itemDetail?.book_title}
           </h4>
           <h6 className="mb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
@@ -301,7 +298,7 @@ const MyComponent = () => {
                     rotate: 0,
                     zIndex: 100,
                   }}
-                  className="-mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-neutral-700 dark:bg-neutral-800"
+                  className="mr-6 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-neutral-700 dark:bg-neutral-800"
                 >
                   <Image
                     src={
@@ -310,14 +307,14 @@ const MyComponent = () => {
                         : "/bookIcon.png"
                     }
                     alt={itemDetail?.object_path ?? ""}
-                    width="500"
-                    height="500"
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-80 md:w-48"
+                    width={1000}
+                    height={1000}
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-64 md:w-48"
                   />
                 </motion.div>
               </div>
             </div>
-            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
+            <div className="mx-auto flex flex-col items-start justify-start gap-y-2">
               <div className="flex flex-col">
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                   ${itemDetail?.item_sale_price}
@@ -327,39 +324,56 @@ const MyComponent = () => {
                 </span>
               </div>
               <div className="flex items-center justify-center">
+                <span className="pr-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                  Series:
+                </span>
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Series: {itemDetail?.edition}
+                  {itemDetail?.edition}
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                {/* <ElevatorIcon className="mr-1 h-4 w-4 text-neutral-700 dark:text-neutral-300" /> */}
+                <span className="pr-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                  Published:
+                </span>
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Published:{" "}
                   {itemDetail?.introduced
                     ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
                     : ""}
                 </span>
               </div>
               <div className="flex items-center justify-center">
+                <span className="pr-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                  Language:
+                </span>
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Language: {itemDetail?.book_language}
+                  {itemDetail?.book_language}
                 </span>
               </div>
               <div className="flex items-center justify-center">
+                <span className="pr-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                  Number of Pages:
+                </span>
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Number of Pages: {itemDetail?.pages}
+                  {itemDetail?.pages}
                 </span>
               </div>
               <div className="flex items-center justify-center">
+                <span className="pr-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                  Publisher:
+                </span>
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Publisher: {itemDetail?.publisher.publisher_name}
+                  {itemDetail?.publisher.publisher_name}
                 </span>
               </div>
               <div className="flex items-center justify-center">
+                <span className="pr-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                  Country of Publication:
+                </span>
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Country of Publication: {itemDetail?.publisher.country}
+                  {itemDetail?.publisher.country}
                 </span>
               </div>
+
               {itemDetail?.item_id &&
               !isItemInCart(itemDetail.item_id) &&
               itemDetail?.stock?.quantity ? (
@@ -376,17 +390,17 @@ const MyComponent = () => {
             </div>
           </div>
         </ModalContent>
-        <ModalFooter className="gap-4">
+        {/* <ModalFooter className="gap-4">
           <button
             onClick={() => setOpen(false)}
             className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm text-black dark:border-black dark:bg-black dark:text-white"
           >
             Close
-          </button>
-          {/* <button className="w-28 rounded-md border border-black bg-black px-2 py-1 text-sm text-white dark:bg-white dark:text-black">
+          </button> */}
+        {/* <button className="w-28 rounded-md border border-black bg-black px-2 py-1 text-sm text-white dark:bg-white dark:text-black">
               Book Now
             </button> */}
-        </ModalFooter>
+        {/* </ModalFooter> */}
       </ModalBody>
     </div>
   );
