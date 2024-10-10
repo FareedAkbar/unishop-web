@@ -36,9 +36,9 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
           <div className="text-xl text-white font-bold sm:text-3xl lg:mb-4 lg:text-4xl">
             Up to 10% off Voucher
           </div>
-          <button className="flex flex-row rounded-lg border-none bg-red-600 font-bold w-fit text-sm text-white  md:px-3 md:py-1.5 lg:px-4 lg:py-2">
+          <button className="flex flex-row rounded-lg border-none bg-red-600 lg:font-bold w-fit items-center text-[10px] px-1 text-white  md:px-3 md:py-1.5 lg:px-4 lg:py-2">
             <span>Shop Now</span>
-            <IoIosArrowRoundForward className="ml-1   text-white lg:text-xl" />
+            <IoIosArrowRoundForward className="ml-1   text-white text-lg lg:text-xl" />
           </button>
         </div>
       </div>

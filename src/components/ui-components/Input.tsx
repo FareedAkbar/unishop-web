@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface InputProps {
   placeholder?: string;
@@ -10,28 +10,30 @@ interface InputProps {
   width?: string; // New prop for width
 }
 
-const Input: React.FC<InputProps> = ({ 
-  placeholder, 
-  type = 'text', 
-  value, 
-  onChange, 
-  icon, 
-  onIconClick, 
-  width = 'full' // Default to full width if no width prop is provided
+const Input: React.FC<InputProps> = ({
+  placeholder,
+  type = "text",
+  value,
+  onChange,
+  icon,
+  onIconClick,
+  width = "full", // Default to full width if no width prop is provided
 }) => {
   return (
-    <div className={`flex items-center rounded overflow-hidden bg-inputbg ${width}`}>
+    <div
+      className={`flex items-center overflow-hidden rounded bg-inputbg ${width}`}
+    >
       <input
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="flex-1 p-1 focus:outline-none bg-transparent text-base font-poppins" // Set text size for value and placeholder
+        className="flex-1 bg-transparent p-1 text-base focus:outline-none" // Set text size for value and placeholder
       />
       {icon && (
-        <button 
-          type="button" 
-          className="p-1 mr-2" 
+        <button
+          type="button"
+          className="mr-2 p-1"
           onClick={onIconClick} // Handle icon click
         >
           {icon}
