@@ -32,7 +32,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         >
           <motion.div
             animate={{
-              rotate: [0, 2, 0], // Rotate animation
+              rotate: [0, 4, 0], // Rotate animation
               transition: { duration: 3, repeat: Infinity, ease: "easeInOut" },
             }}
             className="mr-4"
