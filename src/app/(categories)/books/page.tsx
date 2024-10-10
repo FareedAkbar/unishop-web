@@ -21,7 +21,6 @@ import { motion } from "framer-motion";
 import { FaCartPlus } from "react-icons/fa";
 import moment from "moment";
 import React from "react";
-import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { getBooks } from "~/_actions/getbooks";
@@ -49,18 +48,15 @@ const MyComponent = () => {
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const { cartItems, addCartItems, removeCartItems, genre } = useAuthContext();
 
-
   useEffect(() => {
     const d = params.get("detail");
     setDetail(d);
   }, [params]);
 
-
-
   useEffect(() => {
     if (!genre) return;
     const genId = genre?.find((item) => item.genre == detail);
-   
+
     const loadData = async () => {
       try {
         setLoader(true);
@@ -159,9 +155,6 @@ const MyComponent = () => {
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-row">
-          <div className="lg:flex-start hidden lg:absolute lg:left-0 lg:flex lg:w-72 lg:self-start">
-            <CategoriesSidebar />
-          </div>
           <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
             <h1 className="m-4 text-end font-bold">
               Showing {data.length} of {data.length} Products

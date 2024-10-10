@@ -20,7 +20,6 @@ import { motion } from "framer-motion";
 import { FaCartPlus } from "react-icons/fa";
 import moment from "moment";
 import React from "react";
-import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import {

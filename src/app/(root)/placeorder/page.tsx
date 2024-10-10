@@ -642,7 +642,7 @@ const MyComponent = () => {
           </h2>
           <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
             <div className="rounded-xl border p-4 lg:col-span-2 xl:col-span-2">
-              <div className="flex justify-between">
+              <div className="flex justify-between lg:flex-row flex-col">
                 <div>
                   <span className="text-md mt-2">Credit Card - eWAY</span>
                   <div className="ml-6 mt-3 flex flex-col">
@@ -662,8 +662,8 @@ const MyComponent = () => {
                   </div>
                 </div>
                 <div>
-                  <div>
-                    <div className="w-48">
+                  <div className="flex flex-col items-center">
+                    <div className="w-48 py-2 ">
                       <Tabs tabs={tabs} changeTabName={setDicountType} />
                     </div>
 
