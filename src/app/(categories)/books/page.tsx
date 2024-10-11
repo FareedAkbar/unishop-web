@@ -269,13 +269,13 @@ const MyComponent = () => {
 
       <ModalBody>
         <ModalContent>
-          <h4 className="mb-3 text-center font-serif text-lg font-bold text-neutral-600 dark:text-neutral-100 md:text-2xl">
+          <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
             {itemDetail?.book_title}
           </h4>
-          <h6 className="mb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
+          <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}
           </h6>
-          <h6 className="mb-8 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
+          <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
             {itemDetail?.additional_notes}
           </h6>
           <div className="flex">
@@ -296,7 +296,7 @@ const MyComponent = () => {
                     rotate: 0,
                     zIndex: 100,
                   }}
-                  className="-mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-neutral-700 dark:bg-neutral-800"
+                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-neutral-700 dark:bg-neutral-800"
                 >
                   <Image
                     src={
@@ -305,9 +305,9 @@ const MyComponent = () => {
                         : "/bookIcon.png"
                     }
                     alt={itemDetail?.object_path ?? ""}
-                    width="500"
-                    height="500"
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-80 md:w-48"
+                    width={500}
+                    height={500}
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-64 md:w-44"
                   />
                 </motion.div>
               </div>
@@ -322,39 +322,56 @@ const MyComponent = () => {
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Series: {itemDetail?.edition}
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                  Series:
+                </span>
+                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                  {itemDetail?.edition}
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                {/* <ElevatorIcon className="mr-1 h-4 w-4 text-neutral-700 dark:text-neutral-300" /> */}
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                  Published:
+                </span>
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Published:{" "}
                   {itemDetail?.introduced
                     ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
                     : ""}
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Language: {itemDetail?.book_language}
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                  Language:
+                </span>
+                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                  {itemDetail?.book_language}
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Number of Pages: {itemDetail?.pages}
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                  Number of Pages:
+                </span>
+                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                  {itemDetail?.pages}
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Publisher: {itemDetail?.publisher.publisher_name}
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                  Publisher:
+                </span>
+                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                  {itemDetail?.publisher.publisher_name}
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  Country of Publication: {itemDetail?.publisher.country}
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                  Country of Publication:
+                </span>
+                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                  {itemDetail?.publisher.country}
                 </span>
               </div>
+
               {itemDetail?.item_id &&
               !isItemInCart(itemDetail.item_id) &&
               itemDetail?.stock?.quantity ? (

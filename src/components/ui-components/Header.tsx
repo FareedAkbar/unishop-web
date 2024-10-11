@@ -335,7 +335,7 @@ const Header = () => {
 
         {/* Desktop Layout */}
         <div className="mt-4 hidden w-full border-b pb-4 md:flex md:items-center md:justify-between">
-          <div className="flex w-full items-center justify-between">
+          <div className="flex w-full items-center ">
             <div
               className="flex-grow cursor-pointer text-left"
               onClick={() => {
@@ -352,7 +352,7 @@ const Header = () => {
             </div>
 
             {/* Navigation Items in the Center */}
-            <nav className="flex flex-grow justify-center space-x-6">
+            <nav className="flex flex-grow justify- space-x-6">
               {navItems.map((item) => (
                 <div key={item.label} className="group relative">
                   <button

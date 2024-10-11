@@ -12,81 +12,6 @@ import { FlipWords } from "~/components/ui/flip-words";
 import ProductList from "~/components/ui-components/ProductList";
 import { Player } from "@lottiefiles/react-lottie-player";
 
-const images = [
-  "/images/home/home1.png",
-  "/images/home/stationary-and-merch.png",
-  "/images/home/graduation-gift.png",
-  "/images/home/home1.png",
-  "/images/home/text-books.png",
-];
-const flashSaleProducts = [
-  {
-    id: 1,
-    book_title: "UOW Boxed Gift Pen",
-    name: "Red North Coat",
-    price: 180,
-    item_sale_price: 120,
-    originalPrice: 160,
-    image: "/assets/images/products/product.png",
-    rating: 4.5,
-    reviews: 88,
-  },
-  {
-    id: 2,
-    book_title: "Red North Coat",
-    item_sale_price: 180,
-    name: "Red North Coat",
-    price: 180,
-    originalPrice: 250,
-    image: "/assets/images/products/product.png",
-    rating: 4.8,
-    reviews: 120,
-  },
-  {
-    id: 3,
-    book_title: "ents Engineering for Software and Systems",
-    item_sale_price: 90,
-    name: "ents Engineering for Software and Systems",
-    price: 90,
-    originalPrice: 120,
-    image: "/assets/images/products/product.png",
-    rating: 4.2,
-    reviews: 50,
-  },
-  {
-    id: 4,
-    book_title: "Gaming Laptop",
-    item_sale_price: 800,
-    name: "Gaming Laptop",
-    price: 800,
-    originalPrice: 1000,
-    image: "/assets/images/products/product.png",
-    rating: 4.7,
-    reviews: 200,
-  },
-  {
-    id: 5,
-    book_title: "Smartwatch",
-    item_sale_price: 150,
-    name: "Smartwatch",
-    price: 150,
-    originalPrice: 200,
-    image: "/assets/images/products/product.png",
-    rating: 4.3,
-    reviews: 100,
-  },
-  {
-    id: 6,
-    book_title: "Wireless Headphones",
-    item_sale_price: 100,
-    name: "Wireless Headphones",
-    price: 100,
-    originalPrice: 150,
-    image: "/assets/images/products/product.png",
-    rating: 4.6,
-    reviews: 80,
-  },
-];
 const bestSellingProducts = [
   {
     id: 1,
@@ -181,7 +106,7 @@ const HomePage: React.FC = () => {
   const words = ["Imagine", "Create", "Inspire", "Transform"];
 
   return (
-    <div className="relative flex-1 overflow-hidden bg-red-50 z-[1] pt-32 lg:pt-24">
+    <div className="relative z-[1] flex-1 overflow-hidden bg-red-50 bg-opacity-80 pt-32 lg:pt-24">
       {/* <BackgroundWords /> */}
       {/* <BackgroundImages /> */}
       <div className="container mx-auto flex justify-center">
@@ -193,24 +118,32 @@ const HomePage: React.FC = () => {
           your reading adventure!
         </div>
       </div>
-      <div className="absolute inset-0 z-[-1] blur-sm overflow-hidden opacity-70">
+      <div className="absolute inset-0 z-[-1] overflow-hidden lg:left-64">
         <Player
-            src={"assets/gifs/lists-bg.json"}
-            loop 
-          autoplay 
-          style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }} 
+          src={"assets/gifs/products-bg.json"}
+          loop
+          autoplay
+          className="absolute inset-0 h-full w-full"
         />
       </div>
       <div className="flex">
         <div className="hidden lg:block lg:pl-20">
           <CategoriesSidebar />
         </div>
-        <div className="flex w-full justify-evenly lg:flex-row flex-col p-5">
+        <div className="flex w-full flex-col justify-evenly p-5 lg:flex-row">
           <div className="pl-0 lg:pl-44">
-            <ProductList products={products} title="Trending" width="lg:w-80 w-full"/>
+            <ProductList
+              products={products}
+              title="Trending"
+              width="lg:w-80 w-full"
+            />
           </div>
           <div className="pl-0">
-            <ProductList products={products} title="Top Rated" width="lg:w-80 w-full"/>
+            <ProductList
+              products={products}
+              title="Top Rated"
+              width="lg:w-80 w-full"
+            />
           </div>
         </div>
       </div>

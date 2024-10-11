@@ -18,7 +18,7 @@ import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 const iconMap: { [key: string]: JSX.Element } = {
   FaBook: <FaBook className="text-blue-700" />,
-  FaGraduationCap: <FaGraduationCap className="text-red-600" />,
+  FaGraduationCap: <FaGraduationCap />,
   FaTshirt: <FaTshirt className="text-green-600" />,
   FaPen: <FaPen className="text-yellow-600" />,
   FaGift: <FaGift className="text-purple-600" />,
@@ -86,7 +86,7 @@ interface CategoriesSidebarProps {
 }
 
 const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
-    const [openCategory, setOpenCategory] = useState<string | null>(null);
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
   const { genre, checkoutData, category } = useAuthContext();
   const router = useRouter();
   const [headerCategory, setHeaderCategory] = useState<
@@ -164,7 +164,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   return (
     <aside
       ref={sidebarRef}
-      className={`absolute left-0 w-64 rounded-r-xl border-r bg-red-100 p-4 my-4 ${className}`} 
+      className={`absolute left-0 my-4 w-64 rounded-r-xl border-y border-r bg-red-100 p-4 shadow-lg ${className}`}
     >
       <h2 className="text-lg font-bold">CATEGORIES</h2>
       <nav className="relative mt-4">
@@ -191,15 +191,15 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               item.label === "Books" ||
               item.label === "Text Book" ? (
                 openCategory === item.label ? (
-                  <FaChevronDown />
+                  <FaChevronDown size={12} />
                 ) : (
-                  <FaChevronRight />
+                  <FaChevronRight size={12} />
                 )
               ) : null}
             </button>
 
             {openCategory === item.label && (
-              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border  bg-red-100 p-4 shadow-lg">
+              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-red-100 p-4 shadow-lg">
                 {item.label === "Books" &&
                   genre?.map((subItem) => (
                     <a

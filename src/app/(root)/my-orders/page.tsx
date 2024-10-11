@@ -31,6 +31,7 @@ import type {
 import type PayloadForTrasactionLink from "~/types/payloadForTrasactionLink";
 import OrdersTable from "./orderstable";
 import { token221 } from "~/types/tokens";
+import OrdersDataTable from "./OrdersDataTable";
 
 const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM`;
 
@@ -463,12 +464,13 @@ const MyComponent = () => {
         {loader && <Spinner />}
         <div className="z-10 w-full p-4">
           <h1 className="pb-3 text-center text-2xl font-bold">My Orders</h1>
-          <OrdersTable
+          {/* <OrdersTable
             handlePayment={(x) => handlePayment(x)}
             data={dataOrders}
             orderStatus={orderStatus}
             title="orders"
-          />
+          /> */}
+          <OrdersDataTable/>
         </div>
       </main>
       {isOpenPaymentAlert ? (

@@ -2,38 +2,26 @@
 // components/Pagination.tsx
 import React from 'react';
 import { useSearchParams  } from 'next/navigation';
-
 interface PaginationProps {
   currentPage: number;
-  totalPages: number;
+  totalRecords: number; // Add totalRecords
+  limit: number;        // Add limit
   onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
-  
+const Pagination: React.FC<PaginationProps> = ({ currentPage, totalRecords, limit, onPageChange }) => {
   const searchParams = useSearchParams();
-  // const path = usePathname();
-
- 
-    const handlePageChange = (pageNumber: number) => {
-      // Create a new URLSearchParams object based on the current search params
-      const newParams = new URLSearchParams(searchParams.toString());
-      
-      // Set the 'page' query parameter
-      newParams.set('page', pageNumber.toString());
   
-      // Construct the new URL with updated query parameters
+  // Calculate total pages based on total records and limit
+  const totalPages = Math.ceil(totalRecords / limit);
 
-      // const newUrl = `${path}?${newParams.toString()}`;
-  
-      // Navigate to the new URL
-      onPageChange(pageNumber);
-      // router.push(newUrl);
-     
-     
-    };
-   
-
+  const handlePageChange = (pageNumber: number) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set('page', pageNumber.toString());
+    
+    // Navigate to the new URL
+    onPageChange(pageNumber);
+  };
 
   return (
     <div className="flex items-center justify-center space-x-2 mt-4">
@@ -65,5 +53,6 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
     </div>
   );
 };
+
 
 export default Pagination;
