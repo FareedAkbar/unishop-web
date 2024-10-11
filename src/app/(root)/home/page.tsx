@@ -181,7 +181,7 @@ const HomePage: React.FC = () => {
   const words = ["Imagine", "Create", "Inspire", "Transform"];
 
   return (
-    <div className="relative flex-1 overflow-hidden bg-red-50 z-[-2] pt-32 lg:pt-24">
+    <div className="relative flex-1 overflow-hidden bg-red-50 z-[1] pt-32 lg:pt-24">
       {/* <BackgroundWords /> */}
       {/* <BackgroundImages /> */}
       <div className="container mx-auto flex justify-center">
@@ -193,7 +193,7 @@ const HomePage: React.FC = () => {
           your reading adventure!
         </div>
       </div>
-      <div className="absolute inset-0 z-[-1] blur overflow-hidden">
+      <div className="absolute inset-0 z-[-1] blur-sm overflow-hidden opacity-70">
         <Player
             src={"assets/gifs/lists-bg.json"}
             loop 
