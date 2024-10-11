@@ -181,7 +181,7 @@ const HomePage: React.FC = () => {
   const words = ["Imagine", "Create", "Inspire", "Transform"];
 
   return (
-    <div className="relative flex-1 overflow-hidden bg-red-50 z-[1] pt-32 lg:pt-24">
+    <div className="relative flex-1 overflow-hidden bg-red-50 bg-opacity-80 z-[1] pt-32 lg:pt-24">
       {/* <BackgroundWords /> */}
       {/* <BackgroundImages /> */}
       <div className="container mx-auto flex justify-center">
@@ -193,12 +193,13 @@ const HomePage: React.FC = () => {
           your reading adventure!
         </div>
       </div>
-      <div className="absolute inset-0 z-[-1] blur-sm overflow-hidden opacity-70">
+      <div className="absolute inset-0 z-[-1] lg:left-64 overflow-hidden">
         <Player
-            src={"assets/gifs/lists-bg.json"}
+            src={"assets/gifs/products-bg.json"}
             loop 
           autoplay 
-          style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }} 
+          className="w-full h-full absolute inset-0"
+          // style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }} 
         />
       </div>
       <div className="flex">

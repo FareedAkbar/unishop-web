@@ -29,7 +29,7 @@ const ProductList: React.FC<ProductListProps> = ({
       {products.map((product, index) => (
         <motion.div
           key={product.id}
-          className={`mx-auto flex ${width} items-center justify-between gap-3 rounded-lg bg-red-100 p-3 shadow-lg`} // Dynamically apply the width
+          className={`mx-auto flex ${width} items-center justify-between gap-3 rounded-lg bg-red-100 border border-neutral-300 p-3 shadow-lg`} // Dynamically apply the width
           initial={{ opacity: 0, y: -20 }} // Start position above
           animate={{
             opacity: 1,
