@@ -15,6 +15,7 @@ import {
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 
 // Create a mapping of icon names to their corresponding components
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 const iconMap: { [key: string]: JSX.Element } = {
   FaBook: <FaBook className="text-blue-700" />,
   FaGraduationCap: <FaGraduationCap className="text-red-600" />,
@@ -181,9 +182,10 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
             >
               <div className="flex items-center">
                 {item.icon && (
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                   <span className="mr-3">{iconMap[item.icon]}</span>
                 )}
-                <span>{item.label}</span>
+                <a href={item.href}>{item.label}</a>
               </div>
               {item.subItems ||
               item.label === "Books" ||

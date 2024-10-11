@@ -228,13 +228,9 @@ const MyComponent = () => {
       guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
       amount: 0.01,
     };
-    console.log(x);
-    console.log(item);
 
     try {
       await getLinkForPayment(x);
-
-      console.log(x);
     } catch (error) {
       console.error("Failed to load data:", error);
     }

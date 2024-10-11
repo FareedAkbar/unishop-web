@@ -76,12 +76,12 @@ input[type="radio"] {
 }
 
 input[type="radio"]:checked {
-  background-color: #007bff; /* Color when selected */
-  border-color: #007bff; /* Border color when selected */
+  background-color: #ff0800; /* Color when selected */
+  border-color: #ff1100; /* Border color when selected */
 }
 
 input[type="radio"]:focus {
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* Focus ring */
+  box-shadow: 0 0 0 2px hsla(0, 4%, 95%, 0.986); /* Focus ring */
 }
 @layer base {
   * {

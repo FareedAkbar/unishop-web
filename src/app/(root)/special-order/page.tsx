@@ -138,7 +138,6 @@ const MyComponent = () => {
     // fetchDetail(item.link);
     setShowCheckout(true);
     setView("checkout");
-    console.log(item);
   };
 
   const placeOrderApiCall = async (requestOptions: SpecialOrderPayload) => {

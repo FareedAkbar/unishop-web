@@ -18,7 +18,7 @@ import { TbSettings } from "react-icons/tb";
 import { HiLogin, HiLogout } from "react-icons/hi";
 import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import SidebarCart from "../ui/sideCart/cartSidebar";
 
 const Header = () => {
@@ -32,9 +32,11 @@ const Header = () => {
     category,
     userInfo,
     isLoggedIn,
+    favItems
   } = useAuthContext();
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const path = usePathname();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSection, setActiveSection] = useState("home");
 
@@ -151,6 +153,9 @@ const Header = () => {
   }, []);
 
   const toggleSidebar = () => {
+    if(path.includes("/checkout") || path.includes("/placeorder"))  return
+     
+   
     setIsSidebarOpen((prev) => !prev);
   };
 
@@ -404,12 +409,19 @@ const Header = () => {
               />
               <div className="relative">
                 <GoHeart className="cursor-pointer text-3xl" />
+                {favItems?.length && favItems?.length > 0 ? (
+                  <span className="absolute right-4 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-[6px] text-sm text-white">
+                    {favItems?.length}
+                  </span>
+                ) : (
+                  ""
+                )}
                 {/* <span className="absolute -top-0 -right-0 bg-red-500 text-white text-[6px] text-sm rounded-full w-4 h-4 flex items-center justify-center">3</span> */}
               </div>
               <div className="relative" onClick={() => toggleSidebar()}>
                 <IoCartOutline className="cursor-pointer text-3xl" />
                 {cartItems?.length && cartItems?.length > 0 ? (
-                  <span className="absolute -right-0 -top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[6px] text-sm text-white">
+                  <span className="absolute right-4 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-[6px] text-sm text-white">
                     {cartItems?.length}
                   </span>
                 ) : (

@@ -4,7 +4,7 @@ import type UserType from "~/types/userType";
 import { isStringified } from "~/utils";
 import type { CheckoutForm} from "~/types/checkoutForm";
 import type { Genre } from "~/types/genre";
-import { Category } from "~/types/category";
+import { type Category } from "~/types/category";
 
 
 const STORAGE_MAPPER = {
@@ -50,7 +50,12 @@ const STORAGE_MAPPER = {
   },
   BOOKNET_CUSTOMER_ID:{
     TYPE: {} as number | null,
-    KEY: "BOOKNET_CUSTOMER_ID",
+    KEY: "bookent_customer_id",
+    DEFAULT: null
+  },
+  FAV_ITEMS:{
+    TYPE: [] as number[],
+    KEY: "fav_items",
     DEFAULT: null
   }
 };
@@ -72,12 +77,9 @@ export const localStorageClient = () => {
     if (!value) {
       return;
     }
-    
     localStorage.setItem(STORAGE_MAPPER[key].KEY, JSON.stringify(value));
   };
   const setEmpty = <T extends keyof typeof STORAGE_MAPPER>(key: T, value: (typeof STORAGE_MAPPER)[T]["TYPE"]) => {
-    
-    
     localStorage.setItem(STORAGE_MAPPER[key].KEY, JSON.stringify(value));
   };
 
@@ -94,5 +96,5 @@ export const localStorageClient = () => {
     }
   };
 
-  return { getItem, setItem, cleanStorage,setEmpty };
+  return { getItem, setItem, cleanStorage, setEmpty };
 };

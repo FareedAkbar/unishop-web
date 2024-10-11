@@ -46,8 +46,8 @@ const MyComponent = () => {
   const { setOpen } = useModal();
   const [detail, setDetail] = useState<string | null>(null);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
-  const { cartItems, addCartItems, removeCartItems, genre } = useAuthContext();
-
+  const { cartItems, addCartItems, removeCartItems, genre,addFavourite } = useAuthContext();
+  
   useEffect(() => {
     const d = params.get("detail");
     setDetail(d);
@@ -101,6 +101,10 @@ const MyComponent = () => {
   const openDetail = async (item: DataCart) => {
     setOpen(true);
     setItemDetail(item);
+  };
+
+  const handleFavourite = async (item: DataCart) => {
+   await addFavourite(item.item_id)
   };
 
   const isItemInCart = (itemId: number) => {
@@ -175,6 +179,7 @@ const MyComponent = () => {
                         onAddToCart={() => handleAddToCart(item)}
                         onRemoveFromCart={() => handleRemoveFromCart(item)}
                         openDetail={() => openDetail(item)}
+                        handleFavourite={() => handleFavourite(item)}
                       />
                     ))}
               </div>

@@ -5,13 +5,15 @@ interface Category {
     label: string;
     href?:string;
     subItems?: SubItem[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     icon:any;
   }
   
   interface SubItem {
     label: string;
     href: string;
-    icon:any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    icon: any;
   }
   export const categories: Category[] = [
     {
@@ -27,7 +29,7 @@ interface Category {
     { 
       label: 'E-Text Book',
       icon: 'FaClipboardList',
-      href: "" 
+      href: "https://unishopuow.vitalsource.com/" 
     },
     { 
       label: 'Pulse',
