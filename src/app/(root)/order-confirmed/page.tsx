@@ -78,13 +78,13 @@ const OrderConfirmed = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <p className="text-md text-zinc-500 dark:text-gray-400">
+          <p className="text-md text-zinc-500 dark:text-gray-400 flex justify-between">
             <strong>Order ID:</strong> {orderTrasactionData?.order_id ?? 0}
           </p>
-          <p className="text-md text-zinc-500 dark:text-gray-400">
+          <p className="text-md text-zinc-500 dark:text-gray-400 flex justify-between">
             <strong>Tracking ID:</strong> {orderTrasactionData?.tracking_id ?? 0}
           </p>
-          <p className="text-md text-zinc-500 dark:text-gray-400">
+          <p className="text-md text-zinc-500 dark:text-gray-400 flex justify-between">
             <strong>Transaction ID:</strong>{" "}
             {orderTrasactionData?.trasaction_id ?? 0 }
           </p>

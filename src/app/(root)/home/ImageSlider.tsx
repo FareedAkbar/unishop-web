@@ -9,7 +9,7 @@ const ImageSlider: React.FC = () => {
   const router = useRouter(); // Initialize router for navigation
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
-  
+
   const slides = [
     {
       image: "/assets/images/home/home1.png",

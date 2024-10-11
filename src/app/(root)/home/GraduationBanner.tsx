@@ -26,7 +26,7 @@ const GraduationBanner: React.FC = () => {
           alt="Graduation"
           width={1000}
           height={1000}
-          className="h-28 w-full object-cover sm:h-72 lg:h-[350px]"
+          className="h-28 w-full object-contain sm:h-72 lg:h-[350px]"
         />
       </div>
     </div>
