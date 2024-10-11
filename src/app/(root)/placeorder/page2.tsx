@@ -27,6 +27,7 @@ import type { placeOrderPayload } from "~/types/placeOrderPayload";
 import { formatDate, formatDateTime } from "~/utils/dateAndTime";
 import { useRouter } from "next/navigation";
 import { generateOTP } from "~/utils/generateOTP";
+import { outlet223 } from "~/types/tokens";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -369,7 +370,7 @@ const MyComponent = () => {
     const x = {
       order_type: shipping?.type == 'free' ? 1 : 2,
       online_order_type: 1,
-      outlet_id: 221,
+      outlet_id: outlet223,
       tracking_id: generateOTP(12).toString(),
       order_status: 7,
       completed_date: formatDate(date),

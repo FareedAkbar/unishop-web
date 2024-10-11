@@ -46,7 +46,7 @@ const CartItem: React.FC<CartItemProps> = ({
       <Image
         src={ imageSrc
           ? `https://ipos-storage.s3.amazonaws.com/${imageSrc}`
-          : '/images/products/product.png'}
+          : '/assets/images/products/product.png'}
         alt={title}
         className="h-20 w-20 rounded bg-gray-200 object-contain mb-4 md:mb-0"
         width={800}

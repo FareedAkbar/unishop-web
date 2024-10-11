@@ -27,7 +27,7 @@ import { formatDate, formatDateTime } from "~/utils/dateAndTime";
 import { useRouter } from "next/navigation";
 import { generateOTP } from "~/utils/generateOTP";
 import Button from "~/components/ui-components/Button";
-import { token221 } from "~/types/tokens";
+import { outlet223, token221 } from "~/types/tokens";
 import { Tabs } from "~/components/ui/tabs";
 import Input from "~/components/ui-components/Input";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
@@ -52,6 +52,7 @@ const MyComponent = () => {
     shippingOptions[0] ?? null,
   );
   const [total, setTotal] = useState<number>(0);
+  const [discountLoader, setDiscountLoader] = useState(false);
   const { toast } = useToast();
   const [calculateLoader, setCalculateLoader] = useState<boolean>(false);
   // const [customerId, setCustomerId] = useState<number>();
@@ -383,7 +384,7 @@ const MyComponent = () => {
     const x = {
       order_type: shipping?.type == "free" ? 1 : 2,
       online_order_type: 1,
-      outlet_id: 223,
+      outlet_id: outlet223,
       tracking_id: generateOTP(12).toString(),
       order_status: 7,
       completed_date: formatDate(date),
@@ -579,7 +580,7 @@ const MyComponent = () => {
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
       );
-
+      setDiscountLoader(true)
       const result: dicountResponse =
         (await response.json()) as dicountResponse;
 
@@ -598,30 +599,38 @@ const MyComponent = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      // setCalculateLoader(false);
+      setDiscountLoader(false)
     }
   };
 
   const handleclick = () => {
-    if (discountType == "Voucher") {
-      const xData = {
-        code: discountValue.trim(),
-        total_order_price: total,
-        order_id: null,
-        till: 0,
-        cus_id: 165,
-        membership: null,
-        outlet_id: 223,
-      };
-      // getDiscounts(x).catch((err) => console.log(err));
+    if (discountValue.trim().length > 0) {
+      if (discountType == "Voucher") {
+        const xData = {
+          code: discountValue.trim(),
+          total_order_price: total,
+          order_id: null,
+          till: 0,
+          cus_id: userInfo?.customer_id ? userInfo?.customer_id : 0,
+          membership: null,
+          outlet_id: outlet223,
+        };
+        getDiscounts(xData).catch((err) => console.log(err));
+      } else {
+        const xData = {
+          cus_id: userInfo?.customer_id ? userInfo?.customer_id : 0,
+          code: discountValue.trim(),
+          // "till" : 1,
+          outlet_id: outlet223,
+        };
+        getDiscounts(xData).catch((err) => console.log(err));
+      }
     } else {
-      const xData = {
-        cus_id: 162,
-        code: discountValue.trim(),
-        // "till" : 1,
-        outlet_id: 223,
-      };
-      // getDiscounts(x).catch((err) => console.log(err));
+      toast({
+        title: "Invalid code",
+        variant: "destructive",
+        description: "Please Enter code",
+      });
     }
   };
 
@@ -642,7 +651,7 @@ const MyComponent = () => {
           </h2>
           <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
             <div className="rounded-xl border p-4 lg:col-span-2 xl:col-span-2">
-              <div className="flex justify-between lg:flex-row flex-col">
+              <div className="flex flex-col justify-between lg:flex-row">
                 <div>
                   <span className="text-md mt-2">Credit Card - eWAY</span>
                   <div className="ml-6 mt-3 flex flex-col">
@@ -661,32 +670,35 @@ const MyComponent = () => {
                     </span>
                   </div>
                 </div>
-                <div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-48 py-2 ">
-                      <Tabs tabs={tabs} changeTabName={setDicountType} />
-                    </div>
+                {userInfo?.customer_id && (
+                  <div>
+                    <div className="flex flex-col items-center">
+                      <div className="w-48 py-2">
+                        <Tabs tabs={tabs} changeTabName={setDicountType} />
+                      </div>
 
-                    <div className="mt-2 flex h-10">
-                      <Input
-                        value={discountValue}
-                        icon
-                        onChange={(e) => {
-                          setDiscountValue(e.target.value);
-                        }}
-                        // type="number"
-                      />
-                      <Button
-                        height="h-8"
-                        title={"Apply discount"}
-                        className="text-xs"
-                        onClick={() => {
-                          handleclick();
-                        }}
-                      />
+                      <div className="mt-2 flex h-10">
+                        <Input
+                          value={discountValue}
+                          icon
+                          onChange={(e) => {
+                            setDiscountValue(e.target.value);
+                          }}
+                          // type="number"
+                        />
+                        <Button
+                          height="h-8"
+                          title={"Apply discount"}
+                          className="text-xs"
+                          loading={discountLoader}
+                          onClick={() => {
+                            handleclick();
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
 
               <div className="mb-4 mt-10">

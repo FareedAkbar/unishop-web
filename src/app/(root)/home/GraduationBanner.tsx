@@ -22,7 +22,7 @@ const GraduationBanner: React.FC = () => {
 
       <div className="mt-8 flex w-1/3 lg:mt-0 lg:justify-end">
         <Image
-          src={"/images/home/graduation.png"}
+          src={"/assets/images/home/graduation.png"}
           alt="Graduation"
           width={1000}
           height={1000}

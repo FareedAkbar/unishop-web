@@ -39,7 +39,7 @@ export default function SpecialOrderCard({
       {/* Main Product Image Section */}
       <div className="relative flex h-40 items-center justify-center rounded-sm bg-gray-200 sm:h-48 lg:h-64">
         <Image
-          src="/images/products/product.png" // Assuming placeholder book image
+          src="/assets/images/products/product.png" // Assuming placeholder book image
           alt={item.title}
           layout="fill"
           objectFit="contain"

@@ -30,7 +30,7 @@ const ProductCard = ({
           src={
             product?.object_path
               ? `https://ipos-storage.s3.amazonaws.com/${product.object_path}`
-              : "/images/products/product.png"
+              : "/assets/images/products/product.png"
           }
           alt={product?.SKU_title ?? ""}
           width={1000}
