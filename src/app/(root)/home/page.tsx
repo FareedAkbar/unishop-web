@@ -181,7 +181,7 @@ const HomePage: React.FC = () => {
   const words = ["Imagine", "Create", "Inspire", "Transform"];
 
   return (
-    <div className="relative flex-1 overflow-hidden bg-red-50 z-[-2] pt-32 lg:pt-24">
+    <div className="relative flex-1 overflow-hidden bg-red-50 z-10 pt-32 lg:pt-24">
       {/* <BackgroundWords /> */}
       {/* <BackgroundImages /> */}
       <div className="container mx-auto flex justify-center">

@@ -23,8 +23,16 @@ import SidebarCart from "../ui/sideCart/cartSidebar";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
-  const { logout, getGenre, cartItems, genre, getCategory, category } =
-    useAuthContext();
+  const {
+    logout,
+    getGenre,
+    cartItems,
+    genre,
+    getCategory,
+    category,
+    userInfo,
+    isLoggedIn,
+  } = useAuthContext();
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -421,6 +429,12 @@ const Header = () => {
                     ref={userDropdownRef}
                     className="absolute right-0 z-10 mt-1 w-40 rounded-md bg-white px-1 py-2 shadow-md"
                   >
+                    {userInfo?.first_name && (
+                      <span className="p-1 text-md font-medium">
+                        {userInfo?.first_name} {userInfo?.last_name}
+                      </span>
+                    )}
+
                     <a
                       href="#account-settings"
                       className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
@@ -428,22 +442,28 @@ const Header = () => {
                       <TbSettings className="mr-2" />
                       Account Setting
                     </a>
-                    <a
-                      onClick={() => handleLogout()}
-                      href="#logout"
-                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
-                    >
-                      <HiLogin className="mr-2" />
-                      Logout
-                    </a>
-                    <a
-                      onClick={() => handleLogout()}
-                      href="#login"
-                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
-                    >
-                      <HiLogout className="mr-2" />
-                      Login
-                    </a>
+                    {isLoggedIn && (
+                      <a
+                        onClick={() => handleLogout()}
+                        href="#logout"
+                        className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
+                      >
+                        <HiLogin className="mr-2" />
+                        Logout
+                      </a>
+                    )}
+
+                    {!isLoggedIn && (
+                      <a
+                        // onClick={() => handleLogout()}
+                        href="/login"
+                        className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
+                      >
+                        <HiLogout className="mr-2" />
+                        Login
+                      </a>
+                    )}
+
                     <a
                       onClick={() => handleLogout()}
                       href="#signup"
