@@ -42,7 +42,7 @@ const Header = () => {
 
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for hamburger menu
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); // Theme state
+  const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem("theme") == "dark" ? true : false); // Theme state
 
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
   const dropdownToggleRef = useRef<HTMLButtonElement | null>(null);

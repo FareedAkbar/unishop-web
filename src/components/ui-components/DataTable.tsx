@@ -17,6 +17,8 @@ import { CiSearch } from "react-icons/ci";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { HiMiniViewColumns } from "react-icons/hi2";
+import { ModalBody, ModalContent, useModal } from "../ui/animated-modal";
+import { GetSpecialOrder } from "~/types/getSpecialBackOrders";
 
 interface DataTableProps {
   tableData: any[];
@@ -37,9 +39,13 @@ const DataTable: React.FC<DataTableProps> = ({
   const [selectedDateRange, setSelectedDateRange] = useState<
     [Date | null, Date | null]
   >([null, null]);
-  const [data, setData] = useState([...tableData]);
+  const { setOpen } = useModal();
+  const [data, setData] = useState(tableData);
+  const [selectedItem, setSelectedItem] = useState<GetSpecialOrder | null>(
+    null,
+  );
   const [searchText, setSearchText] = useState("");
-  const [filteredData, setFilteredData] = useState([...tableData]);
+  const [filteredData, setFilteredData] = useState(tableData);
   const [columns, setColumns] = useState(
     tableColumns.map((column) => ({ ...column, isVisible: true })),
   );
@@ -61,7 +67,7 @@ const DataTable: React.FC<DataTableProps> = ({
   }, []);
 
   useEffect(() => {
-    setData([...tableData]);
+    setData(tableData);
   }, [tableData]);
 
   const toggleFullScreen = () => {
@@ -101,7 +107,7 @@ const DataTable: React.FC<DataTableProps> = ({
   }, [searchText, selectedDateRange, tableData]);
 
   const filterResult = () => {
-    let filtered = [...tableData];
+    let filtered = tableData;
 
     // Search filter
     if (searchText) {
@@ -116,7 +122,7 @@ const DataTable: React.FC<DataTableProps> = ({
     const [startDate, endDate] = selectedDateRange;
     if (startDate && endDate) {
       filtered = filtered.filter((row) => {
-        const date = new Date(row.creationDate); // Adjust according to your date field
+        const date = new Date(row.started); // Adjust according to your date field
         return date >= startDate && date <= endDate;
       });
     }
@@ -169,21 +175,23 @@ const DataTable: React.FC<DataTableProps> = ({
         return 0;
       });
 
-      setData(sortedData);
+      setFilteredData(sortedData);
     }
     setSortOptions([...sortOptions]);
   };
 
-  const onClickView = (orderId: number) => {
-    console.log("Viewing order ID:", orderId);
+  const onClickView = (order: GetSpecialOrder) => {
+    console.log("Viewing order ID:", order);
+    setSelectedItem(order);
+    setOpen(true);
     // Add your view logic here
   };
 
   // Calculate total pages based on filtered data and page size
-  const totalPages = Math.ceil(filteredData.length / pageSize);
+  const totalPages = Math.ceil(filteredData?.length / pageSize);
 
   // Get the data to be displayed for the current page
-  const displayedData = filteredData.slice(
+  const displayedData = filteredData?.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize,
   );
@@ -191,129 +199,136 @@ const DataTable: React.FC<DataTableProps> = ({
   if (!isClient) return null; // Prevent mismatched SSR/CSR content
 
   return (
-    <div className={`flex flex-col bg-white p-3`} id="tableContainer">
-      <div className="mb-4 flex justify-between">
-        <div className="flex items-center">
-          <div className="ml-4"></div>
-        </div>
-        <div className="flex items-center">
-          <input
-            type="text"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            placeholder="Search"
-            onKeyPress={handleSearchKeyPress}
-            className="rounded border border-gray-300 px-2 py-1"
-          />
-
-          <div className="ml-4">
-            <DatePicker
-              selectsRange
-              startDate={selectedDateRange[0]!}
-              endDate={selectedDateRange[1]!}
-              onChange={(update: [Date | null, Date | null]) =>
-                handleDateRangeChange(update)
-              }
-              className="rounded border border-gray-300 px-4 py-1"
-              isClearable={true}
-              placeholderText="Select Date Range"
+    <>
+      <div className={`flex flex-col bg-white p-3`} id="tableContainer">
+        <div className="mb-4 flex justify-between">
+          <div className="flex items-center">
+            <div className="ml-4"></div>
+          </div>
+          <div className="flex items-center">
+            <input
+              type="text"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              placeholder="Search"
+              onKeyPress={handleSearchKeyPress}
+              className="rounded border border-gray-300 px-2 py-1"
             />
+
+            <div className="ml-4">
+              <DatePicker
+                selectsRange
+                startDate={selectedDateRange[0]!}
+                endDate={selectedDateRange[1]!}
+                onChange={(update: [Date | null, Date | null]) =>
+                  handleDateRangeChange(update)
+                }
+                className="rounded border border-gray-300 px-4 py-1"
+                isClearable={true}
+                placeholderText="Select Date Range"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="mb-4 flex justify-between">
-        <div className="flex items-center">
-          <HiMiniViewColumns size={20} className="mr-2" />
-          <span>Columns:</span>
-          {columns.map((column) => (
-            <span key={column.key} className="ml-2">
-              <input
-                type="checkbox"
-                checked={column.isVisible}
-                onChange={() => handleColumnToggle(column.key)}
-              />
-              <span className="ml-1">{column.header}</span>
-            </span>
-          ))}
-        </div>
-        <div className="flex items-center">
-          <span className="mr-2">Page Size:</span>
-          <select
-            value={pageSize}
-            onChange={(e) => setPageSize(Number(e.target.value))}
-            className="rounded border border-gray-300 px-2 py-1"
-          >
-            {[10, 20, 30, 50].map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
+        <div className="mb-4 flex justify-between">
+          <div className="flex items-center">
+            <HiMiniViewColumns size={20} className="mr-2" />
+            <span>Columns:</span>
+            {columns.map((column) => (
+              <span key={column.key} className="ml-2">
+                <input
+                  type="checkbox"
+                  checked={column.isVisible}
+                  onChange={() => handleColumnToggle(column.key)}
+                />
+                <span className="ml-1">{column.header}</span>
+              </span>
             ))}
-          </select>
-          <button onClick={toggleFullScreen} className="ml-2">
-            {isFullScreen ? <FaCompress /> : <FaExpand />}
+          </div>
+          <div className="flex items-center">
+            <span className="mr-2">Page Size:</span>
+            <select
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              className="rounded border border-gray-300 px-2 py-1"
+            >
+              {[10, 20, 30, 50].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+            <button onClick={toggleFullScreen} className="ml-2">
+              {isFullScreen ? <FaCompress /> : <FaExpand />}
+            </button>
+          </div>
+        </div>
+        <table className="min-w-full border">
+          <thead>
+            <tr>
+              {columns.map((column) =>
+                column.isVisible ? (
+                  <th
+                    key={column.key}
+                    className="cursor-pointer border-b p-2 text-left"
+                    onClick={() => column.isSortable && handleSort(column.key)}
+                  >
+                    {column.header}
+                    {sortOptions.find((sort) => sort.key === column.key)
+                      ?.mode === "asc" && <FaAngleUp className="ml-1 inline" />}
+                    {sortOptions.find((sort) => sort.key === column.key)
+                      ?.mode === "desc" && (
+                      <FaAngleDown className="ml-1 inline" />
+                    )}
+                  </th>
+                ) : null,
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {displayedData?.map((row) => (
+              <tr key={row.id} className="border-b">
+                {columns.map((column) =>
+                  column.isVisible ? (
+                    <td key={column.key} className="p-2">
+                      {column.cell ? column.cell(row) : row[column.key]}
+                    </td>
+                  ) : null,
+                )}
+                <td className="p-2">
+                  <FaEye
+                    className="cursor-pointer"
+                    onClick={() => onClickView(row)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="mt-4 flex justify-between">
+          <button
+            className={`border px-3 py-1 ${currentPage === 1 ? "bg-gray-200" : "bg-white"}`}
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <FaChevronLeft />
+          </button>
+          <span className="px-2">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className={`border px-3 py-1 ${currentPage === totalPages ? "bg-gray-200" : "bg-white"}`}
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <FaChevronRight />
           </button>
         </div>
       </div>
-      <table className="min-w-full border">
-        <thead>
-          <tr>
-            {columns.map((column) =>
-              column.isVisible ? (
-                <th
-                  key={column.key}
-                  className="cursor-pointer border-b p-2 text-left"
-                  onClick={() => column.isSortable && handleSort(column.key)}
-                >
-                  {column.header}
-                  {sortOptions.find((sort) => sort.key === column.key)?.mode ===
-                    "asc" && <FaAngleUp className="ml-1 inline" />}
-                  {sortOptions.find((sort) => sort.key === column.key)?.mode ===
-                    "desc" && <FaAngleDown className="ml-1 inline" />}
-                </th>
-              ) : null,
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {displayedData.map((row) => (
-            <tr key={row.id} className="border-b">
-              {columns.map((column) =>
-                column.isVisible ? (
-                  <td key={column.key} className="p-2">
-                    {column.cell ? column.cell(row) : row[column.key]}
-                  </td>
-                ) : null,
-              )}
-              <td className="p-2">
-                <FaEye
-                  className="cursor-pointer"
-                  onClick={() => onClickView(row.id)}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="mt-4 flex justify-between">
-        <button
-          className={`border px-3 py-1 ${currentPage === 1 ? "bg-gray-200" : "bg-white"}`}
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          <FaChevronLeft />
-        </button>
-        <span className="px-2">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          className={`border px-3 py-1 ${currentPage === totalPages ? "bg-gray-200" : "bg-white"}`}
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          <FaChevronRight />
-        </button>
-      </div>
-    </div>
+      <ModalBody>
+        <ModalContent>{selectedItem?.total_order_price}</ModalContent>
+      </ModalBody>
+    </>
   );
 };
 

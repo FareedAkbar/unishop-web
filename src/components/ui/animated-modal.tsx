@@ -2,7 +2,7 @@
 import { cn } from "~/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import React, {
-  ReactNode,
+  type ReactNode,
   createContext,
   useContext,
   useEffect,

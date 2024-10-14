@@ -64,12 +64,10 @@ const MyComponent = () => {
 
   // Handlers for increasing, decreasing, and removing items
   const handleIncrease = async (id: number, number: number) => {
-    console.log(`Increase quantity for item ${id}`);
     await increaseCartItemQuantity(id, number);
   };
 
   const handleDecrease = async (id: number, number: number) => {
-    console.log(`Decrease quantity for item ${id}`);
     await increaseCartItemQuantity(id, number);
   };
 

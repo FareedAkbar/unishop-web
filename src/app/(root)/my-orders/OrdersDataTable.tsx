@@ -1,11 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 "use client";
+import moment from "moment";
 import React from "react";
 import DataTable from "~/components/ui-components/DataTable";
+import type {
+  GetSpecialOrder,
+  OrderStatus,
+} from "~/types/getSpecialBackOrders";
 
-const OrdersDataTable = () => {
+interface dataTable {
+  data: GetSpecialOrder[];
+  orderStatus: OrderStatus[];
+}
+
+const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
   // Dummy data for orders
   const generateDummyOrders = () => {
     const orders = [];
@@ -24,50 +35,52 @@ const OrdersDataTable = () => {
     }
     return orders;
   };
+  function getOrderStatusById(orderStatusId: number | null) {
+    return orderStatus.find((status) => status.status_id === orderStatusId);
+  }
 
-  const tableData = generateDummyOrders();
+  // const tableData = generateDummyOrders();
 
   const columns = [
-    { key: "orderId", header: "Order ID", isSortable: false },
-    { key: "trackingId", header: "Tracking ID", isSortable: false },
+    { key: "order_id", header: "Order ID", isSortable: false },
+    { key: "tracking_id", header: "Tracking ID", isSortable: false },
     {
-      key: "status",
+      key: "order_status",
       header: "Status",
       isSortable: true,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      cell: (info: any) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        const status = info.status ? info.status : "";
-        const badgeColor =
-          status === "Completed" ? "bg-green-500" : "bg-red-500";
+      cell: (info: GetSpecialOrder) => {
+        const status = info.order_status;
+        const badgeColor = "bg-green-500"; // Simplified for now
         return (
           <span
             className={`inline-block rounded px-2 py-1 text-white ${badgeColor}`}
           >
-            {status}
+            {getOrderStatusById(status)?.status_detail}
           </span>
         );
       },
     },
     {
-      key: "creationDate",
+      key: "started",
       header: "Creation Date",
       isSortable: true,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-      cell: (info: any) => info.creationDate.toLocaleDateString(),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: (info: any) => {
+        const date = moment(info.started).format("MM/DD/YYYY");
+        return <span>{date}</span>;
+      },
     },
     {
-      key: "price",
+      key: "total_discounted_price",
       header: "Price",
       isSortable: true,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      cell: (info: any) => `$${info.price}`,
+      cell: (info: any) => <span>{`$${info.total_discounted_price}`}</span>, // Changed to JSX element
     },
   ];
 
-  return (
-    <DataTable tableData={tableData} columns={columns} isLoading={false} />
-  );
+  return <DataTable tableData={data} columns={columns} isLoading={false} />;
 };
 
 export default OrdersDataTable;
