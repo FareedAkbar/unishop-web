@@ -13,7 +13,7 @@ import Logo from "../../../public/unishop_logo_new.png";
 import { GoHeart } from "react-icons/go";
 import { IoCartOutline } from "react-icons/io5";
 import { MdOutlinePersonOutline } from "react-icons/md";
-import { FiSearch } from "react-icons/fi";
+import { FiMoon, FiSearch, FiSun } from "react-icons/fi";
 import { TbSettings } from "react-icons/tb";
 import { HiLogin, HiLogout } from "react-icons/hi";
 import { categories } from "~/constants/categories";
@@ -32,7 +32,7 @@ const Header = () => {
     category,
     userInfo,
     isLoggedIn,
-    favItems
+    favItems,
   } = useAuthContext();
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -42,6 +42,7 @@ const Header = () => {
 
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for hamburger menu
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false); // Theme state
 
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
   const dropdownToggleRef = useRef<HTMLButtonElement | null>(null);
@@ -131,6 +132,28 @@ const Header = () => {
     }
   };
 
+  // Handle theme toggle
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => !prev);
+  };
+
+  // Apply theme based on state
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    // Set initial theme from localStorage
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") setIsDarkMode(true);
+  }, []);
+
   useEffect(() => {
     // if(genre) return;
     getGenre()
@@ -153,9 +176,8 @@ const Header = () => {
   }, []);
 
   const toggleSidebar = () => {
-    if(path.includes("/checkout") || path.includes("/placeorder"))  return
-     
-   
+    if (path.includes("/checkout") || path.includes("/placeorder")) return;
+
     setIsSidebarOpen((prev) => !prev);
   };
 
@@ -201,7 +223,13 @@ const Header = () => {
                 ""
               )}
             </div>
-
+            <button onClick={toggleTheme}>
+              {isDarkMode ? (
+                <FiSun className="text-3xl text-gray-200" />
+              ) : (
+                <FiMoon className="text-3xl" />
+              )}
+            </button>
             <div className="relative" ref={userDropdownRef}>
               <button
                 ref={dropdownToggleRef}
@@ -335,7 +363,7 @@ const Header = () => {
 
         {/* Desktop Layout */}
         <div className="mt-4 hidden w-full border-b pb-4 md:flex md:items-center md:justify-between">
-          <div className="flex w-full items-center ">
+          <div className="flex w-full items-center">
             <div
               className="flex-grow cursor-pointer text-left"
               onClick={() => {
@@ -352,7 +380,7 @@ const Header = () => {
             </div>
 
             {/* Navigation Items in the Center */}
-            <nav className="flex flex-grow justify- space-x-6">
+            <nav className="justify- flex flex-grow space-x-6">
               {navItems.map((item) => (
                 <div key={item.label} className="group relative">
                   <button
@@ -428,6 +456,15 @@ const Header = () => {
                   ""
                 )}
               </div>
+              {/* <div className="relative h-5 w-10 rounded-full bg-gray-200 peer-checked:bg-brand-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 dark:bg-gray-700 dark:peer-focus:ring-brand-800"> */}
+              <button onClick={toggleTheme}>
+                {isDarkMode ? (
+                  <FiSun className="text-3xl text-gray-200" />
+                ) : (
+                  <FiMoon className="text-3xl" />
+                )}
+              </button>
+
               <div className="relative">
                 <button
                   className="cursor-pointer rounded-full bg-red-500"
@@ -442,7 +479,7 @@ const Header = () => {
                     className="absolute right-0 z-10 mt-1 w-40 rounded-md bg-white px-1 py-2 shadow-md"
                   >
                     {userInfo?.first_name && (
-                      <span className="p-1 text-md font-medium">
+                      <span className="text-md p-1 font-medium">
                         {userInfo?.first_name} {userInfo?.last_name}
                       </span>
                     )}

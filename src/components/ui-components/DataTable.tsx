@@ -1,5 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import React, { useState, useEffect } from "react";
-import { FaAngleDown, FaAngleUp, FaExpand, FaEye, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import {
+  FaAngleDown,
+  FaAngleUp,
+  FaExpand,
+  FaEye,
+  FaChevronLeft,
+  FaChevronRight,
+  FaCompress,
+} from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -21,41 +34,67 @@ const DataTable: React.FC<DataTableProps> = ({
   columns: tableColumns,
   isLoading,
 }) => {
-  const [activeTab, setActiveTab] = useState(0);
-  const [selectedDateRange, setSelectedDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [selectedDateRange, setSelectedDateRange] = useState<
+    [Date | null, Date | null]
+  >([null, null]);
   const [data, setData] = useState([...tableData]);
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState([...tableData]);
-  const [columns, setColumns] = useState(tableColumns.map(column => ({ ...column, isVisible: true })));
-  const [sortOptions, setSortOptions] = useState(columns.filter(column => column.isSortable).map(column => ({ key: column.key, mode: "" })));
+  const [columns, setColumns] = useState(
+    tableColumns.map((column) => ({ ...column, isVisible: true })),
+  );
+  const [sortOptions, setSortOptions] = useState(
+    columns
+      .filter((column) => column.isSortable)
+      .map((column) => ({ key: column.key, mode: "" })),
+  );
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
+  // Ensure rendering happens only after client-side hydration
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true); // Ensure rendering happens only after client-side hydration
+  }, []);
+
   useEffect(() => {
     setData([...tableData]);
   }, [tableData]);
 
-  const handleFilterApply = () => {
-    filterResult();
-  };
-
   const toggleFullScreen = () => {
     const element = document.getElementById("tableContainer");
     if (!document.fullscreenElement) {
-      element!.requestFullscreen().catch(err => {
-        console.error("Error attempting to enable full-screen mode:", err.message);
+      element!.requestFullscreen().catch((err) => {
+        console.error(
+          "Error attempting to enable full-screen mode:",
+          err.message,
+        );
       });
-      setIsFullScreen(true);
     } else {
-      document.exitFullscreen().catch(err => {
-        console.error("Error attempting to exit full-screen mode:", err.message);
+      document.exitFullscreen().catch((err) => {
+        console.error(
+          "Error attempting to exit full-screen mode:",
+          err.message,
+        );
       });
-      setIsFullScreen(false);
     }
   };
+
+  // Handle fullscreen state change (including ESC key)
+  useEffect(() => {
+    const handleFullScreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+    };
+  }, []);
 
   useEffect(() => {
     filterResult();
@@ -66,8 +105,8 @@ const DataTable: React.FC<DataTableProps> = ({
 
     // Search filter
     if (searchText) {
-      filtered = filtered.filter(row =>
-        Object.values(row).some(value =>
+      filtered = filtered.filter((row) =>
+        Object.values(row).some((value) =>
           String(value).toLowerCase().includes(searchText.toLowerCase()),
         ),
       );
@@ -76,8 +115,8 @@ const DataTable: React.FC<DataTableProps> = ({
     // Date range filter
     const [startDate, endDate] = selectedDateRange;
     if (startDate && endDate) {
-      filtered = filtered.filter(row => {
-        const date = new Date(row.date); // Adjust according to your date field
+      filtered = filtered.filter((row) => {
+        const date = new Date(row.creationDate); // Adjust according to your date field
         return date >= startDate && date <= endDate;
       });
     }
@@ -101,8 +140,8 @@ const DataTable: React.FC<DataTableProps> = ({
   };
 
   const handleColumnToggle = (columnKey: string) => {
-    setColumns(prevColumns =>
-      prevColumns.map(column => {
+    setColumns((prevColumns) =>
+      prevColumns.map((column) => {
         if (column.key === columnKey) {
           return { ...column, isVisible: !column.isVisible };
         }
@@ -112,9 +151,14 @@ const DataTable: React.FC<DataTableProps> = ({
   };
 
   const handleSort = (columnKey: string) => {
-    const sortOption = sortOptions.find(option => option.key === columnKey);
+    const sortOption = sortOptions.find((option) => option.key === columnKey);
     if (sortOption) {
-      sortOption.mode = sortOption.mode === "asc" ? "desc" : sortOption.mode === "desc" ? "" : "asc";
+      sortOption.mode =
+        sortOption.mode === "asc"
+          ? "desc"
+          : sortOption.mode === "desc"
+            ? ""
+            : "asc";
 
       const sortedData = [...data].sort((a, b) => {
         if (sortOption.mode === "asc") {
@@ -139,7 +183,12 @@ const DataTable: React.FC<DataTableProps> = ({
   const totalPages = Math.ceil(filteredData.length / pageSize);
 
   // Get the data to be displayed for the current page
-  const displayedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const displayedData = filteredData.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
+
+  if (!isClient) return null; // Prevent mismatched SSR/CSR content
 
   return (
     <div className={`flex flex-col bg-white p-3`} id="tableContainer">
@@ -156,28 +205,20 @@ const DataTable: React.FC<DataTableProps> = ({
             onKeyPress={handleSearchKeyPress}
             className="rounded border border-gray-300 px-2 py-1"
           />
-          <CiSearch
-            size={20}
-            className="ml-2 cursor-pointer"
-            onClick={handleSearch}
-          />
+
           <div className="ml-4">
             <DatePicker
               selectsRange
               startDate={selectedDateRange[0]!}
               endDate={selectedDateRange[1]!}
-              onChange={(update: [Date | null, Date | null]) => handleDateRangeChange(update)}
+              onChange={(update: [Date | null, Date | null]) =>
+                handleDateRangeChange(update)
+              }
               className="rounded border border-gray-300 px-4 py-1"
               isClearable={true}
               placeholderText="Select Date Range"
             />
           </div>
-          <button
-            className="ml-2 rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
-            onClick={handleSearch}
-          >
-            Apply
-          </button>
         </div>
       </div>
       <div className="mb-4 flex justify-between">
@@ -209,7 +250,7 @@ const DataTable: React.FC<DataTableProps> = ({
             ))}
           </select>
           <button onClick={toggleFullScreen} className="ml-2">
-            <FaExpand />
+            {isFullScreen ? <FaCompress /> : <FaExpand />}
           </button>
         </div>
       </div>
@@ -223,78 +264,51 @@ const DataTable: React.FC<DataTableProps> = ({
                   className="cursor-pointer border-b p-2 text-left"
                   onClick={() => column.isSortable && handleSort(column.key)}
                 >
-                  <div className="flex items-center justify-between">
-                    <span>{column.header}</span>
-                    {column.isSortable && (
-                      <>
-                        {sortOptions.find((option) => option.key === column.key)?.mode === "asc" ? (
-                          <FaAngleUp />
-                        ) : (
-                          <FaAngleDown />
-                        )}
-                      </>
-                    )}
-                  </div>
+                  {column.header}
+                  {sortOptions.find((sort) => sort.key === column.key)?.mode ===
+                    "asc" && <FaAngleUp className="ml-1 inline" />}
+                  {sortOptions.find((sort) => sort.key === column.key)?.mode ===
+                    "desc" && <FaAngleDown className="ml-1 inline" />}
                 </th>
               ) : null,
             )}
-            <th className="border-b p-2 text-left">Action</th>
           </tr>
         </thead>
         <tbody>
-          {isLoading ? (
-            <tr>
-              <td
-                colSpan={columns.filter((col) => col.isVisible).length + 1} // +1 for Action column
-                className="p-2 text-center"
-              >
-                Loading...
+          {displayedData.map((row) => (
+            <tr key={row.id} className="border-b">
+              {columns.map((column) =>
+                column.isVisible ? (
+                  <td key={column.key} className="p-2">
+                    {column.cell ? column.cell(row) : row[column.key]}
+                  </td>
+                ) : null,
+              )}
+              <td className="p-2">
+                <FaEye
+                  className="cursor-pointer"
+                  onClick={() => onClickView(row.id)}
+                />
               </td>
             </tr>
-          ) : displayedData.length === 0 ? (
-            <tr>
-              <td
-                colSpan={columns.filter((col) => col.isVisible).length + 1} // +1 for Action column
-                className="p-2 text-center"
-              >
-                No data available.
-              </td>
-            </tr>
-          ) : (
-            displayedData.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {columns.map((column) =>
-                  column.isVisible ? (
-                    <td key={column.key} className="border-b p-2">
-                      {column.cell ? column.cell(row) : row[column.key]}
-                    </td>
-                  ) : null,
-                )}
-                <td className="border-b p-2">
-                  <button onClick={() => onClickView(row.id)}>
-                    <FaEye className="text-red-400"/>
-                  </button>
-                </td>
-              </tr>
-            ))
-          )}
+          ))}
         </tbody>
       </table>
-      <div className="mt-4 flex justify-between items-center">
+      <div className="mt-4 flex justify-between">
         <button
-          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+          className={`border px-3 py-1 ${currentPage === 1 ? "bg-gray-200" : "bg-white"}`}
+          onClick={() => setCurrentPage(currentPage - 1)}
           disabled={currentPage === 1}
-          className="disabled:opacity-50"
         >
           <FaChevronLeft />
         </button>
-        <span>
+        <span className="px-2">
           Page {currentPage} of {totalPages}
         </span>
         <button
-          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+          className={`border px-3 py-1 ${currentPage === totalPages ? "bg-gray-200" : "bg-white"}`}
+          onClick={() => setCurrentPage(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="disabled:opacity-50"
         >
           <FaChevronRight />
         </button>

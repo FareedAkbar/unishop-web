@@ -1,4 +1,8 @@
-import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+"use client";
+import React from "react";
 import DataTable from "~/components/ui-components/DataTable";
 
 const OrdersDataTable = () => {
@@ -21,26 +25,8 @@ const OrdersDataTable = () => {
     return orders;
   };
 
-  const [tableData, setTableData] = useState(generateDummyOrders());
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [activeTab, setActiveTab] = useState(0);
+  const tableData = generateDummyOrders();
 
-  const tabs = ["Completed", "Incompleted"];
-
-  // Filter table data based on the selected tab
-  const filteredData = tableData.filter((order) => {
-    return activeTab === 0
-      ? order.status === "Completed"
-      : order.status === "Incompleted";
-  });
-
-  // Handle page change
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  // Columns definition
   const columns = [
     { key: "orderId", header: "Order ID", isSortable: false },
     { key: "trackingId", header: "Tracking ID", isSortable: false },
@@ -48,8 +34,10 @@ const OrdersDataTable = () => {
       key: "status",
       header: "Status",
       isSortable: true,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: (info: any) => {
-        const status = info.status;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        const status = info.status ? info.status : "";
         const badgeColor =
           status === "Completed" ? "bg-green-500" : "bg-red-500";
         return (
@@ -65,32 +53,20 @@ const OrdersDataTable = () => {
       key: "creationDate",
       header: "Creation Date",
       isSortable: true,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
       cell: (info: any) => info.creationDate.toLocaleDateString(),
     },
     {
       key: "price",
       header: "Price",
       isSortable: true,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: (info: any) => `$${info.price}`,
     },
   ];
 
   return (
-    <DataTable
-      tableData={filteredData.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize,
-      )}
-      columns={columns}
-      totalRecords={filteredData.length}
-      limit={pageSize}
-      switchTab={setActiveTab}
-      handleSearchwithDate={() => {}}
-      tabs={tabs}
-      isLoading={false}
-      currentPage={currentPage}
-      onPageChange={handlePageChange}
-    />
+    <DataTable tableData={tableData} columns={columns} isLoading={false} />
   );
 };
 

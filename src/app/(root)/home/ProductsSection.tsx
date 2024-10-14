@@ -186,7 +186,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
           </div>
         </div>
 
-        <div className="w-[92vw]">
+        <div className="w-[92vw] h-[110%]">
           <div
             className="scrollbar-hidden mt-6 flex flex-wrap lg:flex-nowrap lg:overflow-x-auto xl:flex-nowrap xl:overflow-x-auto"
             ref={productContainerRef}
