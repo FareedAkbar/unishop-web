@@ -1,97 +1,85 @@
 "use client";
 
-// import Header from "~/components/header";
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
+import { Player } from "@lottiefiles/react-lottie-player";
+import { FaPhoneAlt, FaEnvelope, FaUserTie, FaBuilding } from "react-icons/fa";
+
 const MapContainerComponent = dynamic(() => import("~/components/map"), {
   ssr: false,
 });
+
 const MyComponent = () => {
   return (
-    <div className="min-h-screen">
-     
-      <main className="flex flex-col items-center justify-center pt-28">
-        {/* {name}
-      <Button onClick={()=>ChangeName()}>change name</Button> */}
-      </main>
-      <div className="flex justify-center px-8">
-        <div className="grid w-full max-w-screen-xl grid-cols-8 gap-4">
-          {/* Your content goes here */}
-          <div className="col-span-8 w-full">
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat py-4 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              The UniShop team are here to help! Providing friendly,
-              personalised service to make sure you’re fully satisfied with your
-              shopping experience from start to finish. Give us a call or send
-              us an email if you have an enquiry.
-            </p>
-            <div className="grid w-full max-w-screen-xl grid-cols-12 gap-4">
-              <div className="sm:col-span-12 md:col-span-4 lg:col-span-4  w-full">
-              <h2 className="relative z-20 mx-auto mt-8 font-serif text-2xl font-bold tracking-tight text-red-600 dark:text-white md:text-2xl lg:text-2xl">
-              GENERAL ENQUIRIES
-            </h2>
+    <div className="bg-gray-50 lg:pt-20 pt-28">
+      {/* Header */}
+      <div className="flex flex-wrap items-center lg:px-32 justify-between pb-14 bg-white p-8 shadow-md">
+        <div className="max-w-md flex-1 text-lg text-gray-700">
+          <h1 className="mb-2 text-3xl font-bold text-red-600">Contact Us</h1>
+          <p className="text-justify">
+            Need assistance? The UniShop team is here to provide friendly and
+            personalized service from start to finish. Reach out via phone or
+            email for any inquiries.
+          </p>
+        </div>
+        <div className="flex justify-center sm:mt-0 sm:flex-shrink-0">
+          <Player
+            autoplay
+            loop
+            src="/assets/gifs/contact.json"
+            className="h-64 w-64"
+          />
+        </div>
+      </div>
 
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat pt-2 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              UniShop Phone: 4221 8050
-            </p>
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat pb-2 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              UniShop Email: uow-bookshop@uow.edu.au
-            </p>
+      <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
+        <div className="w-full rounded-lg bg-red-100  p-6 shadow-md sm:w-1/2 lg:w-1/3">
+          <h2 className="mb-4 flex items-center gap-2 text-xl justify-center font-semibold">
+            <FaPhoneAlt className="text-red-600" /> General Enquiries
+          </h2>
+          <p>Phone: 4221 8050</p>
+          <p>Email: uow-bookshop@uow.edu.au</p>
+        </div>
 
-            <h2 className="relative z-20 mx-auto mt-8 font-serif text-2xl font-bold tracking-tight text-red-600 dark:text-white md:text-2xl lg:text-2xl">
-              SPECIALTY ENQUIRIES
-            </h2>
+        <div className="w-full rounded-lg bg-red-100 p-6 text-center shadow-md sm:w-1/2 lg:w-1/3">
+          <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
+            <FaUserTie className="text-red-600" /> Specialty Enquiries
+          </h2>
+          <p>Retail Operations Manager: uow-bookshop@uow.edu.au</p>
+          <p>Events Coordinator: Anneliese Hennessy (ahennessy@uow.edu.au)</p>
+        </div>
+      </div>
 
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat pt-4 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              Retail Operations Manager / Retail, Merchandise & Branding
-            </p>
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat pb-2 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              uow-bookshop@uow.edu.au
-            </p>
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat pt-2 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              Book Buyer & Events Coordinator / Academic Liaison Officer
-            </p>
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat pb-2 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              Anneliese Hennessy: ahennessy@uow.edu.au
-            </p>
+      {/* Map Section */}
+      <div className="flex justify-center w-full p-8">
+        <div className="overflow-hidden rounded-lg border w-full z-0 lg:w-2/3">
+          <MapContainerComponent height={500} />
+        </div>
+      </div>
 
-            <h2 className="relative z-20 mx-auto mt-8 font-serif text-2xl font-bold tracking-tight text-red-600 dark:text-white md:text-2xl lg:text-2xl">
-              POSTAL ADDRESS
-            </h2>
-
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat pt-2 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              UniShop
-            </p>
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              P.O. Box U100
-            </p>
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat pb-2 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              University of Wollongong P.O. NSW 2500
-            </p>
-            <h2 className="relative z-20 mx-auto mt-8 font-serif text-2xl font-bold tracking-tight text-red-600 dark:text-white md:text-2xl lg:text-2xl">
-              DELIVERY ADDRESS
-            </h2>
-
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat pt-2 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              UniShop
-            </p>
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              2 Northfields Avenue
-            </p>
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat pb-4 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              Gwynneville NSW 2500
-            </p>
-              </div>
-              <div className=" sm:col-span-12 md:col-span-8 lg:col-span-8  w-full border rounded">
-                <MapContainerComponent height={700}/>
-              </div>
-            </div>
-            
-          </div>
+      {/* Address Section */}
+      <div className=" flex flex-wrap justify-evenly gap-6 p-8 text-center">
+        <div>
+          <h2 className="flex items-center gap-2 text-2xl font-bold">
+            <FaBuilding className="text-red-600" /> Postal Address
+          </h2>
+          <p>UniShop</p>
+          <p>P.O. Box U100</p>
+          <p>University of Wollongong P.O. NSW 2500</p>
+        </div>
+        <div>
+          <h2 className="flex items-center gap-2 text-2xl font-bold">
+            <FaBuilding className="text-red-600" /> Delivery Address
+          </h2>
+          <p>UniShop</p>
+          <p>2 Northfields Avenue</p>
+          <p>Gwynneville NSW 2500</p>
         </div>
       </div>
     </div>
   );
 };
+
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>

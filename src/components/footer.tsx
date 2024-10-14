@@ -96,7 +96,7 @@ function Footer() {
               Terms & Conditions
             </Link>
             <Link
-              href="#"
+              href="privacy-policy"
               className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Privacy Policy
@@ -157,19 +157,19 @@ function Footer() {
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Gifts
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               UOW Merchandise
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] hover:text-[#ff0366]"
+              className="text-sm font-medium text-[#646464] hover:text-red-500"
             >
               Erstwilder
             </Link>
@@ -178,7 +178,7 @@ function Footer() {
           {/* working hours */}
           <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Working Hours</p>
-            <span className="mb-2 block h-[4px] w-20 bg-[#ff0366]" />
+            <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <p className="text-sm font-bold text-[#646464]">Monday - Friday:</p>
             <p className="text-sm font-medium text-[#646464]">
               8:00am - 5:00pm
