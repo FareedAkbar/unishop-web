@@ -1,106 +1,128 @@
 "use client";
 
-// import Header from "~/components/header";
-import { Suspense } from "react";
-
 const PrivacyPolicy = () => {
-  // Array of objects with title and content
   const sections = [
     {
       title: "Privacy Policy",
       content: [
-        "This privacy policy sets out how this website (hereafter 'the Store') uses and protects any information that you give the Store while using this website. The Store is committed to ensuring that your privacy is protected. Should we ask you to provide certain information by which you can be identified when using this website, then you can be assured that it will only be used in accordance with this privacy statement. The Store may change this policy from time to time by updating this page. You should check this page from time to time to ensure that you are happy with any changes.",
+        "This privacy policy sets out how this website (hereafter 'the Store') uses and protects any information that you give the Store while using this website.",
+        "The Store is committed to ensuring that your privacy is protected. If we ask you to provide certain information that identifies you, you can be assured that it will only be used in accordance with this privacy statement.",
+        "The Store may change this policy from time to time by updating this page. You should check this page periodically to ensure you are happy with any changes.",
       ],
     },
     {
       title: "What We Collect",
       content: [
         "We may collect the following information:",
-        "• Name",
-        "• Contact information including email address",
-        "• Demographic information such as postcode, preferences, and interests",
-        "• Other information relevant to customer surveys and/or offers",
-        "For the exhaustive list of cookies we collect see the List of cookies we collect section.",
+        [
+          "Name",
+          "Contact information including email address",
+          "Demographic information such as postcode, preferences, and interests",
+          "Other information relevant to customer surveys and/or offers",
+        ],
+        "For the exhaustive list of cookies we collect, see the 'List of Cookies We Collect' section.",
       ],
     },
     {
       title: "What We Do With the Information We Gather",
       content: [
-        "We require this information to understand your needs and provide you with a better service, and in particular for the following reasons:",
-        "• Internal record keeping.",
-        "• We may use the information to improve our products and services.",
-        "• We may periodically send promotional emails about new products, special offers, or other information which we think you may find interesting using the email address which you have provided.",
-        "• From time to time, we may also use your information to contact you for market research purposes. We may contact you by email, phone, fax, or mail.",
-        "• We may use the information to customise the website according to your interests.",
+        "We require this information to understand your needs and provide you with better service, particularly for:",
+        [
+          "Internal record keeping.",
+          "Improving our products and services.",
+          "Sending promotional emails about new products, special offers, or other relevant information.",
+          "Contacting you for market research purposes by email, phone, fax, or mail.",
+          "Customizing the website according to your interests.",
+        ],
       ],
     },
     {
       title: "Security",
       content: [
-        "We are committed to ensuring that your information is secure. In order to prevent unauthorised access or disclosure, we have put in place suitable physical, electronic, and managerial procedures to safeguard and secure the information we collect online.",
+        "We are committed to ensuring that your information is secure. To prevent unauthorized access or disclosure, we have implemented physical, electronic, and managerial procedures to safeguard and secure the information collected online.",
       ],
     },
     {
       title: "How We Use Cookies",
       content: [
-        "A cookie is a small file which asks permission to be placed on your computer's hard drive. Once you agree, the file is added and the cookie helps analyse web traffic or lets you know when you visit a particular site. Cookies allow web applications to respond to you as an individual. The web application can tailor its operations to your needs, likes, and dislikes by gathering and remembering information about your preferences.",
-        "We use traffic log cookies to identify which pages are being used. This helps us analyse data about web page traffic and improve our website in order to tailor it to customer needs. We only use this information for statistical analysis purposes and then the data is removed from the system.",
-        "Overall, cookies help us provide you with a better website, by enabling us to monitor which pages you find useful and which you do not. A cookie in no way gives us access to your computer or any information about you, other than the data you choose to share with us. You can choose to accept or decline cookies. Most web browsers automatically accept cookies, but you can usually modify your browser setting to decline cookies if you prefer. This may prevent you from taking full advantage of the website.",
+        "A cookie is a small file placed on your computer’s hard drive. Once you agree, the file helps analyze web traffic or notifies you of specific site visits.",
+        [
+          "Cookies allow web applications to respond to your preferences.",
+          "We use traffic log cookies to identify which pages are visited, helping us improve our website.",
+          "Cookies do not give us access to your computer or information other than what you share.",
+          "You can accept or decline cookies. Modifying your browser settings may restrict website functionality.",
+        ],
       ],
     },
     {
       title: "Links to Other Websites",
       content: [
-        "Our website may contain links to other websites of interest. However, once you have used these links to leave our site, you should note that we do not have any control over that other website. Therefore, we cannot be responsible for the protection and privacy of any information which you provide whilst visiting such sites and such sites are not governed by this privacy statement. You should exercise caution and look at the privacy statement applicable to the website in question.",
+        "Our website may contain links to other websites. Once you leave our site, we are not responsible for the protection and privacy of any information you provide on those sites. Always review the privacy policy of each website you visit.",
       ],
     },
     {
       title: "Controlling Your Personal Information",
       content: [
-        "You may choose to restrict the collection or use of your personal information in the following ways:",
-        "• Whenever you are asked to fill in a form on the website, look for the box that you can click to indicate that you do not want the information to be used by anybody for direct marketing purposes.",
-        "• If you have previously agreed to us using your personal information for direct marketing purposes, you may change your mind at any time by letting us know using our Contact Us information.",
-        "We will not sell, distribute or lease your personal information to third parties unless we have your permission or are required by law to do so. We may use your personal information to send you promotional information about third parties which we think you may find interesting if you tell us that you wish this to happen.",
-        "You may request details of personal information which we hold about you under the Data Protection Act 1998. A small fee will be payable. If you would like a copy of the information held on you please email us this request using our Contact Us information.",
-        "If you believe that any information we are holding on you is incorrect or incomplete, please write to or email us as soon as possible, at the above address. We will promptly correct any information found to be incorrect.",
+        "You can restrict the use of your personal information in these ways:",
+        [
+          "Look for opt-out checkboxes on forms to prevent direct marketing.",
+          "If you previously agreed to direct marketing, you can change your preference by contacting us.",
+        ],
+        "We will not sell, distribute, or lease your personal information to third parties without permission unless required by law.",
+        "You can request a copy of the personal information we hold about you under the Data Protection Act 1998. A small fee may apply.",
+        "If any information we hold about you is incorrect, please contact us, and we will promptly correct it.",
       ],
     },
-    {
-      title: "List of Cookies We Collect",
-      content: [
-        "The table below lists the cookies we collect and what information they store.",
-        "Cookie Name\t\tCookie Description",
-        "FORM_KEY\t\tStores randomly generated key used to prevent forged requests.",
-        "PHPSESSID\t\tYour session ID on the server.",
-        "GUEST-VIEW\t\tAllows guests to view and edit their orders.",
-        "PERSISTENT_SHOPPING_CART\t\tA link to information about your cart and viewing history, if you have asked for this.",
-        "STF\t\tInformation on products you have emailed to friends.",
-        "STORE\t\tThe store view or language you have selected.",
-        "USER_ALLOWED_SAVE_COOKIE\t\tIndicates whether a customer allowed to use cookies.",
-        "MAGE-CACHE-SESSID\t\tFacilitates caching of content on the browser to make pages load faster.",
-        "MAGE-CACHE-STORAGE\t\tFacilitates caching of content on the browser to make pages load faster.",
-        "MAGE-CACHE-STORAGE-SECTION-INVALIDATION\t\tFacilitates caching of content on the browser to make pages load faster.",
-        "MAGE-CACHE-TIMEOUT\t\tFacilitates caching of content on the browser to make pages load faster.",
-        "SECTION-DATA-IDS\t\tFacilitates caching of content on the browser to make pages load faster.",
-        "PRIVATE_CONTENT_VERSION\t\tFacilitates caching of content on the browser to make pages load faster.",
-        "X-MAGENTO-VARY\t\tFacilitates caching of content on the server to make pages load faster.",
-        "MAGE-TRANSLATION-FILE-VERSION\t\tFacilitates translation of content to other languages.",
-        "MAGE-TRANSLATION-STORAGE\t\tFacilitates translation of content to other languages.",
-      ],
-    },
+    // {
+    //   title: "List of Cookies We Collect",
+    //   content: [
+    //     "Below is a list of cookies we collect and their descriptions:",
+    //     [
+    //       ["FORM_KEY", "Stores a random key to prevent forged requests."],
+    //       ["PHPSESSID", "Your session ID on the server."],
+    //       ["GUEST-VIEW", "Allows guests to view and edit their orders."],
+    //       ["PERSISTENT_SHOPPING_CART", "Links to cart and viewing history."],
+    //       ["STF", "Tracks products emailed to friends."],
+    //       ["STORE", "Stores the selected language or store view."],
+    //       ["USER_ALLOWED_SAVE_COOKIE", "Indicates if cookies are allowed."],
+    //       ["MAGE-CACHE-SESSID", "Facilitates faster page loading via cache."],
+    //       ["MAGE-CACHE-STORAGE", "Caches content on the browser."],
+    //       ["SECTION-DATA-IDS", "Invalidates cached content when needed."],
+    //       ["PRIVATE_CONTENT_VERSION", "Ensures updated private content."],
+    //     ],
+    //   ],
+    // },
   ];
 
   return (
-    <div className="p-6 bg-gray-100">
+    <div className="bg-gray-100 p-6 pt-28">
       {sections.map((section, index) => (
-        <div key={index} className="mb-4 p-4 bg-white rounded shadow-lg">
-          <h2 className="text-xl font-bold text-red-600 mb-2">{section.title}</h2>
-          <ul className="list-disc list-inside">
-            {section.content.map((paragraph, idx) => (
-              <li key={idx} className="text-gray-700 mb-1 whitespace-pre-line">
-                {paragraph}
-              </li>
-            ))}
+        <div key={index} className="mb-4 rounded bg-white p-4 shadow-lg">
+          <h2 className="mb-2 text-xl font-bold text-red-600">
+            {section.title}
+          </h2>
+          <ul className="list-inside list-disc">
+            {section.content.map((item, idx) =>
+              Array.isArray(item) ? (
+                <ul key={idx} className="ml-6 list-disc">
+                  {item.map((subItem, subIdx) =>
+                    Array.isArray(subItem) ? (
+                      <li key={subIdx} className="mb-1">
+                        <strong>{subItem[0]}:</strong> {subItem[1]}
+                      </li>
+                    ) : (
+                      <li key={subIdx} className="mb-1">
+                        {subItem}
+                      </li>
+                    ),
+                  )}
+                </ul>
+              ) : (
+                <li key={idx} className="mb-1 text-gray-700">
+                  {item}
+                </li>
+              ),
+            )}
           </ul>
         </div>
       ))}

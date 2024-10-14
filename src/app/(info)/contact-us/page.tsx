@@ -11,12 +11,12 @@ const MapContainerComponent = dynamic(() => import("~/components/map"), {
 
 const MyComponent = () => {
   return (
-    <div className="bg-gray-50 lg:pt-20 pt-28">
+    <div className="bg-gray-50 dark:bg-slate-800 pt-28 lg:pt-20">
       {/* Header */}
-      <div className="flex flex-wrap items-center lg:px-32 justify-between pb-14 bg-white p-8 shadow-md">
+      <div className="flex flex-wrap items-center justify-between bg-white dark:bg-slate-600  p-8 pb-14 shadow-md lg:px-32">
         <div className="max-w-md flex-1 text-lg text-gray-700">
           <h1 className="mb-2 text-3xl font-bold text-red-600">Contact Us</h1>
-          <p className="text-justify">
+          <p className="text-justify dark:text-white">
             Need assistance? The UniShop team is here to provide friendly and
             personalized service from start to finish. Reach out via phone or
             email for any inquiries.
@@ -27,21 +27,37 @@ const MyComponent = () => {
             autoplay
             loop
             src="/assets/gifs/contact.json"
-            className="h-64 w-64"
+            className="h-64 w-64 scale-[1.5]"
           />
         </div>
       </div>
 
       <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
-        <div className="w-full rounded-lg bg-red-100  p-6 shadow-md sm:w-1/2 lg:w-1/3">
-          <h2 className="mb-4 flex items-center gap-2 text-xl justify-center font-semibold">
+        <div className="w-full rounded-lg bg-red-100 dark:bg-slate-700 p-6 shadow-md sm:w-1/2 lg:w-1/3">
+          <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaPhoneAlt className="text-red-600" /> General Enquiries
           </h2>
-          <p>Phone: 4221 8050</p>
-          <p>Email: uow-bookshop@uow.edu.au</p>
+          <p>
+            Phone:
+            <a
+              href="tel:42218050"
+              className="pl-1 text-red-600 underline hover:text-red-800"
+            >
+              4221 8050
+            </a>
+          </p>
+          <p>
+            Email:
+            <a
+              href="mailto:uow-bookshop@uow.edu.au"
+              className="pl-1 text-red-600 underline hover:text-red-800"
+            >
+              uow-bookshop@uow.edu.au
+            </a>
+          </p>
         </div>
 
-        <div className="w-full rounded-lg bg-red-100 p-6 text-center shadow-md sm:w-1/2 lg:w-1/3">
+        <div className="w-full rounded-lg bg-red-100 dark:bg-slate-700 p-6 text-center shadow-md sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaUserTie className="text-red-600" /> Specialty Enquiries
           </h2>
@@ -51,14 +67,14 @@ const MyComponent = () => {
       </div>
 
       {/* Map Section */}
-      <div className="flex justify-center w-full p-8">
-        <div className="overflow-hidden rounded-lg border w-full z-0 lg:w-2/3">
+      <div className="flex w-full justify-center p-8">
+        <div className="z-0 w-full overflow-hidden rounded-lg border lg:w-2/3">
           <MapContainerComponent height={500} />
         </div>
       </div>
 
       {/* Address Section */}
-      <div className=" flex flex-wrap justify-evenly gap-6 p-8 text-center">
+      <div className="flex flex-wrap justify-evenly gap-6 p-8 text-center">
         <div>
           <h2 className="flex items-center gap-2 text-2xl font-bold">
             <FaBuilding className="text-red-600" /> Postal Address

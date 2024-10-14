@@ -42,7 +42,9 @@ const Header = () => {
 
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for hamburger menu
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem("theme") == "dark" ? true : false); // Theme state
+  const [isDarkMode, setIsDarkMode] = useState(
+    localStorage.getItem("theme") == "dark" ? true : false,
+  ); // Theme state
 
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
   const dropdownToggleRef = useRef<HTMLButtonElement | null>(null);
@@ -181,12 +183,9 @@ const Header = () => {
 
   return (
     <nav className="fixed left-0 top-0 z-[15] h-fit w-full">
-      <header className="flex flex-col bg-white px-4 pt-4 backdrop-blur md:flex-row md:items-center">
+      <header className="flex flex-col bg-white px-4 pt-4 backdrop-blur dark:bg-slate-900 md:flex-row md:items-center">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
         <div className="flex items-center justify-between border-b pb-4 md:hidden">
-          {/* Hamburger Icon */}
-
-          {/* Logo in the Center */}
           <div
             className="flex-grow cursor-pointer text-center"
             onClick={() => {
@@ -237,13 +236,13 @@ const Header = () => {
                 <MdOutlinePersonOutline className="text-xl text-white" />
               </button>
               {isUserDropdownOpen && (
-                <div className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md">
+                <div className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md dark:bg-slate-700">
                   <a
                     href="#account-settings"
                     className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100"
                   >
                     <TbSettings className="mr-2" />
-                    Account Setting
+                    Account Settings
                   </a>
                   <a
                     href="#signup"
@@ -285,7 +284,7 @@ const Header = () => {
             value={searchTerm}
             onChange={handleSearchChange}
             icon={<FiSearch />}
-            width="w-full"
+            width="w-full "
           />
         </div>
 
@@ -473,7 +472,7 @@ const Header = () => {
                 {isUserDropdownOpen && (
                   <div
                     ref={userDropdownRef}
-                    className="absolute right-0 z-10 mt-1 w-40 rounded-md bg-white px-1 py-2 shadow-md"
+                    className="absolute right-0 z-10 mt-1 w-40 rounded-md bg-white px-1 py-2 shadow-md dark:bg-slate-700"
                   >
                     {userInfo?.first_name && (
                       <span className="text-md p-1 font-medium">

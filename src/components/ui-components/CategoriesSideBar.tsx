@@ -164,7 +164,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   return (
     <aside
       ref={sidebarRef}
-      className={`absolute left-0 my-4 w-64 rounded-r-xl border-y border-r bg-red-100 p-4 shadow-lg ${className}`}
+      className={`absolute left-0 my-4 w-64 rounded-r-xl border-y border-r bg-red-100 dark:bg-slate-700 p-4 shadow-lg ${className}`}
     >
       <h2 className="text-lg font-bold">CATEGORIES</h2>
       <nav className="relative mt-4">
@@ -178,7 +178,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   ? toggleCategory(item.label)
                   : null
               }
-              className="flex w-full items-center justify-between text-lg text-black transition-transform duration-300 hover:scale-110 focus:outline-none"
+              className="flex w-full items-center justify-between text-lg dark:text-white text-black transition-transform duration-300 hover:scale-110 focus:outline-none"
             >
               <div className="flex items-center">
                 {item.icon && (
@@ -199,7 +199,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
             </button>
 
             {openCategory === item.label && (
-              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-red-100 p-4 shadow-lg">
+              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-red-100 dark:bg-slate-700 dark:text-white p-4 shadow-lg">
                 {item.label === "Books" &&
                   genre?.map((subItem) => (
                     <a
@@ -236,7 +236,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
         {checkoutData?.booknet_customer_id && (
           <button
             onClick={() => router.push("/my-orders")}
-            className="mb-2 flex w-full items-center text-lg text-black transition-transform duration-300 hover:scale-110 focus:outline-none"
+            className="mb-2 flex w-full items-center text-lg dark:text-white text-black transition-transform duration-300 hover:scale-110 focus:outline-none"
           >
             <FaReceipt className="mr-3 text-indigo-600" />
             <span>My Orders</span>

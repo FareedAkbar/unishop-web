@@ -104,7 +104,7 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center justify-start pt-24">
+      <main className="flex min-h-screen flex-col items-center justify-start pt-24 ">
         <div className="grid w-full grid-cols-1 gap-12 px-4 lg:grid-cols-2">
           <div className="z-10 w-full">
             <Tabs tabs={tabs} key={items?.toString()} />

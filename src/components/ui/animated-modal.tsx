@@ -85,8 +85,7 @@ export const ModalBody = ({
     <AnimatePresence>
       {open && (
         <motion.div
-          initial={{
-            opacity: 0,
+          initial={{            opacity: 0,
           }}
           animate={{
             opacity: 1,

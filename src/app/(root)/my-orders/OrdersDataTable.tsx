@@ -56,7 +56,7 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
           <span
             className={`inline-block rounded px-2 py-1 text-white ${badgeColor}`}
           >
-            {getOrderStatusById(status)?.status_detail}
+            {getOrderStatusById(status)?.status_name}
           </span>
         );
       },

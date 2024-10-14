@@ -113,17 +113,17 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
       )}
 
       <div
-        className={`fixed right-0 top-0 z-30 h-screen w-full transform overflow-hidden border-l-2 bg-white shadow-lg transition-transform lg:w-2/5 ${
+        className={`fixed right-0 top-0 z-30 h-screen w-full transform overflow-hidden border-l-2 bg-white dark:bg-slate-700 shadow-lg transition-transform lg:w-2/5 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Cart Sidebar */}
         {/* Cart Header */}
-        <div className="flex items-center justify-between border-b bg-gray-100 p-4">
+        <div className="flex items-center justify-between border-b bg-gray-100 dark:bg-slate-800 p-4">
           <h2 className="text-xl font-semibold">Your Cart</h2>
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 text-gray-600 hover:text-gray-900"
+            className="absolute right-4 top-4 text-gray-600 dark:text-white dark:hover:text-gray-200 hover:text-gray-900"
           >
             <CgClose className="h-6 w-6" />
           </button>
@@ -158,7 +158,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         <div className="fixed bottom-0 w-full p-3">
           {/* Subtotal and Fees */}
           <div className="mb-2 flex justify-between">
-            <span className="text-sm text-gray-500">Subtotal</span>
+            <span className="text-sm text-gray-500 dark:text-gray-200">Subtotal</span>
             <span className="text-sm">${subTotal.toFixed(2)}</span>
           </div>
           {/* <div className="mb-2 flex justify-between">

@@ -47,7 +47,7 @@ const TermsAndConditions = () => {
   ];
 
   return (
-    <div className="p-6 pt-20 bg-gray-100">
+    <div className="p-6  pt-28 bg-gray-100">
     {sections.map((section, index) => (
       <div key={index} className="mb-4 p-4 bg-white rounded shadow-lg">
         <h2 className="text-xl font-bold text-red-600 mb-2">{section.title}</h2>
