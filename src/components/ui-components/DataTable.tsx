@@ -200,7 +200,7 @@ const DataTable: React.FC<DataTableProps> = ({
 
   return (
     <>
-      <div className={`flex flex-col bg-white p-3`} id="tableContainer">
+      <div className={`flex flex-col bg-white dark:bg-slate-900 rounded p-3`} id="tableContainer">
         <div className="mb-4 flex justify-between">
           <div className="flex items-center">
             <div className="ml-4"></div>
@@ -212,7 +212,7 @@ const DataTable: React.FC<DataTableProps> = ({
               onChange={(e) => setSearchText(e.target.value)}
               placeholder="Search"
               onKeyPress={handleSearchKeyPress}
-              className="rounded border border-gray-300 px-2 py-1"
+              className="rounded border border-gray-300 dark:bg-slate-700 dark:text-white px-2 py-1"
             />
 
             <div className="ml-4">
@@ -223,17 +223,16 @@ const DataTable: React.FC<DataTableProps> = ({
                 onChange={(update: [Date | null, Date | null]) =>
                   handleDateRangeChange(update)
                 }
-                className="rounded border border-gray-300 px-4 py-1"
+                className="rounded border border-gray-300 px-4 py-1 dark:bg-slate-700 dark:text-white"
                 isClearable={true}
                 placeholderText="Select Date Range"
               />
             </div>
           </div>
         </div>
-        <div className="mb-4 flex justify-between">
+        <div className="mb-4 flex lg:flex-row flex-col  lg:gap-0 gap-2 justify-between">
           <div className="flex items-center">
-            <HiMiniViewColumns size={20} className="mr-2" />
-            <span>Columns:</span>
+            <span className="font-bold">Columns:</span>
             {columns.map((column) => (
               <span key={column.key} className="ml-2">
                 <input
@@ -245,12 +244,12 @@ const DataTable: React.FC<DataTableProps> = ({
               </span>
             ))}
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center self-end">
             <span className="mr-2">Page Size:</span>
             <select
               value={pageSize}
               onChange={(e) => setPageSize(Number(e.target.value))}
-              className="rounded border border-gray-300 px-2 py-1"
+              className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
             >
               {[10, 20, 30, 50].map((size) => (
                 <option key={size} value={size}>
@@ -297,7 +296,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 )}
                 <td className="p-2">
                   <FaEye
-                    className="cursor-pointer"
+                    className="cursor-pointer text-red-400 hover:text-red-600"
                     onClick={() => onClickView(row)}
                   />
                 </td>
@@ -307,7 +306,7 @@ const DataTable: React.FC<DataTableProps> = ({
         </table>
         <div className="mt-4 flex justify-between">
           <button
-            className={`border px-3 py-1 ${currentPage === 1 ? "bg-gray-200" : "bg-white"}`}
+            className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200" : "bg-red-500 text-white"}`}
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
           >
@@ -317,7 +316,7 @@ const DataTable: React.FC<DataTableProps> = ({
             Page {currentPage} of {totalPages}
           </span>
           <button
-            className={`border px-3 py-1 ${currentPage === totalPages ? "bg-gray-200" : "bg-white"}`}
+            className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200" : "bg-red-500 text-white"}`}
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
@@ -326,7 +325,111 @@ const DataTable: React.FC<DataTableProps> = ({
         </div>
       </div>
       <ModalBody>
-        <ModalContent>{selectedItem?.total_order_price}</ModalContent>
+        <ModalContent>
+          <div className="space-y-8 p-3">
+            <h2 className="text-center text-3xl font-extrabold uppercase tracking-wide text-gray-900">
+              Order Details
+            </h2>
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {/* Order Info */}
+              <div className="flex flex-col items-center lg:items-start">
+                <h3 className="mb-2 text-center text-xl font-bold text-gray-800">
+                  Order Information
+                </h3>
+
+                {/* Using flex for attribute-value pairs */}
+                <div className="flex items-center">
+                  <p className="mr-2 text-sm text-gray-600">Order ID:</p>
+                  <p className="text-lg font-semibold">
+                    {selectedItem?.order_id}
+                  </p>
+                </div>
+
+                <div className="mt-2 flex items-end">
+                  <p className="mr-2 text-sm text-gray-600">Tracking ID:</p>
+                  <p className="text-lg font-semibold">
+                    {selectedItem?.tracking_id}
+                  </p>
+                </div>
+
+                <div className="mt-2 flex items-center">
+                  <p className="mr-2 text-sm text-gray-600">Actual Price:</p>
+                  <p className="text-lg font-semibold">
+                    ${selectedItem?.total_order_price}
+                  </p>
+                </div>
+
+                <div className="mt-2 flex items-center">
+                  <p className="mr-2 text-sm text-gray-600">
+                    Discounted Price:
+                  </p>
+                  <p className="text-lg font-semibold">
+                    ${selectedItem?.total_discounted_price}
+                  </p>
+                </div>
+              </div>
+
+              {/* Customer Info */}
+              <div className="flex flex-col items-center lg:items-end">
+                <h3 className="mb-2 text-center text-xl font-bold">
+                  Customer Information
+                </h3>
+
+                <div className="flex items-center">
+                  <p className="mr-2 text-sm text-gray-600">Customer ID:</p>
+                  <p className="text-lg font-semibold">
+                    {selectedItem?.customer_id || "Guest"}
+                  </p>
+                </div>
+
+                <div className="mt-2 flex items-center">
+                  <p className="mr-2 text-sm text-gray-600">Outlet:</p>
+                  <p className="text-lg font-semibold">
+                    {selectedItem?.outlet}
+                  </p>
+                </div>
+
+                <div className="mt-2 flex items-center">
+                  <p className="mr-2 text-sm text-gray-600">Special Order:</p>
+                  <p className="text-lg font-semibold">
+                    {selectedItem?.special ? "Yes" : "No"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Special Order Items */}
+            {selectedItem?.special && (
+              <div className="mt-8">
+                <h3 className="text-center text-xl font-extrabold uppercase tracking-wider">
+                  Special Order Items
+                </h3>
+                {selectedItem.special_order_items?.length > 0 ? (
+                  <ul className="mt-2 list-inside list-disc text-gray-700">
+                    {selectedItem.special_order_items.map((item, index) => (
+                      <li key={index}>
+                        <span className="">Item ID:</span> {item.item_id},{" "}
+                        <span className="">Quantity:</span> {item.quantity}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-2 text-gray-700">
+                    No special items in this order.
+                  </p>
+                )}
+              </div>
+            )}
+            {/* Order Started */}
+            <div className="mt-">
+              <p className="text-center text-sm text-gray-500">
+                <span className="font-semibold">Order Started:</span>{" "}
+                {new Date(selectedItem?.started!).toLocaleString()}
+              </p>
+            </div>
+          </div>
+        </ModalContent>
       </ModalBody>
     </>
   );

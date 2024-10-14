@@ -21,19 +21,19 @@ const Input: React.FC<InputProps> = ({
 }) => {
   return (
     <div
-      className={`flex items-center overflow-hidden rounded bg-inputbg ${width}`}
+      className={`flex items-center overflow-hidden rounded dark:bg-slate-700 dark:text-white bg-inputbg ${width}`}
     >
       <input
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="flex-1 bg-transparent p-1 text-base focus:outline-none" // Set text size for value and placeholder
+        className="flex-1 bg-transparent p-1 text-base focus:outline-none " // Set text size for value and placeholder
       />
       {icon && (
         <button
           type="button"
-          className="mr-2 p-1"
+          className="mr-2 p-1 "
           onClick={onIconClick} // Handle icon click
         >
           {icon}

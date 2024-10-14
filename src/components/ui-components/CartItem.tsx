@@ -41,7 +41,7 @@ const CartItem: React.FC<CartItemProps> = ({
 }) => {
   return (
     <>
-    <div className="flex flex-row items-start space-x-4 border-b py-4 bg-white">
+    <div className="flex flex-row items-start space-x-4 border-b py-4 bg-white dark:bg-slate-700">
       {/* Image */}
       <Image
         src={ imageSrc
@@ -57,13 +57,13 @@ const CartItem: React.FC<CartItemProps> = ({
       <div className="flex-1">
         <h3 className="font-semibold text-sm">{title}</h3>
         <p className="text-xs">
-          Size:<span className="pl-1 text-gray-500">{size}</span>
+          Size:<span className="pl-1 text-gray-500 dark:text-gray-200">{size}</span>
         </p>
         <p className="text-xs">
-        Available Stock: :<span className="pl-1 text-gray-500">{stock?.quantity}</span>
+        Available Stock: :<span className="pl-1 text-gray-500 dark:text-gray-200">{stock?.quantity}</span>
         </p>
         <p className="text-xs">
-          Color:<span className="pl-1 text-gray-500">{color}</span>
+          Color:<span className="pl-1 text-gray-500 dark:text-gray-200">{color}</span>
         </p>
         <p className="font-bold text-md">${price}</p>
       </div>
@@ -76,7 +76,7 @@ const CartItem: React.FC<CartItemProps> = ({
         </button>
 
         {/* Plus and minus buttons at the bottom */}
-        <div className="flex items-center space-x-2 rounded bg-gray-200 p-1  justify-between mt-auto w-auto">
+        <div className="flex items-center space-x-2 rounded bg-gray-200 dark:bg-gray-500 p-1  justify-between mt-auto w-auto">
           <button className="p-1" disabled={itemQuantity < 2} onClick={onDecrease}>
             <HiOutlineMinus size={14} />
           </button>
@@ -89,7 +89,7 @@ const CartItem: React.FC<CartItemProps> = ({
       
     </div>
     {stock?.quantity < itemQuantity && (
-      <p className="bg-yellow-200 p-3 text-sm">
+      <p className="bg-yellow-200 rounded dark:bg-yellow-500 p-3 text-sm">
         {/* <MdWarning size={23} /> */}
         {`Although we can't fulfill your request for quantity, we'll backorder the remaining ${itemQuantity - stock.quantity}.`}
       </p>
