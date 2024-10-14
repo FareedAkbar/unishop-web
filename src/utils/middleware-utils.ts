@@ -9,7 +9,7 @@ export const routerReader = (req: NextRequest) => {
 
   const REQ_ORIGIN = getItem("REQ_ORIGIN");
   const IS_LOGGED_IN = getItem("IS_LOGGED_IN");
-
+  console.log("ISLOGGED_IN",IS_LOGGED_IN)
   const _RESPONSE_MAPPER = RESPONSE_MAPPER(req.url, REQ_ORIGIN);
 
   // Removed unnecessary type assertion

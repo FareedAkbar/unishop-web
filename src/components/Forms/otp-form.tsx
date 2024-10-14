@@ -39,7 +39,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
     if (otp && otp.join("").length == 4) {
       try {
         const x = {
-          customer_id: loginResponse?.data.customer_id, email: loginResponse?.data.email, otp: parseInt(otp.join(""))
+          customer_id: loginResponse?.data.customer_id, email: loginResponse?.data.email, otp: parseInt(otp.join(""), 10)
         }
         setLoader(true)
         const res = await verifyOTP(x);

@@ -18,7 +18,7 @@ import {
 } from "~/components/ui/animated-modal";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaCartPlus } from "react-icons/fa";
+import { FaCartPlus, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
@@ -41,13 +41,15 @@ const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
   const isFirstRender = useRef(true);
-
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState<DataCart[] | null>(null);
   const params = useSearchParams();
   const { setOpen } = useModal();
   const [detail, setDetail] = useState<string | null>(null);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
-  const { cartItems, addCartItems, removeCartItems, genre,addFavourite } = useAuthContext();
-  
+  const { cartItems, addCartItems, removeCartItems, genre, addFavourite } =
+    useAuthContext();
+
   useEffect(() => {
     const d = params.get("detail");
     setDetail(d);
@@ -63,6 +65,7 @@ const MyComponent = () => {
         const x = await getBooks(genId?.genre_id ?? 1);
         if (typeof x !== "boolean" && x.status) {
           setData(x.data);
+          setFilteredData(x.data);
         }
         setLoader(false);
         // setData(result);
@@ -104,7 +107,7 @@ const MyComponent = () => {
   };
 
   const handleFavourite = async (item: DataCart) => {
-   await addFavourite(item.item_id)
+    await addFavourite(item.item_id);
   };
 
   const isItemInCart = (itemId: number) => {
@@ -131,7 +134,7 @@ const MyComponent = () => {
   //   // smoothScrollTo(0, 1500); //
   // };
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(dummyProducts.length / PRODUCTS_PER_PAGE);
+  const [pageSize, setPageSize] = useState(10);
 
   // Get the products for the current page
   const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
@@ -149,6 +152,38 @@ const MyComponent = () => {
       setCurrentPage((prev) => prev - 1);
     }
   };
+  const filterResult = () => {
+    let filtered = data;
+
+    // Search filter
+    if (searchText) {
+      filtered = filtered.filter((row) =>
+        Object.values(row).some((value) =>
+          String(value).toLowerCase().includes(searchText.toLowerCase()),
+        ),
+      );
+    }
+
+    // Date range filter
+
+    setFilteredData(filtered);
+    setCurrentPage(1); // Reset to first page on new filter
+  };
+  // Calculate total pages based on filtered data and page size
+  const totalPages = Math.ceil(
+    filteredData ? filteredData?.length / pageSize : 1 / pageSize,
+  );
+
+  // Get the data to be displayed for the current page
+  const displayedData = filteredData?.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
+
+  useEffect(() => {
+    filterResult();
+  }, [searchText, data]);
+
   return (
     <div>
       <motion.main
@@ -160,9 +195,18 @@ const MyComponent = () => {
       >
         <div className="flex flex-row">
           <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
-            <h1 className="m-4 text-end font-bold">
-              Showing {data.length} of {data.length} Products
-            </h1>
+            <div className="m-4 text-end">
+              <input
+                type="text"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                placeholder="Search"
+                className="rounded border border-gray-300 px-2 py-1"
+              />
+              <h1 className="font-bold">
+                Showing {displayedData?.length} of {data.length} Items
+              </h1>
+            </div>
             <ScrollArea className="h-[75vh] pb-10">
               <div className="flex flex-wrap">
                 {loader
@@ -171,7 +215,7 @@ const MyComponent = () => {
                         <ProductCardSkeleton />
                       </div>
                     ))
-                  : data?.map((item: DataCart) => (
+                  : displayedData?.map((item: DataCart) => (
                       <ProductCard
                         key={item.book_id}
                         product={item}
@@ -184,6 +228,26 @@ const MyComponent = () => {
                     ))}
               </div>
             </ScrollArea>
+            <div className="mt-4 flex justify-between">
+              <button
+                className={`border px-3 py-1 ${currentPage === 1 ? "bg-gray-200" : "bg-white"}`}
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <FaChevronLeft />
+              </button>
+              <span className="px-2">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                className={`border px-3 py-1 ${currentPage === totalPages ? "bg-gray-200" : "bg-white"}`}
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <FaChevronRight />
+              </button>
+            </div>
+
             {/* <div className="mt-4 flex justify-between">
               <button
                 onClick={handlePreviousPage}

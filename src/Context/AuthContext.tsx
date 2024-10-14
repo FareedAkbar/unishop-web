@@ -12,6 +12,7 @@ import type { Booknet_customer_checkout, checkoutBooknetResponse, CheckoutForm }
 import type { Genre, GenreResponse } from "~/types/genre";
 import type { LoginData, LoginResponse, SendOTPResponse, VerifyOTPResponse } from "~/types/loginResponse";
 import { type Category, type CategoryResponse } from "~/types/category";
+import { setCookie } from "~/utils/cookie";
 
 type trasactionData = {
   trasaction_id?: string | null,
@@ -150,6 +151,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       lsClient.setItem("USER_INFO", responsePayload.data);
       lsClient.setItem("TOKEN", responsePayload.token);
       lsClient.setItem("IS_LOGGED_IN", true);
+      setCookie("IS_LOGGED_IN", true ,7)
       return responsePayload
     } else {
       throw new Error(responsePayload.message); // Throw an error with the message
