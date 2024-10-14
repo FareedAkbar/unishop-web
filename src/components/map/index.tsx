@@ -25,7 +25,7 @@ L.Icon.Default.mergeOptions({
 });
 // Define a custom icon
 const customIcon = L.icon({
-  iconUrl: "https://png.pngtree.com/png-clipart/20230924/original/pngtree-vector-eps-10-of-a-red-map-marker-icon-isolated-on-png-image_12670278.png",
+  iconUrl: "/assets/icons/location.png",
   iconSize: [60, 60],
   iconAnchor: [30, 60],
   popupAnchor: [0, -60],

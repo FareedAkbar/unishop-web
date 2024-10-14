@@ -61,12 +61,10 @@ const Header = () => {
 
   const handleSectionClick = (section: string, isDropdown = false) => {
     setActiveSection(section);
-    if (section == "home") {
-      router.push("/");
-    }
-    if (section == "login") {
-      router.push("/login");
-    }
+    console.log("ss", activeSection);
+
+    router.push(section);
+
     if (isDropdown) {
       setOpenDropdown(null); // Close dropdown when clicking a section
     }
@@ -100,25 +98,25 @@ const Header = () => {
   // Navigation items array with nested structure for Shop
   const navItems = [
     { label: "Home", href: "/" },
-    {
-      label: "Shop",
-      subItems: [
-        {
-          label: "Product 1",
-          href: "#product1",
-          onClick: () => handleSectionClick("product1", true),
-        },
-        {
-          label: "Product 2",
-          href: "#product2",
-          onClick: () => handleSectionClick("product2", true),
-        },
-      ],
-    },
+    // {
+    //   label: "Shop",
+    //   subItems: [
+    //     {
+    //       label: "Product 1",
+    //       href: "#product1",
+    //       onClick: () => handleSectionClick("product1", true),
+    //     },
+    //     {
+    //       label: "Product 2",
+    //       href: "#product2",
+    //       onClick: () => handleSectionClick("product2", true),
+    //     },
+    //   ],
+    // },
     {
       label: "Contact",
-      href: "#contact",
-      onClick: () => handleSectionClick("contact"),
+      href: "/contact-us",
+      onClick: () => handleSectionClick("/contact-us"),
     },
   ];
 
@@ -381,23 +379,24 @@ const Header = () => {
 
             {/* Navigation Items in the Center */}
             <nav className="justify- flex flex-grow space-x-6">
-              {navItems.map((item) => (
-                <div key={item.label} className="group relative">
+              {navItems.map((item, id) => (
+                <div key={id} className="group relative">
                   <button
-                    onClick={() =>
-                      item.subItems
-                        ? toggleDropdown(item.label)
-                        : handleSectionClick(item.label.toLowerCase())
-                    }
-                    className={`relative flex items-center ${item.subItems ? "cursor-pointer" : ""}`}
+                    onClick={() => handleSectionClick(item.href)}
+                    // onClick={() =>
+                    //   item.subItems
+                    //     ? toggleDropdown(item.label)
+                    //     : handleSectionClick(item.label.toLowerCase())
+                    // }
+                    // className={`relative flex items-center ${item.subItems ? "cursor-pointer" : ""}`}
                     ref={dropdownRef}
                   >
                     <span
-                      className={`${activeSection === item.label.toLowerCase() ? "font-bold text-red-500 underline" : ""}`}
+                      className={`${activeSection === item.href ? "font-bold text-red-500 underline" : ""}`}
                     >
                       {item.label}
                     </span>
-                    {item.subItems && (
+                    {/* {item.subItems && (
                       <span className="ml-1">
                         {openDropdown === item.label ? (
                           <FaChevronUp />
@@ -405,10 +404,10 @@ const Header = () => {
                           <FaChevronDown />
                         )}
                       </span>
-                    )}
+                    )} */}
                   </button>
                   {/* Render dropdown menu if subItems exist */}
-                  {item.subItems && openDropdown === item.label && (
+                  {/* {item.subItems && openDropdown === item.label && (
                     <div className="absolute z-10 mt-1 w-40 bg-white shadow-md">
                       {item.subItems.map((subItem) => (
                         <a
@@ -421,7 +420,7 @@ const Header = () => {
                         </a>
                       ))}
                     </div>
-                  )}
+                  )} */}
                 </div>
               ))}
             </nav>
@@ -438,25 +437,23 @@ const Header = () => {
               <div className="relative">
                 <GoHeart className="cursor-pointer text-3xl" />
                 {favItems?.length && favItems?.length > 0 ? (
-                  <span className="absolute right-4 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-[6px] text-sm text-white">
+                  <span className="absolute right-4 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
                     {favItems?.length}
                   </span>
                 ) : (
                   ""
                 )}
-                {/* <span className="absolute -top-0 -right-0 bg-red-500 text-white text-[6px] text-sm rounded-full w-4 h-4 flex items-center justify-center">3</span> */}
               </div>
               <div className="relative" onClick={() => toggleSidebar()}>
                 <IoCartOutline className="cursor-pointer text-3xl" />
                 {cartItems?.length && cartItems?.length > 0 ? (
-                  <span className="absolute right-4 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-[6px] text-sm text-white">
+                  <span className="absolute right-4 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
                     {cartItems?.length}
                   </span>
                 ) : (
                   ""
                 )}
               </div>
-              {/* <div className="relative h-5 w-10 rounded-full bg-gray-200 peer-checked:bg-brand-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 dark:bg-gray-700 dark:peer-focus:ring-brand-800"> */}
               <button onClick={toggleTheme}>
                 {isDarkMode ? (
                   <FiSun className="text-3xl text-gray-200" />

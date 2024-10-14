@@ -9,22 +9,20 @@ const MyComponent = () => {
 
   return (
     <div className="min-h-screen">
-   
       <main className="flex flex-col items-center justify-center pt-28"></main>
       <div className="min-2-md flex justify-center px-8">
         <div className="grid w-full max-w-screen-xl grid-cols-8 gap-4">
           <div className="col-span-12">
-          <CardContainer className="inter-var w-full">
-          <CardItem translateZ="100" className="mt-4 w-full">
-                        <Image
-                          src={'/homePage/About_us.jpg'}
-                          objectFit="contain"
-                          className="h-auto w-full rounded-xl object-cover group-hover/card:shadow-xl"
-                          alt="thumbnail"
-                        />
-                      </CardItem>
-                    
-                  </CardContainer>
+            <CardContainer className="inter-var w-full">
+              <CardItem translateZ="100" className="mt-4 w-full">
+                <Image
+                  src={"/homePage/About_us.jpg"}
+                  objectFit="contain"
+                  className="h-auto w-full rounded-xl object-cover group-hover/card:shadow-xl"
+                  alt="thumbnail"
+                />
+              </CardItem>
+            </CardContainer>
           </div>
           {/* Your content goes here */}
           <div className="col-span-8">

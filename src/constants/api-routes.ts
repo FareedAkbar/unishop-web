@@ -20,6 +20,7 @@ export enum PAGE_ROUTES {
   SPECIAL_ORDER = "/special-order",
   MY_ORDERS = "/my-orders",
   ORDER_CONFIRMED = "/order-confirmed",
+  PRIVACY_POLICY = "/privacy-policy"
 }
 
 export enum API_ROUTES {
