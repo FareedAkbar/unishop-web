@@ -2,8 +2,6 @@
 
 import LoginForm from "~/components/Forms/uow-login";
 import { Suspense, useState } from "react";
-import SendOTPForm from "~/components/Forms/send-otp";
-import VerifyOTPForm from "~/components/Forms/verify-otp";
 import type { LoginResponse } from "~/types/loginResponse";
 import BooknetFormLogin from "~/components/Forms/booknet-form-login";
 import Image from "next/image";
@@ -14,7 +12,6 @@ import OTPVerificationForm from "~/components/Forms/otp-form";
 
 const MyComponent = () => {
   const [view, setView] = useState("login");
-  const [activeTabeName, setActiveTabeName] = useState("customerLogin");
   const router = useRouter();
 
   const [loginResponse, setLoginResponse] = useState<LoginResponse | null>(
@@ -25,7 +22,9 @@ const MyComponent = () => {
     {
       title: "Guest Login",
       value: "customerLogin",
-      content: <BooknetFormLogin push={true} goTo="/" title="Login as a Guest" />,
+      content: (
+        <BooknetFormLogin push={true} goTo="/" title="Login as a Guest" />
+      ),
     },
     {
       title: "UOW Login",
@@ -51,7 +50,7 @@ const MyComponent = () => {
         {view == "login" && (
           <div className="relative">
             <button
-              onClick={() => router.push("/")} 
+              onClick={() => router.push("/")}
               className="fixed left-10 top-10 rounded-full bg-transparent p-2 shadow-md transition hover:bg-gray-200"
             >
               <FaArrowLeft className="text-black" />
@@ -59,23 +58,9 @@ const MyComponent = () => {
             <Tabs tabs={tabs} />
           </div>
         )}
-        
-        {/* {view == "booknet" && (
-          <div className="w">
-            <BooknetFormLogin push={true} goTo="/" title="Customer Login" />
-          </div>
-        )}
-        {view == "Login" && (
-          <LoginForm setView={setView} setLoginResponse={setLoginResponse} />
-        )}
-        {view == "Send-Otp" && (
-          <SendOTPForm setView={setView} loginResponse={loginResponse} />
-        )}
+
         {view == "Verify-Otp" && (
-        <VerifyOTPForm loginResponse={loginResponse} />
-        )} */}
-        {view == "Verify-Otp" && (
-          <OTPVerificationForm loginResponse={loginResponse}/>
+          <OTPVerificationForm loginResponse={loginResponse} />
           // <VerifyOTPForm loginResponse={loginResponse} />
         )}
       </main>

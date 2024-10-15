@@ -32,19 +32,20 @@ export const Tabs = ({
 }) => {
   const [active, setActive] = useState<Tab>(propTabs[0]!);
   const [tabs, setTabs] = useState<Tab[]>(propTabs);
-
-  const moveSelectedTabToTop = (idx: number) => {
-    const newTabs = [...propTabs];
-    const selectedTab = newTabs.splice(idx, 1);
-    newTabs.unshift(selectedTab[0]!);
-    setTabs(newTabs);
-    if(changeTabName){
-      changeTabName(newTabs[0]?.value ?? "")
-    }
-    setActive(newTabs[0]!);
-  };
-
+  
   const [hovering, setHovering] = useState(false);
+  
+    const moveSelectedTabToTop = (idx: number) => {
+      const newTabs = [...propTabs];
+      const selectedTab = newTabs.splice(idx, 1);
+      newTabs.unshift(selectedTab[0]!);
+      setTabs(newTabs);
+      if(changeTabName){
+        changeTabName(newTabs[0]?.value ?? "")
+      }
+      setActive(newTabs[0]!);
+      setHovering(false);
+    };
 
   return (
     <>
@@ -72,7 +73,7 @@ export const Tabs = ({
                 layoutId="clickedbutton"
                 transition={{ type: "spring", bounce: 0.3, duration: 0.6 }}
                 className={cn(
-                  "absolute inset-0 rounded-full bg-red-200 dark:bg-zinc-800",
+                  "absolute inset-0 rounded-full bg-red-200 dark:bg-red-800",
                   activeTabClassName,
                 )}
               />

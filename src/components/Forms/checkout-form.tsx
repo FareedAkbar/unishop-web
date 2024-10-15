@@ -174,7 +174,7 @@ export default function CehckoutForm({ push, handleData, disabled = false }: che
   };
 
   return (
-    <div className="mx-auto w-full rounded-none border bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
+    <div className="mx-auto w-full rounded-none border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         Checkout
       </h2>

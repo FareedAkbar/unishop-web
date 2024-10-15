@@ -5,10 +5,8 @@ import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter } from "next/navigation";
 import { toast } from "~/hooks/use-toast";
 
-
 interface Props {
-
-  loginResponse?: LoginResponse | null
+  loginResponse?: LoginResponse | null;
 }
 
 const OTPVerificationForm = ({ loginResponse }: Props) => {
@@ -17,82 +15,77 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
   const { verifyOTP, sendOTP } = useAuthContext();
   const router = useRouter();
 
-  // Handle OTP input change
   const handleChange = (value: string, index: number) => {
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Automatically move to the next input if the user enters a number
-    if (value.length === 1 && index < 3) {
+    // Move to the next input if a value is entered
+    if (value && index < 3) {
       const nextInput = document.getElementById(`otp-input-${index + 1}`);
-      if (nextInput) {
-        (nextInput as HTMLInputElement).focus();
-      }
+      nextInput && (nextInput as HTMLInputElement).focus();
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    // Move to the previous input if Backspace is pressed and the current input is empty
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      const prevInput = document.getElementById(`otp-input-${index - 1}`);
+      prevInput && (prevInput as HTMLInputElement).focus();
     }
   };
 
   const handleVerify = async () => {
-    // Your verification logic here
     console.log("Verifying OTP:", otp.join(""));
-    console.log(otp)
-    if (otp && otp.join("").length == 4) {
+    if (otp.join("").length === 4) {
       try {
-        const x = {
-          customer_id: loginResponse?.data.customer_id, email: loginResponse?.data.email, otp: parseInt(otp.join(""), 10)
-        }
-        setLoader(true)
-        const res = await verifyOTP(x);
-        setLoader(false)
+        const data = {
+          customer_id: loginResponse?.data.customer_id,
+          email: loginResponse?.data.email,
+          otp: parseInt(otp.join(""), 10),
+        };
+        setLoader(true);
+        const res = await verifyOTP(data);
+        setLoader(false);
 
-        // Type guard to ensure res is LoginResponse
         if (typeof res !== "boolean" && res.status) {
-          console.log(res)
-          router.push('/')
+          router.push("/");
         }
       } catch (err) {
         const errorMessage = (err as Error).message || "An unknown error occurred";
-        setLoader(false)
+        setLoader(false);
         toast({
           title: "Login Failed",
           variant: "destructive",
-          description: errorMessage, // Use the error message from the thrown error
+          description: errorMessage,
         });
-
       }
     } else {
       toast({
         title: "Invalid OTP",
         variant: "destructive",
-        description: "Please enter 4 digit OTP", // Use the error message from the thrown error
+        description: "Please enter a 4-digit OTP",
       });
     }
-
-
-
   };
 
-  const ResentOtp = async () => {
+  const ResendOtp = async () => {
     try {
       setLoader(true);
-
       const response = await sendOTP({
         customer_id: loginResponse?.data.customer_id,
         email: loginResponse?.data.email,
       });
-      // Type guard to ensure res is LoginResponse
+
       if (typeof response !== "boolean" && response.status) {
         toast({
-          title: "OTP Resend",
+          title: "OTP Resent",
           variant: "default",
         });
       }
-
       setLoader(false);
-
     } catch (err) {
-      const errorMessage =
-        (err as Error).message || "An unknown error occurred";
+      const errorMessage = (err as Error).message || "An unknown error occurred";
       setLoader(false);
       toast({
         title: "OTP Resend Failed",
@@ -104,7 +97,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
 
   return (
     <div className="flex items-center justify-center pt-20 lg:pt-0 lg:h-screen bg-transparent">
-      <div className="bg-white p-8 border rounded-2xl  max-w-sm w-full">
+      <div className="bg-white p-8 border rounded-2xl max-w-sm w-full">
         <h2 className="text-2xl font-bold text-center mb-4">OTP Verification</h2>
         <p className="text-center mb-6 text-gray-600">
           Enter the verification code we just sent to your email {loginResponse?.data.email}.
@@ -121,7 +114,8 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
               maxLength={1}
               className="w-12 h-12 text-center text-2xl font-semibold border-2 border-red-400 rounded-md focus:border-red-500 focus:outline-none"
               onChange={(e) => handleChange(e.target.value, index)}
-              autoComplete="one-time-code" // This enables auto-filling OTP on supported devices
+              onKeyDown={(e) => handleKeyDown(e, index)}
+              autoComplete="one-time-code"
             />
           ))}
         </div>
@@ -129,11 +123,12 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
         {/* Resend Link */}
         <div className="text-center mb-4">
           <p className="text-gray-600">
-            {`Don't Receive Code Yet?`}{" "}
-            <a href="#" onClick={async () => {
-              await (!loader ? ResentOtp() :
-                '')
-            }} className="text-red-500 underline">
+            Don&apos;t Receive Code Yet?{" "}
+            <a
+              href="#"
+              onClick={async () => !loader && (await ResendOtp())}
+              className="text-red-500 underline"
+            >
               Resend
             </a>
           </p>
