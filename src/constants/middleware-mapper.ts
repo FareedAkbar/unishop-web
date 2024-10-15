@@ -79,6 +79,10 @@ export const PAGE_MAPPER: Record<Exclude<PAGE_ROUTES, PAGE_ROUTES.UNKNOWN>, { PU
     PUBLIC: true,
     PROTECTED: true,
   },
+  [PAGE_ROUTES.FAVORITES]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
 };
 
 // export const RESPONSE_MAPPER1 = (url: string, REQ_ORIGIN: string) => {

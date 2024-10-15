@@ -1,6 +1,13 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { FaChevronRight, FaChevronDown, FaReceipt } from "react-icons/fa";
+import {
+  FaChevronRight,
+  FaChevronDown,
+  FaReceipt,
+  FaHome,
+  FaEnvelope,
+  FaPhoneAlt,
+} from "react-icons/fa";
 import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
 import type { CategoryTreeNode, Category as CAT } from "~/types/category";
@@ -15,6 +22,7 @@ import {
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import Link from "next/link";
 import { outlet221 } from "~/types/tokens";
+import { FiPhone } from "react-icons/fi";
 
 // Create a mapping of icon names to their corresponding components
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
@@ -168,8 +176,33 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   return (
     <aside
       ref={sidebarRef}
-      className={`absolute left-0 my-4 w-64 rounded-r-xl border-y border-r bg-red-100 dark:bg-slate-700 p-4 shadow-lg ${className}`}
+      className={`absolute left-0 w-64 rounded-r-xl border-y border-r bg-red-100 p-4 shadow-lg dark:bg-slate-700 ${className}`}
     >
+      <div className="flex justify-center space-x-6 pb-2">
+        <div className="group relative">
+          <Link
+            href="/"
+            className="flex items-center justify-center rounded-full text-red-500 transition-colors hover:text-red-600"
+          >
+            <FaHome size={30} />
+          </Link>
+          <span className="absolute bottom-10 left-1/2 z-30 -translate-x-1/2 transform whitespace-nowrap rounded border bg-slate-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+            Home
+          </span>
+        </div>
+
+        <div className="group relative">
+          <Link
+            href="/contact-us"
+            className="flex items-center justify-center rounded-full text-red-500 transition-colors hover:text-red-600"
+          >
+            <FaPhoneAlt size={28} />
+          </Link>
+          <span className="absolute bottom-10 left-1/2 z-30 -translate-x-1/2 transform whitespace-nowrap rounded border bg-slate-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+            Contact Us
+          </span>
+        </div>
+      </div>
       <h2 className="text-lg font-bold">CATEGORIES</h2>
       <nav className="relative mt-4">
         {categories.map((item) => (
@@ -182,7 +215,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   ? toggleCategory(item.label)
                   : null
               }
-              className="flex w-full items-center justify-between text-lg dark:text-white text-black transition-transform duration-300 hover:scale-110 focus:outline-none"
+              className="flex w-full items-center justify-between text-lg text-black transition-transform duration-300 hover:scale-110 focus:outline-none dark:text-white"
             >
               <div className="flex items-center">
                 {item.icon && (
@@ -203,13 +236,15 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
             </button>
 
             {openCategory === item.label && (
-              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-red-100 dark:bg-slate-700 dark:text-white p-4 shadow-lg">
+              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-red-100 p-4 shadow-lg dark:bg-slate-700 dark:text-white">
                 {item.label === "Books" &&
                   genre?.map((subItem) => (
                     <Link
                       key={subItem.genre}
                       href={`books?detail=${subItem.genre}`}
                       className="block py-1 text-sm hover:underline"
+                      onClick={() => setOpenCategory(null)}
+                      passHref
                     >
                       {subItem.genre}
                     </Link>
@@ -240,7 +275,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
         {checkoutData?.booknet_customer_id ? (
           <button
             onClick={() => router.push("/my-orders")}
-            className="mb-2 flex w-full items-center text-lg dark:text-white text-black transition-transform duration-300 hover:scale-110 focus:outline-none"
+            className="mb-2 flex w-full items-center text-lg text-black transition-transform duration-300 hover:scale-110 focus:outline-none dark:text-white"
           >
             <FaReceipt className="mr-3 text-indigo-600" />
             <span>My Orders</span>

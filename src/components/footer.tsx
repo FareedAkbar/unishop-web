@@ -20,7 +20,7 @@ function Footer() {
 
   return (
     <footer className="bg-zinc-100 dark:bg-slate-900">
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto pt-8 pb-2">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {/* logo side */}
           <div className="flex flex-col items-center gap-8 text-center md:col-span-1 md:items-start md:text-left">
@@ -33,26 +33,20 @@ function Footer() {
             />
             <div className="flex flex-col gap-3">
               <p className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464] dark:text-gray-300">
-                <FaMapMarkerAlt className="text-2xl text-[#646464] dark:text-gray-300" /> Suite 5,
-                Level 3, 5-7 Littleton St, Riverwood NSW 2210
+                <FaMapMarkerAlt className="text-2xl text-[#646464] dark:text-gray-300" /> Building 11,
+                University of Wollongong
               </p>
               <a
-                href="tel:+61 2 9534 8744"
+                href="tel:(02) 4221 8050"
                 className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464] dark:text-gray-300"
               >
-                <FaPhoneAlt className="text-[#646464] dark:text-gray-300" /> +61 2 9534 8744
+                <FaPhoneAlt className="text-[#646464] dark:text-gray-300" /> (02) 4221 8050
               </a>
               <a
-                href="tel:+61 4 5074 5025"
+                href="mailto:uow-bookshop@uow.edu.au"
                 className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464] dark:text-gray-300"
               >
-                <FaPhoneAlt className="text-[#646464] dark:text-gray-300" /> +61 4 5074 5025
-              </a>
-              <a
-                href="mailto:support@iitsols.com"
-                className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464] dark:text-gray-300"
-              >
-                <FaEnvelope className="text-[#646464] dark:text-gray-300" /> support@iitsols.com
+                <FaEnvelope className="text-[#646464] dark:text-gray-300" /> uow-bookshop@uow.edu.au
               </a>
             </div>
             <div className="flex gap-4 pl-4 text-xl text-[#646464] ">
@@ -190,13 +184,13 @@ function Footer() {
         </div>
         {/* bottom center */}
         <div className="flex flex-col items-center text-center">
-          <p className="text-sm font-medium text-[#646464] dark:text-gray-300">
+          <p className="text-xs font-medium text-[#646464] dark:text-gray-300">
             Privacy Policy | © {new Date().getFullYear()} PULSE
           </p>
-          <p className="text-sm font-medium text-[#646464] dark:text-gray-300">
+          <p className="text-xs font-medium text-[#646464] dark:text-gray-300">
             Design by{" "}
-            <a target="_blank" rel="noreferrer" href="https://iitsols.com/">
-              IMPACT SOLUTIONS
+            <a target="_blank" rel="noreferrer" href="https://iitsols.com/" className="hover:text-red-500">
+              IMPACT IT SOLUTIONS
             </a>
           </p>
         </div>

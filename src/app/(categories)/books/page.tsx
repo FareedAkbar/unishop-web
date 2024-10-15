@@ -25,16 +25,6 @@ import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { getBooks } from "~/_actions/getbooks";
 
-const dummyProducts = Array.from({ length: 10 }, (_, index) => ({
-  id: index + 1,
-  name: `Product ${index + 1}`,
-  price: parseFloat((Math.random() * 100).toFixed(2)), // Random price between 0 and 100
-  originalPrice: parseFloat((Math.random() * 150).toFixed(2)), // Random original price between 0 and 150
-  image: `https://via.placeholder.com/150?text=Product+${index + 1}`, // Placeholder image
-  rating: parseFloat((Math.random() * 5).toFixed(1)), // Random rating between 0 and 5
-  reviews: Math.floor(Math.random() * 100), // Random number of reviews
-}));
-
 const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
@@ -83,7 +73,7 @@ const MyComponent = () => {
         console.error("Failed to load data in useEffect:", error);
       });
     }
-  }, [genre,params]);
+  }, [genre, params]);
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
@@ -122,36 +112,12 @@ const MyComponent = () => {
       : false;
   };
 
-  // Handle pagination
-  // useEffect(() => {
-  //   // const startIndex = (currentPage - 1) * meta.limit;
-  //   // const endIndex = startIndex + meta.limit;
-  //   setTotalPages(Math.ceil(meta.total / meta.limit));
-  // }, [currentPage, meta]);
-
-  //  const handlePageChange = (page: number) => {
-  //   setCurrentPage(page);
-  //   // smoothScrollTo(0, 1500); //
-  // };
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
   // Get the products for the current page
   const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
-  const end = start + PRODUCTS_PER_PAGE;
-  const currentProducts = dummyProducts.slice(start, end);
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
-    }
-  };
   const filterResult = () => {
     let filtered = data;
 
@@ -208,10 +174,10 @@ const MyComponent = () => {
               </h1>
             </div>
             <ScrollArea className="h-[75vh] pb-10">
-              <div className="flex flex-wrap">
+              <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
-                      <div key={index} className="w-1/3 p-2">
+                      <div key={index} className=" p-2">
                         <ProductCardSkeleton />
                       </div>
                     ))
@@ -247,87 +213,7 @@ const MyComponent = () => {
                 <FaChevronRight />
               </button>
             </div>
-
-            {/* <div className="mt-4 flex justify-between">
-              <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-                className={`rounded bg-red-500 px-4 py-2 text-white ${
-                  currentPage === 1 ? "cursor-not-allowed" : ""
-                }`}
-              >
-                Previous
-              </button>
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-                className={`rounded bg-red-500 px-4 py-2 text-white ${
-                  currentPage === totalPages ? "cursor-not-allowed" : ""
-                }`}
-              >
-                Next
-              </button>
-            </div> */}
           </div>
-        </div>
-        {/*      
-        <div className="grid h-[40rem] w-full items-center justify-between sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
-          <div className="flex flex-col">
-            <h2 className="relative z-20 mx-auto mt-32 text-center font-serif text-2xl font-bold tracking-tight text-red-600 dark:text-white md:text-4xl lg:text-5xl">
-              {detail}
-            </h2>
-
-            <p className="text-1xl inter-var relative left-0 top-[1px] bg-gradient-to-r from-zinc-600 via-zinc-600 to-zinc-500 bg-clip-text bg-no-repeat py-4 text-center font-sans text-transparent [text-shadow:0_0_rgba(0,0,0,0.1)] md:text-2xl lg:text-2xl">
-              {description}
-            </p>
-          </div>
-          <div className="mx-auto text-left">
-            <Player
-              autoplay
-              loop
-              src={'/book.json'}
-              style={{ height: "500px", width: "500px" }}
-            >
-              <Controls buttons={["play", "repeat", "frame", "debug"]} />
-            </Player>
-          </div>
-        </div>
-        <div className="mx-auto max-w-5xl px-8"/> */}
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          {/* <div className="sm:grid-cols2 xs:grid-cols-1 grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
-            {loader && (
-              <>
-                <BookSkelton />
-                <BookSkelton />
-                <BookSkelton />
-                <BookSkelton />
-              </>
-            )}
-            {loader &&
-              data?.map((item: DataCart) => (
-                <ProductGradient
-                  key={item.item_id}
-                  book_title={item.book_title}
-                  description={item.description}
-                  object_path={item.object_path}
-                  item_sale_price={item.item_sale_price}
-                  showAddToCart={!isItemInCart(item.item_id)}
-                  onAddToCart={() => handleAddToCart(item)}
-                  onRemoveFromCart={() => handleRemoveFromCart(item)}
-                  stock={item.stock}
-                  item={item}
-                  openDetail={() => openDetail(item)}
-                />
-              ))}
-          </div> */}
-
-          {/* {!loader ? (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          ) : ''} */}
         </div>
       </motion.main>
 

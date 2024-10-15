@@ -98,29 +98,29 @@ const Header = () => {
   }, []);
 
   // Navigation items array with nested structure for Shop
-  const navItems = [
-    { label: "Home", href: "/" },
-    // {
-    //   label: "Shop",
-    //   subItems: [
-    //     {
-    //       label: "Product 1",
-    //       href: "#product1",
-    //       onClick: () => handleSectionClick("product1", true),
-    //     },
-    //     {
-    //       label: "Product 2",
-    //       href: "#product2",
-    //       onClick: () => handleSectionClick("product2", true),
-    //     },
-    //   ],
-    // },
-    {
-      label: "Contact",
-      href: "/contact-us",
-      onClick: () => handleSectionClick("/contact-us"),
-    },
-  ];
+  // const navItems = [
+  //   { label: "Home", href: "/" },
+  //   {
+  //     label: "Shop",
+  //     subItems: [
+  //       {
+  //         label: "Product 1",
+  //         href: "#product1",
+  //         onClick: () => handleSectionClick("product1", true),
+  //       },
+  //       {
+  //         label: "Product 2",
+  //         href: "#product2",
+  //         onClick: () => handleSectionClick("product2", true),
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     label: "Contact",
+  //     href: "/contact-us",
+  //     onClick: () => handleSectionClick("/contact-us"),
+  //   },
+  // ];
 
   const handleLogout = async () => {
     try {
@@ -197,7 +197,7 @@ const Header = () => {
 
           {/* Right Section: Heart, Cart, and User Dropdown Icons */}
           <div className="flex items-center space-x-4">
-            <div className="relative">
+            <div className="relative" onClick={() => router.push("/favorites")}>
               <GoHeart className="cursor-pointer text-xl" />
               <span className="absolute -right-0 -top-0 flex h-2 w-2 items-center justify-center rounded-full bg-red-500 text-[6px] text-white">
                 3
@@ -216,9 +216,9 @@ const Header = () => {
             </div>
             <button onClick={() => toggleTheme(themeMode)}>
               {themeMode == "dark" ? (
-                <FiSun className="text-3xl text-gray-200" />
+                <FiSun className="text-xl text-gray-200" />
               ) : (
-                <FiMoon className="text-3xl" />
+                <FiMoon className="text-xl" />
               )}
             </button>
             <div className="relative" ref={userDropdownRef}>
@@ -278,7 +278,7 @@ const Header = () => {
             value={searchTerm}
             onChange={handleSearchChange}
             icon={<FiSearch />}
-            width="w-full "
+            width="w-64 "
           />
         </div>
 
@@ -370,18 +370,16 @@ const Header = () => {
               />
             </div>
 
-            {/* Navigation Items in the Center */}
-            <nav className="justify- flex flex-grow space-x-6">
+            {/* <nav className="justify- flex flex-grow space-x-6">
               {navItems.map((item, id) => (
                 <div key={id} className="group relative">
                   <button
-                    onClick={() => handleSectionClick(item.href)}
-                    // onClick={() =>
-                    //   item.subItems
-                    //     ? toggleDropdown(item.label)
-                    //     : handleSectionClick(item.label.toLowerCase())
-                    // }
-                    // className={`relative flex items-center ${item.subItems ? "cursor-pointer" : ""}`}
+                    onClick={() =>
+                      item.subItems
+                        ? toggleDropdown(item.label)
+                        : handleSectionClick(item.label.toLowerCase())
+                    }
+                    className={`relative flex items-center ${item.subItems ? "cursor-pointer" : ""}`}
                     ref={dropdownRef}
                   >
                     <span
@@ -389,7 +387,7 @@ const Header = () => {
                     >
                       {item.label}
                     </span>
-                    {/* {item.subItems && (
+                    {item.subItems && (
                       <span className="ml-1">
                         {openDropdown === item.label ? (
                           <FaChevronUp />
@@ -397,10 +395,9 @@ const Header = () => {
                           <FaChevronDown />
                         )}
                       </span>
-                    )} */}
+                    )}
                   </button>
-                  {/* Render dropdown menu if subItems exist */}
-                  {/* {item.subItems && openDropdown === item.label && (
+                  {item.subItems && openDropdown === item.label && (
                     <div className="absolute z-10 mt-1 w-40 bg-white shadow-md">
                       {item.subItems.map((subItem) => (
                         <a
@@ -413,10 +410,10 @@ const Header = () => {
                         </a>
                       ))}
                     </div>
-                  )} */}
+                  )}
                 </div>
               ))}
-            </nav>
+            </nav> */}
 
             {/* Right Section: Search Bar and Icons */}
             <div className="flex items-center space-x-4">
@@ -424,10 +421,14 @@ const Header = () => {
                 placeholder="What are you looking for?"
                 value={searchTerm}
                 onChange={handleSearchChange}
-                icon={<FiSearch />}
-                width="w-64"
+                icon={<FiSearch size={26} />}
+                width="w-56"
+                animateOnClick={true}
               />
-              <div className="relative">
+              <div
+                className="relative"
+                onClick={() => router.push("/favorites")}
+              >
                 <GoHeart className="cursor-pointer text-3xl" />
                 {favItems?.length && favItems?.length > 0 ? (
                   <span className="absolute right-4 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
@@ -449,7 +450,7 @@ const Header = () => {
               </div>
               <button onClick={() => toggleTheme(themeMode)}>
                 {themeMode == "dark" ? (
-                  <FiSun className="text-3xl text-gray-200" />
+                  <FiSun className="p-0.5 text-3xl text-gray-200" />
                 ) : (
                   <FiMoon className="text-3xl" />
                 )}

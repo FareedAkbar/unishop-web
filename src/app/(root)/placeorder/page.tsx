@@ -644,8 +644,8 @@ const MyComponent = () => {
     >Loading...</span>
   </div> */}
 
-      <main className="mb-8 min-h-screen justify-center pt-28">
-        <div className="z-10 bg-white px-6">
+      <main className="mb-8 min-h-screen justify-center pt-28 lg:pt-20">
+        <div className="z-10 bg-white dark:bg-slate-800 px-6">
           <h2 className="mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
             Payment Method
           </h2>
@@ -786,7 +786,7 @@ const MyComponent = () => {
                   <div className="mt-6 grid grid-cols-2 justify-between">
                     <div className="flex flex-col">
                       <span className="text-sm">Shipping</span>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
                         {shipping?.label} - {shipping?.type}
                       </span>
                     </div>
