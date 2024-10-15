@@ -71,7 +71,7 @@ export default function SignupFormDemo({
   };
 
   return (
-    <div className="z-30 mx-auto w-full max-w-md rounded-xl border bg-white p-4 shadow-input dark:bg-black md:rounded-2xl md:p-8">
+    <div className="z-30 mx-auto w-full max-w-md rounded-xl border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
       {/* {loader && <Spinner />} */}
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         Login as a Pulse Member

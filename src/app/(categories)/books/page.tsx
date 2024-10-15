@@ -195,15 +195,15 @@ const MyComponent = () => {
       >
         <div className="flex flex-row">
           <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
-            <div className="m-4 text-end">
+            <div className="m-4 flex items-center justify-end gap-2 text-end">
               <input
                 type="text"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 placeholder="Search"
-                className="rounded border border-gray-300 px-2 py-1"
+                className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
               />
-              <h1 className="font-bold">
+              <h1 className="pt-3 font-bold">
                 Showing {displayedData?.length} of {data.length} Items
               </h1>
             </div>
@@ -228,9 +228,9 @@ const MyComponent = () => {
                     ))}
               </div>
             </ScrollArea>
-            <div className="mt-4 flex justify-between">
+            <div className="-mt-9 flex justify-between px-4">
               <button
-                className={`border px-3 py-1 ${currentPage === 1 ? "bg-gray-200" : "bg-white"}`}
+                className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "bg-red-500 text-white"}`}
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
               >
@@ -240,7 +240,7 @@ const MyComponent = () => {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                className={`border px-3 py-1 ${currentPage === totalPages ? "bg-gray-200" : "bg-white"}`}
+                className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "bg-red-500 text-white"}`}
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >

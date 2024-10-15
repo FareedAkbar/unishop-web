@@ -40,7 +40,7 @@ const Select: React.FC<SelectProps> = ({
       <select
         id={id}
         name={name}
-        className="block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-400 focus:border-indigo-300 sm:text-sm"
+        className="block w-full px-3 py-2 border rounded-md dark:bg-slate-700 shadow-sm focus:outline-none focus:ring-red-400 focus:border-red-500 sm:text-sm"
         value={value}
         onChange={handleChange}
         disabled={loader} // Disable select when loader is true

@@ -234,28 +234,28 @@ const Header = () => {
                 <div className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md dark:bg-slate-700">
                   <a
                     href="#account-settings"
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100"
+                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
                   >
                     <TbSettings className="mr-2" />
                     Account Settings
                   </a>
                   <a
                     href="#signup"
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100"
+                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
                   >
                     <HiLogin className="mr-2" />
                     Sign Up
                   </a>
                   <a
                     href="#login"
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100"
+                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
                   >
                     <HiLogout className="mr-2" />
                     Login
                   </a>
                   <a
                     href="#logout"
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100"
+                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
                   >
                     <HiLogin className="mr-2" />
                     Logout
@@ -477,7 +477,7 @@ const Header = () => {
 
                     <a
                       href="#account-settings"
-                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
+                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
                     >
                       <TbSettings className="mr-2" />
                       Account Setting
@@ -486,7 +486,7 @@ const Header = () => {
                       <a
                         onClick={() => handleLogout()}
                         href="#logout"
-                        className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
+                        className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
                       >
                         <HiLogin className="mr-2" />
                         Logout
@@ -497,7 +497,7 @@ const Header = () => {
                       <a
                         // onClick={() => handleLogout()}
                         href="/login"
-                        className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
+                        className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
                       >
                         <HiLogout className="mr-2" />
                         Login
@@ -507,7 +507,7 @@ const Header = () => {
                     <a
                       onClick={() => handleLogout()}
                       href="#signup"
-                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100"
+                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
                     >
                       <HiLogin className="mr-2" />
                       Signup
