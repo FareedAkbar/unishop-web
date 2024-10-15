@@ -33,6 +33,8 @@ const Header = () => {
     userInfo,
     isLoggedIn,
     favItems,
+    setTheme,
+    themeMode,
   } = useAuthContext();
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -42,9 +44,6 @@ const Header = () => {
 
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for hamburger menu
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(
-    localStorage.getItem("theme") == "dark" ? true : false,
-  ); // Theme state
 
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
   const dropdownToggleRef = useRef<HTMLButtonElement | null>(null);
@@ -133,26 +132,22 @@ const Header = () => {
   };
 
   // Handle theme toggle
-  const toggleTheme = () => {
-    setIsDarkMode((prev) => !prev);
+  const toggleTheme = async (theme: string) => {
+    if (theme == "dark") {
+      setTheme("light");
+    } else {
+      setTheme("dark");
+    }
   };
 
   // Apply theme based on state
   useEffect(() => {
-    if (isDarkMode) {
+    if (themeMode == "dark") {
       document.body.classList.add("dark");
-      localStorage.setItem("theme", "dark");
     } else {
       document.body.classList.remove("dark");
-      localStorage.setItem("theme", "light");
     }
-  }, [isDarkMode]);
-
-  useEffect(() => {
-    // Set initial theme from localStorage
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") setIsDarkMode(true);
-  }, []);
+  }, [themeMode]);
 
   useEffect(() => {
     // if(genre) return;
@@ -220,8 +215,8 @@ const Header = () => {
                 ""
               )}
             </div>
-            <button onClick={toggleTheme}>
-              {isDarkMode ? (
+            <button onClick={() => toggleTheme(themeMode)}>
+              {themeMode == "dark" ? (
                 <FiSun className="text-3xl text-gray-200" />
               ) : (
                 <FiMoon className="text-3xl" />
@@ -453,8 +448,8 @@ const Header = () => {
                   ""
                 )}
               </div>
-              <button onClick={toggleTheme}>
-                {isDarkMode ? (
+              <button onClick={() => toggleTheme(themeMode)}>
+                {themeMode == "dark" ? (
                   <FiSun className="text-3xl text-gray-200" />
                 ) : (
                   <FiMoon className="text-3xl" />

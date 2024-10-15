@@ -57,6 +57,11 @@ const STORAGE_MAPPER = {
     TYPE: [] as number[],
     KEY: "fav_items",
     DEFAULT: null
+  },
+  THEME_MODE:{
+    TYPE: "" as string,
+    KEY: "theme",
+    DEFAULT: null
   }
 };
 

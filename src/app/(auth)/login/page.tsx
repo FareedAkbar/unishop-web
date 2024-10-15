@@ -39,7 +39,7 @@ const MyComponent = () => {
     <div className="relative flex h-screen flex-col items-center justify-center">
       <div className="absolute inset-0 hidden bg-cover bg-center lg:block">
         <Image
-          src={"/images/auth-bg.png"}
+          src={"/assets/images/auth-bg.png"}
           alt="bg img"
           width={1000}
           height={1000}

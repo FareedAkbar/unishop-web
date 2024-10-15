@@ -43,7 +43,7 @@ interface AuthContextProps {
   removeAllCartItems: () => Promise<boolean>;
   setTrasactionData: (payload: trasactionData | null) => Promise<boolean>;
   setUUID: (payload: string) => Promise<boolean>;
-  setTheme: (payload: string) => Promise<boolean>;
+  setTheme: (payload: string) => void;
   CheckoutApiWithUserName: (payload: Booknet_customer_checkout) => Promise<checkoutBooknetResponse>;
   uuidLocal: string | undefined;
   token: string | undefined;
@@ -70,7 +70,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userInfo, setUserInfo] = useState<UserType | undefined>();
 
   const [token, setToken] = useState<string | undefined>();
-  const [themeMode, setThemeMode] = useState<string>("Light");
+  const [themeMode, setThemeMode] = useState<string>("");
   const [cartItems, setItems] = useState<DataCart[]>([]);
   const [favItems, setFavItems] = useState<number[]>([]);
   const [orderTrasactionData, setOrderTrasactionData] = useState<trasactionData | null>(null);
@@ -151,7 +151,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       lsClient.setItem("USER_INFO", responsePayload.data);
       lsClient.setItem("TOKEN", responsePayload.token);
       lsClient.setItem("IS_LOGGED_IN", true);
-      setCookie("IS_LOGGED_IN", true ,7)
+      setCookie("IS_LOGGED_IN", true ,7);
       return responsePayload
     } else {
       throw new Error(responsePayload.message); // Throw an error with the message
@@ -219,10 +219,10 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return true;
   };
 
-  const setTheme = async (payload: string): Promise<boolean> => {
-    // lsClient.setItem("UUID", payload);
+  const setTheme = (payload: string) => {
+    console.log(payload)
+    lsClient.setItem("THEME_MODE",payload)
     setThemeMode(payload)
-    return true;
   };
 
   const addFavourite = async (payload: number): Promise<void> => {
@@ -362,6 +362,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const TOKEN = lsClient.getItem("TOKEN");
     const BOOKNET_CUSTOMER_ID = lsClient.getItem("BOOKNET_CUSTOMER_ID");
     const FAV_ITEMS = lsClient.getItem("FAV_ITEMS");
+    const THEME_MODE = lsClient.getItem("THEME_MODE")
     setItems(
       cartItems
         ? typeof cartItems === "string"
@@ -369,6 +370,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           : cartItems
         : [],
     );
+    setThemeMode(THEME_MODE)
     setFavItems(FAV_ITEMS ?? [])
     setUuidLocal(UUID);
     setBooknetCustomerId(BOOKNET_CUSTOMER_ID);

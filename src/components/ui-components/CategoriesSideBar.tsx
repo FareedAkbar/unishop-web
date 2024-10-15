@@ -13,6 +13,7 @@ import {
   FaClipboardList,
 } from "react-icons/fa";
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
+import Link from "next/link";
 
 // Create a mapping of icon names to their corresponding components
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
@@ -185,7 +186,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                   <span className="mr-3">{iconMap[item.icon]}</span>
                 )}
-                <a href={item.href}>{item.label}</a>
+                <Link href={item.href ?? ""}>{item.label}</Link>
               </div>
               {item.subItems ||
               item.label === "Books" ||
@@ -202,23 +203,23 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-red-100 dark:bg-slate-700 dark:text-white p-4 shadow-lg">
                 {item.label === "Books" &&
                   genre?.map((subItem) => (
-                    <a
+                    <Link
                       key={subItem.genre}
                       href={`books?detail=${subItem.genre}`}
                       className="block py-1 text-sm hover:underline"
                     >
                       {subItem.genre}
-                    </a>
+                    </Link>
                   ))}
                 {item.label === "Text Book" &&
                   headerCategory?.[0]?.children?.map((subItem) => (
-                    <a
+                    <Link
                       key={subItem.id}
                       href={`textbooks?detail=${subItem.id}`}
                       className="block py-1 text-sm hover:underline"
                     >
                       {subItem.category_name}
-                    </a>
+                    </Link>
                   ))}
                 {item.subItems && (
                   <SubcategoryList

@@ -31,6 +31,7 @@ export const COOKIE_MAPPER = {
 
 export const cookieClient = (req: NextRequest | undefined, res: undefined | NextResponse = undefined) => {
   const getItem = <T extends keyof typeof COOKIE_MAPPER>(key: T): (typeof COOKIE_MAPPER)[T]["TYPE"] => {
+    
     const item = req?.cookies.get(COOKIE_MAPPER[key].KEY)?.value ?? COOKIE_MAPPER[key].DEFAULT;
     try {
       return isStringified(item)

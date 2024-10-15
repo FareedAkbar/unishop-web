@@ -83,7 +83,7 @@ const MyComponent = () => {
         console.error("Failed to load data in useEffect:", error);
       });
     }
-  }, [genre]);
+  }, [genre,params]);
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
