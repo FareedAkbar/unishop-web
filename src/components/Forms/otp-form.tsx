@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React, { useState } from "react";
 import Button from "../ui-components/Button";
 import type { LoginResponse } from "~/types/loginResponse";

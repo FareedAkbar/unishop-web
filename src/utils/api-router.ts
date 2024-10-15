@@ -59,7 +59,6 @@ export const apiRouter = async <T extends keyof typeof API_TYPE_MAPPER>(
   }
 
   const _ = API_TYPE_MAPPER[input];
-
   return response as Omit<Response, "json"> & { json: () => Promise<typeof _> };
 };
 

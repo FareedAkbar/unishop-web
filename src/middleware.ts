@@ -25,20 +25,20 @@ export function middleware(req: NextRequest) {
   // -------- PUBLIC ROUTES --------
   if (PUBLIC) {
     console.log("PUBLIC");
-    // STOP USERS FROM ACCESSING ROUTES THAT ARE ONLY FOR PUBLIC USERS
+    // STOP LOGGED-IN USERS FROM ACCESSING PUBLIC ROUTES LIKE LOGIN OR REGISTER
     if (IS_LOGGED_IN && !PROTECTED) {
-      console.log("LOGGED IN AND NOT PROTECTED");
-      return RESPONSE_MAPPER[IS_PAGE_OR_API as keyof typeof RESPONSE_MAPPER]?.ONLY_PUBLIC;
+      console.log("LOGGED IN AND NOT PROTECTED - REDIRECTING TO HOME");
+      return RESPONSE_MAPPER[IS_PAGE_OR_API as keyof typeof RESPONSE_MAPPER]?.BASE; // Redirect to home
     }
   }
 
   // -------- PROTECTED ROUTES --------
   else if (PROTECTED) {
     console.log("PROTECTED");
-    // STOP USERS FROM ACCESSING ROUTES THAT ARE ONLY FOR LOGGED IN USERS
+    // STOP NON-LOGGED-IN USERS FROM ACCESSING PROTECTED ROUTES
     if (!IS_LOGGED_IN) {
-      console.log("NOT LOGGED IN");
-      return RESPONSE_MAPPER[IS_PAGE_OR_API as keyof typeof RESPONSE_MAPPER]?.UNAUTHORIZED;
+      console.log("NOT LOGGED IN - REDIRECTING TO LOGIN");
+      return RESPONSE_MAPPER[IS_PAGE_OR_API as keyof typeof RESPONSE_MAPPER]?.UNAUTHORIZED; // Redirect to login
     }
   }
 
@@ -51,4 +51,4 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|images|favicon.ico|assets).*)']
-}
+};

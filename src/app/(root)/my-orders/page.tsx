@@ -161,6 +161,7 @@ const MyComponent = () => {
       setLoader(false);
     }
   };
+
   const fetchDataOrders = async () => {
     console.log("dasdasd");
     setLoader(true);
@@ -175,6 +176,7 @@ const MyComponent = () => {
       // Check if result has the expected structure
       if (result?.status) {
         // setMeta(result.meta);
+        console.log(result.data)
         setDataOrders(result.data);
       } else {
         console.error("Unexpected result structure:", result);
@@ -187,8 +189,6 @@ const MyComponent = () => {
     }
   };
 
-  // Handle add to cart
-  console.log(booknetCustomerId);
   useEffect(() => {
     if (!booknetCustomerId) return;
     const loadData = async () => {

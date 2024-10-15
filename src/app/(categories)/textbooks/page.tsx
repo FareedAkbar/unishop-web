@@ -78,7 +78,6 @@ const MyComponent = () => {
         const x = await getBooks(catId?.id ?? 1);
         if (typeof x !== "boolean" && x.status) {
           setData(x.data);
-          console.log(x.data);
         }
 
         setLoader(false);
@@ -97,7 +96,7 @@ const MyComponent = () => {
         console.error("Failed to load data in useEffect:", error);
       });
     }
-  }, [category]);
+  }, [category,detail]);
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {

@@ -228,7 +228,7 @@ const MyComponent = () => {
                     ))}
               </div>
             </ScrollArea>
-            <div className="-mt-9 flex justify-between px-4">
+            <div className="mt-9 flex justify-between px-4">
               <button
                 className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "bg-red-500 text-white"}`}
                 onClick={() => setCurrentPage(currentPage - 1)}

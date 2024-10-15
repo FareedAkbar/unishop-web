@@ -20,6 +20,7 @@ import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
 import SidebarCart from "../ui/sideCart/cartSidebar";
+import Link from "next/link";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -122,10 +123,8 @@ const Header = () => {
   ];
 
   const handleLogout = async () => {
-    console.log("Logout");
     try {
-      await logout(); // Await the logout promise
-      router.push("/login");
+      void logout()
     } catch (error) {
       console.error("Logout failed:", error); // Handle the error as needed
     }
@@ -483,35 +482,35 @@ const Header = () => {
                       Account Setting
                     </a>
                     {isLoggedIn && (
-                      <a
+                      <Link
                         onClick={() => handleLogout()}
-                        href="#logout"
+                        href=""
                         className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
                       >
                         <HiLogin className="mr-2" />
                         Logout
-                      </a>
+                      </Link>
                     )}
 
                     {!isLoggedIn && (
-                      <a
+                      <Link
                         // onClick={() => handleLogout()}
                         href="/login"
                         className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
                       >
                         <HiLogout className="mr-2" />
                         Login
-                      </a>
+                      </Link>
                     )}
 
-                    <a
+                    <Link
                       onClick={() => handleLogout()}
-                      href="#signup"
+                      href="/signup"
                       className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
                     >
                       <HiLogin className="mr-2" />
                       Signup
-                    </a>
+                    </Link>
                   </div>
                 )}
               </div>

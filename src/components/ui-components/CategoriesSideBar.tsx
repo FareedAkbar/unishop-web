@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa";
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import Link from "next/link";
+import { outlet221 } from "~/types/tokens";
 
 // Create a mapping of icon names to their corresponding components
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
@@ -119,7 +120,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     });
 
     categories.forEach((category) => {
-      if (category.parent === 0 && category.outlet === 223) {
+      if (category.parent === 0 && category.outlet === outlet221) {
         const rootCategory = categoryMap[category.id];
         if (rootCategory) {
           tree.push(rootCategory);
@@ -141,7 +142,9 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   // Initialize category tree on mount
   useEffect(() => {
     if (!category) return;
+
     const categoryTree = buildCategoryTree(category);
+    console.log(categoryTree)
     setHeaderCategory(categoryTree);
   }, [category]);
 
@@ -234,7 +237,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
           </div>
         ))}
 
-        {checkoutData?.booknet_customer_id && (
+        {checkoutData?.booknet_customer_id ? (
           <button
             onClick={() => router.push("/my-orders")}
             className="mb-2 flex w-full items-center text-lg dark:text-white text-black transition-transform duration-300 hover:scale-110 focus:outline-none"
@@ -242,7 +245,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
             <FaReceipt className="mr-3 text-indigo-600" />
             <span>My Orders</span>
           </button>
-        )}
+        ):""}
       </nav>
     </aside>
   );

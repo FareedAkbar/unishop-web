@@ -2,22 +2,23 @@ import { cookieClient } from "~/clients/cookie-client";
 import { NextRequest, NextResponse } from "next/server";
 import { API_ROUTES, PAGE_ROUTES } from "~/constants/api-routes";
 import { PAGE_MAPPER, RESPONSE_MAPPER } from "~/constants/middleware-mapper";
+import { cookies } from 'next/headers'
 
 export const routerReader = (req: NextRequest) => {
   const { getItem } = cookieClient(req);
   const URL = matchRoute(req.nextUrl.pathname);
 
   const REQ_ORIGIN = getItem("REQ_ORIGIN");
-  const IS_LOGGED_IN = getItem("IS_LOGGED_IN");
-  console.log("IS_LOGGED_IN",IS_LOGGED_IN)
   const _RESPONSE_MAPPER = RESPONSE_MAPPER(req.url, REQ_ORIGIN);
 
-  // Removed unnecessary type assertion
-  const IS_PAGE_OR_API = "PAGE"; // This can be inferred as a string
+  // Get the 'IS_LOGGED_IN' cookie value
+  const cookieStore = cookies();
+  const IS_LOGGED_IN = cookieStore.get('IS_LOGGED_IN')?.value === 'true'; // Explicit comparison to 'true'
+
+  const IS_PAGE_OR_API = "PAGE"; // For now, always assume it's a page
 
   const pageRoute = PAGE_MAPPER[URL as Exclude<PAGE_ROUTES, PAGE_ROUTES.UNKNOWN>];
 
-  // PAGE
   if (pageRoute) {
     return {
       ...pageRoute,
@@ -31,7 +32,6 @@ export const routerReader = (req: NextRequest) => {
     };
   }
 
-  // NOT FOUND
   return {
     URL,
     REQ_ORIGIN,
@@ -44,7 +44,6 @@ export const routerReader = (req: NextRequest) => {
     RESPONSE_MAPPER: _RESPONSE_MAPPER,
   };
 };
-
 export const saveReqOrigin = (req: NextRequest) => {
   if (req.nextUrl.pathname === embedAppIdSlug(PAGE_ROUTES.NOT_FOUND, req.url)) {
     return NextResponse.next();
