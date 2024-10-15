@@ -35,13 +35,13 @@ const MyComponent = () => {
       <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
         <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
-            <FaPhoneAlt className="text-red-500 " /> General Enquiries
+            <FaPhoneAlt className="text-red-500" /> General Enquiries
           </h2>
           <p>
             Phone:
             <a
               href="tel:42218050"
-              className="pl-1 text-red-500   hover:text-gray-300 transition-colors"
+              className="pl-1 text-red-500 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
             >
               4221 8050
             </a>
@@ -50,7 +50,7 @@ const MyComponent = () => {
             Email:
             <a
               href="mailto:uow-bookshop@uow.edu.au"
-              className="pl-1 text-red-500   hover:text-gray-300 transition-colors"
+              className="pl-1 text-red-500 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
             >
               uow-bookshop@uow.edu.au
             </a>
@@ -59,13 +59,13 @@ const MyComponent = () => {
 
         <div className="w-full rounded-lg bg-red-100 p-6 text-center shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
-            <FaUserTie className="text-red-500  " /> Specialty Enquiries
+            <FaUserTie className="text-red-500" /> Specialty Enquiries
           </h2>
           <p>
             Retail Operations Manager:
             <a
               href="mailto:uow-bookshop@uow.edu.au"
-              className="text-red-500 transition-colors hover:text-gray-300 pl-1"
+              className="transition-colorshover:text-gray-600 pl-1 text-red-500 dark:hover:text-gray-300"
             >
               uow-bookshop@uow.edu.au
             </a>
@@ -74,9 +74,9 @@ const MyComponent = () => {
             Events Coordinator: Anneliese Hennessy
             <a
               href="mailto:ahennessy@uow.edu.au"
-              className="text-red-500 transition-colors hover:text-gray-300"
+              className="transition-colorshover:text-gray-600 text-red-500 dark:hover:text-gray-300"
             >
-               (ahennessy@uow.edu.au)
+              (ahennessy@uow.edu.au)
             </a>
           </p>
         </div>
@@ -93,7 +93,7 @@ const MyComponent = () => {
       <div className="flex flex-wrap justify-evenly gap-6 p-8 text-center">
         <div>
           <h2 className="flex items-center gap-2 text-2xl font-bold">
-            <FaBuilding className="text-red-500 " /> Postal Address
+            <FaBuilding className="text-red-500" /> Postal Address
           </h2>
           <p>UniShop</p>
           <p>P.O. Box U100</p>
@@ -101,7 +101,7 @@ const MyComponent = () => {
         </div>
         <div>
           <h2 className="flex items-center gap-2 text-2xl font-bold">
-            <FaBuilding className="text-red-500 " /> Delivery Address
+            <FaBuilding className="text-red-500" /> Delivery Address
           </h2>
           <p>UniShop</p>
           <p>2 Northfields Avenue</p>

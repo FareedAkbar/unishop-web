@@ -130,7 +130,7 @@ const HomePage: React.FC = () => {
         <div className="hidden lg:block lg:pl-20">
           <CategoriesSidebar />
         </div>
-        <div className="flex w-full flex-col justify-evenly p-5 lg:flex-row">
+        <div className="flex w-full flex-col justify-evenly p-5 pb-10 lg:flex-row">
           <div className="pl-0 lg:pl-44">
             <ProductList
               products={products}
