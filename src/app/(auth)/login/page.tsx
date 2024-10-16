@@ -38,12 +38,22 @@ const MyComponent = () => {
     <div className="relative flex h-screen flex-col items-center justify-center">
       <div className="absolute inset-0 hidden bg-cover bg-center lg:block">
         <Image
-          src={"/assets/images/auth-bg.png"}
-          alt="bg img"
+          src="/assets/images/auth-bg.png"
+          alt="background image"
           width={1000}
           height={1000}
-          objectFit="cover "
-          className="relative h-full w-full"
+          objectFit="cover"
+          className="relative h-full w-full dark:hidden"
+        />
+
+        <Image
+          src="/assets/images/home/home1.png"
+          alt="background image flipped"
+          width={1000}
+          height={1000}
+          objectFit="cover"
+          className="relative hidden h-full w-full dark:block"
+          style={{ transform: "scaleX(-1)" }} // Flip image for dark mode
         />
       </div>
       <main className="absolute top-32 z-10 lg:right-10 lg:top-3 lg:w-1/3">
@@ -51,9 +61,9 @@ const MyComponent = () => {
           <div className="relative">
             <button
               onClick={() => router.push("/")}
-              className="fixed left-10 top-10 rounded-full bg-transparent p-2 shadow-md transition hover:bg-gray-200"
+              className="fixed left-10 top-10 rounded-full bg-transparent p-2  transition hover:bg-gray-200 dark:hover:bg-slate-700"
             >
-              <FaArrowLeft className="text-black" />
+              <FaArrowLeft className="text-black dark:text-white" />
             </button>
             <Tabs tabs={tabs} />
           </div>

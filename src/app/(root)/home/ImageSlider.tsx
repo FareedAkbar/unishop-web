@@ -66,13 +66,13 @@ const ImageSlider: React.FC = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
         setIsFlipping(false); // Reset flip state after changing the image
       }, 500); // Duration matching the flip-out animation
-    }, 3500); // Adjusted timing to account for flip effect
+    }, 5500); // Adjusted timing to account for flip effect
 
     return () => clearInterval(interval);
   }, [slides.length]);
 
   return (
-    <div className="container flex w-full flex-col pb-4 lg:px-4">
+    <div className="container flex w-full flex-col pb-4 px-4">
       <div className="absolute z-10 w-2/5 p-1 lg:block lg:pl-10 lg:pt-10">
         <div className="flex h-24 flex-col justify-between px-2 py-2 sm:h-52 md:h-60 md:px-6 lg:h-80 lg:px-10">
           <div className="flex items-center lg:mb-4">

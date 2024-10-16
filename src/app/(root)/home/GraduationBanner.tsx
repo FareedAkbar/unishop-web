@@ -6,7 +6,7 @@ import CountdownTimer from "~/components/countdownTimer";
 
 const GraduationBanner: React.FC = () => {
   return (
-    <div className="flex flex-row items-center justify-between bg-gradient-to-r from-red-900 to-red-400 p-4 sm:p-8">
+    <div className="flex flex-row items-center justify-between bg-gradient-to-r from-red-900 to-red-400 p-4 m-4 rounded sm:p-8">
       <div className="flex max-w-xl flex-col justify-center text-left">
         <h3 className="text-xs font-semibold text-red-500 sm:text-sm">
           Categories

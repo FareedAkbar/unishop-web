@@ -186,9 +186,9 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
           </div>
         </div>
 
-        <div className="w-[92vw] ">
+        <div className="lg:w-[92vw] w-full">
           <div
-            className="scrollbar-hidden mt-6 py-6 flex flex-wrap lg:flex-nowrap lg:overflow-x-auto xl:flex-nowrap xl:overflow-x-auto"
+            className="scrollbar-hidden mt-6 py-6 flex justify-center flex-wrap lg:flex-nowrap lg:overflow-x-auto xl:flex-nowrap xl:overflow-x-auto"
             ref={productContainerRef}
           >
             <ProductCard key={1} />

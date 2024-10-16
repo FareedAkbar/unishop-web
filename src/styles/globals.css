@@ -103,3 +103,22 @@ input[type="radio"]:focus {
   scrollbar-width: none;      /* Firefox */
 }
 
+.dark input:-webkit-autofill {
+  background-color: rgba(70, 90, 126, 0.4) !important; /* Optional: Desired background color */
+  color: white !important; /* Text color in dark mode */
+  border: 1px solid rgba(70, 90, 126, 0.4) !important; /* Optional: Change border color */
+  box-shadow: 0 0 0 30px rgba(70, 90, 126, 0.4) inset !important; /* Optional: Inner shadow for autofill */
+}
+
+.dark input:-internal-autofill-selected {
+  background-color: rgba(56, 71, 98, 0.4) !important; /* Dark mode background color */
+  color: white !important; /* Text color in dark mode */
+  border: 1px solid rgba(70, 90, 126, 0.4) !important; /* Optional: Change border color */
+  appearance: none !important; /* Remove default appearance */
+}
+
+/* Reset properties for autofill input in light mode */
+input:-webkit-autofill,
+input:-internal-autofill-selected {
+  background-image: none !important; /* Remove any background image */
+}

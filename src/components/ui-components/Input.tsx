@@ -49,7 +49,7 @@ const Input: React.FC<InputProps> = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
-        setIsVisible(false);
+       if(animateOnClick) setIsVisible(false);
         setIsFocused(false);
       }
     };

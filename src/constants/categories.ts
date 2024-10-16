@@ -39,34 +39,39 @@ interface Category {
     { 
       label: 'Graduation',
       icon: 'FaGraduationCap',
-      subItems: [
-        { label: 'Caps', icon: 'FaGraduationCap', href: '#' },
-        { label: 'Gowns', icon: 'FaGraduationCap', href: '#' }
-      ] 
+      // subItems: [
+      //   { label: 'Caps', icon: 'FaGraduationCap', href: '#' },
+      //   { label: 'Gowns', icon: 'FaGraduationCap', href: '#' }
+      // ] 
     },
     { 
-      label: 'UOW Merchandise',
+      label: 'Merch & Clothing',
       icon: 'FaTshirt',
       subItems: [
-        { label: 'T-shirts', icon: 'FaTshirt', href: '#' },
-        { label: 'Hoodies', icon: 'FaTshirt', href: '#' }
-      ] 
+        { label: "Merchandise", icon: FaTshirt, href: "#" },
+        { label: "Graduation", icon: FaTshirt, href: "#" },
+        { label: "Clothing", icon: FaTshirt, href: "#" },
+      ],
     },
     { 
-      label: 'Stationary',
+      label: 'Stationary & Tech',
       icon: 'FaPen',
-      subItems: [
-        { label: 'Pens', icon: 'FaPen', href: '#' },
-        { label: 'Notebooks', icon: 'FaPen', href: '#' }
-      ] 
+      // subItems: [
+      //   { label: 'Pens', icon: 'FaPen', href: '#' },
+      //   { label: 'Notebooks', icon: 'FaPen', href: '#' }
+      // ] 
     },
     { 
       label: 'Art & Gifts',
       icon: 'FaGift',
       subItems: [
-        { label: 'Posters', icon: 'FaGift', href: '#' },
-        { label: 'Frames', icon: 'FaFrame', href: '#' }
-      ] 
+        { label: "Imagine Homewares", icon: FaGift, href: "#" },
+        { label: "Indigenous art merch", icon: FaGift, href: "#" },
+        { label: "Danielle Hulls Photography", icon: FaGift, href: "#" },
+        { label: "Marini Ferlazzo", icon: FaGift, href: "#" },
+        { label: "White Clay Mountain", icon: FaGift, href: "#" },
+        { label: "Eliza Jade Candles", icon: FaGift, href: "#" },
+      ]
     },
     { 
       label: 'Contact',

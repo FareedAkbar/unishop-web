@@ -98,9 +98,9 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
 
   return (
     <div className="flex items-center justify-center pt-20 lg:pt-0 lg:h-screen bg-transparent">
-      <div className="bg-white p-8 border rounded-2xl max-w-sm w-full">
+      <div className="bg-white dark:bg-slate-800 p-8 border rounded-2xl max-w-sm w-full">
         <h2 className="text-2xl font-bold text-center mb-4">OTP Verification</h2>
-        <p className="text-center mb-6 text-gray-600">
+        <p className="text-center mb-6 text-gray-600 dark:text-gray-300">
           Enter the verification code we just sent to your email {loginResponse?.data.email}.
         </p>
 
@@ -113,7 +113,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
               type="text"
               value={value}
               maxLength={1}
-              className="w-12 h-12 text-center text-2xl font-semibold border-2 border-red-400 rounded-md focus:border-red-500 focus:outline-none"
+              className="w-12 h-12 text-center text-2xl dark:bg-slate-700 font-semibold border-2 border-red-400 rounded-md focus:border-red-500 focus:outline-none"
               onChange={(e) => handleChange(e.target.value, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
               autoComplete="one-time-code"
@@ -123,7 +123,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
 
         {/* Resend Link */}
         <div className="text-center mb-4">
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             Don&apos;t Receive Code Yet?{" "}
             <a
               href="#"

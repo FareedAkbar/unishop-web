@@ -106,11 +106,9 @@ const MyComponent = () => {
     <div>
       <main className="flex min-h-screen flex-col items-center justify-start pt-24 dark:bg-slate-900">
         <div className="grid w-full grid-cols-1 gap-12 px-4 lg:grid-cols-2">
-          <div className="z-10 w-full">
-            <Tabs tabs={tabs} key={items?.toString()} />
-          </div>
-          <div className="z-10 h-screen pt-10">
-            <ScrollArea className="flex-1 p-4 lg:h-4/5 dark:bg-slate-700 rounded-lg">
+         
+          <div className="z-10 lg:h-screen pt-10 lg:order-2">
+            <ScrollArea className="flex-1 p-4 lg:h-4/5 max-h-[40vh] dark:bg-slate-700 rounded-lg">
               {items?.[0] ? (
                 items.map((item: DataCart) => (
                   <CartItem
@@ -153,6 +151,9 @@ const MyComponent = () => {
                 </div>
               )}
             </ScrollArea>
+          </div>
+          <div className="z-10 w-full lg:pt-0 pt-16">
+            <Tabs tabs={tabs} key={items?.toString()} />
           </div>
         </div>
       </main>
