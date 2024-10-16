@@ -161,23 +161,31 @@ const MyComponent = () => {
       >
         <div className="flex flex-row">
           <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
-            <div className="m-4 flex items-center justify-end gap-2 text-end">
-              <input
-                type="text"
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                placeholder="Search"
-                className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
-              />
-              <h1 className="pt-3 font-bold">
-                Showing {displayedData?.length} of {data.length} Items
-              </h1>
+            <div className="m-4 flex flex-wrap items-end justify-between gap-4">
+              <div className="text-left">
+                <h2 className="text-xl font-bold">Books</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-300">{"subcategory"}</p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  placeholder="Search"
+                  className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
+                />
+                <h1 className="font-bold">
+                  Showing {displayedData?.length} of {data.length} Items
+                </h1>
+              </div>
             </div>
+
             <ScrollArea className="h-[75vh] pb-10">
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
-                      <div key={index} className=" p-2">
+                      <div key={index} className="p-2">
                         <ProductCardSkeleton />
                       </div>
                     ))
@@ -194,9 +202,9 @@ const MyComponent = () => {
                     ))}
               </div>
             </ScrollArea>
-            <div className="mt-9 flex justify-between px-4">
+            <div className="lg:-mt-9 z-10 flex justify-between px-4">
               <button
-                className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "bg-red-500 text-white"}`}
+                className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "bg-red-500 cursor-pointer text-white"}`}
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
               >
@@ -206,7 +214,7 @@ const MyComponent = () => {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "bg-red-500 text-white"}`}
+                className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "bg-red-500 cursor-pointer text-white"}`}
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
@@ -246,7 +254,7 @@ const MyComponent = () => {
                     rotate: 0,
                     zIndex: 100,
                   }}
-                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-neutral-700 dark:bg-neutral-800"
+                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
                 >
                   <Image
                     src={
@@ -326,7 +334,7 @@ const MyComponent = () => {
               !isItemInCart(itemDetail.item_id) &&
               itemDetail?.stock?.quantity ? (
                 <button
-                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
+                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white "
                   onClick={() => handleAddToCart(itemDetail)}
                 >
                   <FaCartPlus className="text-lg" />
@@ -341,7 +349,7 @@ const MyComponent = () => {
         <ModalFooter className="gap-4">
           <button
             onClick={() => setOpen(false)}
-            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm text-black dark:border-black dark:bg-black dark:text-white"
+            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm  dark:border-slate-950 dark:bg-slate-900 "
           >
             Close
           </button>

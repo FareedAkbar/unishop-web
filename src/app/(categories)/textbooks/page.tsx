@@ -194,28 +194,35 @@ const MyComponent = () => {
       >
         <div className="flex flex-row">
           <div className="flex flex-col px-4 py-5 lg:absolute lg:left-64 lg:right-0">
-            <div className="m-4 flex items-center justify-end gap-4">
-              {subCategory?.[0] && (
-                <Select
-                  onValueChange={(x: string) => handleChangeSubCategory(x)}
-                >
-                  <SelectTrigger className="w-72">
-                    <SelectValue placeholder="" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {subCategory?.map((item) => (
-                      <SelectItem key={item.id} value={item.id.toString()}>
-                        {item.category_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+            <div className="m-4 flex flex-wrap items-end justify-between gap-4">
+              <div className="text-left">
+                <h2 className="text-xl font-bold">Text Books</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-300">
+                  {"subcategory"}
+                </p>
+              </div>
 
-              {/* Heading */}
-              <h1 className="text-end font-bold">
-                Showing {data.length} of {data.length} Products
-              </h1>
+              <div className="m-4 flex items-center justify-end gap-4">
+                {subCategory?.[0] && (
+                  <Select
+                    onValueChange={(x: string) => handleChangeSubCategory(x)}
+                  >
+                    <SelectTrigger className="w-72">
+                      <SelectValue placeholder="" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {subCategory?.map((item) => (
+                        <SelectItem key={item.id} value={item.id.toString()}>
+                          {item.category_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+                <h1 className="text-end font-bold">
+                  Showing {data.length} of {data.length} Products
+                </h1>
+              </div>
             </div>
             <ScrollArea className="h-[75vh] pb-10">
               <div className="flex flex-wrap justify-center py-3">

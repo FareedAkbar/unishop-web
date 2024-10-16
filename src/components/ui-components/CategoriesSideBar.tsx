@@ -5,7 +5,6 @@ import {
   FaChevronDown,
   FaReceipt,
   FaHome,
-  FaEnvelope,
   FaPhoneAlt,
 } from "react-icons/fa";
 import { categories } from "~/constants/categories";
@@ -22,7 +21,6 @@ import {
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import Link from "next/link";
 import { outlet221 } from "~/types/tokens";
-import { FiPhone } from "react-icons/fi";
 
 // Create a mapping of icon names to their corresponding components
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
@@ -57,14 +55,14 @@ const SubcategoryList = ({
   isOpen,
 }: SubcategoryListProps) => {
   return (
-    <div className="ml-4">
+    <div className="ml-3">
       {subItems.map((subItem) => (
         <div key={subItem.label} className="relative">
           <button
             onClick={() =>
               subItem.subItems ? toggleCategory(subItem.label) : null
             }
-            className="flex w-full items-center justify-between text-sm text-black focus:outline-none"
+            className="flex w-full items-center justify-between py-1 text-sm focus:outline-none hover:underline"
           >
             <span>{subItem.label}</span>
             {subItem.subItems &&
@@ -152,7 +150,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     if (!category) return;
 
     const categoryTree = buildCategoryTree(category);
-    console.log(categoryTree)
+    console.log(categoryTree);
     setHeaderCategory(categoryTree);
   }, [category]);
 
@@ -208,6 +206,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
         {categories.map((item) => (
           <div key={item.label} className="relative mb-2">
             <button
+              type="button"
               onClick={() =>
                 item.subItems ||
                 item.label === "Books" ||
@@ -215,14 +214,16 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   ? toggleCategory(item.label)
                   : null
               }
-              className="flex w-full items-center justify-between text-lg text-black transition-transform duration-300 hover:scale-110 focus:outline-none dark:text-white"
+              className="flex w-full items-center justify-between text-lg transition-transform duration-300 hover:scale-110 focus:outline-none"
             >
               <div className="flex items-center">
                 {item.icon && (
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                   <span className="mr-3">{iconMap[item.icon]}</span>
                 )}
-                <Link href={item.href ?? ""}>{item.label}</Link>
+                <Link href={item.href ?? ""} scroll={false}>
+                  {item.label}
+                </Link>
               </div>
               {item.subItems ||
               item.label === "Books" ||
@@ -281,7 +282,9 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
             <FaReceipt className="mr-3 text-indigo-600" />
             <span>My Orders</span>
           </button>
-        ):""}
+        ) : (
+          ""
+        )}
       </nav>
     </aside>
   );

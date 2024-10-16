@@ -60,9 +60,9 @@ const PrivacyPolicy: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen p-8 pt-28">
+    <div className="relative min-h-screen p-8 pt-32">
       {/* Background Lottie Animation */}
-      <div className="absolute inset-0 top-40 -z-10 opacity-20">
+      <div className="absolute inset-0 top-40 -z-10 opacity-20 dark:opacity-70 dark:blur-sm">
         <Player
           autoplay
           loop
@@ -85,7 +85,7 @@ const PrivacyPolicy: React.FC = () => {
       {/* Collapsible Sections */}
       <div className="mx-auto max-w-4xl">
         {sections.map((section, index) => (
-          <div key={index} className="mb-4 rounded-lg bg-red-100 p-5 shadow-lg">
+          <div key={index} className="mb-4 rounded-lg bg-red-100 dark:bg-slate-800 p-5 shadow-lg">
             <div
               className="flex cursor-pointer items-center justify-between"
               onClick={() => toggleSection(index)}
@@ -94,15 +94,15 @@ const PrivacyPolicy: React.FC = () => {
                 {section.title}
               </h2>
               {activeIndex === index ? (
-                <FaChevronUp className="text-gray-600" />
+                <FaChevronUp className="text-gray-600 dark:text-gray-300" />
               ) : (
-                <FaChevronDown className="text-gray-600" />
+                <FaChevronDown className="text-gray-600 dark:text-gray-300" />
               )}
             </div>
 
             {/* Section Content with Animation */}
             <div
-              className={`mt-2 overflow-hidden transition-all bg-white rounded duration-300 ease-in-out ${
+              className={`mt-2 overflow-hidden transition-all bg-white dark:bg-slate-700 rounded duration-300 ease-in-out ${
                 activeIndex === index ? "max-h-[500px]" : "max-h-0"
               }`}
             >
@@ -112,18 +112,18 @@ const PrivacyPolicy: React.FC = () => {
                     <ul key={idx} className="ml-4 list-disc">
                       {item.map((subItem, subIdx) =>
                         Array.isArray(subItem) ? (
-                          <li key={subIdx} className="mb-1">
-                            <strong>{subItem[0]}:</strong> {subItem[1]}
+                          <li key={subIdx} className="mb-1 dark:text-white">
+                            <strong className="dark:text-white">{subItem[0]}:</strong> {subItem[1]}
                           </li>
                         ) : (
-                          <li key={subIdx} className="mb-1">
+                          <li key={subIdx} className="mb-1 text-black dark:text-white">
                             {subItem}
                           </li>
                         ),
                       )}
                     </ul>
                   ) : (
-                    <li key={idx} className="mb-1 text-gray-700">
+                    <li key={idx} className="mb-1 text-gray-700 dark:text-white">
                       {item}
                     </li>
                   ),

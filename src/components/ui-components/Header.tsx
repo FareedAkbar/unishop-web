@@ -124,7 +124,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      void logout()
+      void logout();
     } catch (error) {
       console.error("Logout failed:", error); // Handle the error as needed
     }
@@ -199,15 +199,19 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             <div className="relative" onClick={() => router.push("/favorites")}>
               <GoHeart className="cursor-pointer text-xl" />
-              <span className="absolute -right-0 -top-0 flex h-2 w-2 items-center justify-center rounded-full bg-red-500 text-[6px] text-white">
-                3
-              </span>
+              {favItems?.length && favItems?.length > 0 ? (
+                <span className="absolute -bottom-0 -left-0 flex h-3 w-3 items-center justify-center rounded-full bg-red-500 text-[8px] text-white">
+                  {favItems?.length}
+                </span>
+              ) : (
+                ""
+              )}
             </div>
 
             <div className="relative" onClick={() => toggleSidebar()}>
               <IoCartOutline className="cursor-pointer text-xl" />
               {cartItems?.length && cartItems?.length > 0 ? (
-                <span className="absolute -right-0 -top-0 flex h-2 w-2 items-center justify-center rounded-full bg-red-500 text-[6px] text-white">
+                <span className="absolute -bottom-0 -left-0 flex h-3 w-3 items-center justify-center rounded-full bg-red-500 text-[8px] text-white">
                   {cartItems?.length}
                 </span>
               ) : (
@@ -224,7 +228,7 @@ const Header = () => {
             <div className="relative" ref={userDropdownRef}>
               <button
                 ref={dropdownToggleRef}
-                className="cursor-pointer rounded-full bg-red-500"
+                className="cursor-pointer rounded-full bg-red-500 p-0.5"
                 onClick={toggleUserDropdown}
               >
                 <MdOutlinePersonOutline className="text-xl text-white" />
@@ -233,28 +237,28 @@ const Header = () => {
                 <div className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md dark:bg-slate-700">
                   <a
                     href="#account-settings"
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
+                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                   >
                     <TbSettings className="mr-2" />
                     Account Settings
                   </a>
                   <a
                     href="#signup"
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
+                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                   >
                     <HiLogin className="mr-2" />
                     Sign Up
                   </a>
                   <a
                     href="#login"
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
+                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                   >
                     <HiLogout className="mr-2" />
                     Login
                   </a>
                   <a
                     href="#logout"
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
+                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                   >
                     <HiLogin className="mr-2" />
                     Logout
@@ -278,7 +282,7 @@ const Header = () => {
             value={searchTerm}
             onChange={handleSearchChange}
             icon={<FiSearch />}
-            width="w-64 "
+            width="w-full "
           />
         </div>
 
@@ -287,23 +291,23 @@ const Header = () => {
           <>
             {/* Overlay to reduce opacity */}
             <div
-              className="fixed inset-0 z-20 bg-black bg-opacity-50" // Dark overlay
+              className="fixed inset-0 z-20 bg-black h-screen bg-opacity-50" // Dark overlay
               onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
             />
 
             <button
-              className={`fixed right-5 top-5 z-40 sm:block md:hidden ${isMobileMenuOpen ? "bg-white" : ""}`} // Ensure z-30 is applied
+              className={`fixed right-5 top-5 z-40 sm:block md:hidden ${isMobileMenuOpen ? "bg-white dark:bg-slate-700" : ""}`} // Ensure z-30 is applied
               onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
             >
               <FaTimes className="text-xl text-red-500" />
             </button>
 
-            <nav className="fixed right-0 top-0 z-30 flex h-[80%] w-full flex-col overflow-scroll bg-white p-4 md:hidden md:w-1/2">
+            <nav className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col overflow-scroll bg-white dark:bg-slate-700 p-4 md:hidden md:w-1/2">
               <button
                 onClick={() => {
                   router.push("/");
                 }}
-                className="mb-4 flex w-full items-center justify-between text-lg text-black focus:outline-none"
+                className="mb-4 flex w-full items-center justify-between text-lg focus:outline-none"
               >
                 <span>Home</span>
               </button>
@@ -313,7 +317,7 @@ const Header = () => {
                     onClick={() =>
                       item.subItems ? toggleDropdown(item.label) : null
                     }
-                    className="flex w-full items-center justify-between text-lg text-black focus:outline-none"
+                    className="flex w-full items-center justify-between text-lg focus:outline-none"
                   >
                     <span>{item.label}</span>
                     {item.subItems ? (
@@ -330,7 +334,7 @@ const Header = () => {
                         <a
                           key={subItem.label}
                           href={subItem.href}
-                          className="block py-1 text-sm text-gray-700 hover:underline"
+                          className="block py-1 text-sm text-gray-700 dark:text-gray-300 hover:underline"
                         >
                           {subItem.label}
                         </a>
@@ -344,7 +348,7 @@ const Header = () => {
                 onClick={() => {
                   //
                 }}
-                className="mb-4 flex w-full items-center justify-between text-lg text-black focus:outline-none"
+                className="mb-4 flex w-full items-center justify-between text-lg  focus:outline-none"
               >
                 <span>Logout</span>
               </button>
@@ -477,7 +481,7 @@ const Header = () => {
 
                     <a
                       href="#account-settings"
-                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
+                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                     >
                       <TbSettings className="mr-2" />
                       Account Setting
@@ -486,7 +490,7 @@ const Header = () => {
                       <Link
                         onClick={() => handleLogout()}
                         href=""
-                        className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
+                        className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                       >
                         <HiLogin className="mr-2" />
                         Logout
@@ -497,7 +501,7 @@ const Header = () => {
                       <Link
                         // onClick={() => handleLogout()}
                         href="/login"
-                        className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
+                        className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                       >
                         <HiLogout className="mr-2" />
                         Login
@@ -507,7 +511,7 @@ const Header = () => {
                     <Link
                       onClick={() => handleLogout()}
                       href="/signup"
-                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-500"
+                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                     >
                       <HiLogin className="mr-2" />
                       Signup

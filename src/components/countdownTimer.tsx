@@ -46,7 +46,7 @@ const CountdownTimer = ({ targetDate }: { targetDate: Date }) => {
                         <span className="time-value text-xs font-semibold sm:text-lg">
                             {Object.values(timeRemaining)[idx]}
                         </span>
-                        <span className="time-label text-[5px] lg:text-xs">{label}</span>
+                        <span className="time-label text-[5px] lg:text-[10px]">{label}</span>
                     </div>
                 </Fragment>
             ))}
