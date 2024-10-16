@@ -386,7 +386,7 @@ const MyComponent = () => {
 };
 const SpecialOrderPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner />}>
       <MyComponent />
     </Suspense>
   );

@@ -4,6 +4,7 @@
 import { Suspense } from "react";
 import { CardContainer, CardItem } from "~/components/ui/3d-card";
 import Image from "next/image";
+import Spinner from "~/components/spinner";
 const MyComponent = () => {
   // Handle add to cart
 
@@ -60,7 +61,7 @@ const MyComponent = () => {
 };
 const Page = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner />}>
       <MyComponent />
     </Suspense>
   );

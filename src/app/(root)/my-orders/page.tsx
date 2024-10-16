@@ -481,8 +481,7 @@ const MyComponent = () => {
                 <div className="flex h-screen w-screen items-center justify-center">
                   {loading && (
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                      <span>Loading...</span>{" "}
-                      {/* You can replace this with a spinner or any loading indicator */}
+                      <Spinner />
                     </div>
                   )}
                   <iframe
@@ -521,7 +520,7 @@ const MyComponent = () => {
 };
 const SpecialOrderPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner />}>
       <ModalProvider>
         <MyComponent />
       </ModalProvider>

@@ -2,6 +2,7 @@
 
 // import Header from "~/components/header";
 import { Suspense } from "react";
+import Spinner from "~/components/spinner";
 
 const MyComponent = () => {
  
@@ -42,7 +43,7 @@ const MyComponent = () => {
 };
 const Page = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner />}>
       <MyComponent />
     </Suspense>
   );

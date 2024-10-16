@@ -1,11 +1,7 @@
 "use client";
-
-// import Header from "~/components/header";
 import { Suspense, useEffect, useRef, useState } from "react";
-// import Pagination from "~/components/pagination";
 import { useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
-// import type PaginationData from '~/types/paginationData'
 import type DataCart from "~/types/book";
 import Spinner from "~/components/spinner";
 import ProductCardSkeleton from "~/components/ui-components/ProductCardSkeleton";
@@ -48,7 +44,7 @@ const MyComponent = () => {
   useEffect(() => {
     if (!genre) return;
     const genId = genre?.find((item) => item.genre == detail);
-    console.log(genId)
+    console.log(genId);
     const loadData = async () => {
       try {
         setLoader(true);
@@ -164,7 +160,9 @@ const MyComponent = () => {
             <div className="m-4 flex flex-wrap items-end justify-between gap-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">Books</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-300">{"subcategory"}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-300">
+                  {"subcategory"}
+                </p>
               </div>
 
               <div className="flex items-center gap-2">
@@ -202,9 +200,9 @@ const MyComponent = () => {
                     ))}
               </div>
             </ScrollArea>
-            <div className="lg:-mt-9 z-10 flex justify-between px-4">
+            <div className="z-10 flex justify-between px-4 lg:-mt-9">
               <button
-                className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "bg-red-500 cursor-pointer text-white"}`}
+                className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
               >
@@ -214,7 +212,7 @@ const MyComponent = () => {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "bg-red-500 cursor-pointer text-white"}`}
+                className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
@@ -334,7 +332,7 @@ const MyComponent = () => {
               !isItemInCart(itemDetail.item_id) &&
               itemDetail?.stock?.quantity ? (
                 <button
-                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white "
+                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
                   onClick={() => handleAddToCart(itemDetail)}
                 >
                   <FaCartPlus className="text-lg" />
@@ -349,7 +347,7 @@ const MyComponent = () => {
         <ModalFooter className="gap-4">
           <button
             onClick={() => setOpen(false)}
-            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm  dark:border-slate-950 dark:bg-slate-900 "
+            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm dark:border-slate-950 dark:bg-slate-900"
           >
             Close
           </button>

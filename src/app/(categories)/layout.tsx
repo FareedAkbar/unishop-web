@@ -9,7 +9,7 @@ export default function RootLayout({
   return (
     <>
       <Header />
-      <CategoriesSidebar className=" top-[calc(100px)] " />
+      <CategoriesSidebar className=" top-[calc(100px)] lg:block hidden" />
       {children}
       <Footer/>
     </>

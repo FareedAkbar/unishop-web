@@ -22,6 +22,7 @@ export enum PAGE_ROUTES {
   ORDER_CONFIRMED = "/order-confirmed",
   PRIVACY_POLICY = "/privacy-policy",
   FAVORITES="/favorites",
+  CLOTHS="/cloths"
 }
 
 export enum API_ROUTES {
