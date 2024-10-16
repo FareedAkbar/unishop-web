@@ -11,7 +11,7 @@
  
  interface VerifyOTP {
     customer_id?: number;
-    otp?: number;
+    otp?: string;
     email?: string
   }
 

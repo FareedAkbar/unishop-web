@@ -386,7 +386,7 @@ const MyComponent = () => {
       online_order_type: 1,
       outlet_id: outlet223,
       tracking_id: generateOTP(12).toString(),
-      order_status: 7,
+      order_status: 1,
       completed_date: formatDate(date),
       started: formatDateTime(date),
       details: "order Detail| UniShop",
@@ -580,7 +580,7 @@ const MyComponent = () => {
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
       );
-      setDiscountLoader(true)
+      setDiscountLoader(true);
       const result: dicountResponse =
         (await response.json()) as dicountResponse;
 
@@ -599,7 +599,7 @@ const MyComponent = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      setDiscountLoader(false)
+      setDiscountLoader(false);
     }
   };
 
@@ -645,8 +645,8 @@ const MyComponent = () => {
   </div> */}
 
       <main className="mb-8 min-h-screen justify-center pt-28 lg:pt-20">
-        <div className="z-10 bg-white dark:bg-slate-800 px-6">
-          <h2 className="mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
+        <div className="z-10 bg-white px-6 dark:bg-slate-800">
+          <h2 className="mt-6 pt-4 text-xl font-bold text-neutral-800 dark:text-neutral-200">
             Payment Method
           </h2>
           <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
@@ -684,17 +684,20 @@ const MyComponent = () => {
                           onChange={(e) => {
                             setDiscountValue(e.target.value);
                           }}
+
                           // type="number"
                         />
-                        <Button
-                          height="h-8"
-                          title={"Apply discount"}
-                          className="text-xs"
-                          loading={discountLoader}
-                          onClick={() => {
-                            handleclick();
-                          }}
-                        />
+                        <div className="ml-2 mt-1">
+                          <Button
+                            height="h-8"
+                            title={"Apply discount"}
+                            className="text-xs"
+                            loading={discountLoader}
+                            onClick={() => {
+                              handleclick();
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>

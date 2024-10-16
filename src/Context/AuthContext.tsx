@@ -156,7 +156,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } = response as VerifyOTPResponse;
     if (responsePayload.status) {
       setIsLoggedIn(true);
-
+      console.log(responsePayload)
       setToken(responsePayload.token);
       setUserInfo(responsePayload.data);
       lsClient.setItem("USER_INFO", responsePayload.data);
