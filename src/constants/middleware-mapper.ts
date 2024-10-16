@@ -81,7 +81,7 @@ export const PAGE_MAPPER: Record<Exclude<PAGE_ROUTES, PAGE_ROUTES.UNKNOWN>, { PU
   },
   [PAGE_ROUTES.FAVORITES]: {
     PUBLIC: true,
-    PROTECTED: false,
+    PROTECTED: true,
   },
 };
 

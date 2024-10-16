@@ -48,7 +48,7 @@ const MyComponent = () => {
   useEffect(() => {
     if (!genre) return;
     const genId = genre?.find((item) => item.genre == detail);
-
+    console.log(genId)
     const loadData = async () => {
       try {
         setLoader(true);
@@ -73,7 +73,7 @@ const MyComponent = () => {
         console.error("Failed to load data in useEffect:", error);
       });
     }
-  }, [genre, params]);
+  }, [genre, detail]);
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {

@@ -192,13 +192,13 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
             ref={productContainerRef}
           >
             <ProductCard key={1} />
-            <ProductCard key={1} />
-            <ProductCard key={1} />
-            <ProductCard key={1} />
-            <ProductCard key={1} />
-            <ProductCard key={1} />
-            <ProductCard key={1} />
-            <ProductCard key={1} />
+            <ProductCard key={2} />
+            <ProductCard key={3} />
+            <ProductCard key={4} />
+            <ProductCard key={5} />
+            <ProductCard key={6} />
+            <ProductCard key={7} />
+            <ProductCard key={8} />
           </div>
         </div>
 

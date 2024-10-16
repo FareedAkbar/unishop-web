@@ -379,7 +379,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 <div className="flex items-center">
                   <p className="mr-2 text-sm text-gray-600">Customer ID:</p>
                   <p className="text-lg font-semibold">
-                    {selectedItem?.customer_id || "Guest"}
+                    {selectedItem?.customer_id ?? "Guest"}
                   </p>
                 </div>
 
@@ -400,10 +400,10 @@ const DataTable: React.FC<DataTableProps> = ({
             </div>
 
             {/* Special Order Items */}
-            {selectedItem?.special && (
+            {selectedItem?.special_order_items && (
               <div className="mt-8">
                 <h3 className="text-center text-xl font-extrabold uppercase tracking-wider">
-                  Special Order Items
+                  Order Items
                 </h3>
                 {selectedItem.special_order_items?.length > 0 ? (
                   <ul className="mt-2 list-inside list-disc text-gray-700">
@@ -416,7 +416,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   </ul>
                 ) : (
                   <p className="mt-2 text-gray-700">
-                    No special items in this order.
+                    No items in this order.
                   </p>
                 )}
               </div>
@@ -425,7 +425,7 @@ const DataTable: React.FC<DataTableProps> = ({
             <div className="mt-">
               <p className="text-center text-sm text-gray-500">
                 <span className="font-semibold">Order Started:</span>{" "}
-                {new Date(selectedItem?.started!).toLocaleString()}
+                {selectedItem?.started ? new Date(selectedItem?.started).toLocaleString() : ''}
               </p>
             </div>
           </div>

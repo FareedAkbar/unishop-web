@@ -255,6 +255,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       key={subItem.id}
                       href={`textbooks?detail=${subItem.id}`}
                       className="block py-1 text-sm hover:underline"
+                      onClick={() => setOpenCategory(null)}
                     >
                       {subItem.category_name}
                     </Link>

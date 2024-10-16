@@ -18,7 +18,6 @@ const requestOptions: RequestInit = {
     redirect: "follow", // Use the correct type for `redirect`
 };
 export async function getBooks(genre_id: number): Promise<ApiResponse | boolean> {
-
     try {
         const response = await fetch(
             `https://booknet-dev.iconsole.com.au/api/books/getBooksByGenreCat?genre_id=${genre_id}&category_id=27&entries=1&images=1&detailed=1`,

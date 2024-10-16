@@ -45,6 +45,8 @@ const dummyProducts = Array.from({ length: 10 }, (_, index) => ({
 const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
+  const { cartItems, addCartItems, removeCartItems, category, addFavourite } =
+    useAuthContext();
   const [loader, setLoader] = useState<boolean>(false);
 
   const [data, setData] = useState<DataCart[]>([]);
@@ -56,8 +58,6 @@ const MyComponent = () => {
   const { setOpen } = useModal();
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [detail, setDetail] = useState<string | null>(null);
-  const { cartItems, addCartItems, removeCartItems, category } =
-    useAuthContext();
 
   useEffect(() => {
     const d = params.get("detail");
@@ -96,7 +96,7 @@ const MyComponent = () => {
         console.error("Failed to load data in useEffect:", error);
       });
     }
-  }, [category,detail]);
+  }, [category, detail]);
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
@@ -179,6 +179,9 @@ const MyComponent = () => {
       // Optionally set an error state here
     }
   };
+  const handleFavourite = async (item: DataCart) => {
+    await addFavourite(item.item_id);
+  };
 
   return (
     <div>
@@ -218,7 +221,7 @@ const MyComponent = () => {
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
-                      <div key={index} className=" p-2">
+                      <div key={index} className="p-2">
                         <ProductCardSkeleton />
                       </div>
                     ))
@@ -230,6 +233,7 @@ const MyComponent = () => {
                         onAddToCart={() => handleAddToCart(item)}
                         onRemoveFromCart={() => handleRemoveFromCart(item)}
                         openDetail={() => openDetail(item)}
+                        handleFavourite={() => handleFavourite(item)}
                       />
                     ))}
               </div>

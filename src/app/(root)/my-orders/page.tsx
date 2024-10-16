@@ -33,6 +33,7 @@ import OrdersTable from "./orderstable";
 import { token221 } from "~/types/tokens";
 import OrdersDataTable from "./OrdersDataTable";
 import { ModalProvider } from "~/components/ui/animated-modal";
+import { getMyOrders, getOrderStatus } from "~/_actions/my_orders";
 
 const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM`;
 
@@ -115,20 +116,9 @@ const MyComponent = () => {
   const fetchOrderStatus = async () => {
     setLoader(true);
     try {
-      const response = await fetch(
-        `https://ipos-dev.iconsole.com.au/api/v1/ipos/orders/getOrderStatuses`,
-        requestOptions,
-      );
-      const result: OrderStatusResponse =
-        (await response.json()) as OrderStatusResponse;
-
-      // Check if result has the expected structure
-      if (result?.status) {
-        // setMeta(result.meta);
-        setOrderStatus(result.data);
-      } else {
-        console.error("Unexpected result structure:", result);
-        // Handle unexpected structure here
+      const x = await getOrderStatus();
+      if (typeof x !== "boolean" && x.status) {
+        setOrderStatus(x.data);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -163,24 +153,13 @@ const MyComponent = () => {
   };
 
   const fetchDataOrders = async () => {
-    console.log("dasdasd");
+    if (!checkoutData?.booknet_customer_id) return;
+
     setLoader(true);
     try {
-      const response = await fetch(
-        `https://booknet-dev.iconsole.com.au/api/special/customer?booknet_customer_id=${booknetCustomerId}&special=0`,
-        requestOptions,
-      );
-      const result: GetSpecialOrderApiResponse =
-        (await response.json()) as GetSpecialOrderApiResponse;
-
-      // Check if result has the expected structure
-      if (result?.status) {
-        // setMeta(result.meta);
-        console.log(result.data)
-        setDataOrders(result.data);
-      } else {
-        console.error("Unexpected result structure:", result);
-        // Handle unexpected structure here
+      const x = await getMyOrders(checkoutData?.booknet_customer_id);
+      if (typeof x !== "boolean" && x.status) {
+        setDataOrders(x.data);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -190,12 +169,14 @@ const MyComponent = () => {
   };
 
   useEffect(() => {
-    if (!booknetCustomerId) return;
+    if (!checkoutData?.booknet_customer_id) return;
+    console.log(checkoutData?.booknet_customer_id);
     const loadData = async () => {
       try {
         setLoader(true);
-        await fetchDataOrders();
         await fetchOrderStatus();
+        await fetchDataOrders();
+
         setLoader(false);
         // setData(result);
         // setTotalPages(result.totalPages);

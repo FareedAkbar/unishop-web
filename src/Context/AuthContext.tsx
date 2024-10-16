@@ -97,7 +97,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [booknetCustomerId, setBooknetCustomerId] = useState<number | null>(
     null,
   );
-  const router = useRouter()
+  const router = useRouter();
 
   const login = async (payload: Login): Promise<LoginResponse | boolean> => {
     const response = await apiRouter(
@@ -354,15 +354,15 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = async (): Promise<void> => {
     // lsClient.cleanStorage();
 
-    await LogOutApi()
-     console.log("LOGFFFFF")
-     lsClient.setEmpty("TOKEN", "");
-     lsClient.setEmpty("IS_LOGGED_IN", false);
-     lsClient.setEmpty("USER_INFO", null);
-     setIsLoggedIn(false);
-     setUserInfo(undefined);
-     setToken(undefined);
-     router.push("/login")
+    await LogOutApi();
+
+    lsClient.setEmpty("TOKEN", "");
+    lsClient.setEmpty("IS_LOGGED_IN", false);
+    lsClient.setEmpty("USER_INFO", null);
+    setIsLoggedIn(false);
+    setUserInfo(undefined);
+    setToken(undefined);
+    router.push("/login");
   };
 
   useEffect(() => {
@@ -456,7 +456,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       (await response.json()) as checkoutBooknetResponse;
     if (responsePayload.status) {
       setCheckoutData(responsePayload.data);
-      console.log(responsePayload.data);
       const x = responsePayload.data.booknet_customer_id ?? null;
       setBooknetCustomerId(x);
       lsClient.setItem("CHECKOUT_DATA", responsePayload.data);

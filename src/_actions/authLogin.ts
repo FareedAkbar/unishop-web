@@ -29,8 +29,7 @@ export async function VerifyOTPCApi(payload: VerifyOTP): Promise<VerifyOTPRespon
                 value: 'true',
                 httpOnly: true,
                 path: '/',
-              })
-            console.log(response)
+            })
             return responsePayload
         } else {
             console.error("Unexpected result structure:", responsePayload);

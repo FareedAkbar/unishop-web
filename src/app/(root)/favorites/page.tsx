@@ -46,13 +46,14 @@ const MyComponent = () => {
   }, [params]);
 
   useEffect(() => {
-    if (!genre) return;
-    const genId = genre?.find((item) => item.genre == detail);
-
+    // if (!genre) return;
+    // const genId = genre?.find((item) => item.genre == detail);
+   
     const loadData = async () => {
+      console.log("asdas")
       try {
         setLoader(true);
-        const x = await getBooks(genId?.genre_id ?? 1);
+        const x = await getBooks(1);
         if (typeof x !== "boolean" && x.status) {
           setData(x.data);
           setFilteredData(x.data);
@@ -66,14 +67,12 @@ const MyComponent = () => {
         // Optionally set an error state here
       }
     };
-    if (isFirstRender.current) {
-      isFirstRender.current = false; // Prevents further API calls on first render
-    } else {
+   
       loadData().catch((error) => {
         console.error("Failed to load data in useEffect:", error);
       });
-    }
-  }, [genre, params]);
+    
+  }, []);
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
