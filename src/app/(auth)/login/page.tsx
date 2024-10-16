@@ -9,6 +9,7 @@ import { Tabs } from "~/components/ui/tabs";
 import { FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import OTPVerificationForm from "~/components/Forms/otp-form";
+import Spinner from "~/components/spinner";
 
 const MyComponent = () => {
   const [view, setView] = useState("login");
@@ -80,7 +81,7 @@ const MyComponent = () => {
 
 const LoginPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner />}>
       <MyComponent />
     </Suspense>
   );

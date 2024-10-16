@@ -30,6 +30,7 @@ import Button from "~/components/ui-components/Button";
 import { outlet223, token221 } from "~/types/tokens";
 import { Tabs } from "~/components/ui/tabs";
 import Input from "~/components/ui-components/Input";
+import Spinner from "~/components/spinner";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -580,7 +581,7 @@ const MyComponent = () => {
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
       );
-      setDiscountLoader(true)
+      setDiscountLoader(true);
       const result: dicountResponse =
         (await response.json()) as dicountResponse;
 
@@ -599,7 +600,7 @@ const MyComponent = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      setDiscountLoader(false)
+      setDiscountLoader(false);
     }
   };
 
@@ -636,16 +637,8 @@ const MyComponent = () => {
 
   return (
     <div>
-      {/* <div
-    className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-    role="status">
-    <span
-      className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-    >Loading...</span>
-  </div> */}
-
       <main className="mb-8 min-h-screen justify-center pt-28 lg:pt-20">
-        <div className="z-10 bg-white dark:bg-slate-800 px-6">
+        <div className="z-10 bg-white px-6 dark:bg-slate-800">
           <h2 className="mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
             Payment Method
           </h2>
@@ -891,8 +884,7 @@ const MyComponent = () => {
                 <div className="flex h-screen w-screen items-center justify-center">
                   {loading && (
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                      <span>Loading...</span>{" "}
-                      {/* You can replace this with a spinner or any loading indicator */}
+                      <Spinner />
                     </div>
                   )}
                   <iframe
@@ -940,7 +932,7 @@ const MyComponent = () => {
 
 const PlaceOrderPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner />}>
       <MyComponent />
     </Suspense>
   );

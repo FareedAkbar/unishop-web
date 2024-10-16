@@ -28,7 +28,9 @@ const Select: React.FC<SelectProps> = ({
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
-    const selectedOption = options.find(option => option.value === selectedValue);
+    const selectedOption = options.find(
+      (option) => option.value === selectedValue,
+    );
 
     if (selectedOption && onChange) {
       onChange(selectedOption); // Send the entire option object
@@ -40,7 +42,7 @@ const Select: React.FC<SelectProps> = ({
       <select
         id={id}
         name={name}
-        className="block w-full px-3 py-2 border rounded-md dark:bg-slate-700 shadow-sm focus:outline-none focus:ring-red-400 focus:border-red-500 sm:text-sm"
+        className="block w-full rounded-md border px-3 py-2 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-400 dark:bg-slate-700 sm:text-sm"
         value={value}
         onChange={handleChange}
         disabled={loader} // Disable select when loader is true
@@ -70,7 +72,7 @@ const Select: React.FC<SelectProps> = ({
       {loader && (
         <div className="absolute inset-y-0 right-0 flex items-center pr-3">
           <svg
-            className="w-5 h-5 text-gray-500 animate-spin"
+            className="h-5 w-5 animate-spin text-gray-500"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -92,7 +94,7 @@ const Select: React.FC<SelectProps> = ({
         </div>
       )}
 
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
   );
 };

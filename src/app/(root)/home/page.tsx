@@ -106,7 +106,7 @@ const HomePage: React.FC = () => {
   const words = ["Imagine", "Create", "Inspire", "Transform"];
 
   return (
-    <div className="relative z-[1] flex-1 overflow-hidden bg-red-50 dark:bg-slate-800 bg-opacity-80 pt-32 lg:pt-24">
+    <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 pt-32 dark:bg-slate-800 lg:pt-24">
       {/* <BackgroundWords /> */}
       {/* <BackgroundImages /> */}
       <div className="container mx-auto flex justify-center">
@@ -114,7 +114,7 @@ const HomePage: React.FC = () => {
       </div>
       <div className="flex flex-col py-5">
         <div className="self-center lg:text-5xl">
-          <FlipWords words={words} />
+          <FlipWords words={words} className="text-red-500" />
           your reading adventure!
         </div>
       </div>
@@ -130,20 +130,13 @@ const HomePage: React.FC = () => {
         <div className="hidden lg:block lg:pl-20">
           <CategoriesSidebar />
         </div>
-        <div className="flex w-full flex-col justify-evenly p-5 pb-10 lg:flex-row">
-          <div className="pl-0 lg:pl-44">
-            <ProductList
-              products={products}
-              title="Trending"
-              width="lg:w-80 w-full"
-            />
+        <div className="container mx-auto grid w-full p-5 pb-10  lg:grid-cols-2 lg:pl-48">
+          <div className="-mr-4 w-full">
+            <ProductList products={products} title="Trending" width="w-full" />
           </div>
-          <div className="pl-0">
-            <ProductList
-              products={products}
-              title="Top Rated"
-              width="lg:w-80 w-full"
-            />
+
+          <div className="w-full">
+            <ProductList products={products} title="Top Rated" width="w-full" />
           </div>
         </div>
       </div>

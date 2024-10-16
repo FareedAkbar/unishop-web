@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
+import Spinner from "~/components/spinner";
 
 const MyComponent = () => {
   const router = useRouter();
@@ -39,7 +40,7 @@ const MyComponent = () => {
 
 const SignupPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner />}>
       <MyComponent />
     </Suspense>
   );

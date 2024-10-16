@@ -14,47 +14,27 @@ import {
 } from "~/components/ui/animated-modal";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaCartPlus } from "react-icons/fa";
+import { FaCartPlus, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "~/components/ui/select";
-import type { Category } from "~/types/category";
-import { getBooks } from "~/_actions/gettextbooks";
-
-const dummyProducts = Array.from({ length: 10 }, (_, index) => ({
-  id: index + 1,
-  name: `Product ${index + 1}`,
-  price: parseFloat((Math.random() * 100).toFixed(2)), // Random price between 0 and 100
-  originalPrice: parseFloat((Math.random() * 150).toFixed(2)), // Random original price between 0 and 150
-  image: `https://via.placeholder.com/150?text=Product+${index + 1}`, // Placeholder image
-  rating: parseFloat((Math.random() * 5).toFixed(1)), // Random rating between 0 and 5
-  reviews: Math.floor(Math.random() * 100), // Random number of reviews
-}));
+import { getBooks } from "~/_actions/getbooks";
 
 const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
-  const { cartItems, addCartItems, removeCartItems, category, addFavourite } =
-    useAuthContext();
   const [loader, setLoader] = useState<boolean>(false);
-
   const [data, setData] = useState<DataCart[]>([]);
-  const [subCategory, setSubCategory] = useState<Category[] | null>(null);
   const isFirstRender = useRef(true);
-
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState<DataCart[] | null>(null);
   const params = useSearchParams();
-
   const { setOpen } = useModal();
-  const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [detail, setDetail] = useState<string | null>(null);
+  const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
+  const { cartItems, addCartItems, removeCartItems, genre, addFavourite } =
+    useAuthContext();
 
   useEffect(() => {
     const d = params.get("detail");
@@ -62,21 +42,17 @@ const MyComponent = () => {
   }, [params]);
 
   useEffect(() => {
-    if (!category) return;
-    if (!detail) return;
-
-    const catId = category?.find((item) => item.id == parseInt(detail));
-
+    if (!genre) return;
+    const genId = genre?.find((item) => item.genre == detail);
+    console.log(genId);
     const loadData = async () => {
-      const x = category?.filter((item) => item.parent == catId?.id);
-      setSubCategory(x);
       try {
         setLoader(true);
-        const x = await getBooks(catId?.id ?? 1);
+        const x = await getBooks(genId?.genre_id ?? 1);
         if (typeof x !== "boolean" && x.status) {
           setData(x.data);
+          setFilteredData(x.data);
         }
-
         setLoader(false);
         // setData(result);
         // setTotalPages(result.totalPages);
@@ -93,7 +69,7 @@ const MyComponent = () => {
         console.error("Failed to load data in useEffect:", error);
       });
     }
-  }, [category, detail]);
+  }, [genre, detail]);
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
@@ -116,6 +92,10 @@ const MyComponent = () => {
     setItemDetail(item);
   };
 
+  const handleFavourite = async (item: DataCart) => {
+    await addFavourite(item.item_id);
+  };
+
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
       typeof cartItems === "string"
@@ -128,57 +108,43 @@ const MyComponent = () => {
       : false;
   };
 
-  // Handle pagination
-  // useEffect(() => {
-  //   // const startIndex = (currentPage - 1) * meta.limit;
-  //   // const endIndex = startIndex + meta.limit;
-  //   setTotalPages(Math.ceil(meta.total / meta.limit));
-  // }, [currentPage, meta]);
-
-  //  const handlePageChange = (page: number) => {
-  //   setCurrentPage(page);
-  //   // smoothScrollTo(0, 1500); //
-  // };
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(dummyProducts.length / PRODUCTS_PER_PAGE);
+  const [pageSize, setPageSize] = useState(10);
 
   // Get the products for the current page
   const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
-  const end = start + PRODUCTS_PER_PAGE;
-  const currentProducts = dummyProducts.slice(start, end);
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
+  const filterResult = () => {
+    let filtered = data;
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
+    // Search filter
+    if (searchText) {
+      filtered = filtered.filter((row) =>
+        Object.values(row).some((value) =>
+          String(value).toLowerCase().includes(searchText.toLowerCase()),
+        ),
+      );
     }
-  };
 
-  const handleChangeSubCategory = async (id: string) => {
-    try {
-      setLoader(true);
-      const x = await getBooks(parseInt(id) ?? 1);
-      if (typeof x !== "boolean" && x.status) {
-        setData(x.data);
-      }
-      setLoader(false);
-      // await fetchData(parseInt(x) ?? 1);
-      // setData(result);
-      // setTotalPages(result.totalPages);
-    } catch (error) {
-      console.error("Failed to load data:", error);
-      setLoader(false);
-      // Optionally set an error state here
-    }
+    // Date range filter
+
+    setFilteredData(filtered);
+    setCurrentPage(1); // Reset to first page on new filter
   };
-  const handleFavourite = async (item: DataCart) => {
-    await addFavourite(item.item_id);
-  };
+  // Calculate total pages based on filtered data and page size
+  const totalPages = Math.ceil(
+    filteredData ? filteredData?.length / pageSize : 1 / pageSize,
+  );
+
+  // Get the data to be displayed for the current page
+  const displayedData = filteredData?.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
+
+  useEffect(() => {
+    filterResult();
+  }, [searchText, data]);
 
   return (
     <div>
@@ -190,37 +156,29 @@ const MyComponent = () => {
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-row">
-          <div className="flex flex-col px-4 py-5 lg:absolute lg:left-64 lg:right-0">
+          <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
             <div className="m-4 flex flex-wrap items-end justify-between gap-4">
               <div className="text-left">
-                <h2 className="text-xl font-bold">Text Books</h2>
+                <h2 className="text-xl font-bold">Books</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-300">
                   {"subcategory"}
                 </p>
               </div>
 
-              <div className="m-4 flex items-center justify-end gap-4">
-                {subCategory?.[0] && (
-                  <Select
-                    onValueChange={(x: string) => handleChangeSubCategory(x)}
-                  >
-                    <SelectTrigger className="w-72">
-                      <SelectValue placeholder="" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {subCategory?.map((item) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.category_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-                <h1 className="text-end font-bold">
-                  Showing {data.length} of {data.length} Products
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  placeholder="Search"
+                  className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
+                />
+                <h1 className="font-bold">
+                  Showing {displayedData?.length} of {data.length} Items
                 </h1>
               </div>
             </div>
+
             <ScrollArea className="h-[75vh] pb-10">
               <div className="flex flex-wrap justify-center py-3">
                 {loader
@@ -229,7 +187,7 @@ const MyComponent = () => {
                         <ProductCardSkeleton />
                       </div>
                     ))
-                  : data?.map((item: DataCart) => (
+                  : displayedData?.map((item: DataCart) => (
                       <ProductCard
                         key={item.book_id}
                         product={item}
@@ -242,48 +200,38 @@ const MyComponent = () => {
                     ))}
               </div>
             </ScrollArea>
-            {/* <div className="mt-4 flex justify-between">
+            <div className="z-10 flex justify-between px-4 lg:-mt-9">
               <button
-                onClick={handlePreviousPage}
+                className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`rounded bg-red-500 px-4 py-2 text-white ${
-                  currentPage === 1 ? "cursor-not-allowed" : ""
-                }`}
               >
-                Previous
+                <FaChevronLeft />
               </button>
+              <span className="px-2">
+                Page {currentPage} of {totalPages}
+              </span>
               <button
-                onClick={handleNextPage}
+                className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`rounded bg-red-500 px-4 py-2 text-white ${
-                  currentPage === totalPages ? "cursor-not-allowed" : ""
-                }`}
               >
-                Next
+                <FaChevronRight />
               </button>
-            </div> */}
+            </div>
           </div>
-        </div>
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          {/* {!loader ? (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          ) : ''} */}
         </div>
       </motion.main>
 
       <ModalBody>
         <ModalContent>
-          <h4 className="mb-3 text-center font-serif text-lg font-bold text-red-600 dark:text-neutral-100 md:text-2xl">
+          <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
             {itemDetail?.book_title}
           </h4>
-          <h6 className="mb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
+          <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}
           </h6>
-          <h6 className="mb-8 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
+          <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
             {itemDetail?.additional_notes}
           </h6>
           <div className="flex">
@@ -304,7 +252,7 @@ const MyComponent = () => {
                     rotate: 0,
                     zIndex: 100,
                   }}
-                  className="mr-6 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-neutral-700 dark:bg-neutral-800"
+                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
                 >
                   <Image
                     src={
@@ -313,14 +261,14 @@ const MyComponent = () => {
                         : "/bookIcon.png"
                     }
                     alt={itemDetail?.object_path ?? ""}
-                    width={1000}
-                    height={1000}
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-64 md:w-48"
+                    width={500}
+                    height={500}
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-64 md:w-44"
                   />
                 </motion.div>
               </div>
             </div>
-            <div className="mx-auto flex flex-col items-start justify-start gap-y-2">
+            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
               <div className="flex flex-col">
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                   ${itemDetail?.item_sale_price}
@@ -330,15 +278,15 @@ const MyComponent = () => {
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                <span className="pr-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Series:
                 </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                   {itemDetail?.edition}
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                <span className="pr-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Published:
                 </span>
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -348,34 +296,34 @@ const MyComponent = () => {
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                <span className="pr-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Language:
                 </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                   {itemDetail?.book_language}
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                <span className="pr-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Number of Pages:
                 </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                   {itemDetail?.pages}
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                <span className="pr-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Publisher:
                 </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                   {itemDetail?.publisher.publisher_name}
                 </span>
               </div>
               <div className="flex items-center justify-center">
-                <span className="pr-1 text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Country of Publication:
                 </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                   {itemDetail?.publisher.country}
                 </span>
               </div>
@@ -384,7 +332,7 @@ const MyComponent = () => {
               !isItemInCart(itemDetail.item_id) &&
               itemDetail?.stock?.quantity ? (
                 <button
-                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
+                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
                   onClick={() => handleAddToCart(itemDetail)}
                 >
                   <FaCartPlus className="text-lg" />
@@ -396,23 +344,23 @@ const MyComponent = () => {
             </div>
           </div>
         </ModalContent>
-        {/* <ModalFooter className="gap-4">
+        <ModalFooter className="gap-4">
           <button
             onClick={() => setOpen(false)}
-            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm text-black dark:border-black dark:bg-black dark:text-white"
+            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm dark:border-slate-950 dark:bg-slate-900"
           >
             Close
-          </button> */}
-        {/* <button className="w-28 rounded-md border border-black bg-black px-2 py-1 text-sm text-white dark:bg-white dark:text-black">
+          </button>
+          {/* <button className="w-28 rounded-md border border-black bg-black px-2 py-1 text-sm text-white dark:bg-white dark:text-black">
               Book Now
             </button> */}
-        {/* </ModalFooter> */}
+        </ModalFooter>
       </ModalBody>
     </div>
   );
 };
 
-const TextBookPage = () => {
+const GiftsPage = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <ModalProvider>
@@ -421,4 +369,4 @@ const TextBookPage = () => {
     </Suspense>
   );
 };
-export default TextBookPage;
+export default GiftsPage;

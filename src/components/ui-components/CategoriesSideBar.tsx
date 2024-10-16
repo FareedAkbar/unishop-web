@@ -55,14 +55,14 @@ const SubcategoryList = ({
   isOpen,
 }: SubcategoryListProps) => {
   return (
-    <div className="ml-3">
+    <div className="">
       {subItems.map((subItem) => (
         <div key={subItem.label} className="relative">
           <button
             onClick={() =>
               subItem.subItems ? toggleCategory(subItem.label) : null
             }
-            className="flex w-full items-center justify-between py-1 text-sm focus:outline-none hover:underline"
+            className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
           >
             <span>{subItem.label}</span>
             {subItem.subItems &&
@@ -174,37 +174,12 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   return (
     <aside
       ref={sidebarRef}
-      className={`absolute left-0 w-64 rounded-r-xl border-y border-r bg-red-100 p-4 shadow-lg dark:bg-slate-700 ${className}`}
+      className={`absolute left-0 w-64 rounded-r-xl border-y border-r bg-white p-4 shadow-lg dark:bg-slate-700 ${className}`}
     >
-      <div className="flex justify-center space-x-6 pb-2">
-        <div className="group relative">
-          <Link
-            href="/"
-            className="flex items-center justify-center rounded-full text-red-500 transition-colors hover:text-red-600"
-          >
-            <FaHome size={30} />
-          </Link>
-          <span className="absolute bottom-10 left-1/2 z-30 -translate-x-1/2 transform whitespace-nowrap rounded border bg-slate-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-            Home
-          </span>
-        </div>
-
-        <div className="group relative">
-          <Link
-            href="/contact-us"
-            className="flex items-center justify-center rounded-full text-red-500 transition-colors hover:text-red-600"
-          >
-            <FaPhoneAlt size={28} />
-          </Link>
-          <span className="absolute bottom-10 left-1/2 z-30 -translate-x-1/2 transform whitespace-nowrap rounded border bg-slate-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-            Contact Us
-          </span>
-        </div>
-      </div>
       <h2 className="text-lg font-bold">CATEGORIES</h2>
       <nav className="relative mt-4">
         {categories.map((item) => (
-          <div key={item.label} className="relative mb-2">
+          <div key={item.label} className="relative">
             <button
               type="button"
               onClick={() =>
@@ -214,7 +189,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   ? toggleCategory(item.label)
                   : null
               }
-              className="flex w-full items-center justify-between text-lg transition-transform duration-300 hover:scale-110 focus:outline-none"
+              className="duration-240 flex w-full items-center justify-between text-lg transition-transform hover:scale-110 focus:outline-none"
             >
               <div className="flex items-center">
                 {item.icon && (
@@ -235,9 +210,9 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 )
               ) : null}
             </button>
-
+            <div className="my-1 h-px w-[50%] border-t border-gray-400" />
             {openCategory === item.label && (
-              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-red-100 p-4 shadow-lg dark:bg-slate-700 dark:text-white">
+              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
                 {item.label === "Books" &&
                   genre?.map((subItem) => (
                     <Link
@@ -277,7 +252,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
         {checkoutData?.booknet_customer_id ? (
           <button
             onClick={() => router.push("/my-orders")}
-            className="mb-2 flex w-full items-center text-lg text-black transition-transform duration-300 hover:scale-110 focus:outline-none dark:text-white"
+            className="mb-2 flex w-full items-center text-lg transition-transform duration-300 hover:scale-110 focus:outline-none"
           >
             <FaReceipt className="mr-3 text-indigo-600" />
             <span>My Orders</span>
@@ -285,6 +260,23 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
         ) : (
           ""
         )}
+        <div className="flex justify-between gap-1 py-1">
+          <Link
+            href="/"
+            className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
+          >
+            <FaHome size={16} />
+            <span className="text-xs">Home</span>
+          </Link>
+
+          <Link
+            href="/contact-us"
+            className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
+          >
+            <FaPhoneAlt size={16} />
+            <span className="text-xs">Contact Us</span>
+          </Link>
+        </div>
       </nav>
     </aside>
   );

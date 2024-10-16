@@ -22,14 +22,14 @@ const ProductList: React.FC<ProductListProps> = ({
   width = "w-64",
 }) => {
   return (
-    <div className="flex flex-col space-y-4 p-3">
+    <div className="flex flex-col space-y-4 p-2">
       {title && (
-        <h2 className="mb-4 text-2xl font-bold text-gray-800 dark:text-white animate-bounce">{title}</h2>
+        <h2 className="mb-4 text-2xl pl-3 font-bold text-gray-800 dark:text-white animate-bounce">{title}</h2>
       )}
       {products.map((product, index) => (
         <motion.div
           key={product.id}
-          className={`mx-auto flex ${width} items-center justify-between cursor-pointer gap-3 rounded-lg bg-red-100 dark:bg-slate-700 dark:text-white border border-neutral-300 p-3 shadow-lg`} // Dynamically apply the width
+          className={`mx-auto flex ${width} items-center justify-between cursor-pointer gap-3 rounded-lg bg-white dark:bg-slate-700 dark:text-white border border-neutral-300 p-3 shadow-lg`} // Dynamically apply the width
           initial={{ opacity: 0, y: -20 }} // Start position above
           animate={{
             opacity: 1,

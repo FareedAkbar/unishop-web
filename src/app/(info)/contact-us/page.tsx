@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { FaPhoneAlt, FaEnvelope, FaUserTie, FaBuilding } from "react-icons/fa";
+import Spinner from "~/components/spinner";
 
 const MapContainerComponent = dynamic(() => import("~/components/map"), {
   ssr: false,
@@ -114,7 +115,7 @@ const MyComponent = () => {
 
 const Page = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner />}>
       <MyComponent />
     </Suspense>
   );

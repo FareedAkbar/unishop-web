@@ -14,6 +14,7 @@ import AlertBox from "~/components/alertBox/alert";
 import { Tabs } from "~/components/ui/tabs";
 import Button from "~/components/ui-components/Button";
 import { useRouter } from "next/navigation";
+import Spinner from "~/components/spinner";
 
 const MyComponent = () => {
   const { cartItems, removeCartItems, increaseCartItemQuantity } =
@@ -170,7 +171,7 @@ const MyComponent = () => {
 
 const CheckoutPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner />}>
       <MyComponent />
     </Suspense>
   );
