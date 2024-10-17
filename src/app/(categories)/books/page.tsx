@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
 import Spinner from "~/components/spinner";
@@ -20,10 +20,13 @@ import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { getBooks } from "~/_actions/getbooks";
+import { useToast } from "~/hooks/use-toast";
+import AlertBox from "~/components/alertBox/alert";
 
 const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
+  const router = useRouter();
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
   const isFirstRender = useRef(true);
@@ -33,8 +36,16 @@ const MyComponent = () => {
   const { setOpen } = useModal();
   const [detail, setDetail] = useState<string | null>(null);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
-  const { cartItems, addCartItems, removeCartItems, genre, addFavourite } =
-    useAuthContext();
+  const [loginAlert, setLoginAlert] = useState<boolean>(false);
+  const {
+    cartItems,
+    addCartItems,
+    removeCartItems,
+    genre,
+    addFavourite,
+    checkoutData,
+  } = useAuthContext();
+  const { toast } = useToast();
 
   useEffect(() => {
     const d = params.get("detail");
@@ -44,7 +55,7 @@ const MyComponent = () => {
   useEffect(() => {
     if (!genre) return;
     const genId = genre?.find((item) => item.genre == detail);
-    console.log(genId);
+    if (!genId) return;
     const loadData = async () => {
       try {
         setLoader(true);
@@ -93,7 +104,21 @@ const MyComponent = () => {
   };
 
   const handleFavourite = async (item: DataCart) => {
-    await addFavourite(item.item_id);
+    if (checkoutData?.booknet_customer_id) {
+      await addFavourite(item.item_id, checkoutData.booknet_customer_id).then(
+        (x) => {
+          if (x) {
+            toast({
+              variant: "success",
+              title: "Added To Wishlist",
+              description: "Item has been added successfully.",
+            });
+          }
+        },
+      );
+    } else {
+      setLoginAlert(true);
+    }
   };
 
   const isItemInCart = (itemId: number) => {
@@ -146,6 +171,11 @@ const MyComponent = () => {
     filterResult();
   }, [searchText, data]);
 
+  const goToLogin = () => {
+    setLoginAlert(false);
+    router.push("login");
+  };
+
   return (
     <div>
       <motion.main
@@ -161,7 +191,7 @@ const MyComponent = () => {
               <div className="text-left">
                 <h2 className="text-xl font-bold">Books</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-300">
-                  {"subcategory"}
+                  {detail}
                 </p>
               </div>
 
@@ -356,6 +386,13 @@ const MyComponent = () => {
             </button> */}
         </ModalFooter>
       </ModalBody>
+      <AlertBox
+        title="Login Your Account"
+        description="Please login to add item to wishlist"
+        open={loginAlert}
+        onClose={() => setLoginAlert(false)}
+        onContinue={() => goToLogin()}
+      />
     </div>
   );
 };

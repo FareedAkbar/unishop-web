@@ -7,20 +7,11 @@ import { useAuthContext } from "~/Context/AuthContext";
 
 import type DataCart from "~/types/book";
 import shippingOptions from "~/components/constants/shippingMethod";
-
 import type ShippingType from "~/types/shipping";
-import CartItemCard from "~/components/ui/sideCart/cartItemCard";
 import type TaxCalculationApiResponse from "~/types/taxCalculationApiResponse";
 import type CreatePayloadBooksForTax from "~/types/createPayloadBooksForTax";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
 import type PayloadForTrasactionLink from "~/types/payloadForTrasactionLink";
 import socket from "~/utils/socket";
-import { ScrollArea } from "~/components/ui/scroll-area";
 import { useToast } from "~/hooks/use-toast";
 import type { placeOrderPayload } from "~/types/placeOrderPayload";
 import { formatDate, formatDateTime } from "~/utils/dateAndTime";
@@ -230,6 +221,7 @@ const MyComponent = () => {
     data: trasactionResponse;
     message: string;
   }
+
   const getLinkForPayment = async (
     requestOptions: PayloadForTrasactionLink,
   ) => {
@@ -558,6 +550,7 @@ const MyComponent = () => {
   type discount = {
     verify: boolean;
   };
+
   type dicountResponse = {
     status: boolean;
     message: string;

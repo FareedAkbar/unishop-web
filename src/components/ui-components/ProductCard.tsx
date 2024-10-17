@@ -46,7 +46,7 @@ const ProductCard = ({
             onClick={() => (handleFavourite ? handleFavourite() : "")}
             className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
           >
-            {product?.item_id && favItems?.includes(product?.item_id) ? (
+           {product?.item_id && favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
               <AiFillHeart color="red" />
             ) : (
               <AiOutlineHeart />

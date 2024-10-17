@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
 import Spinner from "~/components/spinner";
@@ -20,7 +20,10 @@ import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { getBooks } from "~/_actions/getbooks";
+import { getBooks } from "~/_actions/gettextbooks";
+import AlertBox from "~/components/alertBox/alert";
+import { useToast } from "~/hooks/use-toast";
+import type { Category } from "~/types/category";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -32,44 +35,60 @@ const MyComponent = () => {
   const [filteredData, setFilteredData] = useState<DataCart[] | null>(null);
   const params = useSearchParams();
   const { setOpen } = useModal();
-  const [detail, setDetail] = useState<string | null>(null);
+  const [detail, setDetail] = useState<string>("");
+  const [subcategory, setSubcategory] = useState<Category | null>(null);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
-  const { cartItems, addCartItems, removeCartItems, genre, addFavourite } =
-    useAuthContext();
+  const [loginAlert, setLoginAlert] = useState<boolean>(false);
+  const router = useRouter();
+  const { toast } = useToast();
+  const {
+    cartItems,
+    addCartItems,
+    removeCartItems,
+    genre,
+    addFavourite,
+    checkoutData,
+    category,
+  } = useAuthContext();
 
   useEffect(() => {
     const d = params.get("detail");
-    setDetail(d);
+    if (d) {
+      setDetail(d);
+    }
   }, [params]);
 
   useEffect(() => {
     if (!genre) return;
-    const genId = genre?.find((item) => item.genre == detail);
-    console.log(genId)
-    const loadData = async () => {
-      try {
-        setLoader(true);
-        const x = await getBooks(genId?.genre_id ?? 1);
-        if (typeof x !== "boolean" && x.status) {
-          setData(x.data);
-          setFilteredData(x.data);
+    const genId = category?.find((item) => item.id == parseInt(detail));
+    if (genId) {
+      setSubcategory(genId);
+      const loadData = async () => {
+        try {
+          setLoader(true);
+          const x = await getBooks(genId?.id ?? 1);
+          if (typeof x !== "boolean" && x.status) {
+            setData(x.data);
+            setFilteredData(x.data);
+          }
+          setLoader(false);
+          // setData(result);
+          // setTotalPages(result.totalPages);
+        } catch (error) {
+          console.error("Failed to load data:", error);
+          setLoader(false);
+          // Optionally set an error state here
         }
-        setLoader(false);
-        // setData(result);
-        // setTotalPages(result.totalPages);
-      } catch (error) {
-        console.error("Failed to load data:", error);
-        setLoader(false);
-        // Optionally set an error state here
+      };
+      if (isFirstRender.current) {
+        isFirstRender.current = false; // Prevents further API calls on first render
+      } else {
+        loadData().catch((error) => {
+          console.error("Failed to load data in useEffect:", error);
+        });
       }
-    };
-    if (isFirstRender.current) {
-      isFirstRender.current = false; // Prevents further API calls on first render
-    } else {
-      loadData().catch((error) => {
-        console.error("Failed to load data in useEffect:", error);
-      });
     }
+  
   }, [genre, detail]);
 
   // Handle add to cart
@@ -94,9 +113,22 @@ const MyComponent = () => {
   };
 
   const handleFavourite = async (item: DataCart) => {
-    await addFavourite(item.item_id);
+    if (checkoutData?.booknet_customer_id) {
+      await addFavourite(item.item_id, checkoutData.booknet_customer_id).then(
+        (x) => {
+          if (x) {
+            toast({
+              variant: "success",
+              title: "Added To Wishlist",
+              description: "Item has been added successfully.",
+            });
+          }
+        },
+      );
+    } else {
+      setLoginAlert(true);
+    }
   };
-
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
       typeof cartItems === "string"
@@ -147,6 +179,11 @@ const MyComponent = () => {
     filterResult();
   }, [searchText, data]);
 
+  const goToLogin = () => {
+    setLoginAlert(false);
+    router.push("login");
+  };
+
   return (
     <div>
       <motion.main
@@ -160,8 +197,10 @@ const MyComponent = () => {
           <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
             <div className="m-4 flex flex-wrap items-end justify-between gap-4">
               <div className="text-left">
-                <h2 className="text-xl font-bold">Books</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-300">{"subcategory"}</p>
+                <h2 className="text-xl font-bold">MERCH & Clothing</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-300">
+                  {subcategory?.category_name}
+                </p>
               </div>
 
               <div className="flex items-center gap-2">
@@ -199,9 +238,9 @@ const MyComponent = () => {
                     ))}
               </div>
             </ScrollArea>
-            <div className="lg:-mt-9 z-10 flex justify-between px-4">
+            <div className="z-10 flex justify-between px-4 lg:-mt-9">
               <button
-                className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "bg-red-500 cursor-pointer text-white"}`}
+                className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
               >
@@ -211,7 +250,7 @@ const MyComponent = () => {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "bg-red-500 cursor-pointer text-white"}`}
+                className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
@@ -331,7 +370,7 @@ const MyComponent = () => {
               !isItemInCart(itemDetail.item_id) &&
               itemDetail?.stock?.quantity ? (
                 <button
-                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white "
+                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
                   onClick={() => handleAddToCart(itemDetail)}
                 >
                   <FaCartPlus className="text-lg" />
@@ -346,7 +385,7 @@ const MyComponent = () => {
         <ModalFooter className="gap-4">
           <button
             onClick={() => setOpen(false)}
-            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm  dark:border-slate-950 dark:bg-slate-900 "
+            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm dark:border-slate-950 dark:bg-slate-900"
           >
             Close
           </button>
@@ -355,6 +394,13 @@ const MyComponent = () => {
             </button> */}
         </ModalFooter>
       </ModalBody>
+      <AlertBox
+        title="Login Your Account"
+        description="Please login to add item to wishlist"
+        open={loginAlert}
+        onClose={() => setLoginAlert(false)}
+        onContinue={() => goToLogin()}
+      />
     </div>
   );
 };

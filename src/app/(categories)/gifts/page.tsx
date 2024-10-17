@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
 import Spinner from "~/components/spinner";
@@ -19,11 +19,16 @@ import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { getBooks } from "~/_actions/getbooks";
+import { getBooks } from "~/_actions/gettextbooks";
+import type { Category } from "~/types/category";
+import { useToast } from "~/hooks/use-toast";
+import AlertBox from "~/components/alertBox/alert";
 
 const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
+  const {toast} = useToast();
+  const router = useRouter();
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
   const isFirstRender = useRef(true);
@@ -31,44 +36,51 @@ const MyComponent = () => {
   const [filteredData, setFilteredData] = useState<DataCart[] | null>(null);
   const params = useSearchParams();
   const { setOpen } = useModal();
-  const [detail, setDetail] = useState<string | null>(null);
+  const [detail, setDetail] = useState<string>("");
+  const [subcategory, setSubcategory] = useState<Category | null>(null);
+  const [loginAlert, setLoginAlert] = useState<boolean>(false);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
-  const { cartItems, addCartItems, removeCartItems, genre, addFavourite } =
+  const { cartItems, addCartItems, removeCartItems, genre, addFavourite,checkoutData, category } =
     useAuthContext();
 
   useEffect(() => {
     const d = params.get("detail");
-    setDetail(d);
+    if (d) {
+      setDetail(d);
+    }
   }, [params]);
 
   useEffect(() => {
     if (!genre) return;
-    const genId = genre?.find((item) => item.genre == detail);
-    console.log(genId);
-    const loadData = async () => {
-      try {
-        setLoader(true);
-        const x = await getBooks(genId?.genre_id ?? 1);
-        if (typeof x !== "boolean" && x.status) {
-          setData(x.data);
-          setFilteredData(x.data);
+    const genId = category?.find((item) => item.id == parseInt(detail));
+    if (genId) {
+      setSubcategory(genId);
+      const loadData = async () => {
+        try {
+          setLoader(true);
+          const x = await getBooks(genId?.id ?? 1);
+          if (typeof x !== "boolean" && x.status) {
+            setData(x.data);
+            setFilteredData(x.data);
+          }
+          setLoader(false);
+          // setData(result);
+          // setTotalPages(result.totalPages);
+        } catch (error) {
+          console.error("Failed to load data:", error);
+          setLoader(false);
+          // Optionally set an error state here
         }
-        setLoader(false);
-        // setData(result);
-        // setTotalPages(result.totalPages);
-      } catch (error) {
-        console.error("Failed to load data:", error);
-        setLoader(false);
-        // Optionally set an error state here
+      };
+      if (isFirstRender.current) {
+        isFirstRender.current = false; // Prevents further API calls on first render
+      } else {
+        loadData().catch((error) => {
+          console.error("Failed to load data in useEffect:", error);
+        });
       }
-    };
-    if (isFirstRender.current) {
-      isFirstRender.current = false; // Prevents further API calls on first render
-    } else {
-      loadData().catch((error) => {
-        console.error("Failed to load data in useEffect:", error);
-      });
     }
+   
   }, [genre, detail]);
 
   // Handle add to cart
@@ -93,8 +105,27 @@ const MyComponent = () => {
   };
 
   const handleFavourite = async (item: DataCart) => {
-    await addFavourite(item.item_id);
+    if (checkoutData?.booknet_customer_id) {
+      await addFavourite(item.item_id, checkoutData.booknet_customer_id).then(
+        (x) => {
+          if (x) {
+            toast({
+              variant: "success",
+              title: "Added To Wishlist",
+              description: "Item has been added successfully.",
+            });
+          }
+        },
+      );
+    } else {
+      setLoginAlert(true);
+    }
   };
+  const goToLogin = () => {
+    setLoginAlert(false);
+    router.push("login");
+  };
+
 
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
@@ -159,9 +190,9 @@ const MyComponent = () => {
           <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
             <div className="m-4 flex flex-wrap items-end justify-between gap-4">
               <div className="text-left">
-                <h2 className="text-xl font-bold">Books</h2>
+                <h2 className="text-xl font-bold">Arts & Gifts</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-300">
-                  {"subcategory"}
+                  {subcategory?.category_name}
                 </p>
               </div>
 
@@ -356,6 +387,13 @@ const MyComponent = () => {
             </button> */}
         </ModalFooter>
       </ModalBody>
+      <AlertBox
+        title="Login Your Account"
+        description="Please login to add item to wishlist"
+        open={loginAlert}
+        onClose={() => setLoginAlert(false)}
+        onContinue={() => goToLogin()}
+      />
     </div>
   );
 };

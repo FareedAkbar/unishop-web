@@ -9,6 +9,9 @@
     parent: number;
     media_id: number;
     booknet: number;
+    gifts: number;
+    arts: number;
+    clothings: number | null;
   }
   type CategoryTreeNode = {
     id: number;

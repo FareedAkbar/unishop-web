@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
 import Spinner from "~/components/spinner";
@@ -28,6 +28,8 @@ import {
 } from "~/components/ui/select";
 import type { Category } from "~/types/category";
 import { getBooks } from "~/_actions/gettextbooks";
+import AlertBox from "~/components/alertBox/alert";
+import { useToast } from "~/hooks/use-toast";
 
 const dummyProducts = Array.from({ length: 10 }, (_, index) => ({
   id: index + 1,
@@ -42,16 +44,24 @@ const dummyProducts = Array.from({ length: 10 }, (_, index) => ({
 const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
-  const { cartItems, addCartItems, removeCartItems, category, addFavourite } =
-    useAuthContext();
+  const {
+    cartItems,
+    addCartItems,
+    removeCartItems,
+    category,
+    addFavourite,
+    checkoutData,
+  } = useAuthContext();
   const [loader, setLoader] = useState<boolean>(false);
 
   const [data, setData] = useState<DataCart[]>([]);
   const [subCategory, setSubCategory] = useState<Category[] | null>(null);
+  const [parentSubCategory, setParentSubCategory] = useState<Category | null>(null);
   const isFirstRender = useRef(true);
-
+  const router = useRouter();
+  const { toast } = useToast();
   const params = useSearchParams();
-
+  const [loginAlert, setLoginAlert] = useState<boolean>(false);
   const { setOpen } = useModal();
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [detail, setDetail] = useState<string | null>(null);
@@ -66,33 +76,39 @@ const MyComponent = () => {
     if (!detail) return;
 
     const catId = category?.find((item) => item.id == parseInt(detail));
-
-    const loadData = async () => {
-      const x = category?.filter((item) => item.parent == catId?.id);
-      setSubCategory(x);
-      try {
-        setLoader(true);
-        const x = await getBooks(catId?.id ?? 1);
-        if (typeof x !== "boolean" && x.status) {
-          setData(x.data);
+    if(catId){
+      setParentSubCategory(catId)
+      const loadData = async () => {
+        const x = category?.filter((item) => item.parent == catId?.id);
+  
+        setSubCategory(x);
+        try {
+          setLoader(true);
+          const x = await getBooks(catId?.id ?? 1);
+          if (typeof x !== "boolean" && x.status) {
+            setData(x.data);
+          }
+  
+          setLoader(false);
+          // setData(result);
+          // setTotalPages(result.totalPages);
+        } catch (error) {
+          console.error("Failed to load data:", error);
+          setLoader(false);
+          // Optionally set an error state here
         }
-
-        setLoader(false);
-        // setData(result);
-        // setTotalPages(result.totalPages);
-      } catch (error) {
-        console.error("Failed to load data:", error);
-        setLoader(false);
-        // Optionally set an error state here
+      };
+      if (isFirstRender.current) {
+        isFirstRender.current = false; // Prevents further API calls on first render
+      } else {
+        loadData().catch((error) => {
+          console.error("Failed to load data in useEffect:", error);
+        });
       }
-    };
-    if (isFirstRender.current) {
-      isFirstRender.current = false; // Prevents further API calls on first render
-    } else {
-      loadData().catch((error) => {
-        console.error("Failed to load data in useEffect:", error);
-      });
     }
+   
+    
+   
   }, [category, detail]);
 
   // Handle add to cart
@@ -177,7 +193,25 @@ const MyComponent = () => {
     }
   };
   const handleFavourite = async (item: DataCart) => {
-    await addFavourite(item.item_id);
+    if (checkoutData?.booknet_customer_id) {
+      await addFavourite(item.item_id, checkoutData.booknet_customer_id).then(
+        (x) => {
+          if (x) {
+            toast({
+              variant: "success",
+              title: "Added Successful",
+              description: "Item has been added successfully.",
+            });
+          }
+        },
+      );
+    } else {
+      setLoginAlert(true);
+    }
+  };
+  const goToLogin = () => {
+    setLoginAlert(false);
+    router.push("login");
   };
 
   return (
@@ -195,7 +229,7 @@ const MyComponent = () => {
               <div className="text-left">
                 <h2 className="text-xl font-bold">Text Books</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-300">
-                  {"subcategory"}
+                  {parentSubCategory?.category_name}
                 </p>
               </div>
 
@@ -408,6 +442,13 @@ const MyComponent = () => {
             </button> */}
         {/* </ModalFooter> */}
       </ModalBody>
+      <AlertBox
+        title="Login Your Account"
+        description="Please login to add item to wishlist"
+        open={loginAlert}
+        onClose={() => setLoginAlert(false)}
+        onContinue={() => goToLogin()}
+      />
     </div>
   );
 };

@@ -21,6 +21,7 @@ import {
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import Link from "next/link";
 import { outlet221 } from "~/types/tokens";
+import { ScrollArea } from "../ui/scroll-area";
 
 // Create a mapping of icon names to their corresponding components
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
@@ -100,6 +101,10 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   const [headerCategory, setHeaderCategory] = useState<
     CategoryTreeNode[] | null
   >(null);
+  const [headerCategoryGifts, setHeaderCategoryGifts] = useState<CAT[]>([]);
+  const [headerCategoryClothings, setHeaderCategoryClothings] = useState<
+    CAT[] | null
+  >(null);
   const sidebarRef = useRef<HTMLDivElement>(null); // Ref for sidebar
 
   // Toggle category function
@@ -126,7 +131,11 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     });
 
     categories.forEach((category) => {
-      if (category.parent === 0 && category.outlet === outlet221) {
+      if (
+        category.parent === 0 &&
+        category.booknet == 1 &&
+        category.outlet === outlet221
+      ) {
         const rootCategory = categoryMap[category.id];
         if (rootCategory) {
           tree.push(rootCategory);
@@ -150,8 +159,16 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     if (!category) return;
 
     const categoryTree = buildCategoryTree(category);
+    // const categoryTreeGift = buildCategoryGifts(category);
+    const categoryTreeGift = category.filter(
+      (item) => item.gifts == 1 || item.arts == 1,
+    );
+    const categoryTreeClothing = category.filter((item) => item.clothings == 1);
+
     console.log(categoryTree);
     setHeaderCategory(categoryTree);
+    setHeaderCategoryGifts(categoryTreeGift);
+    setHeaderCategoryClothings(categoryTreeClothing);
   }, [category]);
 
   // Close subcategories on outside click
@@ -213,30 +230,60 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
             <div className="my-1 h-px w-[50%] border-t border-gray-400" />
             {openCategory === item.label && (
               <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
-                {item.label === "Books" &&
-                  genre?.map((subItem) => (
-                    <Link
-                      key={subItem.genre}
-                      href={`books?detail=${subItem.genre}`}
-                      className="block py-1 text-sm hover:underline"
-                      onClick={() => setOpenCategory(null)}
-                      passHref
-                    >
-                      {subItem.genre}
-                    </Link>
-                  ))}
-                {item.label === "Text Book" &&
-                  headerCategory?.[0]?.children?.map((subItem) => (
+                {item.label === "Books" && genre &&  (
+                  <ScrollArea className="h-[25vh]">
+                    {genre?.map((subItem) => (
+                      <Link
+                        key={subItem.genre}
+                        href={`books?detail=${subItem.genre}`}
+                        className="block py-1 text-sm hover:underline"
+                        onClick={() => setOpenCategory(null)}
+                        passHref
+                      >
+                        {subItem.genre}
+                      </Link>
+                    ))}
+                  </ScrollArea>
+                )}
+                {item.label === "Text Book" && headerCategory?.[0] &&  (
+                  <ScrollArea className="h-[25vh]">
+                    {headerCategory?.[0]?.children?.map((subItem) => (
+                      <Link
+                        key={subItem.id}
+                        href={`textbooks?detail=${subItem.id}`}
+                        className="block py-1 text-sm hover:underline"
+                        onClick={() => setOpenCategory(null)}
+                      >
+                        {subItem.category_name}
+                      </Link>
+                    ))}
+                  </ScrollArea>
+                )}
+                {item.label === "Art & Gifts" &&
+                  headerCategoryGifts?.[0] &&
+                  headerCategoryGifts?.map((subItem) => (
                     <Link
                       key={subItem.id}
-                      href={`textbooks?detail=${subItem.id}`}
+                      href={`gifts?detail=${subItem.id}`}
                       className="block py-1 text-sm hover:underline"
                       onClick={() => setOpenCategory(null)}
                     >
                       {subItem.category_name}
                     </Link>
                   ))}
-                {item.subItems && (
+                {item.label === "Merch & Clothing" &&
+                  headerCategoryClothings?.[0] &&
+                  headerCategoryClothings.map((subItem) => (
+                    <Link
+                      key={subItem.id}
+                      href={`cloths?detail=${subItem.id}`}
+                      className="block py-1 text-sm hover:underline"
+                      onClick={() => setOpenCategory(null)}
+                    >
+                      {subItem.category_name}
+                    </Link>
+                  ))}
+                {item.subItems?.[0] && (
                   <SubcategoryList
                     subItems={item.subItems}
                     openCategory={openCategory}

@@ -25,12 +25,19 @@ import { setCookie } from "~/utils/cookie";
 import { VerifyOTPCApi } from "~/_actions/authLogin";
 import { cookies } from "next/headers";
 import { LogOutApi } from "~/_actions/logout";
+import { addToFavourite, getFavouriteItems } from "~/_actions/wishlist";
+import type {
+  addFavResponse,
+  FavData,
+  getFavResponse,
+} from "~/types/favourite";
 
 type trasactionData = {
   trasaction_id?: string | null;
   order_id?: number | null;
   tracking_id?: number | null;
 };
+
 interface AuthContextProps {
   isLoggedIn: boolean;
   userInfo?: UserType;
@@ -67,8 +74,12 @@ interface AuthContextProps {
   themeMode: string;
   booknetCustomerId?: number | null;
   orderTrasactionData?: trasactionData | null;
-  addFavourite: (payload: number) => Promise<void>;
-  favItems: number[];
+  addFavourite: (
+    item_id: number,
+    booknet_customer_id: number,
+  ) => Promise<boolean>;
+  getFavourite: (booknet_customer_id: number) => Promise<boolean>;
+  favItems: FavData[];
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -87,7 +98,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [token, setToken] = useState<string | undefined>();
   const [themeMode, setThemeMode] = useState<string>("");
   const [cartItems, setItems] = useState<DataCart[]>([]);
-  const [favItems, setFavItems] = useState<number[]>([]);
+  const [favItems, setFavItems] = useState<FavData[]>([]);
   const [orderTrasactionData, setOrderTrasactionData] =
     useState<trasactionData | null>(null);
   const [genre, setGenre] = useState<Genre[] | null>([]);
@@ -156,7 +167,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } = response as VerifyOTPResponse;
     if (responsePayload.status) {
       setIsLoggedIn(true);
-      console.log(responsePayload)
+      console.log(responsePayload);
       setToken(responsePayload.token);
       setUserInfo(responsePayload.data);
       lsClient.setItem("USER_INFO", responsePayload.data);
@@ -215,6 +226,49 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return true;
   };
 
+  const getArts = async (): Promise<boolean> => {
+    const response = await apiRouter(
+      "CATEGORY",
+      {
+        method: "GET",
+      },
+      // { skipAuthorization: true },
+    );
+
+    if (!response.ok) return false;
+
+    const responsePayload: { status: boolean; data: Category[] } =
+      (await response.json()) as CategoryResponse;
+    if (!responsePayload.status) return false;
+
+    setCategory(responsePayload.data);
+
+    lsClient.setItem("CATEGORY", responsePayload.data);
+
+    return true;
+  };
+  const getGifts = async (): Promise<boolean> => {
+    const response = await apiRouter(
+      "CATEGORY",
+      {
+        method: "GET",
+      },
+      // { skipAuthorization: true },
+    );
+
+    if (!response.ok) return false;
+
+    const responsePayload: { status: boolean; data: Category[] } =
+      (await response.json()) as CategoryResponse;
+    if (!responsePayload.status) return false;
+
+    setCategory(responsePayload.data);
+
+    lsClient.setItem("CATEGORY", responsePayload.data);
+
+    return true;
+  };
+
   const setTrasactionData = async (
     payload: trasactionData | null,
   ): Promise<boolean> => {
@@ -234,22 +288,58 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setThemeMode(payload);
   };
 
-  const addFavourite = async (payload: number): Promise<void> => {
-    setFavItems((prevFavItems) => {
-      // Check if the item already exists in the favorite list
-      if (prevFavItems.includes(payload)) {
-        // If it exists, remove it
-        const x = prevFavItems.filter((item) => item !== payload);
-        lsClient.setItem("FAV_ITEMS", x);
-        return x;
-      } else {
-        // If it doesn't exist, add it to the list
-        const x = [...prevFavItems, payload];
-        lsClient.setItem("FAV_ITEMS", x);
-        return x;
-      }
-    });
-    return;
+  const addFavourite = async (
+    item_id: number,
+    booknet_customer_id: number,
+  ): Promise<boolean> => {
+    const response = await addToFavourite(item_id, booknet_customer_id);
+    const responsePayload: {
+      status: boolean;
+    } = response as addFavResponse;
+    if (responsePayload.status) {
+      setFavItems((prevFavItems) => {
+        // Check if the item already exists in the favorite list
+        const itemExists = prevFavItems.some(
+          (item) => item.item_id === item_id,
+        );
+
+        if (itemExists) {
+          // If it exists, remove it by filtering out the item
+          const updatedFavItems = prevFavItems.filter(
+            (item) => item.item_id !== item_id,
+          );
+          return updatedFavItems;
+        } else {
+          // Create a new item object that conforms to the FavData type
+          const newItem: FavData = {
+            booknet_customer_wishlist_id: 0, // Set this dynamically as needed
+            booknet_customer_id: booknet_customer_id, // Ensure this value matches the type (number | null)
+            item_id: item_id, // This is the item_id you want to add
+          };
+
+          const updatedFavItems = [...prevFavItems, newItem];
+          return updatedFavItems;
+        }
+      });
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const getFavourite = async (
+    booknet_customer_id: number,
+  ): Promise<boolean> => {
+    const response = await getFavouriteItems(booknet_customer_id);
+    const responsePayload: {
+      status: boolean;
+      data: FavData[];
+    } = response as getFavResponse;
+    if (responsePayload.status) {
+      setFavItems(responsePayload.data);
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const addCartItems = async (payload: DataCart): Promise<boolean> => {
@@ -375,7 +465,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const UUID = lsClient.getItem("UUID");
     const TOKEN = lsClient.getItem("TOKEN");
     const BOOKNET_CUSTOMER_ID = lsClient.getItem("BOOKNET_CUSTOMER_ID");
-    const FAV_ITEMS = lsClient.getItem("FAV_ITEMS");
     const THEME_MODE = lsClient.getItem("THEME_MODE");
     setItems(
       cartItems
@@ -385,7 +474,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         : [],
     );
     setThemeMode(THEME_MODE);
-    setFavItems(FAV_ITEMS ?? []);
     setUuidLocal(UUID);
     setBooknetCustomerId(BOOKNET_CUSTOMER_ID);
     setToken(TOKEN);
@@ -500,6 +588,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         themeMode,
         orderTrasactionData,
         addFavourite,
+        getFavourite,
         favItems,
       }}
     >

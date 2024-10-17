@@ -48,7 +48,6 @@ const MyComponent = () => {
   useEffect(() => {
     // if (!genre) return;
     // const genId = genre?.find((item) => item.genre == detail);
-   
     const loadData = async () => {
       console.log("asdas")
       try {
@@ -67,11 +66,9 @@ const MyComponent = () => {
         // Optionally set an error state here
       }
     };
-   
       loadData().catch((error) => {
         console.error("Failed to load data in useEffect:", error);
       });
-    
   }, []);
 
   // Handle add to cart
@@ -96,7 +93,7 @@ const MyComponent = () => {
   };
 
   const handleFavourite = async (item: DataCart) => {
-    await addFavourite(item.item_id);
+    // await addFavourite(item.item_id);
   };
 
   const isItemInCart = (itemId: number) => {

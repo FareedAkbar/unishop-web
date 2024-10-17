@@ -48,9 +48,9 @@ interface Category {
       label: 'Merch & Clothing',
       icon: 'FaTshirt',
       subItems: [
-        { label: "Merchandise", icon: FaTshirt, href: "#" },
-        { label: "Graduation", icon: FaTshirt, href: "#" },
-        { label: "Clothing", icon: FaTshirt, href: "#" },
+        // { label: "Merchandise", icon: FaTshirt, href: "#" },
+        // { label: "Graduation", icon: FaTshirt, href: "#" },
+        // { label: "Clothing", icon: FaTshirt, href: "#" },
       ],
     },
     { 
@@ -65,12 +65,12 @@ interface Category {
       label: 'Art & Gifts',
       icon: 'FaGift',
       subItems: [
-        { label: "Imagine Homewares", icon: FaGift, href: "#" },
-        { label: "Indigenous art merch", icon: FaGift, href: "#" },
-        { label: "Danielle Hulls Photography", icon: FaGift, href: "#" },
-        { label: "Marini Ferlazzo", icon: FaGift, href: "#" },
-        { label: "White Clay Mountain", icon: FaGift, href: "#" },
-        { label: "Eliza Jade Candles", icon: FaGift, href: "#" },
+        // { label: "Imagine Homewares", icon: FaGift, href: "#" },
+        // { label: "Indigenous art merch", icon: FaGift, href: "#" },
+        // { label: "Danielle Hulls Photography", icon: FaGift, href: "#" },
+        // { label: "Marini Ferlazzo", icon: FaGift, href: "#" },
+        // { label: "White Clay Mountain", icon: FaGift, href: "#" },
+        // { label: "Eliza Jade Candles", icon: FaGift, href: "#" },
       ]
     },
     { 

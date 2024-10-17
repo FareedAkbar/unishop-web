@@ -36,6 +36,8 @@ const Header = () => {
     favItems,
     setTheme,
     themeMode,
+    checkoutData,
+    getFavourite
   } = useAuthContext();
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -169,11 +171,23 @@ const Header = () => {
       });
   }, []);
 
+  useEffect(() => {
+    const loadData = async () => {
+      if (checkoutData?.booknet_customer_id) {
+        await getFavourite(checkoutData?.booknet_customer_id);
+      }
+    };
+    loadData().catch((error) => {
+      console.error("Failed to load data in useEffect:", error);
+    });
+  }, [checkoutData]);
+
   const toggleSidebar = () => {
     if (path.includes("/checkout") || path.includes("/placeorder")) return;
 
     setIsSidebarOpen((prev) => !prev);
   };
+
 
   return (
     <nav className="fixed left-0 top-0 z-[15] h-fit w-full">
@@ -291,7 +305,7 @@ const Header = () => {
           <>
             {/* Overlay to reduce opacity */}
             <div
-              className="fixed inset-0 z-20 bg-black h-screen bg-opacity-50" // Dark overlay
+              className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50" // Dark overlay
               onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
             />
 
@@ -302,7 +316,7 @@ const Header = () => {
               <FaTimes className="text-xl text-red-500" />
             </button>
 
-            <nav className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col overflow-scroll bg-white dark:bg-slate-700 p-4 md:hidden md:w-1/2">
+            <nav className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col overflow-scroll bg-white p-4 dark:bg-slate-700 md:hidden md:w-1/2">
               <button
                 onClick={() => {
                   router.push("/");
@@ -334,7 +348,7 @@ const Header = () => {
                         <a
                           key={subItem.label}
                           href={subItem.href}
-                          className="block py-1 text-sm text-gray-700 dark:text-gray-300 hover:underline"
+                          className="block py-1 text-sm text-gray-700 hover:underline dark:text-gray-300"
                         >
                           {subItem.label}
                         </a>
@@ -348,7 +362,7 @@ const Header = () => {
                 onClick={() => {
                   //
                 }}
-                className="mb-4 flex w-full items-center justify-between text-lg  focus:outline-none"
+                className="mb-4 flex w-full items-center justify-between text-lg focus:outline-none"
               >
                 <span>Logout</span>
               </button>
