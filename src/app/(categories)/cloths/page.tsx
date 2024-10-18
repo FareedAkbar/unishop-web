@@ -68,6 +68,7 @@ const MyComponent = () => {
           setLoader(true);
           const x = await getBooks(genId?.id ?? 1);
           if (typeof x !== "boolean" && x.status) {
+            console.log(x.data)
             setData(x.data);
             setFilteredData(x.data);
           }

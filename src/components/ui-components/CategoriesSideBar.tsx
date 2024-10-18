@@ -55,13 +55,14 @@ const SubcategoryList = ({
   toggleCategory,
   isOpen,
 }: SubcategoryListProps) => {
+  const router = useRouter()
   return (
     <div className="">
       {subItems.map((subItem) => (
         <div key={subItem.label} className="relative">
           <button
             onClick={() =>
-              subItem.subItems ? toggleCategory(subItem.label) : null
+              subItem.subItems ? toggleCategory(subItem.label) : router.push(subItem?.href ?? '')
             }
             className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
           >

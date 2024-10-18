@@ -17,6 +17,8 @@ const MyComponent = () => {
             <CardContainer className="inter-var w-full">
               <CardItem translateZ="100" className="mt-4 w-full">
                 <Image
+                  width={50}
+                  height={50}
                   src={"/homePage/About_us.jpg"}
                   objectFit="contain"
                   className="h-auto w-full rounded-xl object-cover group-hover/card:shadow-xl"

@@ -67,10 +67,10 @@ interface Category {
       subItems: [
         // { label: "Imagine Homewares", icon: FaGift, href: "#" },
         // { label: "Indigenous art merch", icon: FaGift, href: "#" },
-        // { label: "Danielle Hulls Photography", icon: FaGift, href: "#" },
-        // { label: "Marini Ferlazzo", icon: FaGift, href: "#" },
-        // { label: "White Clay Mountain", icon: FaGift, href: "#" },
-        // { label: "Eliza Jade Candles", icon: FaGift, href: "#" },
+        { label: "Danielle Hulls Photography", icon: FaGift, href: "/gifts" },
+        { label: "Marini Ferlazzo", icon: FaGift, href: "/gifts" },
+        { label: "White Clay Mountain", icon: FaGift, href: "/gifts" },
+        { label: "Eliza Jade Candles", icon: FaGift, href: "/gifts" },
       ]
     },
     { 
