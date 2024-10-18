@@ -29,7 +29,7 @@ const MyComponent: React.FC = () => {
           <Player
             autoplay
             loop
-            src="/assets/gifs/contact.json"
+            src="/assets/gifs/delivery.json"
             className="h-64 w-64 scale-[1.5]"
           />
         </div>

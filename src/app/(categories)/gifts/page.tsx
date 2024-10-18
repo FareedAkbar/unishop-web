@@ -26,7 +26,6 @@ import AlertBox from "~/components/alertBox/alert";
 import GiftCategoryInfo from "./GiftCategory";
 
 const PRODUCTS_PER_PAGE = 10;
-
 interface GiftCategory {
   name: string;
   description: string;
@@ -35,9 +34,9 @@ interface GiftCategory {
   tagline?: string;
   mission?: string;
   featuredLocation: string;
-  contact?: string;
   images: string[];
-  socials?: string;
+  lastWord: string; // New attribute
+  featuredProducts: string[]; // New attribute
 }
 
 const giftCategories: GiftCategory[] = [
@@ -48,13 +47,18 @@ const giftCategories: GiftCategory[] = [
     additionalInfo:
       "Her work is much loved by locals and travellers for her unique perspective on the pristine coastline we call home.",
     featuredLocation:
-      "Featured in store at UniShop, Danielle’s work showcases the finest views the Illawarra has to offer. Her prints, blank greeting cards, stickers, and gift tags are the perfect keepsake for visitors or seasoned locals.",
-    contact: "Contact us for product details or purchase inquiries.",
+      "Featured in store at UniShop, Danielle’s work showcases the finest views the Illawarra has to offer. ",
     images: [
-      "https://example.com/danielle_hulls_photo1.jpg",
-      "https://example.com/danielle_hulls_photo2.jpg",
+      "/assets/images/gifts/danielle_hulls_photo1.jpg",
+      "/assets/images/gifts/danielle_hulls_photo2.png",
     ],
-    socials: "daniellehullsphoto",
+    lastWord: "Photography", // Last word of the name
+    featuredProducts: [
+      "Prints",
+      "Blank greeting cards",
+      "Stickers",
+      "Gift tags",
+    ],
   },
   {
     name: "Marini Ferlazzo",
@@ -62,16 +66,23 @@ const giftCategories: GiftCategory[] = [
       "Marini Ferlazzo is a family business based in Melbourne, Australia. Founder and wildlife artist Nathan Ferlazzo creates ranges to support wildlife conservation, making perfect wildlife gifts and Australian souvenirs.",
     history:
       "Nathan started the business in 2011 with his mother, Clare, and sister, Simone. The unique products celebrate Australia’s wildlife, with a share of profits donated to wildlife conservation for a sustainable future.",
-    featuredLocation:
-      "Shop a range of gifts at UniShop, including mugs, coasters, tableware, tote bags, umbrellas, bookmarks, and greeting cards.",
+    featuredLocation: "Shop a range of gifts at UniShop.",
     additionalInfo:
       "Marini Ferlazzo’s original take on Australiana through floral arrangements is unique and appealing, making it a popular gift choice at UniShop.",
-    contact: "Contact us for product details or purchase inquiries.",
     images: [
-      "https://example.com/marini_ferlazzo1.jpg",
-      "https://example.com/marini_ferlazzo2.jpg",
+      "/assets/images/gifts/marini_ferlazzo1.png",
+      "/assets/images/gifts/marini_ferlazzo2.jpg",
     ],
-    socials: "mariniphoto",
+    lastWord: "Ferlazzo", // Last word of the name
+    featuredProducts: [
+      "Mugs",
+      "Coasters",
+      "Tableware",
+      "Tote bags",
+      "Umbrellas",
+      "Bookmarks",
+      "Greeting cards",
+    ],
   },
   {
     name: "White Clay Mountain",
@@ -80,11 +91,17 @@ const giftCategories: GiftCategory[] = [
       "White Clay Mountain pieces provide a reminder to notice and connect with your environment and inspire tactile creativity using evidence-based methods to increase wellbeing.",
     mission:
       "The mission is to spread positive wellbeing and appreciation of Australia’s natural beauty, connecting people to nature, others, and their innate creativity through handcrafted pieces and experiences.",
-    featuredLocation:
-      "Available at UniShop, their products include dangle and stud earrings, delicate rings, and gemstone bracelets, all inspired by the beauty of nature.",
+    featuredLocation: "Available at UniShop.",
     images: [
-      "https://example.com/white_clay_mountain1.jpg",
-      "https://example.com/white_clay_mountain2.jpg",
+      "/assets/images/gifts/white_clay_mountain1.jpg",
+      "/assets/images/gifts/white_clay_mountain2.jpg",
+    ],
+    lastWord: "Mountain", // Last word of the name
+    featuredProducts: [
+      "Dangle earrings",
+      "Stud earrings",
+      "Delicate rings",
+      "Gemstone bracelets",
     ],
   },
   {
@@ -93,15 +110,16 @@ const giftCategories: GiftCategory[] = [
       "Eliza Jade Candles focuses on creating unique scents using premium perfumes and superior coconut soy wax, free from petrochemicals, phthalates, and parabens.",
     additionalInfo:
       "The brand promotes eco-friendly practices with refilling and recycling options.",
-    featuredLocation:
-      "Browse the aromatic display at UniShop, where all candle lovers’ dreams come true. Products include candles, room sprays, and reed diffusers to relax the soul and please the senses.",
-    contact: "Contact us for product details or purchase inquiries.",
+    featuredLocation: "Browse the aromatic display at UniShop.",
     images: [
-      "https://example.com/eliza_jade1.jpg",
-      "https://example.com/eliza_jade2.jpg",
+      "/assets/images/gifts/eliza_jade1.png",
+      "/assets/images/gifts/eliza_jade2.png",
     ],
+    lastWord: "Candles", // Last word of the name
+    featuredProducts: ["Candles", "Room sprays", "Reed diffusers"],
   },
 ];
+
 const MyComponent = () => {
   const { toast } = useToast();
   const router = useRouter();
@@ -114,7 +132,9 @@ const MyComponent = () => {
   const { setOpen } = useModal();
   const [detail, setDetail] = useState<string>("");
   const [subcategory, setSubcategory] = useState<Category | null>(null);
-  const [subcategoryStatic, setSubcategoryStatic] = useState<string | null>(null);
+  const [subcategoryStatic, setSubcategoryStatic] = useState<string | null>(
+    null,
+  );
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const {
@@ -140,7 +160,7 @@ const MyComponent = () => {
     }
   }, [params]);
 
-console.log(subcategoryStatic)
+  console.log(subcategoryStatic);
   useEffect(() => {
     if (!genre) return;
     if (!detail) return;
@@ -267,7 +287,7 @@ console.log(subcategoryStatic)
     filterResult();
   }, [searchText, data]);
   const matchedCategory = giftCategories.find(
-    (cat) => cat.name === subcategory?.category_name,
+    (cat) => cat.lastWord === subcategoryStatic,
   );
 
   return (
@@ -282,7 +302,7 @@ console.log(subcategoryStatic)
         {matchedCategory ? (
           <GiftCategoryInfo category={matchedCategory} />
         ) : (
-          <div className="flex flex-row">
+          <div className="flex flex-grow flex-row">
             <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
               <div className="m-4 flex flex-wrap items-end justify-between gap-4">
                 <div className="text-left">
