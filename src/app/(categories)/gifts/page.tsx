@@ -23,11 +23,87 @@ import { getBooks } from "~/_actions/gettextbooks";
 import type { Category } from "~/types/category";
 import { useToast } from "~/hooks/use-toast";
 import AlertBox from "~/components/alertBox/alert";
+import GiftCategoryInfo from "./GiftCategory";
 
 const PRODUCTS_PER_PAGE = 10;
 
+interface GiftCategory {
+  name: string;
+  description: string;
+  additionalInfo?: string;
+  history?: string;
+  tagline?: string;
+  mission?: string;
+  featuredLocation: string;
+  contact?: string;
+  images: string[];
+  socials?: string;
+}
+
+const giftCategories: GiftCategory[] = [
+  {
+    name: "Danielle Hulls Photography",
+    description:
+      "Danielle Hulls is a photographer based in sunny Shellharbour, on the South Coast of New South Wales, Australia. She has been capturing the coastline from an aerial and land perspective for the better part of a decade, and printing her work to be displayed in homes, workspaces, and retail settings since 2021.",
+    additionalInfo:
+      "Her work is much loved by locals and travellers for her unique perspective on the pristine coastline we call home.",
+    featuredLocation:
+      "Featured in store at UniShop, Danielle’s work showcases the finest views the Illawarra has to offer. Her prints, blank greeting cards, stickers, and gift tags are the perfect keepsake for visitors or seasoned locals.",
+    contact: "Contact us for product details or purchase inquiries.",
+    images: [
+      "https://example.com/danielle_hulls_photo1.jpg",
+      "https://example.com/danielle_hulls_photo2.jpg",
+    ],
+    socials: "daniellehullsphoto",
+  },
+  {
+    name: "Marini Ferlazzo",
+    description:
+      "Marini Ferlazzo is a family business based in Melbourne, Australia. Founder and wildlife artist Nathan Ferlazzo creates ranges to support wildlife conservation, making perfect wildlife gifts and Australian souvenirs.",
+    history:
+      "Nathan started the business in 2011 with his mother, Clare, and sister, Simone. The unique products celebrate Australia’s wildlife, with a share of profits donated to wildlife conservation for a sustainable future.",
+    featuredLocation:
+      "Shop a range of gifts at UniShop, including mugs, coasters, tableware, tote bags, umbrellas, bookmarks, and greeting cards.",
+    additionalInfo:
+      "Marini Ferlazzo’s original take on Australiana through floral arrangements is unique and appealing, making it a popular gift choice at UniShop.",
+    contact: "Contact us for product details or purchase inquiries.",
+    images: [
+      "https://example.com/marini_ferlazzo1.jpg",
+      "https://example.com/marini_ferlazzo2.jpg",
+    ],
+    socials: "mariniphoto",
+  },
+  {
+    name: "White Clay Mountain",
+    tagline: "Authenticity | Connection | Creativity | Curiosity | Gratitude",
+    description:
+      "White Clay Mountain pieces provide a reminder to notice and connect with your environment and inspire tactile creativity using evidence-based methods to increase wellbeing.",
+    mission:
+      "The mission is to spread positive wellbeing and appreciation of Australia’s natural beauty, connecting people to nature, others, and their innate creativity through handcrafted pieces and experiences.",
+    featuredLocation:
+      "Available at UniShop, their products include dangle and stud earrings, delicate rings, and gemstone bracelets, all inspired by the beauty of nature.",
+    images: [
+      "https://example.com/white_clay_mountain1.jpg",
+      "https://example.com/white_clay_mountain2.jpg",
+    ],
+  },
+  {
+    name: "Eliza Jade Candles",
+    description:
+      "Eliza Jade Candles focuses on creating unique scents using premium perfumes and superior coconut soy wax, free from petrochemicals, phthalates, and parabens.",
+    additionalInfo:
+      "The brand promotes eco-friendly practices with refilling and recycling options.",
+    featuredLocation:
+      "Browse the aromatic display at UniShop, where all candle lovers’ dreams come true. Products include candles, room sprays, and reed diffusers to relax the soul and please the senses.",
+    contact: "Contact us for product details or purchase inquiries.",
+    images: [
+      "https://example.com/eliza_jade1.jpg",
+      "https://example.com/eliza_jade2.jpg",
+    ],
+  },
+];
 const MyComponent = () => {
-  const {toast} = useToast();
+  const { toast } = useToast();
   const router = useRouter();
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
@@ -40,8 +116,15 @@ const MyComponent = () => {
   const [subcategory, setSubcategory] = useState<Category | null>(null);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
-  const { cartItems, addCartItems, removeCartItems, genre, addFavourite,checkoutData, category } =
-    useAuthContext();
+  const {
+    cartItems,
+    addCartItems,
+    removeCartItems,
+    genre,
+    addFavourite,
+    checkoutData,
+    category,
+  } = useAuthContext();
 
   useEffect(() => {
     const d = params.get("detail");
@@ -80,7 +163,6 @@ const MyComponent = () => {
         });
       }
     }
-   
   }, [genre, detail]);
 
   // Handle add to cart
@@ -125,7 +207,6 @@ const MyComponent = () => {
     setLoginAlert(false);
     router.push("login");
   };
-
 
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
@@ -176,6 +257,9 @@ const MyComponent = () => {
   useEffect(() => {
     filterResult();
   }, [searchText, data]);
+  const matchedCategory = giftCategories.find(
+    (cat) => cat.name === subcategory?.category_name,
+  );
 
   return (
     <div>
@@ -186,72 +270,76 @@ const MyComponent = () => {
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex flex-row">
-          <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
-            <div className="m-4 flex flex-wrap items-end justify-between gap-4">
-              <div className="text-left">
-                <h2 className="text-xl font-bold">Arts & Gifts</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-300">
-                  {subcategory?.category_name}
-                </p>
+        {matchedCategory ? (
+          <GiftCategoryInfo category={matchedCategory} />
+        ) : (
+          <div className="flex flex-row">
+            <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
+              <div className="m-4 flex flex-wrap items-end justify-between gap-4">
+                <div className="text-left">
+                  <h2 className="text-xl font-bold">Arts & Gifts</h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-300">
+                    {subcategory?.category_name}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    placeholder="Search"
+                    className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
+                  />
+                  <h1 className="font-bold">
+                    Showing {displayedData?.length} of {data.length} Items
+                  </h1>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  placeholder="Search"
-                  className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
-                />
-                <h1 className="font-bold">
-                  Showing {displayedData?.length} of {data.length} Items
-                </h1>
+              <ScrollArea className="h-[75vh] pb-10">
+                <div className="flex flex-wrap justify-center py-3">
+                  {loader
+                    ? Array.from({ length: 6 }, (_, index) => (
+                        <div key={index} className="p-2">
+                          <ProductCardSkeleton />
+                        </div>
+                      ))
+                    : displayedData?.map((item: DataCart) => (
+                        <ProductCard
+                          key={item.book_id}
+                          product={item}
+                          showAddToCart={!isItemInCart(item.item_id)}
+                          onAddToCart={() => handleAddToCart(item)}
+                          onRemoveFromCart={() => handleRemoveFromCart(item)}
+                          openDetail={() => openDetail(item)}
+                          handleFavourite={() => handleFavourite(item)}
+                        />
+                      ))}
+                </div>
+              </ScrollArea>
+              <div className="z-10 flex justify-between px-4 lg:-mt-9">
+                <button
+                  className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  <FaChevronLeft />
+                </button>
+                <span className="px-2">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  <FaChevronRight />
+                </button>
               </div>
-            </div>
-
-            <ScrollArea className="h-[75vh] pb-10">
-              <div className="flex flex-wrap justify-center py-3">
-                {loader
-                  ? Array.from({ length: 6 }, (_, index) => (
-                      <div key={index} className="p-2">
-                        <ProductCardSkeleton />
-                      </div>
-                    ))
-                  : displayedData?.map((item: DataCart) => (
-                      <ProductCard
-                        key={item.book_id}
-                        product={item}
-                        showAddToCart={!isItemInCart(item.item_id)}
-                        onAddToCart={() => handleAddToCart(item)}
-                        onRemoveFromCart={() => handleRemoveFromCart(item)}
-                        openDetail={() => openDetail(item)}
-                        handleFavourite={() => handleFavourite(item)}
-                      />
-                    ))}
-              </div>
-            </ScrollArea>
-            <div className="z-10 flex justify-between px-4 lg:-mt-9">
-              <button
-                className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <FaChevronLeft />
-              </button>
-              <span className="px-2">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                <FaChevronRight />
-              </button>
             </div>
           </div>
-        </div>
+        )}
       </motion.main>
 
       <ModalBody>
