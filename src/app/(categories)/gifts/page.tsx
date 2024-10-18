@@ -114,6 +114,7 @@ const MyComponent = () => {
   const { setOpen } = useModal();
   const [detail, setDetail] = useState<string>("");
   const [subcategory, setSubcategory] = useState<Category | null>(null);
+  const [subcategoryStatic, setSubcategoryStatic] = useState<string | null>(null);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const {
@@ -132,9 +133,17 @@ const MyComponent = () => {
       setDetail(d);
     }
   }, [params]);
+  useEffect(() => {
+    const d = params.get("desc");
+    if (d) {
+      setSubcategoryStatic(d);
+    }
+  }, [params]);
 
+console.log(subcategoryStatic)
   useEffect(() => {
     if (!genre) return;
+    if (!detail) return;
     const genId = category?.find((item) => item.id == parseInt(detail));
     if (genId) {
       setSubcategory(genId);
@@ -280,6 +289,7 @@ const MyComponent = () => {
                   <h2 className="text-xl font-bold">Arts & Gifts</h2>
                   <p className="text-sm text-gray-500 dark:text-gray-300">
                     {subcategory?.category_name}
+                    {subcategoryStatic}
                   </p>
                 </div>
 
