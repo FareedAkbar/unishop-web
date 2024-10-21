@@ -137,12 +137,15 @@ const MyComponent = () => {
   );
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
+  const [wishListLoader, setWishListLoader] = useState<boolean>(false);
   const {
     cartItems,
     addCartItems,
     removeCartItems,
     genre,
     addFavourite,
+    favItems,
+    removeFavourite,
     checkoutData,
     category,
   } = useAuthContext();
@@ -216,18 +219,37 @@ const MyComponent = () => {
   };
 
   const handleFavourite = async (item: DataCart) => {
+   
     if (checkoutData?.booknet_customer_id) {
-      await addFavourite(item.item_id, checkoutData.booknet_customer_id).then(
-        (x) => {
-          if (x) {
-            toast({
-              variant: "success",
-              title: "Added To Wishlist",
-              description: "Item has been added successfully.",
-            });
-          }
-        },
-      );
+      // setWishListLoader(true)
+      if(item && favItems?.some((favItem) => favItem.item_id === item.item_id)){
+      
+        await removeFavourite(item.item_id, checkoutData.booknet_customer_id).then(
+          (x) => {
+            if (x) {
+              toast({
+                variant: "destructive",
+                title: "Remove From Wishlist",
+                description: "Item has been removed successfully.",
+              });
+            }
+          },
+        ).finally(()=>setWishListLoader(false));
+      }else{
+      
+        await addFavourite(item.item_id, checkoutData.booknet_customer_id).then(
+          (x) => {
+            if (x) {
+              toast({
+                variant: "success",
+                title: "Added To Wishlist",
+                description: "Item has been added successfully.",
+              });
+            }
+          },
+        ).finally(()=>setWishListLoader(false));
+      }
+     
     } else {
       setLoginAlert(true);
     }
@@ -344,6 +366,7 @@ const MyComponent = () => {
                           onRemoveFromCart={() => handleRemoveFromCart(item)}
                           openDetail={() => openDetail(item)}
                           handleFavourite={() => handleFavourite(item)}
+                          wishListLoader={wishListLoader}
                         />
                       ))}
                 </div>

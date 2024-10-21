@@ -25,7 +25,7 @@ import { setCookie } from "~/utils/cookie";
 import { VerifyOTPCApi } from "~/_actions/authLogin";
 import { cookies } from "next/headers";
 import { LogOutApi } from "~/_actions/logout";
-import { addToFavourite, getFavouriteItems } from "~/_actions/wishlist";
+import { addToFavourite, getFavouriteItems, removeFromFavourite } from "~/_actions/wishlist";
 import type {
   addFavResponse,
   FavData,
@@ -75,6 +75,10 @@ interface AuthContextProps {
   booknetCustomerId?: number | null;
   orderTrasactionData?: trasactionData | null;
   addFavourite: (
+    item_id: number,
+    booknet_customer_id: number,
+  ) => Promise<boolean>;
+  removeFavourite: (
     item_id: number,
     booknet_customer_id: number,
   ) => Promise<boolean>;
@@ -293,6 +297,44 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     booknet_customer_id: number,
   ): Promise<boolean> => {
     const response = await addToFavourite(item_id, booknet_customer_id);
+    const responsePayload: {
+      status: boolean;
+    } = response as addFavResponse;
+    if (responsePayload.status) {
+      setFavItems((prevFavItems) => {
+        // Check if the item already exists in the favorite list
+        const itemExists = prevFavItems.some(
+          (item) => item.item_id === item_id,
+        );
+
+        if (itemExists) {
+          // If it exists, remove it by filtering out the item
+          const updatedFavItems = prevFavItems.filter(
+            (item) => item.item_id !== item_id,
+          );
+          return updatedFavItems;
+        } else {
+          // Create a new item object that conforms to the FavData type
+          const newItem: FavData = {
+            booknet_customer_wishlist_id: 0, // Set this dynamically as needed
+            booknet_customer_id: booknet_customer_id, // Ensure this value matches the type (number | null)
+            item_id: item_id, // This is the item_id you want to add
+          };
+
+          const updatedFavItems = [...prevFavItems, newItem];
+          return updatedFavItems;
+        }
+      });
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const removeFavourite = async (
+    item_id: number,
+    booknet_customer_id: number,
+  ): Promise<boolean> => {
+    const response = await removeFromFavourite(item_id, booknet_customer_id);
     const responsePayload: {
       status: boolean;
     } = response as addFavResponse;
@@ -588,6 +630,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         themeMode,
         orderTrasactionData,
         addFavourite,
+        removeFavourite,
         getFavourite,
         favItems,
       }}

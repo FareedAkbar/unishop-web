@@ -50,6 +50,8 @@ const MyComponent = () => {
     removeCartItems,
     category,
     addFavourite,
+    favItems,
+    removeFavourite,
     checkoutData,
   } = useAuthContext();
   const [loader, setLoader] = useState<boolean>(false);
@@ -65,6 +67,7 @@ const MyComponent = () => {
   const { setOpen } = useModal();
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [detail, setDetail] = useState<string | null>(null);
+  const [wishListLoader, setWishListLoader] = useState<boolean>(false);
 
   useEffect(() => {
     const d = params.get("detail");
@@ -193,18 +196,37 @@ const MyComponent = () => {
     }
   };
   const handleFavourite = async (item: DataCart) => {
+   
     if (checkoutData?.booknet_customer_id) {
-      await addFavourite(item.item_id, checkoutData.booknet_customer_id).then(
-        (x) => {
-          if (x) {
-            toast({
-              variant: "success",
-              title: "Added Successful",
-              description: "Item has been added successfully.",
-            });
-          }
-        },
-      );
+      // setWishListLoader(true)
+      if(item && favItems?.some((favItem) => favItem.item_id === item.item_id)){
+     
+        await removeFavourite(item.item_id, checkoutData.booknet_customer_id).then(
+          (x) => {
+            if (x) {
+              toast({
+                variant: "destructive",
+                title: "Remove From Wishlist",
+                description: "Item has been removed successfully.",
+              });
+            }
+          },
+        ).finally(()=>setWishListLoader(false));
+      }else{
+       
+        await addFavourite(item.item_id, checkoutData.booknet_customer_id).then(
+          (x) => {
+            if (x) {
+              toast({
+                variant: "success",
+                title: "Added To Wishlist",
+                description: "Item has been added successfully.",
+              });
+            }
+          },
+        ).finally(()=>setWishListLoader(false));
+      }
+     
     } else {
       setLoginAlert(true);
     }
@@ -272,6 +294,7 @@ const MyComponent = () => {
                         onRemoveFromCart={() => handleRemoveFromCart(item)}
                         openDetail={() => openDetail(item)}
                         handleFavourite={() => handleFavourite(item)}
+                        wishListLoader={wishListLoader}
                       />
                     ))}
               </div>
