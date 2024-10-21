@@ -5,12 +5,10 @@ import ImageSlider from "./ImageSlider";
 import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
 import ProductsSection from "./ProductsSection";
 import GraduationBanner from "./GraduationBanner";
-import NewArrivals from "./NewArrivals";
-import BackgroundWords from "~/components/ui-components/BackgroundWords";
-import BackgroundImages from "~/components/ui-components/BackgroundImages";
-import { FlipWords } from "~/components/ui/flip-words";
 import ProductList from "~/components/ui-components/ProductList";
+import { FlipWords } from "~/components/ui/flip-words";
 import { Player } from "@lottiefiles/react-lottie-player";
+import AboutSection from "./AboutSection";
 
 const bestSellingProducts = [
   {
@@ -102,52 +100,67 @@ const products = [
     price: 19.99,
   },
 ];
+
 const HomePage: React.FC = () => {
   const words = ["Imagine", "Create", "Inspire", "Transform"];
 
   return (
     <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 pt-32 dark:bg-slate-800 lg:pt-24">
-      {/* <BackgroundWords /> */}
-      {/* <BackgroundImages /> */}
       <div className="container mx-auto flex justify-center">
         <ImageSlider />
       </div>
+
       <div className="flex flex-col py-5">
         <div className="self-center lg:text-5xl">
           <FlipWords words={words} className="text-red-500" />
           your reading adventure!
         </div>
       </div>
-      <div className="absolute inset-0 z-[-1] overflow-hidden lg:left-64">
-        <Player
-          src={"assets/gifs/products-bg.json"}
-          loop
-          autoplay
-          className="absolute inset-0 h-full w-full"
-        />
-      </div>
-      <div className="flex">
-        <div className="hidden lg:block lg:pl-20">
-          <CategoriesSidebar />
+
+      {/* Product List Section with Background Animation */}
+      <div className="relative w-full">
+        {/* Lottie Animation in the Background */}
+        <div className="absolute inset-0 -z-10">
+          <Player
+            src={"assets/gifs/products-bg.json"}
+            loop
+            autoplay
+            className="h-[500px] w-full object-contain overflow-visible"
+          />
         </div>
-        <div className="container mx-auto grid w-full p-5 pb-10  lg:grid-cols-2 lg:pl-48">
-          <div className="-mr-4 w-full">
-            <ProductList products={products} title="Trending" width="w-full" />
+
+        <div className="flex">
+          <div className="hidden lg:block lg:pl-20">
+            <CategoriesSidebar />
           </div>
 
-          <div className="w-full">
-            <ProductList products={products} title="Top Rated" width="w-full" />
+          <div className="container mx-auto grid w-full p-5 pb-10 lg:grid-cols-2 lg:pl-48">
+            <div className="-mr-4 w-full">
+              <ProductList
+                products={products}
+                title="Trending"
+                width="w-full"
+              />
+            </div>
+
+            <div className="w-full">
+              <ProductList
+                products={products}
+                title="Top Rated"
+                width="w-full"
+              />
+            </div>
           </div>
         </div>
       </div>
 
+      <AboutSection />
       <GraduationBanner />
       <ProductsSection
         products={bestSellingProducts}
         headingPartOne="Best Selling"
         headingPartTwo="Products This Month"
       />
-      {/* <NewArrivals/> */}
     </div>
   );
 };

@@ -19,7 +19,7 @@ const MyComponent = () => {
                 <Image
                   width={50}
                   height={50}
-                  src={"/homePage/About_us.jpg"}
+                  src={"/assets/homePage/About_us.jpg"}
                   objectFit="contain"
                   className="h-auto w-full rounded-xl object-cover group-hover/card:shadow-xl"
                   alt="thumbnail"
