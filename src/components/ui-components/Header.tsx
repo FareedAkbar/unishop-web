@@ -21,6 +21,7 @@ import { useAuthContext } from "~/Context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
 import SidebarCart from "../ui/sideCart/cartSidebar";
 import Link from "next/link";
+import { ScrollArea } from "../ui/scroll-area";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -353,6 +354,21 @@ const Header = () => {
                           {subItem.label}
                         </a>
                       ))}
+                       {item.label === "Books" && genre &&  (
+                  <ScrollArea className="h-[25vh]">
+                    {genre?.map((subItem) => (
+                      <Link
+                        key={subItem.genre}
+                        href={`books?detail=${subItem.genre}`}
+                        className="block py-1 text-sm hover:underline"
+                        onClick={() => setOpenDropdown(null)}
+                        passHref
+                      >
+                        {subItem.genre}
+                      </Link>
+                    ))}
+                  </ScrollArea>
+                )}
                     </div>
                   )}
                 </div>
