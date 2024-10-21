@@ -217,14 +217,14 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center py-20"
+        className="flex  flex-col items-center pt-20"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-row">
-          <div className="flex flex-col px-4 py-5 lg:absolute lg:left-64 lg:right-0">
+          <div className="flex flex-col px-4 py-5 lg:pl-64">
             <div className="m-4 flex flex-wrap items-end justify-between gap-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">Text Books</h2>
@@ -255,7 +255,7 @@ const MyComponent = () => {
                 </h1>
               </div>
             </div>
-            <ScrollArea className="h-[75vh] pb-10">
+            <ScrollArea className="h-[90vh]">
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (

@@ -10,6 +10,61 @@ import {
   FaCheck, // Import the check icon
 } from "react-icons/fa";
 import Spinner from "~/components/spinner";
+import { IconType } from "react-icons";
+
+// Reusable Card Component
+interface PolicyCardProps {
+  title: string;
+  icon: IconType;
+  items: string[];
+}
+
+const ReturnPolicyCard: React.FC<PolicyCardProps> = ({
+  title,
+  icon: Icon,
+  items,
+}) => (
+  <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
+    <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
+      <Icon className="text-red-500" /> {title}
+    </h2>
+    <ul className="list-none space-y-2 text-left">
+      {items.map((item, index) => (
+        <li key={index} className="flex items-start gap-2">
+          <FaCheck className="h-4 w-4 text-red-500 flex-shrink-0" />
+          {item}
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+// Data Arrays for the Cards
+const inStorePolicy = {
+  title: "In Store Returns",
+  icon: FaSyncAlt,
+  items: [
+    "Exchange or credit note provided within 14 days with a valid receipt.",
+    "Items must be in saleable condition.",
+    "Shrink-wrapped items can only be returned if the seal is intact.",
+    "Items with eBooks, access codes, or digital content are non-returnable if opened or used (unless faulty).",
+    "Course notes are non-returnable.",
+    "Refunds are issued using the original payment method.",
+  ],
+};
+
+const onlineOrderPolicy = {
+  title: "Online Orders",
+  icon: FaShoppingCart,
+  items: [
+    "Returns accepted within 14 days with the original Tax Invoice.",
+    "Items must be in mint condition.",
+    "Reason for return must be indicated on the back of the invoice.",
+    "Faulty or incorrect items are eligible for free return postage.",
+    "For other reasons, the customer covers shipping costs.",
+    "Refunds may take 1-2 billing cycles to appear in your account.",
+  ],
+};
 
 const MyComponent: React.FC = () => {
   return (
@@ -30,81 +85,16 @@ const MyComponent: React.FC = () => {
           <Player
             autoplay
             loop
-            src="/assets/gifs/contact.json"
-            className="h-64 w-64 scale-[1.5]"
+            src="/assets/gifs/refund.json"
+            className="h-64 w-64"
           />
         </div>
       </div>
 
       {/* Cards Section */}
       <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
-        {/* Card 1: In Store Returns */}
-        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
-          <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
-            <FaSyncAlt className="text-red-500" /> In Store Returns
-          </h2>
-          <ul className="list-none space-y-2 text-left">
-            <li className="flex items-start gap-2">
-              <FaCheck className="text-red-500 h-4 w-4" /> {/* Fixed size */}
-              Exchange or credit note provided within 14 days with a valid
-              receipt.
-            </li>
-            <li className="flex items-start gap-2">
-              <FaCheck className="text-red-500 h-4 w-4" /> {/* Fixed size */}
-              Items must be in saleable condition.
-            </li>
-            <li className="flex items-start gap-2">
-              <FaCheck className="text-red-500 h-4 w-4" /> {/* Fixed size */}
-              Shrink-wrapped items can only be returned if the seal is intact.
-            </li>
-            <li className="flex items-start gap-2">
-              <FaCheck className="text-red-500 h-4 w-4" /> {/* Fixed size */}
-              Items with eBooks, access codes, or digital content are
-              non-returnable if opened or used (unless faulty).
-            </li>
-            <li className="flex items-start gap-2">
-              <FaCheck className="text-red-500 h-4 w-4" /> {/* Fixed size */}
-              Course notes are non-returnable.
-            </li>
-            <li className="flex items-start gap-2">
-              <FaCheck className="text-red-500 h-4 w-4" /> {/* Fixed size */}
-              Refunds are issued using the original payment method.
-            </li>
-          </ul>
-        </div>
-
-        {/* Card 2: Online Orders */}
-        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
-          <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
-            <FaShoppingCart className="text-red-500" /> Online Orders
-          </h2>
-          <ul className="list-none space-y-2 text-left">
-            <li className="flex items-start gap-2">
-              <FaCheck className="text-red-500 h-4 w-4" /> {/* Fixed size */}
-              Returns accepted within 14 days with the original Tax Invoice.
-            </li>
-            <li className="flex items-start gap-2">
-              <FaCheck className="text-red-500 h-4 w-4" /> {/* Fixed size */}
-              Items must be in mint condition.
-            </li>
-            <li className="flex items-start gap-2">
-              <FaCheck className="text-red-500 h-4 w-4" /> {/* Fixed size */}
-              Reason for return must be indicated on the back of the invoice.
-            </li>
-            <li className="flex items-start gap-2">
-              <FaCheck className="text-red-500 h-4 w-4" /> {/* Fixed size */}
-              Faulty or incorrect items are eligible for free return postage.
-            </li>
-            <li className="flex items-start gap-2">
-              <FaCheck className="text-red-500 h-4 w-4" /> {/* Fixed size */}
-              For other reasons, the customer covers shipping costs.
-            </li>
-            <li className="flex items-start gap-2">
-              <FaCheck className="text-red-500 h-4 w-4" /> {/* Fixed size */}
-              Refunds may take 1-2 billing cycles to appear in your account.
-            </li>
-          </ul>
-        </div>
+        <ReturnPolicyCard {...inStorePolicy} />
+        <ReturnPolicyCard {...onlineOrderPolicy} />
       </div>
 
       {/* Terms and Contact Section */}

@@ -179,14 +179,14 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center py-20"
+        className="flex min-h-screen flex-col items-center pt-20 pb-5"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-row">
-          <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
+          <div className="flex flex-col px-4 lg:pl-64">
             <div className="m-4 flex flex-wrap items-end justify-between gap-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">Books</h2>
@@ -209,7 +209,7 @@ const MyComponent = () => {
               </div>
             </div>
 
-            <ScrollArea className="h-[75vh] pb-10">
+            <ScrollArea className="h-[75vh] pb-5">
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
@@ -230,7 +230,7 @@ const MyComponent = () => {
                     ))}
               </div>
             </ScrollArea>
-            <div className="z-10 flex justify-between px-4 lg:-mt-9">
+            <div className="z-10 flex justify-between px-4 ">
               <button
                 className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                 onClick={() => setCurrentPage(currentPage - 1)}
