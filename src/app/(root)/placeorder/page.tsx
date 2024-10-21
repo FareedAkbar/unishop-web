@@ -697,22 +697,22 @@ const MyComponent = () => {
                     {shippingOptions.map((option) => (
                       <div key={option.value}>
                         <div className="my-4 border-t border-gray-300"></div>
-                        <label className="flex">
+                        <label className="flex items-center gap-4">
                           <input
                             type="radio"
                             value={option.value}
                             checked={shipping?.value === option.value}
-                            onChange={() => onChange(option)} // Handle change
+                            onChange={() => onChange(option)}
                             className="form-radio"
                           />
-                          <div className="flex flex-1">
-                            <span className="flex-1 text-center">
+                          <div className="flex items-center flex-1">
+                            <span className="w-1/6 text-center">
                               {option.amount}
                             </span>
-                            <span className="flex-1 text-center">
+                            <span className="w-1/6 text-center">
                               {option.type}
                             </span>
-                            <span className="flex-1 text-center">
+                            <span className="w-2/3 text-left pl-2">
                               {option.label}
                             </span>
                           </div>
@@ -772,15 +772,15 @@ const MyComponent = () => {
                       )}
                     </span>
                   </div>
-                  <div className="mt-6 grid grid-cols-2 justify-between">
-                    <div className="flex flex-col">
+                  <div className="mt-6 grid grid-cols-3 justify-between">
+                    <div className="flex flex-col col-span-2">
                       <span className="text-sm">Shipping</span>
                       <span className="text-sm text-gray-600 dark:text-gray-300">
                         {shipping?.label} - {shipping?.type}
                       </span>
                     </div>
 
-                    <span className="flex justify-end text-sm">
+                    <span className="flex justify-end text-sm col-span-1">
                       ${shipping?.amount.toFixed(2)}
                     </span>
                   </div>

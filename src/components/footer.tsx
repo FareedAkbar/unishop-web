@@ -183,7 +183,7 @@ function Footer() {
           </div>
         </div>
         {/* bottom center */}
-        <div className="flex flex-col items-center text-center">
+        <div className="flex flex-col items-center text-center pt-3">
           <p className="text-xs font-medium text-[#646464] dark:text-gray-300">
             Privacy Policy | © {new Date().getFullYear()} PULSE
           </p>

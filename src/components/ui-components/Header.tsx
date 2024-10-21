@@ -22,6 +22,8 @@ import { usePathname, useRouter } from "next/navigation";
 import SidebarCart from "../ui/sideCart/cartSidebar";
 import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
+import type { CategoryTreeNode, Category as CAT } from "~/types/category";
+import { outlet221 } from "~/types/tokens";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -38,7 +40,7 @@ const Header = () => {
     setTheme,
     themeMode,
     checkoutData,
-    getFavourite
+    getFavourite,
   } = useAuthContext();
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -63,7 +65,54 @@ const Header = () => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
+  const [headerCategory, setHeaderCategory] = useState<
+    CategoryTreeNode[] | null
+  >(null);
+  const [headerCategoryGifts, setHeaderCategoryGifts] = useState<CAT[]>([]);
+  const [headerCategoryClothings, setHeaderCategoryClothings] = useState<
+    CAT[] | null
+  >(null);
+  function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
+    const categoryMap: Record<number, CategoryTreeNode> = {};
+    const tree: CategoryTreeNode[] = [];
 
+    categories.forEach((category) => {
+      categoryMap[category.id] = {
+        id: category.id,
+        outlet: category.outlet,
+        category_name: category.category_name,
+        category_description: category.category_description,
+        deleted: category.deleted,
+        media_id: category.media_id,
+        booknet: category.booknet,
+        children: [],
+      };
+    });
+
+    categories.forEach((category) => {
+      if (
+        category.parent === 0 &&
+        category.booknet == 1 &&
+        category.outlet === outlet221
+      ) {
+        const rootCategory = categoryMap[category.id];
+        if (rootCategory) {
+          tree.push(rootCategory);
+        }
+      } else {
+        const parent = categoryMap[category.parent];
+        if (parent) {
+          const childCategory = categoryMap[category.id];
+          if (childCategory) {
+            parent.children!.push(childCategory);
+          }
+        }
+      }
+    });
+
+    return tree;
+  }
+  
   const handleSectionClick = (section: string, isDropdown = false) => {
     setActiveSection(section);
     console.log("ss", activeSection);
@@ -74,7 +123,21 @@ const Header = () => {
       setOpenDropdown(null); // Close dropdown when clicking a section
     }
   };
+  useEffect(() => {
+    if (!category) return;
 
+    const categoryTree = buildCategoryTree(category);
+    // const categoryTreeGift = buildCategoryGifts(category);
+    const categoryTreeGift = category.filter(
+      (item) => item.gifts == 1 || item.arts == 1,
+    );
+    const categoryTreeClothing = category.filter((item) => item.clothings == 1);
+
+    console.log(categoryTree);
+    setHeaderCategory(categoryTree);
+    setHeaderCategoryGifts(categoryTreeGift);
+    setHeaderCategoryClothings(categoryTreeClothing);
+  }, [category]);
   // Close the dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -188,7 +251,6 @@ const Header = () => {
 
     setIsSidebarOpen((prev) => !prev);
   };
-
 
   return (
     <nav className="fixed left-0 top-0 z-[15] h-fit w-full">
@@ -354,21 +416,59 @@ const Header = () => {
                           {subItem.label}
                         </a>
                       ))}
-                       {item.label === "Books" && genre &&  (
-                  <ScrollArea className="h-[25vh]">
-                    {genre?.map((subItem) => (
-                      <Link
-                        key={subItem.genre}
-                        href={`books?detail=${subItem.genre}`}
-                        className="block py-1 text-sm hover:underline"
-                        onClick={() => setOpenDropdown(null)}
-                        passHref
-                      >
-                        {subItem.genre}
-                      </Link>
-                    ))}
-                  </ScrollArea>
-                )}
+                      {item.label === "Books" && genre && (
+                        <ScrollArea className="h-[25vh]">
+                          {genre?.map((subItem) => (
+                            <Link
+                              key={subItem.genre}
+                              href={`books?detail=${subItem.genre}`}
+                              className="block py-1 text-sm hover:underline"
+                              onClick={() => setOpenDropdown(null)}
+                              passHref
+                            >
+                              {subItem.genre}
+                            </Link>
+                          ))}
+                        </ScrollArea>
+                      )}
+                      {item.label === "Text Book" && headerCategory?.[0] && (
+                        <ScrollArea className="h-[25vh]">
+                          {headerCategory?.[0]?.children?.map((subItem) => (
+                            <Link
+                              key={subItem.id}
+                              href={`textbooks?detail=${subItem.id}`}
+                              className="block py-1 text-sm hover:underline"
+                              onClick={() => setOpenDropdown(null)}
+                            >
+                              {subItem.category_name}
+                            </Link>
+                          ))}
+                        </ScrollArea>
+                      )}
+                      {item.label === "Art & Gifts" &&
+                        headerCategoryGifts?.[0] &&
+                        headerCategoryGifts?.map((subItem) => (
+                          <Link
+                            key={subItem.id}
+                            href={`gifts?detail=${subItem.id}`}
+                            className="block py-1 text-sm hover:underline"
+                            onClick={() => setOpenDropdown(null)}
+                          >
+                            {subItem.category_name}
+                          </Link>
+                        ))}
+                      {item.label === "Merch & Clothing" &&
+                        headerCategoryClothings?.[0] &&
+                        headerCategoryClothings.map((subItem) => (
+                          <Link
+                            key={subItem.id}
+                            href={`cloths?detail=${subItem.id}`}
+                            className="block py-1 text-sm hover:underline"
+                            onClick={() => setOpenDropdown(null)}
+                          >
+                            {subItem.category_name}
+                          </Link>
+                        ))}
                     </div>
                   )}
                 </div>
