@@ -1,66 +1,73 @@
 "use client";
 
-// import Header from "~/components/header";
-import { Suspense } from "react";
-import { CardContainer, CardItem } from "~/components/ui/3d-card";
 import Image from "next/image";
+import { Suspense } from "react";
 import Spinner from "~/components/spinner";
+import { FaStore, FaTruck, FaUsers } from "react-icons/fa"; // Importing React Icons
+
 const MyComponent = () => {
-  // Handle add to cart
-
   return (
-    <div className="min-h-screen">
-      <main className="flex flex-col items-center justify-center pt-28"></main>
-      <div className="min-2-md flex justify-center px-8">
-        <div className="grid w-full max-w-screen-xl grid-cols-8 gap-4">
-          <div className="col-span-12">
-            <CardContainer className="inter-var w-full">
-              <CardItem translateZ="100" className="mt-4 w-full">
-                <Image
-                  width={50}
-                  height={50}
-                  src={"/assets/homePage/About_us.jpg"}
-                  objectFit="contain"
-                  className="h-auto w-full rounded-xl object-cover group-hover/card:shadow-xl"
-                  alt="thumbnail"
-                />
-              </CardItem>
-            </CardContainer>
-          </div>
-          {/* Your content goes here */}
-          <div className="col-span-8">
-            <h2 className="relative z-20 mx-auto mt-16 font-serif text-2xl font-bold tracking-tight text-red-600 dark:text-white md:text-2xl lg:text-2xl">
-              UNISHOP IS NON-FOR-PROFIT
-            </h2>
+    <div className="pt-24 flex min-h-screen flex-col items-center justify-center">
+      {/* Image on Top */}
+      <div className="w-full max-w-screen-xl p-5 overflow-hidden rounded-xl">
+        <Image
+          src="/assets/images/About_us.jpg"
+          alt="thumbnail"
+          className="h-auto w-full object-cover rounded-lg"
+          width={1000}
+          height={1000}
+        />
+      </div>
 
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat py-4 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              Explore UniShop for exclusive UOW merchandise, from academic
-              essentials and official gear to graduation collections. Delight in
-              unique Aboriginal art, jewellery, and décor, and benefit from
-              clothing sales, varied sizes, competitive prices, and free
-              shipping on select items. Visit us in-store or online for an
-              exceptional shopping experience.
-            </p>
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat py-4 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              Enjoy convenient delivery or &apos;CLICK AND COLLECT&apos; options
-              at UniShop, located on the scenic UOW campus. As a UOW Pulse
-              venture, your purchases directly contribute to enriching student
-              life through events, clubs, and more. Thank you for supporting the
-              UOW community.{" "}
-            </p>
-            <p className="text-1xl md:text-1xl lg:text-1xl inter-var relative left-0 top-[1px] bg-clip-text bg-no-repeat py-4 font-sans text-zinc-500 [text-shadow:0_0_rgba(0,0,0,0.1)]">
-              UniShop is a UOW Pulse business, with all proceeds from everything
-              you buy going straight back to enhancing the student experience on
-              campus. Whether that&apos;s through events, festivals,
-              competitions or through our clubs and societies.Thank you for
-              supporting the UOW campus experience.{" "}
-            </p>
-          </div>
+      {/* Cards Section */}
+      <div className="grid grid-cols-1 gap-6 px-6 py-12 md:grid-cols-2 lg:grid-cols-3 max-w-screen-xl">
+        {/* Card 1 */}
+        <div className="p-6 rounded-lg shadow-lg bg-red-100 dark:bg-slate-800">
+          <FaStore className="text-red-500 text-4xl animate-swing mb-4 mx-auto" /> {/* Icon */}
+          <h2 className="mb-4 text-xl font-semibold text-center text-red-500">
+            UNISHOP IS NON-FOR-PROFIT
+          </h2>
+          <p className="leading-relaxed text-justify text-gray-600 dark:text-gray-300">
+            Explore UniShop for exclusive UOW merchandise, from academic
+            essentials and official gear to graduation collections. Delight in
+            unique Aboriginal art, jewellery, and décor, and benefit from
+            clothing sales, varied sizes, competitive prices, and free shipping
+            on select items.
+          </p>
+        </div>
+
+        {/* Card 2 */}
+        <div className="p-6 rounded-lg shadow-lg bg-red-100 dark:bg-slate-800">
+          <FaTruck className="text-red-500 text-4xl animate-swing mb-4 mx-auto" /> {/* Icon */}
+          <h2 className="mb-4 text-xl font-semibold text-center text-red-500">
+            SHOP ONLINE OR IN-STORE
+          </h2>
+          <p className="leading-relaxed text-justify text-gray-600 dark:text-gray-300">
+            Enjoy convenient delivery or 'CLICK AND COLLECT' options at UniShop,
+            located on the scenic UOW campus. As a UOW Pulse venture, your
+            purchases directly contribute to enriching student life through
+            events, clubs, and more.
+          </p>
+        </div>
+
+        {/* Card 3 */}
+        <div className="p-6 rounded-lg shadow-lg bg-red-100 dark:bg-slate-800">
+          <FaUsers className="text-red-500 text-4xl animate-swing mb-4 mx-auto" /> {/* Icon */}
+          <h2 className="mb-4 text-xl font-semibold text-center text-red-500">
+            SUPPORTING STUDENT LIFE
+          </h2>
+          <p className="leading-relaxed text-justify text-gray-600 dark:text-gray-300">
+            UniShop is a UOW Pulse business, with all proceeds from everything
+            you buy going straight back to enhancing the student experience on
+            campus. Whether that’s through events, festivals, competitions, or
+            through our clubs and societies.
+          </p>
         </div>
       </div>
     </div>
   );
 };
+
 const Page = () => {
   return (
     <Suspense fallback={<Spinner />}>

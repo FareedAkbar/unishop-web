@@ -24,6 +24,20 @@ import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
 import type { CategoryTreeNode, Category as CAT } from "~/types/category";
 import { outlet221 } from "~/types/tokens";
+import {
+  FaBook,
+  FaGraduationCap,
+  FaTshirt,
+  FaPen,
+  FaGift,
+  FaClipboardList,
+} from "react-icons/fa";
+import {
+  AiOutlineFileText,
+  AiOutlineContacts,
+  AiOutlineHome,
+  AiOutlineLogout,
+} from "react-icons/ai";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -112,7 +126,7 @@ const Header = () => {
 
     return tree;
   }
-  
+
   const handleSectionClick = (section: string, isDropdown = false) => {
     setActiveSection(section);
     console.log("ss", activeSection);
@@ -251,7 +265,16 @@ const Header = () => {
 
     setIsSidebarOpen((prev) => !prev);
   };
-
+  const iconMap: { [key: string]: JSX.Element } = {
+    FaBook: <FaBook className="text-blue-700" />,
+    FaGraduationCap: <FaGraduationCap />,
+    FaTshirt: <FaTshirt className="text-green-600" />,
+    FaPen: <FaPen className="text-yellow-600" />,
+    FaGift: <FaGift className="text-purple-600" />,
+    FaClipboardList: <FaClipboardList className="text-orange-600" />,
+    AiOutlineFileText: <AiOutlineFileText className="text-teal-600" />,
+    AiOutlineContacts: <AiOutlineContacts className="text-amber-600" />,
+  };
   return (
     <nav className="fixed left-0 top-0 z-[15] h-fit w-full">
       <header className="flex flex-col bg-white px-4 pt-4 backdrop-blur dark:bg-slate-900 md:flex-row md:items-center">
@@ -379,14 +402,17 @@ const Header = () => {
               <FaTimes className="text-xl text-red-500" />
             </button>
 
-            <nav className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col overflow-scroll bg-white p-4 dark:bg-slate-700 md:hidden md:w-1/2">
+            <nav className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col overflow-scroll bg-white p-6 dark:bg-slate-700 md:hidden md:w-1/2">
               <button
                 onClick={() => {
                   router.push("/");
                 }}
                 className="mb-4 flex w-full items-center justify-between text-lg focus:outline-none"
               >
-                <span>Home</span>
+                <div className="flex items-center space-x-2">
+                  <AiOutlineHome className="mr-1 text-red-500" />
+                  <span>Home</span>
+                </div>
               </button>
               {categories.map((item) => (
                 <div key={item.label} className="mb-4">
@@ -396,7 +422,15 @@ const Header = () => {
                     }
                     className="flex w-full items-center justify-between text-lg focus:outline-none"
                   >
-                    <span>{item.label}</span>
+                    <div className="flex items-center">
+                      {item.icon && (
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                        <span className="mr-3">{iconMap[item.icon]}</span>
+                      )}
+                      <Link href={item.href ?? ""} scroll={false}>
+                        {item.label}
+                      </Link>
+                    </div>{" "}
                     {item.subItems ? (
                       openDropdown === item.label ? (
                         <FaChevronDown />
@@ -480,7 +514,10 @@ const Header = () => {
                 }}
                 className="mb-4 flex w-full items-center justify-between text-lg focus:outline-none"
               >
-                <span>Logout</span>
+                <div className="flex cursor-pointer items-center space-x-2">
+                  <HiLogin className="mr-1 text-gray-600 dark:text-gray-300" />
+                  <span>Logout</span>
+                </div>
               </button>
             </nav>
           </>

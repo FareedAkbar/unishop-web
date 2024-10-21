@@ -13,11 +13,11 @@ import {
 
 const MyComponent = () => {
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen pt-28 lg:pt-16">
       <div className="flex flex-wrap items-center justify-between bg-white p-8 pb-14 shadow-md dark:bg-slate-600 lg:px-32">
-        <div className="max-w-md flex-1 text-lg ">
+        <div className="max-w-md flex-1 text-lg">
           <div className="space-y-2 text-center">
-            <h2 className="font-semibold text-xl ">
+            <h2 className="text-xl font-semibold">
               ENQUIRE ABOUT HIRING YOUR GRADUATION ATTIRE
             </h2>
             <p className="flex items-center justify-start text-lg text-gray-500 dark:text-gray-300">
@@ -37,18 +37,18 @@ const MyComponent = () => {
             </p>
           </div>
         </div>
-        <div className="flex justify-center sm:mt-0 sm:flex-shrink-0">
-          <Player
+        <div className="w-full flex justify-center sm:w-auto sm:flex-shrink-0 mt-8 sm:mt-0">
+        <Player
             autoplay
             loop
             src="/assets/gifs/graduation.json"
-            className="h-64 w-64"
+            className="h-64 w-64 self-center"
           />
         </div>
       </div>
 
       {/* Cards Section */}
-      <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 lg:px-12 text-center">
+      <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center lg:px-12">
         <div className="grid w-full max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-2">
           {/* Card 1: Hiring & Purchasing */}
           <div className="rounded-lg bg-red-100 p-6 shadow-lg dark:bg-slate-700">
