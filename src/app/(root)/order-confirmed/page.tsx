@@ -15,10 +15,10 @@ const OrderConfirmed = () => {
   const { orderTrasactionData } = useAuthContext();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 pb-16 pt-32 dark:bg-gray-900 sm:px-8">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 pb-16 pt-28 dark:bg-gray-900 sm:px-8">
       {/* Thank You Message */}
       <motion.h2
-        className="mb-6 text-3xl font-bold text-red-600 dark:text-white"
+        className="mb-6 text-3xl font-bold text-red-500 "
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
