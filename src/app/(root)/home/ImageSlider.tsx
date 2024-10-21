@@ -88,7 +88,7 @@ const ImageSlider: React.FC = () => {
             {slides[currentIndex]!.heading}
           </div>
           <button
-            className="flex w-fit flex-row items-center rounded-lg border-none bg-red-600 px-1 text-[10px] text-white md:px-3 md:py-1.5 lg:px-4 lg:py-2 lg:text-base lg:font-bold"
+            className="flex w-fit flex-row items-center rounded border-none bg-red-600 px-1 text-[10px] text-white md:px-3 md:py-1.5 lg:px-4 lg:py-2 lg:text-base lg:font-bold"
             onClick={() => router.push(slides[currentIndex]!.route)} // Navigate to respective route
           >
             <span>{slides[currentIndex]!.button}</span>
@@ -109,14 +109,14 @@ const ImageSlider: React.FC = () => {
         />
       </div>
       {/* Dots Indicator */}
-      <div className="mt-4 flex justify-center space-x-2">
+      <div className="mt-4 flex justify-center items-center space-x-2">
         {slides.map((_, index) => (
           <div
             key={index}
-            className={`h-3 w-3 rounded-full ${
+            className={` rounded-full ${
               currentIndex === index
-                ? "border-2 border-black bg-red-500"
-                : "bg-gray-400"
+                ? "border-2 border-black bg-red-500 h-3.5  w-3.5"
+                : "bg-gray-400 h-3 w-3"
             }`}
           ></div>
         ))}
