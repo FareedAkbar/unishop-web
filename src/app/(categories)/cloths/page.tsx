@@ -119,10 +119,10 @@ const MyComponent = () => {
   const handleFavourite = async (item: DataCart) => {
    
     if (checkoutData?.booknet_customer_id) {
-      // setWishListLoader(true)
+      setWishListLoader(true)
       if(item && favItems?.some((favItem) => favItem.item_id === item.item_id)){
       
-        await removeFavourite(item.item_id, checkoutData.booknet_customer_id).then(
+        await removeFavourite(item, checkoutData.booknet_customer_id).then(
           (x) => {
             if (x) {
               toast({
@@ -135,7 +135,7 @@ const MyComponent = () => {
         ).finally(()=>setWishListLoader(false));
       }else{
        
-        await addFavourite(item.item_id, checkoutData.booknet_customer_id).then(
+        await addFavourite(item, checkoutData.booknet_customer_id).then(
           (x) => {
             if (x) {
               toast({
@@ -378,7 +378,7 @@ const MyComponent = () => {
                   Publisher:
                 </span>
                 <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher.publisher_name}
+                  {itemDetail?.publisher?.publisher_name}
                 </span>
               </div>
               <div className="flex items-center justify-center">
@@ -386,7 +386,7 @@ const MyComponent = () => {
                   Country of Publication:
                 </span>
                 <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher.country}
+                  {itemDetail?.publisher?.country}
                 </span>
               </div>
 

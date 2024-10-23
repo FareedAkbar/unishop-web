@@ -265,7 +265,7 @@ const Header = () => {
 
     setIsSidebarOpen((prev) => !prev);
   };
-  const iconMap: { [key: string]: JSX.Element } = {
+  const iconMap: Record<string, JSX.Element> = {
     FaBook: <FaBook className="text-blue-700" />,
     FaGraduationCap: <FaGraduationCap />,
     FaTshirt: <FaTshirt className="text-green-600" />,

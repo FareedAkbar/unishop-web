@@ -24,6 +24,8 @@ import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { getBooks } from "~/_actions/getbooks";
+import { getFavouriteItems } from "~/_actions/wishlist";
+import { useToast } from "~/hooks/use-toast";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -37,39 +39,49 @@ const MyComponent = () => {
   const { setOpen } = useModal();
   const [detail, setDetail] = useState<string | null>(null);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
-  const { cartItems, addCartItems, removeCartItems, genre, addFavourite } =
+  const [wishListLoader, setWishListLoader] = useState<boolean>(false);
+  const { cartItems, addCartItems, removeCartItems, genre, addFavourite,checkoutData,favItems,
+    removeFavourite, } =
     useAuthContext();
+    const { toast } = useToast();
 
   useEffect(() => {
     const d = params.get("detail");
     setDetail(d);
   }, [params]);
 
-  useEffect(() => {
-    // if (!genre) return;
-    // const genId = genre?.find((item) => item.genre == detail);
-    const loadData = async () => {
-      console.log("asdas")
-      try {
-        setLoader(true);
-        const x = await getBooks(1);
-        if (typeof x !== "boolean" && x.status) {
-          setData(x.data);
-          setFilteredData(x.data);
-        }
-        setLoader(false);
-        // setData(result);
-        // setTotalPages(result.totalPages);
-      } catch (error) {
-        console.error("Failed to load data:", error);
-        setLoader(false);
-        // Optionally set an error state here
-      }
-    };
-      loadData().catch((error) => {
-        console.error("Failed to load data in useEffect:", error);
-      });
-  }, []);
+  // async function getFav (){
+  //   try {
+     
+  //   const x =  await getFavouriteItems(checkoutData?.booknet_customer_id);
+  //         if (typeof x !== "boolean" && x.status) {
+  //           setData(x.data);
+  //           setFilteredData(x.data);
+  //         }
+  //         setLoader(false);
+  //         // setData(result);
+  //         // setTotalPages(result.totalPages);
+  //       } catch (error) {
+  //         console.error("Failed to load data:", error);
+  //         setLoader(false);
+  //         // Optionally set an error state here
+  //       }
+  // }
+  // useEffect(() => {
+  //   if (checkoutData?.booknet_customer_id){
+  //     const loadData = async () => {
+  //       setLoader(true);
+  //      await getFav()
+  //     };
+  //       loadData().catch((error) => {
+  //         console.error("Failed to load data in useEffect:", error);
+  //       });
+  //   };
+  //   // const genId = genre?.find((item) => item.genre == detail);
+    
+  // }, [checkoutData]);
+
+
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
@@ -93,8 +105,45 @@ const MyComponent = () => {
   };
 
   const handleFavourite = async (item: DataCart) => {
-    // await addFavourite(item.item_id);
+   
+    if (checkoutData?.booknet_customer_id) {
+      setWishListLoader(true)
+      if(item && favItems?.some((favItem) => favItem.item_id === item.item_id)){
+
+        await removeFavourite(item, checkoutData.booknet_customer_id).then(
+          async (x) => {
+            if (x) {
+              toast({
+                variant: "destructive",
+                title: "Remove From Wishlist",
+                description: "Item has been removed successfully.",
+              });
+            }
+            // await getFav();
+          },
+        ).finally(()=>setWishListLoader(false));
+      }else{
+        
+        await addFavourite(item, checkoutData.booknet_customer_id).then(
+          async (x) => {
+            if (x) {
+              toast({
+                variant: "success",
+                title: "Added To Wishlist",
+                description: "Item has been added successfully.",
+              });
+            }
+            // await getFav();
+          },
+        ).finally(()=>{
+          setWishListLoader(false);
+         
+        });
+      }
+     
+    }
   };
+
 
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
@@ -115,7 +164,7 @@ const MyComponent = () => {
   const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
 
   const filterResult = () => {
-    let filtered = data;
+    let filtered = favItems;
 
     // Search filter
     if (searchText) {
@@ -144,7 +193,7 @@ const MyComponent = () => {
 
   useEffect(() => {
     filterResult();
-  }, [searchText, data]);
+  }, [searchText, favItems]);
 
   return (
     <div>
@@ -164,7 +213,7 @@ const MyComponent = () => {
             <ScrollArea className="h-[75vh] pb-10">
               <div className="flex flex-wrap justify-center py-3">
                 {loader
-                  ? Array.from({ length: 6 }, (_, index) => (
+                  ? Array.from({ length: 2 }, (_, index) => (
                       <div key={index} className="p-2">
                         <ProductCardSkeleton />
                       </div>
@@ -178,8 +227,14 @@ const MyComponent = () => {
                         onRemoveFromCart={() => handleRemoveFromCart(item)}
                         openDetail={() => openDetail(item)}
                         handleFavourite={() => handleFavourite(item)}
+                        wishListLoader={wishListLoader}
                       />
                     ))}
+                    {!loader && !favItems[0] && (
+                        <div>
+                          Currently you have no items in wishlist
+                        </div>
+                    )}
               </div>
             </ScrollArea>
           </div>
@@ -279,7 +334,7 @@ const MyComponent = () => {
                   Publisher:
                 </span>
                 <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher.publisher_name}
+                  {itemDetail?.publisher?.publisher_name}
                 </span>
               </div>
               <div className="flex items-center justify-center">
@@ -287,7 +342,7 @@ const MyComponent = () => {
                   Country of Publication:
                 </span>
                 <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher.country}
+                  {itemDetail?.publisher?.country}
                 </span>
               </div>
 
