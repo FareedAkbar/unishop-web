@@ -73,7 +73,7 @@ export async function removeFromFavourite(item_id: number, booknet_customer_id: 
     }
 };
 
-export async function getFavouriteItems(booknet_customer_id: number): Promise<getFavResponse | boolean> {
+export async function getFavouriteItems(booknet_customer_id: number | null | undefined): Promise<getFavResponse | boolean> {
 
     const requestOptions: RequestInit = {
         method: "GET",
@@ -97,6 +97,7 @@ export async function getFavouriteItems(booknet_customer_id: number): Promise<ge
             return result
         } else {
             console.error("Unexpected result structure:", result);
+            console.log("errorrrrr",result)
             return result
         }
     } catch (error) {

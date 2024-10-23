@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 "use client";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -22,10 +26,16 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { getBooks } from "~/_actions/getbooks";
 import { useToast } from "~/hooks/use-toast";
 import AlertBox from "~/components/alertBox/alert";
+import { randomData } from "~/constants/rendaom";
+import Select from "~/components/Fields/select";
+
 
 const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
+
+  const [selectedValues, setSelectedValues] = useState<Record<string, string | undefined>>({});
+
   const router = useRouter();
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
@@ -49,6 +59,79 @@ const MyComponent = () => {
     favItems
   } = useAuthContext();
   const { toast } = useToast();
+
+ 
+
+
+  const getOptions = (tagName: string, dependencies: Record<string, string | undefined>) => {
+    return Array.from(
+      new Set(
+        randomData.Variations.filter((variation) => {
+          // Check all previous tag dependencies
+          return Object.keys(dependencies).every((key) => {
+            return variation.variation_tags.some(
+              (tag) => tag.items_variations_tags_name === key && tag.items_variations_tags_links_values_value === dependencies[key]
+            );
+          });
+        }).map((variation) => {
+          // Return only unique values for the current tag
+          return variation.variation_tags.find((tag) => tag.items_variations_tags_name === tagName)?.items_variations_tags_links_values_value;
+        })
+      )
+    )
+      .filter(Boolean)
+      .map((value) => ({ value: value!, label: value! }));
+  };
+
+  // Function to handle change in any select dropdown
+  const handleSelectChange = (tagName: string, selectedOption: { value: string; label: string }) => {
+    setSelectedValues((prevValues) => {
+      const newValues = { ...prevValues, [tagName]: selectedOption.value };
+  
+      // Find the current tag's index
+      const tagIndex = randomData.Variations[0]?.variation_tags.findIndex(
+        (tag) => tag.items_variations_tags_name === tagName
+      );
+  
+      // Reset only the dependent dropdowns
+      if (tagIndex !== undefined && tagIndex !== -1) {
+        const tagsToReset = randomData.Variations[0]?.variation_tags.slice(tagIndex + 1).map(
+          (tag) => tag.items_variations_tags_name
+        );
+        tagsToReset?.forEach((tag) => {
+          newValues[tag] = undefined;
+        });
+      }
+  
+      return newValues;
+    });
+  };
+
+  const filterVariationsBySelectedValues = (variations: any[], selectedValues: Record<string, string | undefined>) => {
+    return variations?.filter((variation) => {
+      // Check if every selected value matches in the variation's tags
+      return Object.keys(selectedValues).every((tagName) => {
+        const selectedValue = selectedValues[tagName];
+        
+        // Only proceed if the selected value is not undefined
+        if (!selectedValue) {
+          return false;
+        }
+  
+        return variation.variation_tags.some((tag: any) => {
+          return (
+            tag.items_variations_tags_name === tagName &&
+            tag.items_variations_tags_links_values_value === selectedValue
+          );
+        });
+      });
+    });
+  };
+  
+  const filteredVariations = filterVariationsBySelectedValues(randomData.Variations, selectedValues);
+  
+  console.log(filteredVariations);
+
 
   useEffect(() => {
     const d = params.get("detail");
@@ -109,10 +192,10 @@ const MyComponent = () => {
   const handleFavourite = async (item: DataCart) => {
    
     if (checkoutData?.booknet_customer_id) {
-      // setWishListLoader(true)
+      setWishListLoader(true)
       if(item && favItems?.some((favItem) => favItem.item_id === item.item_id)){
 
-        await removeFavourite(item.item_id, checkoutData.booknet_customer_id).then(
+        await removeFavourite(item, checkoutData.booknet_customer_id).then(
           (x) => {
             if (x) {
               toast({
@@ -125,7 +208,7 @@ const MyComponent = () => {
         ).finally(()=>setWishListLoader(false));
       }else{
         
-        await addFavourite(item.item_id, checkoutData.booknet_customer_id).then(
+        await addFavourite(item, checkoutData.booknet_customer_id).then(
           (x) => {
             if (x) {
               toast({
@@ -207,8 +290,8 @@ const MyComponent = () => {
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex flex-row">
-          <div className="flex flex-col px-4 lg:pl-64">
+        <div className="flex flex-grow flex-row sm:pt-10">
+          <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
             <div className="m-4 flex flex-wrap items-end justify-between gap-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">Books</h2>
@@ -369,7 +452,7 @@ const MyComponent = () => {
                   Publisher:
                 </span>
                 <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher.publisher_name}
+                  {itemDetail?.publisher?.publisher_name}
                 </span>
               </div>
               <div className="flex items-center justify-center">
@@ -377,10 +460,65 @@ const MyComponent = () => {
                   Country of Publication:
                 </span>
                 <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher.country}
+                  {itemDetail?.publisher?.country}
                 </span>
               </div>
 
+              <div>
+              <div>
+              <div>
+              <div>
+        <h3>Selected Variations:</h3>
+        <ul>
+          {Object.keys(selectedValues).map((key) => (
+            <>
+            {selectedValues[key] && (
+               <li key={key}>
+               {key}: {selectedValues[key] ?? 'Please Select'}
+             </li>
+            )}
+           {!selectedValues[key] && (
+               <li key={key} className="text-red-400">
+               {key}: {selectedValues[key] ?? 'Please Select'}
+             </li>
+            )}
+            </>
+            
+          ))}
+        </ul>
+      </div>
+      </div>
+      </div>
+      {randomData.Variations[0]?.variation_tags.map((tag, index) => {
+        const tagName = tag.items_variations_tags_name;
+        const prevTags = randomData.Variations[0]?.variation_tags.slice(0, index);
+        const dependencies = prevTags?.reduce((acc: Record<string, string | undefined>, currTag) => {
+          if (selectedValues[currTag.items_variations_tags_name]) {
+            acc[currTag.items_variations_tags_name] = selectedValues[currTag.items_variations_tags_name];
+          }
+          return acc;
+        }, {});
+
+        return (
+          <>
+          <>{tagName}</>
+           <Select
+            key={tagName}
+            id={tagName}
+            name={tagName}
+            options={getOptions(tagName, dependencies ?? {})}
+            value={selectedValues[tagName]}
+            placeholder={`Select ${tagName}`}
+            onChange={(option) => handleSelectChange(tagName, option)}
+            // loader={prevTags?.some((prevTag) => !selectedValues[prevTag.items_variations_tags_name])}
+          />
+          </>
+         
+        );
+      })}
+      {/* Display selected options */}
+      
+    </div>
               {itemDetail?.item_id &&
               !isItemInCart(itemDetail.item_id) &&
               itemDetail?.stock?.quantity ? (

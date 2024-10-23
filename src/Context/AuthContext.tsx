@@ -75,15 +75,15 @@ interface AuthContextProps {
   booknetCustomerId?: number | null;
   orderTrasactionData?: trasactionData | null;
   addFavourite: (
-    item_id: number,
+    item_id: DataCart,
     booknet_customer_id: number,
   ) => Promise<boolean>;
   removeFavourite: (
-    item_id: number,
+    item: DataCart,
     booknet_customer_id: number,
   ) => Promise<boolean>;
   getFavourite: (booknet_customer_id: number) => Promise<boolean>;
-  favItems: FavData[];
+  favItems: DataCart[];
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -102,7 +102,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [token, setToken] = useState<string | undefined>();
   const [themeMode, setThemeMode] = useState<string>("");
   const [cartItems, setItems] = useState<DataCart[]>([]);
-  const [favItems, setFavItems] = useState<FavData[]>([]);
+  const [favItems, setFavItems] = useState<DataCart[]>([]);
   const [orderTrasactionData, setOrderTrasactionData] =
     useState<trasactionData | null>(null);
   const [genre, setGenre] = useState<Genre[] | null>([]);
@@ -293,77 +293,83 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const addFavourite = async (
-    item_id: number,
+    item: DataCart,
     booknet_customer_id: number,
   ): Promise<boolean> => {
-    const response = await addToFavourite(item_id, booknet_customer_id);
+   
+      setFavItems((prevFavItems) => {
+        // Check if the item already exists in the favorite list
+       
+          // Create a new item object that conforms to the FavData type
+          const newItem: DataCart = item;
+
+          const updatedFavItems = [...prevFavItems, newItem];
+          return updatedFavItems;
+        
+      });
+    const response = await addToFavourite(item.item_id, booknet_customer_id);
     const responsePayload: {
       status: boolean;
     } = response as addFavResponse;
     if (responsePayload.status) {
-      setFavItems((prevFavItems) => {
-        // Check if the item already exists in the favorite list
-        const itemExists = prevFavItems.some(
-          (item) => item.item_id === item_id,
-        );
-
-        if (itemExists) {
-          // If it exists, remove it by filtering out the item
-          const updatedFavItems = prevFavItems.filter(
-            (item) => item.item_id !== item_id,
-          );
-          return updatedFavItems;
-        } else {
-          // Create a new item object that conforms to the FavData type
-          const newItem: FavData = {
-            booknet_customer_wishlist_id: 0, // Set this dynamically as needed
-            booknet_customer_id: booknet_customer_id, // Ensure this value matches the type (number | null)
-            item_id: item_id, // This is the item_id you want to add
-          };
-
-          const updatedFavItems = [...prevFavItems, newItem];
-          return updatedFavItems;
-        }
-      });
-      return true;
+      return true
+    } else  if (!responsePayload.status) {
+      const itemExists = favItems.some(
+        (item) => item.item_id === item.item_id,
+      );
+      if(itemExists){
+        setFavItems((prevFavItems) => {
+         
+  
+          
+            // If it exists, remove it by filtering out the item
+            const updatedFavItems = prevFavItems.filter(
+              (item) => item.item_id !== item.item_id,
+            );
+            return updatedFavItems;
+          
+        });
+      }
+      return false;
     } else {
       return false;
     }
   };
   const removeFavourite = async (
-    item_id: number,
+    item: DataCart,
     booknet_customer_id: number,
   ): Promise<boolean> => {
-    const response = await removeFromFavourite(item_id, booknet_customer_id);
+    const itemExists = favItems.some(
+      (item) => item.item_id === item.item_id,
+    );
+    if(itemExists){
+      const newItemList = favItems.filter(
+        (item) => item.item_id !== item.item_id,
+      );
+      setFavItems(newItemList);
+    }
+    const response = await removeFromFavourite(item.item_id, booknet_customer_id);
     const responsePayload: {
       status: boolean;
     } = response as addFavResponse;
     if (responsePayload.status) {
-      setFavItems((prevFavItems) => {
-        // Check if the item already exists in the favorite list
-        const itemExists = prevFavItems.some(
-          (item) => item.item_id === item_id,
-        );
-
-        if (itemExists) {
-          // If it exists, remove it by filtering out the item
-          const updatedFavItems = prevFavItems.filter(
-            (item) => item.item_id !== item_id,
-          );
-          return updatedFavItems;
-        } else {
+      return true
+    }else if (!responsePayload.status) {
+      const itemExistsAgain = favItems.some(
+        (item) => item.item_id === item.item_id,
+      );
+      if(!itemExistsAgain){
+        setFavItems((prevFavItems) => {
+       
           // Create a new item object that conforms to the FavData type
-          const newItem: FavData = {
-            booknet_customer_wishlist_id: 0, // Set this dynamically as needed
-            booknet_customer_id: booknet_customer_id, // Ensure this value matches the type (number | null)
-            item_id: item_id, // This is the item_id you want to add
-          };
+          const newItem: DataCart = item
 
           const updatedFavItems = [...prevFavItems, newItem];
           return updatedFavItems;
-        }
+        
       });
-      return true;
+      }
+      return false;
     } else {
       return false;
     }
@@ -374,7 +380,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const response = await getFavouriteItems(booknet_customer_id);
     const responsePayload: {
       status: boolean;
-      data: FavData[];
+      data: DataCart[];
     } = response as getFavResponse;
     if (responsePayload.status) {
       setFavItems(responsePayload.data);

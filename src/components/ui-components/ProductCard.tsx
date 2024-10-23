@@ -5,6 +5,7 @@ import React from "react";
 import { AiOutlineHeart, AiOutlineEye, AiFillHeart } from "react-icons/ai";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
+import Spinner from "../spinner";
 
 interface ProductProps {
   showAddToCart?: boolean;
@@ -13,7 +14,7 @@ interface ProductProps {
   openDetail?: () => void;
   handleFavourite?: () => void;
   product?: DataCart | null;
-  wishListLoader?: boolean | false 
+  wishListLoader?: boolean 
 }
 
 const ProductCard = ({
@@ -23,7 +24,7 @@ const ProductCard = ({
   showAddToCart,
   openDetail,
   handleFavourite,
-  wishListLoader
+  wishListLoader = false
 }: ProductProps) => {
   const { favItems } = useAuthContext();
   return (

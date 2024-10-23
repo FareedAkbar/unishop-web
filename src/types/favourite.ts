@@ -1,3 +1,5 @@
+import DataCart from "./book";
+
 interface addFavResponse {
     // meta: PaginationData; // Adjust based on your actual structure
     // data: DataCart[];
@@ -10,7 +12,7 @@ type FavData = {
     item_id: number
 }
 interface getFavResponse {
-    data: FavData[];
+    data: DataCart[];
     status: boolean;
 }
 
