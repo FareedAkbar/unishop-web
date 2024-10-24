@@ -75,40 +75,38 @@ const ImageSlider: React.FC = () => {
   }, [slides.length]);
 
   return (
-    <div
-      className={`container flex w-full flex-col px-4 pb-4 pt-2 ${
-        isFlipping ? "animate-flip-out" : ""
-      }`}
-    >
-      <div className="absolute z-10 w-2/5 p-1 lg:block lg:pl-10 lg:pt-10">
-        <div className="flex h-32 flex-col justify-between px-2 py-2 sm:h-52 md:h-60 md:px-6 lg:h-80 lg:px-10">
-          <div className="flex items-center lg:mb-4">
-            {slides[currentIndex]!.icon}
-            <span className="text-[9px] text-white sm:text-xl lg:text-lg">
-              {slides[currentIndex]!.name}
-            </span>
+    <div className={`container flex w-full flex-col px-4 pb-4 pt-2`}>
+      <div className={`${isFlipping ? "animate-flip-out" : ""}`}>
+        <div className="absolute z-10 w-2/5 p-1 lg:block lg:pl-10 lg:pt-10">
+          <div className="flex h-32 flex-col justify-between px-2 py-2 sm:h-52 md:h-60 md:px-6 lg:h-80 lg:px-10">
+            <div className="flex items-center lg:mb-4">
+              {slides[currentIndex]!.icon}
+              <span className="text-[9px] text-white sm:text-xl lg:text-lg">
+                {slides[currentIndex]!.name}
+              </span>
+            </div>
+            <div className="text-xl font-bold text-white sm:text-3xl lg:mb-4 lg:text-4xl">
+              {slides[currentIndex]!.heading}
+            </div>
+            <button
+              className="flex w-fit flex-row items-center rounded border-none bg-red-600 px-1 text-[10px] text-white md:px-3 md:py-1.5 lg:px-4 lg:py-2 lg:text-base lg:font-bold"
+              onClick={() => router.push(slides[currentIndex]!.route)} // Navigate to respective route
+            >
+              <span>{slides[currentIndex]!.button}</span>
+              <IoIosArrowRoundForward className="ml-1 text-lg text-white lg:text-xl" />
+            </button>
           </div>
-          <div className="text-xl font-bold text-white sm:text-3xl lg:mb-4 lg:text-4xl">
-            {slides[currentIndex]!.heading}
-          </div>
-          <button
-            className="flex w-fit flex-row items-center rounded border-none bg-red-600 px-1 text-[10px] text-white md:px-3 md:py-1.5 lg:px-4 lg:py-2 lg:text-base lg:font-bold"
-            onClick={() => router.push(slides[currentIndex]!.route)} // Navigate to respective route
-          >
-            <span>{slides[currentIndex]!.button}</span>
-            <IoIosArrowRoundForward className="ml-1 text-lg text-white lg:text-xl" />
-          </button>
         </div>
-      </div>
-      <div className="relative">
-        <Image
-          src={slides[currentIndex]!.image}
-          alt={slides[currentIndex]!.name}
-          width={3000}
-          height={3000}
-          objectFit="cover"
-          className={`relative h-36 w-full rounded-lg transition-transform duration-700 ease-in-out sm:h-72 lg:h-[400px]`}
-        />
+        <div className="relative">
+          <Image
+            src={slides[currentIndex]!.image}
+            alt={slides[currentIndex]!.name}
+            width={3000}
+            height={3000}
+            objectFit="cover"
+            className={`relative h-36 w-full rounded-lg transition-transform duration-700 ease-in-out sm:h-72 lg:h-[400px]`}
+          />
+        </div>
       </div>
       {/* Dots Indicator */}
       <div className="mt-4 flex items-center justify-center space-x-2">

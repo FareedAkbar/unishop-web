@@ -82,7 +82,7 @@ const MyComponent = () => {
       </div>
 
       {/* Image Section - Full Width */}
-      <div className="mt-10 space-y-6">
+      <div className="mt-10 px-3 space-y-6">
         <Image
           src="/assets/images/graduation_attire/pricing.png"
           alt="Graduation Gown"

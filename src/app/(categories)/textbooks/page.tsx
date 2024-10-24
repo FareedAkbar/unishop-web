@@ -245,7 +245,7 @@ const MyComponent = () => {
             <div className="m-4 flex flex-wrap items-end justify-between gap-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">Text Books</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-300">
+                <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
                   {parentSubCategory?.category_name}
                 </p>
               </div>

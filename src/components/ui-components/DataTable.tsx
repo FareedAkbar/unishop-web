@@ -327,41 +327,41 @@ const DataTable: React.FC<DataTableProps> = ({
       <ModalBody>
         <ModalContent>
           <div className="space-y-8 p-3">
-            <h2 className="text-center text-3xl font-extrabold uppercase tracking-wide text-gray-900">
+            <h2 className="text-center text-3xl font-extrabold uppercase tracking-wide text-gray-900 dark:text-gray-200">
               Order Details
             </h2>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {/* Order Info */}
               <div className="flex flex-col items-center lg:items-start">
-                <h3 className="mb-2 text-center text-xl font-bold text-gray-800">
+                <h3 className="mb-2 text-center text-xl font-bold ">
                   Order Information
                 </h3>
 
                 {/* Using flex for attribute-value pairs */}
                 <div className="flex items-center">
-                  <p className="mr-2 text-sm text-gray-600">Order ID:</p>
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Order ID:</p>
                   <p className="text-lg font-semibold">
                     {selectedItem?.order_id}
                   </p>
                 </div>
 
                 <div className="mt-2 flex items-end">
-                  <p className="mr-2 text-sm text-gray-600">Tracking ID:</p>
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Tracking ID:</p>
                   <p className="text-lg font-semibold">
                     {selectedItem?.tracking_id}
                   </p>
                 </div>
 
                 <div className="mt-2 flex items-center">
-                  <p className="mr-2 text-sm text-gray-600">Actual Price:</p>
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Actual Price:</p>
                   <p className="text-lg font-semibold">
                     ${selectedItem?.total_order_price}
                   </p>
                 </div>
 
                 <div className="mt-2 flex items-center">
-                  <p className="mr-2 text-sm text-gray-600">
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
                     Discounted Price:
                   </p>
                   <p className="text-lg font-semibold">
@@ -377,21 +377,21 @@ const DataTable: React.FC<DataTableProps> = ({
                 </h3>
 
                 <div className="flex items-center">
-                  <p className="mr-2 text-sm text-gray-600">Customer ID:</p>
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Customer ID:</p>
                   <p className="text-lg font-semibold">
                     {selectedItem?.customer_id ?? "Guest"}
                   </p>
                 </div>
 
                 <div className="mt-2 flex items-center">
-                  <p className="mr-2 text-sm text-gray-600">Outlet:</p>
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Outlet:</p>
                   <p className="text-lg font-semibold">
                     {selectedItem?.outlet}
                   </p>
                 </div>
 
                 <div className="mt-2 flex items-center">
-                  <p className="mr-2 text-sm text-gray-600">Special Order:</p>
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Special Order:</p>
                   <p className="text-lg font-semibold">
                     {selectedItem?.special ? "Yes" : "No"}
                   </p>
@@ -406,7 +406,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   Order Items
                 </h3>
                 {selectedItem.special_order_items?.length > 0 ? (
-                  <ul className="mt-2 list-inside list-disc text-gray-700">
+                  <ul className="mt-2 list-inside list-disc text-gray-700 dark:text-gray-300">
                     {selectedItem.special_order_items.map((item, index) => (
                       <li key={index}>
                         <span className="">Item ID:</span> {item.item_id},{" "}
@@ -423,7 +423,7 @@ const DataTable: React.FC<DataTableProps> = ({
             )}
             {/* Order Started */}
             <div className="mt-">
-              <p className="text-center text-sm text-gray-500">
+              <p className="text-center text-sm text-gray-500 dark:text-gray-300">
                 <span className="font-semibold">Order Started:</span>{" "}
                 {selectedItem?.started ? new Date(selectedItem?.started).toLocaleString() : ''}
               </p>
