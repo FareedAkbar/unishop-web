@@ -76,7 +76,7 @@ const PrivacyPolicy: React.FC = () => {
         Privacy Policy
       </h1>
       <p className="mx-auto max-w-2xl text-center lg:text-lg leading-10 pb-7">
-        This privacy policy outlines how "the Store" collects and protects your
+        This privacy policy outlines how the &quot;Store&quot; collects and protects your
         information while using our website. We are committed to safeguarding
         your privacy and will only use your information in accordance with this
         policy. Please review this page periodically for any updates.
@@ -102,9 +102,8 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Section Content with Animation */}
             <div
-              className={`mt-2 overflow-hidden transition-all bg-white dark:bg-slate-700 rounded duration-300 ease-in-out ${
-                activeIndex === index ? "max-h-[500px]" : "max-h-0"
-              }`}
+              className={`mt-2 overflow-hidden transition-all bg-white dark:bg-slate-700 rounded duration-300 ease-in-out ${activeIndex === index ? "max-h-[500px]" : "max-h-0"
+                }`}
             >
               <ul className="ml-6 mt-2 list-disc py-2">
                 {section.content.map((item, idx) =>

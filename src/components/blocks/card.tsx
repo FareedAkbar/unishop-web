@@ -142,7 +142,7 @@ export default function ExpandableCardDemo({ data }: DataArray) {
                     >
                       {active.description}
                     </motion.p>
-                    {active.stock.quantity < active.quantity && (
+                    {active?.stock.quantity ? (active?.stock.quantity < active.quantity && (
                       <motion.p
                         layoutId={`stock-quantity-${active.quantity}-${active.stock.quantity}`}
                         className="rounded bg-yellow-200 p-2 text-center text-neutral-700 dark:text-neutral-400 md:text-left"
@@ -151,7 +151,7 @@ export default function ExpandableCardDemo({ data }: DataArray) {
                         we&apos;ll back order the remaining{" "}
                         {active.quantity - active.stock.quantity}.
                       </motion.p>
-                    )}
+                    )) : null}
                   </div>
 
                   <motion.button
@@ -181,7 +181,7 @@ export default function ExpandableCardDemo({ data }: DataArray) {
         ) : null}
       </AnimatePresence>
       <ScrollArea className=" h-3/4 rounded-md border mx-auto w-full max-w-2xl gap-4 bg-white p-4 shadow shadow-card shadow-zinc-300 dark:bg-black md:rounded-xl md:p-8">
-     
+
         <div>
           <p className="font-serif text-lg font-bold">Order Summary</p>
           <p>{data.length} items in cart</p>
@@ -232,16 +232,16 @@ export default function ExpandableCardDemo({ data }: DataArray) {
                 >
                   {card.description}
                 </motion.p>
-                {card.stock.quantity < card.quantity && (
+                {card.stock.quantity ? (card.stock.quantity < card.quantity && (
                   <motion.p
                     layoutId={`stock-quantity-${card.quantity}-${card.stock.quantity}`}
                     className="rounded bg-yellow-200 p-2 text-center text-neutral-700 dark:text-neutral-400 md:text-left flex"
                   >
-                   <MdWarning size={23}/> {" "}We don&apos;t have as many quantity as you requested, but we&apos;ll
+                    <MdWarning size={23} /> {" "}We don&apos;t have as many quantity as you requested, but we&apos;ll
                     back order the remaining{" "}
                     {card.quantity - card.stock.quantity}.
                   </motion.p>
-                )}
+                )) : null}
               </div>
             </div>
             <motion.button
@@ -252,7 +252,7 @@ export default function ExpandableCardDemo({ data }: DataArray) {
             </motion.button>
           </motion.div>
         ))}
-     
+
       </ScrollArea>
       {/* <AlertBox title="Remove Item" description="Are you sure you want to Remove this item from cart?" open={isOpenAlert} onClose={()=>setIsOpenAlert(false)} onContinue={()=> handleRemoveFromCart(removeItem)}></AlertBox> */}
     </>

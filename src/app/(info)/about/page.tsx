@@ -43,7 +43,7 @@ const MyComponent = () => {
             SHOP ONLINE OR IN-STORE
           </h2>
           <p className="leading-relaxed text-justify text-gray-600 dark:text-gray-300">
-            Enjoy convenient delivery or 'CLICK AND COLLECT' options at UniShop,
+            Enjoy convenient delivery or &quot;CLICK AND COLLECT&quot; options at UniShop,
             located on the scenic UOW campus. As a UOW Pulse venture, your
             purchases directly contribute to enriching student life through
             events, clubs, and more.
