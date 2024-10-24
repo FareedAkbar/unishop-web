@@ -20,7 +20,7 @@ export async function addToFavourite(item_id: number, booknet_customer_id: numbe
     };
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/customer/wishlist`,
+            `http://110.93.226.167:3000/api/customer/wishlist`,
             requestOptions,
         );
         const result: addFavResponse = (await response.json()) as addFavResponse;
@@ -54,7 +54,7 @@ export async function removeFromFavourite(item_id: number, booknet_customer_id: 
     };
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/customer/wishlist`,
+            `http://110.93.226.167:3000/api/customer/wishlist`,
             requestOptions,
         );
         const result: addFavResponse = (await response.json()) as addFavResponse;
@@ -86,7 +86,7 @@ export async function getFavouriteItems(booknet_customer_id: number | null | und
     };
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/customer/wishlist?booknet_customer_id=${booknet_customer_id}`,
+            `http://110.93.226.167:3000/api/customer/wishlist?booknet_customer_id=${booknet_customer_id}`,
             requestOptions,
         );
         const result: getFavResponse = (await response.json()) as getFavResponse;
@@ -97,7 +97,7 @@ export async function getFavouriteItems(booknet_customer_id: number | null | und
             return result
         } else {
             console.error("Unexpected result structure:", result);
-            console.log("errorrrrr",result)
+            console.log("error",result)
             return result
         }
     } catch (error) {

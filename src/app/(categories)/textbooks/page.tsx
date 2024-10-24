@@ -101,13 +101,11 @@ const MyComponent = () => {
           // Optionally set an error state here
         }
       };
-      if (isFirstRender.current) {
-        isFirstRender.current = false; // Prevents further API calls on first render
-      } else {
+     
         loadData().catch((error) => {
           console.error("Failed to load data in useEffect:", error);
         });
-      }
+      
     }
    
     
@@ -367,7 +365,7 @@ const MyComponent = () => {
                     src={
                       itemDetail?.object_path
                         ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                        : "/bookIcon.png"
+                        : "/assets/images/products/product.png"
                     }
                     alt={itemDetail?.object_path ?? ""}
                     width={1000}

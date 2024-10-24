@@ -14,6 +14,7 @@ interface SelectProps {
   loader?: boolean; // Add loader prop
   error?: string;
   onChange?: (option: Option) => void; // Update onChange type
+  isDisabled?: boolean
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -25,6 +26,7 @@ const Select: React.FC<SelectProps> = ({
   error,
   value,
   onChange,
+  isDisabled = false
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
@@ -45,7 +47,7 @@ const Select: React.FC<SelectProps> = ({
         className="block w-full rounded-md border px-3 py-2 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-400 dark:bg-slate-700 sm:text-sm"
         value={value}
         onChange={handleChange}
-        disabled={loader} // Disable select when loader is true
+        disabled={loader || isDisabled} // Disable select when loader is true
       >
         {/* If loading, show a loading option */}
         {loader ? (

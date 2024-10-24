@@ -1,3 +1,81 @@
+
+interface Tag {
+  item_id: number;
+  tag_id: number;
+  tag: string;
+}
+
+interface TagLink {
+  items_variations_tags_link_id: number;
+  items_variations_tags_id: number;
+  items_variations_tags_name: string;
+}
+
+interface StockEntry {
+  stock_id: number;
+  stock_name: string;
+  stock_quantities_requested: string;
+  amount_paid: string;
+  stock_quantities_recieved: string;
+  quantities: string;
+  unit_id: number;
+  unit_name: string;
+  lowest_level: string;
+}
+
+interface Stock {
+  quantity: number | null;
+  quantity_check: boolean;
+  stock_id: number;
+  unit_id: number | null;
+  unit_name: string | null;
+  stock_name: string;
+  lowest_level: string;
+  stock_quantities_requested: string | null;
+  amount_paid: string | null;
+  stock_quantities_recieved: string | null;
+  stock_entry: StockEntry[];
+}
+
+interface CostDetails {
+  items_costing_id: number;
+  item_id: number;
+  items_variable_items_id: number;
+  items_costing_p2p: number;
+  items_costing_p2s: number;
+  items_costing_p2o: number;
+}
+
+
+
+interface VariationTag {
+  items_variations_tags_link_id: number;
+  item_id: number;
+  items_variations_tags_id: number;
+  items_variations_tags_name: string;
+  items_variations_tags_links_values_id: number;
+  items_variations_tags_links_values_link_id: number;
+  items_variations_tags_links_values_var_id: number;
+  items_variations_tags_links_values_value: string;
+}
+interface Variation {
+  items_variable_items_id: number;
+  item_id: number;
+  items_variable_items_barcode: string;
+  items_variable_items_sku_number: string;
+  items_variable_items_sku_title: string;
+  items_variable_items_sale_price: number;
+  items_variable_items_cost_price: number;
+  items_variable_items_expiry_date: string;
+  book_ISBN: string | null;
+  book_language: string | null;
+  subtitle: string | null;
+  published_date: string | null;
+  variation_tags: VariationTag[];
+  cost_details: CostDetails;
+  stock: Stock;
+}
+
 export default interface DataCart {
   book_id: number;
   final_price_including_tax?: number; // Just use number; 0 is included
@@ -49,33 +127,14 @@ export default interface DataCart {
   stock: Stock;
   media: Media[];
   publisher: Publisher;
+  tags?: Tag[] | null;
+  tag_links?: TagLink[] | null;
+  variations?: Variation[] | null;
 }
 
-interface Stock {
-  stock_id: number;
-  unit_id: number;
-  unit_name: string;
-  stock_name: string;
-  lowest_level: string;
-  stock_quantities_requested: string;
-  amount_paid: string;
-  stock_quantities_recieved: string;
-  quantity_check: boolean;
-  quantity: number;
-  stock_entry: StockEntry[];
-}
 
-interface StockEntry {
-  stock_id: number;
-  stock_name: string;
-  stock_quantities_requested: string;
-  amount_paid: string;
-  stock_quantities_recieved: string;
-  quantities: string;
-  unit_id: number;
-  unit_name: string;
-  lowest_level: string;
-}
+
+
 
 interface Media {
   object_id: number;
