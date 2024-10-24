@@ -19,13 +19,13 @@ import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { getBooks } from "~/_actions/gettextbooks";
 import type { Category } from "~/types/category";
 import { useToast } from "~/hooks/use-toast";
 import AlertBox from "~/components/alertBox/alert";
 import GiftCategoryInfo from "./GiftCategory";
+import { getItemsByCategory } from "~/_actions/getitemsbycategory";
+import type { Pagination } from "~/types/pagination";
 
-const PRODUCTS_PER_PAGE = 10;
 interface GiftCategory {
   name: string;
   description: string;
@@ -127,7 +127,6 @@ const MyComponent = () => {
   const [data, setData] = useState<DataCart[]>([]);
   const isFirstRender = useRef(true);
   const [searchText, setSearchText] = useState("");
-  const [filteredData, setFilteredData] = useState<DataCart[] | null>(null);
   const params = useSearchParams();
   const { setOpen } = useModal();
   const [detail, setDetail] = useState<string>("");
@@ -138,6 +137,11 @@ const MyComponent = () => {
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [wishListLoader, setWishListLoader] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<Pagination | null>(null);
+  const [totalPages, setTotalPages] = useState(pagination?.pages ?? 1);
+  const [displayData, setDisplayData] = useState<DataCart[] | null>(null);
+  const [currentPage, setCurrentPage] = useState(pagination?.page ?? 1);
+  const [pageSize, setPageSize] = useState(pagination?.limit ?? 15);
   const {
     cartItems,
     addCartItems,
@@ -163,7 +167,26 @@ const MyComponent = () => {
     }
   }, [params]);
 
-  console.log(subcategoryStatic);
+  async function getCloths(page: number) {
+    try {
+      setLoader(true);
+      const x = await getItemsByCategory(parseInt(detail) ?? 1, page, 1, 0);
+      if (typeof x !== "boolean" && x.status) {
+        setPagination(x.meta)
+        setData(x.data);
+        setDisplayData(x.data);
+        setTotalPages(x.meta.pages);
+        setPageSize(x.meta.pages)
+      }
+      setLoader(false);
+      // setData(result);
+      // setTotalPages(result.totalPages);
+    } catch (error) {
+      console.error("Failed to load data:", error);
+      setLoader(false);
+      // Optionally set an error state here
+    }
+  }
   useEffect(() => {
     if (!genre) return;
     if (!detail) return;
@@ -171,29 +194,14 @@ const MyComponent = () => {
     if (genId) {
       setSubcategory(genId);
       const loadData = async () => {
-        try {
-          setLoader(true);
-          const x = await getBooks(genId?.id ?? 1);
-          if (typeof x !== "boolean" && x.status) {
-            setData(x.data);
-            setFilteredData(x.data);
-          }
-          setLoader(false);
-          // setData(result);
-          // setTotalPages(result.totalPages);
-        } catch (error) {
-          console.error("Failed to load data:", error);
-          setLoader(false);
-          // Optionally set an error state here
-        }
+        await getCloths(1)
       };
-      if (isFirstRender.current) {
-        isFirstRender.current = false; // Prevents further API calls on first render
-      } else {
+
+     
         loadData().catch((error) => {
           console.error("Failed to load data in useEffect:", error);
         });
-      }
+     
     }
   }, [genre, detail]);
 
@@ -271,11 +279,8 @@ const MyComponent = () => {
       : false;
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
 
   // Get the products for the current page
-  const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
 
   const filterResult = () => {
     let filtered = data;
@@ -291,23 +296,28 @@ const MyComponent = () => {
 
     // Date range filter
 
-    setFilteredData(filtered);
-    setCurrentPage(1); // Reset to first page on new filter
+    setCurrentPage(filtered ? 1 : pagination?.page ?? 1); // Reset to first page on new filter
+    setTotalPages(Math.ceil(
+      filtered ? filtered?.length / pageSize : 1 / pageSize,
+    ));
+    const x = filtered ? filtered?.slice(
+      (currentPage - 1) * pageSize,
+      currentPage * pageSize,
+    ) : data
+    setDisplayData(x)
   };
-  // Calculate total pages based on filtered data and page size
-  const totalPages = Math.ceil(
-    filteredData ? filteredData?.length / pageSize : 1 / pageSize,
-  );
-
-  // Get the data to be displayed for the current page
-  const displayedData = filteredData?.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  );
+  
 
   useEffect(() => {
     filterResult();
-  }, [searchText, data]);
+  }, [searchText]);
+
+  const handlePageChange = async (page: number) => {
+    setCurrentPage(page)
+    await getCloths(page)
+
+  }
+
   const matchedCategory = giftCategories.find(
     (cat) => cat.lastWord === subcategoryStatic,
   );
@@ -344,7 +354,7 @@ const MyComponent = () => {
                     className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
                   />
                   <h1 className="font-bold">
-                    Showing {displayedData?.length} of {data.length} Items
+                  Showing {displayData?.length} of {data.length} Items
                   </h1>
                 </div>
               </div>
@@ -357,7 +367,7 @@ const MyComponent = () => {
                           <ProductCardSkeleton />
                         </div>
                       ))
-                    : displayedData?.map((item: DataCart) => (
+                    : displayData?.map((item: DataCart) => (
                         <ProductCard
                           key={item.book_id}
                           product={item}
@@ -371,25 +381,27 @@ const MyComponent = () => {
                       ))}
                 </div>
               </ScrollArea>
+              {pagination && (
               <div className="z-10 flex justify-between px-4 lg:-mt-9">
                 <button
                   className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
-                  onClick={() => setCurrentPage(currentPage - 1)}
+                  onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
                   <FaChevronLeft />
                 </button>
                 <span className="px-2">
-                  Page {currentPage} of {totalPages}
+                  Page {currentPage ?? 1} of {totalPages ?? 1}
                 </span>
                 <button
                   className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
-                  onClick={() => setCurrentPage(currentPage + 1)}
+                  onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
                 >
                   <FaChevronRight />
                 </button>
               </div>
+            )}
             </div>
           </div>
         )}

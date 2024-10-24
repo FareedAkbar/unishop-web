@@ -30,7 +30,7 @@ import type { Category } from "~/types/category";
 import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import Select from "~/components/Fields/select";
 import type { Pagination } from "~/types/pagination";
-import { Variation } from "~/types/book";
+import type { Variation } from "~/types/book";
 
 
 const MyComponent = () => {
@@ -38,7 +38,6 @@ const MyComponent = () => {
   const [data, setData] = useState<DataCart[]>([]);
   const isFirstRender = useRef(true);
   const [searchText, setSearchText] = useState("");
-  const [filteredData, setFilteredData] = useState<DataCart[] | null>(null);
   const params = useSearchParams();
   const { setOpen } = useModal();
   const [detail, setDetail] = useState<string>("");
@@ -79,7 +78,6 @@ const MyComponent = () => {
       if (typeof x !== "boolean" && x.status) {
         setPagination(x.meta)
         setData(x.data);
-        setFilteredData(x.data);
         setDisplayData(x.data);
         setTotalPages(x.meta.pages);
         setPageSize(x.meta.pages)
@@ -256,9 +254,6 @@ const MyComponent = () => {
     }
 
     // Date range filter
-
-    setFilteredData(filtered);
-    console.log(filtered)
     setCurrentPage(filtered ? 1 : pagination?.page ?? 1); // Reset to first page on new filter
     setTotalPages(Math.ceil(
       filtered ? filtered?.length / pageSize : 1 / pageSize,
@@ -267,9 +262,6 @@ const MyComponent = () => {
       (currentPage - 1) * pageSize,
       currentPage * pageSize,
     ) : data
-    console.log(x)
-    console.log(currentPage)
-    console.log(pageSize)
     setDisplayData(x)
   };
   // Calculate total pages based on filtered data and page size
