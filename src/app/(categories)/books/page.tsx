@@ -221,7 +221,7 @@ const MyComponent = () => {
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-grow flex-row sm:pt-10">
-          <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
+          <div className="flex flex-col px-4 lg:pl-72">
             <div className="m-4 flex flex-wrap items-end justify-between gap-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">Books</h2>

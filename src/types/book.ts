@@ -58,7 +58,7 @@ interface VariationTag {
   items_variations_tags_links_values_var_id: number;
   items_variations_tags_links_values_value: string;
 }
-interface Variation {
+export interface Variation {
   items_variable_items_id: number;
   item_id: number;
   items_variable_items_barcode: string;
@@ -130,6 +130,7 @@ export default interface DataCart {
   tags?: Tag[] | null;
   tag_links?: TagLink[] | null;
   variations?: Variation[] | null;
+  selected_variation?: Variation | null;
 }
 
 
