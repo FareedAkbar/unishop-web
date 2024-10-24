@@ -314,9 +314,10 @@ const MyComponent = () => {
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex flex-row">
-          <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
-            <div className="m-4 flex flex-wrap items-end justify-between gap-4">
+         <div className="flex flex-grow flex-row sm:pt-10">
+          <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
+            {/* Header Section */}
+            <div className="flex w-full flex-wrap items-end justify-between pb-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">MERCH & Clothing</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-300">
@@ -368,7 +369,7 @@ const MyComponent = () => {
               </div>
             </ScrollArea>
             {pagination && (
-              <div className="z-10 flex justify-between px-4 lg:-mt-9">
+            <div className="z-10 flex justify-between px-4 py-4">
                 <button
                   className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage - 1)}

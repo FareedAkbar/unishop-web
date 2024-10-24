@@ -29,12 +29,9 @@ import AlertBox from "~/components/alertBox/alert";
 import { randomData } from "~/constants/rendaom";
 import Select from "~/components/Fields/select";
 
-
 const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
-
-
   const router = useRouter();
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
@@ -55,15 +52,9 @@ const MyComponent = () => {
     addFavourite,
     removeFavourite,
     checkoutData,
-    favItems
+    favItems,
   } = useAuthContext();
   const { toast } = useToast();
-
-
-
-
-  
-
 
   useEffect(() => {
     const d = params.get("detail");
@@ -91,11 +82,10 @@ const MyComponent = () => {
         // Optionally set an error state here
       }
     };
-    
-      loadData().catch((error) => {
-        console.error("Failed to load data in useEffect:", error);
-      });
-    
+
+    loadData().catch((error) => {
+      console.error("Failed to load data in useEffect:", error);
+    });
   }, [genre, detail]);
 
   // Handle add to cart
@@ -120,13 +110,14 @@ const MyComponent = () => {
   };
 
   const handleFavourite = async (item: DataCart) => {
-
     if (checkoutData?.booknet_customer_id) {
-      setWishListLoader(true)
-      if (item && favItems?.some((favItem) => favItem.item_id === item.item_id)) {
-
-        await removeFavourite(item, checkoutData.booknet_customer_id).then(
-          (x) => {
+      setWishListLoader(true);
+      if (
+        item &&
+        favItems?.some((favItem) => favItem.item_id === item.item_id)
+      ) {
+        await removeFavourite(item, checkoutData.booknet_customer_id)
+          .then((x) => {
             if (x) {
               toast({
                 variant: "destructive",
@@ -134,12 +125,11 @@ const MyComponent = () => {
                 description: "Item has been removed successfully.",
               });
             }
-          },
-        ).finally(() => setWishListLoader(false));
+          })
+          .finally(() => setWishListLoader(false));
       } else {
-
-        await addFavourite(item, checkoutData.booknet_customer_id).then(
-          (x) => {
+        await addFavourite(item, checkoutData.booknet_customer_id)
+          .then((x) => {
             if (x) {
               toast({
                 variant: "success",
@@ -147,10 +137,9 @@ const MyComponent = () => {
                 description: "Item has been added successfully.",
               });
             }
-          },
-        ).finally(() => setWishListLoader(false));
+          })
+          .finally(() => setWishListLoader(false));
       }
-
     } else {
       setLoginAlert(true);
     }
@@ -214,15 +203,16 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center pt-20 pb-5"
+        className="flex min-h-screen flex-col items-center pb-5 pt-20"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-grow flex-row sm:pt-10">
-          <div className="flex flex-col px-4 lg:pl-72">
-            <div className="m-4 flex flex-wrap items-end justify-between gap-4">
+          <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
+            {/* Header Section */}
+            <div className="flex w-full flex-wrap items-end justify-between pb-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">Books</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-300">
@@ -238,37 +228,44 @@ const MyComponent = () => {
                   placeholder="Search"
                   className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
                 />
-                <h1 className="font-bold">
+                <h1 className="pr-2 font-bold">
                   Showing {displayedData?.length} of {data.length} Items
                 </h1>
               </div>
             </div>
 
+            {/* Scrollable Product Section */}
             <ScrollArea className="h-[75vh] pb-5">
-              <div className="flex flex-wrap justify-center py-3">
+              <div className="flex h-full flex-wrap items-center justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
-                    <div key={index} className="p-2">
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
+                      <div key={index} className="p-2">
+                        <ProductCardSkeleton />
+                      </div>
+                    ))
                   : displayedData?.map((item: DataCart) => (
-                    <ProductCard
-                      key={item.book_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={() => handleAddToCart(item)}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
-                      handleFavourite={() => handleFavourite(item)}
-                      wishListLoader={wishListLoader}
-                    />
-                  ))}
+                      <ProductCard
+                        key={item.book_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={() => handleAddToCart(item)}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        openDetail={() => openDetail(item)}
+                        handleFavourite={() => handleFavourite(item)}
+                        wishListLoader={wishListLoader}
+                      />
+                    ))}
               </div>
             </ScrollArea>
-            <div className="z-10 flex justify-between px-4 ">
+
+            {/* Pagination Section */}
+            <div className="z-10 flex justify-between px-4 py-4">
               <button
-                className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                className={`rounded-full p-2 ${
+                  currentPage === 1
+                    ? "bg-gray-200 text-black"
+                    : "cursor-pointer bg-red-500 text-white"
+                }`}
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
               >
@@ -278,7 +275,11 @@ const MyComponent = () => {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                className={`rounded-full p-2 ${
+                  currentPage === totalPages
+                    ? "bg-gray-200 text-black"
+                    : "cursor-pointer bg-red-500 text-white"
+                }`}
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
@@ -395,8 +396,8 @@ const MyComponent = () => {
               </div>
 
               {itemDetail?.item_id &&
-                !isItemInCart(itemDetail.item_id) &&
-                itemDetail?.stock?.quantity ? (
+              !isItemInCart(itemDetail.item_id) &&
+              itemDetail?.stock?.quantity ? (
                 <button
                   className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
                   onClick={() => handleAddToCart(itemDetail)}

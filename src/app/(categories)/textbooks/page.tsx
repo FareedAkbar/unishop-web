@@ -58,7 +58,9 @@ const MyComponent = () => {
 
   const [data, setData] = useState<DataCart[]>([]);
   const [subCategory, setSubCategory] = useState<Category[] | null>(null);
-  const [parentSubCategory, setParentSubCategory] = useState<Category | null>(null);
+  const [parentSubCategory, setParentSubCategory] = useState<Category | null>(
+    null,
+  );
   const isFirstRender = useRef(true);
   const router = useRouter();
   const { toast } = useToast();
@@ -79,11 +81,11 @@ const MyComponent = () => {
     if (!detail) return;
 
     const catId = category?.find((item) => item.id == parseInt(detail));
-    if(catId){
-      setParentSubCategory(catId)
+    if (catId) {
+      setParentSubCategory(catId);
       const loadData = async () => {
         const x = category?.filter((item) => item.parent == catId?.id);
-  
+
         setSubCategory(x);
         try {
           setLoader(true);
@@ -91,7 +93,7 @@ const MyComponent = () => {
           if (typeof x !== "boolean" && x.status) {
             setData(x.data);
           }
-  
+
           setLoader(false);
           // setData(result);
           // setTotalPages(result.totalPages);
@@ -101,15 +103,11 @@ const MyComponent = () => {
           // Optionally set an error state here
         }
       };
-     
-        loadData().catch((error) => {
-          console.error("Failed to load data in useEffect:", error);
-        });
-      
+
+      loadData().catch((error) => {
+        console.error("Failed to load data in useEffect:", error);
+      });
     }
-   
-    
-   
   }, [category, detail]);
 
   // Handle add to cart
@@ -194,13 +192,14 @@ const MyComponent = () => {
     }
   };
   const handleFavourite = async (item: DataCart) => {
-   
     if (checkoutData?.booknet_customer_id) {
-      setWishListLoader(true)
-      if(item && favItems?.some((favItem) => favItem.item_id === item.item_id)){
-     
-        await removeFavourite(item, checkoutData.booknet_customer_id).then(
-          (x) => {
+      setWishListLoader(true);
+      if (
+        item &&
+        favItems?.some((favItem) => favItem.item_id === item.item_id)
+      ) {
+        await removeFavourite(item, checkoutData.booknet_customer_id)
+          .then((x) => {
             if (x) {
               toast({
                 variant: "destructive",
@@ -208,12 +207,11 @@ const MyComponent = () => {
                 description: "Item has been removed successfully.",
               });
             }
-          },
-        ).finally(()=>setWishListLoader(false));
-      }else{
-       
-        await addFavourite(item, checkoutData.booknet_customer_id).then(
-          (x) => {
+          })
+          .finally(() => setWishListLoader(false));
+      } else {
+        await addFavourite(item, checkoutData.booknet_customer_id)
+          .then((x) => {
             if (x) {
               toast({
                 variant: "success",
@@ -221,10 +219,9 @@ const MyComponent = () => {
                 description: "Item has been added successfully.",
               });
             }
-          },
-        ).finally(()=>setWishListLoader(false));
+          })
+          .finally(() => setWishListLoader(false));
       }
-     
     } else {
       setLoginAlert(true);
     }
@@ -237,14 +234,14 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex  flex-col items-center pt-20"
+        className="flex flex-col items-center pt-20"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-row">
-          <div className="flex flex-col px-4 py-5 lg:pl-64">
+          <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
             <div className="m-4 flex flex-wrap items-end justify-between gap-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">Text Books</h2>
@@ -275,7 +272,7 @@ const MyComponent = () => {
                 </h1>
               </div>
             </div>
-            <ScrollArea className="h-[90vh]">
+            <ScrollArea className="h-[80vh]">
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
