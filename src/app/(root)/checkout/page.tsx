@@ -117,8 +117,6 @@ const MyComponent = () => {
                     title={item.book_title}
                     imageSrc={item?.object_path}
                     price={item.item_sale_price}
-                    size={"aa"}
-                    color={"red"}
                     showRemove={true}
                     onChangeQuantity={(id, number) =>
                       onChangeQuantity(id, number)
@@ -136,6 +134,7 @@ const MyComponent = () => {
                       setRemoveItem(item);
                       setIsOpenDeleteAlert(true);
                     }}
+                    item={item}
                   />
                 ))
               ) : (

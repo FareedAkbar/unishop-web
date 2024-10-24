@@ -133,8 +133,8 @@ const MyComponent = () => {
     });
   };
 
-  const filteredVariations: Variation[] =  filterVariationsBySelectedValues(itemDetail?.variations ? itemDetail?.variations : [], selectedValues);
-  
+  const filteredVariations: Variation[] = filterVariationsBySelectedValues(itemDetail?.variations ? itemDetail?.variations : [], selectedValues);
+
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
@@ -142,9 +142,11 @@ const MyComponent = () => {
     const x = item
     if (item?.variations?.[0] && item?.tag_links) {
       Object.assign(x, { selected_variation: filteredVariations?.[0] })
+      Object.assign(x, { item_sale_price: filteredVariations?.[0]?.items_variable_items_sale_price })
+      Object.assign(x, { selectedValues: selectedValues })
     }
     try {
-      console.log(x)
+      setOpen(false)
       await addCartItems(x);
     } catch (error) {
       console.error("Failed to add item to cart:", error);
@@ -304,7 +306,6 @@ const MyComponent = () => {
     await getCloths(page)
 
   }
-
   return (
     <div>
       <motion.main
@@ -314,7 +315,7 @@ const MyComponent = () => {
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-         <div className="flex flex-grow flex-row sm:pt-10">
+        <div className="flex flex-grow flex-row sm:pt-10">
           <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between pb-4">
@@ -369,7 +370,7 @@ const MyComponent = () => {
               </div>
             </ScrollArea>
             {pagination && (
-            <div className="z-10 flex justify-between px-4 py-4">
+              <div className="z-10 flex justify-between px-4 py-4">
                 <button
                   className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage - 1)}
@@ -442,7 +443,7 @@ const MyComponent = () => {
             <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
               <div className="flex flex-col">
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
-                  ${itemDetail?.item_sale_price}
+                  ${itemDetail?.variations?.[0] && filteredVariations?.[0]?.items_variable_items_sale_price ? filteredVariations?.[0]?.items_variable_items_sale_price : itemDetail?.variations?.[0] ? itemDetail?.variations?.[0].items_variable_items_sale_price : itemDetail?.item_sale_price}
                 </span>
                 {/* <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
                   SKU {itemDetail?.SKU}

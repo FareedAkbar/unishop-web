@@ -408,7 +408,7 @@ const MyComponent = () => {
       <ModalBody>
         <ModalContent>
           <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
-            {itemDetail?.book_title}
+            {itemDetail?.item_name}
           </h4>
           <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}
@@ -440,7 +440,7 @@ const MyComponent = () => {
                     src={
                       itemDetail?.object_path
                         ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                        : "/bookIcon.png"
+                        : "/assets/images/products/product.png"
                     }
                     alt={itemDetail?.object_path ?? ""}
                     width={500}
@@ -459,7 +459,8 @@ const MyComponent = () => {
                   SKU {itemDetail?.SKU}
                 </span>
               </div>
-              <div className="flex items-center justify-center">
+              {itemDetail?.edition && (
+                <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Series:
                 </span>
@@ -467,9 +468,11 @@ const MyComponent = () => {
                   {itemDetail?.edition}
                 </span>
               </div>
+              )}
+              
               <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Published:
+                  Created At:
                 </span>
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">
                   {itemDetail?.introduced
@@ -477,39 +480,6 @@ const MyComponent = () => {
                     : ""}
                 </span>
               </div>
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Language:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.book_language}
-                </span>
-              </div>
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Number of Pages:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.pages}
-                </span>
-              </div>
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Publisher:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher?.publisher_name}
-                </span>
-              </div>
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Country of Publication:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher?.country}
-                </span>
-              </div>
-
               {itemDetail?.item_id &&
               !isItemInCart(itemDetail.item_id) &&
               itemDetail?.stock?.quantity ? (

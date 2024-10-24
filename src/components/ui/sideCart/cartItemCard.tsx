@@ -151,7 +151,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           </Button>
         </div>
       )}
-      {stock.quantity < itemQuantity && (
+      { stock.quantity < itemQuantity && (
         <p className="bg-yellow-200 p-3 text-sm">
           {/* <MdWarning size={23} /> */}
           We don&apos;t have as many quantity as you requested, but we&apos;ll back order

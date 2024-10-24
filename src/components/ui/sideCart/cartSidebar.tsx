@@ -130,15 +130,13 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Cart Items List */}
-        <ScrollArea className="h-3/5 flex-1 p-4">
+        <ScrollArea className="h-3/4 flex-1 p-4">
           {items.map((item: DataCart) => (
             <CartItem
               key={item.item_id}
-              title={item.book_title}
+              title={item.item_name}
               imageSrc={item?.object_path}
               price={item.item_sale_price}
-              size={"aa"}
-              color={"red"}
               showRemove={true}
               onChangeQuantity={(id, number) => onChangeQuantity(id, number)}
               onIncrease={() => handleIncrease(item.item_id, item.quantity + 1)}
@@ -150,6 +148,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
                 setRemoveItem(item);
                 setIsOpenDeleteAlert(true);
               }}
+              item={item}
             />
           ))}
         </ScrollArea>

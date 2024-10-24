@@ -129,14 +129,14 @@ const MyComponent = () => {
     dataArray1: DataCart[],
   ): CreatePayloadBooksForTax[] => {
     return dataArray1.map((book) => ({
-      price: book.item_sale_price, // Extract the item_sale_price
+      price: book.selected_variation?.items_variable_items_sale_price ?? book.item_sale_price, // Extract the item_sale_price
       quantity: book.quantity,
       item_id: book.item_id, // Extract the item_id
       cat_id: book.category, // Extract the category as cat_id
-      textbook_id: book.book_id, // Extract the book_id as textbook_id
-      is_textbook: 1, // Set is_textbook to 1 (fixed value)
-      variationId: null, // Set variationId to null (fixed value)
-      variable_item: 0, // Set variable_item to 0 (fixed value)
+      textbook_id: book.book_id ? book.book_id : null , // Extract the book_id as textbook_id
+      is_textbook: book.book_id ? 1 : 0, // Set is_textbook to 1 (fixed value)
+      variationId: book.selected_variation?.items_variable_items_id ?? null, 
+      variable_item: book.selected_variation?.items_variable_items_id ? 1 : 0, // Set variable_item to 0 (fixed value)
       premium_upgrades_CPM: [], // Set premium_upgrades_CPM to an empty array (fixed value)
       is_deal: 0,
       deal_id: null,
@@ -152,7 +152,7 @@ const MyComponent = () => {
   const fetchData = async (requestOptions: CreatePayloadBooksForTax[]) => {
     try {
       const response = await fetch(
-        "https://booknet-dev.iconsole.com.au/api/calculate?check_availability=0",
+        "http://110.93.226.167:3000/api/calculate?check_availability=0",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
@@ -190,6 +190,7 @@ const MyComponent = () => {
     const loadData = async () => {
       try {
         if (!items) return;
+        console.log(items)
         const itemsPayload = createItemsPayload(items);
 
         if (!itemsPayload[0]) return;
@@ -227,7 +228,7 @@ const MyComponent = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://ipos-dev.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
+        "http://110.93.226.167:3001/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
@@ -261,20 +262,20 @@ const MyComponent = () => {
   };
 
   const handlePlaceOrder = async () => {
-    // await placeOrderApi(797498821);
-    const x = {
-      customer_id: checkoutData?.customer_id,
-      guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
-      amount: 0.01,
-    };
+    await placeOrderApi(797498821);
+    // const x = {
+    //   customer_id: checkoutData?.customer_id,
+    //   guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
+    //   amount: 0.01,
+    // };
 
-    try {
-      await getLinkForPayment(x);
+    // try {
+    //   await getLinkForPayment(x);
 
-      console.log(x);
-    } catch (error) {
-      console.error("Failed to load data:", error);
-    }
+    //   console.log(x);
+    // } catch (error) {
+    //   console.error("Failed to load data:", error);
+    // }
   };
 
   type socketResponse = {
@@ -292,7 +293,7 @@ const MyComponent = () => {
     console.log(requestOptions);
     try {
       const response = await fetch(
-        "https://booknet-dev.iconsole.com.au/api/orders/web",
+        "http://110.93.226.167:3000/api/orders/web",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
@@ -354,14 +355,14 @@ const MyComponent = () => {
       return {
         item_id: item.item_id,
         deal_id: null, // Assuming deal_id is null since it's not provided
-        variable_id: null, // Assuming variable_id is null since it's not provided
+        variable_id: item.selected_variation?.items_variable_items_id ?? null , // Assuming variable_id is null since it's not provided
         quantity_item: item.quantity,
         // quantity_item:  item.stock?.quantity > 0 &&  item.quantity > item.stock?.quantity ? item.stock?.quantity : item.quantity,
         // back_order_quantity: item.stock?.quantity > 0 &&  item.quantity > item.stock?.quantity ? item.quantity - item.stock?.quantity : 0,
         back_order_quantity: 0,
         notes: "", // Use additional_notes if present
         is_deal: null, // Assuming is_deal is null since it's not provided
-        item_price: item.item_sale_price,
+        item_price: item.selected_variation?.items_variable_items_id ? item.selected_variation?.items_variable_items_sale_price : item.item_sale_price,
         discounted_price: null, // Assuming discounted_price is null since it's not provided
         deal_items: [], // Assuming no deal items from the provided input
         premium_upgrades: [], // Assuming no premium upgrades from the provided input

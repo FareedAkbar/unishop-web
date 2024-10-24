@@ -23,7 +23,7 @@ interface StockEntry {
   lowest_level: string;
 }
 
-interface Stock {
+export interface Stock {
   quantity: number | null;
   quantity_check: boolean;
   stock_id: number;
@@ -131,6 +131,8 @@ export default interface DataCart {
   tag_links?: TagLink[] | null;
   variations?: Variation[] | null;
   selected_variation?: Variation | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  selectedValues?: any
 }
 
 

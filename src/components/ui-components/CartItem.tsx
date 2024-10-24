@@ -1,17 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import Image from "next/image";
 import React from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { HiOutlineMinus, HiOutlinePlus } from "react-icons/hi";
-interface Stock {
-  quantity: number; // Just use number; 0 is included
-}
+import type { Stock } from "~/types/book";
+import type DataCart from "~/types/book";
+
 
 interface CartItemProps {
   title: string;
-  size: string;
-  color: string;
   price: number;
-  
+
   imageSrc?: string | null;
   onIncrease: () => void;
   onDecrease: () => void;
@@ -20,15 +20,13 @@ interface CartItemProps {
   onChangeQuantity?: (id: number, quantity: number) => void;
   itemQuantity: number;
   showQuantityIncriment?: boolean,
-  stock: Stock
+  stock: Stock;
+  item?: DataCart
 }
 
 const CartItem: React.FC<CartItemProps> = ({
   title,
-  size,
-  color,
   price,
- 
   imageSrc,
   onIncrease,
   onDecrease,
@@ -37,63 +35,88 @@ const CartItem: React.FC<CartItemProps> = ({
   onChangeQuantity,
   itemQuantity,
   showQuantityIncriment,
-  stock
+  stock,
+  item
 }) => {
+  const quantity = item?.selected_variation?.stock ? item?.selected_variation?.stock.quantity : stock?.quantity ? stock.quantity : 0
+  console.log(item)
   return (
     <>
-    <div className="flex flex-row items-start space-x-4 border-b py-4 bg-white dark:bg-slate-700">
-      {/* Image */}
-      <Image
-        src={ imageSrc
-          ? `https://ipos-storage.s3.amazonaws.com/${imageSrc}`
-          : '/assets/images/products/product.png'}
-        alt={title}
-        className="h-20 w-20 rounded bg-gray-200 object-contain mb-4 md:mb-0"
-        width={800}
-        height={800}
-      />
+      <div className="flex flex-row items-start space-x-4 border-b py-4 bg-white dark:bg-slate-700">
+        {/* Image */}
+        <Image
+          src={imageSrc
+            ? `https://ipos-storage.s3.amazonaws.com/${imageSrc}`
+            : '/assets/images/products/product.png'}
+          alt={title}
+          className="h-20 w-20 rounded bg-gray-200 object-contain mb-4 md:mb-0"
+          width={800}
+          height={800}
+        />
 
-      {/* Product details */}
-      <div className="flex-1">
-        <h3 className="font-semibold text-sm">{title}</h3>
-        <p className="text-xs">
-          Size:<span className="pl-1 text-gray-500 dark:text-gray-200">{size}</span>
-        </p>
-        <p className="text-xs">
-        Available Stock: :<span className="pl-1 text-gray-500 dark:text-gray-200">{stock?.quantity}</span>
-        </p>
-        <p className="text-xs">
-          Color:<span className="pl-1 text-gray-500 dark:text-gray-200">{color}</span>
-        </p>
-        <p className="font-bold text-md">${price}</p>
-      </div>
+        {/* Product details */}
+        <div className="flex-1">
+          <h3 className="font-semibold text-sm">{title}</h3>
+          {/* {item?.selected_variation?} */}
+          {item?.selectedValues && (
+            
+                <div>
+                  <span className="font-semibold text-xs">Selected Variations</span>
+                  <ul>
+                    {Object.keys(item?.selectedValues).map((key) => (
+                      <>
+                        {item?.selectedValues[key] && (
+                          <p className="text-xs capitalize" key={key}>
+                           {key}:  <span className="pl-1 text-gray-500 dark:text-gray-200">{item?.selectedValues[key]}</span>
+                          </p>
+                        )}
+                      </>
 
-      {/* Delete and Plus/Minus buttons */}
-      <div className="flex flex-col gap-6 items-end w-auto">
-        {/* Delete button at the top-right */}
-        <button className="self-end text-red-500 mb-2 text-sm" onClick={()=>onRemove()}>
-          <FaTrashAlt size={16} />
-        </button>
+                    ))}
+                  </ul>
+                </div>
+             
+          )}
 
-        {/* Plus and minus buttons at the bottom */}
-        <div className="flex items-center space-x-2 rounded bg-gray-200 dark:bg-gray-500 p-1  justify-between mt-auto w-auto">
-          <button className="p-1" disabled={itemQuantity < 2} onClick={onDecrease}>
-            <HiOutlineMinus size={14} />
-          </button>
-          <span className="text-sm">{itemQuantity}</span>
-          <button className="p-1" onClick={onIncrease}>
-            <HiOutlinePlus size={14} />
-          </button>
+          <p className="text-xs">
+            Available Stock: <span className="pl-1 text-gray-500 dark:text-gray-200">{quantity ? quantity : 0}</span>
+          </p>
+
+          <p className="font-bold text-md">${price}</p>
         </div>
+
+        {/* Delete and Plus/Minus buttons */}
+        <div className="flex flex-col gap-6 items-end w-auto">
+          {/* Delete button at the top-right */}
+          <button className="self-end text-red-500 mb-2 text-sm" onClick={() => onRemove()}>
+            <FaTrashAlt size={16} />
+          </button>
+
+          {/* Plus and minus buttons at the bottom */}
+          <div className="flex items-center space-x-2 rounded bg-gray-200 dark:bg-gray-500 p-1  justify-between mt-auto w-auto">
+            <button className="p-1" disabled={itemQuantity < 2} onClick={onDecrease}>
+              <HiOutlineMinus size={14} />
+            </button>
+            <span className="text-sm">{itemQuantity}</span>
+            <button className="p-1" onClick={onIncrease}>
+              <HiOutlinePlus size={14} />
+            </button>
+          </div>
+        </div>
+
       </div>
-      
-    </div>
-    {stock?.quantity < itemQuantity && (
-      <p className="bg-yellow-200 rounded dark:bg-yellow-500 p-3 text-sm">
-        {/* <MdWarning size={23} /> */}
-        {`Although we can't fulfill your request for quantity, we'll backorder the remaining ${itemQuantity - stock.quantity}.`}
-      </p>
-    )}
+      {quantity && quantity > -1 ? quantity < itemQuantity && (
+        <p className="bg-yellow-200 rounded dark:bg-yellow-500 p-3 text-sm">
+          {/* <MdWarning size={23} /> */}
+          {`Although we can't fulfill your request for quantity, we'll backorder the remaining ${itemQuantity - quantity}.`}
+        </p>
+      ) : ''}
+      {(quantity == 0 || quantity == null) && (
+        <p className="bg-yellow-200 rounded dark:bg-yellow-500 p-3 text-sm">
+          {/* <MdWarning size={23} /> */}
+          {`Although we can't fulfill your request for quantity, we'll backorder the remaining ${itemQuantity}.`}
+        </p>
+      )}
     </>
   );
 };
