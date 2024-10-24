@@ -75,9 +75,11 @@ const ImageSlider: React.FC = () => {
   }, [slides.length]);
 
   return (
-    <div className={`container flex w-full flex-col px-4 pb-4 pt-2 ${
-      isFlipping ? "animate-flip-out" : ""
-    }`}>
+    <div
+      className={`container flex w-full flex-col px-4 pb-4 pt-2 ${
+        isFlipping ? "animate-flip-out" : ""
+      }`}
+    >
       <div className="absolute z-10 w-2/5 p-1 lg:block lg:pl-10 lg:pt-10">
         <div className="flex h-32 flex-col justify-between px-2 py-2 sm:h-52 md:h-60 md:px-6 lg:h-80 lg:px-10">
           <div className="flex items-center lg:mb-4">
@@ -105,18 +107,18 @@ const ImageSlider: React.FC = () => {
           width={3000}
           height={3000}
           objectFit="cover"
-          className={`relative h-36 w-full rounded-lg transition-transform duration-700 ease-in-out sm:h-72 lg:h-[400px] `}
+          className={`relative h-36 w-full rounded-lg transition-transform duration-700 ease-in-out sm:h-72 lg:h-[400px]`}
         />
       </div>
       {/* Dots Indicator */}
-      <div className="mt-4 flex justify-center items-center space-x-2">
+      <div className="mt-4 flex items-center justify-center space-x-2">
         {slides.map((_, index) => (
           <div
             key={index}
-            className={` rounded-full ${
+            className={`rounded-full ${
               currentIndex === index
-                ? "border-2 border-black bg-red-500 h-3.5  w-3.5"
-                : "bg-gray-400 h-3 w-3"
+                ? "h-3.5 w-3.5 border-2 border-black bg-red-500"
+                : "h-3 w-3 bg-gray-400"
             }`}
           />
         ))}

@@ -32,7 +32,6 @@ import Select from "~/components/Fields/select";
 import type { Pagination } from "~/types/pagination";
 import type { Variation } from "~/types/book";
 
-
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
@@ -46,7 +45,9 @@ const MyComponent = () => {
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
   const [wishListLoader, setWishListLoader] = useState<boolean>(false);
-  const [selectedValues, setSelectedValues] = useState<Record<string, string | undefined>>({});
+  const [selectedValues, setSelectedValues] = useState<
+    Record<string, string | undefined>
+  >({});
   const [currentPage, setCurrentPage] = useState(pagination?.page ?? 1);
   const [pageSize, setPageSize] = useState(pagination?.limit ?? 15);
   const [totalPages, setTotalPages] = useState(pagination?.pages ?? 1);
@@ -76,11 +77,11 @@ const MyComponent = () => {
       setLoader(true);
       const x = await getItemsByCategory(parseInt(detail) ?? 1, page, 1, 0);
       if (typeof x !== "boolean" && x.status) {
-        setPagination(x.meta)
+        setPagination(x.meta);
         setData(x.data);
         setDisplayData(x.data);
         setTotalPages(x.meta.pages);
-        setPageSize(x.meta.pages)
+        setPageSize(x.meta.pages);
       }
       setLoader(false);
       // setData(result);
@@ -98,20 +99,19 @@ const MyComponent = () => {
     if (genId) {
       setSubcategory(genId);
       const loadData = async () => {
-        await getCloths(1)
+        await getCloths(1);
       };
 
       loadData().catch((error) => {
         console.error("Failed to load data in useEffect:", error);
       });
-
     }
-
   }, [genre, detail]);
 
-
-
-  const filterVariationsBySelectedValues = (variations: Variation[], selectedValues: Record<string, string | undefined>) => {
+  const filterVariationsBySelectedValues = (
+    variations: Variation[],
+    selectedValues: Record<string, string | undefined>,
+  ) => {
     return variations?.filter((variation) => {
       // Check if every selected value matches in the variation's tags
       return Object.keys(selectedValues).every((tagName) => {
@@ -138,8 +138,7 @@ const MyComponent = () => {
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
-
-    const x = item
+    const x = item;
     if (item?.variations?.[0] && item?.tag_links) {
       Object.assign(x, { selected_variation: filteredVariations?.[0] })
       Object.assign(x, { item_sale_price: filteredVariations?.[0]?.items_variable_items_sale_price })
@@ -151,7 +150,6 @@ const MyComponent = () => {
     } catch (error) {
       console.error("Failed to add item to cart:", error);
     }
-
   };
   const handleRemoveFromCart = async (item: DataCart) => {
     try {
@@ -161,47 +159,56 @@ const MyComponent = () => {
     }
   };
 
-
-  const getOptions = (tagName: string, dependencies: Record<string, string | undefined>) => {
+  const getOptions = (
+    tagName: string,
+    dependencies: Record<string, string | undefined>,
+  ) => {
     return Array.from(
       new Set(
-        itemDetail?.variations?.filter((variation) => {
-          // Check all previous tag dependencies
-          return Object.keys(dependencies).every((key) => {
-            return variation.variation_tags.some(
-              (tag) => tag.items_variations_tags_name === key && tag.items_variations_tags_links_values_value === dependencies[key]
-            );
-          });
-        }).map((variation) => {
-          // Return only unique values for the current tag
-          return variation.variation_tags.find((tag) => tag.items_variations_tags_name === tagName)?.items_variations_tags_links_values_value;
-        })
-      )
+        itemDetail?.variations
+          ?.filter((variation) => {
+            // Check all previous tag dependencies
+            return Object.keys(dependencies).every((key) => {
+              return variation.variation_tags.some(
+                (tag) =>
+                  tag.items_variations_tags_name === key &&
+                  tag.items_variations_tags_links_values_value ===
+                    dependencies[key],
+              );
+            });
+          })
+          .map((variation) => {
+            // Return only unique values for the current tag
+            return variation.variation_tags.find(
+              (tag) => tag.items_variations_tags_name === tagName,
+            )?.items_variations_tags_links_values_value;
+          }),
+      ),
     )
       .filter(Boolean)
       .map((value) => ({
-        tagName,  // include tagName in the result
-        dependencies,  // include dependencies in the result
-        value: value!, label: value!
+        tagName, // include tagName in the result
+        dependencies, // include dependencies in the result
+        value: value!,
+        label: value!,
       }));
   };
-
-
 
   const openDetail = async (item: DataCart) => {
     setOpen(true);
     setItemDetail(item);
-    setSelectedValues({})
+    setSelectedValues({});
   };
 
   const handleFavourite = async (item: DataCart) => {
-
     if (checkoutData?.booknet_customer_id) {
-      setWishListLoader(true)
-      if (item && favItems?.some((favItem) => favItem.item_id === item.item_id)) {
-
-        await removeFavourite(item, checkoutData.booknet_customer_id).then(
-          (x) => {
+      setWishListLoader(true);
+      if (
+        item &&
+        favItems?.some((favItem) => favItem.item_id === item.item_id)
+      ) {
+        await removeFavourite(item, checkoutData.booknet_customer_id)
+          .then((x) => {
             if (x) {
               toast({
                 variant: "destructive",
@@ -209,12 +216,11 @@ const MyComponent = () => {
                 description: "Item has been removed successfully.",
               });
             }
-          },
-        ).finally(() => setWishListLoader(false));
+          })
+          .finally(() => setWishListLoader(false));
       } else {
-
-        await addFavourite(item, checkoutData.booknet_customer_id).then(
-          (x) => {
+        await addFavourite(item, checkoutData.booknet_customer_id)
+          .then((x) => {
             if (x) {
               toast({
                 variant: "success",
@@ -222,10 +228,9 @@ const MyComponent = () => {
                 description: "Item has been added successfully.",
               });
             }
-          },
-        ).finally(() => setWishListLoader(false));
+          })
+          .finally(() => setWishListLoader(false));
       }
-
     } else {
       setLoginAlert(true);
     }
@@ -242,7 +247,6 @@ const MyComponent = () => {
       : false;
   };
 
-
   const filterResult = () => {
     let filtered = data;
 
@@ -256,15 +260,14 @@ const MyComponent = () => {
     }
 
     // Date range filter
-    setCurrentPage(filtered ? 1 : pagination?.page ?? 1); // Reset to first page on new filter
-    setTotalPages(Math.ceil(
-      filtered ? filtered?.length / pageSize : 1 / pageSize,
-    ));
-    const x = filtered ? filtered?.slice(
-      (currentPage - 1) * pageSize,
-      currentPage * pageSize,
-    ) : data
-    setDisplayData(x)
+    setCurrentPage(filtered ? 1 : (pagination?.page ?? 1)); // Reset to first page on new filter
+    setTotalPages(
+      Math.ceil(filtered ? filtered?.length / pageSize : 1 / pageSize),
+    );
+    const x = filtered
+      ? filtered?.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      : data;
+    setDisplayData(x);
   };
   // Calculate total pages based on filtered data and page size
 
@@ -279,20 +282,23 @@ const MyComponent = () => {
     router.push("login");
   };
 
-  const handleSelectChange = (tagName: string, selectedOption: { value: string; label: string }) => {
+  const handleSelectChange = (
+    tagName: string,
+    selectedOption: { value: string; label: string },
+  ) => {
     setSelectedValues((prevValues) => {
       const newValues = { ...prevValues, [tagName]: selectedOption.value };
 
       // Find the current tag's index
       const tagIndex = itemDetail?.variations?.[0]?.variation_tags.findIndex(
-        (tag) => tag.items_variations_tags_name === tagName
+        (tag) => tag.items_variations_tags_name === tagName,
       );
 
       // Reset only the dependent dropdowns
       if (tagIndex !== undefined && tagIndex !== -1) {
-        const tagsToReset = itemDetail?.variations?.[0]?.variation_tags.slice(tagIndex + 1).map(
-          (tag) => tag.items_variations_tags_name
-        );
+        const tagsToReset = itemDetail?.variations?.[0]?.variation_tags
+          .slice(tagIndex + 1)
+          .map((tag) => tag.items_variations_tags_name);
         tagsToReset?.forEach((tag) => {
           newValues[tag] = undefined;
         });
@@ -309,7 +315,7 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center py-20"
+        className="flex min-h-screen flex-col items-center pt-32 lg:pt-20"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
@@ -344,29 +350,28 @@ const MyComponent = () => {
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
-                    <div key={index} className="p-2">
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
+                      <div key={index} className="p-2">
+                        <ProductCardSkeleton />
+                      </div>
+                    ))
                   : displayData?.map((item: DataCart) => (
-                    <ProductCard
-                      key={item.book_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={async () => {
-                        if (item?.variations?.[0]) {
-                          await openDetail(item)
-                        } else {
-                          await handleAddToCart(item);
-                        }
-
-                      }}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
-                      handleFavourite={() => handleFavourite(item)}
-                      wishListLoader={wishListLoader}
-                    />
-                  ))}
+                      <ProductCard
+                        key={item.book_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={async () => {
+                          if (item?.variations?.[0]) {
+                            await openDetail(item);
+                          } else {
+                            await handleAddToCart(item);
+                          }
+                        }}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        openDetail={() => openDetail(item)}
+                        handleFavourite={() => handleFavourite(item)}
+                        wishListLoader={wishListLoader}
+                      />
+                    ))}
               </div>
             </ScrollArea>
             {pagination && (
@@ -390,7 +395,6 @@ const MyComponent = () => {
                 </button>
               </div>
             )}
-
           </div>
         </div>
       </motion.main>
@@ -461,7 +465,7 @@ const MyComponent = () => {
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Created at:
                 </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                   {itemDetail?.introduced
                     ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
                     : ""}
@@ -505,7 +509,9 @@ const MyComponent = () => {
                     <div>
                       <div>
                         {!Object.keys(selectedValues)[0] ? (
-                          <span className="text-red-400 text-md font-bold">Please Select Variations</span>
+                          <span className="text-md pb-1 font-bold text-red-500">
+                            Please Select Variations
+                          </span>
                         ) : (
                           <span className="font-bold">Selected Variations</span>
                         )}
@@ -515,70 +521,127 @@ const MyComponent = () => {
                             <>
                               {selectedValues[key] && (
                                 <li key={key}>
-                                  {key}: {selectedValues[key] ?? 'Please Select'}
+                                  {key}:{" "}
+                                  {selectedValues[key] ?? "Please Select"}
                                 </li>
                               )}
                               {!selectedValues[key] && (
                                 <li key={key} className="text-red-400">
-                                  {key}: {selectedValues[key] ?? 'Please Select'}
+                                  {key}:{" "}
+                                  {selectedValues[key] ?? "Please Select"}
                                 </li>
                               )}
                             </>
-
                           ))}
                         </ul>
                       </div>
                     </div>
                   </div>
 
-                  {itemDetail?.variations?.[0]?.variation_tags.map((tag, index) => {
-                    const tagName = tag.items_variations_tags_name;
-                    const prevTags = itemDetail?.variations?.[0]?.variation_tags.slice(0, index);
-                    const dependencies = prevTags?.reduce((acc: Record<string, string | undefined>, currTag) => {
-                      if (selectedValues[currTag.items_variations_tags_name]) {
-                        acc[currTag.items_variations_tags_name] = selectedValues[currTag.items_variations_tags_name];
-                      }
-                      return acc;
-                    }, {});
-                    const isDisabled = index > 0 && !prevTags?.every((prevTag) => selectedValues[prevTag.items_variations_tags_name]);
-                    return (
-                      <>
-                        <>{tagName}</>
-                        <Select
+                  {itemDetail?.variations?.[0]?.variation_tags.map(
+                    (tag, index) => {
+                      const tagName = tag.items_variations_tags_name;
+                      const prevTags =
+                        itemDetail?.variations?.[0]?.variation_tags.slice(
+                          0,
+                          index,
+                        );
+
+                      const dependencies = prevTags?.reduce(
+                        (acc: Record<string, string | undefined>, currTag) => {
+                          if (
+                            selectedValues[currTag.items_variations_tags_name]
+                          ) {
+                            acc[currTag.items_variations_tags_name] =
+                              selectedValues[
+                                currTag.items_variations_tags_name
+                              ];
+                          }
+                          return acc;
+                        },
+                        {},
+                      );
+
+                      const isDisabled =
+                        index > 0 &&
+                        !prevTags?.every(
+                          (prevTag) =>
+                            selectedValues[prevTag.items_variations_tags_name],
+                        );
+
+                      const options = getOptions(tagName, dependencies ?? {});
+
+                      const handleSizeClick = (size: string) => {
+                        handleSelectChange(tagName, {
+                          value: size,
+                          label: size,
+                        });
+                      };
+
+                      return (
+                        <div
                           key={tagName}
-                          id={tagName}
-                          name={tagName}
-                          options={getOptions(tagName, dependencies ?? {})}
-                          value={selectedValues[tagName] ? selectedValues[tagName] : ""}
-                          placeholder={`Select ${tagName}`}
-                          onChange={(option: { value: string; label: string; }) => handleSelectChange(tagName, option)}
-                          isDisabled={isDisabled}
-                        // loader={prevTags?.some((prevTag) => !selectedValues[prevTag.items_variations_tags_name])}
-                        />
-                      </>
+                          className={`my-4 w-full ${tagName == "size" ? "flex items-center gap-1" : ""}`}
+                        >
+                          <h3 className="text-lg font-semibold">{tagName}</h3>
 
-                    );
-                  })}
+                          {tagName.toLowerCase().includes("size") ? (
+                            <div className="scrollbar-hidden pl-3 flex max-w-44 justify-center gap-2 overflow-x-auto px-1 lg:max-w-56">
+                              {options.map((option) => (
+                                <button
+                                  key={option.value}
+                                  className={`min-w-10 rounded border p-1 text-center ${
+                                    selectedValues[tagName] === option.value
+                                      ? "bg-red-500 text-white"
+                                      : "border-red-500 bg-white dark:bg-slate-700"
+                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                  onClick={() => handleSizeClick(option.value)}
+                                >
+                                  {option.label}
+                                </button>
+                              ))}
+                            </div>
+                          ) : (
+                            <Select
+                              id={tagName}
+                              name={tagName}
+                              options={options}
+                              value={
+                                selectedValues[tagName]
+                                  ? selectedValues[tagName]
+                                  : ""
+                              }
+                              placeholder={`Select ${tagName}`}
+                              onChange={(option: {
+                                value: string;
+                                label: string;
+                              }) => handleSelectChange(tagName, option)}
+                              isDisabled={isDisabled}
+                            />
+                          )}
+                        </div>
+                      );
+                    },
+                  )}
+
                   {/* Display selected options */}
-
                 </div>
               )}
-
-
-
 
               {/* {itemDetail?.item_id &&
                 !isItemInCart(itemDetail.item_id) &&
                 itemDetail?.stock?.quantity ? ( */}
-              {itemDetail?.variations?.[0]?.variation_tags && Object.keys(selectedValues)[0] && filteredVariations?.[0]?.items_variable_items_id && (
-                <button
-                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
-                  onClick={() => handleAddToCart(itemDetail)}
-                >
-                  <FaCartPlus className="text-lg" />
-                  <div className="pl-2">Add to Cart</div>
-                </button>
-              )}
+              {itemDetail?.variations?.[0]?.variation_tags &&
+                Object.keys(selectedValues)[0] &&
+                filteredVariations?.[0]?.items_variable_items_id && (
+                  <button
+                    className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
+                    onClick={() => handleAddToCart(itemDetail)}
+                  >
+                    <FaCartPlus className="text-lg" />
+                    <div className="pl-2">Add to Cart</div>
+                  </button>
+                )}
 
               {/* // ) : (
               //   ""
@@ -586,17 +649,15 @@ const MyComponent = () => {
             </div>
           </div>
         </ModalContent>
-        <ModalFooter className="gap-4">
+        {/* <ModalFooter className="gap-4">
           <button
             onClick={() => setOpen(false)}
             className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm dark:border-slate-950 dark:bg-slate-900"
           >
             Close
           </button>
-          {/* <button className="w-28 rounded-md border border-black bg-black px-2 py-1 text-sm text-white dark:bg-white dark:text-black">
-              Book Now
-            </button> */}
-        </ModalFooter>
+         
+        </ModalFooter> */}
       </ModalBody>
       <AlertBox
         title="Login Your Account"
