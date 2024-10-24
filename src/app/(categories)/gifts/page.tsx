@@ -219,13 +219,14 @@ const MyComponent = () => {
   };
 
   const handleFavourite = async (item: DataCart) => {
-   
     if (checkoutData?.booknet_customer_id) {
-      setWishListLoader(true)
-      if(item && favItems?.some((favItem) => favItem.item_id === item.item_id)){
-      
-        await removeFavourite(item, checkoutData.booknet_customer_id).then(
-          (x) => {
+      setWishListLoader(true);
+      if (
+        item &&
+        favItems?.some((favItem) => favItem.item_id === item.item_id)
+      ) {
+        await removeFavourite(item, checkoutData.booknet_customer_id)
+          .then((x) => {
             if (x) {
               toast({
                 variant: "destructive",
@@ -233,12 +234,11 @@ const MyComponent = () => {
                 description: "Item has been removed successfully.",
               });
             }
-          },
-        ).finally(()=>setWishListLoader(false));
-      }else{
-      
-        await addFavourite(item, checkoutData.booknet_customer_id).then(
-          (x) => {
+          })
+          .finally(() => setWishListLoader(false));
+      } else {
+        await addFavourite(item, checkoutData.booknet_customer_id)
+          .then((x) => {
             if (x) {
               toast({
                 variant: "success",
@@ -246,10 +246,9 @@ const MyComponent = () => {
                 description: "Item has been added successfully.",
               });
             }
-          },
-        ).finally(()=>setWishListLoader(false));
+          })
+          .finally(() => setWishListLoader(false));
       }
-     
     } else {
       setLoginAlert(true);
     }
@@ -315,7 +314,7 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center pt-20"
+        className="flex flex-col items-center pt-20"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
@@ -324,8 +323,8 @@ const MyComponent = () => {
         {matchedCategory ? (
           <GiftCategoryInfo category={matchedCategory} />
         ) : (
-          <div className="flex flex-grow flex-row">
-            <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
+          <div className="flex flex-grow flex-row sm:pt-10">
+            <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
               <div className="m-4 flex flex-wrap items-end justify-between gap-4">
                 <div className="text-left">
                   <h2 className="text-xl font-bold">Arts & Gifts</h2>
