@@ -7,7 +7,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
-import {  verifyOtpSchema } from './schema';
+import { verifyOtpSchema } from './schema';
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useToast } from "~/hooks/use-toast";
@@ -17,14 +17,12 @@ import Spinner from "../spinner";
 // Define the type of form inputs
 type FormValues = z.infer<typeof verifyOtpSchema>;
 interface LoginFormProps {
-  
- 
   loginResponse?: LoginResponse | null
 }
 
-export default function VerifyOTPForm({loginResponse} :LoginFormProps) {
-  const {  verifyOTP } = useAuthContext();
-  const [loader,setLoader] = useState(false)
+export default function VerifyOTPForm({ loginResponse }: LoginFormProps) {
+  const { verifyOTP } = useAuthContext();
+  const [loader, setLoader] = useState(false)
   const router = useRouter();
   const { toast } = useToast();
 
@@ -34,15 +32,17 @@ export default function VerifyOTPForm({loginResponse} :LoginFormProps) {
   });
 
   // Handle form submission
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data: FormValues) => {
     try {
       const x = {
-        customer_id: loginResponse?.data.customer_id, email: loginResponse?.data.email, otp: parseInt(data.otp)
+        customer_id: loginResponse?.data.customer_id,
+        email: loginResponse?.data.email,
+        otp: data.otp
       }
       setLoader(true)
       const res = await verifyOTP(x);
       setLoader(false)
-  
+
       // Type guard to ensure res is LoginResponse
       if (typeof res !== "boolean" && res.status) {
         console.log(res)
@@ -58,7 +58,7 @@ export default function VerifyOTPForm({loginResponse} :LoginFormProps) {
       });
       console.log(err);
     }
-   
+
   };
 
   return (
@@ -67,18 +67,18 @@ export default function VerifyOTPForm({loginResponse} :LoginFormProps) {
         <Spinner />
       )}
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
-      Please Verify your OTP Code
+        Please Verify your OTP Code
       </h2>
-    
+
 
       <form className="mt-8 mb-2" onSubmit={handleSubmit(onSubmit)}>
-        
-      <LabelInputContainer className="mb-4">
-      <Label htmlFor="email">Email Address</Label>
+
+        <LabelInputContainer className="mb-4">
+          <Label htmlFor="email">Email Address</Label>
           <p>{loginResponse?.data.email}</p>
-        
+
         </LabelInputContainer>
-          <LabelInputContainer className="mb-4">
+        <LabelInputContainer className="mb-4">
           <Label htmlFor="email">OTP</Label>
           <Input
             id="otp"
