@@ -433,8 +433,8 @@ const MyComponent = () => {
               </div>
 
               {itemDetail?.item_id &&
-              !isItemInCart(itemDetail.item_id) &&
-              itemDetail?.stock?.quantity ? (
+                !isItemInCart(itemDetail.item_id) &&
+                itemDetail?.stock?.quantity ? (
                 <button
                   className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
                   onClick={() => handleAddToCart(itemDetail)}
