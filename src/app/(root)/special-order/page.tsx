@@ -30,7 +30,7 @@ import { generateOTP } from "~/utils/generateOTP";
 import { Tabs } from "~/components/ui/tabs";
 import SpecialOrderCard from "~/components/ui-components/SpecialOrderCard";
 import { AiOutlineArrowLeft, AiOutlineClose } from "react-icons/ai";
-import { token221 } from "~/types/tokens";
+import { token221, token223 } from "~/types/tokens";
 
 interface ApiResponse {
   // meta: PaginationData; // Adjust based on your actual structure
@@ -46,7 +46,7 @@ interface ApiBookDetailResponse {
 const requestOptions: RequestInit = {
   method: "GET",
   headers: {
-    Authorization: `Bearer ${token221}`,
+    Authorization: `Bearer ${token223}`,
     "Content-Type": "application/json", // Optional, depending on your API
   },
   redirect: "follow", // Use the correct type for `redirect`
@@ -150,7 +150,7 @@ const MyComponent = () => {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token221}`,
+            Authorization: `Bearer ${token223}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },

@@ -1,7 +1,7 @@
 "use server";
 
 import type DataCart from '~/types/book';
-import { token221 } from '~/types/tokens';
+import { token221, token223 } from '~/types/tokens';
 
 
 interface ApiResponse {
@@ -12,7 +12,7 @@ interface ApiResponse {
 const requestOptions: RequestInit = {
     method: "GET",
     headers: {
-        Authorization: `Bearer ${token221}`,
+        Authorization: `Bearer ${token223}`,
         "Content-Type": "application/json", // Optional, depending on your API
     },
     redirect: "follow", // Use the correct type for `redirect`
@@ -20,7 +20,7 @@ const requestOptions: RequestInit = {
 export async function getBooks(genre_id: number): Promise<ApiResponse | boolean> {
     try {
         const response = await fetch(
-            `http://110.93.226.167:3000/api/books/getBooksByGenreCat?genre_id=${genre_id}&category_id=27&entries=1&images=1&detailed=1`,
+            `https://booknet-dev.iconsole.com.au/api/books/getBooksByGenreCat?genre_id=${genre_id}&category_id=27&entries=1&images=1&detailed=1`,
             requestOptions,
         );
         const result: ApiResponse = (await response.json()) as ApiResponse;
@@ -28,13 +28,14 @@ export async function getBooks(genre_id: number): Promise<ApiResponse | boolean>
         // Check if result has the expected structure
         if (result?.status) {
             // setMeta(result.meta);
+            console.log("Result Structure:", result)
             return result
         } else {
-            console.error("Unexpected result structure:", result);
+            console.error("Unexpected resulttt structure:", result);
             return result
         }
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Errorrr fetching data:", error);
         return false
     }
 };

@@ -39,7 +39,7 @@ const CartItem: React.FC<CartItemProps> = ({
   item
 }) => {
   const quantity = item?.selected_variation?.stock ? item?.selected_variation?.stock.quantity : stock?.quantity ? stock.quantity : 0
-  console.log(item)
+
   return (
     <>
       <div className="flex flex-row items-start space-x-4 border-b py-4 bg-white dark:bg-slate-700">

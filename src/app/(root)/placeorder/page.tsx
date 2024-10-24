@@ -18,7 +18,7 @@ import { formatDate, formatDateTime } from "~/utils/dateAndTime";
 import { useRouter } from "next/navigation";
 import { generateOTP } from "~/utils/generateOTP";
 import Button from "~/components/ui-components/Button";
-import { outlet223, token221 } from "~/types/tokens";
+import { outlet223, token221, token223 } from "~/types/tokens";
 import { Tabs } from "~/components/ui/tabs";
 import Input from "~/components/ui-components/Input";
 import Spinner from "~/components/spinner";
@@ -152,12 +152,12 @@ const MyComponent = () => {
   const fetchData = async (requestOptions: CreatePayloadBooksForTax[]) => {
     try {
       const response = await fetch(
-        "http://110.93.226.167:3000/api/calculate?check_availability=0",
+        "https://booknet-dev.iconsole.com.au/api/calculate?check_availability=0",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token221}`,
+            Authorization: `Bearer ${token223}`,
           },
           body: JSON.stringify({ items: requestOptions, member_id: null }), // Send the payload as JSON
         },
@@ -228,12 +228,12 @@ const MyComponent = () => {
   ) => {
     try {
       const response = await fetch(
-        "http://110.93.226.167:3001/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
+        "https://ipos-dev.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token221}`,
+            Authorization: `Bearer ${token223}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
@@ -262,20 +262,20 @@ const MyComponent = () => {
   };
 
   const handlePlaceOrder = async () => {
-    await placeOrderApi(797498821);
-    // const x = {
-    //   customer_id: checkoutData?.customer_id,
-    //   guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
-    //   amount: 0.01,
-    // };
+    // await placeOrderApi(797498821);
+    const x = {
+      customer_id: checkoutData?.customer_id,
+      guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
+      amount: 0.01,
+    };
 
-    // try {
-    //   await getLinkForPayment(x);
+    try {
+      await getLinkForPayment(x);
 
-    //   console.log(x);
-    // } catch (error) {
-    //   console.error("Failed to load data:", error);
-    // }
+      console.log(x);
+    } catch (error) {
+      console.error("Failed to load data:", error);
+    }
   };
 
   type socketResponse = {
@@ -293,12 +293,12 @@ const MyComponent = () => {
     console.log(requestOptions);
     try {
       const response = await fetch(
-        "http://110.93.226.167:3000/api/orders/web",
+        "https://booknet-dev.iconsole.com.au/api/orders/web",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token221}`,
+            Authorization: `Bearer ${token223}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
@@ -570,7 +570,7 @@ const MyComponent = () => {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token221}`,
+            Authorization: `Bearer ${token223}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },

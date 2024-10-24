@@ -20,7 +20,7 @@ import {
 } from "react-icons/fa";
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import Link from "next/link";
-import { outlet221 } from "~/types/tokens";
+import { outlet221, outlet223 } from "~/types/tokens";
 import { ScrollArea } from "../ui/scroll-area";
 
 // Create a mapping of icon names to their corresponding components
@@ -135,7 +135,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       if (
         category.parent === 0 &&
         category.booknet == 1 &&
-        category.outlet === outlet221
+        category.outlet === outlet223
       ) {
         const rootCategory = categoryMap[category.id];
         if (rootCategory) {
@@ -162,11 +162,9 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     const categoryTree = buildCategoryTree(category);
     // const categoryTreeGift = buildCategoryGifts(category);
     const categoryTreeGift = category.filter(
-      (item) => item.gifts == 1 || item.arts == 1,
+      (item) => item.outlet == outlet223 && item.parent != 472 && (item.gifts == 1 || item.arts == 1),
     );
-    const categoryTreeClothing = category.filter((item) => item.clothings == 1);
-
-    console.log(categoryTree);
+    const categoryTreeClothing = category.filter((item) => item.clothings == 1 && item.outlet == outlet223 && item.parent != 472);
     setHeaderCategory(categoryTree);
     setHeaderCategoryGifts(categoryTreeGift);
     setHeaderCategoryClothings(categoryTreeClothing);
@@ -218,9 +216,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   {item.label}
                 </Link>
               </div>
-              {item.subItems ||
-              item.label === "Books" ||
-              item.label === "Text Book" ? (
+              {item.subItems ? (
                 openCategory === item.label ? (
                   <FaChevronDown size={12} />
                 ) : (
@@ -246,9 +242,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                     ))}
                   </ScrollArea>
                 )}
-                {item.label === "Text Book" && headerCategory?.[0] &&  (
-                  <ScrollArea className="h-[25vh]">
-                    {headerCategory?.[0]?.children?.map((subItem) => (
+                {item.label === "Text Book" && headerCategory?.[0]?.children?.map((subItem) => (
                       <Link
                         key={subItem.id}
                         href={`textbooks?detail=${subItem.id}`}
@@ -257,8 +251,8 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       >
                         {subItem.category_name}
                       </Link>
-                    ))}
-                  </ScrollArea>
+                    )
+                  // </ScrollArea>
                 )}
                 {item.label === "Art & Gifts" &&
                   headerCategoryGifts?.[0] &&

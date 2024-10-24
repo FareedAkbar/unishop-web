@@ -173,7 +173,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -350,28 +350,28 @@ const MyComponent = () => {
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
-                      <div key={index} className="p-2">
-                        <ProductCardSkeleton />
-                      </div>
-                    ))
+                    <div key={index} className="p-2">
+                      <ProductCardSkeleton />
+                    </div>
+                  ))
                   : displayData?.map((item: DataCart) => (
-                      <ProductCard
-                        key={item.book_id}
-                        product={item}
-                        showAddToCart={!isItemInCart(item.item_id)}
-                        onAddToCart={async () => {
-                          if (item?.variations?.[0]) {
-                            await openDetail(item);
-                          } else {
-                            await handleAddToCart(item);
-                          }
-                        }}
-                        onRemoveFromCart={() => handleRemoveFromCart(item)}
-                        openDetail={() => openDetail(item)}
-                        handleFavourite={() => handleFavourite(item)}
-                        wishListLoader={wishListLoader}
-                      />
-                    ))}
+                    <ProductCard
+                      key={item.book_id}
+                      product={item}
+                      showAddToCart={!isItemInCart(item.item_id)}
+                      onAddToCart={async () => {
+                        if (item?.variations?.[0]) {
+                          await openDetail(item);
+                        } else {
+                          await handleAddToCart(item);
+                        }
+                      }}
+                      onRemoveFromCart={() => handleRemoveFromCart(item)}
+                      openDetail={() => openDetail(item)}
+                      handleFavourite={() => handleFavourite(item)}
+                      wishListLoader={wishListLoader}
+                    />
+                  ))}
               </div>
             </ScrollArea>
             {pagination && (
@@ -554,7 +554,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                                currTag.items_variations_tags_name
+                              currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -590,11 +590,10 @@ const MyComponent = () => {
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center ${
-                                    selectedValues[tagName] === option.value
-                                      ? "bg-red-500 text-white"
-                                      : "border-red-500 bg-white dark:bg-slate-700"
-                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                  className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
+                                    ? "bg-red-500 text-white"
+                                    : "border-red-500 bg-white dark:bg-slate-700"
+                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}

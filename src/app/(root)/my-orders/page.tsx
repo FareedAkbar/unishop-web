@@ -30,7 +30,7 @@ import type {
 
 import type PayloadForTrasactionLink from "~/types/payloadForTrasactionLink";
 import OrdersTable from "./orderstable";
-import { token221 } from "~/types/tokens";
+import { token221, token223 } from "~/types/tokens";
 import OrdersDataTable from "./OrdersDataTable";
 import { ModalProvider } from "~/components/ui/animated-modal";
 import { getMyOrders, getOrderStatus } from "~/_actions/my_orders";
@@ -40,7 +40,7 @@ const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJw
 const requestOptions: RequestInit = {
   method: "GET",
   headers: {
-    Authorization: `Bearer ${token221}`,
+    Authorization: `Bearer ${token223}`,
     "Content-Type": "application/json", // Optional, depending on your API
   },
   redirect: "follow", // Use the correct type for `redirect`
@@ -86,7 +86,7 @@ const MyComponent = () => {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token221}`,
+            Authorization: `Bearer ${token223}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },

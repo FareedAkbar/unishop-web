@@ -2,7 +2,7 @@
 
 import type DataCart from '~/types/book';
 import type { Pagination } from '~/types/pagination';
-import { token221 } from '~/types/tokens';
+import { token221, token223 } from '~/types/tokens';
 
 
 interface ApiResponse {
@@ -14,19 +14,16 @@ interface ApiResponse {
 const requestOptions: RequestInit = {
     method: "GET",
     headers: {
-        Authorization: `Bearer ${token221}`,
+        Authorization: `Bearer ${token223}`,
         "Content-Type": "application/json", // Optional, depending on your API
     },
     redirect: "follow", // Use the correct type for `redirect`
 };
 export async function getItemsByCategory(id: number, page: number, food: number, gifts: number): Promise<ApiResponse | boolean> {
-    console.log("food",food)
-    console.log("gifts",gifts)
-    console.log("page",page)
     
     try {
         const response = await fetch(
-            `http://110.93.226.167:3000/api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=${food}&gifts=${gifts}}&category=${id}&page=${page}&images=1&detailed=1`,
+            `https://booknet-dev.iconsole.com.au/api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=${food}&}&category=${id}&page=${page}&images=1&detailed=1`,
             requestOptions,
         );
         const result: ApiResponse = (await response.json()) as ApiResponse;
@@ -34,14 +31,14 @@ export async function getItemsByCategory(id: number, page: number, food: number,
         // Check if result has the expected structure
         if (result?.status) {
             // setMeta(result.meta);
-            console.log(result)
+            console.log("result structure:",result)
             return result
         } else {
-            console.error("Unexpected result structure:", result);
+            console.error("Unexpected resulttt structure:", result);
             return result
         }
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Errorrr fetching data:", error);
         return false
     }
 };

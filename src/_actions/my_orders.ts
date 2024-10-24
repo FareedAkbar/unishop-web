@@ -1,7 +1,7 @@
 "use server";
 
 import type { GetSpecialOrder, GetSpecialOrderApiResponse, OrderStatus, OrderStatusResponse } from '~/types/getSpecialBackOrders';
-import { token221 } from '~/types/tokens';
+import { token221, token223 } from '~/types/tokens';
 
 
 interface ApiResponse {
@@ -17,7 +17,7 @@ interface ApiResponseStatus {
 const requestOptions: RequestInit = {
     method: "GET",
     headers: {
-        Authorization: `Bearer ${token221}`,
+        Authorization: `Bearer ${token223}`,
         "Content-Type": "application/json", // Optional, depending on your API
     },
     redirect: "follow", // Use the correct type for `redirect`
@@ -25,7 +25,7 @@ const requestOptions: RequestInit = {
 export async function getMyOrders(booknetCustomerId: number): Promise<ApiResponse | boolean> {
     try {
         const response = await fetch(
-            `http://110.93.226.167:3000/api/special/customer?booknet_customer_id=${booknetCustomerId}&special=0`,
+            `https://booknet-dev.iconsole.com.au/api/special/customer?booknet_customer_id=${booknetCustomerId}&special=0`,
             requestOptions,
         );
         const result: GetSpecialOrderApiResponse =
@@ -50,7 +50,7 @@ export async function getMyOrders(booknetCustomerId: number): Promise<ApiRespons
 export async function getOrderStatus(): Promise<ApiResponseStatus | boolean> {
     try {
         const response = await fetch(
-            `http://110.93.226.167:3001/api/v1/ipos/orders/getOrderStatuses`,
+            `https://ipos-dev.iconsole.com.au/api/v1/ipos/orders/getOrderStatuses`,
             requestOptions,
         );
         const result: OrderStatusResponse =

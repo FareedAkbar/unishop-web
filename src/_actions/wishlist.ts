@@ -1,7 +1,7 @@
 "use server";
 
 import type { addFavResponse, getFavResponse } from "~/types/favourite";
-import { token221 } from "~/types/tokens";
+import { token221, token223 } from "~/types/tokens";
 
 
 export async function addToFavourite(item_id: number, booknet_customer_id: number): Promise<addFavResponse | boolean> {
@@ -12,7 +12,7 @@ export async function addToFavourite(item_id: number, booknet_customer_id: numbe
     const requestOptions: RequestInit = {
         method: "POST",
         headers: {
-            Authorization: `Bearer ${token221}`,
+            Authorization: `Bearer ${token223}`,
             "Content-Type": "application/json", // Optional, depending on your API
         },
         body: JSON.stringify(payload),
@@ -20,7 +20,7 @@ export async function addToFavourite(item_id: number, booknet_customer_id: numbe
     };
     try {
         const response = await fetch(
-            `http://110.93.226.167:3000/api/customer/wishlist`,
+            `https://booknet-dev.iconsole.com.au/api/customer/wishlist`,
             requestOptions,
         );
         const result: addFavResponse = (await response.json()) as addFavResponse;
@@ -46,7 +46,7 @@ export async function removeFromFavourite(item_id: number, booknet_customer_id: 
     const requestOptions: RequestInit = {
         method: "DELETE",
         headers: {
-            Authorization: `Bearer ${token221}`,
+            Authorization: `Bearer ${token223}`,
             "Content-Type": "application/json", // Optional, depending on your API
         },
         body: JSON.stringify(payload),
@@ -54,7 +54,7 @@ export async function removeFromFavourite(item_id: number, booknet_customer_id: 
     };
     try {
         const response = await fetch(
-            `http://110.93.226.167:3000/api/customer/wishlist`,
+            `https://booknet-dev.iconsole.com.au/api/customer/wishlist`,
             requestOptions,
         );
         const result: addFavResponse = (await response.json()) as addFavResponse;
@@ -78,7 +78,7 @@ export async function getFavouriteItems(booknet_customer_id: number | null | und
     const requestOptions: RequestInit = {
         method: "GET",
         headers: {
-            Authorization: `Bearer ${token221}`,
+            Authorization: `Bearer ${token223}`,
             "Content-Type": "application/json", // Optional, depending on your API
         },
        
@@ -86,7 +86,7 @@ export async function getFavouriteItems(booknet_customer_id: number | null | und
     };
     try {
         const response = await fetch(
-            `http://110.93.226.167:3000/api/customer/wishlist?booknet_customer_id=${booknet_customer_id}`,
+            `https://booknet-dev.iconsole.com.au/api/customer/wishlist?booknet_customer_id=${booknet_customer_id}`,
             requestOptions,
         );
         const result: getFavResponse = (await response.json()) as getFavResponse;

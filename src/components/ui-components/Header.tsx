@@ -23,7 +23,7 @@ import SidebarCart from "../ui/sideCart/cartSidebar";
 import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
 import type { CategoryTreeNode, Category as CAT } from "~/types/category";
-import { outlet221 } from "~/types/tokens";
+import { outlet221, outlet223 } from "~/types/tokens";
 import {
   FaBook,
   FaGraduationCap,
@@ -107,7 +107,7 @@ const Header = () => {
       if (
         category.parent === 0 &&
         category.booknet == 1 &&
-        category.outlet === outlet221
+        category.outlet === outlet223
       ) {
         const rootCategory = categoryMap[category.id];
         if (rootCategory) {
