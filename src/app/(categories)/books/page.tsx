@@ -215,7 +215,7 @@ const MyComponent = () => {
             <div className="flex w-full flex-wrap items-end justify-between pb-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">Books</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-300">
+                <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
                   {detail}
                 </p>
               </div>

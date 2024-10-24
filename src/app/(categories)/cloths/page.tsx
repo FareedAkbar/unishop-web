@@ -133,19 +133,24 @@ const MyComponent = () => {
     });
   };
 
-  const filteredVariations: Variation[] = filterVariationsBySelectedValues(itemDetail?.variations ? itemDetail?.variations : [], selectedValues);
-
+  const filteredVariations: Variation[] = filterVariationsBySelectedValues(
+    itemDetail?.variations ? itemDetail?.variations : [],
+    selectedValues,
+  );
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
     const x = item;
     if (item?.variations?.[0] && item?.tag_links) {
-      Object.assign(x, { selected_variation: filteredVariations?.[0] })
-      Object.assign(x, { item_sale_price: filteredVariations?.[0]?.items_variable_items_sale_price })
-      Object.assign(x, { selectedValues: selectedValues })
+      Object.assign(x, { selected_variation: filteredVariations?.[0] });
+      Object.assign(x, {
+        item_sale_price:
+          filteredVariations?.[0]?.items_variable_items_sale_price,
+      });
+      Object.assign(x, { selectedValues: selectedValues });
     }
     try {
-      setOpen(false)
+      setOpen(false);
       await addCartItems(x);
     } catch (error) {
       console.error("Failed to add item to cart:", error);
@@ -308,10 +313,9 @@ const MyComponent = () => {
     });
   };
   const handlePageChange = async (page: number) => {
-    setCurrentPage(page)
-    await getCloths(page)
-
-  }
+    setCurrentPage(page);
+    await getCloths(page);
+  };
   return (
     <div>
       <motion.main
@@ -327,7 +331,7 @@ const MyComponent = () => {
             <div className="flex w-full flex-wrap items-end justify-between pb-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">MERCH & Clothing</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-300">
+                <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
                   {subcategory?.category_name}
                 </p>
               </div>
@@ -447,7 +451,14 @@ const MyComponent = () => {
             <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
               <div className="flex flex-col">
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
-                  ${itemDetail?.variations?.[0] && filteredVariations?.[0]?.items_variable_items_sale_price ? filteredVariations?.[0]?.items_variable_items_sale_price : itemDetail?.variations?.[0] ? itemDetail?.variations?.[0].items_variable_items_sale_price : itemDetail?.item_sale_price}
+                  $
+                  {itemDetail?.variations?.[0] &&
+                  filteredVariations?.[0]?.items_variable_items_sale_price
+                    ? filteredVariations?.[0]?.items_variable_items_sale_price
+                    : itemDetail?.variations?.[0]
+                      ? itemDetail?.variations?.[0]
+                          .items_variable_items_sale_price
+                      : itemDetail?.item_sale_price}
                 </span>
                 {/* <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
                   SKU {itemDetail?.SKU}
@@ -513,22 +524,30 @@ const MyComponent = () => {
                             Please Select Variations
                           </span>
                         ) : (
-                          <span className="font-bold">Selected Variations</span>
+                          <span className="font-bold text-red-500">Selected Variations</span>
                         )}
 
                         <ul>
                           {Object.keys(selectedValues).map((key) => (
                             <>
                               {selectedValues[key] && (
-                                <li key={key}>
-                                  {key}:{" "}
-                                  {selectedValues[key] ?? "Please Select"}
+                                <li key={key} className="flex items-center">
+                                  <span className=" font-bold capitalize text-neutral-700 dark:text-neutral-300">
+                                    {key}:{" "}
+                                  </span>
+                                  <span className="pl-1  text-neutral-700 dark:text-neutral-300">
+                                    {selectedValues[key] ?? "Please Select"}
+                                  </span>
                                 </li>
                               )}
                               {!selectedValues[key] && (
                                 <li key={key} className="text-red-400">
-                                  {key}:{" "}
-                                  {selectedValues[key] ?? "Please Select"}
+                                  <span className=" font-bold capitalize text-neutral-700 dark:text-neutral-300">
+                                    {key}:{" "}
+                                  </span>
+                                  <span className="pl-1  text-neutral-700 dark:text-neutral-300">
+                                    {selectedValues[key] ?? "Please Select"}
+                                  </span>{" "}
                                 </li>
                               )}
                             </>
@@ -583,10 +602,10 @@ const MyComponent = () => {
                           key={tagName}
                           className={`my-4 w-full ${tagName == "size" ? "flex items-center gap-1" : ""}`}
                         >
-                          <h3 className="text-lg font-semibold">{tagName}</h3>
+                          <h3 className="text-lg font-semibold capitalize">{tagName}</h3>
 
                           {tagName.toLowerCase().includes("size") ? (
-                            <div className="scrollbar-hidden pl-3 flex max-w-44 justify-center gap-2 overflow-x-auto px-1 lg:max-w-56">
+                            <div className="scrollbar-hidden flex justify-center gap-2 overflow-x-auto px-1 pl-3 lg:max-w-full">
                               {options.map((option) => (
                                 <button
                                   key={option.value}

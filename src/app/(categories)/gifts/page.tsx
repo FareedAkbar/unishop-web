@@ -337,7 +337,7 @@ const MyComponent = () => {
               <div className="m-4 flex flex-wrap items-end justify-between gap-4">
                 <div className="text-left">
                   <h2 className="text-xl font-bold">Arts & Gifts</h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-300">
+                  <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
                     {subcategory?.category_name}
                     {subcategoryStatic}
                   </p>
@@ -496,17 +496,15 @@ const MyComponent = () => {
             </div>
           </div>
         </ModalContent>
-        <ModalFooter className="gap-4">
+        {/* <ModalFooter className="gap-4">
           <button
             onClick={() => setOpen(false)}
             className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm dark:border-slate-950 dark:bg-slate-900"
           >
             Close
           </button>
-          {/* <button className="w-28 rounded-md border border-black bg-black px-2 py-1 text-sm text-white dark:bg-white dark:text-black">
-              Book Now
-            </button> */}
-        </ModalFooter>
+         
+        </ModalFooter> */}
       </ModalBody>
       <AlertBox
         title="Login Your Account"
