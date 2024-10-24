@@ -43,7 +43,9 @@ const MyComponent = () => {
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
   const [wishListLoader, setWishListLoader] = useState<boolean>(false);
-  const [selectedValues, setSelectedValues] = useState<Record<string, string | undefined>>({});
+  const [selectedValues, setSelectedValues] = useState<
+    Record<string, string | undefined>
+  >({});
   const [currentPage, setCurrentPage] = useState(pagination?.page ?? 1);
   const [pageSize, setPageSize] = useState(pagination?.limit ?? 15);
   const [totalPages, setTotalPages] = useState(pagination?.pages ?? 1);
@@ -69,17 +71,17 @@ const MyComponent = () => {
     }
   }, [params]);
   async function getCloths(page: number) {
-    console.log(page)
+    console.log(page);
     try {
       setLoader(true);
       const x = await getItemsByCategory(parseInt(detail) ?? 1, page, 0, 1);
       if (typeof x !== "boolean" && x.status) {
-        setPagination(x.meta)
+        setPagination(x.meta);
         setData(x.data);
         setFilteredData(x.data);
         setDisplayData(x.data);
         setTotalPages(x.meta.pages);
-        setPageSize(x.meta.pages)
+        setPageSize(x.meta.pages);
       }
       setLoader(false);
       // setData(result);
@@ -97,15 +99,13 @@ const MyComponent = () => {
     if (genId) {
       setSubcategory(genId);
       const loadData = async () => {
-        await getCloths(1)
+        await getCloths(1);
       };
-      
-        loadData().catch((error) => {
-          console.error("Failed to load data in useEffect:", error);
-        });
-      
-    }
 
+      loadData().catch((error) => {
+        console.error("Failed to load data in useEffect:", error);
+      });
+    }
   }, [genre, detail]);
 
   // Handle add to cart
@@ -124,45 +124,56 @@ const MyComponent = () => {
     }
   };
 
-
-  const getOptions = (tagName: string, dependencies: Record<string, string | undefined>) => {
+  const getOptions = (
+    tagName: string,
+    dependencies: Record<string, string | undefined>,
+  ) => {
     return Array.from(
       new Set(
-        itemDetail?.variations?.filter((variation) => {
-          // Check all previous tag dependencies
-          return Object.keys(dependencies).every((key) => {
-            return variation.variation_tags.some(
-              (tag) => tag.items_variations_tags_name === key && tag.items_variations_tags_links_values_value === dependencies[key]
-            );
-          });
-        }).map((variation) => {
-          // Return only unique values for the current tag
-          return variation.variation_tags.find((tag) => tag.items_variations_tags_name === tagName)?.items_variations_tags_links_values_value;
-        })
-      )
+        itemDetail?.variations
+          ?.filter((variation) => {
+            // Check all previous tag dependencies
+            return Object.keys(dependencies).every((key) => {
+              return variation.variation_tags.some(
+                (tag) =>
+                  tag.items_variations_tags_name === key &&
+                  tag.items_variations_tags_links_values_value ===
+                    dependencies[key],
+              );
+            });
+          })
+          .map((variation) => {
+            // Return only unique values for the current tag
+            return variation.variation_tags.find(
+              (tag) => tag.items_variations_tags_name === tagName,
+            )?.items_variations_tags_links_values_value;
+          }),
+      ),
     )
       .filter(Boolean)
       .map((value) => ({
-        tagName,  // include tagName in the result
-        dependencies,  // include dependencies in the result
-        value: value!, label: value!
+        tagName, // include tagName in the result
+        dependencies, // include dependencies in the result
+        value: value!,
+        label: value!,
       }));
   };
 
   const openDetail = async (item: DataCart) => {
     setOpen(true);
     setItemDetail(item);
-    setSelectedValues({})
+    setSelectedValues({});
   };
 
   const handleFavourite = async (item: DataCart) => {
-
     if (checkoutData?.booknet_customer_id) {
-      setWishListLoader(true)
-      if (item && favItems?.some((favItem) => favItem.item_id === item.item_id)) {
-
-        await removeFavourite(item, checkoutData.booknet_customer_id).then(
-          (x) => {
+      setWishListLoader(true);
+      if (
+        item &&
+        favItems?.some((favItem) => favItem.item_id === item.item_id)
+      ) {
+        await removeFavourite(item, checkoutData.booknet_customer_id)
+          .then((x) => {
             if (x) {
               toast({
                 variant: "destructive",
@@ -170,12 +181,11 @@ const MyComponent = () => {
                 description: "Item has been removed successfully.",
               });
             }
-          },
-        ).finally(() => setWishListLoader(false));
+          })
+          .finally(() => setWishListLoader(false));
       } else {
-
-        await addFavourite(item, checkoutData.booknet_customer_id).then(
-          (x) => {
+        await addFavourite(item, checkoutData.booknet_customer_id)
+          .then((x) => {
             if (x) {
               toast({
                 variant: "success",
@@ -183,10 +193,9 @@ const MyComponent = () => {
                 description: "Item has been added successfully.",
               });
             }
-          },
-        ).finally(() => setWishListLoader(false));
+          })
+          .finally(() => setWishListLoader(false));
       }
-
     } else {
       setLoginAlert(true);
     }
@@ -203,7 +212,6 @@ const MyComponent = () => {
       : false;
   };
 
-
   const filterResult = () => {
     let filtered = data;
 
@@ -219,15 +227,14 @@ const MyComponent = () => {
     // Date range filter
 
     setFilteredData(filtered);
-    setCurrentPage(filtered ? 1 : pagination?.page ?? 1); // Reset to first page on new filter
-    setTotalPages(Math.ceil(
-      filtered ? filtered?.length / pageSize : 1 / pageSize,
-    ));
-    const x = filtered ? filtered?.slice(
-      (currentPage - 1) * pageSize,
-      currentPage * pageSize,
-    ) : data
-    setDisplayData(x)
+    setCurrentPage(filtered ? 1 : (pagination?.page ?? 1)); // Reset to first page on new filter
+    setTotalPages(
+      Math.ceil(filtered ? filtered?.length / pageSize : 1 / pageSize),
+    );
+    const x = filtered
+      ? filtered?.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      : data;
+    setDisplayData(x);
   };
   // Calculate total pages based on filtered data and page size
 
@@ -242,20 +249,23 @@ const MyComponent = () => {
     router.push("login");
   };
 
-  const handleSelectChange = (tagName: string, selectedOption: { value: string; label: string }) => {
+  const handleSelectChange = (
+    tagName: string,
+    selectedOption: { value: string; label: string },
+  ) => {
     setSelectedValues((prevValues) => {
       const newValues = { ...prevValues, [tagName]: selectedOption.value };
 
       // Find the current tag's index
       const tagIndex = itemDetail?.variations?.[0]?.variation_tags.findIndex(
-        (tag) => tag.items_variations_tags_name === tagName
+        (tag) => tag.items_variations_tags_name === tagName,
       );
 
       // Reset only the dependent dropdowns
       if (tagIndex !== undefined && tagIndex !== -1) {
-        const tagsToReset = itemDetail?.variations?.[0]?.variation_tags.slice(tagIndex + 1).map(
-          (tag) => tag.items_variations_tags_name
-        );
+        const tagsToReset = itemDetail?.variations?.[0]?.variation_tags
+          .slice(tagIndex + 1)
+          .map((tag) => tag.items_variations_tags_name);
         tagsToReset?.forEach((tag) => {
           newValues[tag] = undefined;
         });
@@ -265,23 +275,23 @@ const MyComponent = () => {
     });
   };
   const handlePageChange = async (page: number) => {
-    setCurrentPage(page)
-    await getCloths(page)
-
-  }
+    setCurrentPage(page);
+    await getCloths(page);
+  };
 
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center py-20"
+        className="flex min-h-screen flex-col items-center pt-20"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex flex-row">
-          <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
-            <div className="m-4 flex flex-wrap items-end justify-between gap-4">
+        <div className="flex flex-grow flex-row sm:pt-10">
+          <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
+            {/* Header Section */}
+            <div className="flex w-full flex-wrap items-end justify-between pb-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">Art & Gifts</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-300">
@@ -307,26 +317,26 @@ const MyComponent = () => {
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
-                    <div key={index} className="p-2">
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
+                      <div key={index} className="p-2">
+                        <ProductCardSkeleton />
+                      </div>
+                    ))
                   : displayData?.map((item: DataCart) => (
-                    <ProductCard
-                      key={item.book_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={() => handleAddToCart(item)}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
-                      handleFavourite={() => handleFavourite(item)}
-                      wishListLoader={wishListLoader}
-                    />
-                  ))}
+                      <ProductCard
+                        key={item.book_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={() => handleAddToCart(item)}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        openDetail={() => openDetail(item)}
+                        handleFavourite={() => handleFavourite(item)}
+                        wishListLoader={wishListLoader}
+                      />
+                    ))}
               </div>
             </ScrollArea>
             {pagination && (
-              <div className="z-10 flex justify-between px-4 lg:-mt-9">
+              <div className="z-10 flex justify-between px-4 py-4">
                 <button
                   className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage - 1)}
@@ -346,7 +356,6 @@ const MyComponent = () => {
                 </button>
               </div>
             )}
-
           </div>
         </div>
       </motion.main>
@@ -461,7 +470,9 @@ const MyComponent = () => {
                     <div>
                       <div>
                         {!Object.keys(selectedValues)[0] ? (
-                          <span className="text-red-400 text-md font-bold">Please Select Variations</span>
+                          <span className="text-md font-bold text-red-400">
+                            Please Select Variations
+                          </span>
                         ) : (
                           <span className="font-bold">Selected Variations</span>
                         )}
@@ -471,60 +482,73 @@ const MyComponent = () => {
                             <>
                               {selectedValues[key] && (
                                 <li key={key}>
-                                  {key}: {selectedValues[key] ?? 'Please Select'}
+                                  {key}:{" "}
+                                  {selectedValues[key] ?? "Please Select"}
                                 </li>
                               )}
                               {!selectedValues[key] && (
                                 <li key={key} className="text-red-400">
-                                  {key}: {selectedValues[key] ?? 'Please Select'}
+                                  {key}:{" "}
+                                  {selectedValues[key] ?? "Please Select"}
                                 </li>
                               )}
                             </>
-
                           ))}
                         </ul>
                       </div>
                     </div>
                   </div>
 
-                  {itemDetail?.variations?.[0]?.variation_tags.map((tag, index) => {
-                    const tagName = tag.items_variations_tags_name;
-                    const prevTags = itemDetail?.variations?.[0]?.variation_tags.slice(0, index);
-                    const dependencies = prevTags?.reduce((acc: Record<string, string | undefined>, currTag) => {
-                      if (selectedValues[currTag.items_variations_tags_name]) {
-                        acc[currTag.items_variations_tags_name] = selectedValues[currTag.items_variations_tags_name];
-                      }
-                      return acc;
-                    }, {});
+                  {itemDetail?.variations?.[0]?.variation_tags.map(
+                    (tag, index) => {
+                      const tagName = tag.items_variations_tags_name;
+                      const prevTags =
+                        itemDetail?.variations?.[0]?.variation_tags.slice(
+                          0,
+                          index,
+                        );
+                      const dependencies = prevTags?.reduce(
+                        (acc: Record<string, string | undefined>, currTag) => {
+                          if (
+                            selectedValues[currTag.items_variations_tags_name]
+                          ) {
+                            acc[currTag.items_variations_tags_name] =
+                              selectedValues[
+                                currTag.items_variations_tags_name
+                              ];
+                          }
+                          return acc;
+                        },
+                        {},
+                      );
 
-                    return (
-                      <>
-                        <>{tagName}</>
-                        <Select
-                          key={tagName}
-                          id={tagName}
-                          name={tagName}
-                          options={getOptions(tagName, dependencies ?? {})}
-                          value={selectedValues[tagName]}
-                          placeholder={`Select ${tagName}`}
-                          onChange={(option: { value: string; label: string; }) => handleSelectChange(tagName, option)}
-                        // loader={prevTags?.some((prevTag) => !selectedValues[prevTag.items_variations_tags_name])}
-                        />
-                      </>
-
-                    );
-                  })}
+                      return (
+                        <>
+                          <>{tagName}</>
+                          <Select
+                            key={tagName}
+                            id={tagName}
+                            name={tagName}
+                            options={getOptions(tagName, dependencies ?? {})}
+                            value={selectedValues[tagName]}
+                            placeholder={`Select ${tagName}`}
+                            onChange={(option: {
+                              value: string;
+                              label: string;
+                            }) => handleSelectChange(tagName, option)}
+                            // loader={prevTags?.some((prevTag) => !selectedValues[prevTag.items_variations_tags_name])}
+                          />
+                        </>
+                      );
+                    },
+                  )}
                   {/* Display selected options */}
-
                 </div>
               )}
 
-
-
-
               {itemDetail?.item_id &&
-                !isItemInCart(itemDetail.item_id) &&
-                itemDetail?.stock?.quantity ? (
+              !isItemInCart(itemDetail.item_id) &&
+              itemDetail?.stock?.quantity ? (
                 <button
                   className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
                   onClick={() => handleAddToCart(itemDetail)}
