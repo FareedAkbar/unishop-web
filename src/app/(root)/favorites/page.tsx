@@ -26,6 +26,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { getBooks } from "~/_actions/getbooks";
 import { getFavouriteItems } from "~/_actions/wishlist";
 import { useToast } from "~/hooks/use-toast";
+import { Player } from "@lottiefiles/react-lottie-player";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -198,7 +199,7 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center pt-28"
+        className="flex min-h-screen flex-col items-center pt-36 lg:pt-28"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
@@ -231,9 +232,18 @@ const MyComponent = () => {
                       />
                     ))}
                     {!loader && !favItems[0] && (
-                        <div>
-                          Currently you have no items in wishlist
-                        </div>
+                         <div className="flex flex-col items-center justify-center w-full h-full">
+                         <p className="mt-4 text-lg text-center text-gray-600 dark:text-gray-300">
+                           Currently, you have no items in your wishlist.
+                         </p>
+                         <Player
+                          autoplay
+                          loop
+                          src="/assets/gifs/emptywishlist.json" // Lottie animation path
+                          className="h-80 w-80 " // Tailwind classes for responsive sizing
+                        />
+
+                       </div>
                     )}
               </div>
             </ScrollArea>
@@ -378,7 +388,7 @@ const MyComponent = () => {
   );
 };
 
-const BooksPage = () => {
+const FavsPage = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <ModalProvider>
@@ -387,4 +397,4 @@ const BooksPage = () => {
     </Suspense>
   );
 };
-export default BooksPage;
+export default FavsPage;

@@ -128,6 +128,7 @@ const HomePage: React.FC = () => {
             className="h-[500px] w-full object-contain overflow-visible"
           />
         </div>
+       
 
         <div className="flex">
           <div className="hidden lg:block lg:pl-20">
@@ -135,7 +136,7 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="container mx-auto grid w-full p-5 pb-10 lg:grid-cols-2 lg:pl-48">
-            <div className="-mr-4 w-full">
+            <div className="-mr-4 w-full ">
               <ProductList
                 products={products}
                 title="Trending"
