@@ -1,5 +1,4 @@
 "use client";
-
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
@@ -20,16 +19,110 @@ import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import AlertBox from "~/components/alertBox/alert";
-import { useToast } from "~/hooks/use-toast";
+import { getBooks } from "~/_actions/gettextbooks";
 import type { Category } from "~/types/category";
-import { getItemsByCategory } from "~/_actions/getitemsbycategory";
-import Select from "~/components/Fields/select";
-import type { Pagination } from "~/types/pagination";
+import { useToast } from "~/hooks/use-toast";
+import AlertBox from "~/components/alertBox/alert";
+import GiftCategoryInfo from "./GiftCategory";
 
 const PRODUCTS_PER_PAGE = 10;
+interface GiftCategory {
+  name: string;
+  description: string;
+  additionalInfo?: string;
+  history?: string;
+  tagline?: string;
+  mission?: string;
+  featuredLocation: string;
+  images: string[];
+  lastWord: string; // New attribute
+  featuredProducts: string[]; // New attribute
+}
+
+const giftCategories: GiftCategory[] = [
+  {
+    name: "Danielle Hulls Photography",
+    description:
+      "Danielle Hulls is a photographer based in sunny Shellharbour, on the South Coast of New South Wales, Australia. She has been capturing the coastline from an aerial and land perspective for the better part of a decade, and printing her work to be displayed in homes, workspaces, and retail settings since 2021.",
+    additionalInfo:
+      "Her work is much loved by locals and travellers for her unique perspective on the pristine coastline we call home.",
+    featuredLocation:
+      "Featured in store at UniShop, Danielle’s work showcases the finest views the Illawarra has to offer. ",
+    images: [
+      "/assets/images/gifts/danielle_hulls_photo1.jpg",
+      "/assets/images/gifts/danielle_hulls_photo2.png",
+    ],
+    lastWord: "Photography", // Last word of the name
+    featuredProducts: [
+      "Prints",
+      "Blank greeting cards",
+      "Stickers",
+      "Gift tags",
+    ],
+  },
+  {
+    name: "Marini Ferlazzo",
+    description:
+      "Marini Ferlazzo is a family business based in Melbourne, Australia. Founder and wildlife artist Nathan Ferlazzo creates ranges to support wildlife conservation, making perfect wildlife gifts and Australian souvenirs.",
+    history:
+      "Nathan started the business in 2011 with his mother, Clare, and sister, Simone. The unique products celebrate Australia’s wildlife, with a share of profits donated to wildlife conservation for a sustainable future.",
+    featuredLocation: "Shop a range of gifts at UniShop.",
+    additionalInfo:
+      "Marini Ferlazzo’s original take on Australiana through floral arrangements is unique and appealing, making it a popular gift choice at UniShop.",
+    images: [
+      "/assets/images/gifts/marini_ferlazzo1.png",
+      "/assets/images/gifts/marini_ferlazzo2.jpg",
+    ],
+    lastWord: "Ferlazzo", // Last word of the name
+    featuredProducts: [
+      "Mugs",
+      "Coasters",
+      "Tableware",
+      "Tote bags",
+      "Umbrellas",
+      "Bookmarks",
+      "Greeting cards",
+    ],
+  },
+  {
+    name: "White Clay Mountain",
+    tagline: "Authenticity | Connection | Creativity | Curiosity | Gratitude",
+    description:
+      "White Clay Mountain pieces provide a reminder to notice and connect with your environment and inspire tactile creativity using evidence-based methods to increase wellbeing.",
+    mission:
+      "The mission is to spread positive wellbeing and appreciation of Australia’s natural beauty, connecting people to nature, others, and their innate creativity through handcrafted pieces and experiences.",
+    featuredLocation: "Available at UniShop.",
+    images: [
+      "/assets/images/gifts/white_clay_mountain1.jpg",
+      "/assets/images/gifts/white_clay_mountain2.jpg",
+    ],
+    lastWord: "Mountain", // Last word of the name
+    featuredProducts: [
+      "Dangle earrings",
+      "Stud earrings",
+      "Delicate rings",
+      "Gemstone bracelets",
+    ],
+  },
+  {
+    name: "Eliza Jade Candles",
+    description:
+      "Eliza Jade Candles focuses on creating unique scents using premium perfumes and superior coconut soy wax, free from petrochemicals, phthalates, and parabens.",
+    additionalInfo:
+      "The brand promotes eco-friendly practices with refilling and recycling options.",
+    featuredLocation: "Browse the aromatic display at UniShop.",
+    images: [
+      "/assets/images/gifts/eliza_jade1.png",
+      "/assets/images/gifts/eliza_jade2.png",
+    ],
+    lastWord: "Candles", // Last word of the name
+    featuredProducts: ["Candles", "Room sprays", "Reed diffusers"],
+  },
+];
 
 const MyComponent = () => {
+  const { toast } = useToast();
+  const router = useRouter();
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
   const isFirstRender = useRef(true);
@@ -39,27 +132,20 @@ const MyComponent = () => {
   const { setOpen } = useModal();
   const [detail, setDetail] = useState<string>("");
   const [subcategory, setSubcategory] = useState<Category | null>(null);
-  const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
-  const [pagination, setPagination] = useState<Pagination | null>(null);
+  const [subcategoryStatic, setSubcategoryStatic] = useState<string | null>(
+    null,
+  );
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
+  const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [wishListLoader, setWishListLoader] = useState<boolean>(false);
-  const [selectedValues, setSelectedValues] = useState<
-    Record<string, string | undefined>
-  >({});
-  const [currentPage, setCurrentPage] = useState(pagination?.page ?? 1);
-  const [pageSize, setPageSize] = useState(pagination?.limit ?? 15);
-  const [totalPages, setTotalPages] = useState(pagination?.pages ?? 1);
-  const [displayData, setDisplayData] = useState<DataCart[] | null>(null);
-  const router = useRouter();
-  const { toast } = useToast();
   const {
     cartItems,
     addCartItems,
     removeCartItems,
     genre,
     addFavourite,
-    removeFavourite,
     favItems,
+    removeFavourite,
     checkoutData,
     category,
   } = useAuthContext();
@@ -70,28 +156,14 @@ const MyComponent = () => {
       setDetail(d);
     }
   }, [params]);
-  async function getCloths(page: number) {
-    console.log(page);
-    try {
-      setLoader(true);
-      const x = await getItemsByCategory(parseInt(detail) ?? 1, page, 0, 1);
-      if (typeof x !== "boolean" && x.status) {
-        setPagination(x.meta);
-        setData(x.data);
-        setFilteredData(x.data);
-        setDisplayData(x.data);
-        setTotalPages(x.meta.pages);
-        setPageSize(x.meta.pages);
-      }
-      setLoader(false);
-      // setData(result);
-      // setTotalPages(result.totalPages);
-    } catch (error) {
-      console.error("Failed to load data:", error);
-      setLoader(false);
-      // Optionally set an error state here
+  useEffect(() => {
+    const d = params.get("desc");
+    if (d) {
+      setSubcategoryStatic(d);
     }
-  }
+  }, [params]);
+
+  console.log(subcategoryStatic);
   useEffect(() => {
     if (!genre) return;
     if (!detail) return;
@@ -99,12 +171,29 @@ const MyComponent = () => {
     if (genId) {
       setSubcategory(genId);
       const loadData = async () => {
-        await getCloths(1);
+        try {
+          setLoader(true);
+          const x = await getBooks(genId?.id ?? 1);
+          if (typeof x !== "boolean" && x.status) {
+            setData(x.data);
+            setFilteredData(x.data);
+          }
+          setLoader(false);
+          // setData(result);
+          // setTotalPages(result.totalPages);
+        } catch (error) {
+          console.error("Failed to load data:", error);
+          setLoader(false);
+          // Optionally set an error state here
+        }
       };
-
-      loadData().catch((error) => {
-        console.error("Failed to load data in useEffect:", error);
-      });
+      if (isFirstRender.current) {
+        isFirstRender.current = false; // Prevents further API calls on first render
+      } else {
+        loadData().catch((error) => {
+          console.error("Failed to load data in useEffect:", error);
+        });
+      }
     }
   }, [genre, detail]);
 
@@ -124,56 +213,19 @@ const MyComponent = () => {
     }
   };
 
-  const getOptions = (
-    tagName: string,
-    dependencies: Record<string, string | undefined>,
-  ) => {
-    return Array.from(
-      new Set(
-        itemDetail?.variations
-          ?.filter((variation) => {
-            // Check all previous tag dependencies
-            return Object.keys(dependencies).every((key) => {
-              return variation.variation_tags.some(
-                (tag) =>
-                  tag.items_variations_tags_name === key &&
-                  tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
-              );
-            });
-          })
-          .map((variation) => {
-            // Return only unique values for the current tag
-            return variation.variation_tags.find(
-              (tag) => tag.items_variations_tags_name === tagName,
-            )?.items_variations_tags_links_values_value;
-          }),
-      ),
-    )
-      .filter(Boolean)
-      .map((value) => ({
-        tagName, // include tagName in the result
-        dependencies, // include dependencies in the result
-        value: value!,
-        label: value!,
-      }));
-  };
-
   const openDetail = async (item: DataCart) => {
     setOpen(true);
     setItemDetail(item);
-    setSelectedValues({});
   };
 
   const handleFavourite = async (item: DataCart) => {
+   
     if (checkoutData?.booknet_customer_id) {
-      setWishListLoader(true);
-      if (
-        item &&
-        favItems?.some((favItem) => favItem.item_id === item.item_id)
-      ) {
-        await removeFavourite(item, checkoutData.booknet_customer_id)
-          .then((x) => {
+      setWishListLoader(true)
+      if(item && favItems?.some((favItem) => favItem.item_id === item.item_id)){
+      
+        await removeFavourite(item, checkoutData.booknet_customer_id).then(
+          (x) => {
             if (x) {
               toast({
                 variant: "destructive",
@@ -181,11 +233,12 @@ const MyComponent = () => {
                 description: "Item has been removed successfully.",
               });
             }
-          })
-          .finally(() => setWishListLoader(false));
-      } else {
-        await addFavourite(item, checkoutData.booknet_customer_id)
-          .then((x) => {
+          },
+        ).finally(()=>setWishListLoader(false));
+      }else{
+      
+        await addFavourite(item, checkoutData.booknet_customer_id).then(
+          (x) => {
             if (x) {
               toast({
                 variant: "success",
@@ -193,13 +246,19 @@ const MyComponent = () => {
                 description: "Item has been added successfully.",
               });
             }
-          })
-          .finally(() => setWishListLoader(false));
+          },
+        ).finally(()=>setWishListLoader(false));
       }
+     
     } else {
       setLoginAlert(true);
     }
   };
+  const goToLogin = () => {
+    setLoginAlert(false);
+    router.push("login");
+  };
+
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
       typeof cartItems === "string"
@@ -211,6 +270,12 @@ const MyComponent = () => {
       ? true
       : false;
   };
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  // Get the products for the current page
+  const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
 
   const filterResult = () => {
     let filtered = data;
@@ -227,57 +292,25 @@ const MyComponent = () => {
     // Date range filter
 
     setFilteredData(filtered);
-    setCurrentPage(filtered ? 1 : (pagination?.page ?? 1)); // Reset to first page on new filter
-    setTotalPages(
-      Math.ceil(filtered ? filtered?.length / pageSize : 1 / pageSize),
-    );
-    const x = filtered
-      ? filtered?.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-      : data;
-    setDisplayData(x);
+    setCurrentPage(1); // Reset to first page on new filter
   };
   // Calculate total pages based on filtered data and page size
+  const totalPages = Math.ceil(
+    filteredData ? filteredData?.length / pageSize : 1 / pageSize,
+  );
 
   // Get the data to be displayed for the current page
+  const displayedData = filteredData?.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
 
   useEffect(() => {
     filterResult();
-  }, [searchText]);
-
-  const goToLogin = () => {
-    setLoginAlert(false);
-    router.push("login");
-  };
-
-  const handleSelectChange = (
-    tagName: string,
-    selectedOption: { value: string; label: string },
-  ) => {
-    setSelectedValues((prevValues) => {
-      const newValues = { ...prevValues, [tagName]: selectedOption.value };
-
-      // Find the current tag's index
-      const tagIndex = itemDetail?.variations?.[0]?.variation_tags.findIndex(
-        (tag) => tag.items_variations_tags_name === tagName,
-      );
-
-      // Reset only the dependent dropdowns
-      if (tagIndex !== undefined && tagIndex !== -1) {
-        const tagsToReset = itemDetail?.variations?.[0]?.variation_tags
-          .slice(tagIndex + 1)
-          .map((tag) => tag.items_variations_tags_name);
-        tagsToReset?.forEach((tag) => {
-          newValues[tag] = undefined;
-        });
-      }
-
-      return newValues;
-    });
-  };
-  const handlePageChange = async (page: number) => {
-    setCurrentPage(page);
-    await getCloths(page);
-  };
+  }, [searchText, data]);
+  const matchedCategory = giftCategories.find(
+    (cat) => cat.lastWord === subcategoryStatic,
+  );
 
   return (
     <div>
@@ -288,76 +321,78 @@ const MyComponent = () => {
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex flex-grow flex-row sm:pt-10">
-          <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
-            {/* Header Section */}
-            <div className="flex w-full flex-wrap items-end justify-between pb-4">
-              <div className="text-left">
-                <h2 className="text-xl font-bold">Art & Gifts</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-300">
-                  {subcategory?.category_name}
-                </p>
+        {matchedCategory ? (
+          <GiftCategoryInfo category={matchedCategory} />
+        ) : (
+          <div className="flex flex-grow flex-row">
+            <div className="flex flex-col px-4 lg:absolute lg:left-72 lg:right-0">
+              <div className="m-4 flex flex-wrap items-end justify-between gap-4">
+                <div className="text-left">
+                  <h2 className="text-xl font-bold">Arts & Gifts</h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-300">
+                    {subcategory?.category_name}
+                    {subcategoryStatic}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    placeholder="Search"
+                    className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
+                  />
+                  <h1 className="font-bold">
+                    Showing {displayedData?.length} of {data.length} Items
+                  </h1>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  placeholder="Search"
-                  className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
-                />
-                <h1 className="font-bold">
-                  Showing {displayData?.length} of {data.length} Items
-                </h1>
-              </div>
-            </div>
-
-            <ScrollArea className="h-[75vh] pb-10">
-              <div className="flex flex-wrap justify-center py-3">
-                {loader
-                  ? Array.from({ length: 6 }, (_, index) => (
-                      <div key={index} className="p-2">
-                        <ProductCardSkeleton />
-                      </div>
-                    ))
-                  : displayData?.map((item: DataCart) => (
-                      <ProductCard
-                        key={item.book_id}
-                        product={item}
-                        showAddToCart={!isItemInCart(item.item_id)}
-                        onAddToCart={() => handleAddToCart(item)}
-                        onRemoveFromCart={() => handleRemoveFromCart(item)}
-                        openDetail={() => openDetail(item)}
-                        handleFavourite={() => handleFavourite(item)}
-                        wishListLoader={wishListLoader}
-                      />
-                    ))}
-              </div>
-            </ScrollArea>
-            {pagination && (
-              <div className="z-10 flex justify-between px-4 py-4">
+              <ScrollArea className="h-[75vh] pb-10">
+                <div className="flex flex-wrap justify-center py-3">
+                  {loader
+                    ? Array.from({ length: 6 }, (_, index) => (
+                        <div key={index} className="p-2">
+                          <ProductCardSkeleton />
+                        </div>
+                      ))
+                    : displayedData?.map((item: DataCart) => (
+                        <ProductCard
+                          key={item.book_id}
+                          product={item}
+                          showAddToCart={!isItemInCart(item.item_id)}
+                          onAddToCart={() => handleAddToCart(item)}
+                          onRemoveFromCart={() => handleRemoveFromCart(item)}
+                          openDetail={() => openDetail(item)}
+                          handleFavourite={() => handleFavourite(item)}
+                          wishListLoader={wishListLoader}
+                        />
+                      ))}
+                </div>
+              </ScrollArea>
+              <div className="z-10 flex justify-between px-4 lg:-mt-9">
                 <button
                   className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
-                  onClick={() => handlePageChange(currentPage - 1)}
+                  onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
                   <FaChevronLeft />
                 </button>
                 <span className="px-2">
-                  Page {currentPage ?? 1} of {totalPages ?? 1}
+                  Page {currentPage} of {totalPages}
                 </span>
                 <button
                   className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
-                  onClick={() => handlePageChange(currentPage + 1)}
+                  onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
                 >
                   <FaChevronRight />
                 </button>
               </div>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </motion.main>
 
       <ModalBody>
@@ -395,7 +430,7 @@ const MyComponent = () => {
                     src={
                       itemDetail?.object_path
                         ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                        : "/assets/images/products/product.png"
+                        : "/bookIcon.png"
                     }
                     alt={itemDetail?.object_path ?? ""}
                     width={500}
@@ -464,87 +499,6 @@ const MyComponent = () => {
                   {itemDetail?.publisher?.country}
                 </span>
               </div>
-              {itemDetail?.variations?.[0]?.variation_tags && (
-                <div>
-                  <div>
-                    <div>
-                      <div>
-                        {!Object.keys(selectedValues)[0] ? (
-                          <span className="text-md font-bold text-red-400">
-                            Please Select Variations
-                          </span>
-                        ) : (
-                          <span className="font-bold">Selected Variations</span>
-                        )}
-
-                        <ul>
-                          {Object.keys(selectedValues).map((key) => (
-                            <>
-                              {selectedValues[key] && (
-                                <li key={key}>
-                                  {key}:{" "}
-                                  {selectedValues[key] ?? "Please Select"}
-                                </li>
-                              )}
-                              {!selectedValues[key] && (
-                                <li key={key} className="text-red-400">
-                                  {key}:{" "}
-                                  {selectedValues[key] ?? "Please Select"}
-                                </li>
-                              )}
-                            </>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  {itemDetail?.variations?.[0]?.variation_tags.map(
-                    (tag, index) => {
-                      const tagName = tag.items_variations_tags_name;
-                      const prevTags =
-                        itemDetail?.variations?.[0]?.variation_tags.slice(
-                          0,
-                          index,
-                        );
-                      const dependencies = prevTags?.reduce(
-                        (acc: Record<string, string | undefined>, currTag) => {
-                          if (
-                            selectedValues[currTag.items_variations_tags_name]
-                          ) {
-                            acc[currTag.items_variations_tags_name] =
-                              selectedValues[
-                                currTag.items_variations_tags_name
-                              ];
-                          }
-                          return acc;
-                        },
-                        {},
-                      );
-
-                      return (
-                        <>
-                          <>{tagName}</>
-                          <Select
-                            key={tagName}
-                            id={tagName}
-                            name={tagName}
-                            options={getOptions(tagName, dependencies ?? {})}
-                            value={selectedValues[tagName]}
-                            placeholder={`Select ${tagName}`}
-                            onChange={(option: {
-                              value: string;
-                              label: string;
-                            }) => handleSelectChange(tagName, option)}
-                            // loader={prevTags?.some((prevTag) => !selectedValues[prevTag.items_variations_tags_name])}
-                          />
-                        </>
-                      );
-                    },
-                  )}
-                  {/* Display selected options */}
-                </div>
-              )}
 
               {itemDetail?.item_id &&
               !isItemInCart(itemDetail.item_id) &&

@@ -30,6 +30,7 @@ import type { Category } from "~/types/category";
 import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import Select from "~/components/Fields/select";
 import type { Pagination } from "~/types/pagination";
+import { Variation } from "~/types/book";
 
 
 const MyComponent = () => {
@@ -110,13 +111,47 @@ const MyComponent = () => {
 
   }, [genre, detail]);
 
+
+
+  const filterVariationsBySelectedValues = (variations: Variation[], selectedValues: Record<string, string | undefined>) => {
+    return variations?.filter((variation) => {
+      // Check if every selected value matches in the variation's tags
+      return Object.keys(selectedValues).every((tagName) => {
+        const selectedValue = selectedValues[tagName];
+
+        // Only proceed if the selected value is not undefined
+        if (!selectedValue) {
+          return false;
+        }
+
+        return variation.variation_tags.some((tag: any) => {
+          return (
+            tag.items_variations_tags_name === tagName &&
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            tag.items_variations_tags_links_values_value === selectedValue
+          );
+        });
+      });
+    });
+  };
+
+  const filteredVariations: Variation[] =  filterVariationsBySelectedValues(itemDetail?.variations ? itemDetail?.variations : [], selectedValues);
+  
+
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
+
+    const x = item
+    if (item?.variations?.[0] && item?.tag_links) {
+      Object.assign(x, { selected_variation: filteredVariations?.[0] })
+    }
     try {
-      await addCartItems(item);
+      console.log(x)
+      await addCartItems(x);
     } catch (error) {
       console.error("Failed to add item to cart:", error);
     }
+
   };
   const handleRemoveFromCart = async (item: DataCart) => {
     try {
@@ -151,29 +186,6 @@ const MyComponent = () => {
       }));
   };
 
-  const filterVariationsBySelectedValues = (variations: any[], selectedValues: Record<string, string | undefined>) => {
-    return variations?.filter((variation) => {
-      // Check if every selected value matches in the variation's tags
-      return Object.keys(selectedValues).every((tagName) => {
-        const selectedValue = selectedValues[tagName];
-
-        // Only proceed if the selected value is not undefined
-        if (!selectedValue) {
-          return false;
-        }
-
-        return variation.variation_tags.some((tag: any) => {
-          return (
-            tag.items_variations_tags_name === tagName &&
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            tag.items_variations_tags_links_values_value === selectedValue
-          );
-        });
-      });
-    });
-  };
-
-  const filteredVariations = filterVariationsBySelectedValues(itemDetail?.variations ? itemDetail?.variations : [], selectedValues);
 
 
   const openDetail = async (item: DataCart) => {
@@ -348,7 +360,14 @@ const MyComponent = () => {
                       key={item.book_id}
                       product={item}
                       showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={() => handleAddToCart(item)}
+                      onAddToCart={async () => {
+                        if (item?.variations?.[0]) {
+                          await openDetail(item)
+                        } else {
+                          await handleAddToCart(item);
+                        }
+
+                      }}
                       onRemoveFromCart={() => handleRemoveFromCart(item)}
                       openDetail={() => openDetail(item)}
                       handleFavourite={() => handleFavourite(item)}
@@ -555,9 +574,10 @@ const MyComponent = () => {
 
 
 
-              {itemDetail?.item_id &&
+              {/* {itemDetail?.item_id &&
                 !isItemInCart(itemDetail.item_id) &&
-                itemDetail?.stock?.quantity ? (
+                itemDetail?.stock?.quantity ? ( */}
+              {itemDetail?.variations?.[0]?.variation_tags && Object.keys(selectedValues)[0] && filteredVariations?.[0]?.items_variable_items_id && (
                 <button
                   className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
                   onClick={() => handleAddToCart(itemDetail)}
@@ -565,9 +585,11 @@ const MyComponent = () => {
                   <FaCartPlus className="text-lg" />
                   <div className="pl-2">Add to Cart</div>
                 </button>
-              ) : (
-                ""
               )}
+
+              {/* // ) : (
+              //   ""
+              // )} */}
             </div>
           </div>
         </ModalContent>

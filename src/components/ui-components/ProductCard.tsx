@@ -63,7 +63,7 @@ const ProductCard = ({
             <AiOutlineEye />
           </button>
         </div>
-        {product?.item_sale_price ? (
+        {/* {product?.item_sale_price ? ( */}
           <button
             onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
             className={`absolute bottom-0 z-20 mt-4 w-full rounded-b-md py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${
@@ -72,9 +72,9 @@ const ProductCard = ({
           >
             {!showAddToCart ? "Remove From Cart" : "Add To Cart"}
           </button>
-        ) : (
+        {/* ) : (
           ""
-        )}
+        )} */}
       </div>
       <h2 className="mt-2 truncate text-sm font-bold sm:mt-4 sm:text-base lg:text-lg">
         {product?.book_title}
