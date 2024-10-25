@@ -129,6 +129,7 @@ const MyComponent = () => {
   const openDetail = async (item: DataCart) => {
     setOpen(true);
     setItemDetail(item);
+    console.log("ttd",item);
   };
 
   const isItemInCart = (itemId: number) => {
