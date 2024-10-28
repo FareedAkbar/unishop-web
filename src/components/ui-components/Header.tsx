@@ -147,7 +147,7 @@ const Header = () => {
     );
     const categoryTreeClothing = category.filter((item) => item.clothings == 1);
 
-    console.log(categoryTree);
+    
     setHeaderCategory(categoryTree);
     setHeaderCategoryGifts(categoryTreeGift);
     setHeaderCategoryClothings(categoryTreeClothing);
@@ -414,6 +414,45 @@ const Header = () => {
                   <span>Home</span>
                 </div>
               </button>
+              {headerCategory?.[0]?.children?.map((item) => (
+                <div key={item.category_name} className="mb-4">
+                  <button
+                    onClick={() => (item.children?.[0] ? toggleDropdown(item.category_name) : router.push(`/products?name=${item.category_name}&detail=${item.id}`))}
+                    className="flex w-full items-center justify-between text-lg focus:outline-none"
+                  >
+                    <div className="flex items-center">
+                      {/* {item.icon && (
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                        <span className="mr-3">{iconMap[item.icon]}</span>
+                      )} */}
+                      {/* <Link href={item.href ?? ""} scroll={false}> */}
+                      {item.category_name}
+                      {/* </Link> */}
+                    </div>{" "}
+                    {item.children?.[0] ? (
+                      openDropdown === item.category_name ? (
+                        <FaChevronDown />
+                      ) : (
+                        <FaChevronRight />
+                      )
+                    ) : null}
+                  </button>
+                  {item.children && openDropdown === item.category_name && (
+                    <div className="ml-4 mt-1">
+                      {item.children.map((subItem) => (
+                        <button
+                          key={subItem.id}
+                          onClick={() => (subItem.children?.[0] ? toggleDropdown(subItem.category_name) : router.push(`/products?name=${subItem.category_name}&detail=${subItem.id}`))}
+                          className="block py-1 text-sm text-gray-700 hover:underline dark:text-gray-300"
+                        >
+                          {subItem.category_name}
+                        </button>
+                      ))}
+
+                    </div>
+                  )}
+                </div>
+              ))}
               {categories.map((item) => (
                 <div key={item.label} className="mb-4">
                   <button
@@ -465,7 +504,7 @@ const Header = () => {
                           ))}
                         </ScrollArea>
                       )}
-                      {item.label === "Text Book" && headerCategory?.[0] && (
+                      {headerCategory?.[0] && (
                         <ScrollArea className="h-[25vh]">
                           {headerCategory?.[0]?.children?.map((subItem) => (
                             <Link
@@ -479,7 +518,7 @@ const Header = () => {
                           ))}
                         </ScrollArea>
                       )}
-                      {item.label === "Art & Gifts" &&
+                      {/* {item.label === "Art & Gifts" &&
                         headerCategoryGifts?.[0] &&
                         headerCategoryGifts?.map((subItem) => (
                           <Link
@@ -502,7 +541,7 @@ const Header = () => {
                           >
                             {subItem.category_name}
                           </Link>
-                        ))}
+                        ))} */}
                     </div>
                   )}
                 </div>

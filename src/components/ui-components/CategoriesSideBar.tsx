@@ -63,7 +63,7 @@ const SubcategoryList1 = ({ subItems, openCategories, toggleCategory }: Subcateg
             onClick={() => {
               if (subItem.children?.[0]) {
                 toggleCategory(subItem.category_name);
-              }else{
+              } else {
                 router.push(`/products?name=${subItem.category_name}&detail=${subItem.id}`)
               }
             }}
@@ -141,7 +141,7 @@ interface CategoriesSidebarProps {
 
 const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
-  const [openCategories, setOpenCategories] = useState<string[]>([]); 
+  const [openCategories, setOpenCategories] = useState<string[]>([]);
   const { genre, checkoutData, category } = useAuthContext();
   const router = useRouter();
   const [headerCategory, setHeaderCategory] = useState<
@@ -155,15 +155,15 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
 
   const toggleCategory = (label: string) => {
     setOpenCategory(null)
-  setOpenCategories((prev) => 
-    prev.includes(label) ? prev.filter(cat => cat !== label) : [...prev, label]
-  );
- 
-};
-const toggleCategory2 = (label: string) => {
-  setOpenCategories([])
-  setOpenCategory((pre) => pre == label ? "" : label)
-};
+    setOpenCategories((prev) =>
+      prev.includes(label) ? prev.filter(cat => cat !== label) : [...prev, label]
+    );
+
+  };
+  const toggleCategory2 = (label: string) => {
+    setOpenCategories([])
+    setOpenCategory((pre) => pre == label ? "" : label)
+  };
   // Build the category tree
   function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
     const categoryMap: Record<number, CategoryTreeNode> = {};
@@ -183,21 +183,24 @@ const toggleCategory2 = (label: string) => {
     });
 
     categories.forEach((category) => {
-      if (category.parent === 0) return;
-
-      const parent = categoryMap[category.parent];
-      const childCategory = categoryMap[category.id];
-
-      if (parent && childCategory) {
-        parent.children!.push(childCategory);
-      } else if (childCategory) {
-        tree.push(childCategory);
+      if ( category.parent === 0 ) {
+        const rootCategory = categoryMap[category.id];
+        if (rootCategory) {
+          tree.push(rootCategory);
+        }
+      } else {
+        const parent = categoryMap[category.parent];
+        if (parent) {
+          const childCategory = categoryMap[category.id];
+          if (childCategory) {
+            parent.children!.push(childCategory);
+          }
+        }
       }
     });
 
     return tree;
   }
-
   // Initialize category tree on mount
   useEffect(() => {
     if (!category) return;
@@ -209,10 +212,11 @@ const toggleCategory2 = (label: string) => {
     );
     const categoryTreeClothing = category.filter((item) => item.clothings == 1 && item.outlet == outlet223 && item.parent != 472);
     setHeaderCategory(categoryTree);
+    
     setHeaderCategoryGifts(categoryTreeGift);
     setHeaderCategoryClothings(categoryTreeClothing);
   }, [category]);
-  console.log(headerCategory)
+  
   // Close subcategories on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -231,7 +235,7 @@ const toggleCategory2 = (label: string) => {
     };
   }, []);
 
- 
+
   return (
     <aside
       ref={sidebarRef}
@@ -239,40 +243,43 @@ const toggleCategory2 = (label: string) => {
     >
       <h2 className="text-lg font-bold">CATEGORIES</h2>
       <nav className="relative mt-4">
-      {headerCategory?.map((item) => (
-          <div key={item.category_name} className="relative">
-            <button
-              type="button"
-              onClick={() => (item.children ? toggleCategory(item.category_name) : router.push(`/products?name=${item.category_name}&detail=${item.id}`))}
-              className="flex items-center justify-between w-full text-sm transition-transform hover:scale-110"
-            >
-               {/* <Link
+        {headerCategory?.[0]?.children?.map((item) => (
+          // item.id != 472 && (
+            <div key={item.category_name} className="relative">
+              <button
+                type="button"
+                onClick={() => (item.children?.[0] ? toggleCategory(item.category_name) : router.push(`/products?name=${item.category_name}&detail=${item.id}`))}
+                className="flex items-center justify-between w-full text-sm transition-transform hover:scale-110"
+              >
+                {/* <Link
                         key={item.id}
                         href={item.children?.[0] ? '#' : `books?detail=${item.id}`}
                         className="flex items-center justify-between w-full text-sm transition-transform hover:scale-110"
                         onClick={() => item.children ? setOpenCategories([]) : null}
                         passHref
                       > */}
-              <div className="flex items-center">
-                {item.category_name}
-              </div>
-              {item.children?.[0] ? (
-                openCategories.includes(item.category_name) ? (
-                  <FaChevronDown size={12} />
-                ) : (
-                  <FaChevronRight size={12} />
-                )
-              ) : null}
-              {/* </Link> */}
-            </button>
-            {openCategories.includes(item.category_name) && item.children?.[0] && (
-              <SubcategoryList1
-                subItems={item.children}
-                openCategories={openCategories}
-                toggleCategory={toggleCategory}
-              />
-            )}
-          </div>
+                <div className="flex items-center">
+                  {item.category_name}
+                </div>
+                {item.children?.[0] ? (
+                  openCategories.includes(item.category_name) ? (
+                    <FaChevronDown size={12} />
+                  ) : (
+                    <FaChevronRight size={12} />
+                  )
+                ) : null}
+                {/* </Link> */}
+              </button>
+              {openCategories.includes(item.category_name) && item.children?.[0] && (
+                <SubcategoryList1
+                  subItems={item.children}
+                  openCategories={openCategories}
+                  toggleCategory={toggleCategory}
+                />
+              )}
+            </div>
+          // )
+
         ))}
         {categories.map((item) => (
           <div key={item.label} className="relative">
@@ -280,8 +287,8 @@ const toggleCategory2 = (label: string) => {
               type="button"
               onClick={() =>
                 item.subItems ||
-                item.label === "Books" ||
-                item.label === "Text Book"
+                  item.label === "Books" ||
+                  item.label === "Text Book"
                   ? toggleCategory2(item.label)
                   : null
               }
@@ -307,14 +314,14 @@ const toggleCategory2 = (label: string) => {
             <div className="my-1 h-px w-[50%] border-t border-gray-400" />
             {openCategory == item.label && (
               <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
-                {item.label === "Books" && genre &&  (
+                {item.label === "Books" && genre && (
                   <ScrollArea className="h-[25vh]">
                     {genre?.map((subItem) => (
                       <Link
                         key={subItem.genre}
                         href={`books?detail=${subItem.genre}`}
                         className="block py-1 text-sm hover:underline"
-                        onClick={() => {setOpenCategory(null); setOpenCategories([])}}
+                        onClick={() => { setOpenCategory(null); setOpenCategories([]) }}
                         passHref
                       >
                         {subItem.genre}

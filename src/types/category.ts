@@ -12,6 +12,7 @@
     gifts: number;
     arts: number;
     clothings: number | null;
+    children: Category[]; // Update to match your data's nested structure
   }
   type CategoryTreeNode = {
     id: number;
