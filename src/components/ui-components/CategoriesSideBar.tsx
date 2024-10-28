@@ -183,7 +183,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     });
 
     categories.forEach((category) => {
-      if ( category.parent === 0 ) {
+      if (category.parent === 0) {
         const rootCategory = categoryMap[category.id];
         if (rootCategory) {
           tree.push(rootCategory);
@@ -212,11 +212,11 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     );
     const categoryTreeClothing = category.filter((item) => item.clothings == 1 && item.outlet == outlet223 && item.parent != 472);
     setHeaderCategory(categoryTree);
-    
+
     setHeaderCategoryGifts(categoryTreeGift);
     setHeaderCategoryClothings(categoryTreeClothing);
   }, [category]);
-  
+
   // Close subcategories on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -239,13 +239,14 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   return (
     <aside
       ref={sidebarRef}
-      className={`absolute left-0 w-64 rounded-r-xl border-y border-r bg-white p-4 shadow-lg dark:bg-slate-700 ${className}`}
+      className={`absolute left-0  rounded-r-xl border-y border-r bg-white p-4 shadow-lg dark:bg-slate-700 ${className}`}
     >
       <h2 className="text-lg font-bold">CATEGORIES</h2>
-      <nav className="relative mt-4">
-        {headerCategory?.[0]?.children?.map((item) => (
-          // item.id != 472 && (
-            <div key={item.category_name} className="relative">
+      <ScrollArea className="h-[40vh]">
+        <nav className="relative mt-4">
+          {headerCategory?.[0]?.children?.map((item) => (
+            // item.id != 472 && (
+            <div key={item.category_name} className="relative ">
               <button
                 type="button"
                 onClick={() => (item.children?.[0] ? toggleCategory(item.category_name) : router.push(`/products?name=${item.category_name}&detail=${item.id}`))}
@@ -278,58 +279,58 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 />
               )}
             </div>
-          // )
+            // )
 
-        ))}
-        {categories.map((item) => (
-          <div key={item.label} className="relative">
-            <button
-              type="button"
-              onClick={() =>
-                item.subItems ||
-                  item.label === "Books" ||
-                  item.label === "Text Book"
-                  ? toggleCategory2(item.label)
-                  : null
-              }
-              className="duration-240 flex w-full items-center justify-between text-lg transition-transform hover:scale-110 focus:outline-none"
-            >
-              <div className="flex items-center">
-                {item.icon && (
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                  <span className="mr-3">{iconMap[item.icon]}</span>
-                )}
-                <Link href={item.href ?? ""} scroll={false}>
-                  {item.label}
-                </Link>
-              </div>
-              {item.subItems ? (
-                openCategory == item.label ? (
-                  <FaChevronDown size={12} />
-                ) : (
-                  <FaChevronRight size={12} />
-                )
-              ) : null}
-            </button>
-            <div className="my-1 h-px w-[50%] border-t border-gray-400" />
-            {openCategory == item.label && (
-              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
-                {item.label === "Books" && genre && (
-                  <ScrollArea className="h-[25vh]">
-                    {genre?.map((subItem) => (
-                      <Link
-                        key={subItem.genre}
-                        href={`books?detail=${subItem.genre}`}
-                        className="block py-1 text-sm hover:underline"
-                        onClick={() => { setOpenCategory(null); setOpenCategories([]) }}
-                        passHref
-                      >
-                        {subItem.genre}
-                      </Link>
-                    ))}
-                  </ScrollArea>
-                )}
-                {/* {item.label === "Text Book" && headerCategory?.[0]?.children?.map((subItem) => (
+          ))}
+          {categories.map((item) => (
+            <div key={item.label} className="relative">
+              <button
+                type="button"
+                onClick={() =>
+                  item.subItems ||
+                    item.label === "Books" ||
+                    item.label === "Text Book"
+                    ? toggleCategory2(item.label)
+                    : null
+                }
+                className="duration-240 flex w-full items-center justify-between text-lg transition-transform hover:scale-110 focus:outline-none"
+              >
+                <div className="flex items-center">
+                  {item.icon && (
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                    <span className="mr-3">{iconMap[item.icon]}</span>
+                  )}
+                  <Link href={item.href ?? ""} scroll={false}>
+                    {item.label}
+                  </Link>
+                </div>
+                {item.subItems ? (
+                  openCategory == item.label ? (
+                    <FaChevronDown size={12} />
+                  ) : (
+                    <FaChevronRight size={12} />
+                  )
+                ) : null}
+              </button>
+              <div className="my-1 h-px w-[50%] border-t border-gray-400" />
+              {openCategory == item.label && (
+                <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
+                  {item.label === "Books" && genre && (
+                    <ScrollArea className="h-[25vh]">
+                      {genre?.map((subItem) => (
+                        <Link
+                          key={subItem.genre}
+                          href={`books?detail=${subItem.genre}`}
+                          className="block py-1 text-sm hover:underline"
+                          onClick={() => { setOpenCategory(null); setOpenCategories([]) }}
+                          passHref
+                        >
+                          {subItem.genre}
+                        </Link>
+                      ))}
+                    </ScrollArea>
+                  )}
+                  {/* {item.label === "Text Book" && headerCategory?.[0]?.children?.map((subItem) => (
                       <Link
                         key={subItem.id}
                         href={`textbooks?detail=${subItem.id}`}
@@ -341,7 +342,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                     )
                  
                 )} */}
-                {/* {item.label === "Art & Gifts" &&
+                  {/* {item.label === "Art & Gifts" &&
                   headerCategoryGifts?.[0] &&
                   headerCategoryGifts?.map((subItem) => (
                     <Link
@@ -353,7 +354,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       {subItem.category_name}
                     </Link>
                   ))} */}
-                {/* {item.label === "Merch & Clothing" &&
+                  {/* {item.label === "Merch & Clothing" &&
                   headerCategoryClothings?.[0] &&
                   headerCategoryClothings.map((subItem) => (
                     <Link
@@ -365,48 +366,50 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       {subItem.category_name}
                     </Link>
                   ))} */}
-                {item.subItems?.[0] && (
-                  <SubcategoryList
-                    subItems={item.subItems}
-                    openCategory={openCategory}
-                    toggleCategory={toggleCategory2}
-                    isOpen={openCategory === item.label}
-                  />
-                )}
-              </div>
-            )}
-          </div>
-        ))}
+                  {item.subItems?.[0] && (
+                    <SubcategoryList
+                      subItems={item.subItems}
+                      openCategory={openCategory}
+                      toggleCategory={toggleCategory2}
+                      isOpen={openCategory === item.label}
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
 
-        {checkoutData?.booknet_customer_id ? (
-          <button
-            onClick={() => router.push("/my-orders")}
-            className="mb-2 flex w-full items-center text-lg transition-transform duration-300 hover:scale-110 focus:outline-none"
-          >
-            <FaReceipt className="mr-3 text-indigo-600" />
-            <span>My Orders</span>
-          </button>
-        ) : (
-          ""
-        )}
-        <div className="flex justify-between gap-1 py-1">
-          <Link
-            href="/"
-            className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
-          >
-            <FaHome size={16} />
-            <span className="text-xs">Home</span>
-          </Link>
+          {checkoutData?.booknet_customer_id ? (
+            <button
+              onClick={() => router.push("/my-orders")}
+              className="mb-2 flex w-full items-center text-lg transition-transform duration-300 hover:scale-110 focus:outline-none"
+            >
+              <FaReceipt className="mr-3 text-indigo-600" />
+              <span>My Orders</span>
+            </button>
+          ) : (
+            ""
+          )}
 
-          <Link
-            href="/contact-us"
-            className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
-          >
-            <FaPhoneAlt size={16} />
-            <span className="text-xs">Contact Us</span>
-          </Link>
-        </div>
-      </nav>
+        </nav>
+      </ScrollArea>
+      <div className="flex justify-between gap-1 py-1">
+        <Link
+          href="/"
+          className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
+        >
+          <FaHome size={16} />
+          <span className="text-xs">Home</span>
+        </Link>
+
+        <Link
+          href="/contact-us"
+          className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
+        >
+          <FaPhoneAlt size={16} />
+          <span className="text-xs">Contact Us</span>
+        </Link>
+      </div>
     </aside>
   );
 };
