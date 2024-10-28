@@ -44,8 +44,8 @@ const MyComponent = () => {
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [wishListLoader, setWishListLoader] = useState<boolean>(false);
   const [selectedValues, setSelectedValues] = useState<
-  Record<string, string | undefined>
->({});
+    Record<string, string | undefined>
+  >({});
   const {
     cartItems,
     addCartItems,
@@ -113,7 +113,7 @@ const MyComponent = () => {
   const openDetail = async (item: DataCart) => {
     setOpen(true);
     setItemDetail(item);
-    console.log("ftd",item);
+    console.log("ftd", item);
     setSelectedValues({});
   };
   const getOptions = (
@@ -130,7 +130,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -306,7 +306,7 @@ const MyComponent = () => {
               Wishlist Wonders
             </h2>
 
-            <ScrollArea className="h-[75vh] pb-10">
+            <ScrollArea className="max-h-[75vh] pb-5">
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 2 }, (_, index) => (
@@ -348,8 +348,7 @@ const MyComponent = () => {
       <ModalBody>
         <ModalContent>
           <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
-            {itemDetail?.book_title}
-            {itemDetail?.item_name}
+            {itemDetail?.book_title || itemDetail?.item_name}
           </h4>
           <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}
@@ -395,13 +394,14 @@ const MyComponent = () => {
               <div className="flex flex-col">
                 {itemDetail?.item_sale_price && (
                   <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
-                    $ {itemDetail?.variations?.[0] &&
-                  filteredVariations?.[0]?.items_variable_items_sale_price
-                    ? filteredVariations?.[0]?.items_variable_items_sale_price
-                    : itemDetail?.variations?.[0]
-                      ? itemDetail?.variations?.[0]
-                          .items_variable_items_sale_price
-                      : itemDetail?.item_sale_price}
+                    ${" "}
+                    {itemDetail?.variations?.[0] &&
+                    filteredVariations?.[0]?.items_variable_items_sale_price
+                      ? filteredVariations?.[0]?.items_variable_items_sale_price
+                      : itemDetail?.variations?.[0]
+                        ? itemDetail?.variations?.[0]
+                            .items_variable_items_sale_price
+                        : itemDetail?.item_sale_price}
                   </span>
                 )}
                 {itemDetail?.SKU && (
@@ -427,7 +427,7 @@ const MyComponent = () => {
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Published:
                   </span>
-                  <span className="text-sm pl-1 text-neutral-700 dark:text-neutral-300">
+                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                     {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
                   </span>
                 </div>
@@ -444,7 +444,7 @@ const MyComponent = () => {
                 </div>
               )}
 
-              {itemDetail?.pages && (
+              {itemDetail?.pages !== undefined && itemDetail.pages !== null && (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
@@ -476,7 +476,7 @@ const MyComponent = () => {
                   </span>
                 </div>
               )}
- {itemDetail?.variations?.[0]?.variation_tags && (
+              {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>
                   <div>
                     <div>
@@ -486,7 +486,9 @@ const MyComponent = () => {
                             Please Select Variations
                           </span>
                         ) : (
-                          <span className="font-bold text-red-500">Selected Variations</span>
+                          <span className="font-bold text-red-500">
+                            Selected Variations
+                          </span>
                         )}
 
                         <ul>
@@ -494,20 +496,20 @@ const MyComponent = () => {
                             <>
                               {selectedValues[key] && (
                                 <li key={key} className="flex items-center">
-                                  <span className=" font-bold capitalize text-neutral-700 dark:text-neutral-300">
+                                  <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                     {key}:{" "}
                                   </span>
-                                  <span className="pl-1  text-neutral-700 dark:text-neutral-300">
+                                  <span className="pl-1 text-neutral-700 dark:text-neutral-300">
                                     {selectedValues[key] ?? "Please Select"}
                                   </span>
                                 </li>
                               )}
                               {!selectedValues[key] && (
                                 <li key={key} className="text-red-400">
-                                  <span className=" font-bold capitalize text-neutral-700 dark:text-neutral-300">
+                                  <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                     {key}:{" "}
                                   </span>
-                                  <span className="pl-1  text-neutral-700 dark:text-neutral-300">
+                                  <span className="pl-1 text-neutral-700 dark:text-neutral-300">
                                     {selectedValues[key] ?? "Please Select"}
                                   </span>{" "}
                                 </li>
@@ -535,7 +537,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                              currTag.items_variations_tags_name
+                                currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -564,17 +566,20 @@ const MyComponent = () => {
                           key={tagName}
                           className={`my-4 w-full ${tagName == "size" ? "flex items-center gap-1" : ""}`}
                         >
-                          <h3 className="text-lg font-semibold capitalize">{tagName}</h3>
+                          <h3 className="text-lg font-semibold capitalize">
+                            {tagName}
+                          </h3>
 
                           {tagName.toLowerCase().includes("size") ? (
                             <div className="scrollbar-hidden flex justify-center gap-2 overflow-x-auto px-1 pl-3 lg:max-w-full">
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
-                                    ? "bg-red-500 text-white"
-                                    : "border-red-500 bg-white dark:bg-slate-700"
-                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                  className={`min-w-10 rounded border p-1 text-center ${
+                                    selectedValues[tagName] === option.value
+                                      ? "bg-red-500 text-white"
+                                      : "border-red-500 bg-white dark:bg-slate-700"
+                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}

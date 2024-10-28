@@ -356,7 +356,7 @@ const MyComponent = () => {
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Published:
                 </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                   {itemDetail?.introduced
                     ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
                     : ""}
