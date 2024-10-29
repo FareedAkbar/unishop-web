@@ -20,7 +20,7 @@ function Footer() {
 
   return (
     <footer className="bg-zinc-100 dark:bg-slate-900">
-      <div className="container mx-auto pt-8 pb-2">
+      <div className="container mx-auto pb-2 pt-8">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {/* logo side */}
           <div className="flex flex-col items-center gap-8 text-center md:col-span-1 md:items-start md:text-left">
@@ -32,24 +32,31 @@ function Footer() {
               className="w-[18rem] pl-3"
             />
             <div className="flex flex-col gap-3">
-              <p className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464] dark:text-gray-300">
-                <FaMapMarkerAlt className="text-2xl text-[#646464] dark:text-gray-300" /> Building 11,
-                University of Wollongong
-              </p>
+              <a
+                href="https://www.google.com/maps?q=-34.40755818806117,150.87911127658157"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
+              >
+                <FaMapMarkerAlt className="text-2xl text-[#646464] dark:text-gray-300" />
+                Building 11, University of Wollongong
+              </a>
               <a
                 href="tel:(02) 4221 8050"
-                className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464] dark:text-gray-300"
+                className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
               >
-                <FaPhoneAlt className="text-[#646464] dark:text-gray-300" /> (02) 4221 8050
+                <FaPhoneAlt className="text-[#646464] dark:text-gray-300" />{" "}
+                (02) 4221 8050
               </a>
               <a
                 href="mailto:uow-bookshop@uow.edu.au"
-                className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464] dark:text-gray-300"
+                className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
               >
-                <FaEnvelope className="text-[#646464] dark:text-gray-300" /> uow-bookshop@uow.edu.au
+                <FaEnvelope className="text-[#646464] dark:text-gray-300" />{" "}
+                uow-bookshop@uow.edu.au
               </a>
             </div>
-            <div className="flex gap-4 pl-4 text-xl text-[#646464] ">
+            <div className="flex gap-4 pl-4 text-xl text-[#646464]">
               {iconsTab.map(({ icon }, index) => (
                 <div
                   key={index}
@@ -67,43 +74,43 @@ function Footer() {
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <Link
               href="contact-us"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Contact Us
             </Link>
             <Link
               href="postage-and-handling"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Postage & Handling
             </Link>
             <Link
               href="refunds-and-returns"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Refunds & Returns
             </Link>
             <Link
               href="terms-and-conditions"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Terms & Conditions
             </Link>
             <Link
               href="privacy-policy"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Privacy Policy
             </Link>
             <Link
               href="about"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               About Us
             </Link>
             <Link
               href="academic-dress-hire"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Academic Dress Hire
             </Link>
@@ -115,31 +122,31 @@ function Footer() {
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Textbooks
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Books
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               UOW Merchandise
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Stationery & Tech
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Graduation
             </Link>
@@ -151,19 +158,19 @@ function Footer() {
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Gifts
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               UOW Merchandise
             </Link>
             <Link
               href="#"
-              className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500"
+              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Erstwilder
             </Link>
@@ -173,7 +180,9 @@ function Footer() {
           <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Working Hours</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
-            <p className="text-sm font-bold text-[#646464] dark:text-gray-300 dark:hover:text-red-500">Monday - Friday:</p>
+            <p className="text-sm font-bold text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
+              Monday - Friday:
+            </p>
             <p className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
               8:00am - 5:00pm
             </p>
@@ -183,13 +192,18 @@ function Footer() {
           </div>
         </div>
         {/* bottom center */}
-        <div className="flex flex-col items-center text-center pt-3">
+        <div className="flex flex-col items-center pt-3 text-center">
           <p className="text-xs font-medium text-[#646464] dark:text-gray-300">
             Privacy Policy | © {new Date().getFullYear()} PULSE
           </p>
           <p className="text-xs font-medium text-[#646464] dark:text-gray-300">
             Design by{" "}
-            <a target="_blank" rel="noreferrer" href="https://iitsols.com/" className="hover:text-red-500">
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://iitsols.com/"
+              className="hover:text-red-500"
+            >
               IMPACT IT SOLUTIONS
             </a>
           </p>

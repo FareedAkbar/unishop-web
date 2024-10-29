@@ -91,6 +91,10 @@ export const PAGE_MAPPER: Record<Exclude<PAGE_ROUTES, PAGE_ROUTES.UNKNOWN>, { PU
     PUBLIC: true,
     PROTECTED: true,
   },
+  [PAGE_ROUTES.PRODUCT_DETAILS]: {
+    PUBLIC: true,
+    PROTECTED: true,
+  },
 };
 
 // export const RESPONSE_MAPPER1 = (url: string, REQ_ORIGIN: string) => {

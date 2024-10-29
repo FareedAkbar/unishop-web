@@ -112,7 +112,7 @@ const HomePage: React.FC = () => {
 
       <div className="flex flex-col py-5">
         <div className="self-center lg:text-5xl">
-          <FlipWords words={words} className="text-red-500" />
+          <FlipWords words={words} className="text-red-500 dark:text-red-500" />
           your reading adventure!
         </div>
       </div>
