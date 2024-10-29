@@ -83,7 +83,7 @@ const MyComponent = () => {
         // setMeta(result.meta);
         setData(result.data);
       } else {
-        console.error("Unexpected result structure:", result);
+        console.error("Unexpected result structure fetchData:", result);
         // Handle unexpected structure here
       }
     } catch (error) {
@@ -109,7 +109,7 @@ const MyComponent = () => {
         // setMeta(result.meta);
         setDataDetail(result.data);
       } else {
-        console.error("Unexpected result structure:", result);
+        console.error("Unexpected result structure fetchDetail:", result);
         // Handle unexpected structure here
       }
     } catch (error) {
@@ -177,7 +177,7 @@ const MyComponent = () => {
           description:
             "Unfortunately, your order could not be processed. Please try again.",
         });
-        console.error("Unexpected result structure:", result);
+        console.error("Unexpected result structure placeOrderApiCall:", result);
         // Handle unexpected structure here
       }
     } catch (error) {

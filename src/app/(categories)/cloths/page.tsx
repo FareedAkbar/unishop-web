@@ -30,7 +30,7 @@ import type { Category } from "~/types/category";
 import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import Select from "~/components/Fields/select";
 import type { Pagination } from "~/types/pagination";
-import type { Variation } from "~/types/book";
+import type { Variation, VariationTag } from "~/types/book";
 
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
@@ -122,7 +122,7 @@ const MyComponent = () => {
           return false;
         }
 
-        return variation.variation_tags.some((tag: any) => {
+        return variation.variation_tags.some((tag: VariationTag) => {
           return (
             tag.items_variations_tags_name === tagName &&
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

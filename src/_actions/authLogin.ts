@@ -32,7 +32,7 @@ export async function VerifyOTPCApi(payload: VerifyOTP): Promise<VerifyOTPRespon
             })
             return responsePayload
         } else {
-            console.error("Unexpected result structure:", responsePayload);
+            console.error("Unexpected result structure VerifyOTPCApi:", responsePayload);
             return responsePayload
         }
     } catch (error) {

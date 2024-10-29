@@ -31,7 +31,7 @@ export async function getBooks(genre_id: number): Promise<ApiResponse | boolean>
             console.log(result)
             return result
         } else {
-            console.error("Unexpected result structure:", result);
+            console.error("Unexpected result structure getBooks:", result);
             return result
         }
     } catch (error) {

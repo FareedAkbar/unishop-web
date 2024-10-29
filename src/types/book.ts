@@ -48,7 +48,7 @@ interface CostDetails {
 
 
 
-interface VariationTag {
+export interface VariationTag {
   items_variations_tags_link_id: number;
   item_id: number;
   items_variations_tags_id: number;

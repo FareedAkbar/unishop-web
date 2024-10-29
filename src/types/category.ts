@@ -11,6 +11,7 @@
     booknet: number;
     gifts: number;
     arts: number;
+    object_path: string,
     clothings: number | null;
     children: Category[]; // Update to match your data's nested structure
   }
@@ -22,6 +23,7 @@
     deleted: number;
     media_id: number;
     booknet: number;
+    object_path: string,
     children?: CategoryTreeNode[];
   };
   

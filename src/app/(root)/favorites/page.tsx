@@ -28,7 +28,7 @@ import { getBooks } from "~/_actions/getbooks";
 import { getFavouriteItems } from "~/_actions/wishlist";
 import { useToast } from "~/hooks/use-toast";
 import { Player } from "@lottiefiles/react-lottie-player";
-import type { Variation } from "~/types/book";
+import type { Variation, VariationTag } from "~/types/book";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -189,7 +189,7 @@ const MyComponent = () => {
           return false;
         }
 
-        return variation.variation_tags.some((tag: any) => {
+        return variation.variation_tags.some((tag: VariationTag) => {
           return (
             tag.items_variations_tags_name === tagName &&
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -348,7 +348,7 @@ const MyComponent = () => {
       <ModalBody>
         <ModalContent>
           <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
-            {itemDetail?.book_title || itemDetail?.item_name}
+            {itemDetail?.book_title ?? itemDetail?.item_name}
           </h4>
           <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}

@@ -150,7 +150,7 @@ export default function CehckoutForm({ push, handleData, disabled = false }: che
           setLoader(false);
           if (res.status) {
             if (push) {
-              router.push("placeorder");
+              router.push("/placeorder");
             }
             if (!push && handleData) {
               handleData(res?.data);

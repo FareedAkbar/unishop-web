@@ -64,6 +64,7 @@ const MyComponent = () => {
     favItems,
     checkoutData,
     category,
+    setProductForDetail
   } = useAuthContext();
 
   useEffect(() => {
@@ -316,6 +317,11 @@ const MyComponent = () => {
     setCurrentPage(page);
     await getCloths(page);
   };
+
+  const goToDetail = async (item: DataCart)=>{
+     await setProductForDetail(item)
+     router.push('/product-details')
+  }
   return (
     <div>
       <motion.main
@@ -371,7 +377,7 @@ const MyComponent = () => {
                         }
                       }}
                       onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
+                      openDetail={() => goToDetail(item)}
                       handleFavourite={() => handleFavourite(item)}
                       wishListLoader={wishListLoader}
                     />

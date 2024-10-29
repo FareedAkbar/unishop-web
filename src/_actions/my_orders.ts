@@ -37,7 +37,7 @@ export async function getMyOrders(booknetCustomerId: number): Promise<ApiRespons
             return result
 
         } else {
-            console.error("Unexpected result structure:", result);
+            console.error("Unexpected result structure getMyOrders:", result);
             // Handle unexpected structure here
             return result
         }
@@ -61,7 +61,7 @@ export async function getOrderStatus(): Promise<ApiResponseStatus | boolean> {
             return result
 
         } else {
-            console.error("Unexpected result structure:", result);
+            console.error("Unexpected result structure getOrderStatus:", result);
             // Handle unexpected structure here
             return result
         }

@@ -84,6 +84,8 @@ interface AuthContextProps {
   ) => Promise<boolean>;
   getFavourite: (booknet_customer_id: number) => Promise<boolean>;
   favItems: DataCart[];
+  setProductForDetail: (data: DataCart | null) => Promise<void>;
+  productDetail: DataCart | null
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -110,6 +112,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [uuidLocal, setUuidLocal] = useState<string | undefined>();
   const [checkoutData, setCheckoutData] = useState<CheckoutForm | null>(null);
   const [booknetCustomerId, setBooknetCustomerId] = useState<number | null>(
+    null,
+  );
+  const [productDetail, setProductDetail] = useState<DataCart | null>(
     null,
   );
   const router = useRouter();
@@ -535,6 +540,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
+  const setProductForDetail = async (payload: DataCart | null): Promise<void> => {
+    setProductDetail(payload)
+  };
   const checkoutFormData = async (payload: CheckoutForm): Promise<boolean> => {
     lsClient.setItem("CHECKOUT_DATA", payload);
     return true;
@@ -556,6 +564,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       },
       { skipAuthorization: true },
     );
+    
 
     const responsePayload: { status: boolean; data: CheckoutForm } =
       (await response.json()) as checkoutBooknetResponse;
@@ -563,7 +572,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const x = responsePayload.data.booknet_customer_id ?? null;
       setBooknetCustomerId(x);
       setCheckoutData(responsePayload.data);
-
+      console.log(responsePayload.data)
       lsClient.setItem(
         "BOOKNET_CUSTOMER_ID",
         responsePayload?.data.booknet_customer_id ?? null,
@@ -639,6 +648,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         removeFavourite,
         getFavourite,
         favItems,
+        setProductForDetail,
+        productDetail
       }}
     >
       {children}

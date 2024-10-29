@@ -22,6 +22,7 @@ import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import Link from "next/link";
 import { outlet221, outlet223 } from "~/types/tokens";
 import { ScrollArea } from "../ui/scroll-area";
+import Image from "next/image";
 
 // Create a mapping of icon names to their corresponding components
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
@@ -197,6 +198,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
         category_name: category.category_name,
         category_description: category.category_description,
         deleted: category.deleted,
+        object_path: category.object_path ? category.object_path : '',
         media_id: category.media_id,
         booknet: category.booknet,
         children: [],
@@ -268,7 +270,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       className={`absolute left-0 max-w-64 rounded-r-xl border-y border-r bg-white p-4 shadow-lg dark:bg-slate-700 ${className}`}
     >
       <h2 className="text-lg font-bold">CATEGORIES</h2>
-      <ScrollArea className="h-[70vh]">
+      <ScrollArea className="h-[50vh]">
         <nav className="relative mt-4">
           {headerCategory?.[0]?.children?.map((item) => (
             // item.id != 472 && (
@@ -279,8 +281,8 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   item.children?.[0]
                     ? toggleCategory(item.category_name)
                     : router.push(
-                        `/products?name=${item.category_name}&detail=${item.id}`,
-                      )
+                      `/products?name=${item.category_name}&detail=${item.id}`,
+                    )
                 }
                 className="flex w-full items-center justify-between px-3 transition-transform hover:scale-110"
               >
@@ -291,20 +293,37 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                         onClick={() => item.children ? setOpenCategories([]) : null}
                         passHref
                       > */}
-                <div className="">
-                  <span className="w-40 truncate" title={item.category_name}>
+                <div className="flex items-center justify-start ">
+                  {item.object_path && (
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                    <Image
+                      src={
+                        item?.object_path
+                          ? `https://ipos-storage.s3.amazonaws.com/${item.object_path}`
+                          : "/assets/images/products/product.png"
+                      }
+                      alt={item?.object_path ?? ""}
+                      width={20}
+                      height={20}
+                      className="flex-shrink-0 rounded-md object-cover mr-3"
+                    />
+                  )}
+                  <span className="w-40 truncate text-left" title={item.category_name}>
                     {item.category_name.length > 16
                       ? `${item.category_name.slice(0, 16)}...`
                       : item.category_name}
                   </span>
                 </div>
-                {item.children?.[0] ? (
-                  openCategories.includes(item.category_name) ? (
-                    <FaChevronDown size={12} />
-                  ) : (
-                    <FaChevronRight size={12} />
-                  )
-                ) : null}
+                <div>
+                  {item.children?.[0] ? (
+                    openCategories.includes(item.category_name) ? (
+                      <FaChevronDown size={12} />
+                    ) : (
+                      <FaChevronRight size={12} />
+                    )
+                  ) : null}
+                </div>
+
                 {/* </Link> */}
               </button>
               <div className="my-1 h-px w-[50%] border-t border-gray-400" />
@@ -328,8 +347,8 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 type="button"
                 onClick={() =>
                   item.subItems ||
-                  item.label === "Books" ||
-                  item.label === "Text Book"
+                    item.label === "Books" ||
+                    item.label === "Text Book"
                     ? toggleCategory2(item.label)
                     : null
                 }
@@ -341,7 +360,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                     <span className="mr-3">{iconMap[item.icon]}</span>
                   )}
                   <Link href={item.href ?? ""} scroll={false}>
-                    {item.label}
+                    {item.label}  
                   </Link>
                 </div>
                 {item.subItems ? (

@@ -103,7 +103,7 @@ const MyComponent = () => {
         // window.open(result.data.link);
         console.log(result);
       } else {
-        console.error("Unexpected result structure:", result);
+        console.error("Unexpected result structure getLinkForPayment:", result);
         // Handle unexpected structure here
       }
     } catch (error) {
@@ -142,7 +142,7 @@ const MyComponent = () => {
         // setMeta(result.meta);
         // setDataSpecialOrders(result.data);
       } else {
-        console.error("Unexpected result structure:", result);
+        console.error("Unexpected result structure fetchDataSpecialOrders:", result);
         // Handle unexpected structure here
       }
     } catch (error) {
@@ -257,7 +257,7 @@ const MyComponent = () => {
           description:
             "Unfortunately, your order could not be processed. Please try again.",
         });
-        console.error("Unexpected result structure:", result);
+        console.error("Unexpected result structure placeOrderApiCall:", result);
         // Handle unexpected structure here
       }
     } catch (error) {

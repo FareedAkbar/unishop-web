@@ -100,6 +100,7 @@ const Header = () => {
         category_name: category.category_name,
         category_description: category.category_description,
         deleted: category.deleted,
+        object_path: category.object_path ?  category.object_path : '',
         media_id: category.media_id,
         booknet: category.booknet,
         children: [],
@@ -254,7 +255,9 @@ const Header = () => {
   useEffect(() => {
     const loadData = async () => {
       if (checkoutData?.booknet_customer_id) {
+        console.error("Failed to load data in useEffect:");
         await getFavourite(checkoutData?.booknet_customer_id);
+       
       }
     };
     loadData().catch((error) => {
