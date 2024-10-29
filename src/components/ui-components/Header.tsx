@@ -6,6 +6,8 @@ import {
   FaBars,
   FaChevronRight,
   FaTimes,
+  FaHome,
+  FaPhoneAlt,
 } from "react-icons/fa";
 import Input from "./Input"; // Assuming you have an Input component
 import Image from "next/image";
@@ -38,6 +40,7 @@ import {
   AiOutlineHome,
   AiOutlineLogout,
 } from "react-icons/ai";
+import { DivOverlay } from "leaflet";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -62,7 +65,7 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSection, setActiveSection] = useState("home");
 
-  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for hamburger menu
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false); // State for hamburger menu
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
@@ -147,7 +150,6 @@ const Header = () => {
     );
     const categoryTreeClothing = category.filter((item) => item.clothings == 1);
 
-    
     setHeaderCategory(categoryTree);
     setHeaderCategoryGifts(categoryTreeGift);
     setHeaderCategoryClothings(categoryTreeClothing);
@@ -390,20 +392,38 @@ const Header = () => {
         {isMobileMenuOpen && (
           <>
             {/* Overlay to reduce opacity */}
+            {isMobileMenuOpen && (
             <div
               className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50" // Dark overlay
               onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
             />
-
+            )}
             <button
               className={`fixed right-5 top-5 z-40 sm:block md:hidden ${isMobileMenuOpen ? "bg-white dark:bg-slate-700" : ""}`} // Ensure z-30 is applied
               onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
             >
               <FaTimes className="text-xl text-red-500" />
             </button>
+            <div className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col bg-white p-6 dark:bg-slate-700 md:hidden md:w-1/2">
+              <div className="z-40 flex w-[90%] justify-around gap-1 pb-2">
+                <Link
+                  href="/"
+                  className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-red-500 p-2 text-white transition-transform hover:scale-105"
+                >
+                  <FaHome size={16} />
+                  <span className="text-xs">Home</span>
+                </Link>
 
-            <nav className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col overflow-scroll bg-white p-6 dark:bg-slate-700 md:hidden md:w-1/2">
-              <button
+                <Link
+                  href="/"
+                  className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-red-500 p-2 text-white transition-transform hover:scale-105"
+                >
+                  <HiLogin size={16} />
+                  <span className="text-xs">Logout</span>
+                </Link>
+              </div>
+              <nav className="overflow-scroll">
+                {/* <button
                 onClick={() => {
                   router.push("/");
                 }}
@@ -413,112 +433,127 @@ const Header = () => {
                   <AiOutlineHome className="mr-1 text-red-500" />
                   <span>Home</span>
                 </div>
-              </button>
-              {headerCategory?.[0]?.children?.map((item) => (
-                <div key={item.category_name} className="mb-4">
-                  <button
-                    onClick={() => (item.children?.[0] ? toggleDropdown(item.category_name) : router.push(`/products?name=${item.category_name}&detail=${item.id}`))}
-                    className="flex w-full items-center justify-between text-lg focus:outline-none"
-                  >
-                    <div className="flex items-center">
-                      {/* {item.icon && (
+              </button> */}
+
+                {headerCategory?.[0]?.children?.map((item) => (
+                  <div key={item.category_name} className="mb-4">
+                    <button
+                      onClick={() =>
+                        item.children?.[0]
+                          ? toggleDropdown(item.category_name)
+                          : (router.push(
+                              `/products?name=${item.category_name}&detail=${item.id}`,
+                            ),
+                            setMobileMenuOpen(!isMobileMenuOpen))
+                      }
+                      className="flex w-full items-center justify-between text-lg focus:outline-none"
+                    >
+                      <div className="flex items-center">
+                        {/* {item.icon && (
                         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                         <span className="mr-3">{iconMap[item.icon]}</span>
                       )} */}
-                      {/* <Link href={item.href ?? ""} scroll={false}> */}
-                      {item.category_name}
-                      {/* </Link> */}
-                    </div>{" "}
-                    {item.children?.[0] ? (
-                      openDropdown === item.category_name ? (
-                        <FaChevronDown />
-                      ) : (
-                        <FaChevronRight />
-                      )
-                    ) : null}
-                  </button>
-                  {item.children && openDropdown === item.category_name && (
-                    <div className="ml-4 mt-1">
-                      {item.children.map((subItem) => (
-                        <button
-                          key={subItem.id}
-                          onClick={() => (subItem.children?.[0] ? toggleDropdown(subItem.category_name) : router.push(`/products?name=${subItem.category_name}&detail=${subItem.id}`))}
-                          className="block py-1 text-sm text-gray-700 hover:underline dark:text-gray-300"
-                        >
-                          {subItem.category_name}
-                        </button>
-                      ))}
-
-                    </div>
-                  )}
-                </div>
-              ))}
-              {categories.map((item) => (
-                <div key={item.label} className="mb-4">
-                  <button
-                    onClick={() =>
-                      item.subItems ? toggleDropdown(item.label) : null
-                    }
-                    className="flex w-full items-center justify-between text-lg focus:outline-none"
-                  >
-                    <div className="flex items-center">
-                      {item.icon && (
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                        <span className="mr-3">{iconMap[item.icon]}</span>
-                      )}
-                      <Link href={item.href ?? ""} scroll={false}>
-                        {item.label}
-                      </Link>
-                    </div>{" "}
-                    {item.subItems ? (
-                      openDropdown === item.label ? (
-                        <FaChevronDown />
-                      ) : (
-                        <FaChevronRight />
-                      )
-                    ) : null}
-                  </button>
-                  {item.subItems && openDropdown === item.label && (
-                    <div className="ml-4 mt-1">
-                      {item.subItems.map((subItem) => (
-                        <a
-                          key={subItem.label}
-                          href={subItem.href}
-                          className="block py-1 text-sm text-gray-700 hover:underline dark:text-gray-300"
-                        >
-                          {subItem.label}
-                        </a>
-                      ))}
-                      {item.label === "Books" && genre && (
-                        <ScrollArea className="h-[25vh]">
-                          {genre?.map((subItem) => (
-                            <Link
-                              key={subItem.genre}
-                              href={`books?detail=${subItem.genre}`}
-                              className="block py-1 text-sm hover:underline"
-                              onClick={() => setOpenDropdown(null)}
-                              passHref
-                            >
-                              {subItem.genre}
-                            </Link>
-                          ))}
-                        </ScrollArea>
-                      )}
-                      {headerCategory?.[0] && (
-                        <ScrollArea className="h-[25vh]">
-                          {headerCategory?.[0]?.children?.map((subItem) => (
-                            <Link
-                              key={subItem.id}
-                              href={`textbooks?detail=${subItem.id}`}
-                              className="block py-1 text-sm hover:underline"
-                              onClick={() => setOpenDropdown(null)}
-                            >
-                              {subItem.category_name}
-                            </Link>
-                          ))}
-                        </ScrollArea>
-                      )}
-                      {/* {item.label === "Art & Gifts" &&
+                        {/* <Link href={item.href ?? ""} scroll={false}> */}
+                        {item.category_name}
+                        {/* </Link> */}
+                      </div>{" "}
+                      {item.children?.[0] ? (
+                        openDropdown === item.category_name ? (
+                          <FaChevronDown />
+                        ) : (
+                          <FaChevronRight />
+                        )
+                      ) : null}
+                    </button>
+                    {item.children && openDropdown === item.category_name && (
+                      <div className="ml-4 mt-1">
+                        {item.children.map((subItem) => (
+                          <button
+                            key={subItem.id}
+                            onClick={() =>
+                              subItem.children?.[0]
+                                ? toggleDropdown(subItem.category_name)
+                                : (router.push(
+                                    `/products?name=${item.category_name}&detail=${item.id}`,
+                                  ),
+                                  setMobileMenuOpen(!isMobileMenuOpen),
+                                  setOpenDropdown(null))
+                            }
+                            className="block py-1 text-sm text-gray-700 hover:underline dark:text-gray-300"
+                          >
+                            {subItem.category_name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {categories.map((item) => (
+                  <div key={item.label} className="mb-4">
+                    <button
+                      onClick={() =>
+                        item.subItems ? toggleDropdown(item.label) : null
+                      }
+                      className="flex w-full items-center justify-between text-lg focus:outline-none"
+                    >
+                      <div className="flex items-center">
+                        {item.icon && (
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                          <span className="mr-3">{iconMap[item.icon]}</span>
+                        )}
+                        <Link href={item.href ?? ""} scroll={false}>
+                          {item.label}
+                        </Link>
+                      </div>{" "}
+                      {item.subItems ? (
+                        openDropdown === item.label ? (
+                          <FaChevronDown />
+                        ) : (
+                          <FaChevronRight />
+                        )
+                      ) : null}
+                    </button>
+                    {item.subItems && openDropdown === item.label && (
+                      <div className="ml-4 mt-1">
+                        {item.subItems.map((subItem) => (
+                          <a
+                            key={subItem.label}
+                            href={subItem.href}
+                            className="block py-1 text-sm text-gray-700 hover:underline dark:text-gray-300"
+                          >
+                            {subItem.label}
+                          </a>
+                        ))}
+                        {item.label === "Books" && genre && (
+                          <ScrollArea className="h-[25vh]">
+                            {genre?.map((subItem) => (
+                              <Link
+                                key={subItem.genre}
+                                href={`books?detail=${subItem.genre}`}
+                                className="block py-1 text-sm hover:underline"
+                                onClick={() => setOpenDropdown(null)}
+                                passHref
+                              >
+                                {subItem.genre}
+                              </Link>
+                            ))}
+                          </ScrollArea>
+                        )}
+                        {headerCategory?.[0] && (
+                          <ScrollArea className="h-[25vh]">
+                            {headerCategory?.[0]?.children?.map((subItem) => (
+                              <Link
+                                key={subItem.id}
+                                href={`textbooks?detail=${subItem.id}`}
+                                className="block py-1 text-sm hover:underline"
+                                onClick={() => setOpenDropdown(null)}
+                              >
+                                {subItem.category_name}
+                              </Link>
+                            ))}
+                          </ScrollArea>
+                        )}
+                        {/* {item.label === "Art & Gifts" &&
                         headerCategoryGifts?.[0] &&
                         headerCategoryGifts?.map((subItem) => (
                           <Link
@@ -542,23 +577,12 @@ const Header = () => {
                             {subItem.category_name}
                           </Link>
                         ))} */}
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              <button
-                onClick={() => {
-                  //
-                }}
-                className="mb-4 flex w-full items-center justify-between text-lg focus:outline-none"
-              >
-                <div className="flex cursor-pointer items-center space-x-2">
-                  <HiLogin className="mr-1 text-gray-600 dark:text-gray-300" />
-                  <span>Logout</span>
-                </div>
-              </button>
-            </nav>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </nav>
+            </div>
           </>
         )}
 

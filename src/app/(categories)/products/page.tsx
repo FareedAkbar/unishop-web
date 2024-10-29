@@ -328,7 +328,7 @@ const MyComponent = () => {
         <div className="flex flex-grow flex-row sm:pt-10">
           <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
             {/* Header Section */}
-            <div className="flex w-full flex-wrap items-end justify-between pb-4">
+            <div className="flex w-full flex-wrap gap-2 items-end justify-between pb-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold"> {subcategory?.category_name}</h2>
                 {/* <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
