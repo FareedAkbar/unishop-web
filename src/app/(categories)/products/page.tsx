@@ -336,7 +336,7 @@ const MyComponent = () => {
             {/* Header Section */}
             <div className="flex w-full flex-wrap gap-2 items-end justify-between pb-4">
               <div className="text-left">
-                <h2 className="text-xl font-bold"> {subcategory?.category_name}</h2>
+                <h2 className="text-xl font-bold capitalize"> {subcategory?.category_name}</h2>
                 {/* <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
                   {subcategory?.category_name}
                 </p> */}

@@ -78,8 +78,8 @@ export interface Variation {
 
 export default interface DataCart {
   book_id: number;
-  final_price_including_tax?: number; // Just use number; 0 is included
-  quantity: number; // Just use number; 0 is included
+  final_price_including_tax?: number; 
+  quantity: number; 
   item_id: number;
   genre_id: number;
   book_title: string;
@@ -132,14 +132,15 @@ export default interface DataCart {
   variations?: Variation[] | null;
   selected_variation?: Variation | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selectedValues?: any
+  selectedValues?: any;
+
 }
 
 
 
 
 
-interface Media {
+export interface Media {
   object_id: number;
   object_path: string;
 }
