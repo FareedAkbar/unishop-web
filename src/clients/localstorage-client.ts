@@ -62,7 +62,12 @@ const STORAGE_MAPPER = {
     TYPE: "" as string,
     KEY: "theme",
     DEFAULT: null
-  }
+  },
+  PRODUCT_DETAIL:{
+    TYPE: {} as DataCart | null,
+    KEY: "product_detail",
+    DEFAULT: null
+  },
 };
 
 export const localStorageClient = () => {

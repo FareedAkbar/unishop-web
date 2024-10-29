@@ -519,6 +519,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const TOKEN = lsClient.getItem("TOKEN");
     const BOOKNET_CUSTOMER_ID = lsClient.getItem("BOOKNET_CUSTOMER_ID");
     const THEME_MODE = lsClient.getItem("THEME_MODE");
+    const PRODUCT_DETAIL = lsClient.getItem("PRODUCT_DETAIL");
     setItems(
       cartItems
         ? typeof cartItems === "string"
@@ -526,6 +527,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           : cartItems
         : [],
     );
+    setProductDetail(PRODUCT_DETAIL);
     setThemeMode(THEME_MODE);
     setUuidLocal(UUID);
     setBooknetCustomerId(BOOKNET_CUSTOMER_ID);
@@ -542,6 +544,10 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const setProductForDetail = async (payload: DataCart | null): Promise<void> => {
     setProductDetail(payload)
+    lsClient.setItem(
+      "PRODUCT_DETAIL",
+      payload ?? null,
+    );
   };
   const checkoutFormData = async (payload: CheckoutForm): Promise<boolean> => {
     lsClient.setItem("CHECKOUT_DATA", payload);

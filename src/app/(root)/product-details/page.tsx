@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { FaCartPlus } from "react-icons/fa";
 import moment from "moment";
 import Select from "~/components/Fields/select";
-import type { Variation } from "~/types/book";
+import type { Variation, VariationTag } from "~/types/book";
 import type DataCart from "~/types/book";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -21,7 +21,7 @@ interface ProductDetailsProps {
 
 const ProductDetails: React.FC<ProductDetailsProps> = (
   {
-      itemDetail,
+      // itemDetail,
     //   getOptions,
     //   handleAddToCart,
   },
@@ -30,8 +30,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   const [selectedValues, setSelectedValues] = useState<Record<string, string>>(
     {},
   );
-  const { cartItems, addCartItems, removeCartItems } = useAuthContext();
-
+  const { cartItems, addCartItems, removeCartItems, productDetail } = useAuthContext();
+  const itemDetail = productDetail
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
       typeof cartItems === "string"
@@ -43,6 +43,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       ? true
       : false;
   };
+
+  console.log(productDetail)
 
   const handleSelectChange = (
     tagName: string,
@@ -128,7 +130,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
           return false;
         }
 
-        return variation.variation_tags.some((tag: any) => {
+        return variation.variation_tags.some((tag: VariationTag) => {
           return (
             tag.items_variations_tags_name === tagName &&
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -146,7 +148,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   return (
     <div className="p-6 pt-28">
       <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
-        {itemDetail?.book_title || itemDetail?.item_name}
+        {itemDetail?.book_title ?? itemDetail?.item_name}
       </h4>
       <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
         {itemDetail?.description}
