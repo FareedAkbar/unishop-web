@@ -74,7 +74,9 @@ const SubcategoryList1 = ({
                 router.push(
                   `/products?name=${subItem.category_name}&detail=${subItem.id}`,
                 );
-                setOpenCategories([]);
+                setTimeout(() => {
+                  setOpenCategories([]);
+                }, 1000);
               }
             }}
             className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
@@ -267,11 +269,11 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   return (
     <aside
       ref={sidebarRef}
-      className={`absolute left-0 max-w-64 rounded-r-xl border-y border-r bg-white p-4 shadow-lg dark:bg-slate-700 ${className}`}
+      className={`absolute left-0 max-w-64 rounded-r-xl border-y border-r bg-white px-4 py-2 shadow-lg dark:bg-slate-700 ${className}`}
     >
       <h2 className="text-lg font-bold">CATEGORIES</h2>
-      <ScrollArea className="h-[50vh]">
-        <nav className="relative mt-4">
+      <ScrollArea className="h-[70vh] py-2 pr-2">
+        <nav className="relative">
           {headerCategory?.[0]?.children?.map((item) => (
             // item.id != 472 && (
             <div key={item.category_name} className="relative">
@@ -326,7 +328,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
 
                 {/* </Link> */}
               </button>
-              <div className="my-1 h-px w-[50%] border-t border-gray-400" />
+              <div className="my-1 ml-2 h-px w-[50%] border-t border-gray-400" />
 
               {openCategories.includes(item.category_name) &&
                 item.children?.[0] && (
@@ -371,7 +373,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   )
                 ) : null}
               </button>
-              <div className="my-1 h-px w-[50%] border-t border-gray-400" />
+              <div className="my-1 h-px w-[50%] border-t ml-2 border-gray-400" />
               {openCategory == item.label && (
                 <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
                   {item.label === "Books" && genre && (
@@ -383,7 +385,9 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                           className="block py-1 text-sm hover:underline"
                           onClick={() => {
                             setOpenCategory(null);
-                            setOpenCategories([]);
+                            setTimeout(() => {
+                              setOpenCategories([]);
+                            }, 1000);
                           }}
                           passHref
                         >
@@ -444,7 +448,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
           {checkoutData?.booknet_customer_id ? (
             <button
               onClick={() => router.push("/my-orders")}
-              className="mb-2 flex w-full items-center text-lg transition-transform duration-300 hover:scale-110 focus:outline-none"
+              className="mb-2 flex w-full items-center px-3 text-lg transition-transform duration-300 hover:scale-110 focus:outline-none"
             >
               <FaReceipt className="mr-3 text-indigo-600" />
               <span>My Orders</span>

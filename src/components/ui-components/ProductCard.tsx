@@ -6,6 +6,7 @@ import { AiOutlineHeart, AiOutlineEye, AiFillHeart } from "react-icons/ai";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
 import Spinner from "../spinner";
+import { useRouter } from "next/navigation";
 
 interface ProductProps {
   showAddToCart?: boolean;
@@ -27,6 +28,7 @@ const ProductCard = ({
   wishListLoader = false
 }: ProductProps) => {
   const { favItems } = useAuthContext();
+  const router =useRouter();
   return (
     <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col p-2 transition-transform duration-300 hover:scale-110 sm:w-64 md:w-64 lg:w-72">
       <div className="relative flex h-40 grow-0 items-center justify-center rounded-sm bg-gray-200 dark:bg-slate-600 sm:h-48 lg:h-64">
@@ -69,6 +71,7 @@ const ProductCard = ({
             )}
           </button>
           <button
+            // onClick={() => (openDetail ? openDetail() : "")}
             onClick={() => (openDetail ? openDetail() : "")}
             className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
           >
