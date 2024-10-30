@@ -552,38 +552,49 @@ const MyComponent = () => {
                     : ""}
                 </span>
               </div>
-              {/* <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Language:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.book_language}
-                </span>
-              </div> */}
-              {/* <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Number of Pages:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.pages}
-                </span>
-              </div> */}
-              {/* <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Publisher:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher?.publisher_name}
-                </span>
-              </div> */}
-              {/* <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Country of Publication:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher?.country}
-                </span>
-              </div> */}
+              {itemDetail?.book_language && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Language:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.book_language}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.pages !== undefined && itemDetail.pages !== null && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Number of Pages:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.pages}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.publisher?.publisher_name && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Publisher:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.publisher.publisher_name}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.publisher?.country && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Country of Publication:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.publisher.country}
+                  </span>
+                </div>
+              )}
               {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>
                   <div>
@@ -740,7 +751,7 @@ const MyComponent = () => {
           <div className="flex w-full justify-end">
             <button
               className="mt-5 flex w-fit flex-row items-center justify-end rounded border-none bg-red-500 px-1 text-[10px] text-white hover:bg-red-600 md:px-3 md:py-1.5 lg:px-4 lg:py-2 lg:text-base"
-              onClick={() => goToDetail(itemDetail)} // Navigate to respective route
+              onClick={() => goToDetail(itemDetail)}
             >
               <span>More Details</span>
               <IoIosArrowRoundForward className="ml-1 text-lg text-white lg:text-xl" />
