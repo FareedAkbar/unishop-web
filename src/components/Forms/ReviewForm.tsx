@@ -76,7 +76,6 @@ export default function ReviewForm() {
           <div className="flex space-x-1">
             {Array.from({ length: 5 }, (_, index) => {
               const starValue = index + 1;
-
               return (
                 <FaStar
                   key={index}
@@ -99,7 +98,7 @@ export default function ReviewForm() {
           <textarea
             id="review"
             className={cn(
-              "dark:text-whitee w-full rounded-md bg-gray-50 px-3 py-2 text-black shadow-sm placeholder:text-neutral-400 focus:ring-2 focus:ring-red-500 focus-visible:outline-none focus-visible:ring-[2px] focus-visible:ring-red-400 dark:bg-slate-700 dark:placeholder:text-neutral-300 dark:focus-visible:ring-red-600",
+              "w-full rounded-md bg-gray-50 px-3 py-2 text-black shadow-sm placeholder:text-neutral-400 focus:ring-2 focus:ring-red-500 focus-visible:outline-none focus-visible:ring-[2px] focus-visible:ring-red-400 dark:bg-slate-700 dark:text-white dark:placeholder:text-neutral-300 dark:focus-visible:ring-red-600",
               errors.review ? "border-red-500" : "border-gray-300",
             )}
             placeholder="Write your review here..."

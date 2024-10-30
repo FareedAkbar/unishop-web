@@ -3,7 +3,7 @@
 import React from "react";
 import ImageSlider from "./ImageSlider";
 import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
-import ProductsSection from "./ProductsSection";
+import ProductsSection from "~/components/ui-components/ProductsSection";
 import GraduationBanner from "./GraduationBanner";
 import ProductList from "~/components/ui-components/ProductList";
 import { FlipWords } from "~/components/ui/flip-words";
@@ -157,11 +157,11 @@ const HomePage: React.FC = () => {
 
       <AboutSection />
       <GraduationBanner />
-      <ProductsSection
+      {/* <ProductsSection
         products={bestSellingProducts}
         headingPartOne="Best Selling"
         headingPartTwo="Products This Month"
-      />
+      /> */}
     </div>
   );
 };

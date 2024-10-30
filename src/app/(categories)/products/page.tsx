@@ -31,6 +31,8 @@ import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import Select from "~/components/Fields/select";
 import type { Pagination } from "~/types/pagination";
 import type { Variation } from "~/types/book";
+import Button from "~/components/ui-components/Button";
+import { IoIosArrowRoundForward } from "react-icons/io";
 
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
@@ -64,7 +66,7 @@ const MyComponent = () => {
     favItems,
     checkoutData,
     category,
-    setProductForDetail
+    setProductForDetail,
   } = useAuthContext();
 
   useEffect(() => {
@@ -179,7 +181,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -318,10 +320,10 @@ const MyComponent = () => {
     await getCloths(page);
   };
 
-  const goToDetail = async (item: DataCart)=>{
-     await setProductForDetail(item)
-     router.push('/product-details')
-  }
+  const goToDetail = async (item: DataCart | null) => {
+    await setProductForDetail(item);
+    router.push(`/product-details?category=${item?.category}`);
+  };
   return (
     <div>
       <motion.main
@@ -334,9 +336,12 @@ const MyComponent = () => {
         <div className="flex flex-grow flex-row sm:pt-10">
           <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
             {/* Header Section */}
-            <div className="flex w-full flex-wrap gap-2 items-end justify-between pb-4">
+            <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4">
               <div className="text-left">
-                <h2 className="text-xl font-bold capitalize"> {subcategory?.category_name}</h2>
+                <h2 className="text-xl font-bold capitalize">
+                  {" "}
+                  {subcategory?.category_name}
+                </h2>
                 {/* <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
                   {subcategory?.category_name}
                 </p> */}
@@ -360,28 +365,29 @@ const MyComponent = () => {
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
-                    <div key={index} className="p-2">
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
+                      <div key={index} className="p-2">
+                        <ProductCardSkeleton />
+                      </div>
+                    ))
                   : displayData?.map((item: DataCart) => (
-                    <ProductCard
-                      key={item.book_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={async () => {
-                        if (item?.variations?.[0]) {
-                          await openDetail(item);
-                        } else {
-                          await handleAddToCart(item);
-                        }
-                      }}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => goToDetail(item)}
-                      handleFavourite={() => handleFavourite(item)}
-                      wishListLoader={wishListLoader}
-                    />
-                  ))}
+                      <ProductCard
+                        key={item.book_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={async () => {
+                          if (item?.variations?.[0]) {
+                            await openDetail(item);
+                          } else {
+                            await handleAddToCart(item);
+                          }
+                        }}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        // openDetail={() => goToDetail(item)}
+                        openDetail={() => openDetail(item)}
+                        handleFavourite={() => handleFavourite(item)}
+                        wishListLoader={wishListLoader}
+                      />
+                    ))}
               </div>
             </ScrollArea>
             {pagination && (
@@ -466,18 +472,76 @@ const MyComponent = () => {
                           .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
-                {/* <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
-                  SKU {itemDetail?.SKU}
-                </span> */}
+                {itemDetail?.SKU && (
+                  <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
+                    SKU: {itemDetail.SKU}
+                  </span>
+                )}
               </div>
-              {/* <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Series:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.edition}
-                </span>
-              </div> */}
+              {itemDetail?.barcode && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Barcode:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.barcode}
+                  </span>
+                </div>
+              )}
+              {itemDetail?.edition && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Series:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.edition}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.book_language && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Language:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.book_language}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.pages !== undefined && itemDetail.pages !== null && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Number of Pages:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.pages}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.publisher?.publisher_name && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Publisher:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.publisher.publisher_name}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.publisher?.country && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Country of Publication:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.publisher.country}
+                  </span>
+                </div>
+              )}
               <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Created at:
@@ -530,7 +594,9 @@ const MyComponent = () => {
                             Please Select Variations
                           </span>
                         ) : (
-                          <span className="font-bold text-red-500">Selected Variations</span>
+                          <span className="font-bold text-red-500">
+                            Selected Variations
+                          </span>
                         )}
 
                         <ul>
@@ -538,20 +604,20 @@ const MyComponent = () => {
                             <>
                               {selectedValues[key] && (
                                 <li key={key} className="flex items-center">
-                                  <span className=" font-bold capitalize text-neutral-700 dark:text-neutral-300">
+                                  <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                     {key}:{" "}
                                   </span>
-                                  <span className="pl-1  text-neutral-700 dark:text-neutral-300">
+                                  <span className="pl-1 text-neutral-700 dark:text-neutral-300">
                                     {selectedValues[key] ?? "Please Select"}
                                   </span>
                                 </li>
                               )}
                               {!selectedValues[key] && (
                                 <li key={key} className="text-red-400">
-                                  <span className=" font-bold capitalize text-neutral-700 dark:text-neutral-300">
+                                  <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                     {key}:{" "}
                                   </span>
-                                  <span className="pl-1  text-neutral-700 dark:text-neutral-300">
+                                  <span className="pl-1 text-neutral-700 dark:text-neutral-300">
                                     {selectedValues[key] ?? "Please Select"}
                                   </span>{" "}
                                 </li>
@@ -579,7 +645,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                              currTag.items_variations_tags_name
+                                currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -608,17 +674,20 @@ const MyComponent = () => {
                           key={tagName}
                           className={`my-4 w-full ${tagName == "size" ? "flex items-center gap-1" : ""}`}
                         >
-                          <h3 className="text-lg font-semibold capitalize">{tagName}</h3>
+                          <h3 className="text-lg font-semibold capitalize">
+                            {tagName}
+                          </h3>
 
                           {tagName.toLowerCase().includes("size") ? (
                             <div className="scrollbar-hidden flex justify-center gap-2 overflow-x-auto px-1 pl-3 lg:max-w-full">
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
-                                    ? "bg-red-500 text-white"
-                                    : "border-red-500 bg-white dark:bg-slate-700"
-                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                  className={`min-w-10 rounded border p-1 text-center ${
+                                    selectedValues[tagName] === option.value
+                                      ? "bg-red-500 text-white"
+                                      : "border-red-500 bg-white dark:bg-slate-700"
+                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}
@@ -666,11 +735,16 @@ const MyComponent = () => {
                     <div className="pl-2">Add to Cart</div>
                   </button>
                 )}
-
-              {/* // ) : (
-              //   ""
-              // )} */}
             </div>
+          </div>
+          <div className="flex w-full justify-end">
+            <button
+              className="mt-5 flex w-fit flex-row items-center justify-end rounded border-none bg-red-500 px-1 text-[10px] text-white hover:bg-red-600 md:px-3 md:py-1.5 lg:px-4 lg:py-2 lg:text-base"
+              onClick={() => goToDetail(itemDetail)} // Navigate to respective route
+            >
+              <span>More Details</span>
+              <IoIosArrowRoundForward className="ml-1 text-lg text-white lg:text-xl" />
+            </button>
           </div>
         </ModalContent>
         {/* <ModalFooter className="gap-4">

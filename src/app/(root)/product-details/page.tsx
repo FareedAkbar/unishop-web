@@ -12,6 +12,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import ReviewForm from "~/components/Forms/ReviewForm";
 import { HiOutlineMinus, HiOutlinePlus } from "react-icons/hi";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { getItemsByCategory } from "~/_actions/getitemsbycategory";
+import ProductsSection from "~/components/ui-components/ProductsSection";
 
 interface ProductDetailsProps {
   itemDetail: DataCart;
@@ -32,13 +34,27 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   const [selectedValues, setSelectedValues] = useState<Record<string, string>>(
     {},
   );
+  const [category, setCategory] = useState<string>("");
+  const [products, setProducts] = useState<DataCart[]>([]);
+  const [loader, setLoader] = useState<boolean>(true);
   const {
     cartItems,
     addCartItems,
     removeCartItems,
     productDetail,
     increaseCartItemQuantity,
+    // category,
   } = useAuthContext();
+  const params = useSearchParams();
+
+  useEffect(() => {
+    const d = params.get("category");
+    console.log("dt", d);
+    if (d) {
+      setCategory(d);
+    }
+  }, [params]);
+  const router = useRouter();
   const itemDetail = productDetail;
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
@@ -51,8 +67,34 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       ? true
       : false;
   };
+  async function getProducts(page: number) {
+    try {
+      setLoader(true);
+      const x = await getItemsByCategory(parseInt(category) ?? 1, page, 1, 0);
+      console.log("data", x);
 
-  console.log(productDetail);
+      if (typeof x !== "boolean" && x.status) {
+        setProducts(x.data);
+      }
+      setLoader(false);
+      console.log(products);
+
+      // setData(result);
+      // setTotalPages(result.totalPages);
+    } catch (error) {
+      console.error("Failed to load data:", error);
+      setLoader(false);
+    }
+  }
+  useEffect(() => {
+    if (!category) return;
+    const loadData = async () => {
+      await getProducts(1);
+    };
+    loadData().catch((error) => {
+      console.error("Failed to load data in useEffect:", error);
+    });
+  }, [category]);
 
   const handleSelectChange = (
     tagName: string,
@@ -154,6 +196,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
     if (itemDetail?.quantity) {
       setQuantity(itemDetail.quantity);
     }
+    console.log("ii", itemDetail);
   }, [itemDetail]);
 
   const handleQuantityChange = (newQuantity: number) => {
@@ -200,7 +243,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   };
 
   return (
-    <div className="p-6 pt-28">
+    <div className="p-6 pt-32">
       <h4 className="pb-3 text-center font-serif text-lg font-bold capitalize text-red-500 dark:text-neutral-100 md:text-2xl">
         {itemDetail?.book_title ?? itemDetail?.item_name}
       </h4>
@@ -210,7 +253,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
         {itemDetail?.additional_notes}
       </h6>
-      <div className="flex">
+      <div className="flex flex-wrap gap-3">
         <div className="mx-auto flex items-center">
           {/* Thumbnails on the left */}
           <div className="mr-4 flex flex-col space-y-2">
@@ -219,8 +262,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                 key={index}
                 src={`https://ipos-storage.s3.amazonaws.com/${image.object_path}`}
                 alt={`Image ${index + 1}`}
-                width={80}
-                height={80}
+                width={1000}
+                height={1000}
                 className={`h-24 w-24 cursor-pointer rounded-lg object-contain shadow ${selectedImage.object_path.includes(image.object_path) ? "ring-1 ring-red-500" : ""}`}
                 onClick={() => handleImageClick(image)}
               />
@@ -228,13 +271,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
           </div>
 
           {/* Main Image */}
-          <div className="flex h-80 w-80 items-center justify-center rounded-lg p-2 shadow">
+          <div className="flex h-60 w-60 items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80">
             <Image
               src={`https://ipos-storage.s3.amazonaws.com/${selectedImage.object_path}`}
               alt="Selected Image"
-              width={500}
-              height={500}
-              className="h-72 w-72 rounded-lg object-contain"
+              width={2000}
+              height={2000}
+              className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
             />
           </div>
         </div>
@@ -254,11 +297,20 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
             )}
             {itemDetail?.SKU && (
               <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
-                SKU {itemDetail.SKU}
+                SKU: {itemDetail.SKU}
               </span>
             )}
           </div>
-
+          {itemDetail?.barcode && (
+            <div className="flex items-center justify-center">
+              <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                Barcode:
+              </span>
+              <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                {itemDetail.barcode}
+              </span>
+            </div>
+          )}
           {itemDetail?.edition && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -273,7 +325,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
           {itemDetail?.introduced && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Published:
+                Created at:
               </span>
               <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                 {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
@@ -479,43 +531,45 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       </div>
       {/* Reviews Section */}
       <div className="mt-16 flex flex-col gap-8 md:flex-row">
-        <ScrollArea className="mx-auto overflow-y-auto rounded-lg border p-4 shadow-md md:w-1/2">
-          <h3 className="mb-4 text-lg font-semibold">Reviews</h3>
-          {/* {itemDetail?.reviews?.map((review, index) => (
-            <div key={index} className="mb-4">
-              <p className="font-semibold">{review.user}</p>
-              <p className="text-sm text-gray-600">{review.comment}</p>
-            </div>
-          ))} */}
-          {reviews.map((review, index) => (
-            <div key={index} className="mb-4 border-b pb-2">
-              <p className="font-semibold">{review.user}</p>
-              <p className="text-sm text-gray-600">{review.comment}</p>
-
-              {/* Star Rating */}
-              <div className="flex items-center gap-1 py-2">
-                {Array.from({ length: 5 }, (_, i) =>
-                  i < review.rating ? (
-                    <FaStar key={i} className="text-yellow-500" />
-                  ) : (
-                    <FaRegStar key={i} className="text-gray-400" />
-                  ),
-                )}
+        <div className="max-h-[487px] rounded-lg border p-6 shadow-md md:w-1/2">
+          <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
+          <ScrollArea className="h-[400px]">
+            {reviews.map((review, index) => (
+              <div key={index} className="mb-4 border-b pb-2">
+                <p className="font-semibold">{review.user}</p>
+                <p className="text-sm text-gray-600">{review.comment}</p>
+                {/* Star Rating */}
+                <div className="flex items-center gap-1 py-2">
+                  {Array.from({ length: 5 }, (_, i) =>
+                    i < review.rating ? (
+                      <FaStar key={i} className="text-yellow-500" />
+                    ) : (
+                      <FaRegStar key={i} className="text-gray-400" />
+                    ),
+                  )}
+                </div>
+                {/* Review Date */}
+                <p className="text-xs text-gray-500">
+                  {moment(review.date).format("Do MMMM, YYYY")}
+                </p>
               </div>
-
-              {/* Review Date */}
-              <p className="text-xs text-gray-500">
-                {moment(review.date).format("Do MMMM, YYYY")}
-              </p>
-            </div>
-          ))}
-        </ScrollArea>
-
+            ))}
+          </ScrollArea>
+        </div>
         {/* Review Form */}
         <div className="md:w-1/2">
           <ReviewForm />
         </div>
       </div>
+      <ProductsSection
+        products={products}
+        headingPartOne="Related"
+        headingPartTwo="Products"
+        loader={loader}
+        viewAllButton={() => {
+          router.push(`/products?detail=${category}`);
+        }}
+      />
     </div>
   );
 };
