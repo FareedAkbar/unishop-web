@@ -23,7 +23,7 @@ const requestOptions: RequestInit = {
 export async function getProductTags(): Promise<ApiResponseStatus | boolean> {
     try {
         const response = await fetch(
-            `http://192.168.18.92:3001/api/customer/special-tags`,
+            `https://booknet-dev.iconsole.com.au/api/customer/special-tags`,
             requestOptions,
         );
         const result: ApiResponseStatus =

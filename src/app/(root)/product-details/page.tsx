@@ -14,6 +14,10 @@ import { HiOutlineMinus, HiOutlinePlus } from "react-icons/hi";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import ProductsSection from "~/components/ui-components/ProductsSection";
+import type { ReviewData } from "~/types/reviews";
+import { useToast } from "~/hooks/use-toast";
+import { getReviewsApi, submitReviewsApi } from "~/_actions/reviews";
+import AlertBox from "~/components/alertBox/alert";
 
 interface ProductDetailsProps {
   itemDetail: DataCart;
@@ -34,13 +38,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   const [selectedValues, setSelectedValues] = useState<Record<string, string>>(
     {},
   );
-  const { cartItems, addCartItems, removeCartItems, productDetail,increaseCartItemQuantity } = useAuthContext();
+  const { cartItems, addCartItems, removeCartItems, productDetail, increaseCartItemQuantity, checkoutData } = useAuthContext();
   const itemDetail = productDetail
-  console.log(productDetail)
   const [category, setCategory] = useState<string>("");
   const [products, setProducts] = useState<DataCart[]>([]);
+  const [reviews, setReviews] = useState<ReviewData[] | null>(null);
   const [loader, setLoader] = useState<boolean>(true);
-
+  const [submitLoader, setSubmitLoader] = useState<boolean>(false);
+  const [getReviewsLoader, setGetReviewsLoader] = useState<boolean>(false);
+  const [loginAlert, setLoginAlert] = useState<boolean>(false);
+  const { toast } = useToast();
   const params = useSearchParams();
 
   useEffect(() => {
@@ -51,7 +58,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
     }
   }, [params]);
   const router = useRouter();
- 
+
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
       typeof cartItems === "string"
@@ -73,13 +80,27 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
         setProducts(x.data);
       }
       setLoader(false);
-      console.log(products);
 
       // setData(result);
       // setTotalPages(result.totalPages);
     } catch (error) {
       console.error("Failed to load data:", error);
       setLoader(false);
+    }
+  }
+  async function getReviews(id: number) {
+    setGetReviewsLoader(true)
+    try {
+     
+      const x = await getReviewsApi(id);
+     
+      if (typeof x !== "boolean" && x.status) {
+        setReviews(x.data);
+      }
+      setGetReviewsLoader(false)
+    } catch (error) {
+      console.error("Failed to load data:", error);
+      setGetReviewsLoader(false)
     }
   }
   useEffect(() => {
@@ -91,6 +112,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       console.error("Failed to load data in useEffect:", error);
     });
   }, [category]);
+
+  useEffect(() => {
+    if (!itemDetail) return;
+    const loadData = async () => {
+      await getReviews(itemDetail?.item_id);
+    };
+    loadData().catch((error) => {
+      console.error("Failed to load data in useEffect:", error);
+    });
+  }, [itemDetail]);
 
   const handleSelectChange = (
     tagName: string,
@@ -116,7 +147,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -137,26 +168,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       }));
   };
 
-  const reviews = [
-    {
-      user: "John Doe",
-      comment: "Great app for security, works seamlessly!",
-      rating: 5,
-      date: "2024-10-20",
-    },
-    {
-      user: "Jane Smith",
-      comment: "Good features, but the UI needs improvement.",
-      rating: 3,
-      date: "2024-09-15",
-    },
-    {
-      user: "Alex Johnson",
-      comment: "Decent app, but had some issues with setup.",
-      rating: 4,
-      date: "2024-08-22",
-    },
-  ];
+ 
 
   const handleAddToCart = async (item: DataCart) => {
     const x = item;
@@ -192,13 +204,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
     if (itemDetail?.quantity) {
       setQuantity(itemDetail.quantity);
     }
-    console.log("ii", itemDetail);
   }, [itemDetail]);
 
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity < 1) return;
     setQuantity(newQuantity);
-   void handleQuantity(itemDetail?.item_id ? itemDetail?.item_id : 0, newQuantity);
+    void handleQuantity(itemDetail?.item_id ? itemDetail?.item_id : 0, newQuantity);
   };
 
   const filterVariationsBySelectedValues = (
@@ -237,6 +248,60 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
     setSelectedImage(imagePath);
   };
 
+  const handleSubmitReviews = async (data: ReviewData) => {
+    if(checkoutData?.booknet_customer_id){
+      setSubmitLoader(true);
+      const newData = {
+        ...data,
+        item_id: itemDetail?.item_id,
+        booknet_customer_id: checkoutData?.booknet_customer_id,
+        customer_id: checkoutData?.customer_id ? checkoutData?.customer_id : null,
+      }
+      try {
+        await submitReviewsApi(newData)
+          .then((res) => {
+            if (typeof res != "boolean" && res.status) {
+              toast({
+                title: "Review Submitted",
+                description: "Your review has been submitted successfully.",
+              });
+              if(itemDetail){
+                void getReviews(itemDetail?.item_id)
+              }
+              
+            }
+            if (typeof res != "boolean" && !res.status) {
+              toast({
+                title: "Review Declined",
+                variant: "destructive",
+                description: "Review not submitted",
+              });
+            }
+  
+            setSubmitLoader(false);
+          })
+          .catch((err) => {
+            setSubmitLoader(false);
+            toast({
+              title: "Review Declined",
+              variant: "destructive",
+              description: "Review not submitted",
+            });
+            console.log(err);
+          });
+      } catch (error) {
+        setSubmitLoader(false);
+        console.error("Failed to checkout:", error);
+      }
+    }else{
+      setLoginAlert(true);
+    }
+   
+  }
+  const goToLogin = () => {
+    setLoginAlert(false);
+    router.push("login");
+  };
   return (
     <div className="p-6 pt-32">
       <h4 className="pb-3 text-center font-serif text-lg font-bold capitalize text-red-500 dark:text-neutral-100 md:text-2xl">
@@ -252,44 +317,47 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
         <div className="mx-auto flex items-center">
           {/* Thumbnails on the left */}
           <div className="mr-4 flex flex-col space-y-2">
-            {itemDetail?.media?.map((image, index) => (
+            {itemDetail?.media?.[0] && itemDetail?.media?.map((image, index) => (
               <Image
                 key={index}
                 src={`https://ipos-storage.s3.amazonaws.com/${image.object_path}`}
                 alt={`Image ${index + 1}`}
                 width={1000}
                 height={1000}
-                className={`h-24 w-24 cursor-pointer rounded-lg object-contain shadow ${selectedImage.object_path.includes(image.object_path) ? "ring-1 ring-red-500" : ""}`}
+                className={`h-24 w-24 cursor-pointer rounded-lg object-contain shadow ${selectedImage?.object_path.includes(image.object_path) ? "ring-1 ring-red-500" : ""}`}
                 onClick={() => handleImageClick(image)}
               />
             ))}
           </div>
 
           {/* Main Image */}
-          <div className="flex h-60 w-60 items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80">
-            <Image
-              src={`https://ipos-storage.s3.amazonaws.com/${selectedImage.object_path}`}
-              alt="Selected Image"
-              width={2000}
-              height={2000}
-              className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
-            />
-          </div>
+          {selectedImage?.object_path ? (
+            <div className="flex h-60 w-60 items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80">
+              <Image
+                src={`https://ipos-storage.s3.amazonaws.com/${selectedImage.object_path}`}
+                alt="Selected Image"
+                width={2000}
+                height={2000}
+                className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
+              />
+            </div>
+          ) : ("")}
+
         </div>
         <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
           <div className="flex flex-col">
-            {itemDetail?.item_sale_price && (
+            {itemDetail?.item_sale_price ? (
               <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                 ${" "}
                 {itemDetail?.variations?.[0] &&
-                filteredVariations?.[0]?.items_variable_items_sale_price
+                  filteredVariations?.[0]?.items_variable_items_sale_price
                   ? filteredVariations?.[0]?.items_variable_items_sale_price
                   : itemDetail?.variations?.[0]
                     ? itemDetail?.variations?.[0]
-                        .items_variable_items_sale_price
+                      .items_variable_items_sale_price
                     : itemDetail?.item_sale_price}
               </span>
-            )}
+            ) : ''}
             {itemDetail?.SKU && (
               <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
                 SKU: {itemDetail.SKU}
@@ -462,11 +530,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                         {options.map((option) => (
                           <button
                             key={option.value}
-                            className={`min-w-10 rounded border p-1 text-center ${
-                              selectedValues[tagName] === option.value
-                                ? "bg-red-500 text-white"
-                                : "border-red-500 bg-white dark:bg-slate-700"
-                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
+                              ? "bg-red-500 text-white"
+                              : "border-red-500 bg-white dark:bg-slate-700"
+                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -489,8 +556,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                       />
                     )}
                   </div>
-                );
+                )
               })}
+              
             </div>
           )}
           <div className="mt-auto flex w-auto items-center justify-between space-x-2 rounded bg-gray-200 p-1 dark:bg-gray-500">
@@ -509,9 +577,21 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
               <HiOutlinePlus size={14} />
             </button>
           </div>
+          {itemDetail?.item_id && itemDetail.variations?.[0] &&
+            !isItemInCart(itemDetail.item_id) ? (
+            <button
+              className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
+              onClick={() => handleAddToCart(itemDetail)}
+            >
+              <FaCartPlus className="text-lg" />
+              <div className="pl-2">Add to Cart</div>
+            </button>
+          ) : (
+            ""
+          )}
           {itemDetail?.item_id &&
-          !isItemInCart(itemDetail.item_id) &&
-          itemDetail?.stock?.quantity ? (
+            !isItemInCart(itemDetail.item_id) &&
+            itemDetail?.stock ? (
             <button
               className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
               onClick={() => handleAddToCart(itemDetail)}
@@ -528,32 +608,40 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       <div className="mt-16 flex flex-col gap-8 md:flex-row">
         <div className="max-h-[487px] rounded-lg border p-6 shadow-md md:w-1/2">
           <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
-          <ScrollArea className="h-[400px]">
-            {reviews.map((review, index) => (
-              <div key={index} className="mb-4 border-b pb-2">
-                <p className="font-semibold">{review.user}</p>
-                <p className="text-sm text-gray-600">{review.comment}</p>
-                {/* Star Rating */}
-                <div className="flex items-center gap-1 py-2">
-                  {Array.from({ length: 5 }, (_, i) =>
-                    i < review.rating ? (
-                      <FaStar key={i} className="text-yellow-500" />
-                    ) : (
-                      <FaRegStar key={i} className="text-gray-400" />
-                    ),
-                  )}
+          {reviews?.[0] ? (
+            <ScrollArea className="h-[400px]">
+              {reviews.map((review, index) => (
+                <div key={index} className="mb-4 border-b pb-2">
+                  <p className="font-semibold">{review.name}</p>
+                  <p className="text-sm text-gray-600">{review.review}</p>
+                  {/* Star Rating */}
+                  <div className="flex items-center gap-1 py-2">
+                    {Array.from({ length: 5 }, (_, i) =>
+                      i < (review.stars ? review.stars : 0) ? (
+                        <FaStar key={i} className="text-yellow-500" />
+                      ) : (
+                        <FaRegStar key={i} className="text-gray-400" />
+                      ),
+                    )}
+                  </div>
+                  {/* Review Date */}
+                  <p className="text-xs text-gray-500">
+                    {/* {moment(review.date).format("Do MMMM, YYYY")} */}
+                    {moment().format("Do MMMM, YYYY")}
+                  </p>
                 </div>
-                {/* Review Date */}
-                <p className="text-xs text-gray-500">
-                  {moment(review.date).format("Do MMMM, YYYY")}
-                </p>
-              </div>
-            ))}
-          </ScrollArea>
+              ))}
+            </ScrollArea>
+          ) : (
+            <p className="text-md text-gray-700">
+              {"This product hasn't been reviewed yet. Your feedback could help others!"}
+            </p>
+          )}
+
         </div>
         {/* Review Form */}
         <div className="md:w-1/2">
-          <ReviewForm />
+          <ReviewForm submitValues={(val) => handleSubmitReviews(val)} submitLoader={submitLoader} />
         </div>
       </div>
       <ProductsSection
@@ -564,6 +652,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
         viewAllButton={() => {
           router.push(`/products?detail=${category}`);
         }}
+      />
+       <AlertBox
+        title="Login Your Account"
+        description="Please Login to proceed with checkout"
+        open={loginAlert}
+        onClose={() => setLoginAlert(false)}
+        onContinue={() => goToLogin()}
       />
     </div>
   );

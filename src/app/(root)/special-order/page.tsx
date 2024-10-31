@@ -73,7 +73,7 @@ const MyComponent = () => {
     setLoader(true);
     try {
       const response = await fetch(
-        `http://192.168.18.92:3001/api/search?term=${search}&by=titletext&ebooks=on&detailed=Search`,
+        `https://booknet-dev.iconsole.com.au/api/search?term=${search}&by=titletext&ebooks=on&detailed=Search`,
         requestOptions,
       );
       const result: ApiResponse = (await response.json()) as ApiResponse;
@@ -98,7 +98,7 @@ const MyComponent = () => {
 
     try {
       const response = await fetch(
-        `http://192.168.18.92:3001/api/search/details?title=${link}`,
+        `https://booknet-dev.iconsole.com.au/api/search/details?title=${link}`,
         requestOptions,
       );
       const result: ApiBookDetailResponse =
@@ -145,7 +145,7 @@ const MyComponent = () => {
     setLoader(true);
     try {
       const response = await fetch(
-        "http://192.168.18.92:3001/api/special",
+        "https://booknet-dev.iconsole.com.au/api/special",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {

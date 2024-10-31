@@ -1,8 +1,8 @@
 import { io, Socket } from "socket.io-client";
-// http://192.168.18.92:3000
+// https://ipos-dev.iconsole.com.au
 // https://ipi.iconsole.com.au
-// http://192.168.18.92:3000
-const socket: Socket = io("http://192.168.18.92:3000", {
+// https://ipos-dev.iconsole.com.au
+const socket: Socket = io("https://ipos-dev.iconsole.com.au", {
     autoConnect: true,
     transports: ["websocket"],
 }); // Replace with your server URL
