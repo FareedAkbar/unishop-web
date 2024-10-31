@@ -153,9 +153,9 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
       <div className="py-8 sm:px-6 sm:py-16 lg:py-24">
         <div className="flex flex-row items-center justify-between md:flex-row">
           <div className="flex flex-row items-end justify-between gap-5 md:flex-row md:gap-10">
-            <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white sm:text-5xl">
-              <div className="flex items-center pb-2 sm:pb-4">
-                <div className="mr-2 h-8 w-4 rounded bg-red-500 sm:h-12 sm:w-6" />
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-4xl">
+              <div className="flex items-center pb-2">
+                <div className="mr-2 h-8 w-4 rounded bg-red-500 sm:h-10 sm:w-4" />
                 <span className="text-xl text-red-500 sm:text-3xl">
                   {headingPartOne}
                 </span>

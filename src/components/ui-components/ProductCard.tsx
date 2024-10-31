@@ -15,7 +15,7 @@ interface ProductProps {
   openDetail?: () => void;
   handleFavourite?: () => void;
   product?: DataCart | null;
-  wishListLoader?: boolean
+  wishListLoader?: boolean;
 }
 
 const ProductCard = ({
@@ -25,40 +25,40 @@ const ProductCard = ({
   showAddToCart,
   openDetail,
   handleFavourite,
-  wishListLoader = false
+  wishListLoader = false,
 }: ProductProps) => {
   const { favItems, productTags } = useAuthContext();
 
   const matchingTags = product?.special_tags
     ?.map((specialTag: SpecialTag) =>
       productTags?.find(
-        (tag: ItemSpecialTag) => tag.item_special_tags_id === specialTag.item_special_tags_id
-      )
+        (tag: ItemSpecialTag) =>
+          tag.item_special_tags_id === specialTag.item_special_tags_id,
+      ),
     )
     .filter((tag): tag is ItemSpecialTag => Boolean(tag)); // Filter out undefined values in case there are no matches
 
   const tagNames: string[] = matchingTags?.map((tag) => tag?.tag_name) ?? [];
- 
+
   return (
     <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col p-2 transition-transform duration-300 hover:scale-110 sm:w-64 md:w-64 lg:w-72">
       <div className="relative flex h-40 grow-0 items-center justify-center rounded-sm bg-gray-200 dark:bg-slate-600 sm:h-48 lg:h-64">
-      {tagNames.length > 0 ?
-        (
-          <div className="flex absolute left-2 top-1">
+        {tagNames.length > 0 ? (
+          <div className="absolute left-2 top-1 flex">
             {tagNames.map((tag) => {
               return (
-                <span key={tag} className="z-[12] mr-2 rounded bg-red-500 px-1 py-0.5 text-[8px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1 ">
+                <span
+                  key={tag}
+                  className="z-[12] mr-2 rounded bg-red-500 px-1 py-0.5 text-[8px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
+                >
                   {tag}
                 </span>
-              )
-            }
-
-
-            )}
-
+              );
+            })}
           </div>
-        )
-        : ""}
+        ) : (
+          ""
+        )}
         {/* {product?.variations?.[0]?.items_variable_items_sale_price ?
           (
             <div className="absolute left-2 top-2 z-[12] rounded bg-red-500 px-1 py-0.5 text-[6px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1 sm:text-sm">
@@ -72,7 +72,6 @@ const ProductCard = ({
             </div>)
 
             : ''} */}
-
 
         <Image
           src={
@@ -91,7 +90,8 @@ const ProductCard = ({
             onClick={() => (handleFavourite ? handleFavourite() : "")}
             className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
           >
-            {product?.item_id && favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
+            {product?.item_id &&
+            favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
               <AiFillHeart color="red" />
             ) : (
               <AiOutlineHeart />
@@ -108,8 +108,9 @@ const ProductCard = ({
         {/* {product?.item_sale_price ? ( */}
         <button
           onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
-          className={`absolute bottom-0 z-20 mt-4 w-full rounded-b-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${!showAddToCart ? "bg-red-500" : "bg-black"
-            } hidden group-hover:block`}
+          className={`absolute bottom-0 z-20 mt-4 w-full rounded-b-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${
+            !showAddToCart ? "bg-red-500" : "bg-black"
+          } hidden group-hover:block`}
         >
           {!showAddToCart ? "Remove From Cart" : "Add To Cart"}
         </button>
@@ -124,24 +125,22 @@ const ProductCard = ({
         <span className="truncate text-sm sm:text-sm lg:text-sm">
           Available Stock: {product?.stock?.quantity}
         </span>
-      ) : ''}
-      
+      ) : (
+        ""
+      )}
+
       <div className="mt-1 flex gap-1 sm:mt-2 sm:gap-2">
-        {product?.variations?.[0]?.items_variable_items_sale_price ?
-          (
-            <span className="text-sm font-bold text-red-500 sm:text-lg">
-              $ {product?.variations?.[0]?.items_variable_items_sale_price}
-            </span>
-          )
-
-          : product?.item_sale_price ?
-            (<span className="text-sm font-bold text-red-500 sm:text-lg">
-              $ {product?.item_sale_price}
-            </span>)
-
-            : ''}
-
-
+        {product?.variations?.[0]?.items_variable_items_sale_price ? (
+          <span className="text-sm font-bold text-red-500 sm:text-lg">
+            $ {product?.variations?.[0]?.items_variable_items_sale_price}
+          </span>
+        ) : product?.item_sale_price ? (
+          <span className="text-sm font-bold text-red-500 sm:text-lg">
+            $ {product?.item_sale_price}
+          </span>
+        ) : (
+          ""
+        )}
       </div>
       <div className="flex flex-row justify-between sm:mt-1">
         {/* Additional details like rating can go here */}

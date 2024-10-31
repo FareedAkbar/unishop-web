@@ -2,7 +2,7 @@ import React from "react";
 
 interface ButtonProps {
   title: string;
-  onClick: () => void;
+  onClick?: () => void;
   loading?: boolean;
   color?: string;
   height?: string;

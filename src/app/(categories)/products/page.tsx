@@ -149,7 +149,7 @@ const MyComponent = () => {
   );
 
   // Handle add to cart
-  const handleAddToCart = async (item: DataCart) => {
+  const handleAddToCart = async (item: DataCart) => {    
     const x = item;
     if (item?.variations?.[0] && item?.tag_links) {
       Object.assign(x, { selected_variation: filteredVariations?.[0] });
