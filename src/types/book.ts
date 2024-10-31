@@ -85,6 +85,11 @@ export interface Media {
   object_id: number;
   object_path: string;
 }
+export interface Review {
+  name: string;
+  review: string;
+  stars: number;
+}
 export default interface DataCart {
   book_id: number;
   final_price_including_tax?: number; 
@@ -143,7 +148,7 @@ export default interface DataCart {
   special_tags?: SpecialTag[] | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectedValues?: any;
-
+  reviews?: Review[]
 }
 
 

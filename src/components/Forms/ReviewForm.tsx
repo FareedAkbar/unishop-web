@@ -9,18 +9,23 @@ import { Input } from "../ui/input";
 import Button from "../ui-components/Button";
 import { cn } from "~/lib/utils";
 import { FaStar } from "react-icons/fa";
+import type { ReviewData } from "~/types/reviews";
 
 // Zod schema to validate form input
 const reviewSchema = z.object({
   name: z.string().min(1, "Name is required").max(50, "Name is too long"),
-  summary: z.string().min(5, "Summary should be at least 5 characters"),
   review: z.string().min(10, "Review must be at least 10 characters long"),
 });
 
 type ReviewFormValues = z.infer<typeof reviewSchema>;
 
-export default function ReviewForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+interface FormProps {
+  submitValues: (data: ReviewData) => void;
+  submitLoader: boolean
+}
+
+export default function ReviewForm({submitValues, submitLoader}: FormProps) {
+  
   const [rating, setRating] = useState<number>(0);
   const [hover, setHover] = useState<number | null>(null);
 
@@ -38,17 +43,18 @@ export default function ReviewForm() {
   });
 
   const onSubmit = async (data: ReviewFormValues) => {
-    setIsSubmitting(true);
+    
     try {
-      console.log("Submitted Review:", data);
-      // Simulate network request
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Review submitted successfully!");
+      const value = {
+        name: data.name,
+        review: data.review,
+        stars: rating
+      }
+     void submitValues(value)
+      
     } catch (error) {
       console.error("Error submitting review:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    } 
   };
 
   return (
@@ -114,9 +120,9 @@ export default function ReviewForm() {
         <Button
           title="Submit Review"
           type="submit"
-          loading={isSubmitting}
+          loading={submitLoader}
           width="w-full"
-          disabled={isSubmitting}
+          disabled={submitLoader}
           className="bg-red-500 text-white hover:bg-red-600"
           onClick={() => {
             //

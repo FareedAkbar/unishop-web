@@ -31,17 +31,17 @@ export async function getItemsByCategory(id: number, page: number, food: number,
         // Check if result has the expected structure
         if (result?.status) {
             // setMeta(result.meta);
-            console.log("result structure:",result)
             return result
         } else {
-            console.error("Unexpected resulttt structure:", result);
+            console.error("Unexpected result structure:", result);
             return result
         }
     } catch (error) {
-        console.error("Errorrr fetching data:", error);
+        console.error("Error fetching data:", error);
         return false
     }
 };
+
 
 
 

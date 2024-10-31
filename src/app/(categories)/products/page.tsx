@@ -42,7 +42,7 @@ const MyComponent = () => {
   const params = useSearchParams();
   const { setOpen } = useModal();
   const [detail, setDetail] = useState<string>("");
-  const [subcategory, setSubcategory] = useState<Category | null>(null);
+  const [subcategory, setSubcategory] = useState<string>('');
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
@@ -103,7 +103,10 @@ const MyComponent = () => {
     const catId = category?.find((item) => item.category_type_id == parseInt(detail));
     if (genId ?? catId) {
       if(genId){
-        setSubcategory(genId);
+        setSubcategory(genId.category_name);
+      }
+      if(catId){
+        setSubcategory(catId.type);
       }
       const loadData = async () => {
         await getCloths(1);
@@ -342,7 +345,7 @@ const MyComponent = () => {
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4">
               <div className="text-left">
-                <h2 className="text-xl font-bold capitalize"> {subcategory?.category_name}</h2>
+                <h2 className="text-xl font-bold capitalize"> {subcategory}</h2>
                 {/* <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
                   {subcategory?.category_name}
                 </p> */}
