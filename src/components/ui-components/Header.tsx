@@ -24,7 +24,7 @@ import { usePathname, useRouter } from "next/navigation";
 import SidebarCart from "../ui/sideCart/cartSidebar";
 import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
-import type { CategoryTreeNode, Category as CAT } from "~/types/category";
+import type { CategoryTreeNode, Category as CAT, SuperCategory, SideBarCategory } from "~/types/category";
 import { outlet221, outlet223 } from "~/types/tokens";
 import {
   FaBook,
@@ -58,6 +58,10 @@ const Header = () => {
     themeMode,
     checkoutData,
     getFavourite,
+    getProductTagStatus,
+    productTags,
+    getSubCategory,
+    subCategory
   } = useAuthContext();
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -83,12 +87,9 @@ const Header = () => {
     setSearchTerm(event.target.value);
   };
   const [headerCategory, setHeaderCategory] = useState<
-    CategoryTreeNode[] | null
+  SideBarCategory[] | null
   >(null);
-  const [headerCategoryGifts, setHeaderCategoryGifts] = useState<CAT[]>([]);
-  const [headerCategoryClothings, setHeaderCategoryClothings] = useState<
-    CAT[] | null
-  >(null);
+
   function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
     const categoryMap: Record<number, CategoryTreeNode> = {};
     const tree: CategoryTreeNode[] = [];
@@ -100,7 +101,7 @@ const Header = () => {
         category_name: category.category_name,
         category_description: category.category_description,
         deleted: category.deleted,
-        object_path: category.object_path ?  category.object_path : '',
+        object_path: category.object_path ? category.object_path : '',
         media_id: category.media_id,
         booknet: category.booknet,
         children: [],
@@ -130,6 +131,27 @@ const Header = () => {
 
     return tree;
   }
+  // Define types
+
+type CategoriesMap = Record<number, SuperCategory & { children: CAT[] }>;
+
+const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
+  if (cat.category_type_id) {
+      acc[cat.category_type_id] = { ...cat, children: [] };
+  }
+  return acc;
+}, {} as CategoriesMap);
+
+// Link each item in subCategory to its respective category in categoriesMap
+subCategory?.forEach((item) => {
+    const { category_type_id, outlet } = item;
+    const targetCategory = categoriesMap[category_type_id];
+    if (targetCategory && targetCategory.outlet_id === outlet) {
+        targetCategory.children.push(item);
+    }
+});
+  // Initialize category tree on mount
+ 
 
   const handleSectionClick = (section: string, isDropdown = false) => {
     setActiveSection(section);
@@ -143,18 +165,11 @@ const Header = () => {
   };
   useEffect(() => {
     if (!category) return;
-
-    const categoryTree = buildCategoryTree(category);
-    // const categoryTreeGift = buildCategoryGifts(category);
-    const categoryTreeGift = category.filter(
-      (item) => item.gifts == 1 || item.arts == 1,
-    );
-    const categoryTreeClothing = category.filter((item) => item.clothings == 1);
-
-    setHeaderCategory(categoryTree);
-    setHeaderCategoryGifts(categoryTreeGift);
-    setHeaderCategoryClothings(categoryTreeClothing);
-  }, [category]);
+    const result = Object.values(categoriesMap);
+    setHeaderCategory(result)
+    
+    
+  }, [category,subCategory]);
   // Close the dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -233,31 +248,25 @@ const Header = () => {
 
   useEffect(() => {
     // if(genre) return;
-    getGenre()
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (!productTags?.[0]) {
+      void getProductTagStatus()
+    }
+
+   void getGenre()
   }, []);
+
   useEffect(() => {
     // if(category) return;
-    getCategory()
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+   void getCategory()
+   void getSubCategory(-1)
+     
   }, []);
 
   useEffect(() => {
     const loadData = async () => {
       if (checkoutData?.booknet_customer_id) {
-        console.error("Failed to load data in useEffect:");
         await getFavourite(checkoutData?.booknet_customer_id);
-       
+
       }
     };
     loadData().catch((error) => {
@@ -396,10 +405,10 @@ const Header = () => {
           <>
             {/* Overlay to reduce opacity */}
             {isMobileMenuOpen && (
-            <div
-              className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50" // Dark overlay
-              onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
-            />
+              <div
+                className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50" // Dark overlay
+                onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
+              />
             )}
             <button
               className={`fixed right-5 top-5 z-40 sm:block md:hidden ${isMobileMenuOpen ? "bg-white dark:bg-slate-700" : ""}`} // Ensure z-30 is applied
@@ -438,15 +447,15 @@ const Header = () => {
                 </div>
               </button> */}
 
-                {headerCategory?.[0]?.children?.map((item) => (
-                  <div key={item.category_name} className="mb-4">
+                {headerCategory?.map((item) => (
+                  <div key={item.type} className="mb-4">
                     <button
                       onClick={() =>
                         item.children?.[0]
-                          ? toggleDropdown(item.category_name)
+                          ? toggleDropdown(item.type)
                           : (router.push(
-                              `/products?name=${item.category_name}&detail=${item.id}`,
-                            ),
+                            `/products?name=${item.type}&detail=${item.category_type_id}`,
+                          ),
                             setMobileMenuOpen(!isMobileMenuOpen))
                       }
                       className="flex w-full items-center justify-between text-lg focus:outline-none"
@@ -457,18 +466,18 @@ const Header = () => {
                         <span className="mr-3">{iconMap[item.icon]}</span>
                       )} */}
                         {/* <Link href={item.href ?? ""} scroll={false}> */}
-                        {item.category_name}
+                        {item.type}
                         {/* </Link> */}
                       </div>{" "}
                       {item.children?.[0] ? (
-                        openDropdown === item.category_name ? (
+                        openDropdown === item.type ? (
                           <FaChevronDown />
                         ) : (
                           <FaChevronRight />
                         )
                       ) : null}
                     </button>
-                    {item.children && openDropdown === item.category_name && (
+                    {item.children && openDropdown === item.type && (
                       <div className="ml-4 mt-1">
                         {item.children.map((subItem) => (
                           <button
@@ -477,8 +486,8 @@ const Header = () => {
                               subItem.children?.[0]
                                 ? toggleDropdown(subItem.category_name)
                                 : (router.push(
-                                    `/products?name=${item.category_name}&detail=${item.id}`,
-                                  ),
+                                  `/products?name=${item.type}&detail=${item.category_type_id}`,
+                                ),
                                   setMobileMenuOpen(!isMobileMenuOpen),
                                   setOpenDropdown(null))
                             }

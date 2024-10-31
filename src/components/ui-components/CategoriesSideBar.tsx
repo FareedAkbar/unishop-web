@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa";
 import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
-import type { CategoryTreeNode, Category as CAT } from "~/types/category";
+import type { CategoryTreeNode, Category as CAT, SuperCategory, SideBarCategory } from "~/types/category";
 import {
   FaBook,
   FaGraduationCap,
@@ -165,15 +165,12 @@ interface CategoriesSidebarProps {
 const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [openCategories, setOpenCategories] = useState<string[]>([]);
-  const { genre, checkoutData, category } = useAuthContext();
+  const { genre, checkoutData, category, subCategory } = useAuthContext();
   const router = useRouter();
   const [headerCategory, setHeaderCategory] = useState<
-    CategoryTreeNode[] | null
+  SideBarCategory[] | null
   >(null);
-  const [headerCategoryGifts, setHeaderCategoryGifts] = useState<CAT[]>([]);
-  const [headerCategoryClothings, setHeaderCategoryClothings] = useState<
-    CAT[] | null
-  >(null);
+ 
   const sidebarRef = useRef<HTMLDivElement>(null); // Ref for sidebar
 
   const toggleCategory = (label: string) => {
@@ -188,65 +185,36 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     setOpenCategories([]);
     setOpenCategory((pre) => (pre == label ? "" : label));
   };
-  // Build the category tree
-  function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
-    const categoryMap: Record<number, CategoryTreeNode> = {};
-    const tree: CategoryTreeNode[] = [];
+ 
+ 
 
-    categories.forEach((category) => {
-      categoryMap[category.id] = {
-        id: category.id,
-        outlet: category.outlet,
-        category_name: category.category_name,
-        category_description: category.category_description,
-        deleted: category.deleted,
-        object_path: category.object_path ? category.object_path : '',
-        media_id: category.media_id,
-        booknet: category.booknet,
-        children: [],
-      };
-    });
+// Define types
 
-    categories.forEach((category) => {
-      if (category.parent === 0) {
-        const rootCategory = categoryMap[category.id];
-        if (rootCategory) {
-          tree.push(rootCategory);
-        }
-      } else {
-        const parent = categoryMap[category.parent];
-        if (parent) {
-          const childCategory = categoryMap[category.id];
-          if (childCategory) {
-            parent.children!.push(childCategory);
-          }
-        }
-      }
-    });
+type CategoriesMap = Record<number, SuperCategory & { children: CAT[] }>;
 
-    return tree;
+const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
+  if (cat.category_type_id) {
+      acc[cat.category_type_id] = { ...cat, children: [] };
   }
+  return acc;
+}, {} as CategoriesMap);
+
+// Link each item in subCategory to its respective category in categoriesMap
+subCategory?.forEach((item) => {
+    const { category_type_id, outlet } = item;
+    const targetCategory = categoriesMap[category_type_id];
+    if (targetCategory && targetCategory.outlet_id === outlet) {
+        targetCategory.children.push(item);
+    }
+});
   // Initialize category tree on mount
   useEffect(() => {
     if (!category) return;
-
-    const categoryTree = buildCategoryTree(category);
-    // const categoryTreeGift = buildCategoryGifts(category);
-    const categoryTreeGift = category.filter(
-      (item) =>
-        item.outlet == outlet223 &&
-        item.parent != 472 &&
-        (item.gifts == 1 || item.arts == 1),
-    );
-    const categoryTreeClothing = category.filter(
-      (item) =>
-        item.clothings == 1 && item.outlet == outlet223 && item.parent != 472,
-    );
-    setHeaderCategory(categoryTree);
-
-    setHeaderCategoryGifts(categoryTreeGift);
-    setHeaderCategoryClothings(categoryTreeClothing);
-  }, [category]);
+    const result = Object.values(categoriesMap);
+    setHeaderCategory(result)
+    
+    
+  }, [category,subCategory]);
 
   // Close subcategories on outside click
   useEffect(() => {
@@ -272,18 +240,17 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       className={`absolute left-0 max-w-64 rounded-r-xl border-y border-r bg-white px-4 py-2 shadow-lg dark:bg-slate-700 ${className}`}
     >
       <h2 className="text-lg font-bold">CATEGORIES</h2>
-      <ScrollArea className="h-[70vh] py-2 pr-2">
         <nav className="relative">
-          {headerCategory?.[0]?.children?.map((item) => (
+          {headerCategory?.map((item) => (
             // item.id != 472 && (
-            <div key={item.category_name} className="relative">
+            <div key={item.type} className="relative">
               <button
                 type="button"
                 onClick={() =>
                   item.children?.[0]
-                    ? toggleCategory(item.category_name)
+                    ? toggleCategory(item.type)
                     : router.push(
-                      `/products?name=${item.category_name}&detail=${item.id}`,
+                      `/products?name=${item.type}&detail=${item.category_type_id}`,
                     )
                 }
                 className="flex w-full items-center justify-between px-3 transition-transform hover:scale-110"
@@ -296,7 +263,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                         passHref
                       > */}
                 <div className="flex items-center justify-start ">
-                  {item.object_path && (
+                  {/* {item.object_path && (
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     <Image
                       src={
@@ -309,16 +276,16 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       height={20}
                       className="flex-shrink-0 rounded-md object-cover mr-3"
                     />
-                  )}
-                  <span className="w-40 truncate text-left" title={item.category_name}>
-                    {item.category_name.length > 16
-                      ? `${item.category_name.slice(0, 16)}...`
-                      : item.category_name}
+                  )} */}
+                  <span className="w-40 truncate text-left" title={item.type}>
+                    {item.type.length > 16
+                      ? `${item.type.slice(0, 16)}...`
+                      : item.type}
                   </span>
                 </div>
                 <div>
                   {item.children?.[0] ? (
-                    openCategories.includes(item.category_name) ? (
+                    openCategories.includes(item.type) ? (
                       <FaChevronDown size={12} />
                     ) : (
                       <FaChevronRight size={12} />
@@ -330,7 +297,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               </button>
               <div className="my-1 ml-2 h-px w-[50%] border-t border-gray-400" />
 
-              {openCategories.includes(item.category_name) &&
+              {openCategories.includes(item.type) &&
                 item.children?.[0] && (
                   <SubcategoryList1
                     subItems={item.children}
@@ -457,7 +424,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
             ""
           )}
         </nav>
-      </ScrollArea>
+     
       <div className="flex justify-between gap-1 py-1">
         <Link
           href="/"

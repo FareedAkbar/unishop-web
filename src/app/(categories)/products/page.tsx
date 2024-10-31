@@ -26,7 +26,7 @@ import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import AlertBox from "~/components/alertBox/alert";
 import { useToast } from "~/hooks/use-toast";
-import type { Category } from "~/types/category";
+import type { Category, SuperCategory } from "~/types/category";
 import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import Select from "~/components/Fields/select";
 import type { Pagination } from "~/types/pagination";
@@ -64,7 +64,8 @@ const MyComponent = () => {
     favItems,
     checkoutData,
     category,
-    setProductForDetail
+    setProductForDetail,
+    subCategory
   } = useAuthContext();
 
   useEffect(() => {
@@ -94,11 +95,14 @@ const MyComponent = () => {
     }
   }
   useEffect(() => {
-    if (!genre) return;
+    if (!subCategory) return;
     if (!detail) return;
-    const genId = category?.find((item) => item.id == parseInt(detail));
-    if (genId) {
-      setSubcategory(genId);
+    const genId = subCategory?.find((item) => item.id == parseInt(detail));
+    const catId = category?.find((item) => item.category_type_id == parseInt(detail));
+    if (genId ?? catId) {
+      if(genId){
+        setSubcategory(genId);
+      }
       const loadData = async () => {
         await getCloths(1);
       };
@@ -107,7 +111,7 @@ const MyComponent = () => {
         console.error("Failed to load data in useEffect:", error);
       });
     }
-  }, [genre, detail]);
+  }, [subCategory, detail]);
 
   const filterVariationsBySelectedValues = (
     variations: Variation[],
@@ -336,7 +340,7 @@ const MyComponent = () => {
             {/* Header Section */}
             <div className="flex w-full flex-wrap gap-2 items-end justify-between pb-4">
               <div className="text-left">
-                <h2 className="text-xl font-bold"> {subcategory?.category_name}</h2>
+                <h2 className="text-xl font-bold capitalize"> {subcategory?.category_name}</h2>
                 {/* <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
                   {subcategory?.category_name}
                 </p> */}

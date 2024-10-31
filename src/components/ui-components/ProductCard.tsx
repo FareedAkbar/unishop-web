@@ -5,8 +5,8 @@ import React from "react";
 import { AiOutlineHeart, AiOutlineEye, AiFillHeart } from "react-icons/ai";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
-import Spinner from "../spinner";
-import { useRouter } from "next/navigation";
+import type { ItemSpecialTag } from "~/types/productTags";
+import type { SpecialTag } from "~/types/book";
 
 interface ProductProps {
   showAddToCart?: boolean;
@@ -27,13 +27,39 @@ const ProductCard = ({
   handleFavourite,
   wishListLoader = false
 }: ProductProps) => {
-  const { favItems } = useAuthContext();
-  const router =useRouter();
+  const { favItems, productTags } = useAuthContext();
+
+  const matchingTags = product?.special_tags
+    ?.map((specialTag: SpecialTag) =>
+      productTags?.find(
+        (tag: ItemSpecialTag) => tag.item_special_tags_id === specialTag.item_special_tags_id
+      )
+    )
+    .filter((tag): tag is ItemSpecialTag => Boolean(tag)); // Filter out undefined values in case there are no matches
+
+  const tagNames: string[] = matchingTags?.map((tag) => tag?.tag_name) ?? [];
+ 
   return (
     <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col p-2 transition-transform duration-300 hover:scale-110 sm:w-64 md:w-64 lg:w-72">
       <div className="relative flex h-40 grow-0 items-center justify-center rounded-sm bg-gray-200 dark:bg-slate-600 sm:h-48 lg:h-64">
+      {tagNames.length > 0 ?
+        (
+          <div className="flex absolute left-2 top-1">
+            {tagNames.map((tag) => {
+              return (
+                <span key={tag} className="z-[12] mr-2 rounded bg-red-500 px-1 py-0.5 text-[6px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1 sm:text-sm">
+                  {tag}
+                </span>
+              )
+            }
 
-        {product?.variations?.[0]?.items_variable_items_sale_price ?
+
+            )}
+
+          </div>
+        )
+        : ""}
+        {/* {product?.variations?.[0]?.items_variable_items_sale_price ?
           (
             <div className="absolute left-2 top-2 z-[12] rounded bg-red-500 px-1 py-0.5 text-[6px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1 sm:text-sm">
               {product?.variations?.[0]?.items_variable_items_sale_price}
@@ -45,7 +71,8 @@ const ProductCard = ({
               {product?.item_sale_price}
             </div>)
 
-            : ''}
+            : ''} */}
+
 
         <Image
           src={
@@ -98,7 +125,7 @@ const ProductCard = ({
           Available Stock: {product?.stock?.quantity}
         </span>
       ) : ''}
-
+      
       <div className="mt-1 flex gap-1 sm:mt-2 sm:gap-2">
         {product?.variations?.[0]?.items_variable_items_sale_price ?
           (
@@ -113,6 +140,7 @@ const ProductCard = ({
             </span>)
 
             : ''}
+
 
       </div>
       <div className="flex flex-row justify-between sm:mt-1">

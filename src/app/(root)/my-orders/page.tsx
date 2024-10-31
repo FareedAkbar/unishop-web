@@ -81,7 +81,7 @@ const MyComponent = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://ipos-dev.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
+        "http://192.168.18.92:3000/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
@@ -131,7 +131,7 @@ const MyComponent = () => {
     setLoader(true);
     try {
       const response = await fetch(
-        `https://booknet-dev.iconsole.com.au/api/special/customer?booknet_customer_id=${booknetCustomerId}&special=1`,
+        `http://192.168.18.92:3001/api/special/customer?booknet_customer_id=${booknetCustomerId}&special=1`,
         requestOptions,
       );
       const result: GetSpecialOrderApiResponse =
@@ -225,7 +225,7 @@ const MyComponent = () => {
     console.log(requestOptions);
     try {
       const response = await fetch(
-        "https://booknet-dev.iconsole.com.au/api/special/web",
+        "http://192.168.18.92:3001/api/special/web",
         {
           method: "PUT", // Assuming you're making a POST request
           headers: {

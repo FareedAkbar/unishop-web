@@ -20,7 +20,7 @@ import type {
   SendOTPResponse,
   VerifyOTPResponse,
 } from "~/types/loginResponse";
-import { type Category, type CategoryResponse } from "~/types/category";
+import { SubCategoryResponse, SuperCategory, type Category, type CategoryResponse } from "~/types/category";
 import { setCookie } from "~/utils/cookie";
 import { VerifyOTPCApi } from "~/_actions/authLogin";
 import { cookies } from "next/headers";
@@ -31,6 +31,8 @@ import type {
   FavData,
   getFavResponse,
 } from "~/types/favourite";
+import { getProductTags } from "~/_actions/product_tags";
+import type { ApiResponseStatus, ItemSpecialTag } from "~/types/productTags";
 
 type trasactionData = {
   trasaction_id?: string | null;
@@ -50,6 +52,7 @@ interface AuthContextProps {
   getCheckoutFormData: () => Promise<boolean>;
   getGenre: () => Promise<boolean>;
   getCategory: () => Promise<boolean>;
+  getSubCategory: (payload: number) => Promise<boolean>;
   addCartItems: (payload: DataCart) => Promise<boolean>;
   checkoutFormData: (payload: CheckoutForm) => Promise<boolean>;
   removeCartItems: (payload: DataCart) => Promise<boolean>;
@@ -59,7 +62,8 @@ interface AuthContextProps {
   ) => Promise<boolean>;
   cartItems?: DataCart[];
   genre?: Genre[] | null;
-  category?: Category[] | null;
+  category?: SuperCategory[] | null;
+  subCategory?: Category[] | null;
   checkoutData: CheckoutForm | null;
   appId: string;
   removeAllCartItems: () => Promise<boolean>;
@@ -85,7 +89,9 @@ interface AuthContextProps {
   getFavourite: (booknet_customer_id: number) => Promise<boolean>;
   favItems: DataCart[];
   setProductForDetail: (data: DataCart | null) => Promise<void>;
-  productDetail: DataCart | null
+  productDetail: DataCart | null;
+  getProductTagStatus: ()=> Promise<boolean>;
+  productTags: ItemSpecialTag[] | null
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -108,13 +114,17 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [orderTrasactionData, setOrderTrasactionData] =
     useState<trasactionData | null>(null);
   const [genre, setGenre] = useState<Genre[] | null>([]);
-  const [category, setCategory] = useState<Category[] | null>([]);
+  const [category, setCategory] = useState<SuperCategory[] | null>([]);
+  const [subCategory, setSubCategory] = useState<Category[] | null>([]);
   const [uuidLocal, setUuidLocal] = useState<string | undefined>();
   const [checkoutData, setCheckoutData] = useState<CheckoutForm | null>(null);
   const [booknetCustomerId, setBooknetCustomerId] = useState<number | null>(
     null,
   );
   const [productDetail, setProductDetail] = useState<DataCart | null>(
+    null,
+  );
+  const [productTags, setProductTags] = useState<ItemSpecialTag[] | null>(
     null,
   );
   const router = useRouter();
@@ -224,7 +234,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (!response.ok) return false;
 
-    const responsePayload: { status: boolean; data: Category[] } =
+    const responsePayload: { status: boolean; data: SuperCategory[] } =
       (await response.json()) as CategoryResponse;
     if (!responsePayload.status) return false;
 
@@ -234,12 +244,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     return true;
   };
-
-  const getArts = async (): Promise<boolean> => {
+  const getSubCategory = async (payload: number): Promise<boolean> => {
     const response = await apiRouter(
-      "CATEGORY",
+      "SUB_CATEGORY",
       {
         method: "GET",
+        queryParams: payload && payload > -1 ? `category_type_id=${payload}` : '',
       },
       // { skipAuthorization: true },
     );
@@ -247,36 +257,17 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!response.ok) return false;
 
     const responsePayload: { status: boolean; data: Category[] } =
-      (await response.json()) as CategoryResponse;
+      (await response.json()) as SubCategoryResponse;
     if (!responsePayload.status) return false;
 
-    setCategory(responsePayload.data);
+    setSubCategory(responsePayload.data);
 
-    lsClient.setItem("CATEGORY", responsePayload.data);
+    // lsClient.setItem("CATEGORY", responsePayload.data);
 
     return true;
   };
-  const getGifts = async (): Promise<boolean> => {
-    const response = await apiRouter(
-      "CATEGORY",
-      {
-        method: "GET",
-      },
-      // { skipAuthorization: true },
-    );
+ 
 
-    if (!response.ok) return false;
-
-    const responsePayload: { status: boolean; data: Category[] } =
-      (await response.json()) as CategoryResponse;
-    if (!responsePayload.status) return false;
-
-    setCategory(responsePayload.data);
-
-    lsClient.setItem("CATEGORY", responsePayload.data);
-
-    return true;
-  };
 
   const setTrasactionData = async (
     payload: trasactionData | null,
@@ -389,6 +380,20 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } = response as getFavResponse;
     if (responsePayload.status) {
       setFavItems(responsePayload.data);
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const getProductTagStatus = async (): Promise<boolean> => {
+    const response = await getProductTags();
+    const responsePayload: {
+      status: boolean;
+      data: ItemSpecialTag[];
+    } = response as ApiResponseStatus;
+    if (responsePayload.status) {
+      lsClient.setItem("PRODUCT_SPECIAL_TAGS", responsePayload.data)
+      setProductTags(responsePayload.data)
       return true;
     } else {
       return false;
@@ -520,6 +525,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const BOOKNET_CUSTOMER_ID = lsClient.getItem("BOOKNET_CUSTOMER_ID");
     const THEME_MODE = lsClient.getItem("THEME_MODE");
     const PRODUCT_DETAIL = lsClient.getItem("PRODUCT_DETAIL");
+    const SPECIAL_TAGS = lsClient.getItem("PRODUCT_SPECIAL_TAGS");
     setItems(
       cartItems
         ? typeof cartItems === "string"
@@ -527,6 +533,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           : cartItems
         : [],
     );
+    setProductTags(SPECIAL_TAGS)
     setProductDetail(PRODUCT_DETAIL);
     setThemeMode(THEME_MODE);
     setUuidLocal(UUID);
@@ -655,7 +662,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         getFavourite,
         favItems,
         setProductForDetail,
-        productDetail
+        productDetail,
+        getProductTagStatus,
+        productTags,
+        getSubCategory,
+        subCategory
       }}
     >
       {children}

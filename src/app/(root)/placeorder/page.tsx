@@ -152,7 +152,7 @@ const MyComponent = () => {
   const fetchData = async (requestOptions: CreatePayloadBooksForTax[]) => {
     try {
       const response = await fetch(
-        "https://booknet-dev.iconsole.com.au/api/calculate?check_availability=0",
+        "http://192.168.18.92:3001/api/calculate?check_availability=0",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
@@ -228,7 +228,7 @@ const MyComponent = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://ipos-dev.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
+        "http://192.168.18.92:3000/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
@@ -293,7 +293,7 @@ const MyComponent = () => {
     console.log(requestOptions);
     try {
       const response = await fetch(
-        "https://booknet-dev.iconsole.com.au/api/orders/web",
+        "http://192.168.18.92:3001/api/orders/web",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
@@ -564,8 +564,8 @@ const MyComponent = () => {
     try {
       const response = await fetch(
         discountType == "Voucher"
-          ? "https://ipos-dev.iconsole.com.au/api/v1/ipos/discounts/verifyVoucher"
-          : "https://ipos-dev.iconsole.com.au/api/v1/ipos/discounts/verifyCoupon",
+          ? "http://192.168.18.92:3000/api/v1/ipos/discounts/verifyVoucher"
+          : "http://192.168.18.92:3000/api/v1/ipos/discounts/verifyCoupon",
         {
           method: "POST", // Assuming you're making a POST request
           headers: {

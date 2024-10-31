@@ -4,7 +4,8 @@ import type UserType from "~/types/userType";
 import { isStringified } from "~/utils";
 import type { CheckoutForm} from "~/types/checkoutForm";
 import type { Genre } from "~/types/genre";
-import { type Category } from "~/types/category";
+import { type SuperCategory, type Category } from "~/types/category";
+import { type ItemSpecialTag } from "~/types/productTags";
 
 
 const STORAGE_MAPPER = {
@@ -34,7 +35,7 @@ const STORAGE_MAPPER = {
     DEFAULT: null
   },
   CATEGORY:{
-    TYPE: [] as Category[] | null,
+    TYPE: [] as SuperCategory[] | null,
     KEY:"category",
     DEFAULT: null
   },
@@ -66,6 +67,11 @@ const STORAGE_MAPPER = {
   PRODUCT_DETAIL:{
     TYPE: {} as DataCart | null,
     KEY: "product_detail",
+    DEFAULT: null
+  },
+  PRODUCT_SPECIAL_TAGS:{
+    TYPE: [] as ItemSpecialTag[] | null,
+    KEY: "product_tags",
     DEFAULT: null
   },
 };

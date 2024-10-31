@@ -32,6 +32,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   );
   const { cartItems, addCartItems, removeCartItems, productDetail } = useAuthContext();
   const itemDetail = productDetail
+  console.log(productDetail)
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
       typeof cartItems === "string"
@@ -43,8 +44,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       ? true
       : false;
   };
-
-  console.log(productDetail)
 
   const handleSelectChange = (
     tagName: string,

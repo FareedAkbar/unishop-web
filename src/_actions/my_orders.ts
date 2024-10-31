@@ -25,7 +25,7 @@ const requestOptions: RequestInit = {
 export async function getMyOrders(booknetCustomerId: number): Promise<ApiResponse | boolean> {
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/special/customer?booknet_customer_id=${booknetCustomerId}&special=0`,
+            `http://192.168.18.92:3001/api/special/customer?booknet_customer_id=${booknetCustomerId}&special=0`,
             requestOptions,
         );
         const result: GetSpecialOrderApiResponse =
@@ -50,7 +50,7 @@ export async function getMyOrders(booknetCustomerId: number): Promise<ApiRespons
 export async function getOrderStatus(): Promise<ApiResponseStatus | boolean> {
     try {
         const response = await fetch(
-            `https://ipos-dev.iconsole.com.au/api/v1/ipos/orders/getOrderStatuses`,
+            `http://192.168.18.92:3000/api/v1/ipos/orders/getOrderStatuses`,
             requestOptions,
         );
         const result: OrderStatusResponse =

@@ -20,7 +20,7 @@ export async function addToFavourite(item_id: number, booknet_customer_id: numbe
     };
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/customer/wishlist`,
+            `http://192.168.18.92:3001/api/customer/wishlist`,
             requestOptions,
         );
         const result: addFavResponse = (await response.json()) as addFavResponse;
@@ -54,7 +54,7 @@ export async function removeFromFavourite(item_id: number, booknet_customer_id: 
     };
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/customer/wishlist`,
+            `http://192.168.18.92:3001/api/customer/wishlist`,
             requestOptions,
         );
         const result: addFavResponse = (await response.json()) as addFavResponse;
@@ -86,7 +86,7 @@ export async function getFavouriteItems(booknet_customer_id: number | null | und
     };
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/customer/wishlist?booknet_customer_id=${booknet_customer_id}`,
+            `http://192.168.18.92:3001/api/customer/wishlist?booknet_customer_id=${booknet_customer_id}`,
             requestOptions,
         );
         const result: getFavResponse = (await response.json()) as getFavResponse;

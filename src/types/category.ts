@@ -1,10 +1,18 @@
 // interfaces.ts
 
+export interface SuperCategory {
+  category_type_id: number;
+  type: string;
+  description: string;
+  outlet_id: number;
+}
+
  type Category = {
     id: number;
     outlet: number;
     category_name: string;
     category_description: string;
+    category_type_id: number,
     deleted: number;
     parent: number;
     media_id: number;
@@ -29,7 +37,19 @@
   
    interface CategoryResponse {
     status: boolean;
+    data: SuperCategory[];
+  }
+  export interface SubCategoryResponse {
+    status: boolean;
     data: Category[];
+  }
+
+  export interface SideBarCategory {
+    category_type_id: number;
+    type: string;
+    description: string;
+    outlet_id: number;
+    children : Category[] | null
   }
 
 export type {Category, CategoryResponse, CategoryTreeNode}

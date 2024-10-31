@@ -76,6 +76,15 @@ export interface Variation {
   stock: Stock;
 }
 
+export interface SpecialTag {
+  item_special_tags_assign_id: number;
+  item_id: number;
+  item_special_tags_id: number;
+}
+export interface Media {
+  object_id: number;
+  object_path: string;
+}
 export default interface DataCart {
   book_id: number;
   final_price_including_tax?: number; // Just use number; 0 is included
@@ -131,6 +140,7 @@ export default interface DataCart {
   tag_links?: TagLink[] | null;
   variations?: Variation[] | null;
   selected_variation?: Variation | null;
+  special_tags?: SpecialTag[] | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectedValues?: any
 }
@@ -139,10 +149,7 @@ export default interface DataCart {
 
 
 
-interface Media {
-  object_id: number;
-  object_path: string;
-}
+
 
 interface Publisher {
   publisher_id: number;
