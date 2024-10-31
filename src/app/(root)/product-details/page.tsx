@@ -2,13 +2,18 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaCartPlus } from "react-icons/fa";
+import { FaCartPlus, FaRegStar, FaStar } from "react-icons/fa";
 import moment from "moment";
 import Select from "~/components/Fields/select";
-import type { Variation, VariationTag } from "~/types/book";
+import type { Media, Variation, VariationTag } from "~/types/book";
 import type DataCart from "~/types/book";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
+import ReviewForm from "~/components/Forms/ReviewForm";
+import { HiOutlineMinus, HiOutlinePlus } from "react-icons/hi";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import { getItemsByCategory } from "~/_actions/getitemsbycategory";
+import ProductsSection from "~/components/ui-components/ProductsSection";
 
 interface ProductDetailsProps {
   itemDetail: DataCart;
@@ -21,18 +26,32 @@ interface ProductDetailsProps {
 
 const ProductDetails: React.FC<ProductDetailsProps> = (
   {
-      // itemDetail,
+    // itemDetail,
     //   getOptions,
     //   handleAddToCart,
   },
 ) => {
- 
   const [selectedValues, setSelectedValues] = useState<Record<string, string>>(
     {},
   );
-  const { cartItems, addCartItems, removeCartItems, productDetail } = useAuthContext();
+  const { cartItems, addCartItems, removeCartItems, productDetail,increaseCartItemQuantity } = useAuthContext();
   const itemDetail = productDetail
   console.log(productDetail)
+  const [category, setCategory] = useState<string>("");
+  const [products, setProducts] = useState<DataCart[]>([]);
+  const [loader, setLoader] = useState<boolean>(true);
+
+  const params = useSearchParams();
+
+  useEffect(() => {
+    const d = params.get("category");
+    console.log("dt", d);
+    if (d) {
+      setCategory(d);
+    }
+  }, [params]);
+  const router = useRouter();
+ 
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
       typeof cartItems === "string"
@@ -44,6 +63,34 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       ? true
       : false;
   };
+  async function getProducts(page: number) {
+    try {
+      setLoader(true);
+      const x = await getItemsByCategory(parseInt(category) ?? 1, page, 1, 0);
+      console.log("data", x);
+
+      if (typeof x !== "boolean" && x.status) {
+        setProducts(x.data);
+      }
+      setLoader(false);
+      console.log(products);
+
+      // setData(result);
+      // setTotalPages(result.totalPages);
+    } catch (error) {
+      console.error("Failed to load data:", error);
+      setLoader(false);
+    }
+  }
+  useEffect(() => {
+    if (!category) return;
+    const loadData = async () => {
+      await getProducts(1);
+    };
+    loadData().catch((error) => {
+      console.error("Failed to load data in useEffect:", error);
+    });
+  }, [category]);
 
   const handleSelectChange = (
     tagName: string,
@@ -90,6 +137,27 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       }));
   };
 
+  const reviews = [
+    {
+      user: "John Doe",
+      comment: "Great app for security, works seamlessly!",
+      rating: 5,
+      date: "2024-10-20",
+    },
+    {
+      user: "Jane Smith",
+      comment: "Good features, but the UI needs improvement.",
+      rating: 3,
+      date: "2024-09-15",
+    },
+    {
+      user: "Alex Johnson",
+      comment: "Decent app, but had some issues with setup.",
+      rating: 4,
+      date: "2024-08-22",
+    },
+  ];
+
   const handleAddToCart = async (item: DataCart) => {
     const x = item;
     if (item?.variations?.[0] && item?.tag_links) {
@@ -113,6 +181,24 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
     } catch (error) {
       console.error("Failed to remove item to cart:", error);
     }
+  };
+
+  const handleQuantity = async (id: number, number: number) => {
+    await increaseCartItemQuantity(id, number);
+  };
+  const [quantity, setQuantity] = useState<number>(1);
+
+  useEffect(() => {
+    if (itemDetail?.quantity) {
+      setQuantity(itemDetail.quantity);
+    }
+    console.log("ii", itemDetail);
+  }, [itemDetail]);
+
+  const handleQuantityChange = (newQuantity: number) => {
+    if (newQuantity < 1) return;
+    setQuantity(newQuantity);
+   void handleQuantity(itemDetail?.item_id ? itemDetail?.item_id : 0, newQuantity);
   };
 
   const filterVariationsBySelectedValues = (
@@ -144,9 +230,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
     itemDetail?.variations ? itemDetail?.variations : [],
     selectedValues,
   );
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+  const [selectedImage, setSelectedImage] = useState<Media>(itemDetail?.media[0]!);
+  const handleImageClick = (imagePath: Media) => {
+    setSelectedImage(imagePath);
+  };
+
   return (
-    <div className="p-6 pt-28">
-      <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
+    <div className="p-6 pt-32">
+      <h4 className="pb-3 text-center font-serif text-lg font-bold capitalize text-red-500 dark:text-neutral-100 md:text-2xl">
         {itemDetail?.book_title ?? itemDetail?.item_name}
       </h4>
       <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
@@ -155,38 +248,32 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
         {itemDetail?.additional_notes}
       </h6>
-      <div className="flex">
-        <div>
-          <div className="flex items-center justify-center">
-            <motion.div
-              key={"images"}
-              style={{
-                rotate: Math.random() * 20 - 10,
-              }}
-              whileHover={{
-                scale: 1.1,
-                rotate: 0,
-                zIndex: 100,
-              }}
-              whileTap={{
-                scale: 1.1,
-                rotate: 0,
-                zIndex: 100,
-              }}
-              className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-neutral-700 dark:bg-neutral-800"
-            >
+      <div className="flex flex-wrap gap-3">
+        <div className="mx-auto flex items-center">
+          {/* Thumbnails on the left */}
+          <div className="mr-4 flex flex-col space-y-2">
+            {itemDetail?.media?.map((image, index) => (
               <Image
-                src={
-                  itemDetail?.object_path
-                    ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                    : "/bookIcon.png"
-                }
-                alt={itemDetail?.object_path ?? ""}
-                width={500}
-                height={500}
-                className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-64 md:w-44"
+                key={index}
+                src={`https://ipos-storage.s3.amazonaws.com/${image.object_path}`}
+                alt={`Image ${index + 1}`}
+                width={1000}
+                height={1000}
+                className={`h-24 w-24 cursor-pointer rounded-lg object-contain shadow ${selectedImage.object_path.includes(image.object_path) ? "ring-1 ring-red-500" : ""}`}
+                onClick={() => handleImageClick(image)}
               />
-            </motion.div>
+            ))}
+          </div>
+
+          {/* Main Image */}
+          <div className="flex h-60 w-60 items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80">
+            <Image
+              src={`https://ipos-storage.s3.amazonaws.com/${selectedImage.object_path}`}
+              alt="Selected Image"
+              width={2000}
+              height={2000}
+              className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
+            />
           </div>
         </div>
         <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
@@ -205,11 +292,20 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
             )}
             {itemDetail?.SKU && (
               <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
-                SKU {itemDetail.SKU}
+                SKU: {itemDetail.SKU}
               </span>
             )}
           </div>
-
+          {itemDetail?.barcode && (
+            <div className="flex items-center justify-center">
+              <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                Barcode:
+              </span>
+              <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                {itemDetail.barcode}
+              </span>
+            </div>
+          )}
           {itemDetail?.edition && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -224,7 +320,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
           {itemDetail?.introduced && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Published:
+                Created at:
               </span>
               <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                 {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
@@ -395,15 +491,29 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                   </div>
                 );
               })}
-
-              {/* Display selected options */}
             </div>
           )}
+          <div className="mt-auto flex w-auto items-center justify-between space-x-2 rounded bg-gray-200 p-1 dark:bg-gray-500">
+            <button
+              className="p-1"
+              disabled={quantity <= 1}
+              onClick={() => handleQuantityChange(quantity - 1)}
+            >
+              <HiOutlineMinus size={14} />
+            </button>
+            <span className="text-sm">{quantity}</span>
+            <button
+              className="p-1"
+              onClick={() => handleQuantityChange(quantity + 1)}
+            >
+              <HiOutlinePlus size={14} />
+            </button>
+          </div>
           {itemDetail?.item_id &&
           !isItemInCart(itemDetail.item_id) &&
           itemDetail?.stock?.quantity ? (
             <button
-              className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white "
+              className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
               onClick={() => handleAddToCart(itemDetail)}
             >
               <FaCartPlus className="text-lg" />
@@ -414,6 +524,47 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
           )}
         </div>
       </div>
+      {/* Reviews Section */}
+      <div className="mt-16 flex flex-col gap-8 md:flex-row">
+        <div className="max-h-[487px] rounded-lg border p-6 shadow-md md:w-1/2">
+          <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
+          <ScrollArea className="h-[400px]">
+            {reviews.map((review, index) => (
+              <div key={index} className="mb-4 border-b pb-2">
+                <p className="font-semibold">{review.user}</p>
+                <p className="text-sm text-gray-600">{review.comment}</p>
+                {/* Star Rating */}
+                <div className="flex items-center gap-1 py-2">
+                  {Array.from({ length: 5 }, (_, i) =>
+                    i < review.rating ? (
+                      <FaStar key={i} className="text-yellow-500" />
+                    ) : (
+                      <FaRegStar key={i} className="text-gray-400" />
+                    ),
+                  )}
+                </div>
+                {/* Review Date */}
+                <p className="text-xs text-gray-500">
+                  {moment(review.date).format("Do MMMM, YYYY")}
+                </p>
+              </div>
+            ))}
+          </ScrollArea>
+        </div>
+        {/* Review Form */}
+        <div className="md:w-1/2">
+          <ReviewForm />
+        </div>
+      </div>
+      <ProductsSection
+        products={products}
+        headingPartOne="Related"
+        headingPartTwo="Products"
+        loader={loader}
+        viewAllButton={() => {
+          router.push(`/products?detail=${category}`);
+        }}
+      />
     </div>
   );
 };

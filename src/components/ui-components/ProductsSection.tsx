@@ -5,24 +5,18 @@ import ProductCard from "~/components/ui-components/ProductCard";
 import { HiArrowSmallRight, HiArrowSmallLeft } from "react-icons/hi2";
 import CountdownTimer from "~/components/countdownTimer";
 import Button from "~/components/ui-components/Button";
-
-type Product = {
-  book_title: string;
-  item_sale_price: number;
-  id: number;
-  name: string;
-  price: number;
-  originalPrice: number;
-  image: string;
-  rating: number;
-  reviews: number;
-};
+import DataCart from "~/types/book";
+import ProductCardSkeleton from "./ProductCardSkeleton";
+import { useAuthContext } from "~/Context/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface ProductsSectionProps {
-  products: Product[];
+  products: DataCart[];
   targetDate?: Date; // Optional timer date
   headingPartOne: string; // New prop for the first part of the heading
   headingPartTwo: string; // New prop for the second part of the heading
+  loader?: boolean;
+  viewAllButton?: () => void;
 }
 const data = {
   book_id: 28,
@@ -47,13 +41,11 @@ const data = {
   expiry_date: "2025-12-31 05:00:00",
   barcode: "1234567890123",
 
-
   deleted: 0,
   item_sale_price: 25.99,
-  
- 
+
   items_type: 3,
- 
+
   SKU: "GATSBY-001",
   SKU_title: "Gatsby Hardcover Edition",
   tax_id: 5,
@@ -99,6 +91,8 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
   targetDate,
   headingPartOne,
   headingPartTwo,
+  loader = false,
+  viewAllButton,
 }) => {
   const productContainerRef = useRef<HTMLDivElement>(null);
   const [listInStart, setListInStart] = useState(true);
@@ -124,7 +118,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
       });
     }
   };
-
+  const { setProductForDetail } = useAuthContext();
   const updateIsListInStart = () => {
     if (productContainerRef.current) {
       const scrollLeft = productContainerRef.current.scrollLeft;
@@ -136,7 +130,11 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
       setListInStart(scrollLeft <= 0);
     }
   };
-
+  const router = useRouter();
+  const goToDetail = async (item: DataCart) => {
+    await setProductForDetail(item);
+    router.push(`/product-details?category=${item.category}`);
+  };
   useEffect(() => {
     const ref = productContainerRef.current;
     if (ref) {
@@ -151,7 +149,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
   }, []);
 
   return (
-    <div className="max-w-screen overflow-hidden bg-transparent h-fit pl-2">
+    <div className="max-w-screen h-fit overflow-hidden bg-transparent pl-2">
       <div className="py-8 sm:px-6 sm:py-16 lg:py-24">
         <div className="flex flex-row items-center justify-between md:flex-row">
           <div className="flex flex-row items-end justify-between gap-5 md:flex-row md:gap-10">
@@ -186,28 +184,42 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
           </div>
         </div>
 
-        <div className="lg:w-[92vw] w-full">
+        <div className="w-full lg:w-[92vw]">
           <div
-            className="scrollbar-hidden mt-6 py-6 flex justify-center flex-wrap lg:flex-nowrap lg:overflow-x-auto xl:flex-nowrap xl:overflow-x-auto"
+            className="scrollbar-hidden mt-6 flex flex-wrap justify-center py-6 lg:flex-nowrap lg:overflow-x-auto xl:flex-nowrap xl:overflow-x-auto"
             ref={productContainerRef}
           >
-            <ProductCard key={1} />
-            <ProductCard key={2} />
-            <ProductCard key={3} />
-            <ProductCard key={4} />
-            <ProductCard key={5} />
-            <ProductCard key={6} />
-            <ProductCard key={7} />
-            <ProductCard key={8} />
+            {loader
+              ? Array.from({ length: 6 }, (_, index) => (
+                  <div key={index} className="p-2">
+                    <ProductCardSkeleton />
+                  </div>
+                ))
+              : products.map((item) => (
+                  <ProductCard
+                    key={item.book_id}
+                    product={item}
+                    //  showAddToCart={!isItemInCart(item.item_id)}
+                    //  onAddToCart={async () => {
+                    //    if (item?.variations?.[0]) {
+                    //      await openDetail(item);
+                    //    } else {
+                    //      await handleAddToCart(item);
+                    //    }
+                    //  }}
+                    //  onRemoveFromCart={() => handleRemoveFromCart(item)}
+                    openDetail={() => goToDetail(item)}
+                    //  handleFavourite={() => handleFavourite(item)}
+                    //  wishListLoader={wishListLoader}
+                  />
+                ))}
           </div>
         </div>
 
         <div className="mt-8 flex justify-center sm:mt-12">
           <Button
             title="View all"
-            onClick={() => {
-              // Add your onClick functionality here
-            }}
+            onClick={() => (viewAllButton ? viewAllButton() : "")}
           />
         </div>
       </div>

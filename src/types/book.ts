@@ -87,8 +87,8 @@ export interface Media {
 }
 export default interface DataCart {
   book_id: number;
-  final_price_including_tax?: number; // Just use number; 0 is included
-  quantity: number; // Just use number; 0 is included
+  final_price_including_tax?: number; 
+  quantity: number; 
   item_id: number;
   genre_id: number;
   book_title: string;
@@ -142,14 +142,15 @@ export default interface DataCart {
   selected_variation?: Variation | null;
   special_tags?: SpecialTag[] | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selectedValues?: any
+  selectedValues?: any;
+
 }
 
 
-
-
-
-
+export interface Media {
+  object_id: number;
+  object_path: string;
+}
 
 interface Publisher {
   publisher_id: number;
