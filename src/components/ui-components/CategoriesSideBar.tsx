@@ -72,7 +72,7 @@ const SubcategoryList1 = ({
                 toggleCategory(subItem.category_name);
               } else {
                 router.push(
-                  `/products?name=${subItem.category_name}&detail=${subItem.id}`,
+                  `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
                 );
                 setTimeout(() => {
                   setOpenCategories([]);
@@ -82,7 +82,7 @@ const SubcategoryList1 = ({
             className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
           >
             <span
-              className="w-40 truncate text-left"
+              className="w-40 truncate text-left capitalize"
               title={subItem.category_name}
             >
               {subItem.category_name.length > 16
@@ -250,7 +250,7 @@ subCategory?.forEach((item) => {
                   item.children?.[0]
                     ? toggleCategory(item.type)
                     : router.push(
-                      `/products?name=${item.type}&detail=${item.category_type_id}`,
+                      `/products?category=${item.category_type_id}&name=${item.type}&detail=${item.category_type_id}`,
                     )
                 }
                 className="flex w-full items-center justify-between px-3 transition-transform hover:scale-110"
@@ -277,7 +277,7 @@ subCategory?.forEach((item) => {
                       className="flex-shrink-0 rounded-md object-cover mr-3"
                     />
                   )} */}
-                  <span className="w-40 truncate text-left" title={item.type}>
+                  <span className="w-40 truncate text-left capitalize" title={item.type}>
                     {item.type.length > 16
                       ? `${item.type.slice(0, 16)}...`
                       : item.type}

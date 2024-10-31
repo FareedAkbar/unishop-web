@@ -300,6 +300,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   }
   const goToLogin = () => {
     setLoginAlert(false);
+    
     router.push("login");
   };
   return (

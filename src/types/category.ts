@@ -32,6 +32,7 @@ export interface SuperCategory {
     media_id: number;
     booknet: number;
     object_path: string,
+    category_type_id: number;
     children?: CategoryTreeNode[];
   };
   

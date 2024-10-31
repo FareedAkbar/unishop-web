@@ -33,6 +33,13 @@ import type { Pagination } from "~/types/pagination";
 import type { Variation } from "~/types/book";
 import Button from "~/components/ui-components/Button";
 import { IoIosArrowRoundForward } from "react-icons/io";
+import {
+  Select as NewSelect,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "~/components/ui/select";
 
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
@@ -41,8 +48,10 @@ const MyComponent = () => {
   const [searchText, setSearchText] = useState("");
   const params = useSearchParams();
   const { setOpen } = useModal();
-  const [detail, setDetail] = useState<string>("");
+  const [detail, setDetail] = useState<number>(-1);
+  const [parent, setParent] = useState<number>(-1);
   const [subcategory, setSubcategory] = useState<string>('');
+  const [subcategoryTypes, setSubcategoryTypes] = useState<Category[] | null>(null);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
@@ -72,14 +81,18 @@ const MyComponent = () => {
 
   useEffect(() => {
     const d = params.get("detail");
+    const parentCat = params.get("category");
     if (d) {
-      setDetail(d);
+      setDetail(parseInt(d));
+    }
+    if(parent && parentCat !== null){
+      setParent(parseInt(parentCat))
     }
   }, [params]);
-  async function getCloths(page: number) {
+  async function getCloths(page: number,id: number) {
     try {
       setLoader(true);
-      const x = await getItemsByCategory(parseInt(detail) ?? 1, page, 1, 0);
+      const x = await getItemsByCategory(id ?? 1, page, 1, 0);
       if (typeof x !== "boolean" && x.status) {
         setPagination(x.meta);
         setData(x.data);
@@ -98,9 +111,12 @@ const MyComponent = () => {
   }
   useEffect(() => {
     if (!subCategory) return;
-    if (!detail) return;
-    const genId = subCategory?.find((item) => item.id == parseInt(detail));
-    const catId = category?.find((item) => item.category_type_id == parseInt(detail));
+    if (detail < 0) return;
+    
+    const genId = subCategory?.find((item) => item.id == detail);
+    const parentCat = subCategory?.filter((item)=> item.category_type_id == parent);
+    const catId = category?.find((item) => item.category_type_id == detail);
+    
     if (genId ?? catId) {
       if(genId){
         setSubcategory(genId.category_name);
@@ -108,8 +124,11 @@ const MyComponent = () => {
       if(catId){
         setSubcategory(catId.type);
       }
+      if(parentCat?.[0]){
+        setSubcategoryTypes(parentCat)
+      }
       const loadData = async () => {
-        await getCloths(1);
+        await getCloths(1, detail);
       };
 
       loadData().catch((error) => {
@@ -324,12 +343,16 @@ const MyComponent = () => {
   };
   const handlePageChange = async (page: number) => {
     setCurrentPage(page);
-    await getCloths(page);
+    await getCloths(page, detail);
   };
 
   const goToDetail = async (item: DataCart | null) => {
     await setProductForDetail(item);
     router.push(`/product-details?category=${item?.category}`);
+  };
+  const handleChangeSubCategory = async (id: string) => {
+   
+      setDetail(parseInt(id))
   };
   return (
     <div>
@@ -350,8 +373,24 @@ const MyComponent = () => {
                   {subcategory?.category_name}
                 </p> */}
               </div>
-
+              
               <div className="flex items-center gap-2">
+              {subcategoryTypes?.[0] && (
+                  <NewSelect
+                    onValueChange={(x: string) => handleChangeSubCategory(x)}
+                  >
+                    <SelectTrigger className="w-72">
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {subcategoryTypes?.map((item) => (
+                        <SelectItem key={item.id} value={item.id.toString()}>
+                          {item.category_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </NewSelect>
+                )}
                 <input
                   type="text"
                   value={searchText}
