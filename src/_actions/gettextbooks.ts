@@ -20,7 +20,7 @@ const requestOptions: RequestInit = {
 export async function getBooks(genre_id: number): Promise<ApiResponse | boolean> {
     try {
         const response = await fetch(
-            `http://192.168.18.92:3001/api/books/getBooksByGenreCat?category_id=${genre_id}&entries=1&images=1&detailed=1`,
+            `https://booknet-dev.iconsole.com.au/api/books/getBooksByGenreCat?category_id=${genre_id}&entries=1&images=1&detailed=1`,
             requestOptions,
         );
         const result: ApiResponse = (await response.json()) as ApiResponse;

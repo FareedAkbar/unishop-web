@@ -28,14 +28,14 @@ export enum PAGE_ROUTES {
 }
 
 export enum API_ROUTES {
-  LOGIN = "http://192.168.18.92:3000/api/v1/student/auth/login",
-  SENDOTP = "http://192.168.18.92:3000/api/v1/student/auth/send-otp",
-  VERIFYOTP = "http://192.168.18.92:3000/api/v1/student/auth/verify-login-otp",
-  GENRE = "http://192.168.18.92:3001/api/genre",
-  CATEGORY = "http://192.168.18.92:3001/api/category/type",
-  SUB_CATEGORY = "http://192.168.18.92:3001/api/category",
-  CHECKOUT = "http://192.168.18.92:3001/api/customer",
-  // CHECKOUT_WITH_USERNAME = "http://192.168.18.92:3001/api/customer",
+  LOGIN = "https://ipos-dev.iconsole.com.au/api/v1/student/auth/login",
+  SENDOTP = "https://ipos-dev.iconsole.com.au/api/v1/student/auth/send-otp",
+  VERIFYOTP = "https://ipos-dev.iconsole.com.au/api/v1/student/auth/verify-login-otp",
+  GENRE = "https://booknet-dev.iconsole.com.au/api/genre",
+  CATEGORY = "https://booknet-dev.iconsole.com.au/api/category/type",
+  SUB_CATEGORY = "https://booknet-dev.iconsole.com.au/api/category",
+  CHECKOUT = "https://booknet-dev.iconsole.com.au/api/customer",
+  // CHECKOUT_WITH_USERNAME = "https://booknet-dev.iconsole.com.au/api/customer",
   REGISTER = "/api/auth/register",
   SIGN_OUT = "/api/auth/sign-out",
 }

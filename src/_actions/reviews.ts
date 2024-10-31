@@ -32,7 +32,7 @@ export async function submitReviewsApi(ReviewData: ReviewData): Promise<getSubmi
     };
     try {
         const response = await fetch(
-            `http://192.168.18.92:3001/api/books/review`,
+            `https://booknet-dev.iconsole.com.au/api/books/review`,
             requestOptions,
         );
         const result: getSubmitReviewResponse = (await response.json()) as getSubmitReviewResponse;

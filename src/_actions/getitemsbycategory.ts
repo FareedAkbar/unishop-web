@@ -23,7 +23,7 @@ export async function getItemsByCategory(id: number, page: number, food: number,
     
     try {
         const response = await fetch(
-            `http://192.168.18.92:3001/api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=${food}&}&category=${id}&page=${page}&images=1&detailed=1`,
+            `https://booknet-dev.iconsole.com.au/api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=${food}&}&category=${id}&page=${page}&images=1&detailed=1`,
             requestOptions,
         );
         const result: ApiResponse = (await response.json()) as ApiResponse;
