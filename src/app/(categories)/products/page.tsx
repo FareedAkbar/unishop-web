@@ -26,12 +26,11 @@ import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import AlertBox from "~/components/alertBox/alert";
 import { useToast } from "~/hooks/use-toast";
-import type { Category, SuperCategory } from "~/types/category";
+import type { Category } from "~/types/category";
 import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import Select from "~/components/Fields/select";
 import type { Pagination } from "~/types/pagination";
 import type { Variation } from "~/types/book";
-import Button from "~/components/ui-components/Button";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import {
   Select as NewSelect,
@@ -50,6 +49,7 @@ const MyComponent = () => {
   const { setOpen } = useModal();
   const [detail, setDetail] = useState<number>(-1);
   const [parent, setParent] = useState<number>(-1);
+  const [name, setName] = useState<string>("");
   const [subcategory, setSubcategory] = useState<string>('');
   const [subcategoryTypes, setSubcategoryTypes] = useState<Category[] | null>(null);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
@@ -82,11 +82,18 @@ const MyComponent = () => {
   useEffect(() => {
     const d = params.get("detail");
     const parentCat = params.get("category");
+    const name = params.get("name");
+    
     if (d) {
       setDetail(parseInt(d));
+    } else{
+      setDetail(-1)
     }
     if(parent && parentCat !== null){
       setParent(parseInt(parentCat))
+    }
+    if(name){
+      setName(name)
     }
   }, [params]);
   async function getCloths(page: number,id: number) {
@@ -111,12 +118,16 @@ const MyComponent = () => {
   }
   useEffect(() => {
     if (!subCategory) return;
-    if (detail < 0) return;
+    // if (detail < 0) return;
     
     const genId = subCategory?.find((item) => item.id == detail);
-    const parentCat = subCategory?.filter((item)=> item.category_type_id == parent);
+    const parentCat = subCategory?.filter((item)=> item.category_type_id == parent && item.outlet == 221);
     const catId = category?.find((item) => item.category_type_id == detail);
-    
+    setDisplayData(null);
+    if(parentCat?.[0]){
+      setSubcategoryTypes(parentCat)
+      console.log(parentCat)
+    }
     if (genId ?? catId) {
       if(genId){
         setSubcategory(genId.category_name);
@@ -124,9 +135,7 @@ const MyComponent = () => {
       if(catId){
         setSubcategory(catId.type);
       }
-      if(parentCat?.[0]){
-        setSubcategoryTypes(parentCat)
-      }
+      
       const loadData = async () => {
         await getCloths(1, detail);
       };
@@ -135,7 +144,7 @@ const MyComponent = () => {
         console.error("Failed to load data in useEffect:", error);
       });
     }
-  }, [subCategory, detail]);
+  }, [subCategory, detail, name]);
 
   const filterVariationsBySelectedValues = (
     variations: Variation[],
@@ -368,9 +377,9 @@ const MyComponent = () => {
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4">
               <div className="text-left">
-                <h2 className="text-xl font-bold capitalize"> {subcategory}</h2>
+                <h2 className="text-xl font-bold capitalize"> {name}</h2>
                 {/* <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
-                  {subcategory?.category_name}
+                  {subcategory}
                 </p> */}
               </div>
               

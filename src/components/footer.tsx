@@ -1,3 +1,4 @@
+"use client";
 import {
   FaEnvelope,
   FaFacebookF,
@@ -9,6 +10,7 @@ import { BiLogoPinterestAlt } from "react-icons/bi";
 import Logo from "../../public/pulseFooter2.png";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuthContext } from "~/Context/AuthContext";
 
 function Footer() {
   const iconsTab = [
@@ -17,11 +19,12 @@ function Footer() {
     { icon: <AiFillYoutube /> },
     { icon: <BiLogoPinterestAlt /> },
   ];
+  const { category } = useAuthContext()
 
   return (
     <footer className="bg-zinc-100 dark:bg-slate-900">
       <div className="container mx-auto pb-2 pt-8">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {/* logo side */}
           <div className="flex flex-col items-center gap-8 text-center md:col-span-1 md:items-start md:text-left">
             <Image
@@ -120,6 +123,19 @@ function Footer() {
           <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Shop Online</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
+            {category?.map((item) =>
+            (
+              <>
+                <Link
+                  href={`products?category=${item.category_type_id}&name=${item.type}`}
+                  className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500 capitalize"
+                >
+                  {item.type}
+                </Link>
+              </>
+            )
+            )}
+            {/* <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <Link
               href="#"
               className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
@@ -149,11 +165,11 @@ function Footer() {
               className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
             >
               Graduation
-            </Link>
+            </Link> */}
           </div>
 
           {/* gifts & merch */}
-          <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">
+          {/* <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Gifts & Merch</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <Link
@@ -174,7 +190,7 @@ function Footer() {
             >
               Erstwilder
             </Link>
-          </div>
+          </div> */}
 
           {/* working hours */}
           <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">

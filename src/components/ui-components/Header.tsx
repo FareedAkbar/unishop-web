@@ -90,47 +90,47 @@ const Header = () => {
   SideBarCategory[] | null
   >(null);
 
-  function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
-    const categoryMap: Record<number, CategoryTreeNode> = {};
-    const tree: CategoryTreeNode[] = [];
+  // function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
+  //   const categoryMap: Record<number, CategoryTreeNode> = {};
+  //   const tree: CategoryTreeNode[] = [];
 
-    categories.forEach((category) => {
-      categoryMap[category.id] = {
-        id: category.id,
-        outlet: category.outlet,
-        category_name: category.category_name,
-        category_description: category.category_description,
-        deleted: category.deleted,
-        object_path: category.object_path ? category.object_path : '',
-        media_id: category.media_id,
-        booknet: category.booknet,
-        children: [],
-      };
-    });
+  //   categories.forEach((category) => {
+  //     categoryMap[category.id] = {
+  //       id: category.id,
+  //       outlet: category.outlet,
+  //       category_name: category.category_name,
+  //       category_description: category.category_description,
+  //       deleted: category.deleted,
+  //       object_path: category.object_path ? category.object_path : '',
+  //       media_id: category.media_id,
+  //       booknet: category.booknet,
+  //       children: [],
+  //     };
+  //   });
 
-    categories.forEach((category) => {
-      if (
-        category.parent === 0 &&
-        category.booknet == 1 &&
-        category.outlet === outlet223
-      ) {
-        const rootCategory = categoryMap[category.id];
-        if (rootCategory) {
-          tree.push(rootCategory);
-        }
-      } else {
-        const parent = categoryMap[category.parent];
-        if (parent) {
-          const childCategory = categoryMap[category.id];
-          if (childCategory) {
-            parent.children!.push(childCategory);
-          }
-        }
-      }
-    });
+  //   categories.forEach((category) => {
+  //     if (
+  //       category.parent === 0 &&
+  //       category.booknet == 1 &&
+  //       category.outlet === outlet223
+  //     ) {
+  //       const rootCategory = categoryMap[category.id];
+  //       if (rootCategory) {
+  //         tree.push(rootCategory);
+  //       }
+  //     } else {
+  //       const parent = categoryMap[category.parent];
+  //       if (parent) {
+  //         const childCategory = categoryMap[category.id];
+  //         if (childCategory) {
+  //           parent.children!.push(childCategory);
+  //         }
+  //       }
+  //     }
+  //   });
 
-    return tree;
-  }
+  //   return tree;
+  // }
   // Define types
 
 type CategoriesMap = Record<number, SuperCategory & { children: CAT[] }>;
@@ -163,13 +163,89 @@ subCategory?.forEach((item) => {
       setOpenDropdown(null); // Close dropdown when clicking a section
     }
   };
+
+  // Extend Category1 to include children
+  interface CategoryTreeNode2 extends CAT {
+    children: CategoryTreeNode2[];
+  }
+
+  const buildCategoryTree = (categories: CAT[]): CategoryTreeNode2[] => {
+    const categoriesMap: Record<number, CategoryTreeNode2> = {};
+
+    // Step 1: Organize categories by ID
+    categories.forEach(cat => {
+      categoriesMap[cat.id] = { ...cat, children: [] };
+    });
+
+    const categoryTree: CategoryTreeNode2[] = [];
+
+    // Step 2: Build the tree structure
+    categories.forEach(cat => {
+      if (cat.parent === 0) {
+        // Root category
+        const rootCategory = categoriesMap[cat.id];
+        if (rootCategory) {
+          categoryTree.push(rootCategory); // Check that it's defined
+        }
+      } else {
+        const parentCategory = categoriesMap[cat.parent];
+        if (parentCategory) {
+          const categoryToAdd = categoriesMap[cat.id];
+          if (categoryToAdd) {
+            parentCategory.children.push(categoryToAdd); // Ensure it's defined
+          } else {
+            console.error(`Category ID ${cat.id} not found in map.`);
+          }
+        } else {
+          console.error(`Parent Category ID ${cat.parent} not found in map.`);
+        }
+      }
+    });
+
+    return categoryTree;
+  };
+
   useEffect(() => {
-    if (!category) return;
-    const result = Object.values(categoriesMap);
-    setHeaderCategory(result)
-    
-    
-  }, [category,subCategory]);
+    if (!category || !subCategory) return;
+  
+    const x = buildCategoryTree(subCategory); // This should return CategoryTreeNode2[]
+    console.log(x)
+    const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
+      if (cat.category_type_id) {
+        acc[cat.category_type_id] = { ...cat, children: [] };
+      }
+      return acc;
+    }, {} as CategoriesMap);
+  
+    // Ensure x is an array and has elements
+    if (Array.isArray(x) && x.length > 0) {
+      // Get all children from the built category tree
+      const allChildren: CAT[] = x.flatMap(node => node.children); // Flatten all children
+      allChildren.forEach((item: CAT) => {
+        const { category_type_id, outlet } = item;
+        const targetCategory = categoriesMap[category_type_id];
+        if (targetCategory && targetCategory.outlet_id === outlet) {
+          targetCategory.children.push(item);
+        }
+      });
+  
+      const result = Object.values(categoriesMap);
+      setHeaderCategory(result);
+    } else {
+      // Handle the case when x is empty
+      subCategory.forEach((item: CAT) => {
+        const { category_type_id, outlet } = item;
+        const targetCategory = categoriesMap[category_type_id];
+        if (targetCategory && targetCategory.outlet_id === outlet) {
+          targetCategory.children.push(item);
+        }
+      });
+      const result = Object.values(categoriesMap);
+      setHeaderCategory(result);
+    }
+  
+  }, [category, subCategory]);
+  
   // Close the dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

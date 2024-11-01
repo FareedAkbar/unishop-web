@@ -1,3 +1,4 @@
+"use Client";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -168,9 +169,9 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   const { genre, checkoutData, category, subCategory } = useAuthContext();
   const router = useRouter();
   const [headerCategory, setHeaderCategory] = useState<
-  SideBarCategory[] | null
+    SideBarCategory[] | null
   >(null);
- 
+
   const sidebarRef = useRef<HTMLDivElement>(null); // Ref for sidebar
 
   const toggleCategory = (label: string) => {
@@ -185,36 +186,101 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     setOpenCategories([]);
     setOpenCategory((pre) => (pre == label ? "" : label));
   };
- 
- 
 
-// Define types
 
-type CategoriesMap = Record<number, SuperCategory & { children: CAT[] }>;
 
-const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
-  if (cat.category_type_id) {
-      acc[cat.category_type_id] = { ...cat, children: [] };
+
+
+  // Define types
+
+  type CategoriesMap = Record<number, SuperCategory & { children: CAT[] }>;
+
+
+
+
+
+  // Extend Category1 to include children
+  interface CategoryTreeNode2 extends CAT {
+    children: CategoryTreeNode2[];
   }
-  return acc;
-}, {} as CategoriesMap);
 
-// Link each item in subCategory to its respective category in categoriesMap
-subCategory?.forEach((item) => {
-    const { category_type_id, outlet } = item;
-    const targetCategory = categoriesMap[category_type_id];
-    if (targetCategory && targetCategory.outlet_id === outlet) {
-        targetCategory.children.push(item);
+  const buildCategoryTree = (categories: CAT[]): CategoryTreeNode2[] => {
+    const categoriesMap: Record<number, CategoryTreeNode2> = {};
+
+    // Step 1: Organize categories by ID and initialize children
+    categories.forEach(cat => {
+      categoriesMap[cat.id] = { ...cat, children: [] };
+    });
+
+    const categoryTree: CategoryTreeNode2[] = [];
+
+    // Step 2: Build the tree structure
+    categories.forEach(cat => {
+      if (cat.parent === 0) {
+        // Root category
+        const rootCategory = categoriesMap[cat.id];
+        if (rootCategory) {
+          categoryTree.push(rootCategory); // Check that it's defined
+        }
+      } else {
+        const parentCategory = categoriesMap[cat.parent];
+        if (parentCategory) {
+          const categoryToAdd = categoriesMap[cat.id];
+          if (categoryToAdd) {
+            parentCategory.children.push(categoryToAdd); // Ensure it's defined
+          } else {
+            console.error(`Category ID ${cat.id} not found in map.`);
+          }
+        } else {
+          console.error(`Parent Category ID ${cat.parent} not found in map.`);
+        }
+      }
+    });
+
+    return categoryTree;
+};
+
+
+useEffect(() => {
+  if (!category || !subCategory) return;
+
+  const x = buildCategoryTree(subCategory); // This should return CategoryTreeNode2[]
+  console.log(x)
+  const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
+    if (cat.category_type_id) {
+      acc[cat.category_type_id] = { ...cat, children: [] };
     }
-});
-  // Initialize category tree on mount
-  useEffect(() => {
-    if (!category) return;
+    return acc;
+  }, {} as CategoriesMap);
+
+  // Ensure x is an array and has elements
+  if (Array.isArray(x) && x.length > 0) {
+    // Get all children from the built category tree
+    const allChildren: CAT[] = x.flatMap(node => node.children); // Flatten all children
+    allChildren.forEach((item: CAT) => {
+      const { category_type_id, outlet } = item;
+      const targetCategory = categoriesMap[category_type_id];
+      if (targetCategory && targetCategory.outlet_id === outlet) {
+        targetCategory.children.push(item);
+      }
+    });
+
     const result = Object.values(categoriesMap);
-    setHeaderCategory(result)
-    
-    
-  }, [category,subCategory]);
+    setHeaderCategory(result);
+  } else {
+    // Handle the case when x is empty
+    subCategory.forEach((item: CAT) => {
+      const { category_type_id, outlet } = item;
+      const targetCategory = categoriesMap[category_type_id];
+      if (targetCategory && targetCategory.outlet_id === outlet) {
+        targetCategory.children.push(item);
+      }
+    });
+    const result = Object.values(categoriesMap);
+    setHeaderCategory(result);
+  }
+
+}, [category, subCategory]);
 
   // Close subcategories on outside click
   useEffect(() => {
@@ -240,30 +306,30 @@ subCategory?.forEach((item) => {
       className={`absolute left-0 max-w-64 rounded-r-xl border-y border-r bg-white px-4 py-2 shadow-lg dark:bg-slate-700 ${className}`}
     >
       <h2 className="text-lg font-bold">CATEGORIES</h2>
-        <nav className="relative">
-          {headerCategory?.map((item) => (
-            // item.id != 472 && (
-            <div key={item.type} className="relative">
-              <button
-                type="button"
-                onClick={() =>
-                  item.children?.[0]
-                    ? toggleCategory(item.type)
-                    : router.push(
-                      `/products?category=${item.category_type_id}&name=${item.type}&detail=${item.category_type_id}`,
-                    )
-                }
-                className="flex w-full items-center justify-between px-3 transition-transform hover:scale-110"
-              >
-                {/* <Link
+      <nav className="relative">
+        {headerCategory?.map((item) => (
+          // item.id != 472 && (
+          <div key={item.type} className="relative">
+            <button
+              type="button"
+              onClick={() =>
+                item.children?.[0]
+                  ? toggleCategory(item.type)
+                  : router.push(
+                    `/products?category=${item.category_type_id}&name=${item.type}&detail=${item.category_type_id}`,
+                  )
+              }
+              className="flex w-full items-center justify-between px-3 transition-transform hover:scale-110"
+            >
+              {/* <Link
                         key={item.id}
                         href={item.children?.[0] ? '#' : `books?detail=${item.id}`}
                         className="flex items-center justify-between w-full text-sm transition-transform hover:scale-110"
                         onClick={() => item.children ? setOpenCategories([]) : null}
                         passHref
                       > */}
-                <div className="flex items-center justify-start ">
-                  {/* {item.object_path && (
+              <div className="flex items-center justify-start ">
+                {/* {item.object_path && (
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     <Image
                       src={
@@ -277,93 +343,93 @@ subCategory?.forEach((item) => {
                       className="flex-shrink-0 rounded-md object-cover mr-3"
                     />
                   )} */}
-                  <span className="w-40 truncate text-left capitalize" title={item.type}>
-                    {item.type.length > 16
-                      ? `${item.type.slice(0, 16)}...`
-                      : item.type}
-                  </span>
-                </div>
-                <div>
-                  {item.children?.[0] ? (
-                    openCategories.includes(item.type) ? (
-                      <FaChevronDown size={12} />
-                    ) : (
-                      <FaChevronRight size={12} />
-                    )
-                  ) : null}
-                </div>
-
-                {/* </Link> */}
-              </button>
-              <div className="my-1 ml-2 h-px w-[50%] border-t border-gray-400" />
-
-              {openCategories.includes(item.type) &&
-                item.children?.[0] && (
-                  <SubcategoryList1
-                    subItems={item.children}
-                    openCategories={openCategories}
-                    toggleCategory={toggleCategory}
-                    setOpenCategories={setOpenCategories}
-                  />
-                )}
-            </div>
-
-            // )
-          ))}
-          {categories.map((item) => (
-            <div key={item.label} className="relative">
-              <button
-                type="button"
-                onClick={() =>
-                  item.subItems ||
-                    item.label === "Books" ||
-                    item.label === "Text Book"
-                    ? toggleCategory2(item.label)
-                    : null
-                }
-                className="duration-240 flex w-full items-center justify-between px-3 text-lg transition-transform hover:scale-110 focus:outline-none"
-              >
-                <div className="flex items-center">
-                  {item.icon && (
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                    <span className="mr-3">{iconMap[item.icon]}</span>
-                  )}
-                  <Link href={item.href ?? ""} scroll={false}>
-                    {item.label}  
-                  </Link>
-                </div>
-                {item.subItems ? (
-                  openCategory == item.label ? (
+                <span className="w-40 truncate text-left capitalize" title={item.type}>
+                  {item.type.length > 16
+                    ? `${item.type.slice(0, 16)}...`
+                    : item.type}
+                </span>
+              </div>
+              <div>
+                {item.children?.[0] ? (
+                  openCategories.includes(item.type) ? (
                     <FaChevronDown size={12} />
                   ) : (
                     <FaChevronRight size={12} />
                   )
                 ) : null}
-              </button>
-              <div className="my-1 h-px w-[50%] border-t ml-2 border-gray-400" />
-              {openCategory == item.label && (
-                <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
-                  {item.label === "Books" && genre && (
-                    <ScrollArea className="h-[25vh]">
-                      {genre?.map((subItem) => (
-                        <Link
-                          key={subItem.genre}
-                          href={`books?detail=${subItem.genre}`}
-                          className="block py-1 text-sm hover:underline"
-                          onClick={() => {
-                            setOpenCategory(null);
-                            setTimeout(() => {
-                              setOpenCategories([]);
-                            }, 1000);
-                          }}
-                          passHref
-                        >
-                          {subItem.genre}
-                        </Link>
-                      ))}
-                    </ScrollArea>
-                  )}
-                  {/* {item.label === "Text Book" && headerCategory?.[0]?.children?.map((subItem) => (
+              </div>
+
+              {/* </Link> */}
+            </button>
+            <div className="my-1 ml-2 h-px w-[50%] border-t border-gray-400" />
+
+            {openCategories.includes(item.type) &&
+              item.children?.[0] && (
+                <SubcategoryList1
+                  subItems={item.children}
+                  openCategories={openCategories}
+                  toggleCategory={toggleCategory}
+                  setOpenCategories={setOpenCategories}
+                />
+              )}
+          </div>
+
+          // )
+        ))}
+        {categories.map((item) => (
+          <div key={item.label} className="relative">
+            <button
+              type="button"
+              onClick={() =>
+                item.subItems ||
+                  item.label === "Books" ||
+                  item.label === "Text Book"
+                  ? toggleCategory2(item.label)
+                  : null
+              }
+              className="duration-240 flex w-full items-center justify-between px-3 text-lg transition-transform hover:scale-110 focus:outline-none"
+            >
+              <div className="flex items-center">
+                {item.icon && (
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                  <span className="mr-3">{iconMap[item.icon]}</span>
+                )}
+                <Link href={item.href ?? ""} scroll={false}>
+                  {item.label}
+                </Link>
+              </div>
+              {item.subItems ? (
+                openCategory == item.label ? (
+                  <FaChevronDown size={12} />
+                ) : (
+                  <FaChevronRight size={12} />
+                )
+              ) : null}
+            </button>
+            <div className="my-1 h-px w-[50%] border-t ml-2 border-gray-400" />
+            {openCategory == item.label && (
+              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
+                {item.label === "Books" && genre && (
+                  <ScrollArea className="h-[25vh]">
+                    {genre?.map((subItem) => (
+                      <Link
+                        key={subItem.genre}
+                        href={`books?detail=${subItem.genre}`}
+                        className="block py-1 text-sm hover:underline"
+                        onClick={() => {
+                          setOpenCategory(null);
+                          setTimeout(() => {
+                            setOpenCategories([]);
+                          }, 1000);
+                        }}
+                        passHref
+                      >
+                        {subItem.genre}
+                      </Link>
+                    ))}
+                  </ScrollArea>
+                )}
+                {/* {item.label === "Text Book" && headerCategory?.[0]?.children?.map((subItem) => (
                       <Link
                         key={subItem.id}
                         href={`textbooks?detail=${subItem.id}`}
@@ -375,7 +441,7 @@ subCategory?.forEach((item) => {
                     )
                  
                 )} */}
-                  {/* {item.label === "Art & Gifts" &&
+                {/* {item.label === "Art & Gifts" &&
                   headerCategoryGifts?.[0] &&
                   headerCategoryGifts?.map((subItem) => (
                     <Link
@@ -387,7 +453,7 @@ subCategory?.forEach((item) => {
                       {subItem.category_name}
                     </Link>
                   ))} */}
-                  {/* {item.label === "Merch & Clothing" &&
+                {/* {item.label === "Merch & Clothing" &&
                   headerCategoryClothings?.[0] &&
                   headerCategoryClothings.map((subItem) => (
                     <Link
@@ -399,32 +465,32 @@ subCategory?.forEach((item) => {
                       {subItem.category_name}
                     </Link>
                   ))} */}
-                  {item.subItems?.[0] && (
-                    <SubcategoryList
-                      subItems={item.subItems}
-                      openCategory={openCategory}
-                      toggleCategory={toggleCategory2}
-                      isOpen={openCategory === item.label}
-                    />
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
+                {item.subItems?.[0] && (
+                  <SubcategoryList
+                    subItems={item.subItems}
+                    openCategory={openCategory}
+                    toggleCategory={toggleCategory2}
+                    isOpen={openCategory === item.label}
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        ))}
 
-          {checkoutData?.booknet_customer_id ? (
-            <button
-              onClick={() => router.push("/my-orders")}
-              className="mb-2 flex w-full items-center px-3 text-lg transition-transform duration-300 hover:scale-110 focus:outline-none"
-            >
-              <FaReceipt className="mr-3 text-indigo-600" />
-              <span>My Orders</span>
-            </button>
-          ) : (
-            ""
-          )}
-        </nav>
-     
+        {checkoutData?.booknet_customer_id ? (
+          <button
+            onClick={() => router.push("/my-orders")}
+            className="mb-2 flex w-full items-center px-3 text-lg transition-transform duration-300 hover:scale-110 focus:outline-none"
+          >
+            <FaReceipt className="mr-3 text-indigo-600" />
+            <span>My Orders</span>
+          </button>
+        ) : (
+          ""
+        )}
+      </nav>
+
       <div className="flex justify-between gap-1 py-1">
         <Link
           href="/"
