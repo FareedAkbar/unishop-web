@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaCartPlus, FaRegStar, FaStar } from "react-icons/fa";
+import { FaArrowLeft, FaCartPlus, FaRegStar, FaStar } from "react-icons/fa";
 import moment from "moment";
 import Select from "~/components/Fields/select";
 import type { Media, Variation, VariationTag } from "~/types/book";
@@ -10,7 +10,11 @@ import type DataCart from "~/types/book";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import ReviewForm from "~/components/Forms/ReviewForm";
-import { HiOutlineMinus, HiOutlinePlus } from "react-icons/hi";
+import {
+  HiArrowNarrowLeft,
+  HiOutlineMinus,
+  HiOutlinePlus,
+} from "react-icons/hi";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import ProductsSection from "~/components/ui-components/ProductsSection";
@@ -18,6 +22,7 @@ import type { ReviewData } from "~/types/reviews";
 import { useToast } from "~/hooks/use-toast";
 import { getReviewsApi, submitReviewsApi } from "~/_actions/reviews";
 import AlertBox from "~/components/alertBox/alert";
+import { BsCartXFill, BsFillCartCheckFill } from "react-icons/bs";
 
 interface ProductDetailsProps {
   itemDetail: DataCart;
@@ -38,8 +43,15 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   const [selectedValues, setSelectedValues] = useState<Record<string, string>>(
     {},
   );
-  const { cartItems, addCartItems, removeCartItems, productDetail, increaseCartItemQuantity, checkoutData } = useAuthContext();
-  const itemDetail = productDetail
+  const {
+    cartItems,
+    addCartItems,
+    removeCartItems,
+    productDetail,
+    increaseCartItemQuantity,
+    checkoutData,
+  } = useAuthContext();
+  const itemDetail = productDetail;
   const [category, setCategory] = useState<string>("");
   const [products, setProducts] = useState<DataCart[]>([]);
   const [reviews, setReviews] = useState<ReviewData[] | null>(null);
@@ -89,18 +101,17 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
     }
   }
   async function getReviews(id: number) {
-    setGetReviewsLoader(true)
+    setGetReviewsLoader(true);
     try {
-     
       const x = await getReviewsApi(id);
-     
+
       if (typeof x !== "boolean" && x.status) {
         setReviews(x.data);
       }
-      setGetReviewsLoader(false)
+      setGetReviewsLoader(false);
     } catch (error) {
       console.error("Failed to load data:", error);
-      setGetReviewsLoader(false)
+      setGetReviewsLoader(false);
     }
   }
   useEffect(() => {
@@ -147,7 +158,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -168,9 +179,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       }));
   };
 
- 
-
   const handleAddToCart = async (item: DataCart) => {
+    console.log("carttt");
+
     const x = item;
     if (item?.variations?.[0] && item?.tag_links) {
       Object.assign(x, { selected_variation: filteredVariations?.[0] });
@@ -189,27 +200,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
 
   const handleRemoveFromCart = async (item: DataCart) => {
     try {
-      await removeCartItems(item);
+      await removeCartItems(item!);
     } catch (error) {
       console.error("Failed to remove item to cart:", error);
     }
-  };
-
-  const handleQuantity = async (id: number, number: number) => {
-    await increaseCartItemQuantity(id, number);
-  };
-  const [quantity, setQuantity] = useState<number>(1);
-
-  useEffect(() => {
-    if (itemDetail?.quantity) {
-      setQuantity(itemDetail.quantity);
-    }
-  }, [itemDetail]);
-
-  const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity < 1) return;
-    setQuantity(newQuantity);
-    void handleQuantity(itemDetail?.item_id ? itemDetail?.item_id : 0, newQuantity);
   };
 
   const filterVariationsBySelectedValues = (
@@ -243,20 +237,24 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   );
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-  const [selectedImage, setSelectedImage] = useState<Media>(itemDetail?.media[0]!);
+  const [selectedImage, setSelectedImage] = useState<Media>(
+    itemDetail?.media[0]!,
+  );
   const handleImageClick = (imagePath: Media) => {
     setSelectedImage(imagePath);
   };
 
   const handleSubmitReviews = async (data: ReviewData) => {
-    if(checkoutData?.booknet_customer_id){
+    if (checkoutData?.booknet_customer_id) {
       setSubmitLoader(true);
       const newData = {
         ...data,
         item_id: itemDetail?.item_id,
         booknet_customer_id: checkoutData?.booknet_customer_id,
-        customer_id: checkoutData?.customer_id ? checkoutData?.customer_id : null,
-      }
+        customer_id: checkoutData?.customer_id
+          ? checkoutData?.customer_id
+          : null,
+      };
       try {
         await submitReviewsApi(newData)
           .then((res) => {
@@ -265,10 +263,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                 title: "Review Submitted",
                 description: "Your review has been submitted successfully.",
               });
-              if(itemDetail){
-                void getReviews(itemDetail?.item_id)
+              if (itemDetail) {
+                void getReviews(itemDetail?.item_id);
               }
-              
             }
             if (typeof res != "boolean" && !res.status) {
               toast({
@@ -277,7 +274,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                 description: "Review not submitted",
               });
             }
-  
+
             setSubmitLoader(false);
           })
           .catch((err) => {
@@ -293,11 +290,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
         setSubmitLoader(false);
         console.error("Failed to checkout:", error);
       }
-    }else{
+    } else {
       setLoginAlert(true);
     }
-   
-  }
+  };
   const goToLogin = () => {
     setLoginAlert(false);
     
@@ -305,9 +301,24 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   };
   return (
     <div className="p-6 pt-32">
-      <h4 className="pb-3 text-center font-serif text-lg font-bold capitalize text-red-500 dark:text-neutral-100 md:text-2xl">
-        {itemDetail?.book_title ?? itemDetail?.item_name}
-      </h4>
+      <div className="flex items-center justify-between lg:px-10 pb-4">
+        {/* Left Arrow */}
+        <button
+          onClick={() => router.push(`/products?detail=${category}`)}
+          className="rounded-full bg-transparent p-2 transition hover:bg-gray-200 dark:hover:bg-slate-700"
+        >
+          <HiArrowNarrowLeft className="text-3xl text-red-500" />
+        </button>
+
+        {/* Title */}
+        <h4 className="flex-1 text-center font-serif text-lg font-bold capitalize text-red-500 md:text-3xl">
+          {itemDetail?.book_title ?? itemDetail?.item_name}
+        </h4>
+
+        {/* Invisible Placeholder */}
+        <div className="w-10"></div>
+      </div>
+
       <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
         {itemDetail?.description}
       </h6>
@@ -318,17 +329,18 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
         <div className="mx-auto flex items-center">
           {/* Thumbnails on the left */}
           <div className="mr-4 flex flex-col space-y-2">
-            {itemDetail?.media?.[0] && itemDetail?.media?.map((image, index) => (
-              <Image
-                key={index}
-                src={`https://ipos-storage.s3.amazonaws.com/${image.object_path}`}
-                alt={`Image ${index + 1}`}
-                width={1000}
-                height={1000}
-                className={`h-24 w-24 cursor-pointer rounded-lg object-contain shadow ${selectedImage?.object_path.includes(image.object_path) ? "ring-1 ring-red-500" : ""}`}
-                onClick={() => handleImageClick(image)}
-              />
-            ))}
+            {itemDetail?.media?.[0] &&
+              itemDetail?.media?.map((image, index) => (
+                <Image
+                  key={index}
+                  src={`https://ipos-storage.s3.amazonaws.com/${image.object_path}`}
+                  alt={`Image ${index + 1}`}
+                  width={1000}
+                  height={1000}
+                  className={`h-24 w-24 cursor-pointer rounded-lg object-contain shadow ${selectedImage?.object_path.includes(image.object_path) ? "ring-1 ring-red-500" : ""}`}
+                  onClick={() => handleImageClick(image)}
+                />
+              ))}
           </div>
 
           {/* Main Image */}
@@ -342,8 +354,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                 className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
               />
             </div>
-          ) : ("")}
-
+          ) : (
+            ""
+          )}
         </div>
         <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
           <div className="flex flex-col">
@@ -351,14 +364,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
               <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                 ${" "}
                 {itemDetail?.variations?.[0] &&
-                  filteredVariations?.[0]?.items_variable_items_sale_price
+                filteredVariations?.[0]?.items_variable_items_sale_price
                   ? filteredVariations?.[0]?.items_variable_items_sale_price
                   : itemDetail?.variations?.[0]
                     ? itemDetail?.variations?.[0]
-                      .items_variable_items_sale_price
+                        .items_variable_items_sale_price
                     : itemDetail?.item_sale_price}
               </span>
-            ) : ''}
+            ) : (
+              ""
+            )}
             {itemDetail?.SKU && (
               <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
                 SKU: {itemDetail.SKU}
@@ -531,10 +546,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                         {options.map((option) => (
                           <button
                             key={option.value}
-                            className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
-                              ? "bg-red-500 text-white"
-                              : "border-red-500 bg-white dark:bg-slate-700"
-                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            className={`min-w-10 rounded border p-1 text-center ${
+                              selectedValues[tagName] === option.value
+                                ? "bg-red-500 text-white"
+                                : "border-red-500 bg-white dark:bg-slate-700"
+                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -557,92 +573,93 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                       />
                     )}
                   </div>
-                )
+                );
               })}
-              
             </div>
           )}
-          <div className="mt-auto flex w-auto items-center justify-between space-x-2 rounded bg-gray-200 p-1 dark:bg-gray-500">
+
+          {(itemDetail?.item_id || itemDetail?.variations?.[0]) &&
+          !isItemInCart(itemDetail.item_id) &&
+          itemDetail?.stock ? (
             <button
-              className="p-1"
-              disabled={quantity <= 1}
-              onClick={() => handleQuantityChange(quantity - 1)}
-            >
-              <HiOutlineMinus size={14} />
-            </button>
-            <span className="text-sm">{quantity}</span>
-            <button
-              className="p-1"
-              onClick={() => handleQuantityChange(quantity + 1)}
-            >
-              <HiOutlinePlus size={14} />
-            </button>
-          </div>
-          {itemDetail?.item_id && itemDetail.variations?.[0] &&
-            !isItemInCart(itemDetail.item_id) ? (
-            <button
-              className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
+              className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
               onClick={() => handleAddToCart(itemDetail)}
             >
-              <FaCartPlus className="text-lg" />
+              <BsFillCartCheckFill className="text-lg" />
               <div className="pl-2">Add to Cart</div>
             </button>
           ) : (
-            ""
-          )}
-          {itemDetail?.item_id &&
-            !isItemInCart(itemDetail.item_id) &&
-            itemDetail?.stock ? (
             <button
-              className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
-              onClick={() => handleAddToCart(itemDetail)}
+              className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-2 font-bold text-white hover:bg-red-600"
+              onClick={() => itemDetail && handleRemoveFromCart(itemDetail)}
             >
-              <FaCartPlus className="text-lg" />
-              <div className="pl-2">Add to Cart</div>
+              <BsCartXFill className="text-lg" />
+              <div className="pl-2">Remove from Cart</div>
             </button>
-          ) : (
-            ""
           )}
         </div>
       </div>
       {/* Reviews Section */}
       <div className="mt-16 flex flex-col gap-8 md:flex-row">
-        <div className="max-h-[487px] rounded-lg border p-6 shadow-md md:w-1/2">
+        <div className="max-h-[487px] rounded-lg border p-6 shadow-md dark:bg-slate-800 md:w-1/2">
           <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
-          {reviews?.[0] ? (
+          {getReviewsLoader ? (
+            // Skeleton loader
+            <ScrollArea className="h-[400px]">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className="mb-4 animate-pulse border-b pb-2">
+                  <div className="mb-2 h-4 w-1/3 rounded bg-gray-300 dark:bg-gray-600"></div>
+                  <div className="mb-2 h-3 w-2/3 rounded bg-gray-200 dark:bg-gray-500"></div>
+                  <div className="flex items-center gap-1 py-2">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="h-4 w-4 rounded-full bg-gray-300 dark:bg-gray-600"
+                      ></div>
+                    ))}
+                  </div>
+                  <div className="h-3 w-1/4 rounded bg-gray-200 dark:bg-gray-500"></div>
+                </div>
+              ))}
+            </ScrollArea>
+          ) : reviews?.[0] ? (
             <ScrollArea className="h-[400px]">
               {reviews.map((review, index) => (
                 <div key={index} className="mb-4 border-b pb-2">
                   <p className="font-semibold">{review.name}</p>
-                  <p className="text-sm text-gray-600">{review.review}</p>
-                  {/* Star Rating */}
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {review.review}
+                  </p>
                   <div className="flex items-center gap-1 py-2">
                     {Array.from({ length: 5 }, (_, i) =>
-                      i < (review.stars ? review.stars : 0) ? (
+                      i < (review.stars || 0) ? (
                         <FaStar key={i} className="text-yellow-500" />
                       ) : (
                         <FaRegStar key={i} className="text-gray-400" />
                       ),
                     )}
                   </div>
-                  {/* Review Date */}
                   <p className="text-xs text-gray-500">
                     {/* {moment(review.date).format("Do MMMM, YYYY")} */}
-                    {moment().format("Do MMMM, YYYY")}
+                    {moment().format("Do MMMM, YYYY")}{" "}
                   </p>
                 </div>
               ))}
             </ScrollArea>
           ) : (
             <p className="text-md text-gray-700">
-              {"This product hasn't been reviewed yet. Your feedback could help others!"}
+              {
+                "This product hasn't been reviewed yet. Your feedback could help others!"
+              }
             </p>
           )}
-
         </div>
         {/* Review Form */}
         <div className="md:w-1/2">
-          <ReviewForm submitValues={(val) => handleSubmitReviews(val)} submitLoader={submitLoader} />
+          <ReviewForm
+            submitValues={(val) => handleSubmitReviews(val)}
+            submitLoader={submitLoader}
+          />
         </div>
       </div>
       <ProductsSection
@@ -654,7 +671,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
           router.push(`/products?detail=${category}`);
         }}
       />
-       <AlertBox
+      <AlertBox
         title="Login Your Account"
         description="Please Login to proceed with checkout"
         open={loginAlert}

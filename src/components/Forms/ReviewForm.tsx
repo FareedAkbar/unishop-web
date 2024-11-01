@@ -21,40 +21,41 @@ type ReviewFormValues = z.infer<typeof reviewSchema>;
 
 interface FormProps {
   submitValues: (data: ReviewData) => void;
-  submitLoader: boolean
+  submitLoader: boolean;
 }
 
-export default function ReviewForm({submitValues, submitLoader}: FormProps) {
-  
+export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
   const [rating, setRating] = useState<number>(0);
   const [hover, setHover] = useState<number | null>(null);
 
   const handleRating = (value: number) => {
     setRating(value);
-    // onRatingChange(value);
   };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<ReviewFormValues>({
     resolver: zodResolver(reviewSchema),
   });
 
-  const onSubmit = async (data: ReviewFormValues) => {
-    
+  const onSubmit = (data: ReviewFormValues) => {
     try {
       const value = {
         name: data.name,
         review: data.review,
-        stars: rating
-      }
-     void submitValues(value)
-      
+        stars: rating,
+      };
+      submitValues(value);
+
+      // Reset form and rating after successful submission
+      reset();
+      setRating(0);
     } catch (error) {
       console.error("Error submitting review:", error);
-    } 
+    }
   };
 
   return (
@@ -76,7 +77,7 @@ export default function ReviewForm({submitValues, submitLoader}: FormProps) {
           )}
         </LabelInputContainer>
 
-        {/* Summary Field */}
+        {/* Rating Field */}
         <div className="flex items-center gap-2">
           <Label>Rating</Label>
           <div className="flex space-x-1">
@@ -98,6 +99,7 @@ export default function ReviewForm({submitValues, submitLoader}: FormProps) {
             })}
           </div>
         </div>
+
         {/* Review Field */}
         <LabelInputContainer>
           <Label htmlFor="review">Review</Label>
@@ -124,9 +126,6 @@ export default function ReviewForm({submitValues, submitLoader}: FormProps) {
           width="w-full"
           disabled={submitLoader}
           className="bg-red-500 text-white hover:bg-red-600"
-          onClick={() => {
-            //
-          }}
         />
       </form>
     </div>

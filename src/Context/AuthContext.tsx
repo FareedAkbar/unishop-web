@@ -401,6 +401,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const addCartItems = async (payload: DataCart): Promise<boolean> => {
+    
     setItems((prev) => {
       // Check if the item already exists in the cart
       const existingItemIndex = prev.findIndex(
@@ -435,6 +436,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         return updatedItems;
       }
     });
+    console.log(cartItems);
+
     return true;
   };
 
