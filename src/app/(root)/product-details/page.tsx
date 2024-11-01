@@ -304,7 +304,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       <div className="flex items-center justify-between lg:px-10 pb-4">
         {/* Left Arrow */}
         <button
-          onClick={() => router.push(`/products?detail=${category}`)}
+          onClick={() => router.back()}
           className="rounded-full bg-transparent p-2 transition hover:bg-gray-200 dark:hover:bg-slate-700"
         >
           <HiArrowNarrowLeft className="text-3xl text-red-500" />

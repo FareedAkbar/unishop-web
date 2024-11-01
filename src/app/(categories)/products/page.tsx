@@ -126,7 +126,6 @@ const MyComponent = () => {
     setDisplayData(null);
     if(parentCat?.[0]){
       setSubcategoryTypes(parentCat)
-      console.log(parentCat)
     }
     if (genId ?? catId) {
       if(genId){
