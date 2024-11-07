@@ -9,6 +9,8 @@ import DataCart from "~/types/book";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter } from "next/navigation";
+import { useToast } from "~/hooks/use-toast";
+import AlertBox from "../alertBox/alert";
 
 interface ProductsSectionProps {
   products: DataCart[];
@@ -18,74 +20,6 @@ interface ProductsSectionProps {
   loader?: boolean;
   viewAllButton?: () => void;
 }
-const data = {
-  book_id: 28,
-  item_id: 2089,
-  quantity: 0,
-  genre_id: 1,
-  book_title: "The Great Gatsby",
-  subtitle: "new subtitle",
-  edition: "12",
-  author_first_name: "F. Scott",
-  author_last_name: "Fitzgerald",
-  book_ISBN: "9780743273565",
-  pages: 180,
-  hardcover: 1,
-  publisher_id: 1,
-  book_language: "English",
-  additional_notes:
-    "A novel set in the Jazz Age exploring themes of wealth, love, and the American Dream.",
-  outlet: 221,
-  media_id: 0,
-  item_name: "The Great Gatsby",
-  expiry_date: "2025-12-31 05:00:00",
-  barcode: "1234567890123",
-
-  deleted: 0,
-  item_sale_price: 25.99,
-
-  items_type: 3,
-
-  SKU: "GATSBY-001",
-  SKU_title: "Gatsby Hardcover Edition",
-  tax_id: 5,
-  event_price: 20,
-  event_check: 1,
-  cost_price: "12.5000",
-  weighable: 0,
-  tax_exempted: 1,
-  stockable_item: 1,
-  readyMade: 1,
-
-  returnable: 1,
-  product_id: "PROD-12345",
-
-  genre: "Comedy",
-  description: "1 Chandler is the best example of a comedy person",
-  stock: {
-    suppliers: [],
-    quantity_check: false,
-    quantity: 0,
-    stock_entry: [],
-  },
-  media: [],
-  publisher: {
-    publisher_id: 1,
-    supplier_id: 370,
-    outlet_id: 221,
-    publisher_name: "Test Publisher without supplier and supplier Id",
-    address: "new address",
-    city: "Sydney",
-    state: "Sydney",
-    country: "AUS",
-    postal_code: "2222",
-    phone: "12345",
-    email: "2345",
-    website: "2345",
-    created_at: "2024-08-30T01:37:45.000Z",
-    updated_at: "2024-09-04T07:56:32.000Z",
-  },
-};
 const ProductsSection: React.FC<ProductsSectionProps> = ({
   products,
   targetDate,
@@ -96,6 +30,11 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
 }) => {
   const productContainerRef = useRef<HTMLDivElement>(null);
   const [listInStart, setListInStart] = useState(true);
+  const { checkoutData, favItems, addFavourite,
+    removeFavourite, } = useAuthContext();
+  const [loginAlert, setLoginAlert] = useState<boolean>(false);
+  const [wishListLoader, setWishListLoader] = useState<boolean>(false);
+  const { toast } = useToast();
 
   const handleScrollLeft = () => {
     if (productContainerRef.current) {
@@ -133,7 +72,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
   const router = useRouter();
   const goToDetail = async (item: DataCart) => {
     await setProductForDetail(item);
-    router.push(`/product-details?category=${item.category}`);
+    // router.push(`/product-details?category=${item.category}`);
   };
   useEffect(() => {
     const ref = productContainerRef.current;
@@ -147,6 +86,49 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
       };
     }
   }, []);
+
+
+
+  const handleFavourite = async (item: DataCart) => {
+    if (checkoutData?.booknet_customer_id) {
+      setWishListLoader(true);
+      if (
+        item &&
+        favItems?.some((favItem) => favItem.item_id === item.item_id)
+      ) {
+        await removeFavourite(item, checkoutData.booknet_customer_id)
+          .then((x) => {
+            if (x) {
+              toast({
+                variant: "destructive",
+                title: "Remove From Wishlist",
+                description: "Item has been removed successfully.",
+              });
+            }
+          })
+          .finally(() => setWishListLoader(false));
+      } else {
+        await addFavourite(item, checkoutData.booknet_customer_id)
+          .then((x) => {
+            if (x) {
+              toast({
+                variant: "success",
+                title: "Added To Wishlist",
+                description: "Item has been added successfully.",
+              });
+            }
+          })
+          .finally(() => setWishListLoader(false));
+      }
+    } else {
+      setLoginAlert(true);
+    }
+  };
+
+  const goToLogin = () => {
+    setLoginAlert(false);
+    router.push("login");
+  };
 
   return (
     <div className="max-w-screen h-fit overflow-hidden bg-transparent pl-2">
@@ -191,28 +173,29 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
           >
             {loader
               ? Array.from({ length: 6 }, (_, index) => (
-                  <div key={index} className="p-2">
-                    <ProductCardSkeleton />
-                  </div>
-                ))
+                <div key={index} className="p-2">
+                  <ProductCardSkeleton />
+                </div>
+              ))
               : products.map((item) => (
-                  <ProductCard
-                    key={item.book_id}
-                    product={item}
-                    //  showAddToCart={!isItemInCart(item.item_id)}
-                    //  onAddToCart={async () => {
-                    //    if (item?.variations?.[0]) {
-                    //      await openDetail(item);
-                    //    } else {
-                    //      await handleAddToCart(item);
-                    //    }
-                    //  }}
-                    //  onRemoveFromCart={() => handleRemoveFromCart(item)}
-                    openDetail={() => goToDetail(item)}
-                    //  handleFavourite={() => handleFavourite(item)}
-                    //  wishListLoader={wishListLoader}
-                  />
-                ))}
+                <ProductCard
+                  key={item.book_id}
+                  product={item}
+                  showAddToCart={false}
+                  showButton={false}
+                  //  onAddToCart={async () => {
+                  //    if (item?.variations?.[0]) {
+                  //      await openDetail(item);
+                  //    } else {
+                  //      await handleAddToCart(item);
+                  //    }
+                  //  }}
+                  //  onRemoveFromCart={() => handleRemoveFromCart(item)}
+                  openDetail={() => goToDetail(item)}
+                  handleFavourite={() => handleFavourite(item)}
+                //  wishListLoader={wishListLoader}
+                />
+              ))}
           </div>
         </div>
 
@@ -223,6 +206,13 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
           />
         </div>
       </div>
+      <AlertBox
+        title="Login Your Account"
+        description="Please login to add item to wishlist"
+        open={loginAlert}
+        onClose={() => setLoginAlert(false)}
+        onContinue={() => goToLogin()}
+      />
     </div>
   );
 };

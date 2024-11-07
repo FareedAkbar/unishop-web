@@ -13,7 +13,7 @@ import type { ReviewData } from "~/types/reviews";
 
 // Zod schema to validate form input
 const reviewSchema = z.object({
-  name: z.string().min(1, "Name is required").max(50, "Name is too long"),
+  // name: z.string().min(1, "Name is required").max(50, "Name is too long"),
   review: z.string().min(10, "Review must be at least 10 characters long"),
 });
 
@@ -44,7 +44,7 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
   const onSubmit = (data: ReviewFormValues) => {
     try {
       const value = {
-        name: data.name,
+        // name: data.name,
         review: data.review,
         stars: rating,
       };
@@ -65,7 +65,7 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
         {/* Name Field */}
-        <LabelInputContainer>
+        {/* <LabelInputContainer>
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
@@ -75,7 +75,7 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
           {errors.name && (
             <p className="text-sm text-red-500">{errors.name.message}</p>
           )}
-        </LabelInputContainer>
+        </LabelInputContainer> */}
 
         {/* Rating Field */}
         <div className="flex items-center gap-2">

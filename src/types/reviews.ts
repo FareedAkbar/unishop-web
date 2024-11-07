@@ -2,7 +2,7 @@
 
 
 export type ReviewData = {
-    name: string,
+    username?: string,
     review: string,
     stars?: number | null,
     booknet_customer_id?: number | null,

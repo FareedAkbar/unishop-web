@@ -11,7 +11,7 @@ const NotFoundPage: React.FC = () => {
       <FaGhost className="mb-4 animate-bounce self-center text-6xl text-red-500" />
       <h1 className="mb-2 text-5xl font-extrabold text-red-500">404</h1>
       <p className="mb-6 text-lg opacity-80">
-        Oops! The page you're looking for doesn't exist.
+        `Oops! The page you&apos;re looking for doesn&apos;t exist.
       </p>
       <button
         onClick={() => router.push("/")}

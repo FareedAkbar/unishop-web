@@ -10,6 +10,7 @@ import type { SpecialTag } from "~/types/book";
 
 interface ProductProps {
   showAddToCart?: boolean;
+  showButton?: boolean;
   onAddToCart?: () => void;
   onRemoveFromCart?: () => void;
   openDetail?: () => void;
@@ -26,6 +27,7 @@ const ProductCard = ({
   openDetail,
   handleFavourite,
   wishListLoader = false,
+  showButton = true,
 }: ProductProps) => {
   const { favItems, productTags } = useAuthContext();
 
@@ -41,15 +43,15 @@ const ProductCard = ({
   const tagNames: string[] = matchingTags?.map((tag) => tag?.tag_name) ?? [];
 
   return (
-    <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col p-2 transition-transform duration-300 hover:scale-110 sm:w-64 md:w-64 lg:w-72">
+    <div className="group border rounded-md relative flex w-44 flex-shrink-0 grow-0 flex-col p-1 m-2 transition-transform duration-300 hover:scale-110 sm:w-64 md:w-64 lg:w-72">
       <div className="relative flex h-40 grow-0 items-center justify-center rounded-sm bg-gray-200 dark:bg-slate-600 sm:h-48 lg:h-64">
         {tagNames.length > 0 ? (
-          <div className="absolute left-2 top-1 flex">
+          <div className="absolute left-2 top-1 flex flex-col">
             {tagNames.map((tag) => {
               return (
                 <span
                   key={tag}
-                  className="z-[12] mr-2 rounded bg-red-500 px-1 py-0.5 text-[8px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
+                  className="z-[12] mr-2 mt-1 rounded bg-red-500 px-1 py-0.5 text-[8px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
                 >
                   {tag}
                 </span>
@@ -91,7 +93,7 @@ const ProductCard = ({
             className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
           >
             {product?.item_id &&
-            favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
+              favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
               <AiFillHeart color="red" />
             ) : (
               <AiOutlineHeart />
@@ -106,21 +108,25 @@ const ProductCard = ({
           </button>
         </div>
         {/* {product?.item_sale_price ? ( */}
-        <button
-          onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
-          className={`absolute bottom-0 z-20 mt-4 w-full rounded-b-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${
-            !showAddToCart ? "bg-red-500" : "bg-black"
-          } hidden group-hover:block`}
-        >
-          {!showAddToCart ? "Remove From Cart" : "Add To Cart"}
-        </button>
+        {showButton && (product?.variations?.[0]?.items_variable_items_sale_price ?? product?.item_sale_price) ? (
+          <button
+            onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
+            className={`absolute bottom-0 z-20 mt-4 w-full rounded-b-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${!showAddToCart ? "bg-red-500" : "bg-black"
+              } hidden group-hover:block`}
+          >
+            {!showAddToCart ? "Remove From Cart" : "Add To Cart"}
+          </button>
+        ) : (
+          ""
+        )}
+
         {/* ) : (
           ""
         )} */}
       </div>
-      <h2 className="mt-2 truncate text-sm font-bold sm:mt-4 sm:text-base lg:text-lg">
-        {product?.book_title}
-      </h2>
+      <span className="mt-2 truncate text-sm font-bold sm:mt-4 sm:text-base lg:text-lg" title={product?.item_name}>
+        {product?.item_name && product?.item_name?.length > 20 ? `${product?.item_name.slice(0,20)}...` : product?.item_name}
+      </span>
       {product?.stock?.quantity ? (
         <span className="truncate text-sm sm:text-sm lg:text-sm">
           Available Stock: {product?.stock?.quantity}
@@ -132,11 +138,11 @@ const ProductCard = ({
       <div className="mt-1 flex gap-1 sm:mt-2 sm:gap-2">
         {product?.variations?.[0]?.items_variable_items_sale_price ? (
           <span className="text-sm font-bold text-red-500 sm:text-lg">
-            $ {product?.variations?.[0]?.items_variable_items_sale_price}
+            ${product?.variations?.[0]?.items_variable_items_sale_price}
           </span>
         ) : product?.item_sale_price ? (
           <span className="text-sm font-bold text-red-500 sm:text-lg">
-            $ {product?.item_sale_price}
+            ${product?.item_sale_price}
           </span>
         ) : (
           ""

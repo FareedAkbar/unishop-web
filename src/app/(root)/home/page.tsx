@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ImageSlider from "./ImageSlider";
 import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
 import ProductsSection from "~/components/ui-components/ProductsSection";
@@ -9,6 +9,9 @@ import ProductList from "~/components/ui-components/ProductList";
 import { FlipWords } from "~/components/ui/flip-words";
 import { Player } from "@lottiefiles/react-lottie-player";
 import AboutSection from "./AboutSection";
+import { useAuthContext } from "~/Context/AuthContext";
+import { getItemsByCategory, getSpecialItems } from "~/_actions/getitemsbycategory";
+import { SpecialItems } from "~/types/specialItems";
 
 const bestSellingProducts = [
   {
@@ -103,6 +106,9 @@ const products = [
 
 const HomePage: React.FC = () => {
   const words = ["Imagine", "Create", "Inspire", "Transform"];
+  const [specialItems, setSpecialItems] = useState<SpecialItems[] | null>(null)
+  const { productTags } = useAuthContext()
+
 
   return (
     <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 pt-32 dark:bg-slate-800 lg:pt-24">
@@ -128,30 +134,53 @@ const HomePage: React.FC = () => {
             className="h-[500px] w-full object-contain overflow-visible"
           />
         </div>
-       
+        <div className="absolute inset-0 -z-10">
+          <Player
+            src={"assets/gifs/products-bg.json"}
+            loop
+            autoplay
+            className="h-[500px] w-full object-contain overflow-visible"
+          />
+        </div>
+
 
         <div className="flex">
           <div className="hidden lg:block lg:pl-20">
             <CategoriesSidebar />
           </div>
 
-          <div className="container mx-auto grid w-full p-5 pb-10 lg:grid-cols-2 lg:pl-48">
-            <div className="-mr-4 w-full ">
-              <ProductList
-                products={products}
-                title="Trending"
-                width="w-full"
-              />
-            </div>
 
-            <div className="w-full">
+          {/* {specialItems?.map((item, index) => (
+              <div className="text-lg mt-10 mb-10 flex justify-center" key={index}>
+                {item.tag_name == productTags?.[0]?.tag_name && item.tag_name}
+              </div>
+            ))} */}
+
+          <div className="container mx-auto grid w-full p-5 pb-10 lg:grid-cols-2 lg:pl-48 min-h-[450px]">
+            {productTags?.map((item) =>
+              <>
+                <div className="-mr-4 w-full">
+                  <ProductList
+                    id={item.item_special_tags_id}
+                    title={item.tag_name}
+                    width="w-full"
+                  />
+                </div>
+              </>
+            )}
+
+          </div>
+
+
+
+          {/* <div className="w-full">
               <ProductList
                 products={products}
                 title="Top Rated"
                 width="w-full"
               />
-            </div>
-          </div>
+            </div> */}
+
         </div>
       </div>
 

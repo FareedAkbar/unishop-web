@@ -105,7 +105,7 @@ const MyComponent = () => {
         setData(x.data);
         setDisplayData(x.data);
         setTotalPages(x.meta.pages);
-        setPageSize(x.meta.pages);
+        setPageSize(x.meta.limit);
       }
       setLoader(false);
       // setData(result);
@@ -134,7 +134,6 @@ const MyComponent = () => {
       if(catId){
         setSubcategory(catId.type);
       }
-      
       const loadData = async () => {
         await getCloths(1, detail);
       };
@@ -290,8 +289,8 @@ const MyComponent = () => {
   };
 
   const filterResult = () => {
-    let filtered = data;
-
+    let filtered = [...data];
+    
     // Search filter
     if (searchText) {
       filtered = filtered.filter((row) =>
@@ -300,7 +299,7 @@ const MyComponent = () => {
         ),
       );
     }
-
+    
     // Date range filter
     setCurrentPage(filtered ? 1 : (pagination?.page ?? 1)); // Reset to first page on new filter
     setTotalPages(
@@ -362,6 +361,7 @@ const MyComponent = () => {
    
       setDetail(parseInt(id))
   };
+  
   return (
     <div>
       <motion.main
@@ -454,9 +454,9 @@ const MyComponent = () => {
                   Page {currentPage ?? 1} of {totalPages ?? 1}
                 </span>
                 <button
-                  className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${(totalPages == 0 || currentPage === totalPages) ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
+                  disabled={totalPages == 0 || currentPage === totalPages}
                 >
                   <FaChevronRight />
                 </button>

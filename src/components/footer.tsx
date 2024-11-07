@@ -72,7 +72,7 @@ function Footer() {
           </div>
 
           {/* middle div */}
-          <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">
+          <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Customer Service</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <Link
@@ -120,11 +120,11 @@ function Footer() {
           </div>
 
           {/* shop online */}
-          <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">
+          <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Shop Online</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
-            {category?.map((item) =>
-            (
+            {category?.map((item, index) =>
+            ( index < 7 &&
               <>
                 <Link
                   href={`products?category=${item.category_type_id}&name=${item.type}`}
@@ -193,7 +193,7 @@ function Footer() {
           </div> */}
 
           {/* working hours */}
-          <div className="flex flex-col items-center gap-4 md:col-span-1 md:items-start">
+          <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Working Hours</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <p className="text-sm font-bold text-[#646464] dark:text-gray-300 dark:hover:text-red-500">

@@ -1,7 +1,12 @@
 "use client";
 import { FaExclamationTriangle } from "react-icons/fa";
+import { NextPageContext } from "next";
 
-const Error = ({ statusCode }: { statusCode: number }) => (
+interface ErrorProps {
+  statusCode: number;
+}
+
+const Error = ({ statusCode }: ErrorProps) => (
   <div className="flex h-screen flex-col items-center justify-center text-red-500">
     <FaExclamationTriangle className="mb-4 animate-pulse text-6xl" />
     <h1 className="mb-2 text-4xl font-extrabold">
@@ -10,8 +15,8 @@ const Error = ({ statusCode }: { statusCode: number }) => (
   </div>
 );
 
-Error.getInitialProps = ({ res, err }: any) => {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
+Error.getInitialProps = ({ res, err }: NextPageContext): ErrorProps => {
+  const statusCode = res?.statusCode ?? err?.statusCode ?? 404;
   return { statusCode };
 };
 

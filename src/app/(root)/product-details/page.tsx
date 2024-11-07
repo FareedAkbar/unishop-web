@@ -23,6 +23,7 @@ import { useToast } from "~/hooks/use-toast";
 import { getReviewsApi, submitReviewsApi } from "~/_actions/reviews";
 import AlertBox from "~/components/alertBox/alert";
 import { BsCartXFill, BsFillCartCheckFill } from "react-icons/bs";
+import { getBooks } from "~/_actions/getbooks";
 
 interface ProductDetailsProps {
   itemDetail: DataCart;
@@ -40,9 +41,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
     //   handleAddToCart,
   },
 ) => {
-  const [selectedValues, setSelectedValues] = useState<Record<string, string>>(
-    {},
-  );
+  const [selectedValues, setSelectedValues] = useState<
+    Record<string, string | undefined>
+  >({});
   const {
     cartItems,
     addCartItems,
@@ -53,6 +54,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   } = useAuthContext();
   const itemDetail = productDetail;
   const [category, setCategory] = useState<string>("");
+  const [genre, setGenre] = useState<string>("");
   const [products, setProducts] = useState<DataCart[]>([]);
   const [reviews, setReviews] = useState<ReviewData[] | null>(null);
   const [loader, setLoader] = useState<boolean>(true);
@@ -63,10 +65,14 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   const params = useSearchParams();
 
   useEffect(() => {
-    const d = params.get("category");
-    console.log("dt", d);
-    if (d) {
-      setCategory(d);
+    const cat = params.get("category");
+    const gen = params.get("genre");
+
+    if (cat) {
+      setCategory(cat);
+    }
+    if (gen) {
+      setGenre(gen);
     }
   }, [params]);
   const router = useRouter();
@@ -82,11 +88,22 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       ? true
       : false;
   };
+  const isVariableItemInCart = (itemId: number) => {
+    const newItems: DataCart[] =
+      typeof cartItems === "string"
+        ? (JSON.parse(cartItems) as DataCart[])
+        : cartItems!;
+    return newItems.findIndex(
+      (cartItem: DataCart) => cartItem.selected_variation?.items_variable_items_id === itemId,
+    ) > -1
+      ? true
+      : false;
+  };
   async function getProducts(page: number) {
     try {
       setLoader(true);
       const x = await getItemsByCategory(parseInt(category) ?? 1, page, 1, 0);
-      console.log("data", x);
+
 
       if (typeof x !== "boolean" && x.status) {
         setProducts(x.data);
@@ -102,6 +119,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   }
   async function getReviews(id: number) {
     setGetReviewsLoader(true);
+    console.log(id)
     try {
       const x = await getReviewsApi(id);
 
@@ -125,23 +143,82 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   }, [category]);
 
   useEffect(() => {
+    if (!genre) return;
+    const loadData = async () => {
+      try {
+        setLoader(true);
+        const x = await getBooks(parseInt(genre) ?? 1);
+        if (typeof x !== "boolean" && x.status) {
+          setProducts(x.data);
+        }
+        setLoader(false);
+        // setData(result);
+        // setTotalPages(result.totalPages);
+      } catch (error) {
+        console.error("Failed to load data:", error);
+        setLoader(false);
+        // Optionally set an error state here
+      }
+    };
+    loadData().catch((error) => {
+      console.error("Failed to load data in useEffect:", error);
+    });
+  }, [genre]);
+  const smoothScrollTo = (targetPosition: number, duration: number) => {
+    const startPosition = window.scrollY;
+    const distance = targetPosition - startPosition;
+    let startTime: number | null = null;
+
+    const animation = (currentTime: number) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1);
+
+      window.scrollTo(0, startPosition + distance * progress);
+
+      if (timeElapsed < duration) requestAnimationFrame(animation);
+    };
+
+    requestAnimationFrame(animation);
+  };
+  useEffect(() => {
     if (!itemDetail) return;
     const loadData = async () => {
       await getReviews(itemDetail?.item_id);
+
+      smoothScrollTo(0, 1500);
+
     };
     loadData().catch((error) => {
       console.error("Failed to load data in useEffect:", error);
     });
   }, [itemDetail]);
 
+
   const handleSelectChange = (
     tagName: string,
-    option: { value: string; label: string },
+    selectedOption: { value: string; label: string },
   ) => {
-    setSelectedValues((prev) => ({
-      ...prev,
-      [tagName]: option.value,
-    }));
+    setSelectedValues((prevValues) => {
+      const newValues = { ...prevValues, [tagName]: selectedOption.value };
+
+      // Find the current tag's index
+      const tagIndex = itemDetail?.variations?.[0]?.variation_tags.findIndex(
+        (tag) => tag.items_variations_tags_name === tagName,
+      );
+
+      // Reset only the dependent dropdowns
+      if (tagIndex !== undefined && tagIndex !== -1) {
+        const tagsToReset = itemDetail?.variations?.[0]?.variation_tags
+          .slice(tagIndex + 1)
+          .map((tag) => tag.items_variations_tags_name);
+        tagsToReset?.forEach((tag) => {
+          newValues[tag] = undefined;
+        });
+      }
+
+      return newValues;
+    });
   };
 
   const getOptions = (
@@ -158,7 +235,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -179,9 +256,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       }));
   };
 
+  // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
-    console.log("carttt");
-
     const x = item;
     if (item?.variations?.[0] && item?.tag_links) {
       Object.assign(x, { selected_variation: filteredVariations?.[0] });
@@ -192,6 +268,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       Object.assign(x, { selectedValues: selectedValues });
     }
     try {
+      setSelectedValues({})
       await addCartItems(x);
     } catch (error) {
       console.error("Failed to add item to cart:", error);
@@ -200,7 +277,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
 
   const handleRemoveFromCart = async (item: DataCart) => {
     try {
-      await removeCartItems(item!);
+      await removeCartItems(item);
     } catch (error) {
       console.error("Failed to remove item to cart:", error);
     }
@@ -237,8 +314,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   );
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-  const [selectedImage, setSelectedImage] = useState<Media>(
-    itemDetail?.media[0]!,
+  const [selectedImage, setSelectedImage] = useState<Media | null>(
+    itemDetail?.media?.[0] ? itemDetail?.media?.[0] : null,
   );
   const handleImageClick = (imagePath: Media) => {
     setSelectedImage(imagePath);
@@ -250,6 +327,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       const newData = {
         ...data,
         item_id: itemDetail?.item_id,
+        user_name:"",
+        username:"",
         booknet_customer_id: checkoutData?.booknet_customer_id,
         customer_id: checkoutData?.customer_id
           ? checkoutData?.customer_id
@@ -296,9 +375,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
   };
   const goToLogin = () => {
     setLoginAlert(false);
-    
+
     router.push("login");
   };
+
   return (
     <div className="p-6 pt-32">
       <div className="flex items-center justify-between lg:px-10 pb-4">
@@ -354,21 +434,39 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                 className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
               />
             </div>
+          ) : itemDetail?.object_path ? (
+            <div className="flex h-60 w-60 items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80">
+              <Image
+                src={`https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`}
+                alt="Selected Image"
+                width={2000}
+                height={2000}
+                className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
+              />
+            </div>
           ) : (
-            ""
+            <div className="flex h-60 w-60 items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80">
+              <Image
+                src={`/assets/images/products/product.png`}
+                alt="Selected Image"
+                width={2000}
+                height={2000}
+                className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
+              />
+            </div>
           )}
         </div>
         <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
           <div className="flex flex-col">
-            {itemDetail?.item_sale_price ? (
+            {itemDetail ? (
               <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                 ${" "}
                 {itemDetail?.variations?.[0] &&
-                filteredVariations?.[0]?.items_variable_items_sale_price
+                  filteredVariations?.[0]?.items_variable_items_sale_price
                   ? filteredVariations?.[0]?.items_variable_items_sale_price
                   : itemDetail?.variations?.[0]
                     ? itemDetail?.variations?.[0]
-                        .items_variable_items_sale_price
+                      .items_variable_items_sale_price
                     : itemDetail?.item_sale_price}
               </span>
             ) : (
@@ -546,11 +644,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                         {options.map((option) => (
                           <button
                             key={option.value}
-                            className={`min-w-10 rounded border p-1 text-center ${
-                              selectedValues[tagName] === option.value
-                                ? "bg-red-500 text-white"
-                                : "border-red-500 bg-white dark:bg-slate-700"
-                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
+                              ? "bg-red-500 text-white"
+                              : "border-red-500 bg-white dark:bg-slate-700"
+                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -577,10 +674,15 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
               })}
             </div>
           )}
-
-          {(itemDetail?.item_id || itemDetail?.variations?.[0]) &&
-          !isItemInCart(itemDetail.item_id) &&
-          itemDetail?.stock ? (
+          {(itemDetail?.variations?.[0]) && filteredVariations?.[0]?.items_variable_items_id && Object.values(selectedValues).length == itemDetail?.tag_links?.length &&
+            isVariableItemInCart(filteredVariations?.[0]?.items_variable_items_id) ? (
+              <span className="pl-1 text-green-500 dark:text-green-500">
+              Already added to your cart
+            </span>
+          ) : ""}
+          {(itemDetail?.variations?.[0]) &&
+            !isVariableItemInCart(filteredVariations?.[0]?.items_variable_items_id ?? -1) && (!Object.values(selectedValues).some(value => value === undefined)) && Object.values(selectedValues).length == itemDetail?.tag_links?.length &&
+            (itemDetail?.variations?.[0]?.items_variable_items_sale_price ?? itemDetail?.item_sale_price) ? (
             <button
               className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
               onClick={() => handleAddToCart(itemDetail)}
@@ -588,15 +690,15 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
               <BsFillCartCheckFill className="text-lg" />
               <div className="pl-2">Add to Cart</div>
             </button>
-          ) : (
+          ) : itemDetail && (!itemDetail?.variations?.[0]) && !isItemInCart(itemDetail.item_id) ? (
             <button
-              className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-2 font-bold text-white hover:bg-red-600"
-              onClick={() => itemDetail && handleRemoveFromCart(itemDetail)}
+              className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
+              onClick={() => handleAddToCart(itemDetail)}
             >
-              <BsCartXFill className="text-lg" />
-              <div className="pl-2">Remove from Cart</div>
+              <BsFillCartCheckFill className="text-lg" />
+              <div className="pl-2">Add to Cart</div>
             </button>
-          )}
+          ) : ""}
         </div>
       </div>
       {/* Reviews Section */}
@@ -605,8 +707,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
           <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
           {getReviewsLoader ? (
             // Skeleton loader
-            <ScrollArea className="h-[400px]">
-              {Array.from({ length: 5 }).map((_, index) => (
+            <ScrollArea className="h-[300px]">
+              {Array.from({ length: 3 }).map((_, index) => (
                 <div key={index} className="mb-4 animate-pulse border-b pb-2">
                   <div className="mb-2 h-4 w-1/3 rounded bg-gray-300 dark:bg-gray-600"></div>
                   <div className="mb-2 h-3 w-2/3 rounded bg-gray-200 dark:bg-gray-500"></div>
@@ -626,13 +728,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
             <ScrollArea className="h-[400px]">
               {reviews.map((review, index) => (
                 <div key={index} className="mb-4 border-b pb-2">
-                  <p className="font-semibold">{review.name}</p>
+                  <p className="font-semibold">{review.username}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     {review.review}
                   </p>
                   <div className="flex items-center gap-1 py-2">
                     {Array.from({ length: 5 }, (_, i) =>
-                      i < (review.stars || 0) ? (
+                      i < (review.stars ?? 0) ? (
                         <FaStar key={i} className="text-yellow-500" />
                       ) : (
                         <FaRegStar key={i} className="text-gray-400" />
@@ -668,7 +770,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
         headingPartTwo="Products"
         loader={loader}
         viewAllButton={() => {
-          router.push(`/products?detail=${category}`);
+          router.back();
         }}
       />
       <AlertBox

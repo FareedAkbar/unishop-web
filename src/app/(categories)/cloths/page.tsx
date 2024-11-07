@@ -92,21 +92,21 @@ const MyComponent = () => {
       // Optionally set an error state here
     }
   }
-  useEffect(() => {
-    if (!genre) return;
-    if (!detail) return;
-    const genId = category?.find((item) => item.id == parseInt(detail));
-    if (genId) {
-      setSubcategory(genId);
-      const loadData = async () => {
-        await getCloths(1);
-      };
+  // useEffect(() => {
+  //   if (!genre) return;
+  //   if (!detail) return;
+  //   const genId = category?.find((item) => item.id == parseInt(detail));
+  //   if (genId) {
+  //     setSubcategory(genId);
+  //     const loadData = async () => {
+  //       await getCloths(1);
+  //     };
 
-      loadData().catch((error) => {
-        console.error("Failed to load data in useEffect:", error);
-      });
-    }
-  }, [genre, detail]);
+  //     loadData().catch((error) => {
+  //       console.error("Failed to load data in useEffect:", error);
+  //     });
+  //   }
+  // }, [genre, detail]);
 
   const filterVariationsBySelectedValues = (
     variations: Variation[],

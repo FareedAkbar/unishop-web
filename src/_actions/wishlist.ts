@@ -96,9 +96,7 @@ export async function getFavouriteItems(booknet_customer_id: number | null | und
             console.log("result",result)
             return result
         } else {
-            console.error("Unexpected result structure booknet_customer_id:", booknet_customer_id);
             console.error("Unexpected result structure getFavouriteItems:", result);
-            console.log("error",result)
             return result
         }
     } catch (error) {

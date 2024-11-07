@@ -49,6 +49,7 @@ interface SubcategoryListProps1 {
   openCategories: string[]; // Update: Allow multiple open categories
   toggleCategory: (label: string) => void;
   setOpenCategories: React.Dispatch<React.SetStateAction<string[]>>;
+  item: string
 }
 interface SubcategoryListProps {
   subItems: Category[];
@@ -60,6 +61,7 @@ const SubcategoryList1 = ({
   subItems,
   openCategories,
   toggleCategory,
+  item,
   setOpenCategories,
 }: SubcategoryListProps1) => {
   const router = useRouter();
@@ -70,7 +72,7 @@ const SubcategoryList1 = ({
           <button
             onClick={() => {
               if (subItem.children?.[0]) {
-                toggleCategory(subItem.category_name);
+                toggleCategory(`${subItem.category_name}`);
               } else {
                 router.push(
                   `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
@@ -91,7 +93,7 @@ const SubcategoryList1 = ({
                 : subItem.category_name}
             </span>
             {subItem.children?.[0] &&
-              (openCategories.includes(subItem.category_name) ? (
+              (openCategories.includes(`${item}/${subItem.category_name}`) ? (
                 <FaChevronDown />
               ) : (
                 <FaChevronRight />
@@ -99,13 +101,14 @@ const SubcategoryList1 = ({
           </button>
 
           {/* Render children if open */}
-          {openCategories.includes(subItem.category_name) &&
+          {openCategories.some((cat) => cat.endsWith(`${item}/${subItem.category_name}`)) && 
             subItem.children?.[0] && (
               <div className="ml-4 mt-2">
                 <SubcategoryList1
                   subItems={subItem.children}
+                  item={subItem.category_name}
                   openCategories={openCategories} // Pass down multiple open categories
-                  toggleCategory={toggleCategory}
+                  toggleCategory={(val) => toggleCategory(`${subItem.category_name}/${val}`)}
                   setOpenCategories={setOpenCategories}
                 />
               </div>
@@ -121,6 +124,7 @@ const SubcategoryList = ({
   toggleCategory,
   isOpen,
 }: SubcategoryListProps) => {
+
   const router = useRouter();
   return (
     <div className="">
@@ -173,14 +177,25 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   >(null);
 
   const sidebarRef = useRef<HTMLDivElement>(null); // Ref for sidebar
-
-  const toggleCategory = (label: string) => {
-    setOpenCategory(null);
-    setOpenCategories((prev) =>
-      prev.includes(label)
-        ? prev.filter((cat) => cat !== label)
-        : [...prev, label],
-    );
+ 
+  const toggleCategory = async (label: string) => {
+   
+    setOpenCategories((prev) => {
+      // Check if the clicked category is already open
+      setOpenCategory(null)
+      if (prev.includes(label)) {
+        
+        // Close the category and its children
+        return prev.filter((cat) => cat !== label);
+      } else {
+        // Close other top-level categories when opening a new one
+        const newOpenCategories = prev.filter(
+          (cat) => label.startsWith(cat) || cat.startsWith(label)
+        );
+        
+        return [...newOpenCategories, label];
+      }
+    });
   };
   const toggleCategory2 = (label: string) => {
     setOpenCategories([]);
@@ -238,49 +253,48 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     });
 
     return categoryTree;
-};
+  };
 
 
-useEffect(() => {
-  if (!category || !subCategory) return;
+  useEffect(() => {
+    if (!category || !subCategory) return;
 
-  const x = buildCategoryTree(subCategory); // This should return CategoryTreeNode2[]
-  console.log(x)
-  const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
-    if (cat.category_type_id) {
-      acc[cat.category_type_id] = { ...cat, children: [] };
+    const x = buildCategoryTree(subCategory); // This should return CategoryTreeNode2[]
+    const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
+      if (cat.category_type_id) {
+        acc[cat.category_type_id] = { ...cat, children: [] };
+      }
+      return acc;
+    }, {} as CategoriesMap);
+
+    // Ensure x is an array and has elements
+    if (Array.isArray(x) && x.length > 0) {
+      // Get all children from the built category tree
+      const allChildren: CAT[] = x.flatMap(node => node.children); // Flatten all children
+      allChildren.forEach((item: CAT) => {
+        const { category_type_id, outlet } = item;
+        const targetCategory = categoriesMap[category_type_id];
+        if (targetCategory && targetCategory.outlet_id === outlet) {
+          targetCategory.children.push(item);
+        }
+      });
+
+      const result = Object.values(categoriesMap);
+      setHeaderCategory(result);
+    } else {
+      // Handle the case when x is empty
+      subCategory.forEach((item: CAT) => {
+        const { category_type_id, outlet } = item;
+        const targetCategory = categoriesMap[category_type_id];
+        if (targetCategory && targetCategory.outlet_id === outlet) {
+          targetCategory.children.push(item);
+        }
+      });
+      const result = Object.values(categoriesMap);
+      setHeaderCategory(result);
     }
-    return acc;
-  }, {} as CategoriesMap);
 
-  // Ensure x is an array and has elements
-  if (Array.isArray(x) && x.length > 0) {
-    // Get all children from the built category tree
-    const allChildren: CAT[] = x.flatMap(node => node.children); // Flatten all children
-    allChildren.forEach((item: CAT) => {
-      const { category_type_id, outlet } = item;
-      const targetCategory = categoriesMap[category_type_id];
-      if (targetCategory && targetCategory.outlet_id === outlet) {
-        targetCategory.children.push(item);
-      }
-    });
-
-    const result = Object.values(categoriesMap);
-    setHeaderCategory(result);
-  } else {
-    // Handle the case when x is empty
-    subCategory.forEach((item: CAT) => {
-      const { category_type_id, outlet } = item;
-      const targetCategory = categoriesMap[category_type_id];
-      if (targetCategory && targetCategory.outlet_id === outlet) {
-        targetCategory.children.push(item);
-      }
-    });
-    const result = Object.values(categoriesMap);
-    setHeaderCategory(result);
-  }
-
-}, [category, subCategory]);
+  }, [category, subCategory]);
 
   // Close subcategories on outside click
   useEffect(() => {
@@ -368,7 +382,8 @@ useEffect(() => {
                 <SubcategoryList1
                   subItems={item.children}
                   openCategories={openCategories}
-                  toggleCategory={toggleCategory}
+                  item={item.type}
+                  toggleCategory={(val) => toggleCategory(`${item.type}/${val}`)}
                   setOpenCategories={setOpenCategories}
                 />
               )}

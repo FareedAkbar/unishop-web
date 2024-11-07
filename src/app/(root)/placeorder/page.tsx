@@ -402,8 +402,9 @@ const MyComponent = () => {
       order_items: await convertPayload(),
     };
     try {
+      console.log(x)
       await placeOrderApiCall(x);
-      console.log(x);
+      // console.log(x);
     } catch (error) {
       console.error("Failed to load data:", error);
     }

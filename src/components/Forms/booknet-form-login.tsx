@@ -33,7 +33,7 @@ export default function BooknetFormLogin({
   title = "Checkout",
   disabled
 }: checkoutBooknet) {
-  const { CheckoutApiWithUserName } = useAuthContext();
+  const { CheckoutApiWithUserName,checkoutFormData } = useAuthContext();
   const router = useRouter();
   const [loader, setLoader] = useState(false);
   const {
@@ -51,7 +51,7 @@ export default function BooknetFormLogin({
         .then((res) => {
           if (res.status) {
             if (push) {
-              router.push(goTo);
+              void checkoutFormData(res?.data).then(()=>router.push(goTo));
             }
             if (!push && handleData) {
               handleData(res?.data);

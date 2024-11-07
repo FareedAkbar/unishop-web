@@ -61,7 +61,8 @@ const Header = () => {
     getProductTagStatus,
     productTags,
     getSubCategory,
-    subCategory
+    subCategory,
+    getCheckoutFormData
   } = useAuthContext();
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -209,7 +210,6 @@ subCategory?.forEach((item) => {
     if (!category || !subCategory) return;
   
     const x = buildCategoryTree(subCategory); // This should return CategoryTreeNode2[]
-    console.log(x)
     const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
       if (cat.category_type_id) {
         acc[cat.category_type_id] = { ...cat, children: [] };
@@ -333,6 +333,7 @@ subCategory?.forEach((item) => {
 
   useEffect(() => {
     // if(category) return;
+   void getCheckoutFormData()
    void getCategory()
    void getSubCategory(-1)
      

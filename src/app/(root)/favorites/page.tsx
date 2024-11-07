@@ -3,7 +3,7 @@
 // import Header from "~/components/header";
 import { Suspense, useEffect, useRef, useState } from "react";
 // import Pagination from "~/components/pagination";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 // import type PaginationData from '~/types/paginationData'
 import type DataCart from "~/types/book";
@@ -29,6 +29,8 @@ import { getFavouriteItems } from "~/_actions/wishlist";
 import { useToast } from "~/hooks/use-toast";
 import { Player } from "@lottiefiles/react-lottie-player";
 import type { Variation, VariationTag } from "~/types/book";
+import { IoIosArrowRoundForward } from "react-icons/io";
+import { HiArrowNarrowLeft } from "react-icons/hi";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -55,8 +57,10 @@ const MyComponent = () => {
     checkoutData,
     favItems,
     removeFavourite,
+    setProductForDetail
   } = useAuthContext();
   const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     const d = params.get("detail");
@@ -96,8 +100,18 @@ const MyComponent = () => {
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
+    const x = item;
+    if (item?.variations?.[0] && item?.tag_links) {
+      Object.assign(x, { selected_variation: filteredVariations?.[0] });
+      Object.assign(x, {
+        item_sale_price:
+          filteredVariations?.[0]?.items_variable_items_sale_price,
+      });
+      Object.assign(x, { selectedValues: selectedValues });
+    }
     try {
-      await addCartItems(item);
+      setOpen(false);
+      await addCartItems(x);
     } catch (error) {
       console.error("Failed to add item to cart:", error);
     }
@@ -113,7 +127,6 @@ const MyComponent = () => {
   const openDetail = async (item: DataCart) => {
     setOpen(true);
     setItemDetail(item);
-    console.log("ftd", item);
     setSelectedValues({});
   };
   const getOptions = (
@@ -130,7 +143,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -291,6 +304,10 @@ const MyComponent = () => {
     filterResult();
   }, [searchText, favItems]);
 
+  const goToDetail = async (item: DataCart | null) => {
+    await setProductForDetail(item);
+    router.push(`/product-details`);
+  };
   return (
     <div>
       <motion.main
@@ -300,32 +317,58 @@ const MyComponent = () => {
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex flex-row">
-          <div className="flex flex-col px-4">
-            <h2 className="bg-gradient-to-r from-red-700 via-red-400 to-red-700 bg-clip-text text-center text-4xl font-extrabold text-transparent">
+         <div className="flex items-center justify-between lg:px-10 pb-4 w-screen">
+            {/* Left Arrow */}
+            <div className="w-10 flex justify-start">
+            <button
+              onClick={() => router.back()}
+              className="rounded-full bg-transparent p-2 transition hover:bg-gray-200 dark:hover:bg-slate-700"
+            >
+              <HiArrowNarrowLeft className="text-3xl text-red-500" />
+            </button>
+            </div>
+           
+
+            {/* Title */}
+            <h4 className="flex-1  bg-gradient-to-r from-red-700 via-red-400 to-red-700 bg-clip-text text-center text-4xl font-extrabold text-transparent">
               Wishlist Wonders
-            </h2>
+            </h4>
+
+            {/* Invisible Placeholder */}
+            <div className="w-10"></div>
+          </div>
+        <div className="flex flex-row">
+         
+          <div className="flex flex-col px-4">
+
+
 
             <ScrollArea className="max-h-[75vh] pb-5">
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 2 }, (_, index) => (
-                      <div key={index} className="p-2">
-                        <ProductCardSkeleton />
-                      </div>
-                    ))
+                    <div key={index} className="p-2">
+                      <ProductCardSkeleton />
+                    </div>
+                  ))
                   : displayedData?.map((item: DataCart) => (
-                      <ProductCard
-                        key={item.book_id}
-                        product={item}
-                        showAddToCart={!isItemInCart(item.item_id)}
-                        onAddToCart={() => handleAddToCart(item)}
-                        onRemoveFromCart={() => handleRemoveFromCart(item)}
-                        openDetail={() => openDetail(item)}
-                        handleFavourite={() => handleFavourite(item)}
-                        wishListLoader={wishListLoader}
-                      />
-                    ))}
+                    <ProductCard
+                      key={item.book_id}
+                      product={item}
+                      showAddToCart={!isItemInCart(item.item_id)}
+                      onAddToCart={async () => {
+                        if (item?.variations?.[0]) {
+                          await openDetail(item);
+                        } else {
+                          await handleAddToCart(item);
+                        }
+                      }}
+                      onRemoveFromCart={() => handleRemoveFromCart(item)}
+                      openDetail={() => openDetail(item)}
+                      handleFavourite={() => handleFavourite(item)}
+                      wishListLoader={wishListLoader}
+                    />
+                  ))}
                 {!loader && !favItems[0] && (
                   <div className="flex h-full w-full flex-col items-center justify-center">
                     <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
@@ -348,7 +391,7 @@ const MyComponent = () => {
       <ModalBody>
         <ModalContent>
           <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
-            {itemDetail?.book_title ?? itemDetail?.item_name}
+            {itemDetail?.item_name}
           </h4>
           <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}
@@ -374,13 +417,13 @@ const MyComponent = () => {
                     rotate: 0,
                     zIndex: 100,
                   }}
-                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-neutral-700 dark:bg-neutral-800"
+                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
                 >
                   <Image
                     src={
                       itemDetail?.object_path
                         ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                        : "/bookIcon.png"
+                        : "/assets/images/products/product.png"
                     }
                     alt={itemDetail?.object_path ?? ""}
                     width={500}
@@ -392,25 +435,32 @@ const MyComponent = () => {
             </div>
             <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
               <div className="flex flex-col">
-                {itemDetail?.item_sale_price && (
-                  <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
-                    ${" "}
-                    {itemDetail?.variations?.[0] &&
+                <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
+                  $
+                  {itemDetail?.variations?.[0] &&
                     filteredVariations?.[0]?.items_variable_items_sale_price
-                      ? filteredVariations?.[0]?.items_variable_items_sale_price
-                      : itemDetail?.variations?.[0]
-                        ? itemDetail?.variations?.[0]
-                            .items_variable_items_sale_price
-                        : itemDetail?.item_sale_price}
-                  </span>
-                )}
+                    ? filteredVariations?.[0]?.items_variable_items_sale_price
+                    : itemDetail?.variations?.[0]
+                      ? itemDetail?.variations?.[0]
+                        .items_variable_items_sale_price
+                      : itemDetail?.item_sale_price}
+                </span>
                 {itemDetail?.SKU && (
                   <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
-                    SKU {itemDetail.SKU}
+                    SKU: {itemDetail.SKU}
                   </span>
                 )}
               </div>
-
+              {itemDetail?.barcode && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Barcode:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.barcode}
+                  </span>
+                </div>
+              )}
               {itemDetail?.edition && (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -422,17 +472,59 @@ const MyComponent = () => {
                 </div>
               )}
 
-              {itemDetail?.introduced && (
+              {itemDetail?.book_language && (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Published:
+                    Language:
                   </span>
-                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                    {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.book_language}
                   </span>
                 </div>
               )}
 
+              {itemDetail?.pages !== undefined && itemDetail.pages !== null && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Number of Pages:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.pages}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.publisher?.publisher_name && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Publisher:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.publisher.publisher_name}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.publisher?.country && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Country of Publication:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.publisher.country}
+                  </span>
+                </div>
+              )}
+              <div className="flex items-center justify-center">
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                  Created at:
+                </span>
+                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                  {itemDetail?.introduced
+                    ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
+                    : ""}
+                </span>
+              </div>
               {itemDetail?.book_language && (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -537,7 +629,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                                currTag.items_variations_tags_name
+                              currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -575,11 +667,10 @@ const MyComponent = () => {
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center ${
-                                    selectedValues[tagName] === option.value
+                                  className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
                                       ? "bg-red-500 text-white"
                                       : "border-red-500 bg-white dark:bg-slate-700"
-                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}
@@ -612,30 +703,41 @@ const MyComponent = () => {
                   {/* Display selected options */}
                 </div>
               )}
-              {itemDetail?.item_id &&
-              !isItemInCart(itemDetail.item_id) &&
-              itemDetail?.stock?.quantity ? (
-                <button
-                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white dark:bg-zinc-800"
-                  onClick={() => handleAddToCart(itemDetail)}
-                >
-                  <FaCartPlus className="text-lg" />
-                  <div className="pl-2">Add to Cart</div>
-                </button>
-              ) : (
-                ""
-              )}
+
+              {/* {itemDetail?.item_id &&
+                !isItemInCart(itemDetail.item_id) &&
+                itemDetail?.stock?.quantity ? ( */}
+              {itemDetail?.variations?.[0]?.variation_tags &&
+                Object.keys(selectedValues)[0] &&
+                filteredVariations?.[0]?.items_variable_items_id && (
+                  <button
+                    className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
+                    onClick={() => handleAddToCart(itemDetail)}
+                  >
+                    <FaCartPlus className="text-lg" />
+                    <div className="pl-2">Add to Cart</div>
+                  </button>
+                )}
             </div>
+          </div>
+          <div className="flex w-full justify-end">
+            <button
+              className="mt-5 flex w-fit flex-row items-center justify-end rounded border-none bg-red-500 px-1 text-[10px] text-white hover:bg-red-600 md:px-3 md:py-1.5 lg:px-4 lg:py-2 lg:text-base"
+              onClick={() => goToDetail(itemDetail)}
+            >
+              <span>More Details</span>
+              <IoIosArrowRoundForward className="ml-1 text-lg text-white lg:text-xl" />
+            </button>
           </div>
         </ModalContent>
         {/* <ModalFooter className="gap-4">
           <button
             onClick={() => setOpen(false)}
-            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm text-black dark:border-black dark:bg-black dark:text-white"
+            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm dark:border-slate-950 dark:bg-slate-900"
           >
             Close
           </button>
-          
+         
         </ModalFooter> */}
       </ModalBody>
     </div>

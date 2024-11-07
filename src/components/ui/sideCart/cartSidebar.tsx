@@ -80,14 +80,14 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
   };
 
   // Handlers for increasing, decreasing, and removing items
-  const handleIncrease = async (id: number, number: number) => {
+  const handleIncrease = async (id: number, number: number, variable_id?: number) => {
 
-    await increaseCartItemQuantity(id, number);
+    await increaseCartItemQuantity(id, number,variable_id);
   };
 
-  const handleDecrease = async (id: number, number: number) => {
+  const handleDecrease = async (id: number, number: number, variable_id?: number) => {
 
-    await increaseCartItemQuantity(id, number);
+    await increaseCartItemQuantity(id, number, variable_id);
   };
 
   useEffect(() => {
@@ -139,8 +139,8 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
               price={item.item_sale_price}
               showRemove={true}
               onChangeQuantity={(id, number) => onChangeQuantity(id, number)}
-              onIncrease={() => handleIncrease(item.item_id, item.quantity + 1)}
-              onDecrease={() => handleDecrease(item.item_id, item.quantity - 1)}
+              onIncrease={() => handleIncrease(item.item_id, item.quantity + 1, item?.selected_variation?.items_variable_items_id)}
+              onDecrease={() => handleDecrease(item.item_id, item.quantity - 1, item?.selected_variation?.items_variable_items_id)}
               itemQuantity={item.quantity}
               showQuantityIncriment={true}
               stock={item.stock}
