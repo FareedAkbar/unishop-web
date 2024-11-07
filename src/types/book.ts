@@ -90,6 +90,16 @@ export interface Review {
   review: string;
   stars: number;
 }
+export interface category_detail {
+  category_description: string,
+  category_name: string,
+  id: number,
+  media_id: number, 
+  outlet: number,
+  parent: number,
+  till_visibility: number,
+  web_visibility: number,
+}
 export default interface DataCart {
   book_id: number;
   final_price_including_tax?: number; 
@@ -148,7 +158,8 @@ export default interface DataCart {
   special_tags?: SpecialTag[] | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectedValues?: any;
-  reviews?: Review[]
+  reviews?: Review[],
+  category_detail?: category_detail
 }
 
 

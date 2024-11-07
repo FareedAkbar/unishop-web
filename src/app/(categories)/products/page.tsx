@@ -790,7 +790,7 @@ const MyComponent = () => {
                 Object.keys(selectedValues)[0] &&
                 filteredVariations?.[0]?.items_variable_items_id && (
                   <button
-                    className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
+                    className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
                     onClick={() => handleAddToCart(itemDetail)}
                   >
                     <FaCartPlus className="text-lg" />

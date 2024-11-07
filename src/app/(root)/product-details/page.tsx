@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { FaArrowLeft, FaCartPlus, FaRegStar, FaStar } from "react-icons/fa";
 import moment from "moment";
 import Select from "~/components/Fields/select";
-import type { Media, Variation, VariationTag } from "~/types/book";
+import type { Media, SpecialTag, Variation, VariationTag } from "~/types/book";
 import type DataCart from "~/types/book";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -24,6 +24,7 @@ import { getReviewsApi, submitReviewsApi } from "~/_actions/reviews";
 import AlertBox from "~/components/alertBox/alert";
 import { BsCartXFill, BsFillCartCheckFill } from "react-icons/bs";
 import { getBooks } from "~/_actions/getbooks";
+import { ItemSpecialTag } from "~/types/productTags";
 
 interface ProductDetailsProps {
   itemDetail: DataCart;
@@ -51,6 +52,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
     productDetail,
     increaseCartItemQuantity,
     checkoutData,
+    productTags
   } = useAuthContext();
   const itemDetail = productDetail;
   const [category, setCategory] = useState<string>("");
@@ -124,6 +126,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       const x = await getReviewsApi(id);
 
       if (typeof x !== "boolean" && x.status) {
+        console.log(x.data)
         setReviews(x.data);
       }
       setGetReviewsLoader(false);
@@ -327,8 +330,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
       const newData = {
         ...data,
         item_id: itemDetail?.item_id,
-        user_name:"",
-        username:"",
+        user_name: "",
+        username: "",
         booknet_customer_id: checkoutData?.booknet_customer_id,
         customer_id: checkoutData?.customer_id
           ? checkoutData?.customer_id
@@ -378,17 +381,30 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
 
     router.push("login");
   };
+  const matchingTags = itemDetail?.special_tags
+    ?.map((specialTag: SpecialTag) =>
+      productTags?.find(
+        (tag: ItemSpecialTag) =>
+          tag.item_special_tags_id === specialTag.item_special_tags_id,
+      ),
+    )
+    .filter((tag): tag is ItemSpecialTag => Boolean(tag)); // Filter out undefined values in case there are no matches
 
+  const tagNames: string[] = matchingTags?.map((tag) => tag?.tag_name) ?? [];
+  
   return (
     <div className="p-6 pt-32">
       <div className="flex items-center justify-between lg:px-10 pb-4">
         {/* Left Arrow */}
-        <button
-          onClick={() => router.back()}
-          className="rounded-full bg-transparent p-2 transition hover:bg-gray-200 dark:hover:bg-slate-700"
-        >
-          <HiArrowNarrowLeft className="text-3xl text-red-500" />
-        </button>
+        <div>
+          <button
+            onClick={() => router.back()}
+            className="rounded-full bg-transparent p-2 transition hover:bg-gray-200 dark:hover:bg-slate-700"
+          >
+            <HiArrowNarrowLeft className="text-3xl text-red-500" />
+          </button>
+        </div>
+
 
         {/* Title */}
         <h4 className="flex-1 text-center font-serif text-lg font-bold capitalize text-red-500 md:text-3xl">
@@ -398,7 +414,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
         {/* Invisible Placeholder */}
         <div className="w-10"></div>
       </div>
-
+      <h6 className="capitalize pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
+        {itemDetail?.category_detail?.category_name}
+      </h6>
       <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
         {itemDetail?.description}
       </h6>
@@ -472,12 +490,28 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
             ) : (
               ""
             )}
-            {itemDetail?.SKU && (
-              <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
-                SKU: {itemDetail.SKU}
-              </span>
-            )}
           </div>
+          {tagNames.length > 0 ? (
+            <div className="flex">
+              {tagNames.map((tag) => {
+                return (
+                  <span
+                    key={tag}
+                    className="z-[12] mr-2 mt-1 rounded bg-red-500 px-1 py-0.5 text-[10px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
+                  >
+                    {tag}
+                  </span>
+                );
+              })}
+            </div>
+          ) : (
+            ""
+          )}
+          {itemDetail?.SKU && (
+            <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
+              SKU: {itemDetail.SKU}
+            </span>
+          )}
           {itemDetail?.barcode && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -488,6 +522,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
               </span>
             </div>
           )}
+
           {itemDetail?.edition && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -676,7 +711,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
           )}
           {(itemDetail?.variations?.[0]) && filteredVariations?.[0]?.items_variable_items_id && Object.values(selectedValues).length == itemDetail?.tag_links?.length &&
             isVariableItemInCart(filteredVariations?.[0]?.items_variable_items_id) ? (
-              <span className="pl-1 text-green-500 dark:text-green-500">
+            <span className="pl-1 text-green-500 dark:text-green-500">
               Already added to your cart
             </span>
           ) : ""}
@@ -742,8 +777,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
                     )}
                   </div>
                   <p className="text-xs text-gray-500">
-                    {/* {moment(review.date).format("Do MMMM, YYYY")} */}
-                    {moment().format("Do MMMM, YYYY")}{" "}
+                    {review?.created_at ? moment(review?.created_at).format("Do MMMM, YYYY") : ''}
+                    
                   </p>
                 </div>
               ))}
