@@ -134,14 +134,7 @@ const HomePage: React.FC = () => {
             className="h-[500px] w-full object-contain overflow-visible"
           />
         </div>
-        <div className="absolute inset-0 -z-10">
-          <Player
-            src={"assets/gifs/products-bg.json"}
-            loop
-            autoplay
-            className="h-[500px] w-full object-contain overflow-visible"
-          />
-        </div>
+        
 
 
         <div className="flex">
