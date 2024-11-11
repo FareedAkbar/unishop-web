@@ -9,7 +9,7 @@ export type ReviewData = {
     customer_id?: number | null,
     item_id?: number | null,
     item_reviews_id?: number | null,
-    created_at: string | null
+    created_at?: string | null
   }
 
 
