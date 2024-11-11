@@ -317,10 +317,10 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   return (
     <aside
       ref={sidebarRef}
-      className={`absolute left-0 max-w-64 rounded-r-xl border-y border-r bg-white px-4 py-2 shadow-lg dark:bg-slate-700 ${className}`}
+      className={`absolute left-0 max-w-64 rounded-r-xl border-y  border-r bg-white px-4 py-2 shadow-lg dark:bg-slate-700 ${className}`}
     >
       <h2 className="text-lg font-bold">CATEGORIES</h2>
-      <nav className="relative">
+      <nav className="relative py-3">
         {headerCategory?.map((item) => (
           // item.id != 472 && (
           <div key={item.type} className="relative">

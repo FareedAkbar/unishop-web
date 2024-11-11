@@ -61,8 +61,8 @@ const MyComponent = () => {
         {view == "login" && (
           <div className="relative">
             <button
-              onClick={() => router.push("/")}
-              className="fixed left-10 top-10 rounded-full bg-transparent p-2  transition hover:bg-gray-200 dark:hover:bg-slate-700"
+            onClick={() => router.back()}
+            className="fixed left-10 top-10 rounded-full bg-transparent p-2  transition hover:bg-gray-200 dark:hover:bg-slate-700"
             >
               <FaArrowLeft className="text-black dark:text-white" />
             </button>
