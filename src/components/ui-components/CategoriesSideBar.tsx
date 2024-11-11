@@ -89,7 +89,7 @@ const SubcategoryList1 = ({
               title={subItem.category_name}
             >
               {subItem.category_name.length > 16
-                ? `${subItem.category_name.slice(0, 16)}...`
+                ? `${subItem.category_name.slice(0, 25)}...`
                 : subItem.category_name}
             </span>
             {subItem.children?.[0] &&
@@ -360,7 +360,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   )} */}
                 <span className="w-40 truncate text-left capitalize" title={item.type}>
                   {item.type.length > 16
-                    ? `${item.type.slice(0, 16)}...`
+                    ? `${item.type.slice(0, 20)}...`
                     : item.type}
                 </span>
               </div>
