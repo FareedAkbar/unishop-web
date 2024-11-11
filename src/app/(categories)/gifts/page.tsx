@@ -172,7 +172,7 @@ const MyComponent = () => {
   async function getCloths(page: number) {
     try {
       setLoader(true);
-      const x = await getItemsByCategory(parseInt(detail) ?? 1, page, 1, 0);
+      const x = await getItemsByCategory(parseInt(detail) ?? 1, page);
       if (typeof x !== "boolean" && x.status) {
         setPagination(x.meta)
         setData(x.data);
