@@ -224,6 +224,9 @@ const MyComponent = () => {
       value: "checkout",
       content: (
         <CheckoutForm
+          title=""
+          subTitle=""
+          pushPath=""
           push={false}
           handleData={(d) => handleCheckoutSubmit(d)}
         />
