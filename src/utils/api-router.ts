@@ -69,6 +69,7 @@ const API_TYPE_MAPPER: Record<keyof typeof API_ROUTES, any> = {
   VERIFYOTP: {} as VerifyOTP,
   REGISTER: {} as Register,
   CHECKOUT: {} as Register | Booknet_customer_checkout,
+  SUB_CATEGORY: {} as unknown,
   // CHECKOUT_WITH_USERNAME: {} as Booknet_customer_checkout | Register,
   GENRE: {} as unknown,
   CATEGORY: {} as unknown,
