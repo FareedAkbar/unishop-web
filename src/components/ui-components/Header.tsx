@@ -740,14 +740,14 @@ subCategory?.forEach((item) => {
 
             {/* Right Section: Search Bar and Icons */}
             <div className="flex items-center space-x-4">
-              <Input
+              {/* <Input
                 placeholder="What are you looking for?"
                 value={searchTerm}
                 onChange={handleSearchChange}
                 icon={<FiSearch size={26} />}
                 width="w-56"
                 animateOnClick={true}
-              />
+              /> */}
               <div
                 className="relative"
                 onClick={() => router.push("/favorites")}
@@ -781,11 +781,11 @@ subCategory?.forEach((item) => {
 
               <div className="relative">
                 <button
-                  className="cursor-pointer rounded-full bg-red-500"
+                  className="cursor-pointer rounded-full bg-red-500 mt-1"
                   onClick={toggleUserDropdown}
                   ref={dropdownToggleRef}
                 >
-                  <MdOutlinePersonOutline className="p-0.5 text-3xl text-white" />
+                  <MdOutlinePersonOutline className="p-1 text-3xl text-white" />
                 </button>
                 {isUserDropdownOpen && (
                   <div

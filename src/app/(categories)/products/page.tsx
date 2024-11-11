@@ -366,7 +366,10 @@ const MyComponent = () => {
     router.push(`/product-details?category=${item?.category}`);
   };
   const handleChangeSubCategory = async (id: string) => {
-   
+    const genId = subCategory?.find((item) => item.id == parseInt(id));
+    if(genId?.category_name){
+      setName(genId.category_name)
+    }
       setDetail(parseInt(id))
   };
   

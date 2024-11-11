@@ -66,7 +66,7 @@ const SubcategoryList1 = ({
 }: SubcategoryListProps1) => {
   const router = useRouter();
   return (
-    <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
+    <div className="absolute left-10 top-8 z-50 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
       {subItems.map((subItem) => (
         <div key={subItem.category_name} className="relative">
           <button
@@ -85,12 +85,13 @@ const SubcategoryList1 = ({
             className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
           >
             <span
-              className="w-40 truncate text-left capitalize"
+              className="truncate text-left capitalize mr-2"
               title={subItem.category_name}
             >
-              {subItem.category_name.length > 16
+              {/* {subItem.category_name.length > 16
                 ? `${subItem.category_name.slice(0, 25)}...`
-                : subItem.category_name}
+                : subItem.category_name} */}
+                {subItem.category_name}
             </span>
             {subItem.children?.[0] &&
               (openCategories.includes(`${item}/${subItem.category_name}`) ? (
@@ -408,7 +409,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               <div className="flex items-center">
                 {item.icon && (
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                  <span className="mr-3">{iconMap[item.icon]}</span>
+                  <span className="mr-2">{iconMap[item.icon]}</span>
                 )}
                 <Link href={item.href ?? ""} scroll={false}>
                   {item.label}

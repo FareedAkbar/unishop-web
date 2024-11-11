@@ -76,7 +76,7 @@ const ImageSlider: React.FC = () => {
 
   return (
     <div className={`container flex w-full flex-col px-4 pb-4 pt-2`}>
-      <div className={`${isFlipping ? "animate-flip-out" : ""}`}>
+      <div className={`${isFlipping ? "animate-fade-in-left" : ""}`}>
         <div className="absolute z-10 w-2/5 p-1 lg:block lg:pl-10 lg:pt-10">
           <div className="flex h-32 flex-col justify-between px-2 py-2 sm:h-52 md:h-60 md:px-6 lg:h-80 lg:px-10">
             <div className="flex items-center lg:mb-4">
