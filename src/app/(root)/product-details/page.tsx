@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaCartPlus, FaRegStar, FaStar } from "react-icons/fa";
@@ -25,23 +25,12 @@ import AlertBox from "~/components/alertBox/alert";
 import { BsCartXFill, BsFillCartCheckFill } from "react-icons/bs";
 import { getBooks } from "~/_actions/getbooks";
 import { ItemSpecialTag } from "~/types/productTags";
+import { ModalProvider } from "~/components/ui/animated-modal";
+import Spinner from "~/components/spinner";
 
-interface ProductDetailsProps {
-  itemDetail: DataCart;
-  //   getOptions: (
-  //     tagName: string,
-  //     dependencies?: Record<string, string>,
-  //   ) => { value: string; label: string }[];
-  //   handleAddToCart: (item: DataCart) => void;
-}
 
-const ProductDetails: React.FC<ProductDetailsProps> = (
-  {
-    // itemDetail,
-    //   getOptions,
-    //   handleAddToCart,
-  },
-) => {
+
+const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
     Record<string, string | undefined>
   >({});
@@ -816,6 +805,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = (
         onContinue={() => goToLogin()}
       />
     </div>
+  );
+};
+
+const ProductDetails = () => {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <ModalProvider>
+        <MyComponent />
+      </ModalProvider>
+    </Suspense>
   );
 };
 
