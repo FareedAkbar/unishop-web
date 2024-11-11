@@ -8,7 +8,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "~/lib/utils";
 import { booknetFormSchema } from "./schema";
-
+import { useToast } from "~/hooks/use-toast";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter } from "next/navigation";
 import type { CheckoutForm } from "~/types/checkoutForm";
@@ -33,6 +33,7 @@ export default function BooknetForm({
 }: checkoutBooknet) {
   const { CheckoutApiWithUserName,checkoutFormData } = useAuthContext();
   const router = useRouter();
+  const { toast } = useToast();
   const [loader, setLoader] = useState(false);
   const {
     register,
@@ -61,6 +62,11 @@ export default function BooknetForm({
         })
         .catch((err) => {
           setLoader(false);
+          toast({
+            title: "Checkout Failed",
+            variant: "destructive",
+            description: "Wrong username or password",
+          });
           console.log(err);
         });
     } catch (error) {
