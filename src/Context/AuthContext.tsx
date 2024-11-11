@@ -637,7 +637,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       { skipAuthorization: true },
     );
-    console.log(response)
 
     const responsePayload: { status: boolean; data: CheckoutForm } =
       (await response.json()) as checkoutBooknetResponse;
