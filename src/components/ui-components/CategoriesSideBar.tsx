@@ -317,10 +317,10 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   return (
     <aside
       ref={sidebarRef}
-      className={`absolute left-0 max-w-64 rounded-r-xl border-y border-r bg-white px-4 py-2 shadow-lg dark:bg-slate-700 ${className}`}
+      className={`absolute left-0 max-w-64 rounded-r-xl border-y  border-r bg-white px-4 py-2 shadow-lg dark:bg-slate-700 ${className}`}
     >
       <h2 className="text-lg font-bold">CATEGORIES</h2>
-      <nav className="relative">
+      <nav className="relative py-3">
         {headerCategory?.map((item) => (
           // item.id != 472 && (
           <div key={item.type} className="relative">
@@ -343,6 +343,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                         passHref
                       > */}
               <div className="flex items-center justify-start ">
+              <AiOutlineFileText className="text-orange-600 w-6 h-6 mr-2 p-0.5" />
                 {/* {item.object_path && (
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     <Image

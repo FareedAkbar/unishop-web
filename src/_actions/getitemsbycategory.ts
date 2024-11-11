@@ -20,11 +20,11 @@ const requestOptions: RequestInit = {
     },
     redirect: "follow", // Use the correct type for `redirect`
 };
-export async function getItemsByCategory(id: number | null, page: number, food: number, gifts: number): Promise<ApiResponse | boolean> {
+export async function getItemsByCategory(id: number | null, page: number): Promise<ApiResponse | boolean> {
     
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=${food}&}&category=${id}&page=${page}&images=1&detailed=1`,
+            `https://booknet-dev.iconsole.com.au/api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=0&book=0&category=${id}&page=${page}&images=1&detailed=1&special_tags_only=1`,
             requestOptions,
         );
         const result: ApiResponse = (await response.json()) as ApiResponse;

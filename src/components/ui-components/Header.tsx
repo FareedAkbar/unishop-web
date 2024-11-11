@@ -434,26 +434,26 @@ subCategory?.forEach((item) => {
                     Account Settings
                   </a>
                   <a
-                    href="#signup"
+                    href="/signup"
                     className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                   >
                     <HiLogin className="mr-2" />
                     Sign Up
                   </a>
                   <a
-                    href="#login"
+                    href="/login"
                     className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                   >
                     <HiLogout className="mr-2" />
                     Login
                   </a>
-                  <a
+                  {/* <a
                     href="#logout"
                     className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                   >
                     <HiLogin className="mr-2" />
                     Logout
-                  </a>
+                  </a> */}
                 </div>
               )}
             </div>
@@ -828,7 +828,7 @@ subCategory?.forEach((item) => {
                     )}
 
                     <Link
-                      onClick={() => handleLogout()}
+                      // onClick={() => handleLogout()}
                       href="/signup"
                       className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                     >

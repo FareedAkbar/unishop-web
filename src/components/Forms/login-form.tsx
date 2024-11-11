@@ -34,7 +34,7 @@ export default function SignupFormDemo({ setView, setLoginResponse }: LoginFormP
       setLoader(true);
       const res = await login(data);
       setLoader(false);
-
+      console.log(res)
       if (typeof res !== "boolean" && res.status) {
         setLoginResponse(res);
         setView("Send-Otp");
