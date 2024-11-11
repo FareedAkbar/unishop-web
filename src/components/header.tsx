@@ -19,14 +19,8 @@ export default function Header({ className }: { className?: string }) {
     if (isFirstRender.current) {
       isFirstRender.current = false; // Prevents further API calls on first render
     } else {
-      getGenre().then((res) => {
-        console.log(res);
-
-      }).catch((err) => {
-        console.log(err);
-      });
+     void getGenre()
     }
-
   }, [])
 
   return (

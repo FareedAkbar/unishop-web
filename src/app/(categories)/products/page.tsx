@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
@@ -23,33 +24,47 @@ import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { getBooks } from "~/_actions/getbooks";
-import { useToast } from "~/hooks/use-toast";
 import AlertBox from "~/components/alertBox/alert";
-import { randomData } from "~/constants/rendaom";
+import { useToast } from "~/hooks/use-toast";
+import type { Category } from "~/types/category";
+import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import Select from "~/components/Fields/select";
-import { Variation } from "~/types/book";
+import type { Pagination } from "~/types/pagination";
+import type { Variation } from "~/types/book";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import { BsFillCartCheckFill } from "react-icons/bs";
-
-const PRODUCTS_PER_PAGE = 10;
+import {
+  Select as NewSelect,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "~/components/ui/select";
 
 const MyComponent = () => {
-  const router = useRouter();
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
   const isFirstRender = useRef(true);
   const [searchText, setSearchText] = useState("");
-  const [filteredData, setFilteredData] = useState<DataCart[] | null>(null);
   const params = useSearchParams();
   const { setOpen } = useModal();
-  const [detail, setDetail] = useState<string | null>(null);
+  const [detail, setDetail] = useState<number>(-1);
+  const [parent, setParent] = useState<number>(-1);
+  const [name, setName] = useState<string>("");
+  const [subcategory, setSubcategory] = useState<string>('');
+  const [subcategoryTypes, setSubcategoryTypes] = useState<Category[] | null>(null);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
+  const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
   const [wishListLoader, setWishListLoader] = useState<boolean>(false);
   const [selectedValues, setSelectedValues] = useState<
     Record<string, string | undefined>
   >({});
+  const [currentPage, setCurrentPage] = useState(pagination?.page ?? 1);
+  const [pageSize, setPageSize] = useState(pagination?.limit ?? 15);
+  const [totalPages, setTotalPages] = useState(pagination?.pages ?? 1);
+  const [displayData, setDisplayData] = useState<DataCart[] | null>(null);
+  const router = useRouter();
+  const { toast } = useToast();
   const {
     cartItems,
     addCartItems,
@@ -57,43 +72,77 @@ const MyComponent = () => {
     genre,
     addFavourite,
     removeFavourite,
-    checkoutData,
     favItems,
-    setProductForDetail
+    checkoutData,
+    category,
+    setProductForDetail,
+    subCategory
   } = useAuthContext();
-  const { toast } = useToast();
 
   useEffect(() => {
     const d = params.get("detail");
-    setDetail(d);
+    const parentCat = params.get("category");
+    const name = params.get("name");
+    
+    if (d) {
+      setDetail(parseInt(d));
+    } else{
+      setDetail(-1)
+    }
+    if(parent && parentCat !== null){
+      setParent(parseInt(parentCat))
+    }
+    if(name){
+      setName(name)
+    }
   }, [params]);
-
-  useEffect(() => {
-    if (!genre) return;
-    const genId = genre?.find((item) => item.genre == detail);
-    if (!genId) return;
-    const loadData = async () => {
-      try {
-        setLoader(true);
-        const x = await getBooks(genId?.genre_id ?? 1);
-        if (typeof x !== "boolean" && x.status) {
-          setData(x.data);
-          setFilteredData(x.data);
-        }
-        setLoader(false);
-        // setData(result);
-        // setTotalPages(result.totalPages);
-      } catch (error) {
-        console.error("Failed to load data:", error);
-        setLoader(false);
-        // Optionally set an error state here
+  async function getCloths(page: number,id: number) {
+    try {
+      setLoader(true);
+      const x = await getItemsByCategory(id ?? 1, page, 1, 0);
+      if (typeof x !== "boolean" && x.status) {
+        setPagination(x.meta);
+        setData(x.data);
+        setDisplayData(x.data);
+        setTotalPages(x.meta.pages);
+        setPageSize(x.meta.limit);
       }
-    };
+      setLoader(false);
+      // setData(result);
+      // setTotalPages(result.totalPages);
+    } catch (error) {
+      console.error("Failed to load data:", error);
+      setLoader(false);
+      // Optionally set an error state here
+    }
+  }
+  useEffect(() => {
+    if (!subCategory) return;
+    // if (detail < 0) return;
+    
+    const genId = subCategory?.find((item) => item.id == detail);
+    const parentCat = subCategory?.filter((item)=> item.category_type_id == parent && item.outlet == 221);
+    const catId = category?.find((item) => item.category_type_id == detail);
+    setDisplayData(null);
+    if(parentCat?.[0]){
+      setSubcategoryTypes(parentCat)
+    }
+    if (genId ?? catId) {
+      if(genId){
+        setSubcategory(genId.category_name);
+      }
+      if(catId){
+        setSubcategory(catId.type);
+      }
+      const loadData = async () => {
+        await getCloths(1, detail);
+      };
 
-    loadData().catch((error) => {
-      console.error("Failed to load data in useEffect:", error);
-    });
-  }, [genre, detail]);
+      loadData().catch((error) => {
+        console.error("Failed to load data in useEffect:", error);
+      });
+    }
+  }, [subCategory, detail, name]);
 
   const filterVariationsBySelectedValues = (
     variations: Variation[],
@@ -120,14 +169,13 @@ const MyComponent = () => {
     });
   };
 
-
   const filteredVariations: Variation[] = filterVariationsBySelectedValues(
     itemDetail?.variations ? itemDetail?.variations : [],
     selectedValues,
   );
 
   // Handle add to cart
-  const handleAddToCart = async (item: DataCart) => {
+  const handleAddToCart = async (item: DataCart) => {    
     const x = item;
     if (item?.variations?.[0] && item?.tag_links) {
       Object.assign(x, { selected_variation: filteredVariations?.[0] });
@@ -150,6 +198,41 @@ const MyComponent = () => {
     } catch (error) {
       console.error("Failed to remove item to cart:", error);
     }
+  };
+
+  const getOptions = (
+    tagName: string,
+    dependencies: Record<string, string | undefined>,
+  ) => {
+    return Array.from(
+      new Set(
+        itemDetail?.variations
+          ?.filter((variation) => {
+            // Check all previous tag dependencies
+            return Object.keys(dependencies).every((key) => {
+              return variation.variation_tags.some(
+                (tag) =>
+                  tag.items_variations_tags_name === key &&
+                  tag.items_variations_tags_links_values_value ===
+                    dependencies[key],
+              );
+            });
+          })
+          .map((variation) => {
+            // Return only unique values for the current tag
+            return variation.variation_tags.find(
+              (tag) => tag.items_variations_tags_name === tagName,
+            )?.items_variations_tags_links_values_value;
+          }),
+      ),
+    )
+      .filter(Boolean)
+      .map((value) => ({
+        tagName, // include tagName in the result
+        dependencies, // include dependencies in the result
+        value: value!,
+        label: value!,
+      }));
   };
 
   const openDetail = async (item: DataCart) => {
@@ -193,7 +276,6 @@ const MyComponent = () => {
       setLoginAlert(true);
     }
   };
-
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
       typeof cartItems === "string"
@@ -206,15 +288,9 @@ const MyComponent = () => {
       : false;
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  // Get the products for the current page
-  const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
-
   const filterResult = () => {
-    let filtered = data;
-
+    let filtered = [...data];
+    
     // Search filter
     if (searchText) {
       filtered = filtered.filter((row) =>
@@ -223,66 +299,30 @@ const MyComponent = () => {
         ),
       );
     }
-
+    
     // Date range filter
-
-    setFilteredData(filtered);
-    setCurrentPage(1); // Reset to first page on new filter
+    setCurrentPage(filtered ? 1 : (pagination?.page ?? 1)); // Reset to first page on new filter
+    setTotalPages(
+      Math.ceil(filtered ? filtered?.length / pageSize : 1 / pageSize),
+    );
+    const x = filtered
+      ? filtered?.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      : data;
+    setDisplayData(x);
   };
   // Calculate total pages based on filtered data and page size
-  const totalPages = Math.ceil(
-    filteredData ? filteredData?.length / pageSize : 1 / pageSize,
-  );
 
   // Get the data to be displayed for the current page
-  const displayedData = filteredData?.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  );
 
   useEffect(() => {
     filterResult();
-  }, [searchText, data]);
+  }, [searchText]);
 
   const goToLogin = () => {
     setLoginAlert(false);
     router.push("login");
   };
 
-  const getOptions = (
-    tagName: string,
-    dependencies: Record<string, string | undefined>,
-  ) => {
-    return Array.from(
-      new Set(
-        itemDetail?.variations
-          ?.filter((variation) => {
-            // Check all previous tag dependencies
-            return Object.keys(dependencies).every((key) => {
-              return variation.variation_tags.some(
-                (tag) =>
-                  tag.items_variations_tags_name === key &&
-                  tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
-              );
-            });
-          })
-          .map((variation) => {
-            // Return only unique values for the current tag
-            return variation.variation_tags.find(
-              (tag) => tag.items_variations_tags_name === tagName,
-            )?.items_variations_tags_links_values_value;
-          }),
-      ),
-    )
-      .filter(Boolean)
-      .map((value) => ({
-        tagName, // include tagName in the result
-        dependencies, // include dependencies in the result
-        value: value!,
-        label: value!,
-      }));
-  };
   const handleSelectChange = (
     tagName: string,
     selectedOption: { value: string; label: string },
@@ -308,15 +348,24 @@ const MyComponent = () => {
       return newValues;
     });
   };
+  const handlePageChange = async (page: number) => {
+    setCurrentPage(page);
+    await getCloths(page, detail);
+  };
+
   const goToDetail = async (item: DataCart | null) => {
     await setProductForDetail(item);
-    console.log(item)
-    router.push(`/product-details?genre=${item?.genre_id}`);
+    router.push(`/product-details?category=${item?.category}`);
   };
+  const handleChangeSubCategory = async (id: string) => {
+   
+      setDetail(parseInt(id))
+  };
+  
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center pb-5 pt-20"
+        className="flex min-h-screen flex-col items-center pt-32 lg:pt-20"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
@@ -325,15 +374,31 @@ const MyComponent = () => {
         <div className="flex flex-grow flex-row sm:pt-10">
           <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
             {/* Header Section */}
-            <div className="flex w-full flex-wrap items-end justify-between pb-4">
+            <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4">
               <div className="text-left">
-                <h2 className="text-xl font-bold">Books</h2>
-                <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
-                  {detail}
-                </p>
+                <h2 className="text-xl font-bold capitalize"> {name}</h2>
+                {/* <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
+                  {subcategory}
+                </p> */}
               </div>
-
+              
               <div className="flex items-center gap-2">
+              {subcategoryTypes?.[0] && (
+                  <NewSelect
+                    onValueChange={(x: string) => handleChangeSubCategory(x)}
+                  >
+                    <SelectTrigger className="w-72">
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {subcategoryTypes?.map((item) => (
+                        <SelectItem key={item.id} value={item.id.toString()}>
+                          {item.category_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </NewSelect>
+                )}
                 <input
                   type="text"
                   value={searchText}
@@ -341,68 +406,62 @@ const MyComponent = () => {
                   placeholder="Search"
                   className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
                 />
-                <h1 className="pr-2 font-bold">
-                  Showing {displayedData?.length} of {data.length} Items
+                <h1 className="font-bold">
+                  Showing {displayData?.length} of {data.length} Items
                 </h1>
               </div>
             </div>
 
-            {/* Scrollable Product Section */}
-            <ScrollArea className="h-[75vh] pb-5">
-              <div className="flex h-full flex-wrap items-center justify-center py-3">
+            <ScrollArea className="h-[75vh] pb-10">
+              <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
-                    <div key={index} className="p-2">
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
-                  : displayedData?.map((item: DataCart) => (
-                    <ProductCard
-                      key={item.book_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={async () => {
-                        if (item?.variations?.[0]) {
-                          await openDetail(item);
-                        } else {
-                          await handleAddToCart(item);
-                        }
-                      }}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
-                      handleFavourite={() => handleFavourite(item)}
-                      wishListLoader={wishListLoader}
-                    />
-                  ))}
+                      <div key={index} className="p-2">
+                        <ProductCardSkeleton />
+                      </div>
+                    ))
+                  : displayData?.map((item: DataCart) => (
+                      <ProductCard
+                        key={item.book_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={async () => {
+                          if (item?.variations?.[0]) {
+                            await openDetail(item);
+                          } else {
+                            await handleAddToCart(item);
+                          }
+                        }}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        // openDetail={() => goToDetail(item)}
+                        openDetail={() => openDetail(item)}
+                        handleFavourite={() => handleFavourite(item)}
+                        wishListLoader={wishListLoader}
+                      />
+                    ))}
               </div>
             </ScrollArea>
-
-            {/* Pagination Section */}
-            <div className="z-10 flex justify-between px-4 py-4">
-              <button
-                className={`rounded-full p-2 ${currentPage === 1
-                  ? "bg-gray-200 text-black"
-                  : "cursor-pointer bg-red-500 text-white"
-                  }`}
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <FaChevronLeft />
-              </button>
-              <span className="px-2">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                className={`rounded-full p-2 ${currentPage === totalPages
-                  ? "bg-gray-200 text-black"
-                  : "cursor-pointer bg-red-500 text-white"
-                  }`}
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                <FaChevronRight />
-              </button>
-            </div>
+            {pagination && (
+              <div className="z-10 flex justify-between px-4 py-4">
+                <button
+                  className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  <FaChevronLeft />
+                </button>
+                <span className="px-2">
+                  Page {currentPage ?? 1} of {totalPages ?? 1}
+                </span>
+                <button
+                  className={`rounded-full p-2 ${(totalPages == 0 || currentPage === totalPages) ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={totalPages == 0 || currentPage === totalPages}
+                >
+                  <FaChevronRight />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </motion.main>
@@ -410,7 +469,7 @@ const MyComponent = () => {
       <ModalBody>
         <ModalContent>
           <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
-            {itemDetail?.book_title}
+            {itemDetail?.item_name}
           </h4>
           <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}
@@ -455,73 +514,138 @@ const MyComponent = () => {
             <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
               <div className="flex flex-col">
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
-                  ${itemDetail?.variations?.[0] &&
-                    filteredVariations?.[0]?.items_variable_items_sale_price
+                  $
+                  {itemDetail?.variations?.[0] &&
+                  filteredVariations?.[0]?.items_variable_items_sale_price
                     ? filteredVariations?.[0]?.items_variable_items_sale_price
                     : itemDetail?.variations?.[0]
                       ? itemDetail?.variations?.[0]
-                        .items_variable_items_sale_price
+                          .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
-                <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
-                  SKU {itemDetail?.SKU}
-                </span>
-              </div>
-              {itemDetail?.edition && (
-                <div className="flex items-center justify-center">
-                  <><span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Series:
+                {itemDetail?.SKU && (
+                  <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
+                    SKU: {itemDetail.SKU}
                   </span>
-                    <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                      {itemDetail?.edition}
-                    </span></>
-                </div>
-              )}
-              {itemDetail?.introduced && (
+                )}
+              </div>
+              {itemDetail?.barcode && (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Published:
+                    Barcode:
                   </span>
-                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                    {itemDetail?.introduced
-                      ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
-                      : ""}
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.barcode}
+                  </span>
+                </div>
+              )}
+              {itemDetail?.edition && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Series:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.edition}
                   </span>
                 </div>
               )}
 
+              {itemDetail?.book_language && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Language:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.book_language}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.pages !== undefined && itemDetail.pages !== null && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Number of Pages:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.pages}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.publisher?.publisher_name && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Publisher:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.publisher.publisher_name}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.publisher?.country && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Country of Publication:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.publisher.country}
+                  </span>
+                </div>
+              )}
               <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Language:
+                  Created at:
                 </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.book_language}
-                </span>
-              </div>
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Number of Pages:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.pages}
+                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                  {itemDetail?.introduced
+                    ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
+                    : ""}
                 </span>
               </div>
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Publisher:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher?.publisher_name}
-                </span>
-              </div>
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Country of Publication:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher?.country}
-                </span>
-              </div>
+              {itemDetail?.book_language && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Language:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.book_language}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.pages !== undefined && itemDetail.pages !== null && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Number of Pages:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.pages}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.publisher?.publisher_name && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Publisher:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.publisher.publisher_name}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.publisher?.country && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Country of Publication:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.publisher.country}
+                  </span>
+                </div>
+              )}
               {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>
                   <div>
@@ -583,7 +707,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                              currTag.items_variations_tags_name
+                                currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -621,10 +745,11 @@ const MyComponent = () => {
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
-                                    ? "bg-red-500 text-white"
-                                    : "border-red-500 bg-white dark:bg-slate-700"
-                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                  className={`min-w-10 rounded border p-1 text-center ${
+                                    selectedValues[tagName] === option.value
+                                      ? "bg-red-500 text-white"
+                                      : "border-red-500 bg-white dark:bg-slate-700"
+                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}
@@ -658,7 +783,9 @@ const MyComponent = () => {
                 </div>
               )}
 
-
+              {/* {itemDetail?.item_id &&
+                !isItemInCart(itemDetail.item_id) &&
+                itemDetail?.stock?.quantity ? ( */}
               {itemDetail?.variations?.[0]?.variation_tags &&
                 Object.keys(selectedValues)[0] &&
                 filteredVariations?.[0]?.items_variable_items_id && (
@@ -666,25 +793,11 @@ const MyComponent = () => {
                     className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
                     onClick={() => handleAddToCart(itemDetail)}
                   >
-                    <BsFillCartCheckFill className="text-lg" />
+                    <FaCartPlus className="text-lg" />
                     <div className="pl-2">Add to Cart</div>
                   </button>
                 )}
-              {/* {itemDetail?.item_id &&
-              !isItemInCart(itemDetail.item_id) &&
-              itemDetail?.stock?.quantity ? (
-                <button
-                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
-                  onClick={() => handleAddToCart(itemDetail)}
-                >
-                  <FaCartPlus className="text-lg" />
-                  <div className="pl-2">Add to Cart</div>
-                </button>
-              ) : (
-                ""
-              )} */}
             </div>
-
           </div>
           <div className="flex w-full justify-end">
             <button
@@ -717,7 +830,7 @@ const MyComponent = () => {
   );
 };
 
-const BooksPage = () => {
+const ClothsPage = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <ModalProvider>
@@ -726,4 +839,4 @@ const BooksPage = () => {
     </Suspense>
   );
 };
-export default BooksPage;
+export default ClothsPage;

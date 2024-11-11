@@ -6,6 +6,8 @@ import {
   FaBars,
   FaChevronRight,
   FaTimes,
+  FaHome,
+  FaPhoneAlt,
 } from "react-icons/fa";
 import Input from "./Input"; // Assuming you have an Input component
 import Image from "next/image";
@@ -22,7 +24,7 @@ import { usePathname, useRouter } from "next/navigation";
 import SidebarCart from "../ui/sideCart/cartSidebar";
 import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
-import type { CategoryTreeNode, Category as CAT } from "~/types/category";
+import type { CategoryTreeNode, Category as CAT, SuperCategory, SideBarCategory } from "~/types/category";
 import { outlet221, outlet223 } from "~/types/tokens";
 import {
   FaBook,
@@ -38,6 +40,7 @@ import {
   AiOutlineHome,
   AiOutlineLogout,
 } from "react-icons/ai";
+import { DivOverlay } from "leaflet";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -55,6 +58,11 @@ const Header = () => {
     themeMode,
     checkoutData,
     getFavourite,
+    getProductTagStatus,
+    productTags,
+    getSubCategory,
+    subCategory,
+    getCheckoutFormData
   } = useAuthContext();
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -62,7 +70,7 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSection, setActiveSection] = useState("home");
 
-  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State for hamburger menu
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false); // State for hamburger menu
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
@@ -80,52 +88,71 @@ const Header = () => {
     setSearchTerm(event.target.value);
   };
   const [headerCategory, setHeaderCategory] = useState<
-    CategoryTreeNode[] | null
+  SideBarCategory[] | null
   >(null);
-  const [headerCategoryGifts, setHeaderCategoryGifts] = useState<CAT[]>([]);
-  const [headerCategoryClothings, setHeaderCategoryClothings] = useState<
-    CAT[] | null
-  >(null);
-  function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
-    const categoryMap: Record<number, CategoryTreeNode> = {};
-    const tree: CategoryTreeNode[] = [];
 
-    categories.forEach((category) => {
-      categoryMap[category.id] = {
-        id: category.id,
-        outlet: category.outlet,
-        category_name: category.category_name,
-        category_description: category.category_description,
-        deleted: category.deleted,
-        media_id: category.media_id,
-        booknet: category.booknet,
-        children: [],
-      };
-    });
+  // function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
+  //   const categoryMap: Record<number, CategoryTreeNode> = {};
+  //   const tree: CategoryTreeNode[] = [];
 
-    categories.forEach((category) => {
-      if (
-        category.parent === 0 &&
-        category.booknet == 1 &&
-        category.outlet === outlet223
-      ) {
-        const rootCategory = categoryMap[category.id];
-        if (rootCategory) {
-          tree.push(rootCategory);
-        }
-      } else {
-        const parent = categoryMap[category.parent];
-        if (parent) {
-          const childCategory = categoryMap[category.id];
-          if (childCategory) {
-            parent.children!.push(childCategory);
-          }
-        }
-      }
-    });
+  //   categories.forEach((category) => {
+  //     categoryMap[category.id] = {
+  //       id: category.id,
+  //       outlet: category.outlet,
+  //       category_name: category.category_name,
+  //       category_description: category.category_description,
+  //       deleted: category.deleted,
+  //       object_path: category.object_path ? category.object_path : '',
+  //       media_id: category.media_id,
+  //       booknet: category.booknet,
+  //       children: [],
+  //     };
+  //   });
 
-    return tree;
+  //   categories.forEach((category) => {
+  //     if (
+  //       category.parent === 0 &&
+  //       category.booknet == 1 &&
+  //       category.outlet === outlet223
+  //     ) {
+  //       const rootCategory = categoryMap[category.id];
+  //       if (rootCategory) {
+  //         tree.push(rootCategory);
+  //       }
+  //     } else {
+  //       const parent = categoryMap[category.parent];
+  //       if (parent) {
+  //         const childCategory = categoryMap[category.id];
+  //         if (childCategory) {
+  //           parent.children!.push(childCategory);
+  //         }
+  //       }
+  //     }
+  //   });
+
+  //   return tree;
+  // }
+  // Define types
+
+type CategoriesMap = Record<number, SuperCategory & { children: CAT[] }>;
+
+const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
+  if (cat.category_type_id) {
+      acc[cat.category_type_id] = { ...cat, children: [] };
   }
+  return acc;
+}, {} as CategoriesMap);
+
+// Link each item in subCategory to its respective category in categoriesMap
+subCategory?.forEach((item) => {
+    const { category_type_id, outlet } = item;
+    const targetCategory = categoriesMap[category_type_id];
+    if (targetCategory && targetCategory.outlet_id === outlet) {
+        targetCategory.children.push(item);
+    }
+});
+  // Initialize category tree on mount
+ 
 
   const handleSectionClick = (section: string, isDropdown = false) => {
     setActiveSection(section);
@@ -137,21 +164,88 @@ const Header = () => {
       setOpenDropdown(null); // Close dropdown when clicking a section
     }
   };
+
+  // Extend Category1 to include children
+  interface CategoryTreeNode2 extends CAT {
+    children: CategoryTreeNode2[];
+  }
+
+  const buildCategoryTree = (categories: CAT[]): CategoryTreeNode2[] => {
+    const categoriesMap: Record<number, CategoryTreeNode2> = {};
+
+    // Step 1: Organize categories by ID
+    categories.forEach(cat => {
+      categoriesMap[cat.id] = { ...cat, children: [] };
+    });
+
+    const categoryTree: CategoryTreeNode2[] = [];
+
+    // Step 2: Build the tree structure
+    categories.forEach(cat => {
+      if (cat.parent === 0) {
+        // Root category
+        const rootCategory = categoriesMap[cat.id];
+        if (rootCategory) {
+          categoryTree.push(rootCategory); // Check that it's defined
+        }
+      } else {
+        const parentCategory = categoriesMap[cat.parent];
+        if (parentCategory) {
+          const categoryToAdd = categoriesMap[cat.id];
+          if (categoryToAdd) {
+            parentCategory.children.push(categoryToAdd); // Ensure it's defined
+          } else {
+            console.error(`Category ID ${cat.id} not found in map.`);
+          }
+        } else {
+          console.error(`Parent Category ID ${cat.parent} not found in map.`);
+        }
+      }
+    });
+
+    return categoryTree;
+  };
+
   useEffect(() => {
-    if (!category) return;
-
-    const categoryTree = buildCategoryTree(category);
-    // const categoryTreeGift = buildCategoryGifts(category);
-    const categoryTreeGift = category.filter(
-      (item) => item.gifts == 1 || item.arts == 1,
-    );
-    const categoryTreeClothing = category.filter((item) => item.clothings == 1);
-
-    console.log(categoryTree);
-    setHeaderCategory(categoryTree);
-    setHeaderCategoryGifts(categoryTreeGift);
-    setHeaderCategoryClothings(categoryTreeClothing);
-  }, [category]);
+    if (!category || !subCategory) return;
+  
+    const x = buildCategoryTree(subCategory); // This should return CategoryTreeNode2[]
+    const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
+      if (cat.category_type_id) {
+        acc[cat.category_type_id] = { ...cat, children: [] };
+      }
+      return acc;
+    }, {} as CategoriesMap);
+  
+    // Ensure x is an array and has elements
+    if (Array.isArray(x) && x.length > 0) {
+      // Get all children from the built category tree
+      const allChildren: CAT[] = x.flatMap(node => node.children); // Flatten all children
+      allChildren.forEach((item: CAT) => {
+        const { category_type_id, outlet } = item;
+        const targetCategory = categoriesMap[category_type_id];
+        if (targetCategory && targetCategory.outlet_id === outlet) {
+          targetCategory.children.push(item);
+        }
+      });
+  
+      const result = Object.values(categoriesMap);
+      setHeaderCategory(result);
+    } else {
+      // Handle the case when x is empty
+      subCategory.forEach((item: CAT) => {
+        const { category_type_id, outlet } = item;
+        const targetCategory = categoriesMap[category_type_id];
+        if (targetCategory && targetCategory.outlet_id === outlet) {
+          targetCategory.children.push(item);
+        }
+      });
+      const result = Object.values(categoriesMap);
+      setHeaderCategory(result);
+    }
+  
+  }, [category, subCategory]);
+  
   // Close the dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -230,29 +324,26 @@ const Header = () => {
 
   useEffect(() => {
     // if(genre) return;
-    getGenre()
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (!productTags?.[0]) {
+      void getProductTagStatus()
+    }
+
+   void getGenre()
   }, []);
+
   useEffect(() => {
     // if(category) return;
-    getCategory()
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+   void getCheckoutFormData()
+   void getCategory()
+   void getSubCategory(-1)
+     
   }, []);
 
   useEffect(() => {
     const loadData = async () => {
       if (checkoutData?.booknet_customer_id) {
         await getFavourite(checkoutData?.booknet_customer_id);
+
       }
     };
     loadData().catch((error) => {
@@ -390,20 +481,38 @@ const Header = () => {
         {isMobileMenuOpen && (
           <>
             {/* Overlay to reduce opacity */}
-            <div
-              className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50" // Dark overlay
-              onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
-            />
-
+            {isMobileMenuOpen && (
+              <div
+                className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50" // Dark overlay
+                onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
+              />
+            )}
             <button
               className={`fixed right-5 top-5 z-40 sm:block md:hidden ${isMobileMenuOpen ? "bg-white dark:bg-slate-700" : ""}`} // Ensure z-30 is applied
               onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
             >
               <FaTimes className="text-xl text-red-500" />
             </button>
+            <div className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col bg-white p-6 dark:bg-slate-700 md:hidden md:w-1/2">
+              <div className="z-40 flex w-[90%] justify-around gap-1 pb-2">
+                <Link
+                  href="/"
+                  className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-red-500 p-2 text-white transition-transform hover:scale-105"
+                >
+                  <FaHome size={16} />
+                  <span className="text-xs">Home</span>
+                </Link>
 
-            <nav className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col overflow-scroll bg-white p-6 dark:bg-slate-700 md:hidden md:w-1/2">
-              <button
+                <Link
+                  href="/"
+                  className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-red-500 p-2 text-white transition-transform hover:scale-105"
+                >
+                  <HiLogin size={16} />
+                  <span className="text-xs">Logout</span>
+                </Link>
+              </div>
+              <nav className="overflow-scroll">
+                {/* <button
                 onClick={() => {
                   router.push("/");
                 }}
@@ -413,73 +522,127 @@ const Header = () => {
                   <AiOutlineHome className="mr-1 text-red-500" />
                   <span>Home</span>
                 </div>
-              </button>
-              {categories.map((item) => (
-                <div key={item.label} className="mb-4">
-                  <button
-                    onClick={() =>
-                      item.subItems ? toggleDropdown(item.label) : null
-                    }
-                    className="flex w-full items-center justify-between text-lg focus:outline-none"
-                  >
-                    <div className="flex items-center">
-                      {item.icon && (
+              </button> */}
+
+                {headerCategory?.map((item) => (
+                  <div key={item.type} className="mb-4">
+                    <button
+                      onClick={() =>
+                        item.children?.[0]
+                          ? toggleDropdown(item.type)
+                          : (router.push(
+                            `/products?name=${item.type}&detail=${item.category_type_id}`,
+                          ),
+                            setMobileMenuOpen(!isMobileMenuOpen))
+                      }
+                      className="flex w-full items-center justify-between text-lg focus:outline-none"
+                    >
+                      <div className="flex items-center">
+                        {/* {item.icon && (
                         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                         <span className="mr-3">{iconMap[item.icon]}</span>
-                      )}
-                      <Link href={item.href ?? ""} scroll={false}>
-                        {item.label}
-                      </Link>
-                    </div>{" "}
-                    {item.subItems ? (
-                      openDropdown === item.label ? (
-                        <FaChevronDown />
-                      ) : (
-                        <FaChevronRight />
-                      )
-                    ) : null}
-                  </button>
-                  {item.subItems && openDropdown === item.label && (
-                    <div className="ml-4 mt-1">
-                      {item.subItems.map((subItem) => (
-                        <a
-                          key={subItem.label}
-                          href={subItem.href}
-                          className="block py-1 text-sm text-gray-700 hover:underline dark:text-gray-300"
-                        >
-                          {subItem.label}
-                        </a>
-                      ))}
-                      {item.label === "Books" && genre && (
-                        <ScrollArea className="h-[25vh]">
-                          {genre?.map((subItem) => (
-                            <Link
-                              key={subItem.genre}
-                              href={`books?detail=${subItem.genre}`}
-                              className="block py-1 text-sm hover:underline"
-                              onClick={() => setOpenDropdown(null)}
-                              passHref
-                            >
-                              {subItem.genre}
-                            </Link>
-                          ))}
-                        </ScrollArea>
-                      )}
-                      {item.label === "Text Book" && headerCategory?.[0] && (
-                        <ScrollArea className="h-[25vh]">
-                          {headerCategory?.[0]?.children?.map((subItem) => (
-                            <Link
-                              key={subItem.id}
-                              href={`textbooks?detail=${subItem.id}`}
-                              className="block py-1 text-sm hover:underline"
-                              onClick={() => setOpenDropdown(null)}
-                            >
-                              {subItem.category_name}
-                            </Link>
-                          ))}
-                        </ScrollArea>
-                      )}
-                      {item.label === "Art & Gifts" &&
+                      )} */}
+                        {/* <Link href={item.href ?? ""} scroll={false}> */}
+                        {item.type}
+                        {/* </Link> */}
+                      </div>{" "}
+                      {item.children?.[0] ? (
+                        openDropdown === item.type ? (
+                          <FaChevronDown />
+                        ) : (
+                          <FaChevronRight />
+                        )
+                      ) : null}
+                    </button>
+                    {item.children && openDropdown === item.type && (
+                      <div className="ml-4 mt-1">
+                        {item.children.map((subItem) => (
+                          <button
+                            key={subItem.id}
+                            onClick={() =>
+                              subItem.children?.[0]
+                                ? toggleDropdown(subItem.category_name)
+                                : (router.push(
+                                  `/products?name=${item.type}&detail=${item.category_type_id}`,
+                                ),
+                                  setMobileMenuOpen(!isMobileMenuOpen),
+                                  setOpenDropdown(null))
+                            }
+                            className="block py-1 text-sm text-gray-700 hover:underline dark:text-gray-300"
+                          >
+                            {subItem.category_name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {categories.map((item) => (
+                  <div key={item.label} className="mb-4">
+                    <button
+                      onClick={() =>
+                        item.subItems ? toggleDropdown(item.label) : null
+                      }
+                      className="flex w-full items-center justify-between text-lg focus:outline-none"
+                    >
+                      <div className="flex items-center">
+                        {item.icon && (
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                          <span className="mr-3">{iconMap[item.icon]}</span>
+                        )}
+                        <Link href={item.href ?? ""} scroll={false}>
+                          {item.label}
+                        </Link>
+                      </div>{" "}
+                      {item.subItems ? (
+                        openDropdown === item.label ? (
+                          <FaChevronDown />
+                        ) : (
+                          <FaChevronRight />
+                        )
+                      ) : null}
+                    </button>
+                    {item.subItems && openDropdown === item.label && (
+                      <div className="ml-4 mt-1">
+                        {item.subItems.map((subItem) => (
+                          <a
+                            key={subItem.label}
+                            href={subItem.href}
+                            className="block py-1 text-sm text-gray-700 hover:underline dark:text-gray-300"
+                          >
+                            {subItem.label}
+                          </a>
+                        ))}
+                        {item.label === "Books" && genre && (
+                          <ScrollArea className="h-[25vh]">
+                            {genre?.map((subItem) => (
+                              <Link
+                                key={subItem.genre}
+                                href={`books?detail=${subItem.genre}`}
+                                className="block py-1 text-sm hover:underline"
+                                onClick={() => setOpenDropdown(null)}
+                                passHref
+                              >
+                                {subItem.genre}
+                              </Link>
+                            ))}
+                          </ScrollArea>
+                        )}
+                        {headerCategory?.[0] && (
+                          <ScrollArea className="h-[25vh]">
+                            {headerCategory?.[0]?.children?.map((subItem) => (
+                              <Link
+                                key={subItem.id}
+                                href={`textbooks?detail=${subItem.id}`}
+                                className="block py-1 text-sm hover:underline"
+                                onClick={() => setOpenDropdown(null)}
+                              >
+                                {subItem.category_name}
+                              </Link>
+                            ))}
+                          </ScrollArea>
+                        )}
+                        {/* {item.label === "Art & Gifts" &&
                         headerCategoryGifts?.[0] &&
                         headerCategoryGifts?.map((subItem) => (
                           <Link
@@ -502,24 +665,13 @@ const Header = () => {
                           >
                             {subItem.category_name}
                           </Link>
-                        ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              <button
-                onClick={() => {
-                  //
-                }}
-                className="mb-4 flex w-full items-center justify-between text-lg focus:outline-none"
-              >
-                <div className="flex cursor-pointer items-center space-x-2">
-                  <HiLogin className="mr-1 text-gray-600 dark:text-gray-300" />
-                  <span>Logout</span>
-                </div>
-              </button>
-            </nav>
+                        ))} */}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </nav>
+            </div>
           </>
         )}
 

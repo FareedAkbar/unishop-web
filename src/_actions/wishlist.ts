@@ -30,7 +30,7 @@ export async function addToFavourite(item_id: number, booknet_customer_id: numbe
 
             return result
         } else {
-            console.error("Unexpected result structure:", result);
+            console.error("Unexpected result structure addToFavourite:", result);
             return result
         }
     } catch (error) {
@@ -64,7 +64,7 @@ export async function removeFromFavourite(item_id: number, booknet_customer_id: 
 
             return result
         } else {
-            console.error("Unexpected result structure:", result);
+            console.error("Unexpected result structure removeFromFavourite:", result);
             return result
         }
     } catch (error) {
@@ -96,8 +96,7 @@ export async function getFavouriteItems(booknet_customer_id: number | null | und
             console.log("result",result)
             return result
         } else {
-            console.error("Unexpected result structure:", result);
-            console.log("error",result)
+            console.error("Unexpected result structure getFavouriteItems:", result);
             return result
         }
     } catch (error) {

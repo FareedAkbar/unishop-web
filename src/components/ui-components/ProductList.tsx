@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ScrollArea } from "../ui/scroll-area";
+import { SpecialItems } from "~/types/specialItems";
+import { useAuthContext } from "~/Context/AuthContext";
+import { getSpecialItems } from "~/_actions/getitemsbycategory";
+import { useRouter } from "next/navigation";
 
 interface Product {
   id: number;
@@ -12,61 +16,102 @@ interface Product {
 }
 
 interface ProductListProps {
-  products: Product[];
+  id: number,
   title?: string; // Optional title prop
   width?: string; // Optional width prop
 }
 
 const ProductList: React.FC<ProductListProps> = ({
-  products,
+  id,
   title,
   width = "w-64",
+
+
 }) => {
+  const { productTags } = useAuthContext();
+  const router = useRouter();
+  const [specialItems, setSpecialItems] = useState<SpecialItems[] | null>(null)
+  useEffect(() => {
+    const loadData = async () => {
+      const x = await getSpecialItems(id)
+      if (typeof x != "boolean" && x.status && x.data) {
+        setSpecialItems(x?.data)
+        console.log(x.data)
+      }
+    };
+    loadData().catch((error) => {
+      console.error("Failed to load data in useEffect:", error);
+    });
+  }, [])
+
   return (
-    <div className="flex flex-col space-y-4 p-2">
-      {title && (
-        <h2 className="mb-4 text-2xl pl-3 font-bold text-gray-800 dark:text-white animate-bounce">
-          {title}
-        </h2>
-      )}
-      <ScrollArea className="h-96 pr-5 scrollbar-hidden"> 
-        <div className={`flex flex-col p-3 gap-4 ${width}`}> {/* Flex container for horizontal spacing */}
-          {products.map((product, index) => (
-            <motion.div
-              key={product.id}
-              className={`flex w-full items-center justify-between cursor-pointer rounded-lg bg-white dark:bg-slate-700 dark:text-white border border-neutral-300 p-3 shadow-lg`} 
-              initial={{ opacity: 0, y: -20 }} // Start position above
-              animate={{
-                opacity: 1,
-                y: 0,
-                transition: { type: "spring", stiffness: 100 },
-              }}
-              whileHover={{ scale: 1.05 }} // Scale effect on hover with origin to prevent cutting off
-              transition={{ delay: index * 0.1 }} // Stagger effect
-            >
-              <Image
-                src={product.image}
-                alt={product.name}
-                className="h-36 w-36 animate-swing rounded-lg object-cover"
-                width={100}
-                height={100}
-              />
-              <div className="flex flex-col">
-                <h3 className="font-semibold text-gray-800 dark:text-white">
-                  {product.name}
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-300">
-                  {product.category}
-                </p>
-                <span className="mt-2 text-lg font-bold text-blue-600 dark:text-blue-200">
-                  ${product.price.toFixed(2)}
-                </span>
-              </div>
-            </motion.div>
-          ))}
+    <>
+      {specialItems?.[0] && (
+        <div className="flex flex-col space-y-4 p-6 pb-8">
+          {title && (
+            <h2 className="text-2xl pl-3 font-bold text-gray-800 dark:text-white animate-bounce">
+              {title}
+            </h2>
+          )}
+          <ScrollArea className="h-96 pr-5 scrollbar-hidden">
+            <div className={`flex flex-col pl-6 pr-6 pt-2 pb-6 gap-4 ${width}`}> {/* Flex container for horizontal spacing */}
+              {specialItems?.map((product, index) =>
+                title == product?.tag_name && (
+                  <motion.div
+                    key={product.item_id}
+                    className={`flex w-full items-center justify-between cursor-pointer rounded-lg bg-white dark:bg-slate-700 dark:text-white border border-neutral-300 p-3 shadow-lg`}
+                    initial={{ opacity: 0, y: -20 }} // Start position above
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      transition: { type: "spring", stiffness: 100 },
+                    }}
+                    whileHover={{ scale: 1.05 }} // Scale effect on hover with origin to prevent cutting off
+                    transition={{ delay: index * 0.1 }} // Stagger effect
+                    onClick={()=>router.push(`/products?category=${product.category_type_id}&name=${product.category_name}&detail=${product.category}`)}
+                  >
+                    {product.object_path && product.category_name ? (
+                      <Image
+                        src={`https://ipos-storage.s3.amazonaws.com/${product.object_path}`}
+                        alt={product.category_name}
+                        className="h-36 w-36 animate-swing rounded-lg object-cover"
+                        width={100}
+                        height={100}
+                      />
+                    ) : (
+                      <Image
+                        src={'/assets/images/bookicon.png'}
+                        alt={"Item"}
+                        className="h-36 w-36 animate-swing rounded-lg object-cover"
+                        width={100}
+                        height={100}
+                      />
+                    )}
+
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-gray-800 dark:text-white" title={product.item_name ?? ""}>
+                      {product.item_name && product.item_name.length > 24 ? `${product.item_name?.slice(0, 24)}...` : product.item_name}
+                      </span>
+                      <p className="text-sm flex justify-end text-gray-500 dark:text-gray-300">
+                        {product.category_name}
+                      </p>
+                      {product.item_sale_price ? (
+                        <span className="mt-2 flex justify-end text-lg font-bold text-blue-600 dark:text-blue-200">
+                          ${product.item_sale_price.toFixed(2)}
+                        </span>
+                      ):''}
+
+                    </div>
+                  </motion.div>
+                )
+
+              )}
+            </div>
+          </ScrollArea>
+
         </div>
-      </ScrollArea>
-    </div>
+      )}
+    </>
   );
 };
 

@@ -3,6 +3,7 @@ interface CheckoutForm {
   email: string | null; // Required, must be a valid email
   company?: string | null; // Optional
   address?: string | null; // Optional
+  second_address?: string | null; // Optional
   city?: string | null; // Optional
   state?: string | null; // Optional
   postal_code?: string | null; // Optional
@@ -13,7 +14,10 @@ interface CheckoutForm {
   customer_id?: number | null,
   uuid?: string | null,
   booknet_customer_type_id?: number,
-  booknet_customer_id?: number | null
+  booknet_customer_id?: number | null,
+  username?: string | null
+  password?: string | null,
+  duplicate?: number | null
 }
 
 interface booknet_customer_id {

@@ -48,7 +48,7 @@ interface CostDetails {
 
 
 
-interface VariationTag {
+export interface VariationTag {
   items_variations_tags_link_id: number;
   item_id: number;
   items_variations_tags_id: number;
@@ -76,10 +76,34 @@ export interface Variation {
   stock: Stock;
 }
 
+export interface SpecialTag {
+  item_special_tags_assign_id: number;
+  item_id: number;
+  item_special_tags_id: number;
+}
+export interface Media {
+  object_id: number;
+  object_path: string;
+}
+export interface Review {
+  name: string;
+  review: string;
+  stars: number;
+}
+export interface category_detail {
+  category_description: string,
+  category_name: string,
+  id: number,
+  media_id: number, 
+  outlet: number,
+  parent: number,
+  till_visibility: number,
+  web_visibility: number,
+}
 export default interface DataCart {
   book_id: number;
-  final_price_including_tax?: number; // Just use number; 0 is included
-  quantity: number; // Just use number; 0 is included
+  final_price_including_tax?: number; 
+  quantity: number; 
   item_id: number;
   genre_id: number;
   book_title: string;
@@ -131,15 +155,15 @@ export default interface DataCart {
   tag_links?: TagLink[] | null;
   variations?: Variation[] | null;
   selected_variation?: Variation | null;
+  special_tags?: SpecialTag[] | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selectedValues?: any
+  selectedValues?: any;
+  reviews?: Review[],
+  category_detail?: category_detail
 }
 
 
-
-
-
-interface Media {
+export interface Media {
   object_id: number;
   object_path: string;
 }

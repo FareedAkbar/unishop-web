@@ -192,9 +192,9 @@ const MyComponent = () => {
   useEffect(() => {
     if (!genre) return;
     if (!detail) return;
-    const genId = category?.find((item) => item.id == parseInt(detail));
+    const genId = category?.find((item) => item?.outlet_id == parseInt(detail));
     if (genId) {
-      setSubcategory(genId);
+      setSubcategory(null);
       const loadData = async () => {
         await getCloths(1)
       };

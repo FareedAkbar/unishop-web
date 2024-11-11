@@ -8,6 +8,7 @@ import L from 'leaflet';
 import markerIconUrl from 'leaflet/dist/images/marker-icon.png';
 import markerIconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadowUrl from 'leaflet/dist/images/marker-shadow.png';
+import { useEffect } from 'react';
 
 // Define a type that extends the existing Leaflet Icon Default
 interface LeafletIconDefault extends L.Icon.Default {
@@ -36,6 +37,15 @@ type height = {
 }
  function Map ({height} : height) {
   const position: [number, number] = [-34.40755818806117, 150.87911127658157];
+
+  useEffect(() => {
+    return () => {
+      // Cleanup any existing map instance
+      if (document.querySelector('.leaflet-container')) {
+        document.querySelector('.leaflet-container')?.remove();
+      }
+    };
+  }, []);
 
   return (
     <MapContainer center={position} zoom={13} style={{ height: `${height}px`, width: '100%', borderRadius: "10px" }}>

@@ -26,7 +26,7 @@ import {
   SelectContent,
   SelectItem,
 } from "~/components/ui/select";
-import type { Category } from "~/types/category";
+import type { Category, SuperCategory } from "~/types/category";
 import { getBooks } from "~/_actions/gettextbooks";
 import AlertBox from "~/components/alertBox/alert";
 import { useToast } from "~/hooks/use-toast";
@@ -57,7 +57,7 @@ const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
 
   const [data, setData] = useState<DataCart[]>([]);
-  const [subCategory, setSubCategory] = useState<Category[] | null>(null);
+  const [subCategory, setSubCategory] = useState<SuperCategory[] | null>(null);
   const [parentSubCategory, setParentSubCategory] = useState<Category | null>(
     null,
   );
@@ -76,39 +76,39 @@ const MyComponent = () => {
     setDetail(d);
   }, [params]);
 
-  useEffect(() => {
-    if (!category) return;
-    if (!detail) return;
+  // useEffect(() => {
+  //   if (!category) return;
+  //   if (!detail) return;
 
-    const catId = category?.find((item) => item.id == parseInt(detail));
-    if (catId) {
-      setParentSubCategory(catId);
-      const loadData = async () => {
-        const x = category?.filter((item) => item.parent == catId?.id);
+  //   const catId = category?.find((item) => item.id == parseInt(detail));
+  //   if (catId) {
+  //     setParentSubCategory(catId);
+  //     const loadData = async () => {
+  //       const x = category?.filter((item) => item.parent == catId?.id);
 
-        setSubCategory(x);
-        try {
-          setLoader(true);
-          const x = await getBooks(catId?.id ?? 1);
-          if (typeof x !== "boolean" && x.status) {
-            setData(x.data);
-          }
+  //       setSubCategory(x);
+  //       try {
+  //         setLoader(true);
+  //         const x = await getBooks(catId?.id ?? 1);
+  //         if (typeof x !== "boolean" && x.status) {
+  //           setData(x.data);
+  //         }
 
-          setLoader(false);
-          // setData(result);
-          // setTotalPages(result.totalPages);
-        } catch (error) {
-          console.error("Failed to load data:", error);
-          setLoader(false);
-          // Optionally set an error state here
-        }
-      };
+  //         setLoader(false);
+  //         // setData(result);
+  //         // setTotalPages(result.totalPages);
+  //       } catch (error) {
+  //         console.error("Failed to load data:", error);
+  //         setLoader(false);
+  //         // Optionally set an error state here
+  //       }
+  //     };
 
-      loadData().catch((error) => {
-        console.error("Failed to load data in useEffect:", error);
-      });
-    }
-  }, [category, detail]);
+  //     loadData().catch((error) => {
+  //       console.error("Failed to load data in useEffect:", error);
+  //     });
+  //   }
+  // }, [category, detail]);
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
@@ -129,6 +129,7 @@ const MyComponent = () => {
   const openDetail = async (item: DataCart) => {
     setOpen(true);
     setItemDetail(item);
+    console.log("ttd",item);
   };
 
   const isItemInCart = (itemId: number) => {
@@ -259,11 +260,11 @@ const MyComponent = () => {
                       <SelectValue placeholder="" />
                     </SelectTrigger>
                     <SelectContent>
-                      {subCategory?.map((item) => (
+                      {/* {subCategory?.map((item) => (
                         <SelectItem key={item.id} value={item.id.toString()}>
                           {item.category_name}
                         </SelectItem>
-                      ))}
+                      ))} */}
                     </SelectContent>
                   </Select>
                 )}

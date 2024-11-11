@@ -40,7 +40,7 @@ export default function CehckoutForm({ push, handleData, disabled = false }: che
   const [cityOptions, setCityOptions] = useState<
     { value: number; label: string }[]
   >([]);
-  const { checkoutData, CheckoutApi } = useAuthContext();
+  const { checkoutData, CheckoutApi, checkoutFormData } = useAuthContext();
   const [loader, setLoader] = useState(false);
 
   const defaultValues = checkoutData
@@ -150,12 +150,15 @@ export default function CehckoutForm({ push, handleData, disabled = false }: che
           setLoader(false);
           if (res.status) {
             if (push) {
-              router.push("placeorder");
+            
+              void checkoutFormData(res?.data).then(()=>router.push("/placeorder"));
+              
             }
             if (!push && handleData) {
               handleData(res?.data);
             }
           }
+          
         })
         .catch((err) => {
           setLoader(false);

@@ -22,7 +22,9 @@ export enum PAGE_ROUTES {
   ORDER_CONFIRMED = "/order-confirmed",
   PRIVACY_POLICY = "/privacy-policy",
   FAVORITES="/favorites",
-  CLOTHS="/cloths"
+  CLOTHS="/cloths",
+  PRODUCTS="/products",
+  PRODUCT_DETAILS="/product-details"
 }
 
 export enum API_ROUTES {
@@ -30,7 +32,8 @@ export enum API_ROUTES {
   SENDOTP = "https://ipos-dev.iconsole.com.au/api/v1/student/auth/send-otp",
   VERIFYOTP = "https://ipos-dev.iconsole.com.au/api/v1/student/auth/verify-login-otp",
   GENRE = "https://booknet-dev.iconsole.com.au/api/genre",
-  CATEGORY = "https://booknet-dev.iconsole.com.au/api/genre/categories",
+  CATEGORY = "https://booknet-dev.iconsole.com.au/api/category/type",
+  SUB_CATEGORY = "https://booknet-dev.iconsole.com.au/api/category",
   CHECKOUT = "https://booknet-dev.iconsole.com.au/api/customer",
   // CHECKOUT_WITH_USERNAME = "https://booknet-dev.iconsole.com.au/api/customer",
   REGISTER = "/api/auth/register",

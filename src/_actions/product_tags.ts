@@ -1,12 +1,13 @@
 "use server";
 
-import type DataCart from '~/types/book';
+import type { OrderStatusResponse } from '~/types/getSpecialBackOrders';
+import type { ItemSpecialTag } from '~/types/productTags';
 import { token221, token223 } from '~/types/tokens';
 
 
-interface ApiResponse {
+interface ApiResponseStatus {
     // meta: PaginationData; // Adjust based on your actual structure
-    data: DataCart[];
+    data: ItemSpecialTag[];
     status: boolean;
 }
 const requestOptions: RequestInit = {
@@ -17,21 +18,24 @@ const requestOptions: RequestInit = {
     },
     redirect: "follow", // Use the correct type for `redirect`
 };
-export async function getBooks(genre_id: number): Promise<ApiResponse | boolean> {
+
+
+export async function getProductTags(): Promise<ApiResponseStatus | boolean> {
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/books/getBooksByGenreCat?category_id=${genre_id}&entries=1&images=1&detailed=1`,
+            `https://booknet-dev.iconsole.com.au/api/customer/special-tags`,
             requestOptions,
         );
-        const result: ApiResponse = (await response.json()) as ApiResponse;
-
+        const result: ApiResponseStatus =
+            (await response.json()) as ApiResponseStatus;
         // Check if result has the expected structure
         if (result?.status) {
             // setMeta(result.meta);
-            console.log(result)
             return result
+
         } else {
-            console.error("Unexpected result structure getBooks:", result);
+            console.error("Unexpected result structure getProductTags:", result);
+            // Handle unexpected structure here
             return result
         }
     } catch (error) {

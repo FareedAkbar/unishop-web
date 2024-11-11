@@ -1,6 +1,6 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, SetStateAction, useContext, useEffect, useState } from "react";
 import { localStorageClient } from "~/clients/localstorage-client";
 import type DataCart from "~/types/book";
 import type { Login, SendOTP, VerifyOTP } from "~/types/login";
@@ -20,7 +20,7 @@ import type {
   SendOTPResponse,
   VerifyOTPResponse,
 } from "~/types/loginResponse";
-import { type Category, type CategoryResponse } from "~/types/category";
+import { SubCategoryResponse, SuperCategory, type Category, type CategoryResponse } from "~/types/category";
 import { setCookie } from "~/utils/cookie";
 import { VerifyOTPCApi } from "~/_actions/authLogin";
 import { cookies } from "next/headers";
@@ -31,6 +31,8 @@ import type {
   FavData,
   getFavResponse,
 } from "~/types/favourite";
+import { getProductTags } from "~/_actions/product_tags";
+import type { ApiResponseStatus, ItemSpecialTag } from "~/types/productTags";
 
 type trasactionData = {
   trasaction_id?: string | null;
@@ -50,16 +52,19 @@ interface AuthContextProps {
   getCheckoutFormData: () => Promise<boolean>;
   getGenre: () => Promise<boolean>;
   getCategory: () => Promise<boolean>;
+  getSubCategory: (payload: number) => Promise<boolean>;
   addCartItems: (payload: DataCart) => Promise<boolean>;
   checkoutFormData: (payload: CheckoutForm) => Promise<boolean>;
   removeCartItems: (payload: DataCart) => Promise<boolean>;
   increaseCartItemQuantity: (
     item_id: number,
     quantity: number,
+    variable_id?: number
   ) => Promise<boolean>;
   cartItems?: DataCart[];
   genre?: Genre[] | null;
-  category?: Category[] | null;
+  category?: SuperCategory[] | null;
+  subCategory?: Category[] | null;
   checkoutData: CheckoutForm | null;
   appId: string;
   removeAllCartItems: () => Promise<boolean>;
@@ -84,6 +89,11 @@ interface AuthContextProps {
   ) => Promise<boolean>;
   getFavourite: (booknet_customer_id: number) => Promise<boolean>;
   favItems: DataCart[];
+  setProductForDetail: (data: DataCart | null) => Promise<void>;
+  productDetail: DataCart | null;
+  getProductTagStatus: () => Promise<boolean>;
+  productTags: ItemSpecialTag[] | null;
+  setCheckoutData: React.Dispatch<SetStateAction<CheckoutForm | null>>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -106,10 +116,17 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [orderTrasactionData, setOrderTrasactionData] =
     useState<trasactionData | null>(null);
   const [genre, setGenre] = useState<Genre[] | null>([]);
-  const [category, setCategory] = useState<Category[] | null>([]);
+  const [category, setCategory] = useState<SuperCategory[] | null>([]);
+  const [subCategory, setSubCategory] = useState<Category[] | null>([]);
   const [uuidLocal, setUuidLocal] = useState<string | undefined>();
   const [checkoutData, setCheckoutData] = useState<CheckoutForm | null>(null);
   const [booknetCustomerId, setBooknetCustomerId] = useState<number | null>(
+    null,
+  );
+  const [productDetail, setProductDetail] = useState<DataCart | null>(
+    null,
+  );
+  const [productTags, setProductTags] = useState<ItemSpecialTag[] | null>(
     null,
   );
   const router = useRouter();
@@ -219,7 +236,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (!response.ok) return false;
 
-    const responsePayload: { status: boolean; data: Category[] } =
+    const responsePayload: { status: boolean; data: SuperCategory[] } =
       (await response.json()) as CategoryResponse;
     if (!responsePayload.status) return false;
 
@@ -229,12 +246,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     return true;
   };
-
-  const getArts = async (): Promise<boolean> => {
+  const getSubCategory = async (payload: number): Promise<boolean> => {
     const response = await apiRouter(
-      "CATEGORY",
+      "SUB_CATEGORY",
       {
         method: "GET",
+        queryParams: payload && payload > -1 ? `category_type_id=${payload}` : '',
       },
       // { skipAuthorization: true },
     );
@@ -242,36 +259,17 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!response.ok) return false;
 
     const responsePayload: { status: boolean; data: Category[] } =
-      (await response.json()) as CategoryResponse;
+      (await response.json()) as SubCategoryResponse;
     if (!responsePayload.status) return false;
 
-    setCategory(responsePayload.data);
+    setSubCategory(responsePayload.data);
 
-    lsClient.setItem("CATEGORY", responsePayload.data);
+    // lsClient.setItem("CATEGORY", responsePayload.data);
 
     return true;
   };
-  const getGifts = async (): Promise<boolean> => {
-    const response = await apiRouter(
-      "CATEGORY",
-      {
-        method: "GET",
-      },
-      // { skipAuthorization: true },
-    );
 
-    if (!response.ok) return false;
 
-    const responsePayload: { status: boolean; data: Category[] } =
-      (await response.json()) as CategoryResponse;
-    if (!responsePayload.status) return false;
-
-    setCategory(responsePayload.data);
-
-    lsClient.setItem("CATEGORY", responsePayload.data);
-
-    return true;
-  };
 
   const setTrasactionData = async (
     payload: trasactionData | null,
@@ -287,7 +285,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const setTheme = (payload: string) => {
-    console.log(payload);
     lsClient.setItem("THEME_MODE", payload);
     setThemeMode(payload);
   };
@@ -296,38 +293,38 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     item: DataCart,
     booknet_customer_id: number,
   ): Promise<boolean> => {
-   
-      setFavItems((prevFavItems) => {
-        // Check if the item already exists in the favorite list
-       
-          // Create a new item object that conforms to the FavData type
-          const newItem: DataCart = item;
 
-          const updatedFavItems = [...prevFavItems, newItem];
-          return updatedFavItems;
-        
-      });
+    setFavItems((prevFavItems) => {
+      // Check if the item already exists in the favorite list
+
+      // Create a new item object that conforms to the FavData type
+      const newItem: DataCart = item;
+
+      const updatedFavItems = [...prevFavItems, newItem];
+      return updatedFavItems;
+
+    });
     const response = await addToFavourite(item.item_id, booknet_customer_id);
     const responsePayload: {
       status: boolean;
     } = response as addFavResponse;
     if (responsePayload.status) {
       return true
-    } else  if (!responsePayload.status) {
+    } else if (!responsePayload.status) {
       const itemExists = favItems.some(
         (item) => item.item_id === item.item_id,
       );
-      if(itemExists){
+      if (itemExists) {
         setFavItems((prevFavItems) => {
-         
-  
-          
-            // If it exists, remove it by filtering out the item
-            const updatedFavItems = prevFavItems.filter(
-              (item) => item.item_id !== item.item_id,
-            );
-            return updatedFavItems;
-          
+
+
+
+          // If it exists, remove it by filtering out the item
+          const updatedFavItems = prevFavItems.filter(
+            (item) => item.item_id !== item.item_id,
+          );
+          return updatedFavItems;
+
         });
       }
       return false;
@@ -342,7 +339,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const itemExists = favItems.some(
       (item) => item.item_id === item.item_id,
     );
-    if(itemExists){
+    if (itemExists) {
       const newItemList = favItems.filter(
         (item) => item.item_id !== item.item_id,
       );
@@ -354,20 +351,20 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } = response as addFavResponse;
     if (responsePayload.status) {
       return true
-    }else if (!responsePayload.status) {
+    } else if (!responsePayload.status) {
       const itemExistsAgain = favItems.some(
         (item) => item.item_id === item.item_id,
       );
-      if(!itemExistsAgain){
+      if (!itemExistsAgain) {
         setFavItems((prevFavItems) => {
-       
+
           // Create a new item object that conforms to the FavData type
           const newItem: DataCart = item
 
           const updatedFavItems = [...prevFavItems, newItem];
           return updatedFavItems;
-        
-      });
+
+        });
       }
       return false;
     } else {
@@ -389,13 +386,36 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return false;
     }
   };
+  const getProductTagStatus = async (): Promise<boolean> => {
+    const response = await getProductTags();
+    const responsePayload: {
+      status: boolean;
+      data: ItemSpecialTag[];
+    } = response as ApiResponseStatus;
+    if (responsePayload.status) {
+      lsClient.setItem("PRODUCT_SPECIAL_TAGS", responsePayload.data)
+      setProductTags(responsePayload.data)
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   const addCartItems = async (payload: DataCart): Promise<boolean> => {
+
     setItems((prev) => {
+      let existingItemIndex = -1
       // Check if the item already exists in the cart
-      const existingItemIndex = prev.findIndex(
-        (item) => item.item_id === payload.item_id,
-      );
+      if (payload?.selected_variation?.items_variable_items_id) {
+        existingItemIndex = prev.findIndex(
+          (item) => item.item_id === payload.item_id && item?.selected_variation?.items_variable_items_id == payload?.selected_variation?.items_variable_items_id,
+        );
+      } else {
+        existingItemIndex = prev.findIndex(
+          (item) => item.item_id === payload.item_id,
+        );
+      }
+
 
       // Prepare new or updated item
       const newItem = {
@@ -425,6 +445,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         return updatedItems;
       }
     });
+
     return true;
   };
 
@@ -432,10 +453,19 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const increaseCartItemQuantity = async (
     item_id: number,
     quantity: number,
+    variable_id?: number
   ): Promise<boolean> => {
+    console.log(variable_id)
     const updatedItems = cartItems.map((item) => {
-      if (item.item_id === item_id) {
+      if (variable_id && variable_id == item?.selected_variation?.items_variable_items_id && item.item_id === item_id) {
+        console.log("item", item)
         return { ...item, quantity: quantity };
+
+      } else {
+        if (!variable_id && item.item_id === item_id) {
+          console.log("item2", item)
+          return { ...item, quantity: quantity };
+        }
       }
       return item;
     });
@@ -450,13 +480,20 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       typeof currentItems === "string"
         ? (JSON.parse(currentItems) as DataCart[])
         : currentItems;
+    if (payload?.selected_variation?.items_variable_items_id) {
+      const updatedItems = newItems.filter(
+        (item: DataCart) => item?.selected_variation?.items_variable_items_id !== payload?.selected_variation?.items_variable_items_id,
+      );
+      lsClient.setItem("CART_ITEM", updatedItems);
+      setItems(updatedItems);
+    } else {
+      const updatedItems = newItems.filter(
+        (item: DataCart) => item.item_id !== payload.item_id,
+      );
+      lsClient.setItem("CART_ITEM", updatedItems);
+      setItems(updatedItems);
+    }
 
-    const updatedItems = newItems.filter(
-      (item: DataCart) => item.item_id !== payload.item_id,
-    );
-
-    lsClient.setItem("CART_ITEM", updatedItems);
-    setItems(updatedItems);
 
     return true;
   };
@@ -514,6 +551,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const TOKEN = lsClient.getItem("TOKEN");
     const BOOKNET_CUSTOMER_ID = lsClient.getItem("BOOKNET_CUSTOMER_ID");
     const THEME_MODE = lsClient.getItem("THEME_MODE");
+    const PRODUCT_DETAIL = lsClient.getItem("PRODUCT_DETAIL");
+    const SPECIAL_TAGS = lsClient.getItem("PRODUCT_SPECIAL_TAGS");
     setItems(
       cartItems
         ? typeof cartItems === "string"
@@ -521,6 +560,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           : cartItems
         : [],
     );
+    setProductTags(SPECIAL_TAGS)
+    setProductDetail(PRODUCT_DETAIL);
     setThemeMode(THEME_MODE);
     setUuidLocal(UUID);
     setBooknetCustomerId(BOOKNET_CUSTOMER_ID);
@@ -535,8 +576,16 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
+  const setProductForDetail = async (payload: DataCart | null): Promise<void> => {
+    setProductDetail(payload)
+    lsClient.setItem(
+      "PRODUCT_DETAIL",
+      payload ?? null,
+    );
+  };
   const checkoutFormData = async (payload: CheckoutForm): Promise<boolean> => {
     lsClient.setItem("CHECKOUT_DATA", payload);
+    // setCheckoutData(payload)
     return true;
   };
   const getCheckoutFormData = async (): Promise<boolean> => {
@@ -557,18 +606,19 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       { skipAuthorization: true },
     );
 
+
     const responsePayload: { status: boolean; data: CheckoutForm } =
       (await response.json()) as checkoutBooknetResponse;
     if (responsePayload.status) {
       const x = responsePayload.data.booknet_customer_id ?? null;
       setBooknetCustomerId(x);
-      setCheckoutData(responsePayload.data);
-
+      // setCheckoutData(responsePayload.data);
+      console.log(responsePayload.data)
       lsClient.setItem(
         "BOOKNET_CUSTOMER_ID",
         responsePayload?.data.booknet_customer_id ?? null,
       );
-      lsClient.setItem("CHECKOUT_DATA", responsePayload?.data ?? null);
+      // lsClient.setItem("CHECKOUT_DATA", responsePayload?.data ?? null);
       return responsePayload;
     } else {
       throw new Error("failed"); // Throw an error with the message
@@ -591,11 +641,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const responsePayload: { status: boolean; data: CheckoutForm } =
       (await response.json()) as checkoutBooknetResponse;
     if (responsePayload.status) {
-      setCheckoutData(responsePayload.data);
+      // setCheckoutData(responsePayload.data);
       const x = responsePayload.data.booknet_customer_id ?? null;
       setBooknetCustomerId(x);
-      lsClient.setItem("CHECKOUT_DATA", responsePayload.data);
-      // lsClient.setItem("BOOKNET_CUSTOMER_ID", responsePayload?.data?.booknet_customer_id ?? null);
+      // lsClient.setItem("CHECKOUT_DATA", responsePayload.data);
+      lsClient.setItem("BOOKNET_CUSTOMER_ID", responsePayload?.data?.booknet_customer_id ?? null);
       return responsePayload;
     } else {
       throw new Error("failed"); // Throw an error with the message
@@ -630,6 +680,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         sendOTP,
         verifyOTP,
         CheckoutApi,
+        setCheckoutData,
         booknetCustomerId,
         CheckoutApiWithUserName,
         setTrasactionData,
@@ -639,6 +690,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         removeFavourite,
         getFavourite,
         favItems,
+        setProductForDetail,
+        productDetail,
+        getProductTagStatus,
+        productTags,
+        getSubCategory,
+        subCategory
       }}
     >
       {children}
