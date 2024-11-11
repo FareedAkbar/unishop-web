@@ -88,13 +88,13 @@ const ImageSlider: React.FC = () => {
             <div className="text-xl font-bold text-white sm:text-3xl lg:mb-4 lg:text-4xl">
               {slides[currentIndex]!.heading}
             </div>
-            <button
+            {/* <button
               className="flex w-fit flex-row items-center rounded border-none bg-red-600 px-1 text-[10px] text-white md:px-3 md:py-1.5 lg:px-4 lg:py-2 lg:text-base lg:font-bold"
               onClick={() => router.push(slides[currentIndex]!.route)} // Navigate to respective route
             >
               <span>{slides[currentIndex]!.button}</span>
               <IoIosArrowRoundForward className="ml-1 text-lg text-white lg:text-xl" />
-            </button>
+            </button> */}
           </div>
         </div>
         <div className="relative">
