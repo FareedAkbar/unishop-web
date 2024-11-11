@@ -343,6 +343,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                         passHref
                       > */}
               <div className="flex items-center justify-start ">
+              <AiOutlineFileText className="text-orange-600 w-6 h-6 mr-2 p-0.5" />
                 {/* {item.object_path && (
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     <Image

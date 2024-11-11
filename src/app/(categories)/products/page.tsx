@@ -39,6 +39,7 @@ import {
   SelectContent,
   SelectItem,
 } from "~/components/ui/select";
+import { outlet223 } from "~/types/tokens";
 
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
@@ -97,13 +98,19 @@ const MyComponent = () => {
     }
   }, [params]);
   async function getCloths(page: number,id: number) {
+    setData([]);
+    setPagination(null);
+    setDisplayData(null);
+    setTotalPages(0);
+    setPageSize(0);
     try {
       setLoader(true);
-      const x = await getItemsByCategory(id ?? 1, page, 1, 0);
+      const x = await getItemsByCategory(id ?? 1, page);
       if (typeof x !== "boolean" && x.status) {
+        console.log(x)
         setPagination(x.meta);
         setData(x.data);
-        setDisplayData(x.data);
+        setDisplayData(x.data ? x.data : null);
         setTotalPages(x.meta.pages);
         setPageSize(x.meta.limit);
       }
@@ -121,7 +128,7 @@ const MyComponent = () => {
     // if (detail < 0) return;
     
     const genId = subCategory?.find((item) => item.id == detail);
-    const parentCat = subCategory?.filter((item)=> item.category_type_id == parent && item.outlet == 221);
+    const parentCat = subCategory?.filter((item)=> item.category_type_id == parent && item.outlet == outlet223);
     const catId = category?.find((item) => item.category_type_id == detail);
     setDisplayData(null);
     if(parentCat?.[0]){
@@ -135,6 +142,7 @@ const MyComponent = () => {
         setSubcategory(catId.type);
       }
       const loadData = async () => {
+        console.log(detail)
         await getCloths(1, detail);
       };
 
@@ -413,7 +421,7 @@ const MyComponent = () => {
             </div>
 
             <ScrollArea className="h-[75vh] pb-10">
-              <div className="flex flex-wrap justify-center py-3">
+              <div className="flex flex-wrap justify-center py-3" key={displayData ? displayData?.[0]?.item_id : "123"}>
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
                       <div key={index} className="p-2">
@@ -422,7 +430,7 @@ const MyComponent = () => {
                     ))
                   : displayData?.map((item: DataCart) => (
                       <ProductCard
-                        key={item.book_id}
+                        key={item.item_id}
                         product={item}
                         showAddToCart={!isItemInCart(item.item_id)}
                         onAddToCart={async () => {
@@ -561,7 +569,7 @@ const MyComponent = () => {
                 </div>
               )}
 
-              {itemDetail?.pages !== undefined && itemDetail.pages !== null && (
+              {itemDetail?.pages !== undefined && itemDetail.pages !== null && itemDetail.pages ? (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
@@ -570,7 +578,7 @@ const MyComponent = () => {
                     {itemDetail.pages}
                   </span>
                 </div>
-              )}
+              ) : ''}
 
               {itemDetail?.publisher?.publisher_name && (
                 <div className="flex items-center justify-center">
@@ -603,49 +611,8 @@ const MyComponent = () => {
                     : ""}
                 </span>
               </div>
-              {itemDetail?.book_language && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Language:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.book_language}
-                  </span>
-                </div>
-              )}
+             
 
-              {itemDetail?.pages !== undefined && itemDetail.pages !== null && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Number of Pages:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.pages}
-                  </span>
-                </div>
-              )}
-
-              {itemDetail?.publisher?.publisher_name && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Publisher:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.publisher.publisher_name}
-                  </span>
-                </div>
-              )}
-
-              {itemDetail?.publisher?.country && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Country of Publication:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.publisher.country}
-                  </span>
-                </div>
-              )}
               {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>
                   <div>

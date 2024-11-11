@@ -31,9 +31,12 @@ interface checkout {
   push?: boolean;
   disabled?: boolean;
   handleData?: (data: CheckoutForm) => void;
+  title: string,
+  subTitle: string;
+  pushPath?: string
 }
 
-export default function CehckoutForm({ push, handleData, disabled = false }: checkout) {
+export default function CehckoutForm({ push, handleData, disabled = false, title, subTitle,pushPath }: checkout) {
   // const [stateOptions, setStateOptions] = useState<
   //   { value: number; label: string }[]
   // >([]);
@@ -149,9 +152,9 @@ export default function CehckoutForm({ push, handleData, disabled = false }: che
         .then((res: checkoutBooknetResponse) => {
           setLoader(false);
           if (res.status) {
-            if (push) {
-            
-              void checkoutFormData(res?.data).then(()=>router.push("/placeorder"));
+            if (push && pushPath) {
+              console.log(res?.data)
+              void checkoutFormData(res?.data).then(()=>router.push(pushPath));
               
             }
             if (!push && handleData) {
@@ -179,8 +182,12 @@ export default function CehckoutForm({ push, handleData, disabled = false }: che
   return (
     <div className="mx-auto w-full rounded-none border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-        Checkout
+        {title}
       </h2>
+      <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
+       {subTitle}
+      </p>
+
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">

@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import type { CheckoutForm } from "~/types/checkoutForm";
 import Spinner from "../spinner";
 import Button from "../ui-components/Button";
-import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import { useToast } from "~/hooks/use-toast";
 import Link from "next/link";
 
 interface checkoutBooknet {
@@ -35,6 +35,7 @@ export default function BooknetFormLogin({
 }: checkoutBooknet) {
   const { CheckoutApiWithUserName,checkoutFormData } = useAuthContext();
   const router = useRouter();
+  const { toast } = useToast();
   const [loader, setLoader] = useState(false);
   const {
     register,
@@ -62,6 +63,12 @@ export default function BooknetFormLogin({
         .catch((err) => {
           setLoader(false);
           console.log(err);
+          const errorMessage = (err as Error).message || "An unknown error occurred";
+          toast({
+            title: "Login Failed",
+            variant: "destructive",
+            description: errorMessage,
+          });
         });
     } catch (error) {
       setLoader(false);

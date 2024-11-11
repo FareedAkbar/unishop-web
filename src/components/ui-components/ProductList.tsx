@@ -33,6 +33,7 @@ const ProductList: React.FC<ProductListProps> = ({
   const [specialItems, setSpecialItems] = useState<SpecialItems[] | null>(null)
   useEffect(() => {
     const loadData = async () => {
+      console.log(id)
       const x = await getSpecialItems(id)
       if (typeof x != "boolean" && x.status && x.data) {
         setSpecialItems(x?.data)

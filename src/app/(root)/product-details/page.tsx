@@ -93,7 +93,7 @@ const MyComponent = () => {
   async function getProducts(page: number) {
     try {
       setLoader(true);
-      const x = await getItemsByCategory(parseInt(category) ?? 1, page, 1, 0);
+      const x = await getItemsByCategory(parseInt(category) ?? 1, page);
 
 
       if (typeof x !== "boolean" && x.status) {
@@ -380,7 +380,7 @@ const MyComponent = () => {
     .filter((tag): tag is ItemSpecialTag => Boolean(tag)); // Filter out undefined values in case there are no matches
 
   const tagNames: string[] = matchingTags?.map((tag) => tag?.tag_name) ?? [];
-  
+
   return (
     <div className="p-6 pt-32">
       <div className="flex items-center justify-between lg:px-10 pb-4">
@@ -545,7 +545,7 @@ const MyComponent = () => {
             </div>
           )}
 
-          {itemDetail?.pages !== undefined && itemDetail.pages !== null && (
+          {itemDetail?.pages !== undefined && itemDetail.pages !== null && itemDetail.pages ? (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                 Number of Pages:
@@ -554,7 +554,7 @@ const MyComponent = () => {
                 {itemDetail.pages}
               </span>
             </div>
-          )}
+          ) : ''}
 
           {itemDetail?.publisher?.publisher_name && (
             <div className="flex items-center justify-center">
@@ -767,7 +767,7 @@ const MyComponent = () => {
                   </div>
                   <p className="text-xs text-gray-500">
                     {review?.created_at ? moment(review?.created_at).format("Do MMMM, YYYY") : ''}
-                    
+
                   </p>
                 </div>
               ))}

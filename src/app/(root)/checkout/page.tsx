@@ -87,7 +87,7 @@ const MyComponent = () => {
       title: "Checkout",
       value: "checkout",
       content: (
-        <CheckoutForm push={true} disabled={!items?.[0] ? true : false} />
+        <CheckoutForm title="Checkout" subTitle="" push={true} pushPath="/placeorder" disabled={!items?.[0] ? true : false} />
       ),
     },
     {

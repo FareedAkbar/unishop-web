@@ -498,14 +498,17 @@ const MyComponent = () => {
                   {itemDetail?.book_language}
                 </span>
               </div>
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Number of Pages:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.pages}
-                </span>
-              </div>
+              {itemDetail?.pages ? (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Number of Pages:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail?.pages}
+                  </span>
+                </div>
+              ) : ""}
+
               <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Publisher:
