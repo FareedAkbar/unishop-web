@@ -2,7 +2,7 @@
 
 import { Player } from "@lottiefiles/react-lottie-player";
 import { useState } from "react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaCheck } from "react-icons/fa";
 
 const TermsAndConditions = () => {
   const sections = [
@@ -50,16 +50,17 @@ const TermsAndConditions = () => {
     },
   ];
 
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [openSections, setOpenSections] = useState<boolean[]>(Array(sections.length).fill(false));
 
   const toggleSection = (index: number) => {
-    setActiveIndex(activeIndex === index ? null : index);
+    setOpenSections((prev) =>
+      prev.map((isOpen, i) => (i === index ? !isOpen : isOpen))
+    );
   };
 
   return (
     <div className="relative min-h-screen p-8 pt-32">
       {/* Background Lottie Animation */}
-
       {/* Page Header */}
       <h1 className="mb-6 text-center text-3xl font-extrabold text-red-600">
         Terms and Conditions
@@ -110,7 +111,7 @@ const TermsAndConditions = () => {
               <h2 className="text-xl font-semibold text-red-600">
                 {section.title}
               </h2>
-              {activeIndex === index ? (
+              {openSections[index] ? (
                 <FaChevronUp className="text-gray-600 dark:text-gray-300" />
               ) : (
                 <FaChevronDown className="text-gray-600 dark:text-gray-300" />
@@ -120,40 +121,16 @@ const TermsAndConditions = () => {
             {/* Section Content with Animation */}
             <div
               className={`mt-2 overflow-hidden rounded bg-white transition-all duration-300 ease-in-out dark:bg-slate-700 ${
-                activeIndex === index ? "max-h-[500px]" : "max-h-0"
+                openSections[index] ? "max-h-[500px]" : "max-h-0"
               }`}
             >
-              <ul className="ml-6 mt-2 list-disc py-2">
-                {section.content.map((item, idx) =>
-                  Array.isArray(item) ? (
-                    <ul key={idx} className="ml-4 list-disc">
-                      {item.map((subItem, subIdx) =>
-                        Array.isArray(subItem) ? (
-                          <li key={subIdx} className="mb-1 dark:text-white">
-                            <strong className="dark:text-white">
-                              {subItem[0]}:
-                            </strong>{" "}
-                            {subItem[1]}
-                          </li>
-                        ) : (
-                          <li
-                            key={subIdx}
-                            className="mb-1 text-black dark:text-white"
-                          >
-                            {subItem}
-                          </li>
-                        ),
-                      )}
-                    </ul>
-                  ) : (
-                    <li
-                      key={idx}
-                      className="mb-1 text-gray-700 dark:text-white"
-                    >
-                      {item}
-                    </li>
-                  ),
-                )}
+              <ul className="ml-6 mt-2 py-2">
+                {section.content.map((item, idx) => (
+                  <li key={idx} className="mb-1 flex items-start text-gray-700 dark:text-white">
+                    <FaCheck className="h-3 w-3 text-red-500 flex-shrink-0 mr-2 mt-2 " />
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

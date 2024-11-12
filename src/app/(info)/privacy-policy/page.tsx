@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaCheck } from "react-icons/fa";
 import { Player } from "@lottiefiles/react-lottie-player";
 
 interface Section {
@@ -53,28 +53,25 @@ const PrivacyPolicy: React.FC = () => {
     },
   ];
 
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [activeIndices, setActiveIndices] = useState<number[]>([]);
 
   const toggleSection = (index: number) => {
-    setActiveIndex(activeIndex === index ? null : index);
+    setActiveIndices((prevIndices) =>
+      prevIndices.includes(index)
+        ? prevIndices.filter((i) => i !== index)
+        : [...prevIndices, index]
+    );
   };
 
   return (
     <div className="relative min-h-screen p-8 pt-32">
       {/* Background Lottie Animation */}
       <div className="absolute inset-0 top-40 -z-10 opacity-20 dark:opacity-70 dark:blur-sm">
-        <Player
-          autoplay
-          loop
-          src="/assets/gifs/lists-bg.json"
-          className="h-64 w-64 scale-[1.5]"
-        />
+        <Player autoplay loop src="/assets/gifs/lists-bg.json" className="h-64 w-64 scale-[1.5]" />
       </div>
 
       {/* Page Header */}
-      <h1 className="mb-6 text-center text-3xl font-extrabold text-red-600">
-        Privacy Policy
-      </h1>
+      <h1 className="mb-6 text-center text-3xl font-extrabold text-red-600">Privacy Policy</h1>
       <p className="mx-auto max-w-2xl text-center lg:text-lg leading-10 pb-7">
         This privacy policy outlines how the &quot;Store&quot; collects and protects your
         information while using our website. We are committed to safeguarding
@@ -90,10 +87,8 @@ const PrivacyPolicy: React.FC = () => {
               className="flex cursor-pointer items-center justify-between"
               onClick={() => toggleSection(index)}
             >
-              <h2 className="text-xl font-semibold text-red-600">
-                {section.title}
-              </h2>
-              {activeIndex === index ? (
+              <h2 className="text-xl font-semibold text-red-600">{section.title}</h2>
+              {activeIndices.includes(index) ? (
                 <FaChevronUp className="text-gray-600 dark:text-gray-300" />
               ) : (
                 <FaChevronDown className="text-gray-600 dark:text-gray-300" />
@@ -102,8 +97,9 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Section Content with Animation */}
             <div
-              className={`mt-2 overflow-hidden transition-all bg-white dark:bg-slate-700 rounded duration-300 ease-in-out ${activeIndex === index ? "max-h-[500px]" : "max-h-0"
-                }`}
+              className={`mt-2 overflow-hidden transition-all bg-white dark:bg-slate-700 rounded duration-300 ease-in-out ${
+                activeIndices.includes(index) ? "max-h-[500px]" : "max-h-0"
+              }`}
             >
               <ul className="ml-6 mt-2 list-disc py-2">
                 {section.content.map((item, idx) =>
@@ -111,21 +107,24 @@ const PrivacyPolicy: React.FC = () => {
                     <ul key={idx} className="ml-4 list-disc">
                       {item.map((subItem, subIdx) =>
                         Array.isArray(subItem) ? (
-                          <li key={subIdx} className="mb-1 dark:text-white">
+                          <li key={subIdx} className="mb-1  dark:text-white flex items-center">
+                            <FaCheck className="h-4 w-4 text-red-500 mr-2" />
                             <strong className="dark:text-white">{subItem[0]}:</strong> {subItem[1]}
                           </li>
                         ) : (
-                          <li key={subIdx} className="mb-1 text-black dark:text-white">
+                          <li key={subIdx} className="mb-1  text-black dark:text-white flex items-center">
+                            <FaCheck className="h-4 w-4 text-red-500 mr-2" />
                             {subItem}
                           </li>
-                        ),
+                        )
                       )}
                     </ul>
                   ) : (
-                    <li key={idx} className="mb-1 text-gray-700 dark:text-white">
+                    <li key={idx} className="mb-1 text-gray-700 dark:text-white flex items-center">
+                      {/* <FaCheck className="h-4 w-4 text-red-500 mr-2" /> */}
                       {item}
                     </li>
-                  ),
+                  )
                 )}
               </ul>
             </div>

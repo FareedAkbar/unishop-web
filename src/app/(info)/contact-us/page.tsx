@@ -42,7 +42,7 @@ const MyComponent = () => {
             Phone:
             <a
               href="tel:42218050"
-              className="pl-1 text-red-500 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
+              className="pl-1 text-red-500 underline transition-colors"
             >
               4221 8050
             </a>
@@ -51,7 +51,7 @@ const MyComponent = () => {
             Email:
             <a
               href="mailto:uow-bookshop@uow.edu.au"
-              className="pl-1 text-red-500 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
+              className="pl-1 text-red-500 underline transition-colors"
             >
               uow-bookshop@uow.edu.au
             </a>
@@ -66,7 +66,7 @@ const MyComponent = () => {
             Retail Operations Manager:
             <a
               href="mailto:uow-bookshop@uow.edu.au"
-              className="transition-colorshover:text-gray-600 pl-1 text-red-500 dark:hover:text-gray-300"
+              className="pl-1 text-red-500 underline transition-colors"
             >
               uow-bookshop@uow.edu.au
             </a>
@@ -75,7 +75,7 @@ const MyComponent = () => {
             Events Coordinator: Anneliese Hennessy
             <a
               href="mailto:ahennessy@uow.edu.au"
-              className="transition-colorshover:text-gray-600 text-red-500 dark:hover:text-gray-300"
+              className="text-red-500 underline transition-colors"
             >
               (ahennessy@uow.edu.au)
             </a>
