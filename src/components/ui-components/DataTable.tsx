@@ -383,12 +383,12 @@ const DataTable: React.FC<DataTableProps> = ({
                   </p>
                 </div>
 
-                <div className="mt-2 flex items-center">
+                {/* <div className="mt-2 flex items-center">
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Outlet:</p>
                   <p className="text-lg font-semibold">
                     {selectedItem?.outlet}
                   </p>
-                </div>
+                </div> */}
 
                 <div className="mt-2 flex items-center">
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Special Order:</p>

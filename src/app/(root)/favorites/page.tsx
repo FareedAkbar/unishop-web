@@ -483,7 +483,7 @@ const MyComponent = () => {
                 </div>
               )}
 
-              {itemDetail?.pages !== undefined && itemDetail.pages !== null && (
+              {itemDetail?.pages !== undefined && itemDetail.pages !== null && itemDetail.pages ? (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
@@ -492,7 +492,7 @@ const MyComponent = () => {
                     {itemDetail.pages}
                   </span>
                 </div>
-              )}
+              ):""}
 
               {itemDetail?.publisher?.publisher_name && (
                 <div className="flex items-center justify-center">
@@ -525,49 +525,9 @@ const MyComponent = () => {
                     : ""}
                 </span>
               </div>
-              {itemDetail?.book_language && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Language:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.book_language}
-                  </span>
-                </div>
-              )}
+              
 
-              {itemDetail?.pages !== undefined && itemDetail.pages !== null && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Number of Pages:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.pages}
-                  </span>
-                </div>
-              )}
-
-              {itemDetail?.publisher?.publisher_name && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Publisher:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.publisher.publisher_name}
-                  </span>
-                </div>
-              )}
-
-              {itemDetail?.publisher?.country && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Country of Publication:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.publisher.country}
-                  </span>
-                </div>
-              )}
+             
               {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>
                   <div>
