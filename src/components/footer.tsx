@@ -41,11 +41,12 @@ function Footer() {
           <div className="flex flex-col items-center gap-8 text-center md:col-span-1 md:items-start md:text-left">
             <Image
               src={Logo}
-              width={600}
-              height={350}
               alt="footer_logo"
-              className="w-[18rem] pl-3"
+              width={1000}
+              height={350}
+              className="w-[10rem] pl-4 sm:w-[12rem] xl:w-[16rem]"
             />
+
             <div className="flex flex-col gap-3">
               <a
                 href="https://www.google.com/maps?q=-34.40755818806117,150.87911127658157"

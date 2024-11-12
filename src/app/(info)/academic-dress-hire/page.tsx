@@ -16,7 +16,7 @@ const MyComponent = () => {
     <div className="min-h-screen pt-28 lg:pt-16">
       <div className="flex flex-wrap items-center justify-between bg-white p-8 pb-14 shadow-md dark:bg-slate-600 lg:px-32">
         <div className="max-w-md flex-1 text-lg">
-          <div className="space-y-2 text-center">
+          <div className="space-y-2 ">
             <h2 className="text-xl font-semibold">
               ENQUIRE ABOUT HIRING YOUR GRADUATION ATTIRE
             </h2>
@@ -37,8 +37,8 @@ const MyComponent = () => {
             </p>
           </div>
         </div>
-        <div className="w-full flex justify-center sm:w-auto sm:flex-shrink-0 mt-8 sm:mt-0">
-        <Player
+        <div className="mt-8 flex w-full justify-center sm:mt-0 sm:w-auto sm:flex-shrink-0">
+          <Player
             autoplay
             loop
             src="/assets/gifs/graduation.json"
@@ -51,13 +51,13 @@ const MyComponent = () => {
       <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center lg:px-12">
         <div className="grid w-full max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-2">
           {/* Card 1: Hiring & Purchasing */}
-          <div className="rounded-lg bg-red-100 p-6 shadow-lg dark:bg-slate-700">
+          <div className="rounded-lg  bg-red-100 p-6 shadow-lg dark:bg-slate-700">
             <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
               <FaShoppingBag size={28} className="text-red-500" />
               Hiring & Purchasing
             </h2>
 
-            <p className="mt-4 text-justify text-lg leading-relaxed text-zinc-500 dark:text-zinc-300">
+            <p className="mt-4 text-center text-lg leading-relaxed text-zinc-500 dark:text-zinc-300">
               Unishop provides graduation gowns and accessories throughout the
               year. Gowns can be purchased as a beautiful keepsake of your time
               at UOW. If you missed your graduation ceremony, hire a gown and
@@ -66,13 +66,13 @@ const MyComponent = () => {
           </div>
 
           {/* Card 2: Graduation Details */}
-          <div className="rounded-lg bg-red-100 p-6 shadow-lg dark:bg-slate-700">
+          <div className="rounded-lg  bg-red-100 p-6 shadow-lg dark:bg-slate-700">
             <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
               <FaGraduationCap size={28} className="text-red-500" />
               Graduation Details
             </h2>
 
-            <p className="mt-4 text-justify text-lg leading-relaxed text-zinc-500 dark:text-zinc-300">
+            <p className="mt-4 text-center text-lg leading-relaxed text-zinc-500 dark:text-zinc-300">
               To hire or purchase graduation attire, visit the Customer Service
               counter inside Unishop or use the contact details above. Note that
               academic dress hire is limited during graduation ceremonies.
@@ -82,7 +82,7 @@ const MyComponent = () => {
       </div>
 
       {/* Image Section - Full Width */}
-      <div className="mt-10 px-3 space-y-6">
+      <div className="my-10 space-y-6 px-3">
         <Image
           src="/assets/images/graduation_attire/pricing.png"
           alt="Graduation Gown"
@@ -90,20 +90,35 @@ const MyComponent = () => {
           width={1920}
           height={1080}
         />
-        <Image
-          src="/assets/images/graduation_attire/charges.png"
-          alt="Graduation Ceremony"
-          className="h-auto w-full rounded-lg object-cover"
-          width={1920}
-          height={1080}
-        />
-        <Image
-          src="/assets/images/graduation_attire/sizes.png"
-          alt="Graduation Event"
-          className="h-auto w-full rounded-lg object-cover"
-          width={1920}
-          height={1080}
-        />
+        <div className="flex w-full flex-col gap-8 lg:flex-row ">
+          {/* Purchase Charges Section */}
+          <div className="flex w-full flex-col items-center rounded-lg bg-white shadow-lg p-4 lg:w-1/2 lg:items-start">
+            <h2 className="mb-4 text-center text-2xl font-bold text-black lg:text-left">
+              Purchase Charges
+            </h2>
+            <Image
+              src="/assets/images/graduation_attire/charges.png"
+              alt="Graduation Ceremony"
+              className="h-auto w-full rounded-lg object-cover"
+              width={1920}
+              height={1080}
+            />
+          </div>
+
+          {/* Size Guide Section */}
+          <div className="flex w-full flex-col items-center rounded-lg bg-white shadow-lg p-4 lg:w-1/2 lg:items-start">
+            <h2 className="mb-4 text-center text-2xl font-bold text-black lg:text-left">
+              Size Guide
+            </h2>
+            <Image
+              src="/assets/images/graduation_attire/sizes.png"
+              alt="Graduation Event"
+              className="h-auto w-full rounded-lg object-cover"
+              width={1920}
+              height={1080}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

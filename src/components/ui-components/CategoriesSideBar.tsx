@@ -10,7 +10,12 @@ import {
 } from "react-icons/fa";
 import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
-import type { CategoryTreeNode, Category as CAT, SuperCategory, SideBarCategory } from "~/types/category";
+import type {
+  CategoryTreeNode,
+  Category as CAT,
+  SuperCategory,
+  SideBarCategory,
+} from "~/types/category";
 import {
   FaBook,
   FaGraduationCap,
@@ -23,7 +28,6 @@ import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import Link from "next/link";
 import { outlet221, outlet223 } from "~/types/tokens";
 import { ScrollArea } from "../ui/scroll-area";
-import Image from "next/image";
 
 // Create a mapping of icon names to their corresponding components
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
@@ -49,7 +53,7 @@ interface SubcategoryListProps1 {
   openCategories: string[]; // Update: Allow multiple open categories
   toggleCategory: (label: string) => void;
   setOpenCategories: React.Dispatch<React.SetStateAction<string[]>>;
-  item: string
+  item: string;
 }
 interface SubcategoryListProps {
   subItems: Category[];
@@ -85,13 +89,13 @@ const SubcategoryList1 = ({
             className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
           >
             <span
-              className="truncate text-left capitalize mr-2"
+              className="mr-2 truncate text-left capitalize"
               title={subItem.category_name}
             >
               {/* {subItem.category_name.length > 16
                 ? `${subItem.category_name.slice(0, 25)}...`
                 : subItem.category_name} */}
-                {subItem.category_name}
+              {subItem.category_name}
             </span>
             {subItem.children?.[0] &&
               (openCategories.includes(`${item}/${subItem.category_name}`) ? (
@@ -102,14 +106,18 @@ const SubcategoryList1 = ({
           </button>
 
           {/* Render children if open */}
-          {openCategories.some((cat) => cat.endsWith(`${item}/${subItem.category_name}`)) && 
+          {openCategories.some((cat) =>
+            cat.endsWith(`${item}/${subItem.category_name}`),
+          ) &&
             subItem.children?.[0] && (
               <div className="ml-4 mt-2">
                 <SubcategoryList1
                   subItems={subItem.children}
                   item={subItem.category_name}
                   openCategories={openCategories} // Pass down multiple open categories
-                  toggleCategory={(val) => toggleCategory(`${subItem.category_name}/${val}`)}
+                  toggleCategory={(val) =>
+                    toggleCategory(`${subItem.category_name}/${val}`)
+                  }
                   setOpenCategories={setOpenCategories}
                 />
               </div>
@@ -125,7 +133,6 @@ const SubcategoryList = ({
   toggleCategory,
   isOpen,
 }: SubcategoryListProps) => {
-
   const router = useRouter();
   return (
     <div className="">
@@ -178,22 +185,20 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   >(null);
 
   const sidebarRef = useRef<HTMLDivElement>(null); // Ref for sidebar
- 
+
   const toggleCategory = async (label: string) => {
-   
     setOpenCategories((prev) => {
       // Check if the clicked category is already open
-      setOpenCategory(null)
+      setOpenCategory(null);
       if (prev.includes(label)) {
-        
         // Close the category and its children
         return prev.filter((cat) => cat !== label);
       } else {
         // Close other top-level categories when opening a new one
         const newOpenCategories = prev.filter(
-          (cat) => label.startsWith(cat) || cat.startsWith(label)
+          (cat) => label.startsWith(cat) || cat.startsWith(label),
         );
-        
+
         return [...newOpenCategories, label];
       }
     });
@@ -203,17 +208,9 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     setOpenCategory((pre) => (pre == label ? "" : label));
   };
 
-
-
-
-
   // Define types
 
   type CategoriesMap = Record<number, SuperCategory & { children: CAT[] }>;
-
-
-
-
 
   // Extend Category1 to include children
   interface CategoryTreeNode2 extends CAT {
@@ -224,14 +221,14 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     const categoriesMap: Record<number, CategoryTreeNode2> = {};
 
     // Step 1: Organize categories by ID and initialize children
-    categories.forEach(cat => {
+    categories.forEach((cat) => {
       categoriesMap[cat.id] = { ...cat, children: [] };
     });
 
     const categoryTree: CategoryTreeNode2[] = [];
 
     // Step 2: Build the tree structure
-    categories.forEach(cat => {
+    categories.forEach((cat) => {
       if (cat.parent === 0) {
         // Root category
         const rootCategory = categoriesMap[cat.id];
@@ -256,7 +253,6 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     return categoryTree;
   };
 
-
   useEffect(() => {
     if (!category || !subCategory) return;
 
@@ -271,7 +267,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     // Ensure x is an array and has elements
     if (Array.isArray(x) && x.length > 0) {
       // Get all children from the built category tree
-      const allChildren: CAT[] = x.flatMap(node => node.children); // Flatten all children
+      const allChildren: CAT[] = x.flatMap((node) => node.children); // Flatten all children
       allChildren.forEach((item: CAT) => {
         const { category_type_id, outlet } = item;
         const targetCategory = categoriesMap[category_type_id];
@@ -294,7 +290,6 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       const result = Object.values(categoriesMap);
       setHeaderCategory(result);
     }
-
   }, [category, subCategory]);
 
   // Close subcategories on outside click
@@ -318,7 +313,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   return (
     <aside
       ref={sidebarRef}
-      className={`absolute left-0 max-w-64 rounded-r-xl border-y  border-r bg-white px-4 py-2 shadow-lg dark:bg-slate-700 ${className}`}
+      className={`absolute left-0 w-72 rounded-r-xl border-y border-r bg-white py-2 pl-4 pr-2 shadow-lg dark:bg-slate-700 ${className}`}
     >
       <h2 className="text-lg font-bold">CATEGORIES</h2>
       <nav className="relative py-3">
@@ -331,10 +326,10 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 item.children?.[0]
                   ? toggleCategory(item.type)
                   : router.push(
-                    `/products?category=${item.category_type_id}&name=${item.type}&detail=${item.category_type_id}`,
-                  )
+                      `/products?category=${item.category_type_id}&name=${item.type}&detail=${item.category_type_id}`,
+                    )
               }
-              className="flex w-full items-center justify-between px-3 transition-transform hover:scale-110"
+              className="flex w-full items-center justify-between px-2 transition-transform hover:scale-110"
             >
               {/* <Link
                         key={item.id}
@@ -343,8 +338,8 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                         onClick={() => item.children ? setOpenCategories([]) : null}
                         passHref
                       > */}
-              <div className="flex items-center justify-start ">
-              <AiOutlineFileText className="text-orange-600 w-6 h-6 mr-2 p-0.5" />
+              <div className="flex items-center justify-start">
+                <AiOutlineFileText className="mr-1 h-6 w-6 p-0.5 text-orange-600" />
                 {/* {item.object_path && (
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     <Image
@@ -359,10 +354,8 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       className="flex-shrink-0 rounded-md object-cover mr-3"
                     />
                   )} */}
-                <span className="w-40 truncate text-left capitalize" title={item.type}>
-                  {item.type.length > 16
-                    ? `${item.type.slice(0, 20)}...`
-                    : item.type}
+                <span className=" text-left text-sm" title={item.type}>
+                  {item.type}
                 </span>
               </div>
               <div>
@@ -379,16 +372,15 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
             </button>
             <div className="my-1 ml-2 h-px w-[50%] border-t border-gray-400" />
 
-            {openCategories.includes(item.type) &&
-              item.children?.[0] && (
-                <SubcategoryList1
-                  subItems={item.children}
-                  openCategories={openCategories}
-                  item={item.type}
-                  toggleCategory={(val) => toggleCategory(`${item.type}/${val}`)}
-                  setOpenCategories={setOpenCategories}
-                />
-              )}
+            {openCategories.includes(item.type) && item.children?.[0] && (
+              <SubcategoryList1
+                subItems={item.children}
+                openCategories={openCategories}
+                item={item.type}
+                toggleCategory={(val) => toggleCategory(`${item.type}/${val}`)}
+                setOpenCategories={setOpenCategories}
+              />
+            )}
           </div>
 
           // )
@@ -399,19 +391,19 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               type="button"
               onClick={() =>
                 item.subItems ||
-                  item.label === "Books" ||
-                  item.label === "Text Book"
+                item.label === "Books" ||
+                item.label === "Text Book"
                   ? toggleCategory2(item.label)
                   : null
               }
-              className="duration-240 flex w-full items-center justify-between px-3 text-lg transition-transform hover:scale-110 focus:outline-none"
+              className="duration-240 flex w-full items-center justify-between px-2 text-lg transition-transform hover:scale-110 focus:outline-none"
             >
               <div className="flex items-center">
                 {item.icon && (
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                   <span className="mr-2">{iconMap[item.icon]}</span>
                 )}
-                <Link href={item.href ?? ""} scroll={false}>
+                <Link href={item.href ?? ""} className="text-sm" scroll={false}>
                   {item.label}
                 </Link>
               </div>
@@ -423,7 +415,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 )
               ) : null}
             </button>
-            <div className="my-1 h-px w-[50%] border-t ml-2 border-gray-400" />
+            <div className="my-1 ml-2 h-px w-[50%] border-t border-gray-400" />
             {openCategory == item.label && (
               <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
                 {item.label === "Books" && genre && (
@@ -508,7 +500,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
         )}
       </nav>
 
-      <div className="flex justify-between gap-1 py-1">
+      <div className="flex justify-evenly gap-1 py-1">
         <Link
           href="/"
           className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"

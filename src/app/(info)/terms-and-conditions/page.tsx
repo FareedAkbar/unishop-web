@@ -50,11 +50,13 @@ const TermsAndConditions = () => {
     },
   ];
 
-  const [openSections, setOpenSections] = useState<boolean[]>(Array(sections.length).fill(false));
+  const [openSections, setOpenSections] = useState<boolean[]>(
+    Array(sections.length).fill(false),
+  );
 
   const toggleSection = (index: number) => {
     setOpenSections((prev) =>
-      prev.map((isOpen, i) => (i === index ? !isOpen : isOpen))
+      prev.map((isOpen, i) => (i === index ? !isOpen : isOpen)),
     );
   };
 
@@ -83,13 +85,19 @@ const TermsAndConditions = () => {
             website is <span>UOW Pulse</span> (ABN 28 915 832 337). Use of this
             website is subject to these <a href="#">Terms of Use</a>.
           </p>
-          <ul className="list-inside list-disc">
-            <li>Prices are in Australian Dollars (AUD).</li>
-            <li>
+
+          <ul className="list-none space-y-2">
+            <li className="flex items-start">
+              <FaCheck className="mr-2 mt-2 h-4 w-4 flex-shrink-0 text-red-500" />
+              Prices are in Australian Dollars (AUD).
+            </li>
+            <li className="flex items-start">
+              <FaCheck className="mr-2 mt-2 h-4 w-4 flex-shrink-0 text-red-500" />
               Please ensure the delivery address and receiver name for your
               order are accurate and complete.
             </li>
-            <li>
+            <li className="flex items-start">
+              <FaCheck className="mr-2 mt-2 h-4 w-4 flex-shrink-0 text-red-500" />
               UOW Pulse cannot take responsibility for any orders that may go
               missing due to incorrect information provided by you.
             </li>
@@ -126,8 +134,11 @@ const TermsAndConditions = () => {
             >
               <ul className="ml-6 mt-2 py-2">
                 {section.content.map((item, idx) => (
-                  <li key={idx} className="mb-1 flex items-start text-gray-700 dark:text-white">
-                    <FaCheck className="h-3 w-3 text-red-500 flex-shrink-0 mr-2 mt-2 " />
+                  <li
+                    key={idx}
+                    className="mb-1 flex items-start text-gray-700 dark:text-white"
+                  >
+                    <FaCheck className="mr-2 mt-2 h-3 w-3 flex-shrink-0 text-red-500" />
                     <span>{item}</span>
                   </li>
                 ))}

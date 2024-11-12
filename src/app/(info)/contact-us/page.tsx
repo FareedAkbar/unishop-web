@@ -34,7 +34,7 @@ const MyComponent = () => {
       </div>
 
       <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
-        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
+        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaPhoneAlt className="text-red-500" /> General Enquiries
           </h2>
@@ -58,7 +58,7 @@ const MyComponent = () => {
           </p>
         </div>
 
-        <div className="w-full rounded-lg bg-red-100 p-6 text-center shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
+        <div className="w-full rounded-lg bg-red-100 p-6 text-center shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaUserTie className="text-red-500" /> Specialty Enquiries
           </h2>
@@ -91,17 +91,17 @@ const MyComponent = () => {
       </div>
 
       {/* Address Section */}
-      <div className="flex flex-wrap justify-evenly gap-6 p-8 text-center">
-        <div>
-          <h2 className="flex items-center gap-2 text-2xl font-bold">
+      <div className="flex flex-col gap-6 p-8 text-center lg:flex-row lg:justify-evenly">
+        <div className="w-full max-w-xs text-left">
+          <h2 className="flex items-center gap-2 pb-2 text-lg font-semibold">
             <FaBuilding className="text-red-500" /> Postal Address
           </h2>
           <p>UniShop</p>
           <p>P.O. Box U100</p>
           <p>University of Wollongong P.O. NSW 2500</p>
         </div>
-        <div>
-          <h2 className="flex items-center gap-2 text-2xl font-bold">
+        <div className="w-full max-w-xs text-left">
+          <h2 className="flex items-center gap-2 pb-2 text-lg font-semibold">
             <FaBuilding className="text-red-500" /> Delivery Address
           </h2>
           <p>UniShop</p>
