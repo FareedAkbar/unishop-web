@@ -55,6 +55,7 @@ const MyComponent = () => {
   const [transactionData, setTransactionData] =
     useState<trasactionResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [socketStatus, setSocketStatus] = useState(true);
   const [totalAfterCalculation, setTotalAfterCalculation] =
     useState<TaxCalculationApiResponse>();
   const router = useRouter();
@@ -426,9 +427,10 @@ const MyComponent = () => {
   // }, [uuidLocal]);
 
   useEffect(() => {
-    console.log("Connected to server after");
+   
     if (!checkoutData?.uuid) return;
-
+    socket.disconnect();
+    socket.connect();
     const connectHandler = () => {
       console.log("Connected to server", socket.id);
       console.log(
@@ -451,10 +453,14 @@ const MyComponent = () => {
       );
     };
 
+    
+  
     socket.on("connect", connectHandler);
-
+  
+    // Cleanup the event listener on unmount
     return () => {
       socket.off("connect", connectHandler);
+      socket.disconnect();
     };
   }, [checkoutData]);
 
