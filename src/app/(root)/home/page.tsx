@@ -10,8 +10,12 @@ import { FlipWords } from "~/components/ui/flip-words";
 import { Player } from "@lottiefiles/react-lottie-player";
 import AboutSection from "./AboutSection";
 import { useAuthContext } from "~/Context/AuthContext";
-import { getItemsByCategory, getSpecialItems } from "~/_actions/getitemsbycategory";
+import {
+  getItemsByCategory,
+  getSpecialItems,
+} from "~/_actions/getitemsbycategory";
 import { SpecialItems } from "~/types/specialItems";
+import BackgroundBubbles from "~/components/ui-components/BackgroundBubbles";
 
 const bestSellingProducts = [
   {
@@ -106,12 +110,13 @@ const products = [
 
 const HomePage: React.FC = () => {
   const words = ["Imagine", "Create", "Inspire", "Transform"];
-  const [specialItems, setSpecialItems] = useState<SpecialItems[] | null>(null)
-  const { productTags } = useAuthContext()
-
+  const [specialItems, setSpecialItems] = useState<SpecialItems[] | null>(null);
+  const { productTags } = useAuthContext();
 
   return (
     <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 pt-32 dark:bg-slate-800 lg:pt-24">
+      <BackgroundBubbles />
+
       <div className="container mx-auto flex justify-center">
         <ImageSlider />
       </div>
@@ -126,22 +131,19 @@ const HomePage: React.FC = () => {
       {/* Product List Section with Background Animation */}
       <div className="relative w-full">
         {/* Lottie Animation in the Background */}
-        <div className="absolute inset-0 -z-10">
+        {/* <div className="absolute inset-0 -z-10">
           <Player
             src={"assets/gifs/products-bg.json"}
             loop
             autoplay
-            className="h-[500px] w-full object-contain overflow-visible"
+            className="h-[500px] w-full overflow-visible object-contain"
           />
-        </div>
-        
-
+        </div> */}
 
         <div className="flex">
           <div className="hidden lg:block lg:pl-20">
             <CategoriesSidebar />
           </div>
-
 
           {/* {specialItems?.map((item, index) => (
               <div className="text-lg mt-10 mb-10 flex justify-center" key={index}>
@@ -149,8 +151,8 @@ const HomePage: React.FC = () => {
               </div>
             ))} */}
 
-          <div className="container mx-auto grid w-full p-5 pb-10 lg:grid-cols-2 lg:pl-48 min-h-[450px]">
-            {productTags?.map((item) =>
+          <div className="container mx-auto grid min-h-[450px] w-full p-5 pb-10 lg:grid-cols-2 lg:pl-48">
+            {productTags?.map((item) => (
               <>
                 <div className="-mr-4 w-full">
                   <ProductList
@@ -160,11 +162,8 @@ const HomePage: React.FC = () => {
                   />
                 </div>
               </>
-            )}
-
+            ))}
           </div>
-
-
 
           {/* <div className="w-full">
               <ProductList
@@ -173,7 +172,6 @@ const HomePage: React.FC = () => {
                 width="w-full"
               />
             </div> */}
-
         </div>
       </div>
 

@@ -14,14 +14,14 @@ const AboutSection: React.FC = () => {
     <div className="flex relative flex-col-reverse items-center gap-8 px-8 py-16 lg:flex-row">
       {/* Text Content Section */}
       <div className="space-y-6 lg:w-1/2">
-      <div className="absolute  -z-10 opacity-10 dark:opacity-40">
+      {/* <div className="absolute  -z-10 opacity-10 dark:opacity-40">
           <Player
             src={"assets/gifs/lists-bg.json"}
             loop
             autoplay
             className="h-[500px] w-full object-contain overflow-visible"
           />
-        </div>
+        </div> */}
         <h2 className="text-3xl font-bold text-red-500">
           ABOUT UNISHOP
         </h2>
