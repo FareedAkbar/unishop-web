@@ -127,7 +127,7 @@ function Footer() {
             ( index < 7 &&
               <>
                 <Link
-                  href={`products?category=${item.category_type_id}&name=${item.type}`}
+                  href={`products?category=${item.category_type_id}&name=${item.type}&detail=${item.category_type_id}`}
                   className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500 capitalize"
                 >
                   {item.type}

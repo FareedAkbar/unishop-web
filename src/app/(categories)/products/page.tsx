@@ -26,7 +26,7 @@ import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import AlertBox from "~/components/alertBox/alert";
 import { useToast } from "~/hooks/use-toast";
-import type { Category } from "~/types/category";
+import type { Category, SuperCategory } from "~/types/category";
 import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import Select from "~/components/Fields/select";
 import type { Pagination } from "~/types/pagination";
@@ -53,6 +53,7 @@ const MyComponent = () => {
   const [name, setName] = useState<string>("");
   const [subcategory, setSubcategory] = useState<string>('');
   const [subcategoryTypes, setSubcategoryTypes] = useState<Category[] | null>(null);
+  const [categoryType, setCategoryType] = useState<SuperCategory | null>(null);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
@@ -129,6 +130,10 @@ const MyComponent = () => {
     
     const genId = subCategory?.find((item) => item.id == detail);
     const parentCat = subCategory?.filter((item)=> item.category_type_id == parent && item.outlet == outlet223);
+    const CategoryType = category?.filter((item)=> item.category_type_id == parent);
+    if(CategoryType?.[0]){
+      setCategoryType(CategoryType?.[0])
+    }
     const catId = category?.find((item) => item.category_type_id == detail);
     setDisplayData(null);
     if(parentCat?.[0]){
@@ -142,7 +147,6 @@ const MyComponent = () => {
         setSubcategory(catId.type);
       }
       const loadData = async () => {
-        console.log(detail)
         await getCloths(1, detail);
       };
 
@@ -372,6 +376,8 @@ const MyComponent = () => {
     }
       setDetail(parseInt(id))
   };
+
+
   
   return (
     <div>
@@ -387,10 +393,12 @@ const MyComponent = () => {
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4">
               <div className="text-left">
-                <h2 className="text-xl font-bold capitalize"> {name}</h2>
-                {/* <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
-                  {subcategory}
-                </p> */}
+                <h2 className="text-xl font-bold capitalize"> {categoryType?.type}</h2>
+                {detail > -1 && (
+                  <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
+                  {name}
+                </p>
+                )}
               </div>
               
               <div className="flex items-center gap-2">
