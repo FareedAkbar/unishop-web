@@ -92,7 +92,7 @@ const ProductCard = ({
           className="h-32 object-contain transition-transform duration-300 group-hover:scale-110 lg:h-56 lg:w-56" // Scale on hover
         />
         <div className="absolute right-5 top-2 flex">
-          {!showAddToCart && (
+          {showButton && !showAddToCart && (
             <p
               // onClick={() => handleAddToCart()}
               className="rounded-full border-none bg-red-500 p-0.5 text-sm text-white sm:p-1 sm:text-xl"

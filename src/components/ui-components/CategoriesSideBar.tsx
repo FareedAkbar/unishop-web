@@ -61,6 +61,12 @@ interface SubcategoryListProps {
   toggleCategory: (label: string) => void;
   isOpen: boolean;
 }
+const StaticGiftsRoutes = [
+  { label: "Danielle Hulls Photography", icon: FaGift, href: "/gifts?desc=Photography" },
+{ label: "Marini Ferlazzo", icon: FaGift, href: "/gifts?desc=Ferlazzo" },
+{ label: "White Clay Mountain", icon: FaGift, href: "/gifts?desc=Mountain" },
+{ label: "Eliza Jade Candles", icon: FaGift, href: "/gifts?desc=Candles" }
+]
 const SubcategoryList1 = ({
   subItems,
   openCategories,
@@ -124,6 +130,32 @@ const SubcategoryList1 = ({
             )}
         </div>
       ))}
+      {item == "Gifts" && (
+        StaticGiftsRoutes.map((subItem) => (
+          <div key={subItem.label} className="relative">
+            <button
+              onClick={() => {
+                router.push(subItem.href);
+                setTimeout(() => {
+                  setOpenCategories([]);
+                }, 500);
+              }}
+              className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
+            >
+              <span
+                className="mr-2 truncate text-left capitalize"
+                title={subItem.label}
+              >
+                {subItem.label}
+              </span>
+              
+            </button>
+  
+            {/* Render children if open */}
+            
+          </div>
+        ))
+      )}
     </div>
   );
 };
@@ -381,6 +413,14 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 setOpenCategories={setOpenCategories}
               />
             )}
+            {/* {openCategories.includes(item.type) && item.type == "Gifts" && (
+                  <SubcategoryList1
+                    subItems={xx}
+                    openCategory={openCategory}
+                    toggleCategory={toggleCategory2}
+                    isOpen={false}
+                  />
+                )} */}
           </div>
 
           // )
