@@ -14,18 +14,24 @@ interface ApiResponseStatus {
     data: OrderStatus[];
     status: boolean;
 }
-const requestOptions: RequestInit = {
-    method: "GET",
-    headers: {
-        Authorization: `Bearer ${token223}`,
-        "Content-Type": "application/json", // Optional, depending on your API
-    },
-    redirect: "follow", // Use the correct type for `redirect`
-};
+
 export async function getMyOrders(booknetCustomerId: number): Promise<ApiResponse | boolean> {
+    const payload = {
+        customer_id: null,
+        booknet_customer_id: booknetCustomerId
+    }
+    const requestOptions: RequestInit = {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token223}`,
+            "Content-Type": "application/json", // Optional, depending on your API
+        },
+        redirect: "follow", // Use the correct type for `redirect`,
+        body: JSON.stringify(payload),
+    };
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/special/customer?booknet_customer_id=${booknetCustomerId}&special=0`,
+            `https://booknet-dev.iconsole.com.au/api/orders/customer`,
             requestOptions,
         );
         const result: GetSpecialOrderApiResponse =
@@ -48,6 +54,14 @@ export async function getMyOrders(booknetCustomerId: number): Promise<ApiRespons
 };
 
 export async function getOrderStatus(): Promise<ApiResponseStatus | boolean> {
+    const requestOptions: RequestInit = {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token223}`,
+            "Content-Type": "application/json", // Optional, depending on your API
+        },
+        redirect: "follow", // Use the correct type for `redirect`,
+    };
     try {
         const response = await fetch(
             `https://ipos-dev.iconsole.com.au/api/v1/ipos/orders/getOrderStatuses`,

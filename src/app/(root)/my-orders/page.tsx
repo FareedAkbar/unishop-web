@@ -159,6 +159,7 @@ const MyComponent = () => {
     try {
       const x = await getMyOrders(checkoutData?.booknet_customer_id);
       if (typeof x !== "boolean" && x.status) {
+        console.log(x.data)
         setDataOrders(x.data);
       }
     } catch (error) {
