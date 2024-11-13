@@ -31,6 +31,7 @@ import Select from "~/components/Fields/select";
 import { Variation } from "~/types/book";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { BsFillCartCheckFill } from "react-icons/bs";
+import { FiSearch } from "react-icons/fi";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -334,13 +335,18 @@ const MyComponent = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  placeholder="Search"
-                  className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
-                />
+              <div className="relative">
+                  <input
+                    type="text"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    placeholder="Search"
+                    className="w-full border-b text-sm border-gray-300 p-2 pl-8 bg-gray-100 focus:outline-none dark:bg-slate-700 dark:text-white"
+                  />
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-white">
+                    <FiSearch />
+                  </span>
+                </div>
                 <h1 className="pr-2 font-bold">
                   Showing {displayedData?.length} of {data.length} Items
                 </h1>
@@ -381,7 +387,7 @@ const MyComponent = () => {
             <div className="z-10 flex justify-between px-4 py-4">
               <button
                 className={`rounded-full p-2 ${currentPage === 1
-                  ? "bg-gray-200 text-black"
+                  ? "bg-gray-200 text-black cursor-not-allowed"
                   : "cursor-pointer bg-red-500 text-white"
                   }`}
                 onClick={() => setCurrentPage(currentPage - 1)}
@@ -394,7 +400,7 @@ const MyComponent = () => {
               </span>
               <button
                 className={`rounded-full p-2 ${currentPage === totalPages
-                  ? "bg-gray-200 text-black"
+                  ? "bg-gray-200 text-black cursor-not-allowed"
                   : "cursor-pointer bg-red-500 text-white"
                   }`}
                 onClick={() => setCurrentPage(currentPage + 1)}

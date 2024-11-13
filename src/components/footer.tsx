@@ -11,6 +11,17 @@ import Logo from "../../public/pulseFooter2.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuthContext } from "~/Context/AuthContext";
+import { usePathname } from "next/navigation";
+
+const links = [
+  { title: "Contact Us", href: "/contact-us" },
+  { title: "Postage & Handling", href: "/postage-and-handling" },
+  { title: "Refunds & Returns", href: "/refunds-and-returns" },
+  { title: "Terms & Conditions", href: "/terms-and-conditions" },
+  { title: "Privacy Policy", href: "/privacy-policy" },
+  { title: "About Us", href: "/about" },
+  { title: "Academic Dress Hire", href: "/academic-dress-hire" },
+];
 
 function Footer() {
   const iconsTab = [
@@ -19,7 +30,8 @@ function Footer() {
     { icon: <AiFillYoutube /> },
     { icon: <BiLogoPinterestAlt /> },
   ];
-  const { category } = useAuthContext()
+  const { category } = useAuthContext();
+  const pathname = usePathname();
 
   return (
     <footer className="bg-zinc-100 dark:bg-slate-900">
@@ -29,11 +41,12 @@ function Footer() {
           <div className="flex flex-col items-center gap-8 text-center md:col-span-1 md:items-start md:text-left">
             <Image
               src={Logo}
-              width={600}
-              height={350}
               alt="footer_logo"
-              className="w-[18rem] pl-3"
+              width={1000}
+              height={350}
+              className="w-[10rem] pl-4 sm:w-[12rem] xl:w-[16rem]"
             />
+
             <div className="flex flex-col gap-3">
               <a
                 href="https://www.google.com/maps?q=-34.40755818806117,150.87911127658157"
@@ -41,7 +54,7 @@ function Footer() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
               >
-                <FaMapMarkerAlt className="text-2xl text-[#646464] dark:text-gray-300" />
+                <FaMapMarkerAlt className="text-lg text-[#646464] dark:text-gray-300" />
                 Building 11, University of Wollongong
               </a>
               <a
@@ -75,48 +88,19 @@ function Footer() {
           <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Customer Service</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
-            <Link
-              href="contact-us"
-              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-            >
-              Contact Us
-            </Link>
-            <Link
-              href="postage-and-handling"
-              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-            >
-              Postage & Handling
-            </Link>
-            <Link
-              href="refunds-and-returns"
-              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-            >
-              Refunds & Returns
-            </Link>
-            <Link
-              href="terms-and-conditions"
-              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-            >
-              Terms & Conditions
-            </Link>
-            <Link
-              href="privacy-policy"
-              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              href="about"
-              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-            >
-              About Us
-            </Link>
-            <Link
-              href="academic-dress-hire"
-              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-            >
-              Academic Dress Hire
-            </Link>
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-sm font-medium ${
+                  pathname === link.href
+                    ? "text-red-500"
+                    : "text-[#646464] hover:text-red-500"
+                } dark:text-gray-300 dark:hover:text-red-500`}
+              >
+                {link.title}
+              </Link>
+            ))}
           </div>
 
           {/* shop online */}
@@ -127,7 +111,7 @@ function Footer() {
             ( index < 7 &&
               <>
                 <Link
-                  href={`products?category=${item.category_type_id}&name=${item.type}&detail=${item.category_type_id}`}
+                  href={`products?category=${item.category_type_id}&name=${item.type}`}
                   className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500 capitalize"
                 >
                   {item.type}

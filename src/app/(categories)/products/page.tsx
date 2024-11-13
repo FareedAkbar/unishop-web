@@ -40,6 +40,7 @@ import {
   SelectItem,
 } from "~/components/ui/select";
 import { outlet223 } from "~/types/tokens";
+import { FiSearch } from "react-icons/fi";
 
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
@@ -51,9 +52,10 @@ const MyComponent = () => {
   const [detail, setDetail] = useState<number>(-1);
   const [parent, setParent] = useState<number>(-1);
   const [name, setName] = useState<string>("");
-  const [subcategory, setSubcategory] = useState<string>('');
-  const [subcategoryTypes, setSubcategoryTypes] = useState<Category[] | null>(null);
   const [categoryType, setCategoryType] = useState<SuperCategory | null>(null);
+  const [subcategoryTypes, setSubcategoryTypes] = useState<Category[] | null>(
+    null,
+  );
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
@@ -78,27 +80,27 @@ const MyComponent = () => {
     checkoutData,
     category,
     setProductForDetail,
-    subCategory
+    subCategory,
   } = useAuthContext();
 
   useEffect(() => {
     const d = params.get("detail");
     const parentCat = params.get("category");
     const name = params.get("name");
-    
+
     if (d) {
       setDetail(parseInt(d));
-    } else{
-      setDetail(-1)
+    } else {
+      setDetail(-1);
     }
-    if(parent && parentCat !== null){
-      setParent(parseInt(parentCat))
+    if (parent && parentCat !== null) {
+      setParent(parseInt(parentCat));
     }
-    if(name){
-      setName(name)
+    if (name) {
+      setName(name);
     }
   }, [params]);
-  async function getCloths(page: number,id: number) {
+  async function getCloths(page: number, id: number) {
     setData([]);
     setPagination(null);
     setDisplayData(null);
@@ -108,7 +110,7 @@ const MyComponent = () => {
       setLoader(true);
       const x = await getItemsByCategory(id ?? 1, page);
       if (typeof x !== "boolean" && x.status) {
-        console.log(x)
+        console.log(x);
         setPagination(x.meta);
         setData(x.data);
         setDisplayData(x.data ? x.data : null);
@@ -127,26 +129,22 @@ const MyComponent = () => {
   useEffect(() => {
     if (!subCategory) return;
     // if (detail < 0) return;
-    
+
     const genId = subCategory?.find((item) => item.id == detail);
     const parentCat = subCategory?.filter((item)=> item.category_type_id == parent && item.outlet == outlet223);
     const CategoryType = category?.filter((item)=> item.category_type_id == parent);
     if(CategoryType?.[0]){
       setCategoryType(CategoryType?.[0])
     }
-    const catId = category?.find((item) => item.category_type_id == detail);
+    
     setDisplayData(null);
-    if(parentCat?.[0]){
-      setSubcategoryTypes(parentCat)
+    if (parentCat?.[0]) {
+      setSubcategoryTypes(parentCat);
     }
-    if (genId ?? catId) {
-      if(genId){
-        setSubcategory(genId.category_name);
-      }
-      if(catId){
-        setSubcategory(catId.type);
-      }
+    if (genId) {
+      
       const loadData = async () => {
+        console.log(detail);
         await getCloths(1, detail);
       };
 
@@ -187,7 +185,7 @@ const MyComponent = () => {
   );
 
   // Handle add to cart
-  const handleAddToCart = async (item: DataCart) => {    
+  const handleAddToCart = async (item: DataCart) => {
     const x = item;
     if (item?.variations?.[0] && item?.tag_links) {
       Object.assign(x, { selected_variation: filteredVariations?.[0] });
@@ -302,7 +300,7 @@ const MyComponent = () => {
 
   const filterResult = () => {
     let filtered = [...data];
-    
+
     // Search filter
     if (searchText) {
       filtered = filtered.filter((row) =>
@@ -311,7 +309,7 @@ const MyComponent = () => {
         ),
       );
     }
-    
+
     // Date range filter
     setCurrentPage(filtered ? 1 : (pagination?.page ?? 1)); // Reset to first page on new filter
     setTotalPages(
@@ -371,10 +369,10 @@ const MyComponent = () => {
   };
   const handleChangeSubCategory = async (id: string) => {
     const genId = subCategory?.find((item) => item.id == parseInt(id));
-    if(genId?.category_name){
-      setName(genId.category_name)
+    if (genId?.category_name) {
+      setName(genId.category_name);
     }
-      setDetail(parseInt(id))
+    setDetail(parseInt(id));
   };
 
 
@@ -400,9 +398,9 @@ const MyComponent = () => {
                 </p>
                 )}
               </div>
-              
+
               <div className="flex items-center gap-2">
-              {subcategoryTypes?.[0] && (
+                {subcategoryTypes?.[0] && (
                   <NewSelect
                     onValueChange={(x: string) => handleChangeSubCategory(x)}
                   >
@@ -418,13 +416,19 @@ const MyComponent = () => {
                     </SelectContent>
                   </NewSelect>
                 )}
-                <input
-                  type="text"
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  placeholder="Search"
-                  className="rounded border border-gray-300 px-2 py-1 dark:bg-slate-700 dark:text-white"
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    placeholder="Search"
+                    className="w-full border-b border-gray-300 bg-gray-100 p-2 pl-8 text-sm focus:outline-none dark:bg-slate-700 dark:text-white"
+                  />
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-white">
+                    <FiSearch />
+                  </span>
+                </div>
+
                 <h1 className="font-bold">
                   Showing {displayData?.length} of {data.length} Items
                 </h1>
@@ -432,7 +436,10 @@ const MyComponent = () => {
             </div>
 
             <ScrollArea className="h-[75vh] pb-10">
-              <div className="flex flex-wrap justify-center py-3" key={displayData ? displayData?.[0]?.item_id : "123"}>
+              <div
+                className="flex flex-wrap justify-center py-3"
+                key={displayData ? displayData?.[0]?.item_id : "123"}
+              >
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
                       <div key={index} className="p-2">
@@ -458,12 +465,13 @@ const MyComponent = () => {
                         wishListLoader={wishListLoader}
                       />
                     ))}
+                {!(loader || displayData?.[0]) && <p> no items</p>}
               </div>
             </ScrollArea>
             {pagination && (
               <div className="z-10 flex justify-between px-4 py-4">
                 <button
-                  className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
@@ -473,7 +481,7 @@ const MyComponent = () => {
                   Page {currentPage ?? 1} of {totalPages ?? 1}
                 </span>
                 <button
-                  className={`rounded-full p-2 ${(totalPages == 0 || currentPage === totalPages) ? "bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${totalPages == 0 || currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={totalPages == 0 || currentPage === totalPages}
                 >
@@ -580,7 +588,9 @@ const MyComponent = () => {
                 </div>
               )}
 
-              {itemDetail?.pages !== undefined && itemDetail.pages !== null && itemDetail.pages ? (
+              {itemDetail?.pages !== undefined &&
+              itemDetail.pages !== null &&
+              itemDetail.pages ? (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
@@ -589,7 +599,9 @@ const MyComponent = () => {
                     {itemDetail.pages}
                   </span>
                 </div>
-              ) : ''}
+              ) : (
+                ""
+              )}
 
               {itemDetail?.publisher?.publisher_name && (
                 <div className="flex items-center justify-center">
@@ -622,7 +634,6 @@ const MyComponent = () => {
                     : ""}
                 </span>
               </div>
-             
 
               {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>

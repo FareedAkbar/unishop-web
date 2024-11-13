@@ -24,14 +24,14 @@ const ReturnPolicyCard: React.FC<PolicyCardProps> = ({
   icon: Icon,
   items,
 }) => (
-  <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
+  <div className="w-full rounded-lg bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
     <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
       <Icon className="text-red-500" /> {title}
     </h2>
     <ul className="list-none space-y-2 text-left">
       {items.map((item, index) => (
         <li key={index} className="flex items-start gap-2">
-          <FaCheck className="h-4 w-4 text-red-500 flex-shrink-0" />
+          <FaCheck className="h-4 w-4 flex-shrink-0 text-red-500" />
           {item}
         </li>
       ))}
@@ -81,12 +81,12 @@ const MyComponent: React.FC = () => {
             in-store and online purchases.
           </p>
         </div>
-        <div className="flex justify-center sm:mt-0 sm:flex-shrink-0">
+        <div className="flex justify-center sm:mt-0 lg:w-fit w-full sm:flex-shrink-0">
           <Player
             autoplay
             loop
             src="/assets/gifs/refund.json"
-            className="h-64 w-64"
+            className="h-56 w-56"
           />
         </div>
       </div>
@@ -98,30 +98,37 @@ const MyComponent: React.FC = () => {
       </div>
 
       {/* Terms and Contact Section */}
-      <div className="flex flex-wrap justify-evenly gap-6 p-8 text-center">
-        <div>
-          <h2 className="flex items-center gap-2 text-2xl font-bold">
+      <div className="flex flex-wrap justify-center gap-14 p-8 text-center">
+        <div className="text-left sm:w-1/2 lg:w-1/3">
+          <h2 className="flex items-center gap-2 pb-2 text-xl font-bold">
             <FaEnvelope className="text-red-500" /> Terms & Conditions
           </h2>
-          <p>
+          <p className="">
             See{" "}
             <a
               href="/terms-and-conditions"
+              // onClick={() => router.push("/terms-and-conditions")}
               className="cursor-pointer text-red-500 hover:underline"
             >
-              terms and conditions
+              Terms and Conditions
             </a>{" "}
-            for more details about our refund policy.
+            for overseas shipping.
           </p>
         </div>
 
-        <div>
-          <h2 className="flex items-center gap-2 text-2xl font-bold">
-            <FaPhoneAlt className="text-red-500" /> Contact Us
+        <div className="text-left sm:w-1/2 lg:w-1/3">
+          <h2 className="flex items-center gap-2 pb-2 text-xl font-bold">
+            <FaPhoneAlt className="text-red-500" /> Contact us
           </h2>
           <p>
-            For further inquiries, please reach out to our customer service
-            team.
+            For delivery enquiries, please{" "}
+            <a
+              href="contact-us"
+              className="cursor-pointer text-red-500 hover:underline"
+            >
+              Contact
+            </a>{" "}
+            our customer service staff.
           </p>
         </div>
       </div>

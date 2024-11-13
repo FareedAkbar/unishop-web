@@ -34,7 +34,7 @@ const MyComponent = () => {
       </div>
 
       <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
-        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
+        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaPhoneAlt className="text-red-500" /> General Enquiries
           </h2>
@@ -42,7 +42,7 @@ const MyComponent = () => {
             Phone:
             <a
               href="tel:42218050"
-              className="pl-1 text-red-500 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
+              className="pl-1 text-red-500 underline transition-colors"
             >
               4221 8050
             </a>
@@ -51,14 +51,14 @@ const MyComponent = () => {
             Email:
             <a
               href="mailto:uow-bookshop@uow.edu.au"
-              className="pl-1 text-red-500 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
+              className="pl-1 text-red-500 underline transition-colors"
             >
               uow-bookshop@uow.edu.au
             </a>
           </p>
         </div>
 
-        <div className="w-full rounded-lg bg-red-100 p-6 text-center shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
+        <div className="w-full rounded-lg bg-red-100 p-6 text-center shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaUserTie className="text-red-500" /> Specialty Enquiries
           </h2>
@@ -66,7 +66,7 @@ const MyComponent = () => {
             Retail Operations Manager:
             <a
               href="mailto:uow-bookshop@uow.edu.au"
-              className="transition-colorshover:text-gray-600 pl-1 text-red-500 dark:hover:text-gray-300"
+              className="pl-1 text-red-500 underline transition-colors"
             >
               uow-bookshop@uow.edu.au
             </a>
@@ -75,7 +75,7 @@ const MyComponent = () => {
             Events Coordinator: Anneliese Hennessy
             <a
               href="mailto:ahennessy@uow.edu.au"
-              className="transition-colorshover:text-gray-600 text-red-500 dark:hover:text-gray-300"
+              className="text-red-500 underline transition-colors"
             >
               (ahennessy@uow.edu.au)
             </a>
@@ -91,17 +91,17 @@ const MyComponent = () => {
       </div>
 
       {/* Address Section */}
-      <div className="flex flex-wrap justify-evenly gap-6 p-8 text-center">
-        <div>
-          <h2 className="flex items-center gap-2 text-2xl font-bold">
+      <div className="flex flex-col gap-6 p-8 text-center lg:flex-row lg:justify-evenly">
+        <div className="w-full max-w-xs text-left">
+          <h2 className="flex items-center gap-2 pb-2 text-lg font-semibold">
             <FaBuilding className="text-red-500" /> Postal Address
           </h2>
           <p>UniShop</p>
           <p>P.O. Box U100</p>
           <p>University of Wollongong P.O. NSW 2500</p>
         </div>
-        <div>
-          <h2 className="flex items-center gap-2 text-2xl font-bold">
+        <div className="w-full max-w-xs text-left">
+          <h2 className="flex items-center gap-2 pb-2 text-lg font-semibold">
             <FaBuilding className="text-red-500" /> Delivery Address
           </h2>
           <p>UniShop</p>
