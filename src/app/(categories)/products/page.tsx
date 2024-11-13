@@ -26,7 +26,7 @@ import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import AlertBox from "~/components/alertBox/alert";
 import { useToast } from "~/hooks/use-toast";
-import type { Category } from "~/types/category";
+import type { Category, SuperCategory } from "~/types/category";
 import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import Select from "~/components/Fields/select";
 import type { Pagination } from "~/types/pagination";
@@ -53,7 +53,7 @@ const MyComponent = () => {
   const [detail, setDetail] = useState<number>(-1);
   const [parent, setParent] = useState<number>(-1);
   const [name, setName] = useState<string>("");
-  const [subcategory, setSubcategory] = useState<string>("");
+  const [categoryType, setCategoryType] = useState<SuperCategory | null>(null);
   const [subcategoryTypes, setSubcategoryTypes] = useState<Category[] | null>(
     null,
   );
@@ -101,17 +101,11 @@ const MyComponent = () => {
       setName(name);
     }
   }, [params]);
-  async function getCloths(page: number, id: number) {
-    setData([]);
-    setPagination(null);
-    setDisplayData(null);
-    setTotalPages(0);
-    setPageSize(0);
+  async function getProducts(page: number, id: number,category_type: number) {
     try {
       setLoader(true);
-      const x = await getItemsByCategory(id ?? 1, page);
+      const x = await getItemsByCategory(id ?? 0, page, category_type);
       if (typeof x !== "boolean" && x.status) {
-        console.log(x);
         setPagination(x.meta);
         setData(x.data);
         setDisplayData(x.data ? x.data : null);
@@ -132,24 +126,28 @@ const MyComponent = () => {
     // if (detail < 0) return;
 
     const genId = subCategory?.find((item) => item.id == detail);
-    const parentCat = subCategory?.filter(
-      (item) => item.category_type_id == parent && item.outlet == outlet223,
-    );
+    const parentCat = subCategory?.filter((item)=> item.category_type_id == parent && item.outlet == outlet223);
+    const CategoryType = category?.filter((item)=> item.category_type_id == parent);
+    if(CategoryType?.[0]){
+      setCategoryType(CategoryType?.[0])
+    }
     const catId = category?.find((item) => item.category_type_id == detail);
     setDisplayData(null);
     if (parentCat?.[0]) {
       setSubcategoryTypes(parentCat);
     }
-    if (genId ?? catId) {
-      if (genId) {
-        setSubcategory(genId.category_name);
-      }
-      if (catId) {
-        setSubcategory(catId.type);
-      }
+    if (detail != -1 && (genId ?? catId)) {
       const loadData = async () => {
-        console.log(detail);
-        await getCloths(1, detail);
+        await getProducts(1, detail,0);
+      };
+
+      loadData().catch((error) => {
+        console.error("Failed to load data in useEffect:", error);
+      });
+    }
+    if(detail == -1 && parent){
+      const loadData = async () => {
+        await getProducts(1, 0,parent);
       };
 
       loadData().catch((error) => {
@@ -364,7 +362,7 @@ const MyComponent = () => {
   };
   const handlePageChange = async (page: number) => {
     setCurrentPage(page);
-    await getCloths(page, detail);
+    await getProducts(page, detail,0);
   };
 
   const goToDetail = async (item: DataCart | null) => {
@@ -379,6 +377,8 @@ const MyComponent = () => {
     setDetail(parseInt(id));
   };
 
+
+  
   return (
     <div>
       <motion.main
@@ -393,10 +393,12 @@ const MyComponent = () => {
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4">
               <div className="text-left">
-                <h2 className="text-xl font-bold capitalize"> {name}</h2>
-                {/* <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
-                  {subcategory}
-                </p> */}
+                <h2 className="text-xl font-bold capitalize"> {categoryType?.type}</h2>
+                {detail > -1 && (
+                  <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
+                  {name}
+                </p>
+                )}
               </div>
 
               <div className="flex items-center gap-2">

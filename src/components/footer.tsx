@@ -107,18 +107,17 @@ function Footer() {
           <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Shop Online</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
-            {category?.map(
-              (item, index) =>
-                index < 7 && (
-                  <>
-                    <Link
-                      href={`products?category=${item.category_type_id}&name=${item.type}`}
-                      className="text-sm font-medium capitalize text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-                    >
-                      {item.type}
-                    </Link>
-                  </>
-                ),
+            {category?.map((item, index) =>
+            ( index < 7 &&
+              <>
+                <Link
+                  href={`products?category=${item.category_type_id}&name=${item.type}`}
+                  className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500 capitalize"
+                >
+                  {item.type}
+                </Link>
+              </>
+            )
             )}
             {/* <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <Link
