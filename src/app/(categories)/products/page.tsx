@@ -41,6 +41,7 @@ import {
 } from "~/components/ui/select";
 import { outlet223 } from "~/types/tokens";
 import { FiSearch } from "react-icons/fi";
+import { Player } from "@lottiefiles/react-lottie-player";
 
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
@@ -464,7 +465,19 @@ const MyComponent = () => {
                         wishListLoader={wishListLoader}
                       />
                     ))}
-                {!(loader || displayData?.[0]) && <p> no items</p>}
+                {!(loader || displayData?.[0]) && (
+                  <div className="flex h-full w-full flex-col items-center justify-center">
+                    <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
+                      Currently, you have no items in this category.
+                    </p>
+                    <Player
+                      autoplay
+                      loop
+                      src="/assets/gifs/emptywishlist.json" 
+                      className="h-80 w-80" 
+                    />
+                  </div>
+                )}
               </div>
             </ScrollArea>
             {pagination && (
