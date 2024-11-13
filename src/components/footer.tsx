@@ -5,7 +5,11 @@ import {
   FaMapMarkerAlt,
   FaPhoneAlt,
 } from "react-icons/fa";
-import { AiOutlineTwitter, AiFillYoutube } from "react-icons/ai";
+import {
+  AiOutlineTwitter,
+  AiFillYoutube,
+  AiOutlineInstagram,
+} from "react-icons/ai";
 import { BiLogoPinterestAlt } from "react-icons/bi";
 import Logo from "../../public/pulseFooter2.png";
 import Image from "next/image";
@@ -25,10 +29,14 @@ const links = [
 
 function Footer() {
   const iconsTab = [
-    { icon: <FaFacebookF /> },
-    { icon: <AiOutlineTwitter /> },
-    { icon: <AiFillYoutube /> },
-    { icon: <BiLogoPinterestAlt /> },
+    // { icon: <FaFacebookF /> },
+    // { icon: <AiOutlineTwitter /> },
+    // { icon: <AiFillYoutube /> },
+    // { icon: <BiLogoPinterestAlt /> },
+    {
+      icon: <AiOutlineInstagram />,
+      link: "https://www.instagram.com/uowpulse_eatshop/",
+    },
   ];
   const { category } = useAuthContext();
   const pathname = usePathname();
@@ -72,14 +80,17 @@ function Footer() {
                 uow-bookshop@uow.edu.au
               </a>
             </div>
-            <div className="flex gap-4 pl-4 text-xl text-[#646464]">
-              {iconsTab.map(({ icon }, index) => (
-                <div
+            <div className="flex w-full justify-center gap-4 pl-4 text-xl text-[#646464]">
+              {iconsTab.map(({ icon, link }, index) => (
+                <Link
                   key={index}
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="cursor-pointer rounded-full bg-red-200 p-2 transition-all hover:bg-red-500 hover:text-white"
                 >
-                  {icon}
-                </div>
+                  <div>{icon}</div>
+                </Link>
               ))}
             </div>
           </div>
@@ -107,17 +118,18 @@ function Footer() {
           <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Shop Online</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
-            {category?.map((item, index) =>
-            ( index < 7 &&
-              <>
-                <Link
-                  href={`products?category=${item.category_type_id}&name=${item.type}`}
-                  className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500 capitalize"
-                >
-                  {item.type}
-                </Link>
-              </>
-            )
+            {category?.map(
+              (item, index) =>
+                index < 7 && (
+                  <>
+                    <Link
+                      href={`products?category=${item.category_type_id}&name=${item.type}`}
+                      className="text-sm font-medium capitalize text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
+                    >
+                      {item.type}
+                    </Link>
+                  </>
+                ),
             )}
             {/* <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <Link
