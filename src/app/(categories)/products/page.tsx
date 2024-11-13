@@ -100,17 +100,11 @@ const MyComponent = () => {
       setName(name);
     }
   }, [params]);
-  async function getCloths(page: number, id: number) {
-    setData([]);
-    setPagination(null);
-    setDisplayData(null);
-    setTotalPages(0);
-    setPageSize(0);
+  async function getProducts(page: number, id: number,category_type: number) {
     try {
       setLoader(true);
-      const x = await getItemsByCategory(id ?? 1, page);
+      const x = await getItemsByCategory(id ?? 0, page, category_type);
       if (typeof x !== "boolean" && x.status) {
-        console.log(x);
         setPagination(x.meta);
         setData(x.data);
         setDisplayData(x.data ? x.data : null);
@@ -136,16 +130,23 @@ const MyComponent = () => {
     if(CategoryType?.[0]){
       setCategoryType(CategoryType?.[0])
     }
-    
+    const catId = category?.find((item) => item.category_type_id == detail);
     setDisplayData(null);
     if (parentCat?.[0]) {
       setSubcategoryTypes(parentCat);
     }
-    if (genId) {
-      
+    if (detail != -1 && (genId ?? catId)) {
       const loadData = async () => {
-        console.log(detail);
-        await getCloths(1, detail);
+        await getProducts(1, detail,0);
+      };
+
+      loadData().catch((error) => {
+        console.error("Failed to load data in useEffect:", error);
+      });
+    }
+    if(detail == -1 && parent){
+      const loadData = async () => {
+        await getProducts(1, 0,parent);
       };
 
       loadData().catch((error) => {
@@ -360,7 +361,7 @@ const MyComponent = () => {
   };
   const handlePageChange = async (page: number) => {
     setCurrentPage(page);
-    await getCloths(page, detail);
+    await getProducts(page, detail,0);
   };
 
   const goToDetail = async (item: DataCart | null) => {
