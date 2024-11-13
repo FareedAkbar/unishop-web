@@ -93,7 +93,7 @@ const MyComponent = () => {
   async function getProducts(page: number) {
     try {
       setLoader(true);
-      const x = await getItemsByCategory(parseInt(category) ?? 1, page);
+      const x = await getItemsByCategory(parseInt(category) ?? 0, page,0);
 
 
       if (typeof x !== "boolean" && x.status) {
@@ -110,12 +110,10 @@ const MyComponent = () => {
   }
   async function getReviews(id: number) {
     setGetReviewsLoader(true);
-    console.log(id)
     try {
       const x = await getReviewsApi(id);
 
       if (typeof x !== "boolean" && x.status) {
-        console.log(x.data)
         setReviews(x.data);
       }
       setGetReviewsLoader(false);

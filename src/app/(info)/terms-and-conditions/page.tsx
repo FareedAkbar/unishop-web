@@ -2,7 +2,7 @@
 
 import { Player } from "@lottiefiles/react-lottie-player";
 import { useState } from "react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaCheck } from "react-icons/fa";
 
 const TermsAndConditions = () => {
   const sections = [
@@ -50,16 +50,19 @@ const TermsAndConditions = () => {
     },
   ];
 
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [openSections, setOpenSections] = useState<boolean[]>(
+    Array(sections.length).fill(false),
+  );
 
   const toggleSection = (index: number) => {
-    setActiveIndex(activeIndex === index ? null : index);
+    setOpenSections((prev) =>
+      prev.map((isOpen, i) => (i === index ? !isOpen : isOpen)),
+    );
   };
 
   return (
     <div className="relative min-h-screen p-8 pt-32">
       {/* Background Lottie Animation */}
-
       {/* Page Header */}
       <h1 className="mb-6 text-center text-3xl font-extrabold text-red-600">
         Terms and Conditions
@@ -82,13 +85,19 @@ const TermsAndConditions = () => {
             website is <span>UOW Pulse</span> (ABN 28 915 832 337). Use of this
             website is subject to these <a href="#">Terms of Use</a>.
           </p>
-          <ul className="list-inside list-disc">
-            <li>Prices are in Australian Dollars (AUD).</li>
-            <li>
+
+          <ul className="list-none space-y-2">
+            <li className="flex items-start">
+              <FaCheck className="mr-2 mt-2 h-4 w-4 flex-shrink-0 text-red-500" />
+              Prices are in Australian Dollars (AUD).
+            </li>
+            <li className="flex items-start">
+              <FaCheck className="mr-2 mt-2 h-4 w-4 flex-shrink-0 text-red-500" />
               Please ensure the delivery address and receiver name for your
               order are accurate and complete.
             </li>
-            <li>
+            <li className="flex items-start">
+              <FaCheck className="mr-2 mt-2 h-4 w-4 flex-shrink-0 text-red-500" />
               UOW Pulse cannot take responsibility for any orders that may go
               missing due to incorrect information provided by you.
             </li>
@@ -110,7 +119,7 @@ const TermsAndConditions = () => {
               <h2 className="text-xl font-semibold text-red-600">
                 {section.title}
               </h2>
-              {activeIndex === index ? (
+              {openSections[index] ? (
                 <FaChevronUp className="text-gray-600 dark:text-gray-300" />
               ) : (
                 <FaChevronDown className="text-gray-600 dark:text-gray-300" />
@@ -120,40 +129,19 @@ const TermsAndConditions = () => {
             {/* Section Content with Animation */}
             <div
               className={`mt-2 overflow-hidden rounded bg-white transition-all duration-300 ease-in-out dark:bg-slate-700 ${
-                activeIndex === index ? "max-h-[500px]" : "max-h-0"
+                openSections[index] ? "max-h-[500px]" : "max-h-0"
               }`}
             >
-              <ul className="ml-6 mt-2 list-disc py-2">
-                {section.content.map((item, idx) =>
-                  Array.isArray(item) ? (
-                    <ul key={idx} className="ml-4 list-disc">
-                      {item.map((subItem, subIdx) =>
-                        Array.isArray(subItem) ? (
-                          <li key={subIdx} className="mb-1 dark:text-white">
-                            <strong className="dark:text-white">
-                              {subItem[0]}:
-                            </strong>{" "}
-                            {subItem[1]}
-                          </li>
-                        ) : (
-                          <li
-                            key={subIdx}
-                            className="mb-1 text-black dark:text-white"
-                          >
-                            {subItem}
-                          </li>
-                        ),
-                      )}
-                    </ul>
-                  ) : (
-                    <li
-                      key={idx}
-                      className="mb-1 text-gray-700 dark:text-white"
-                    >
-                      {item}
-                    </li>
-                  ),
-                )}
+              <ul className="ml-6 mt-2 py-2">
+                {section.content.map((item, idx) => (
+                  <li
+                    key={idx}
+                    className="mb-1 flex items-start text-gray-700 dark:text-white"
+                  >
+                    <FaCheck className="mr-2 mt-2 h-3 w-3 flex-shrink-0 text-red-500" />
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

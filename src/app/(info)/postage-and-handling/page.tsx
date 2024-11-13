@@ -38,7 +38,7 @@ const MyComponent: React.FC = () => {
       {/* Cards Section */}
       <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
         {/* Card 1: Order Processing */}
-        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
+        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3 hover:scale-105 transition-all duration-300">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaShippingFast className="text-red-500" /> Order Processing
           </h2>
@@ -49,7 +49,7 @@ const MyComponent: React.FC = () => {
         </div>
 
         {/* Card 2: Delivery Charges */}
-        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
+        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3 hover:scale-105 transition-all duration-300">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaDollarSign className="text-red-500" /> Delivery Charges
           </h2>
@@ -58,9 +58,9 @@ const MyComponent: React.FC = () => {
       </div>
 
       {/* Address Section */}
-      <div className="flex flex-wrap justify-evenly gap-6 p-8 text-center">
-        <div>
-          <h2 className="flex items-center gap-2 text-2xl font-bold">
+      <div className="flex flex-wrap justify-center gap-14 p-8 text-center">
+        <div className="sm:w-1/2 lg:w-1/3 text-left ">
+          <h2 className="pb-2 flex items-center gap-2 text-xl font-bold">
             <FaEnvelope className="text-red-500" /> Terms & Conditions
           </h2>
           <p className="">
@@ -70,14 +70,14 @@ const MyComponent: React.FC = () => {
               // onClick={() => router.push("/terms-and-conditions")}
               className="cursor-pointer text-red-500 hover:underline"
             >
-              terms and conditions
+              Terms and Conditions
             </a>{" "}
             for overseas shipping.
           </p>
         </div>
 
-        <div>
-          <h2 className="flex items-center gap-2 text-2xl font-bold">
+        <div className="sm:w-1/2 lg:w-1/3 text-left ">
+          <h2 className="pb-2 flex items-center gap-2 text-xl font-bold">
             <FaPhoneAlt className="text-red-500" /> Delivery Enquiries
           </h2>
           <p>
