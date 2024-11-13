@@ -61,6 +61,12 @@ interface SubcategoryListProps {
   toggleCategory: (label: string) => void;
   isOpen: boolean;
 }
+const StaticGiftsRoutes = [
+  { label: "Danielle Hulls Photography", icon: FaGift, href: "/gifts?desc=Photography" },
+{ label: "Marini Ferlazzo", icon: FaGift, href: "/gifts?desc=Ferlazzo" },
+{ label: "White Clay Mountain", icon: FaGift, href: "/gifts?desc=Mountain" },
+{ label: "Eliza Jade Candles", icon: FaGift, href: "/gifts?desc=Candles" }
+]
 const SubcategoryList1 = ({
   subItems,
   openCategories,
@@ -124,6 +130,32 @@ const SubcategoryList1 = ({
             )}
         </div>
       ))}
+      {item == "Gifts" && (
+        StaticGiftsRoutes.map((subItem) => (
+          <div key={subItem.label} className="relative">
+            <button
+              onClick={() => {
+                router.push(subItem.href);
+                setTimeout(() => {
+                  setOpenCategories([]);
+                }, 500);
+              }}
+              className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
+            >
+              <span
+                className="mr-2 truncate text-left capitalize"
+                title={subItem.label}
+              >
+                {subItem.label}
+              </span>
+              
+            </button>
+  
+            {/* Render children if open */}
+            
+          </div>
+        ))
+      )}
     </div>
   );
 };
@@ -329,7 +361,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       `/products?category=${item.category_type_id}&name=${item.type}&detail=${item.category_type_id}`,
                     )
               }
-              className="flex w-full items-center justify-between px-2 transition-transform hover:scale-110"
+              className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-110"
             >
               {/* <Link
                         key={item.id}
@@ -339,7 +371,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                         passHref
                       > */}
               <div className="flex items-center justify-start">
-                <AiOutlineFileText className="mr-1 h-6 w-6 p-0.5 text-orange-600" />
+                <AiOutlineFileText className="mr-1.5 h-6 w-6 p-0.5 text-orange-600" />
                 {/* {item.object_path && (
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     <Image
@@ -381,6 +413,14 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 setOpenCategories={setOpenCategories}
               />
             )}
+            {/* {openCategories.includes(item.type) && item.type == "Gifts" && (
+                  <SubcategoryList1
+                    subItems={xx}
+                    openCategory={openCategory}
+                    toggleCategory={toggleCategory2}
+                    isOpen={false}
+                  />
+                )} */}
           </div>
 
           // )
@@ -490,10 +530,10 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
         {checkoutData?.booknet_customer_id ? (
           <button
             onClick={() => router.push("/my-orders")}
-            className="mb-2 flex w-full items-center px-3 text-lg transition-transform duration-300 hover:scale-110 focus:outline-none"
+            className="mb-2 flex w-full items-center px-2 text-lg transition-transform duration-300 hover:scale-110 focus:outline-none"
           >
-            <FaReceipt className="mr-3 text-indigo-600" />
-            <span>My Orders</span>
+            <FaReceipt className="mr-2 text-indigo-600" />
+            <span className="text-sm">My Orders</span>
           </button>
         ) : (
           ""

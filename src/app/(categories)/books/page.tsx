@@ -32,6 +32,7 @@ import { Variation } from "~/types/book";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { BsFillCartCheckFill } from "react-icons/bs";
 import { FiSearch } from "react-icons/fi";
+import { Player } from "@lottiefiles/react-lottie-player";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -60,7 +61,7 @@ const MyComponent = () => {
     removeFavourite,
     checkoutData,
     favItems,
-    setProductForDetail
+    setProductForDetail,
   } = useAuthContext();
   const { toast } = useToast();
 
@@ -120,7 +121,6 @@ const MyComponent = () => {
       });
     });
   };
-
 
   const filteredVariations: Variation[] = filterVariationsBySelectedValues(
     itemDetail?.variations ? itemDetail?.variations : [],
@@ -264,7 +264,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -311,7 +311,7 @@ const MyComponent = () => {
   };
   const goToDetail = async (item: DataCart | null) => {
     await setProductForDetail(item);
-    console.log(item)
+    console.log(item);
     router.push(`/product-details?genre=${item?.genre_id}`);
   };
   return (
@@ -329,19 +329,19 @@ const MyComponent = () => {
             <div className="flex w-full flex-wrap items-end justify-between pb-4">
               <div className="text-left">
                 <h2 className="text-xl font-bold">Books</h2>
-                <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
+                <p className="text-sm capitalize text-gray-500 dark:text-gray-300">
                   {detail}
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
-              <div className="relative">
+                <div className="relative">
                   <input
                     type="text"
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     placeholder="Search"
-                    className="w-full border-b text-sm border-gray-300 p-2 pl-8 bg-gray-100 focus:outline-none dark:bg-slate-700 dark:text-white"
+                    className="w-full border-b border-gray-300 bg-gray-100 p-2 pl-8 text-sm focus:outline-none dark:bg-slate-700 dark:text-white"
                   />
                   <span className="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-white">
                     <FiSearch />
@@ -358,38 +358,52 @@ const MyComponent = () => {
               <div className="flex h-full flex-wrap items-center justify-center py-3">
                 {loader
                   ? Array.from({ length: 6 }, (_, index) => (
-                    <div key={index} className="p-2">
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
+                      <div key={index} className="p-2">
+                        <ProductCardSkeleton />
+                      </div>
+                    ))
                   : displayedData?.map((item: DataCart) => (
-                    <ProductCard
-                      key={item.book_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={async () => {
-                        if (item?.variations?.[0]) {
-                          await openDetail(item);
-                        } else {
-                          await handleAddToCart(item);
-                        }
-                      }}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
-                      handleFavourite={() => handleFavourite(item)}
-                      wishListLoader={wishListLoader}
+                      <ProductCard
+                        key={item.book_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={async () => {
+                          if (item?.variations?.[0]) {
+                            await openDetail(item);
+                          } else {
+                            await handleAddToCart(item);
+                          }
+                        }}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        openDetail={() => openDetail(item)}
+                        handleFavourite={() => handleFavourite(item)}
+                        wishListLoader={wishListLoader}
+                      />
+                    ))}
+                {!(loader || displayedData?.[0]) && (
+                  <div className="flex h-full w-full flex-col items-center justify-center">
+                    <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
+                      Currently, you have no items in this book category.
+                    </p>
+                    <Player
+                      autoplay
+                      loop
+                      src="/assets/gifs/emptywishlist.json"
+                      className="h-80 w-80"
                     />
-                  ))}
+                  </div>
+                )}
               </div>
             </ScrollArea>
 
             {/* Pagination Section */}
             <div className="z-10 flex justify-between px-4 py-4">
               <button
-                className={`rounded-full p-2 ${currentPage === 1
-                  ? "bg-gray-200 text-black cursor-not-allowed"
-                  : "cursor-pointer bg-red-500 text-white"
-                  }`}
+                className={`rounded-full p-2 ${
+                  currentPage === 1
+                    ? "cursor-not-allowed bg-gray-200 text-black"
+                    : "cursor-pointer bg-red-500 text-white"
+                }`}
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
               >
@@ -399,10 +413,11 @@ const MyComponent = () => {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                className={`rounded-full p-2 ${currentPage === totalPages
-                  ? "bg-gray-200 text-black cursor-not-allowed"
-                  : "cursor-pointer bg-red-500 text-white"
-                  }`}
+                className={`rounded-full p-2 ${
+                  currentPage === totalPages
+                    ? "cursor-not-allowed bg-gray-200 text-black"
+                    : "cursor-pointer bg-red-500 text-white"
+                }`}
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
@@ -415,13 +430,13 @@ const MyComponent = () => {
 
       <ModalBody>
         <ModalContent>
-          <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
+          <h4 className="pb-2 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
             {itemDetail?.book_title}
           </h4>
           <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}
           </h6>
-          <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
+          <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 ">
             {itemDetail?.additional_notes}
           </h6>
           <div className="flex">
@@ -453,7 +468,7 @@ const MyComponent = () => {
                     alt={itemDetail?.object_path ?? ""}
                     width={500}
                     height={500}
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-64 md:w-44"
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-44 md:w-44"
                   />
                 </motion.div>
               </div>
@@ -461,12 +476,13 @@ const MyComponent = () => {
             <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
               <div className="flex flex-col">
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
-                  ${itemDetail?.variations?.[0] &&
-                    filteredVariations?.[0]?.items_variable_items_sale_price
+                  $
+                  {itemDetail?.variations?.[0] &&
+                  filteredVariations?.[0]?.items_variable_items_sale_price
                     ? filteredVariations?.[0]?.items_variable_items_sale_price
                     : itemDetail?.variations?.[0]
                       ? itemDetail?.variations?.[0]
-                        .items_variable_items_sale_price
+                          .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
                 <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
@@ -475,12 +491,14 @@ const MyComponent = () => {
               </div>
               {itemDetail?.edition && (
                 <div className="flex items-center justify-center">
-                  <><span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Series:
-                  </span>
+                  <>
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      Series:
+                    </span>
                     <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                       {itemDetail?.edition}
-                    </span></>
+                    </span>
+                  </>
                 </div>
               )}
               {itemDetail?.introduced && (
@@ -513,7 +531,9 @@ const MyComponent = () => {
                     {itemDetail?.pages}
                   </span>
                 </div>
-              ) : ""}
+              ) : (
+                ""
+              )}
 
               <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -592,7 +612,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                              currTag.items_variations_tags_name
+                                currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -630,10 +650,11 @@ const MyComponent = () => {
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
-                                    ? "bg-red-500 text-white"
-                                    : "border-red-500 bg-white dark:bg-slate-700"
-                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                  className={`min-w-10 rounded border p-1 text-center ${
+                                    selectedValues[tagName] === option.value
+                                      ? "bg-red-500 text-white"
+                                      : "border-red-500 bg-white dark:bg-slate-700"
+                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}
@@ -667,7 +688,6 @@ const MyComponent = () => {
                 </div>
               )}
 
-
               {itemDetail?.variations?.[0]?.variation_tags &&
                 Object.keys(selectedValues)[0] &&
                 filteredVariations?.[0]?.items_variable_items_id && (
@@ -693,7 +713,6 @@ const MyComponent = () => {
                 ""
               )} */}
             </div>
-
           </div>
           <div className="flex w-full justify-end">
             <button

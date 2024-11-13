@@ -68,7 +68,7 @@ const MyComponent: React.FC = () => {
             <a
               href="/terms-and-conditions"
               // onClick={() => router.push("/terms-and-conditions")}
-              className="cursor-pointer text-red-500 hover:underline"
+              className="cursor-pointer text-red-500 underline"
             >
               Terms and Conditions
             </a>{" "}

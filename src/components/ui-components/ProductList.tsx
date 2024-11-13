@@ -91,7 +91,7 @@ const ProductList: React.FC<ProductListProps> = ({
 
                     <div className="flex flex-col">
                       <span className="font-semibold text-gray-800 dark:text-white" title={product.item_name ?? ""}>
-                      {product.item_name && product.item_name.length > 24 ? `${product.item_name?.slice(0, 24)}...` : product.item_name}
+                      {product.item_name}
                       </span>
                       <p className="text-sm flex justify-end text-gray-500 dark:text-gray-300">
                         {product.category_name}
