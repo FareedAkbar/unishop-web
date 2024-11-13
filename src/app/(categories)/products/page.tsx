@@ -545,7 +545,7 @@ const MyComponent = () => {
                     alt={itemDetail?.object_path ?? ""}
                     width={500}
                     height={500}
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-64 md:w-44"
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-64 md:w-44"
                   />
                 </motion.div>
               </div>

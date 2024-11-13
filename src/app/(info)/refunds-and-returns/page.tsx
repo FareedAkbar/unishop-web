@@ -108,7 +108,7 @@ const MyComponent: React.FC = () => {
             <a
               href="/terms-and-conditions"
               // onClick={() => router.push("/terms-and-conditions")}
-              className="cursor-pointer text-red-500 hover:underline"
+              className="cursor-pointer text-red-500 underline"
             >
               Terms and Conditions
             </a>{" "}
@@ -124,7 +124,7 @@ const MyComponent: React.FC = () => {
             For delivery enquiries, please{" "}
             <a
               href="contact-us"
-              className="cursor-pointer text-red-500 hover:underline"
+              className="cursor-pointer text-red-500 underline"
             >
               Contact
             </a>{" "}
