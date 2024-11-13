@@ -430,13 +430,13 @@ const MyComponent = () => {
 
       <ModalBody>
         <ModalContent>
-          <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
+          <h4 className="pb-2 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
             {itemDetail?.book_title}
           </h4>
           <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}
           </h6>
-          <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
+          <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 ">
             {itemDetail?.additional_notes}
           </h6>
           <div className="flex">
@@ -468,7 +468,7 @@ const MyComponent = () => {
                     alt={itemDetail?.object_path ?? ""}
                     width={500}
                     height={500}
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-64 md:w-44"
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-44 md:w-44"
                   />
                 </motion.div>
               </div>
