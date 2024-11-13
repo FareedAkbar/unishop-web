@@ -19,7 +19,7 @@ interface GiftCategoryInfoProps {
 
 const GiftCategoryInfo: React.FC<GiftCategoryInfoProps> = ({ category }) => {
   return (
-    <div className="p-5 pt-16 lg:pl-72 lg:pt-12">
+    <div className="p-5 pt-16 lg:pl-80 lg:pt-12">
       <h2 className="mb-2 text-3xl font-extrabold text-red-600">
         {category.name}
       </h2>
