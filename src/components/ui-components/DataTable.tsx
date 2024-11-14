@@ -19,6 +19,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { HiMiniViewColumns } from "react-icons/hi2";
 import { ModalBody, ModalContent, useModal } from "../ui/animated-modal";
 import { GetSpecialOrder } from "~/types/getSpecialBackOrders";
+import { FiSearch } from "react-icons/fi";
 
 interface DataTableProps {
   tableData: any[];
@@ -200,20 +201,30 @@ const DataTable: React.FC<DataTableProps> = ({
 
   return (
     <>
-      <div className={`flex flex-col bg-white dark:bg-slate-900 rounded p-3`} id="tableContainer">
+      <div
+        className={`flex flex-col rounded bg-white p-3 dark:bg-slate-900`}
+        id="tableContainer"
+      >
+        <h1 className="pb-3 text-center text-2xl font-bold text-red-500">
+          My Orders
+        </h1>
         <div className="mb-4 flex justify-between">
           <div className="flex items-center">
             <div className="ml-4"></div>
           </div>
           <div className="flex items-center">
-            <input
-              type="text"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search"
-              onKeyPress={handleSearchKeyPress}
-              className="rounded border border-gray-300 dark:bg-slate-700 dark:text-white px-2 py-1"
-            />
+            <div className="relative">
+              <input
+                type="text"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                placeholder="Search"
+                className="w-full border-b border-gray-300 bg-gray-100 p-2 pl-8 text-sm focus:outline-none dark:bg-slate-700 dark:text-white"
+              />
+              <span className="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-white">
+                <FiSearch />
+              </span>
+            </div>
 
             <div className="ml-4">
               <DatePicker
@@ -223,18 +234,18 @@ const DataTable: React.FC<DataTableProps> = ({
                 onChange={(update: [Date | null, Date | null]) =>
                   handleDateRangeChange(update)
                 }
-                className="rounded border border-gray-300 px-4 py-1 dark:bg-slate-700 dark:text-white"
+                className="rounded border border-gray-300 px-4 py-2 text-sm dark:bg-slate-700 dark:text-white"
                 isClearable={true}
                 placeholderText="Select Date Range"
               />
             </div>
           </div>
         </div>
-        <div className="mb-4 flex lg:flex-row flex-col  lg:gap-0 gap-2 justify-between">
+        <div className="mb-4 flex flex-col justify-between gap-2 lg:flex-row lg:gap-0">
           <div className="flex items-center">
             <span className="font-bold">Columns:</span>
             {columns.map((column) => (
-              <span key={column.key} className="ml-2">
+              <span key={column.key} className="ml-2 text-sm">
                 <input
                   type="checkbox"
                   checked={column.isVisible}
@@ -289,7 +300,7 @@ const DataTable: React.FC<DataTableProps> = ({
               <tr key={row.id} className="border-b">
                 {columns.map((column) =>
                   column.isVisible ? (
-                    <td key={column.key} className="p-2">
+                    <td key={column.key} className="p-2 text-sm">
                       {column.cell ? column.cell(row) : row[column.key]}
                     </td>
                   ) : null,
@@ -327,35 +338,41 @@ const DataTable: React.FC<DataTableProps> = ({
       <ModalBody>
         <ModalContent>
           <div className="space-y-8 p-3">
-            <h2 className="text-center text-3xl font-extrabold uppercase tracking-wide text-gray-900 dark:text-gray-200">
+            <h2 className="text-center text-3xl font-extrabold uppercase tracking-wide text-red-500">
               Order Details
             </h2>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {/* Order Info */}
               <div className="flex flex-col items-center lg:items-start">
-                <h3 className="mb-2 text-center text-xl font-bold ">
+                <h3 className="mb-2 text-center text-xl font-bold">
                   Order Information
                 </h3>
 
                 {/* Using flex for attribute-value pairs */}
                 <div className="flex items-center">
-                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Order ID:</p>
-                  <p className="text-lg font-semibold">
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
+                    Order ID:
+                  </p>
+                  <p className="text-lg font-medium">
                     {selectedItem?.order_id}
                   </p>
                 </div>
 
                 <div className="mt-2 flex items-end">
-                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Tracking ID:</p>
-                  <p className="text-lg font-semibold">
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
+                    Tracking ID:
+                  </p>
+                  <p className="text-lg font-medium">
                     {selectedItem?.tracking_id}
                   </p>
                 </div>
 
                 <div className="mt-2 flex items-center">
-                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Actual Price:</p>
-                  <p className="text-lg font-semibold">
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
+                    Actual Price:
+                  </p>
+                  <p className="text-lg font-medium">
                     ${selectedItem?.total_order_price}
                   </p>
                 </div>
@@ -364,7 +381,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
                     Discounted Price:
                   </p>
-                  <p className="text-lg font-semibold">
+                  <p className="text-lg font-medium">
                     ${selectedItem?.total_discounted_price}
                   </p>
                 </div>
@@ -377,22 +394,26 @@ const DataTable: React.FC<DataTableProps> = ({
                 </h3>
 
                 <div className="flex items-center">
-                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Customer ID:</p>
-                  <p className="text-lg font-semibold">
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
+                    Customer ID:
+                  </p>
+                  <p className="text-lg font-medium">
                     {selectedItem?.customer_id ?? "Guest"}
                   </p>
                 </div>
 
                 {/* <div className="mt-2 flex items-center">
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Outlet:</p>
-                  <p className="text-lg font-semibold">
+                  <p className="text-lg font-medium">
                     {selectedItem?.outlet}
                   </p>
                 </div> */}
 
                 <div className="mt-2 flex items-center">
-                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">Special Order:</p>
-                  <p className="text-lg font-semibold">
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
+                    Special Order:
+                  </p>
+                  <p className="text-lg font-medium">
                     {selectedItem?.special ? "Yes" : "No"}
                   </p>
                 </div>
@@ -415,17 +436,17 @@ const DataTable: React.FC<DataTableProps> = ({
                     ))}
                   </ul>
                 ) : (
-                  <p className="mt-2 text-gray-700">
-                    No items in this order.
-                  </p>
+                  <p className="mt-2 text-gray-700">No items in this order.</p>
                 )}
               </div>
             )}
             {/* Order Started */}
             <div className="mt-">
               <p className="text-center text-sm text-gray-500 dark:text-gray-300">
-                <span className="font-semibold">Order Started:</span>{" "}
-                {selectedItem?.started ? new Date(selectedItem?.started).toLocaleString() : ''}
+                <span className="font-medium">Order Started:</span>{" "}
+                {selectedItem?.started
+                  ? new Date(selectedItem?.started).toLocaleString()
+                  : ""}
               </p>
             </div>
           </div>

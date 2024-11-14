@@ -151,7 +151,7 @@ const HomePage: React.FC = () => {
               </div>
             ))} */}
 
-          <div className="container mx-auto grid min-h-[450px] w-full p-5 pb-10 lg:grid-cols-2 lg:pl-48">
+          <div className="container mx-auto grid min-h-[450px] w-full px-5 pb-10 lg:grid-cols-2 lg:pl-48">
             {productTags?.map((item) => (
               <>
                 <div className="-mr-4 w-full">

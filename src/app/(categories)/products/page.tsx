@@ -101,10 +101,12 @@ const MyComponent = () => {
       setName(name);
     }
   }, [params]);
-  async function getProducts(page: number, id: number,category_type: number) {
+  async function getProducts(page: number, id: number, category_type: number) {
     try {
       setLoader(true);
+      setDisplayData(null); // Reset display data before fetching new data
       const x = await getItemsByCategory(id ?? 0, page, category_type);
+
       if (typeof x !== "boolean" && x.status) {
         setPagination(x.meta);
         setData(x.data);
@@ -112,48 +114,46 @@ const MyComponent = () => {
         setTotalPages(x.meta.pages);
         setPageSize(x.meta.limit);
       }
-      setLoader(false);
-      // setData(result);
-      // setTotalPages(result.totalPages);
     } catch (error) {
       console.error("Failed to load data:", error);
-      setLoader(false);
-      // Optionally set an error state here
+    } finally {
+      setLoader(false); // Ensure loader is disabled in both success and error cases
     }
   }
+
   useEffect(() => {
     if (!subCategory) return;
-    // if (detail < 0) return;
 
-    const genId = subCategory?.find((item) => item.id == detail);
-    const parentCat = subCategory?.filter((item)=> item.category_type_id == parent && item.outlet == outlet223);
-    const CategoryType = category?.filter((item)=> item.category_type_id == parent);
-    if(CategoryType?.[0]){
-      setCategoryType(CategoryType?.[0])
-    }
+    // Determine subcategory details and parent category
+    const genId = subCategory.find((item) => item.id == detail);
+    const parentCat = subCategory.filter(
+      (item) => item.category_type_id == parent && item.outlet == outlet223,
+    );
+    const CategoryType = category?.find(
+      (item) => item.category_type_id == parent,
+    );
     const catId = category?.find((item) => item.category_type_id == detail);
-    setDisplayData(null);
-    if (parentCat?.[0]) {
+
+    if (CategoryType) {
+      setCategoryType(CategoryType);
+    }
+
+    if (parentCat.length > 0) {
       setSubcategoryTypes(parentCat);
     }
-    if (detail != -1 && (genId ?? catId)) {
-      const loadData = async () => {
-        await getProducts(1, detail,0);
-      };
 
-      loadData().catch((error) => {
-        console.error("Failed to load data in useEffect:", error);
-      });
-    }
-    if(detail == -1 && parent){
-      const loadData = async () => {
-        await getProducts(1, 0,parent);
-      };
+    const loadData = async () => {
+      // Fetch products based on `detail` or `parent`
+      if (detail !== -1 && (genId || catId)) {
+        await getProducts(1, detail, 0);
+      } else if (detail === -1 && parent) {
+        await getProducts(1, 0, parent);
+      }
+    };
 
-      loadData().catch((error) => {
-        console.error("Failed to load data in useEffect:", error);
-      });
-    }
+    loadData().catch((error) => {
+      console.error("Failed to load data in useEffect:", error);
+    });
   }, [subCategory, detail, name]);
 
   const filterVariationsBySelectedValues = (
@@ -362,7 +362,7 @@ const MyComponent = () => {
   };
   const handlePageChange = async (page: number) => {
     setCurrentPage(page);
-    await getProducts(page, detail,0);
+    await getProducts(page, detail, 0);
   };
 
   const goToDetail = async (item: DataCart | null) => {
@@ -377,8 +377,6 @@ const MyComponent = () => {
     setDetail(parseInt(id));
   };
 
-
-  
   return (
     <div>
       <motion.main
@@ -393,11 +391,14 @@ const MyComponent = () => {
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4">
               <div className="text-left">
-                <h2 className="text-xl font-bold capitalize"> {categoryType?.type}</h2>
+                <h2 className="text-xl font-bold capitalize">
+                  {" "}
+                  {categoryType?.type}
+                </h2>
                 {detail > -1 && (
-                  <p className="text-sm text-gray-500 capitalize dark:text-gray-300">
-                  {name}
-                </p>
+                  <p className="text-sm capitalize text-gray-500 dark:text-gray-300">
+                    {name}
+                  </p>
                 )}
               </div>
 
@@ -442,32 +443,35 @@ const MyComponent = () => {
                 className="flex flex-wrap justify-center py-3"
                 key={displayData ? displayData?.[0]?.item_id : "123"}
               >
-                {loader
-                  ? Array.from({ length: 6 }, (_, index) => (
-                      <div key={index} className="p-2">
-                        <ProductCardSkeleton />
-                      </div>
-                    ))
-                  : displayData?.map((item: DataCart) => (
-                      <ProductCard
-                        key={item.item_id}
-                        product={item}
-                        showAddToCart={!isItemInCart(item.item_id)}
-                        onAddToCart={async () => {
-                          if (item?.variations?.[0]) {
-                            await openDetail(item);
-                          } else {
-                            await handleAddToCart(item);
-                          }
-                        }}
-                        onRemoveFromCart={() => handleRemoveFromCart(item)}
-                        // openDetail={() => goToDetail(item)}
-                        openDetail={() => openDetail(item)}
-                        handleFavourite={() => handleFavourite(item)}
-                        wishListLoader={wishListLoader}
-                      />
-                    ))}
-                {!(loader || displayData?.[0]) && (
+                {loader ? (
+                  // While loading, show skeleton loaders
+                  Array.from({ length: 6 }, (_, index) => (
+                    <div key={index} className="p-2">
+                      <ProductCardSkeleton />
+                    </div>
+                  ))
+                ) : displayData && displayData.length > 0 ? (
+                  // When data is available, display the product cards
+                  displayData.map((item: DataCart) => (
+                    <ProductCard
+                      key={item.item_id}
+                      product={item}
+                      showAddToCart={!isItemInCart(item.item_id)}
+                      onAddToCart={async () => {
+                        if (item?.variations?.[0]) {
+                          await openDetail(item);
+                        } else {
+                          await handleAddToCart(item);
+                        }
+                      }}
+                      onRemoveFromCart={() => handleRemoveFromCart(item)}
+                      openDetail={() => openDetail(item)}
+                      handleFavourite={() => handleFavourite(item)}
+                      wishListLoader={wishListLoader}
+                    />
+                  ))
+                ) : (
+                  // Only display the empty state when data loading is complete and no items are available
                   <div className="flex h-full w-full flex-col items-center justify-center">
                     <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
                       Currently, you have no items in this category.
@@ -475,8 +479,8 @@ const MyComponent = () => {
                     <Player
                       autoplay
                       loop
-                      src="/assets/gifs/emptywishlist.json" 
-                      className="h-80 w-80" 
+                      src="/assets/gifs/emptywishlist.json"
+                      className="h-80 w-80"
                     />
                   </div>
                 )}
@@ -509,13 +513,13 @@ const MyComponent = () => {
 
       <ModalBody>
         <ModalContent>
-          <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
+          <h4 className="text-center font-serif text-lg font-bold capitalize text-red-500 dark:text-neutral-100 md:text-2xl">
             {itemDetail?.item_name}
           </h4>
-          <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
+          <h6 className="py-1.5 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}
           </h6>
-          <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
+          <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100">
             {itemDetail?.additional_notes}
           </h6>
           <div className="flex">
@@ -536,7 +540,7 @@ const MyComponent = () => {
                     rotate: 0,
                     zIndex: 100,
                   }}
-                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
+                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
                 >
                   <Image
                     src={
@@ -547,7 +551,7 @@ const MyComponent = () => {
                     alt={itemDetail?.object_path ?? ""}
                     width={500}
                     height={500}
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-64 md:w-44"
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-44 md:w-44"
                   />
                 </motion.div>
               </div>

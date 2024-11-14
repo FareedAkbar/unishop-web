@@ -142,7 +142,10 @@ const MyComponent = () => {
         // setMeta(result.meta);
         // setDataSpecialOrders(result.data);
       } else {
-        console.error("Unexpected result structure fetchDataSpecialOrders:", result);
+        console.error(
+          "Unexpected result structure fetchDataSpecialOrders:",
+          result,
+        );
         // Handle unexpected structure here
       }
     } catch (error) {
@@ -159,7 +162,7 @@ const MyComponent = () => {
     try {
       const x = await getMyOrders(checkoutData?.booknet_customer_id);
       if (typeof x !== "boolean" && x.status) {
-        console.log(x.data)
+        console.log(x.data);
         setDataOrders(x.data);
       }
     } catch (error) {
@@ -441,12 +444,11 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="mt-32 flex min-h-screen flex-col items-center">
+      <main className="mt-24 flex min-h-screen flex-col items-center">
         {/* {name}
       <Button onClick={()=>ChangeName()}>change name</Button> */}
         {loader && <Spinner />}
-        <div className="z-10 w-full p-4">
-          <h1 className="pb-3 text-center text-2xl font-bold">My Orders</h1>
+        <div className="w-full p-4">
           {/* <OrdersTable
             handlePayment={(x) => handlePayment(x)}
             data={dataOrders}

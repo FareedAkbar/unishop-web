@@ -75,17 +75,17 @@ const ProductList: React.FC<ProductListProps> = ({
                       <Image
                         src={`https://ipos-storage.s3.amazonaws.com/${product.object_path}`}
                         alt={product.category_name}
-                        className="h-36 w-36 animate-swing rounded-lg object-cover"
-                        width={100}
-                        height={100}
+                        className="h-36 w-36 animate-swing rounded-lg object-contain"
+                        width={1000}
+                        height={1000}
                       />
                     ) : (
                       <Image
                         src={'/assets/images/bookicon.png'}
                         alt={"Item"}
-                        className="h-36 w-36 animate-swing rounded-lg object-cover"
-                        width={100}
-                        height={100}
+                        className="h-36 w-36 animate-swing rounded-lg object-contain"
+                        width={1000}
+                        height={1000}
                       />
                     )}
 

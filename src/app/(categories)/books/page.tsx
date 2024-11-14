@@ -356,34 +356,35 @@ const MyComponent = () => {
             {/* Scrollable Product Section */}
             <ScrollArea className="h-[75vh] pb-5">
               <div className="flex h-full flex-wrap items-center justify-center py-3">
-                {loader
-                  ? Array.from({ length: 6 }, (_, index) => (
-                      <div key={index} className="p-2">
-                        <ProductCardSkeleton />
-                      </div>
-                    ))
-                  : displayedData?.map((item: DataCart) => (
-                      <ProductCard
-                        key={item.book_id}
-                        product={item}
-                        showAddToCart={!isItemInCart(item.item_id)}
-                        onAddToCart={async () => {
-                          if (item?.variations?.[0]) {
-                            await openDetail(item);
-                          } else {
-                            await handleAddToCart(item);
-                          }
-                        }}
-                        onRemoveFromCart={() => handleRemoveFromCart(item)}
-                        openDetail={() => openDetail(item)}
-                        handleFavourite={() => handleFavourite(item)}
-                        wishListLoader={wishListLoader}
-                      />
-                    ))}
-                {!(loader || displayedData?.[0]) && (
+                {loader ? (
+                  Array.from({ length: 6 }, (_, index) => (
+                    <div key={index} className="p-2">
+                      <ProductCardSkeleton />
+                    </div>
+                  ))
+                ) : displayedData && displayedData.length > 0 ? (
+                  displayedData.map((item: DataCart) => (
+                    <ProductCard
+                      key={item.item_id}
+                      product={item}
+                      showAddToCart={!isItemInCart(item.item_id)}
+                      onAddToCart={async () => {
+                        if (item?.variations?.[0]) {
+                          await openDetail(item);
+                        } else {
+                          await handleAddToCart(item);
+                        }
+                      }}
+                      onRemoveFromCart={() => handleRemoveFromCart(item)}
+                      openDetail={() => openDetail(item)}
+                      handleFavourite={() => handleFavourite(item)}
+                      wishListLoader={wishListLoader}
+                    />
+                  ))
+                ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center">
                     <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
-                      Currently, you have no items in this book category.
+                      Currently, you have no items in this category.
                     </p>
                     <Player
                       autoplay
@@ -436,7 +437,7 @@ const MyComponent = () => {
           <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}
           </h6>
-          <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 ">
+          <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100">
             {itemDetail?.additional_notes}
           </h6>
           <div className="flex">

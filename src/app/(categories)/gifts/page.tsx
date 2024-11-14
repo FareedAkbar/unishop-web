@@ -1,15 +1,12 @@
 "use client";
-import React,{ Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Spinner from "~/components/spinner";
 
-import {
-  ModalProvider,
-} from "~/components/ui/animated-modal";
+import { ModalProvider } from "~/components/ui/animated-modal";
 import { motion } from "framer-motion";
 import AlertBox from "~/components/alertBox/alert";
 import GiftCategoryInfo from "./GiftCategory";
-
 
 interface GiftCategory {
   name: string;
@@ -108,34 +105,24 @@ const giftCategories: GiftCategory[] = [
 const MyComponent = () => {
   const router = useRouter();
   const params = useSearchParams();
- 
- 
+
   const [subcategoryStatic, setSubcategoryStatic] = useState<string | null>(
     null,
   );
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
- 
- 
 
-  
   useEffect(() => {
     const d = params.get("desc");
     if (d) {
       setSubcategoryStatic(d);
-    
     }
   }, [params]);
 
-  
-  
   const goToLogin = () => {
     setLoginAlert(false);
     router.push("login");
   };
 
- 
-
-  
   const matchedCategory = giftCategories.find(
     (cat) => cat.lastWord === subcategoryStatic,
   );
@@ -149,14 +136,9 @@ const MyComponent = () => {
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-        {matchedCategory ? (
-          <GiftCategoryInfo category={matchedCategory} />
-        ) : (
-         ""
-        )}
+        {matchedCategory ? <GiftCategoryInfo category={matchedCategory} /> : ""}
       </motion.main>
 
-     
       <AlertBox
         title="Login Your Account"
         description="Please login to add item to wishlist"

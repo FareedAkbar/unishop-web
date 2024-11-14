@@ -367,7 +367,7 @@ subCategory?.forEach((item) => {
     AiOutlineContacts: <AiOutlineContacts className="text-amber-600" />,
   };
   return (
-    <nav className="fixed left-0 top-0 z-[15] h-fit w-full">
+    <nav className="fixed left-0 top-0 z-10 h-fit w-full">
       <header className="flex flex-col bg-white px-4 pt-4 backdrop-blur dark:bg-slate-900 md:flex-row md:items-center">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
         <div className="flex items-center justify-between border-b pb-4 md:hidden">

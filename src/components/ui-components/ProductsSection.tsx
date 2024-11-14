@@ -30,8 +30,8 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
 }) => {
   const productContainerRef = useRef<HTMLDivElement>(null);
   const [listInStart, setListInStart] = useState(true);
-  const { checkoutData, favItems, addFavourite,
-    removeFavourite, } = useAuthContext();
+  const { checkoutData, favItems, addFavourite, removeFavourite } =
+    useAuthContext();
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
   const [wishListLoader, setWishListLoader] = useState<boolean>(false);
   const { toast } = useToast();
@@ -87,8 +87,6 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
     }
   }, []);
 
-
-
   const handleFavourite = async (item: DataCart) => {
     if (checkoutData?.booknet_customer_id) {
       setWishListLoader(true);
@@ -133,8 +131,8 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
   return (
     <div className="max-w-screen h-fit overflow-hidden bg-transparent pl-2">
       <div className="py-8 sm:px-6 sm:py-16 lg:py-24">
-        <div className="flex flex-row items-center justify-between md:flex-row">
-          <div className="flex flex-row items-end justify-between gap-5 md:flex-row md:gap-10">
+        <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-row items-end justify-between gap-5 md:gap-10">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-4xl">
               <div className="flex items-center pb-2">
                 <div className="mr-2 h-8 w-4 rounded bg-red-500 sm:h-10 sm:w-4" />
@@ -168,34 +166,34 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
 
         <div className="w-full lg:w-[92vw]">
           <div
-            className="scrollbar-hidden mt-6 flex flex-wrap justify-center py-6 lg:flex-nowrap lg:overflow-x-auto xl:flex-nowrap xl:overflow-x-auto"
+            className="scrollbar-hidden mt-6 flex flex-wrap justify-center py-6 lg:flex-nowrap lg:overflow-x-auto  xl:flex-nowrap xl:overflow-x-auto"
             ref={productContainerRef}
           >
             {loader
               ? Array.from({ length: 6 }, (_, index) => (
-                <div key={index} className="p-2">
-                  <ProductCardSkeleton />
-                </div>
-              ))
+                  <div key={index} className="p-2">
+                    <ProductCardSkeleton />
+                  </div>
+                ))
               : products.map((item) => (
-                <ProductCard
-                  key={item.book_id}
-                  product={item}
-                  showAddToCart={false}
-                  showButton={false}
-                  //  onAddToCart={async () => {
-                  //    if (item?.variations?.[0]) {
-                  //      await openDetail(item);
-                  //    } else {
-                  //      await handleAddToCart(item);
-                  //    }
-                  //  }}
-                  //  onRemoveFromCart={() => handleRemoveFromCart(item)}
-                  openDetail={() => goToDetail(item)}
-                  handleFavourite={() => handleFavourite(item)}
-                //  wishListLoader={wishListLoader}
-                />
-              ))}
+                  <ProductCard
+                    key={item.book_id}
+                    product={item}
+                    showAddToCart={false}
+                    showButton={false}
+                    //  onAddToCart={async () => {
+                    //    if (item?.variations?.[0]) {
+                    //      await openDetail(item);
+                    //    } else {
+                    //      await handleAddToCart(item);
+                    //    }
+                    //  }}
+                    //  onRemoveFromCart={() => handleRemoveFromCart(item)}
+                    openDetail={() => goToDetail(item)}
+                    handleFavourite={() => handleFavourite(item)}
+                    //  wishListLoader={wishListLoader}
+                  />
+                ))}
           </div>
         </div>
 

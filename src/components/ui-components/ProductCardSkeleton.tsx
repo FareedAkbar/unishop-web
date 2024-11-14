@@ -3,7 +3,7 @@ import React from "react";
 
 export default function ProductCardSkeleton() {
   return (
-    <div className="mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md xl:max-w-lg">
+    <div className="mx-auto w-44 sm:w-64 md:w-64 lg:w-72">
       {/* Image Placeholder */}
       <div className="relative w-full animate-pulse">
         <div className="mb-2 h-40 w-40 rounded bg-gray-200 dark:bg-gray-600 sm:h-48 sm:w-48 lg:h-56 lg:w-56 xl:h-64 xl:w-64"></div>
