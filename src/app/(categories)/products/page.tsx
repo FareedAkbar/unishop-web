@@ -106,7 +106,6 @@ const MyComponent = () => {
       setLoader(true);
       setDisplayData(null); // Reset display data before fetching new data
       const x = await getItemsByCategory(id ?? 0, page, category_type);
-
       if (typeof x !== "boolean" && x.status) {
         setPagination(x.meta);
         setData(x.data);
@@ -114,11 +113,14 @@ const MyComponent = () => {
         setTotalPages(x.meta.pages);
         setPageSize(x.meta.limit);
       }
+      setTimeout(() => {
+        setLoader(false);// Reset flip state after changing the image
+      }, 1000);
+      
     } catch (error) {
       console.error("Failed to load data:", error);
-    } finally {
-      setLoader(false); // Ensure loader is disabled in both success and error cases
-    }
+      setLoader(false);
+    } 
   }
 
   useEffect(() => {
@@ -441,7 +443,7 @@ const MyComponent = () => {
             <ScrollArea className="h-[75vh] pb-10">
               <div
                 className="flex flex-wrap justify-center py-3"
-                key={displayData ? displayData?.[0]?.item_id : "123"}
+                // key={displayData ? displayData?.[0]?.item_id : "123"}
               >
                 {loader ? (
                   // While loading, show skeleton loaders
