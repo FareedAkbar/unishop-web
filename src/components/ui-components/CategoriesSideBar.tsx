@@ -62,11 +62,15 @@ interface SubcategoryListProps {
   isOpen: boolean;
 }
 const StaticGiftsRoutes = [
-  { label: "Danielle Hulls Photography", icon: FaGift, href: "/gifts?desc=Photography" },
-{ label: "Marini Ferlazzo", icon: FaGift, href: "/gifts?desc=Ferlazzo" },
-{ label: "White Clay Mountain", icon: FaGift, href: "/gifts?desc=Mountain" },
-{ label: "Eliza Jade Candles", icon: FaGift, href: "/gifts?desc=Candles" }
-]
+  {
+    label: "Danielle Hulls Photography",
+    icon: FaGift,
+    href: "/gifts?desc=Photography",
+  },
+  { label: "Marini Ferlazzo", icon: FaGift, href: "/gifts?desc=Ferlazzo" },
+  { label: "White Clay Mountain", icon: FaGift, href: "/gifts?desc=Mountain" },
+  { label: "Eliza Jade Candles", icon: FaGift, href: "/gifts?desc=Candles" },
+];
 const SubcategoryList1 = ({
   subItems,
   openCategories,
@@ -130,7 +134,7 @@ const SubcategoryList1 = ({
             )}
         </div>
       ))}
-      {item == "Gifts" && (
+      {item == "Gifts" &&
         StaticGiftsRoutes.map((subItem) => (
           <div key={subItem.label} className="relative">
             <button
@@ -148,14 +152,11 @@ const SubcategoryList1 = ({
               >
                 {subItem.label}
               </span>
-              
             </button>
-  
+
             {/* Render children if open */}
-            
           </div>
-        ))
-      )}
+        ))}
     </div>
   );
 };
@@ -354,19 +355,12 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
           <div key={item.type} className="relative">
             <button
               type="button"
-              onClick={() =>
-                item.children?.[0]
-                  ? toggleCategory(item.type)
-                  : router.push(
-                      `/products?category=${item.category_type_id}&name=${item.type}&detail=${item.category_type_id}`,
-                    )
-              }
-              className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-110"
+              className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-105"
             >
               {/* <Link
                         key={item.id}
                         href={item.children?.[0] ? '#' : `books?detail=${item.id}`}
-                        className="flex items-center justify-between w-full text-sm transition-transform hover:scale-110"
+                        className="flex items-center justify-between w-full text-sm transition-transform hover:scale-105"
                         onClick={() => item.children ? setOpenCategories([]) : null}
                         passHref
                       > */}
@@ -386,19 +380,27 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       className="flex-shrink-0 rounded-md object-cover mr-3"
                     />
                   )} */}
-                <span className=" text-left text-sm" title={item.type}>
+                <span
+                  className="text-left text-sm"
+                  onClick={() => {
+                    router.push(
+                      `/products?category=${item.category_type_id}&name=${item.type}`,
+                    );
+                    setOpenCategories([]);
+                  }}
+                >
                   {item.type}
                 </span>
               </div>
-              <div>
-                {item.children?.[0] ? (
-                  openCategories.includes(item.type) ? (
+              {item.children?.[0] && (
+                <div onClick={() => toggleCategory(item.type)}>
+                  {openCategories.includes(item.type) ? (
                     <FaChevronDown size={12} />
                   ) : (
                     <FaChevronRight size={12} />
-                  )
-                ) : null}
-              </div>
+                  )}
+                </div>
+              )}
 
               {/* </Link> */}
             </button>
@@ -436,7 +438,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   ? toggleCategory2(item.label)
                   : null
               }
-              className="duration-240 flex w-full items-center justify-between px-2 text-lg transition-transform hover:scale-110 focus:outline-none"
+              className="duration-240 flex w-full items-center justify-between px-2 text-lg transition-transform hover:scale-105 focus:outline-none"
             >
               <div className="flex items-center">
                 {item.icon && (
@@ -530,7 +532,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
         {checkoutData?.booknet_customer_id ? (
           <button
             onClick={() => router.push("/my-orders")}
-            className="mb-2 flex w-full items-center px-2 text-lg transition-transform duration-300 hover:scale-110 focus:outline-none"
+            className="mb-2 flex w-full items-center px-2 text-lg transition-transform duration-300 hover:scale-105 focus:outline-none"
           >
             <FaReceipt className="mr-2 text-indigo-600" />
             <span className="text-sm">My Orders</span>

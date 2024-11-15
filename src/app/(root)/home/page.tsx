@@ -12,11 +12,30 @@ import type { SpecialItemsForHomePage } from "~/types/specialItems";
 import BackgroundBubbles from "~/components/ui-components/BackgroundBubbles";
 import { getSpecialItems } from "~/_actions/getitemsbycategory";
 import type { ItemSpecialTag } from "~/types/productTags";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FaLeftLong, FaRightLong } from "react-icons/fa6";
 
 const HomePage: React.FC = () => {
+  const transitionVariants = {
+    enter: {
+      opacity: 0,
+      x: 50, // Start from right for forward motion
+    },
+    center: {
+      opacity: 1,
+      x: 0, // Center position
+    },
+    exit: {
+      opacity: 0,
+      x: -50, // Exit to left for backward motion
+    },
+  };
   const words = ["Imagine", "Create", "Inspire", "Transform"];
   const { productTags } = useAuthContext();
-  const [specialItems, setSpecialItems] = useState<SpecialItemsForHomePage[] | null>(null)
+  const [specialItems, setSpecialItems] = useState<
+    SpecialItemsForHomePage[] | null
+  >(null);
   const isFirstRender = useRef(true);
   useEffect(() => {
     if (productTags && productTags?.length < 0) return;
@@ -24,27 +43,26 @@ const HomePage: React.FC = () => {
       isFirstRender.current = false; // Prevents further API calls on first render
     } else {
       const loadData = async (Tag: ItemSpecialTag) => {
-        const x = await getSpecialItems(Tag.item_special_tags_id)
+        const x = await getSpecialItems(Tag.item_special_tags_id);
         if (typeof x != "boolean" && x.status && x.data) {
           // setSpecialItems(x?.data)
-          console.log("API Call")
+          console.log("API Call");
           if (x.data?.[0]) {
             const newData = {
               title: Tag.tag_name,
-              data: x?.data
-            }
+              data: x?.data,
+            };
             setSpecialItems((prevData) => {
               // If the previous data is null, initialize it as an array
               const z = prevData?.find((item) => item.title == Tag.tag_name);
               if (z) {
-                return prevData
+                return prevData;
               } else {
                 if (!prevData) return [newData];
 
                 // Otherwise, return a new array with the previous data and the new item
                 return [...prevData, newData];
               }
-
             });
           }
         }
@@ -53,10 +71,23 @@ const HomePage: React.FC = () => {
         loadData(item).catch((error) => {
           console.error("Failed to load data in useEffect:", error);
         });
-      })
+      });
     }
+  }, [productTags]);
 
-  }, [productTags])
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleNext = () => {
+    if (currentIndex < specialItems?.length! - 2) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
   return (
     <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 pt-32 dark:bg-slate-800 lg:pt-24">
       <BackgroundBubbles />
@@ -72,7 +103,6 @@ const HomePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Product List Section with Background Animation */}
       <div className="relative w-full">
         {/* Lottie Animation in the Background */}
         {/* <div className="absolute inset-0 -z-10">
@@ -89,34 +119,55 @@ const HomePage: React.FC = () => {
             <CategoriesSidebar />
           </div>
 
-          {/* {specialItems?.map((item, index) => (
-              <div className="text-lg mt-10 mb-10 flex justify-center" key={index}>
-                {item.tag_name == productTags?.[0]?.tag_name && item.tag_name}
-              </div>
-            ))} */}
+          <div className="mx-auto w-full px-5 pb-10">
+            <div className="relative min-h-[450px] lg:pl-64">
+              {/* Grid for the list */}
+              <AnimatePresence initial={false} mode="wait">
+                <motion.div
+                  key={currentIndex}
+                  className="grid grid-cols-1 gap-6 lg:grid-cols-2"
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  variants={transitionVariants}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                  {specialItems
+                    ?.slice(currentIndex, currentIndex + 2)
+                    .map((item, index) => (
+                      <div key={index} className="w-full">
+                        <ProductList
+                          title={item.title}
+                          width="w-full"
+                          index={index}
+                          specialItems={item.data!}
+                        />
+                      </div>
+                    ))}
+                </motion.div>
+              </AnimatePresence>
 
-          <div className="container mx-auto grid min-h-[450px] w-full px-5 pb-10 lg:grid-cols-2 lg:pl-48">
-            {specialItems?.map((item, index) => (
-              <>
-                <div className="-mr-4 w-full">
-                  <ProductList
-                    title={item.title}
-                    width="w-full"
-                    index={index}
-                    specialItems={item.data!}
-                  />
-                </div>
-              </>
-            ))}
+              {/* Navigation buttons */}
+              {specialItems?.length! > 2 && (
+                <>
+                  <button
+                    onClick={handlePrevious}
+                    className="absolute left-48 top-1/2 -translate-y-1/2 rounded-full bg-white p-5 text-red-400 shadow-lg hover:text-red-500 hover:shadow-2xl disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-black"
+                    disabled={currentIndex === 0}
+                  >
+                    <FaLeftLong size={24} />
+                  </button>
+                  <button
+                    onClick={handleNext}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full bg-white p-5 text-red-400 shadow-lg hover:text-red-500 hover:shadow-2xl disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-black"
+                    disabled={currentIndex >= specialItems?.length! - 2}
+                  >
+                    <FaRightLong size={24} />
+                  </button>
+                </>
+              )}
+            </div>
           </div>
-
-          {/* <div className="w-full">
-              <ProductList
-                products={products}
-                title="Top Rated"
-                width="w-full"
-              />
-            </div> */}
         </div>
       </div>
 
