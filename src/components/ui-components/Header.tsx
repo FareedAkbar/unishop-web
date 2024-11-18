@@ -382,7 +382,11 @@ const Header = () => {
       href: "/gifts?desc=Photography",
     },
     { label: "Marini Ferlazzo", icon: FaGift, href: "/gifts?desc=Ferlazzo" },
-    { label: "White Clay Mountain", icon: FaGift, href: "/gifts?desc=Mountain" },
+    {
+      label: "White Clay Mountain",
+      icon: FaGift,
+      href: "/gifts?desc=Mountain",
+    },
     { label: "Eliza Jade Candles", icon: FaGift, href: "/gifts?desc=Candles" },
   ];
   const SubcategoryList1 = ({
@@ -407,7 +411,7 @@ const Header = () => {
                   );
                   setTimeout(() => {
                     setOpenCategories([]);
-                    setMobileMenuOpen(false)
+                    setMobileMenuOpen(false);
                   }, 1000);
                 }
               }}
@@ -457,7 +461,7 @@ const Header = () => {
                   router.push(subItem.href);
                   setTimeout(() => {
                     setOpenCategories([]);
-                    setMobileMenuOpen(false)
+                    setMobileMenuOpen(false);
                   }, 500);
                 }}
                 className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
@@ -494,6 +498,19 @@ const Header = () => {
       }
     });
   };
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.classList.add("overflow-hidden"); // Disable scrolling
+    } else {
+      document.body.classList.remove("overflow-hidden"); // Enable scrolling
+    }
+
+    // Cleanup on component unmount
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [isMobileMenuOpen]);
 
   return (
     <nav className="fixed left-0 top-0 z-10 h-fit w-full">
@@ -613,7 +630,7 @@ const Header = () => {
             {isMobileMenuOpen && (
               <div
                 className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50" // Dark overlay
-                onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
+                // onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
               />
             )}
             <button
@@ -623,7 +640,7 @@ const Header = () => {
               <FaTimes className="text-xl text-red-500" />
             </button>
             <div className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col bg-white p-6 dark:bg-slate-700 md:hidden md:w-1/2">
-              <div className="z-40 flex w-[90%] justify-around gap-1 pb-2">
+              <div className="z-40 flex w-[90%] justify-around gap-1 pb-4">
                 <Link
                   href="/"
                   className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-red-500 p-2 text-white transition-transform hover:scale-105"
@@ -660,10 +677,10 @@ const Header = () => {
                         item.children?.[0]
                           ? toggleCategory(item.type)
                           : (router.push(
-                            `/products?category=${item.category_type_id}&name=${item.type}`,
-                          ),
-                          setMobileMenuOpen(false),
-                          setOpenCategories([]))
+                              `/products?category=${item.category_type_id}&name=${item.type}`,
+                            ),
+                            setMobileMenuOpen(false),
+                            setOpenCategories([]))
                       }
                       className="flex w-full items-center justify-between text-lg focus:outline-none"
                     >
@@ -684,15 +701,18 @@ const Header = () => {
                         )
                       ) : null}
                     </button>
-                    {openCategories.includes(item.type) && item.children?.[0] && (
-                      <SubcategoryList1
-                        subItems={item.children}
-                        openCategories={openCategories}
-                        item={item.type}
-                        toggleCategory={(val) => toggleCategory(`${item.type}/${val}`)}
-                        setOpenCategories={setOpenCategories}
-                      />
-                    )}
+                    {openCategories.includes(item.type) &&
+                      item.children?.[0] && (
+                        <SubcategoryList1
+                          subItems={item.children}
+                          openCategories={openCategories}
+                          item={item.type}
+                          toggleCategory={(val) =>
+                            toggleCategory(`${item.type}/${val}`)
+                          }
+                          setOpenCategories={setOpenCategories}
+                        />
+                      )}
                     {/* {item.children && openDropdown === item.type && (
                       <div className="ml-4 mt-1">
                         {item.children.map((subItem) => (
@@ -759,7 +779,10 @@ const Header = () => {
                                 key={subItem.genre}
                                 href={`books?detail=${subItem.genre}`}
                                 className="block py-1 text-sm hover:underline"
-                                onClick={() => {setOpenDropdown(null); setMobileMenuOpen(false)}}
+                                onClick={() => {
+                                  setOpenDropdown(null);
+                                  setMobileMenuOpen(false);
+                                }}
                                 passHref
                               >
                                 {subItem.genre}
@@ -767,7 +790,7 @@ const Header = () => {
                             ))}
                           </ScrollArea>
                         )}
-                        
+
                         {/* {item.label === "Art & Gifts" &&
                         headerCategoryGifts?.[0] &&
                         headerCategoryGifts?.map((subItem) => (
