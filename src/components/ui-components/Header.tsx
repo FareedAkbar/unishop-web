@@ -759,7 +759,7 @@ const Header = () => {
                                 key={subItem.genre}
                                 href={`books?detail=${subItem.genre}`}
                                 className="block py-1 text-sm hover:underline"
-                                onClick={() => setOpenDropdown(null)}
+                                onClick={() => {setOpenDropdown(null); setMobileMenuOpen(false)}}
                                 passHref
                               >
                                 {subItem.genre}
@@ -767,20 +767,7 @@ const Header = () => {
                             ))}
                           </ScrollArea>
                         )}
-                        {headerCategory?.[0] && (
-                          <ScrollArea className="h-[25vh]">
-                            {headerCategory?.[0]?.children?.map((subItem) => (
-                              <Link
-                                key={subItem.id}
-                                href={`textbooks?detail=${subItem.id}`}
-                                className="block py-1 text-sm hover:underline"
-                                onClick={() => setOpenDropdown(null)}
-                              >
-                                {subItem.category_name}
-                              </Link>
-                            ))}
-                          </ScrollArea>
-                        )}
+                        
                         {/* {item.label === "Art & Gifts" &&
                         headerCategoryGifts?.[0] &&
                         headerCategoryGifts?.map((subItem) => (
