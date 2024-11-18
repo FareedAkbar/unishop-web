@@ -94,6 +94,7 @@ const Header = () => {
   const [headerCategory, setHeaderCategory] = useState<
     SideBarCategory[] | null
   >(null);
+  const [openCategories, setOpenCategories] = useState<string[]>([]);
 
   // function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
   //   const categoryMap: Record<number, CategoryTreeNode> = {};
@@ -366,6 +367,134 @@ const Header = () => {
     AiOutlineFileText: <AiOutlineFileText className="text-teal-600" />,
     AiOutlineContacts: <AiOutlineContacts className="text-amber-600" />,
   };
+
+  interface SubcategoryListProps1 {
+    subItems: CategoryTreeNode[];
+    openCategories: string[]; // Update: Allow multiple open categories
+    toggleCategory: (label: string) => void;
+    setOpenCategories: React.Dispatch<React.SetStateAction<string[]>>;
+    item: string;
+  }
+  const StaticGiftsRoutes = [
+    {
+      label: "Danielle Hulls Photography",
+      icon: FaGift,
+      href: "/gifts?desc=Photography",
+    },
+    { label: "Marini Ferlazzo", icon: FaGift, href: "/gifts?desc=Ferlazzo" },
+    { label: "White Clay Mountain", icon: FaGift, href: "/gifts?desc=Mountain" },
+    { label: "Eliza Jade Candles", icon: FaGift, href: "/gifts?desc=Candles" },
+  ];
+  const SubcategoryList1 = ({
+    subItems,
+    openCategories,
+    toggleCategory,
+    item,
+    setOpenCategories,
+  }: SubcategoryListProps1) => {
+    const router = useRouter();
+    return (
+      <div className="">
+        {subItems.map((subItem) => (
+          <div key={subItem.category_name} className="relative">
+            <button
+              onClick={() => {
+                if (subItem.children?.[0]) {
+                  toggleCategory(`${subItem.category_name}`);
+                } else {
+                  router.push(
+                    `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
+                  );
+                  setTimeout(() => {
+                    setOpenCategories([]);
+                    setMobileMenuOpen(false)
+                  }, 1000);
+                }
+              }}
+              className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
+            >
+              <span
+                className="mr-2 truncate text-left capitalize"
+                title={subItem.category_name}
+              >
+                {/* {subItem.category_name.length > 16
+                  ? `${subItem.category_name.slice(0, 25)}...`
+                  : subItem.category_name} */}
+                {subItem.category_name}
+              </span>
+              {subItem.children?.[0] &&
+                (openCategories.includes(`${item}/${subItem.category_name}`) ? (
+                  <FaChevronDown />
+                ) : (
+                  <FaChevronRight />
+                ))}
+            </button>
+
+            {/* Render children if open */}
+            {openCategories.some((cat) =>
+              cat.endsWith(`${item}/${subItem.category_name}`),
+            ) &&
+              subItem.children?.[0] && (
+                <div className="ml-4 mt-2">
+                  <SubcategoryList1
+                    subItems={subItem.children}
+                    item={subItem.category_name}
+                    openCategories={openCategories} // Pass down multiple open categories
+                    toggleCategory={(val) =>
+                      toggleCategory(`${subItem.category_name}/${val}`)
+                    }
+                    setOpenCategories={setOpenCategories}
+                  />
+                </div>
+              )}
+          </div>
+        ))}
+        {item == "Gifts" &&
+          StaticGiftsRoutes.map((subItem) => (
+            <div key={subItem.label} className="relative">
+              <button
+                onClick={() => {
+                  router.push(subItem.href);
+                  setTimeout(() => {
+                    setOpenCategories([]);
+                    setMobileMenuOpen(false)
+                  }, 500);
+                }}
+                className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
+              >
+                <span
+                  className="mr-2 truncate text-left capitalize"
+                  title={subItem.label}
+                >
+                  {subItem.label}
+                </span>
+              </button>
+
+              {/* Render children if open */}
+            </div>
+          ))}
+      </div>
+    );
+  };
+
+  const toggleCategory = async (label: string) => {
+    setOpenCategories((prev) => {
+      // Check if the clicked category is already open
+      setOpenDropdown(null);
+      if (prev.includes(label)) {
+        // Close the category and its children
+        return prev.filter((cat) => cat !== label);
+      } else {
+        // Close other top-level categories when opening a new one
+        const newOpenCategories = prev.filter(
+          (cat) => label.startsWith(cat) || cat.startsWith(label),
+        );
+
+        return [...newOpenCategories, label];
+      }
+    });
+  };
+
   return (
     <nav className="fixed left-0 top-0 z-10 h-fit w-full">
       <header className="flex flex-col bg-white px-4 pb-2 pt-4 backdrop-blur dark:bg-slate-900 md:flex-row md:items-center lg:pb-0">
@@ -529,11 +658,12 @@ const Header = () => {
                     <button
                       onClick={() =>
                         item.children?.[0]
-                          ? toggleDropdown(item.type)
+                          ? toggleCategory(item.type)
                           : (router.push(
-                              `/products?name=${item.type}&detail=${item.category_type_id}`,
-                            ),
-                            setMobileMenuOpen(!isMobileMenuOpen))
+                            `/products?category=${item.category_type_id}&name=${item.type}`,
+                          ),
+                          setMobileMenuOpen(false),
+                          setOpenCategories([]))
                       }
                       className="flex w-full items-center justify-between text-lg focus:outline-none"
                     >
@@ -547,14 +677,23 @@ const Header = () => {
                         {/* </Link> */}
                       </div>{" "}
                       {item.children?.[0] ? (
-                        openDropdown === item.type ? (
+                        openCategories.includes(item.type) ? (
                           <FaChevronDown />
                         ) : (
                           <FaChevronRight />
                         )
                       ) : null}
                     </button>
-                    {item.children && openDropdown === item.type && (
+                    {openCategories.includes(item.type) && item.children?.[0] && (
+                      <SubcategoryList1
+                        subItems={item.children}
+                        openCategories={openCategories}
+                        item={item.type}
+                        toggleCategory={(val) => toggleCategory(`${item.type}/${val}`)}
+                        setOpenCategories={setOpenCategories}
+                      />
+                    )}
+                    {/* {item.children && openDropdown === item.type && (
                       <div className="ml-4 mt-1">
                         {item.children.map((subItem) => (
                           <button
@@ -563,8 +702,8 @@ const Header = () => {
                               subItem.children?.[0]
                                 ? toggleDropdown(subItem.category_name)
                                 : (router.push(
-                                    `/products?name=${item.type}&detail=${item.category_type_id}`,
-                                  ),
+                                  `/products?name=${item.type}&detail=${item.category_type_id}`,
+                                ),
                                   setMobileMenuOpen(!isMobileMenuOpen),
                                   setOpenDropdown(null))
                             }
@@ -574,7 +713,7 @@ const Header = () => {
                           </button>
                         ))}
                       </div>
-                    )}
+                    )} */}
                   </div>
                 ))}
                 {categories.map((item) => (
