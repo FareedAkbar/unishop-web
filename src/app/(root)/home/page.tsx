@@ -19,6 +19,7 @@ const HomePage: React.FC = () => {
   const [specialItems, setSpecialItems] = useState<SpecialItemsForHomePage[] | null>(null)
   const isFirstRender = useRef(true);
   useEffect(() => {
+    console.log(process.env.NEXT_PUBLIC_PASSKEY)
     if (productTags && productTags?.length < 0) return;
     if (isFirstRender.current) {
       isFirstRender.current = false; // Prevents further API calls on first render
@@ -26,8 +27,6 @@ const HomePage: React.FC = () => {
       const loadData = async (Tag: ItemSpecialTag) => {
         const x = await getSpecialItems(Tag.item_special_tags_id)
         if (typeof x != "boolean" && x.status && x.data) {
-          // setSpecialItems(x?.data)
-          console.log("API Call")
           if (x.data?.[0]) {
             const newData = {
               title: Tag.tag_name,
@@ -57,6 +56,7 @@ const HomePage: React.FC = () => {
     }
 
   }, [productTags])
+
   return (
     <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 pt-32 dark:bg-slate-800 lg:pt-24">
       <BackgroundBubbles />

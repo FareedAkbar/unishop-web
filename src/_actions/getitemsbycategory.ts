@@ -3,7 +3,6 @@
 import type DataCart from '~/types/book';
 import type { Pagination } from '~/types/pagination';
 import { SpecialItemsApiResponse } from '~/types/specialItems';
-import { token221, token223 } from '~/types/tokens';
 
 
 interface ApiResponse {
@@ -15,7 +14,7 @@ interface ApiResponse {
 const requestOptions: RequestInit = {
     method: "GET",
     headers: {
-        Authorization: `Bearer ${token223}`,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
         "Content-Type": "application/json", // Optional, depending on your API
     },
     redirect: "follow", // Use the correct type for `redirect`
@@ -23,9 +22,9 @@ const requestOptions: RequestInit = {
 export async function getItemsByCategory(id: number | null, page: number,category_type: number): Promise<ApiResponse | boolean> {
     let x = ""
     if(category_type != 0){
-        x = `https://booknet-dev.iconsole.com.au/api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=0&book=0&category=${id}&page=${page}&images=1&detailed=1&special_tags_only=1&category_type=${category_type}` 
+        x = `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=0&book=0&category=${id}&page=${page}&images=1&detailed=1&special_tags_only=1&category_type=${category_type}` 
     }else{
-        x = `https://booknet-dev.iconsole.com.au/api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=0&book=0&category=${id}&page=${page}&images=1&detailed=1&special_tags_only=1`
+        x = `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=0&book=0&category=${id}&page=${page}&images=1&detailed=1&special_tags_only=1`
     }
     try {
         const response = await fetch(
@@ -53,7 +52,7 @@ export async function getSpecialItems(id: number): Promise<SpecialItemsApiRespon
     
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/customer/special-tags-items?special_tag_id=${id}`,
+            `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/customer/special-tags-items?special_tag_id=${id}`,
             requestOptions,
         );
         const result: SpecialItemsApiResponse = (await response.json()) as SpecialItemsApiResponse;

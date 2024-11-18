@@ -26,7 +26,6 @@ import {
 } from "react-icons/fa";
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import Link from "next/link";
-import { outlet221, outlet223 } from "~/types/tokens";
 import { ScrollArea } from "../ui/scroll-area";
 
 // Create a mapping of icon names to their corresponding components

@@ -56,7 +56,7 @@ const ProductCard = ({
               return (
                 <span
                   key={tag}
-                  className="z-[12] mr-2 mt-1 rounded bg-red-500 px-1 py-0.5 text-[8px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
+                  className="z-[5] mr-2 mt-1 rounded bg-red-500 px-1 py-0.5 text-[8px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
                 >
                   {tag}
                 </span>

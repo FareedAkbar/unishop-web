@@ -1,4 +1,5 @@
-export const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:3000";
+export const BACKEND_BASE_URL_IPOS = process.env.NEXT_PUBLIC_PASSKEY_IPOS ?? "http://localhost:3000";
+export const BACKEND_BASE_URL_BOOKNET = process.env.NEXT_PUBLIC_PASSKEY_BOOKNET ?? "http://localhost:3000";
 
 export enum PAGE_ROUTES {
   HOME = "/",
@@ -27,15 +28,15 @@ export enum PAGE_ROUTES {
   PRODUCT_DETAILS="/product-details"
 }
 
-export enum API_ROUTES {
-  LOGIN = "https://ipos-dev.iconsole.com.au/api/v1/student/auth/login",
-  SENDOTP = "https://ipos-dev.iconsole.com.au/api/v1/student/auth/send-otp",
-  VERIFYOTP = "https://ipos-dev.iconsole.com.au/api/v1/student/auth/verify-login-otp",
-  GENRE = "https://booknet-dev.iconsole.com.au/api/genre",
-  CATEGORY = "https://booknet-dev.iconsole.com.au/api/category/type",
-  SUB_CATEGORY = "https://booknet-dev.iconsole.com.au/api/category",
-  CHECKOUT = "https://booknet-dev.iconsole.com.au/api/customer",
+export const API_ROUTES = {
+  LOGIN: `${BACKEND_BASE_URL_IPOS}api/v1/student/auth/login`,
+  SENDOTP: `${BACKEND_BASE_URL_IPOS}api/v1/student/auth/send-otp`,
+  VERIFYOTP: `${BACKEND_BASE_URL_IPOS}api/v1/student/auth/verify-login-otp`,
+  GENRE: `${BACKEND_BASE_URL_BOOKNET}api/genre`,
+  CATEGORY: `${BACKEND_BASE_URL_BOOKNET}api/category/type`,
+  SUB_CATEGORY: `${BACKEND_BASE_URL_BOOKNET}api/category`,
+  CHECKOUT: `${BACKEND_BASE_URL_BOOKNET}api/customer`,
   // CHECKOUT_WITH_USERNAME = "https://booknet-dev.iconsole.com.au/api/customer",
-  REGISTER = "/api/auth/register",
-  SIGN_OUT = "/api/auth/sign-out",
+  REGISTER: "/api/auth/register",
+  SIGN_OUT: "/api/auth/sign-out",
 }
