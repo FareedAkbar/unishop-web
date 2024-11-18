@@ -6,7 +6,7 @@ import { cookies } from 'next/headers'
 
 export const routerReader = (req: NextRequest) => {
   const { getItem } = cookieClient(req);
-  const URL = matchRoute(req.nextUrl.pathname);
+  const URL = matchRoute(req.nextUrl.pathname) as typeof PAGE_ROUTES[keyof typeof PAGE_ROUTES];
 
   const REQ_ORIGIN = getItem("REQ_ORIGIN");
   const _RESPONSE_MAPPER = RESPONSE_MAPPER(req.url, REQ_ORIGIN);
@@ -58,20 +58,21 @@ export const saveReqOrigin = (req: NextRequest) => {
   return res;
 };
 
-const matchRoute = (route: string): API_ROUTES | PAGE_ROUTES => {
+type AllRoutes = typeof PAGE_ROUTES[keyof typeof PAGE_ROUTES] | typeof API_ROUTES[keyof typeof API_ROUTES];
+
+const matchRoute = (route: string): AllRoutes => {
   const enumValues = [...Object.values(PAGE_ROUTES), ...Object.values(API_ROUTES)];
 
   for (const enumRoute of enumValues) {
-    // Replace dynamic segments like :id with a regex pattern that matches any segment
     const regex = new RegExp(`^${enumRoute.replace(/:[^/]+/g, "[^/]+")}$`);
     if (regex.test(route)) {
-      return enumRoute as API_ROUTES; // Still necessary to cast, since API_ROUTES is a union type
+      return enumRoute;
     }
   }
 
   return PAGE_ROUTES.UNKNOWN;
 };
 
-export const embedAppIdSlug = (route: PAGE_ROUTES | API_ROUTES, _urlOrAppId: string): string => {
+export const embedAppIdSlug = (route: string, _urlOrAppId: string): AllRoutes => {
   return route; // Ensure this returns a string
 };

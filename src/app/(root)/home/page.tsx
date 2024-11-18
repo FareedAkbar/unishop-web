@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ImageSlider from "./ImageSlider";
 import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
 import GraduationBanner from "./GraduationBanner";
@@ -20,7 +20,7 @@ const HomePage: React.FC = () => {
   const [specialItems, setSpecialItems] = useState<
     SpecialItemsForHomePage[] | null
   >(null);
-
+  const isFirstRender = useRef(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("right");
 
@@ -55,28 +55,40 @@ const HomePage: React.FC = () => {
 
   // Load data for special items
   useEffect(() => {
-    const loadData = async (Tag: ItemSpecialTag) => {
-      const x = await getSpecialItems(Tag.item_special_tags_id);
-      if (typeof x !== "boolean" && x.status && x.data) {
-        if (x.data?.[0]) {
-          const newData = {
-            title: Tag.tag_name,
-            data: x.data,
-          };
-          setSpecialItems((prevData) => {
-            if (!prevData) return [newData];
-            const exists = prevData.find((item) => item.title === Tag.tag_name);
-            return exists ? prevData : [...prevData, newData];
-          });
-        }
-      }
-    };
+    console.log(process.env.NEXT_PUBLIC_PASSKEY);
+    if (productTags && productTags?.length < 0) return;
+    if (isFirstRender.current) {
+      isFirstRender.current = false; // Prevents further API calls on first render
+    } else {
+      const loadData = async (Tag: ItemSpecialTag) => {
+        const x = await getSpecialItems(Tag.item_special_tags_id);
+        if (typeof x != "boolean" && x.status && x.data) {
+          if (x.data?.[0]) {
+            const newData = {
+              title: Tag.tag_name,
+              data: x?.data,
+            };
+            setSpecialItems((prevData) => {
+              // If the previous data is null, initialize it as an array
+              const z = prevData?.find((item) => item.title == Tag.tag_name);
+              if (z) {
+                return prevData;
+              } else {
+                if (!prevData) return [newData];
 
-    productTags?.forEach((item) => {
-      loadData(item).catch((error) =>
-        console.error("Error loading data:", error),
-      );
-    });
+                // Otherwise, return a new array with the previous data and the new item
+                return [...prevData, newData];
+              }
+            });
+          }
+        }
+      };
+      productTags?.map((item) => {
+        loadData(item).catch((error) => {
+          console.error("Failed to load data in useEffect:", error);
+        });
+      });
+    }
   }, [productTags]);
 
   // Auto-slide functionality

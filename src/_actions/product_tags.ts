@@ -2,7 +2,6 @@
 
 import type { OrderStatusResponse } from '~/types/getSpecialBackOrders';
 import type { ItemSpecialTag } from '~/types/productTags';
-import { token221, token223 } from '~/types/tokens';
 
 
 interface ApiResponseStatus {
@@ -13,7 +12,7 @@ interface ApiResponseStatus {
 const requestOptions: RequestInit = {
     method: "GET",
     headers: {
-        Authorization: `Bearer ${token223}`,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
         "Content-Type": "application/json", // Optional, depending on your API
     },
     redirect: "follow", // Use the correct type for `redirect`
@@ -23,7 +22,7 @@ const requestOptions: RequestInit = {
 export async function getProductTags(): Promise<ApiResponseStatus | boolean> {
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/customer/special-tags`,
+            `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/customer/special-tags`,
             requestOptions,
         );
         const result: ApiResponseStatus =

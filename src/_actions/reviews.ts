@@ -1,7 +1,6 @@
 "use server";
 
 import type { getSubmitReviewResponse, ReviewData } from "~/types/reviews";
-import { token221, token223 } from "~/types/tokens";
  
 
 
@@ -13,7 +12,7 @@ interface ApiResponseReviews {
 const requestOptions: RequestInit = {
     method: "GET",
     headers: {
-        Authorization: `Bearer ${token223}`,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
         "Content-Type": "application/json", // Optional, depending on your API
     },
     redirect: "follow", // Use the correct type for `redirect`
@@ -24,7 +23,7 @@ export async function submitReviewsApi(ReviewData: ReviewData): Promise<getSubmi
     const requestOptions: RequestInit = {
         method: "POST",
         headers: {
-            Authorization: `Bearer ${token223}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
             "Content-Type": "application/json", // Optional, depending on your API
         },
         body: JSON.stringify(ReviewData),
@@ -32,7 +31,7 @@ export async function submitReviewsApi(ReviewData: ReviewData): Promise<getSubmi
     };
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/books/review`,
+            `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/review`,
             requestOptions,
         );
         const result: getSubmitReviewResponse = (await response.json()) as getSubmitReviewResponse;
@@ -59,7 +58,7 @@ export async function getReviewsApi(id: number): Promise<ApiResponseReviews | bo
     console.log("id",id)
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/books/review?item_id=${id}`,
+            `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/review?item_id=${id}`,
             requestOptions,
         );
         const result: ApiResponseReviews = (await response.json()) as ApiResponseReviews;

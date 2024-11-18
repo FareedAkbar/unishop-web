@@ -1,7 +1,6 @@
 "use server";
 
 import type { GetSpecialOrder, GetSpecialOrderApiResponse, OrderStatus, OrderStatusResponse } from '~/types/getSpecialBackOrders';
-import { token221, token223 } from '~/types/tokens';
 
 
 interface ApiResponse {
@@ -23,7 +22,7 @@ export async function getMyOrders(booknetCustomerId: number): Promise<ApiRespons
     const requestOptions: RequestInit = {
         method: "POST",
         headers: {
-            Authorization: `Bearer ${token223}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
             "Content-Type": "application/json", // Optional, depending on your API
         },
         redirect: "follow", // Use the correct type for `redirect`,
@@ -31,7 +30,7 @@ export async function getMyOrders(booknetCustomerId: number): Promise<ApiRespons
     };
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/orders/customer`,
+            `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/orders/customer`,
             requestOptions,
         );
         const result: GetSpecialOrderApiResponse =
@@ -57,14 +56,14 @@ export async function getOrderStatus(): Promise<ApiResponseStatus | boolean> {
     const requestOptions: RequestInit = {
         method: "GET",
         headers: {
-            Authorization: `Bearer ${token223}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
             "Content-Type": "application/json", // Optional, depending on your API
         },
         redirect: "follow", // Use the correct type for `redirect`,
     };
     try {
         const response = await fetch(
-            `https://ipos-dev.iconsole.com.au/api/v1/ipos/orders/getOrderStatuses`,
+            `${process.env.NEXT_PUBLIC_PASSKEY_IPOS}api/v1/ipos/orders/getOrderStatuses`,
             requestOptions,
         );
         const result: OrderStatusResponse =

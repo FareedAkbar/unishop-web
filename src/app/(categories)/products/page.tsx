@@ -39,7 +39,6 @@ import {
   SelectContent,
   SelectItem,
 } from "~/components/ui/select";
-import { outlet223 } from "~/types/tokens";
 import { FiSearch } from "react-icons/fi";
 import { Player } from "@lottiefiles/react-lottie-player";
 
@@ -128,7 +127,7 @@ const MyComponent = () => {
     // Determine subcategory details and parent category
     const genId = subCategory.find((item) => item.id == detail);
     const parentCat = subCategory.filter(
-      (item) => item.category_type_id == parent && item.outlet == outlet223,
+      (item) => item.category_type_id == parent
     );
     const CategoryType = category?.find(
       (item) => item.category_type_id == parent,
@@ -488,7 +487,7 @@ const MyComponent = () => {
               </div>
             </ScrollArea>
             {pagination && (
-              <div className="z-10 flex justify-between px-4 py-4">
+              <div className="z-5 flex justify-between px-4 py-4">
                 <button
                   className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage - 1)}

@@ -30,7 +30,6 @@ import type {
 
 import type PayloadForTrasactionLink from "~/types/payloadForTrasactionLink";
 import OrdersTable from "./orderstable";
-import { token221, token223 } from "~/types/tokens";
 import OrdersDataTable from "./OrdersDataTable";
 import { ModalProvider } from "~/components/ui/animated-modal";
 import { getMyOrders, getOrderStatus } from "~/_actions/my_orders";
@@ -40,7 +39,7 @@ const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJw
 const requestOptions: RequestInit = {
   method: "GET",
   headers: {
-    Authorization: `Bearer ${token223}`,
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
     "Content-Type": "application/json", // Optional, depending on your API
   },
   redirect: "follow", // Use the correct type for `redirect`
@@ -81,12 +80,12 @@ const MyComponent = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://ipos-dev.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
+        `${process.env.NEXT_PUBLIC_PASSKEY_IPOS}api/v1/ipos/payments/insertPaymentsDetailsResponsive`,
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token223}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
@@ -131,7 +130,7 @@ const MyComponent = () => {
     setLoader(true);
     try {
       const response = await fetch(
-        `https://booknet-dev.iconsole.com.au/api/special/customer?booknet_customer_id=${booknetCustomerId}&special=1`,
+        `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/special/customer?booknet_customer_id=${booknetCustomerId}&special=1`,
         requestOptions,
       );
       const result: GetSpecialOrderApiResponse =
@@ -229,7 +228,7 @@ const MyComponent = () => {
     console.log(requestOptions);
     try {
       const response = await fetch(
-        "https://booknet-dev.iconsole.com.au/api/special/web",
+        `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/special/web`,
         {
           method: "PUT", // Assuming you're making a POST request
           headers: {

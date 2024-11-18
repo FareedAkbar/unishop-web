@@ -30,7 +30,6 @@ import { generateOTP } from "~/utils/generateOTP";
 import { Tabs } from "~/components/ui/tabs";
 import SpecialOrderCard from "~/components/ui-components/SpecialOrderCard";
 import { AiOutlineArrowLeft, AiOutlineClose } from "react-icons/ai";
-import { token221, token223 } from "~/types/tokens";
 
 interface ApiResponse {
   // meta: PaginationData; // Adjust based on your actual structure
@@ -46,7 +45,7 @@ interface ApiBookDetailResponse {
 const requestOptions: RequestInit = {
   method: "GET",
   headers: {
-    Authorization: `Bearer ${token223}`,
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
     "Content-Type": "application/json", // Optional, depending on your API
   },
   redirect: "follow", // Use the correct type for `redirect`
@@ -73,7 +72,7 @@ const MyComponent = () => {
     setLoader(true);
     try {
       const response = await fetch(
-        `https://booknet-dev.iconsole.com.au/api/search?term=${search}&by=titletext&ebooks=on&detailed=Search`,
+        `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/search?term=${search}&by=titletext&ebooks=on&detailed=Search`,
         requestOptions,
       );
       const result: ApiResponse = (await response.json()) as ApiResponse;
@@ -98,7 +97,7 @@ const MyComponent = () => {
 
     try {
       const response = await fetch(
-        `https://booknet-dev.iconsole.com.au/api/search/details?title=${link}`,
+        `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/search/details?title=${link}`,
         requestOptions,
       );
       const result: ApiBookDetailResponse =
@@ -145,12 +144,12 @@ const MyComponent = () => {
     setLoader(true);
     try {
       const response = await fetch(
-        "https://booknet-dev.iconsole.com.au/api/special",
+        `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/special`,
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token223}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
