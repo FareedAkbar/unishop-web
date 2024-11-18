@@ -130,10 +130,10 @@ const HomePage: React.FC = () => {
       </div>
 
       <div className="flex flex-col py-5">
-        <div className="self-center lg:text-5xl">
+        <div className="self-center text-xl lg:text-5xl">
           <FlipWords
             words={["Imagine", "Create", "Inspire", "Transform"]}
-            className="text-red-500 dark:text-red-500"
+            className="text-red-500 dark:text-red-500 text-2xl lg:text-5xl"
           />
           your reading adventure!
         </div>
