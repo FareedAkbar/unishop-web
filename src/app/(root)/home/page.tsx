@@ -8,42 +8,75 @@ import ProductList from "~/components/ui-components/ProductList";
 import { FlipWords } from "~/components/ui/flip-words";
 import AboutSection from "./AboutSection";
 import { useAuthContext } from "~/Context/AuthContext";
-import type { SpecialItemsForHomePage } from "~/types/specialItems";
 import BackgroundBubbles from "~/components/ui-components/BackgroundBubbles";
 import { getSpecialItems } from "~/_actions/getitemsbycategory";
-import type { ItemSpecialTag } from "~/types/productTags";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaLeftLong, FaRightLong } from "react-icons/fa6";
+import { ItemSpecialTag } from "~/types/productTags";
+import { SpecialItemsForHomePage } from "~/types/specialItems";
 
 const HomePage: React.FC = () => {
-  const words = ["Imagine", "Create", "Inspire", "Transform"];
   const { productTags } = useAuthContext();
-  const [specialItems, setSpecialItems] = useState<SpecialItemsForHomePage[] | null>(null)
+  const [specialItems, setSpecialItems] = useState<
+    SpecialItemsForHomePage[] | null
+  >(null);
   const isFirstRender = useRef(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState<"left" | "right">("right");
+
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
+
+  // Hook to detect screen size
   useEffect(() => {
-    console.log(process.env.NEXT_PUBLIC_PASSKEY)
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth >= 1024); // Tailwind `lg` breakpoint is 1024px
+    };
+
+    handleResize(); // Check on mount
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const transitionVariants = {
+    enter: (direction: "left" | "right") => ({
+      opacity: 0,
+      x: direction === "right" ? 50 : -50,
+    }),
+    center: {
+      opacity: 1,
+      x: 0,
+    },
+    exit: (direction: "left" | "right") => ({
+      opacity: 0,
+      x: direction === "right" ? -50 : 50,
+    }),
+  };
+
+  // Load data for special items
+  useEffect(() => {
+    console.log(process.env.NEXT_PUBLIC_PASSKEY);
     if (productTags && productTags?.length < 0) return;
-    if (isFirstRender.current) {
-      isFirstRender.current = false; // Prevents further API calls on first render
-    } else {
+   
       const loadData = async (Tag: ItemSpecialTag) => {
-        const x = await getSpecialItems(Tag.item_special_tags_id)
+        const x = await getSpecialItems(Tag.item_special_tags_id);
         if (typeof x != "boolean" && x.status && x.data) {
           if (x.data?.[0]) {
             const newData = {
               title: Tag.tag_name,
-              data: x?.data
-            }
+              data: x?.data,
+            };
             setSpecialItems((prevData) => {
               // If the previous data is null, initialize it as an array
               const z = prevData?.find((item) => item.title == Tag.tag_name);
               if (z) {
-                return prevData
+                return prevData;
               } else {
                 if (!prevData) return [newData];
 
                 // Otherwise, return a new array with the previous data and the new item
                 return [...prevData, newData];
               }
-
             });
           }
         }
@@ -52,10 +85,41 @@ const HomePage: React.FC = () => {
         loadData(item).catch((error) => {
           console.error("Failed to load data in useEffect:", error);
         });
-      })
-    }
+      });
+    
+  }, [productTags]);
 
-  }, [productTags])
+  // Auto-slide functionality
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext();
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, [specialItems, currentIndex]);
+
+  const handleNext = () => {
+    setDirection("right");
+    setCurrentIndex((prevIndex) =>
+      specialItems ? (prevIndex + 1) % specialItems.length : 0,
+    );
+  };
+
+  const handlePrevious = () => {
+    setDirection("left");
+    setCurrentIndex((prevIndex) =>
+      specialItems
+        ? (prevIndex - 1 + specialItems.length) % specialItems.length
+        : 0,
+    );
+  };
+
+  const getDisplayedItems = () => {
+    if (!specialItems || specialItems.length === 0) return [];
+    const firstIndex = currentIndex;
+    const secondIndex = (currentIndex + 1) % specialItems.length;
+    return [specialItems[firstIndex], specialItems[secondIndex]];
+  };
 
   return (
     <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 pt-32 dark:bg-slate-800 lg:pt-24">
@@ -67,66 +131,91 @@ const HomePage: React.FC = () => {
 
       <div className="flex flex-col py-5">
         <div className="self-center lg:text-5xl">
-          <FlipWords words={words} className="text-red-500 dark:text-red-500" />
+          <FlipWords
+            words={["Imagine", "Create", "Inspire", "Transform"]}
+            className="text-red-500 dark:text-red-500"
+          />
           your reading adventure!
         </div>
       </div>
 
-      {/* Product List Section with Background Animation */}
       <div className="relative w-full">
-        {/* Lottie Animation in the Background */}
-        {/* <div className="absolute inset-0 -z-10">
-          <Player
-            src={"assets/gifs/products-bg.json"}
-            loop
-            autoplay
-            className="h-[500px] w-full overflow-visible object-contain"
-          />
-        </div> */}
-
         <div className="flex">
           <div className="hidden lg:block lg:pl-20">
             <CategoriesSidebar />
           </div>
 
-          {/* {specialItems?.map((item, index) => (
-              <div className="text-lg mt-10 mb-10 flex justify-center" key={index}>
-                {item.tag_name == productTags?.[0]?.tag_name && item.tag_name}
-              </div>
-            ))} */}
+          <div className="mx-auto w-full px-5 pb-10">
+            <div className="relative min-h-[450px] lg:pl-64">
+              <AnimatePresence initial={false} mode="wait" custom={direction}>
+                <motion.div
+                  key={currentIndex}
+                  className={`flex flex-wrap gap-6 transition-none lg:flex-nowrap lg:overflow-x-hidden lg:transition-all`}
+                  {...(isLargeScreen && {
+                    custom: direction,
+                    initial: "enter",
+                    animate: "center",
+                    exit: "exit",
+                    variants: transitionVariants,
+                    transition: { duration: 0.5, ease: "easeInOut" },
+                  })}
+                >
+                  {/* Render all lists for small screens */}
+                  {specialItems?.map((item, index) => (
+                    <div
+                      key={index}
+                      className="w-full lg:hidden" // Show this only on small screens
+                    >
+                      <ProductList
+                        title={item.title}
+                        width="w-full"
+                        index={index}
+                        specialItems={item.data!}
+                      />
+                    </div>
+                  ))}
 
-          <div className="container mx-auto grid min-h-[450px] w-full px-5 pb-10 lg:grid-cols-2 lg:pl-48">
-            {specialItems?.map((item, index) => (
-              <>
-                <div className="-mr-4 w-full">
-                  <ProductList
-                    title={item.title}
-                    width="w-full"
-                    index={index}
-                    specialItems={item.data!}
-                  />
-                </div>
-              </>
-            ))}
+                  {/* Conditionally render only two lists for large screens */}
+                  {specialItems && specialItems?.length > 2 && (
+                    <div className="hidden w-full gap-6 lg:flex">
+                      {getDisplayedItems().map((item, index) => (
+                        <div key={`display-${index}`} className="w-full">
+                          <ProductList
+                            title={item?.title}
+                            width="w-full"
+                            index={index}
+                            specialItems={item?.data ?? null}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+
+              {specialItems && specialItems?.length > 2 && (
+                <>
+                  <button
+                    onClick={handlePrevious}
+                    className="absolute left-48 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-2xl dark:bg-slate-700 lg:block"
+                  >
+                    <FaLeftLong size={24} />
+                  </button>
+                  <button
+                    onClick={handleNext}
+                    className="absolute right-0 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-2xl dark:bg-slate-700 lg:block"
+                  >
+                    <FaRightLong size={24} />
+                  </button>
+                </>
+              )}
+            </div>
           </div>
-
-          {/* <div className="w-full">
-              <ProductList
-                products={products}
-                title="Top Rated"
-                width="w-full"
-              />
-            </div> */}
         </div>
       </div>
 
       <AboutSection />
       <GraduationBanner />
-      {/* <ProductsSection
-        products={bestSellingProducts}
-        headingPartOne="Best Selling"
-        headingPartTwo="Products This Month"
-      /> */}
     </div>
   );
 };
