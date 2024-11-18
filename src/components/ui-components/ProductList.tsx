@@ -38,7 +38,7 @@ const ProductList: React.FC<ProductListProps> = ({
       {specialItems?.[0] && (
         <div className="flex flex-col space-y-4 p-5 pb-8">
           {title && (
-            <h2 className="animate-bounce pl-3 text-2xl font-bold text-gray-800 dark:text-white">
+            <h2 className="animate-bounce pl-3 text-xl font-bold text-gray-800 dark:text-white">
               {title}
             </h2>
           )}

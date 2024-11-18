@@ -25,12 +25,12 @@ const AboutSection: React.FC = () => {
         <h2 className="text-3xl font-bold text-red-500">
           ABOUT UNISHOP
         </h2>
-        <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-300 text-justify">
+        <p className="text-md leading-relaxed text-zinc-600 dark:text-zinc-300 text-justify">
           Welcome to UniShop, your one-stop shop for all your official UOW
           Merchandise, study essentials, textbooks, course notes, and graduation
           memorabilia and gowns.
         </p>
-        <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-300 text-justify">
+        <p className="text-md leading-relaxed text-zinc-600 dark:text-zinc-300 text-justify">
           UniShop is a UOW Pulse business, with all proceeds from everything you
           buy going straight back to enhancing the student experience on campus.
           Whether through events, festivals, competitions, or through clubs and
