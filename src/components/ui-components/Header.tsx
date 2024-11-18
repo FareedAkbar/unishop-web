@@ -24,7 +24,12 @@ import { usePathname, useRouter } from "next/navigation";
 import SidebarCart from "../ui/sideCart/cartSidebar";
 import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
-import type { CategoryTreeNode, Category as CAT, SuperCategory, SideBarCategory } from "~/types/category";
+import type {
+  CategoryTreeNode,
+  Category as CAT,
+  SuperCategory,
+  SideBarCategory,
+} from "~/types/category";
 import { outlet221, outlet223 } from "~/types/tokens";
 import {
   FaBook,
@@ -62,7 +67,7 @@ const Header = () => {
     productTags,
     getSubCategory,
     subCategory,
-    getCheckoutFormData
+    getCheckoutFormData,
   } = useAuthContext();
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -88,7 +93,7 @@ const Header = () => {
     setSearchTerm(event.target.value);
   };
   const [headerCategory, setHeaderCategory] = useState<
-  SideBarCategory[] | null
+    SideBarCategory[] | null
   >(null);
 
   // function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
@@ -134,25 +139,24 @@ const Header = () => {
   // }
   // Define types
 
-type CategoriesMap = Record<number, SuperCategory & { children: CAT[] }>;
+  type CategoriesMap = Record<number, SuperCategory & { children: CAT[] }>;
 
-const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
-  if (cat.category_type_id) {
+  const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
+    if (cat.category_type_id) {
       acc[cat.category_type_id] = { ...cat, children: [] };
-  }
-  return acc;
-}, {} as CategoriesMap);
+    }
+    return acc;
+  }, {} as CategoriesMap);
 
-// Link each item in subCategory to its respective category in categoriesMap
-subCategory?.forEach((item) => {
+  // Link each item in subCategory to its respective category in categoriesMap
+  subCategory?.forEach((item) => {
     const { category_type_id, outlet } = item;
     const targetCategory = categoriesMap[category_type_id];
     if (targetCategory && targetCategory.outlet_id === outlet) {
-        targetCategory.children.push(item);
+      targetCategory.children.push(item);
     }
-});
+  });
   // Initialize category tree on mount
- 
 
   const handleSectionClick = (section: string, isDropdown = false) => {
     setActiveSection(section);
@@ -174,14 +178,14 @@ subCategory?.forEach((item) => {
     const categoriesMap: Record<number, CategoryTreeNode2> = {};
 
     // Step 1: Organize categories by ID
-    categories.forEach(cat => {
+    categories.forEach((cat) => {
       categoriesMap[cat.id] = { ...cat, children: [] };
     });
 
     const categoryTree: CategoryTreeNode2[] = [];
 
     // Step 2: Build the tree structure
-    categories.forEach(cat => {
+    categories.forEach((cat) => {
       if (cat.parent === 0) {
         // Root category
         const rootCategory = categoriesMap[cat.id];
@@ -208,7 +212,7 @@ subCategory?.forEach((item) => {
 
   useEffect(() => {
     if (!category || !subCategory) return;
-  
+
     const x = buildCategoryTree(subCategory); // This should return CategoryTreeNode2[]
     const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
       if (cat.category_type_id) {
@@ -216,11 +220,11 @@ subCategory?.forEach((item) => {
       }
       return acc;
     }, {} as CategoriesMap);
-  
+
     // Ensure x is an array and has elements
     if (Array.isArray(x) && x.length > 0) {
       // Get all children from the built category tree
-      const allChildren: CAT[] = x.flatMap(node => node.children); // Flatten all children
+      const allChildren: CAT[] = x.flatMap((node) => node.children); // Flatten all children
       allChildren.forEach((item: CAT) => {
         const { category_type_id, outlet } = item;
         const targetCategory = categoriesMap[category_type_id];
@@ -228,7 +232,7 @@ subCategory?.forEach((item) => {
           targetCategory.children.push(item);
         }
       });
-  
+
       const result = Object.values(categoriesMap);
       setHeaderCategory(result);
     } else {
@@ -243,9 +247,8 @@ subCategory?.forEach((item) => {
       const result = Object.values(categoriesMap);
       setHeaderCategory(result);
     }
-  
   }, [category, subCategory]);
-  
+
   // Close the dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -325,25 +328,23 @@ subCategory?.forEach((item) => {
   useEffect(() => {
     // if(genre) return;
     if (!productTags?.[0]) {
-      void getProductTagStatus()
+      void getProductTagStatus();
     }
 
-   void getGenre()
+    void getGenre();
   }, []);
 
   useEffect(() => {
     // if(category) return;
-   void getCheckoutFormData()
-   void getCategory()
-   void getSubCategory(-1)
-     
+    void getCheckoutFormData();
+    void getCategory();
+    void getSubCategory(-1);
   }, []);
 
   useEffect(() => {
     const loadData = async () => {
       if (checkoutData?.booknet_customer_id) {
         await getFavourite(checkoutData?.booknet_customer_id);
-
       }
     };
     loadData().catch((error) => {
@@ -368,7 +369,7 @@ subCategory?.forEach((item) => {
   };
   return (
     <nav className="fixed left-0 top-0 z-10 h-fit w-full">
-      <header className="flex flex-col bg-white px-4 pt-4 backdrop-blur dark:bg-slate-900 md:flex-row md:items-center">
+      <header className="flex flex-col bg-white px-4 pb-2 pt-4 backdrop-blur dark:bg-slate-900 md:flex-row md:items-center lg:pb-0">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
         <div className="flex items-center justify-between border-b pb-4 md:hidden">
           <div
@@ -531,8 +532,8 @@ subCategory?.forEach((item) => {
                         item.children?.[0]
                           ? toggleDropdown(item.type)
                           : (router.push(
-                            `/products?name=${item.type}&detail=${item.category_type_id}`,
-                          ),
+                              `/products?name=${item.type}&detail=${item.category_type_id}`,
+                            ),
                             setMobileMenuOpen(!isMobileMenuOpen))
                       }
                       className="flex w-full items-center justify-between text-lg focus:outline-none"
@@ -563,8 +564,8 @@ subCategory?.forEach((item) => {
                               subItem.children?.[0]
                                 ? toggleDropdown(subItem.category_name)
                                 : (router.push(
-                                  `/products?name=${item.type}&detail=${item.category_type_id}`,
-                                ),
+                                    `/products?name=${item.type}&detail=${item.category_type_id}`,
+                                  ),
                                   setMobileMenuOpen(!isMobileMenuOpen),
                                   setOpenDropdown(null))
                             }
@@ -781,7 +782,7 @@ subCategory?.forEach((item) => {
 
               <div className="relative">
                 <button
-                  className="cursor-pointer rounded-full bg-red-500 mt-1"
+                  className="mt-1 cursor-pointer rounded-full bg-red-500"
                   onClick={toggleUserDropdown}
                   ref={dropdownToggleRef}
                 >

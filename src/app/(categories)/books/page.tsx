@@ -347,7 +347,7 @@ const MyComponent = () => {
                     <FiSearch />
                   </span>
                 </div>
-                <h1 className="pr-2 font-bold">
+                <h1 className="text-sm font-semibold">
                   Showing {displayedData?.length} of {data.length} Items
                 </h1>
               </div>

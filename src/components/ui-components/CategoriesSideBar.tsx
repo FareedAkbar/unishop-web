@@ -457,7 +457,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 )
               ) : null}
             </button>
-            <div className="my-1 ml-2 h-px w-[50%] border-t border-gray-400" />
+            <div className="my-1.5 ml-2 h-px w-[50%] border-t border-gray-400" />
             {openCategory == item.label && (
               <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
                 {item.label === "Books" && genre && (

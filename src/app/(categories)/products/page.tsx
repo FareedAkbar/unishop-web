@@ -114,13 +114,12 @@ const MyComponent = () => {
         setPageSize(x.meta.limit);
       }
       setTimeout(() => {
-        setLoader(false);// Reset flip state after changing the image
+        setLoader(false); // Reset flip state after changing the image
       }, 1000);
-      
     } catch (error) {
       console.error("Failed to load data:", error);
       setLoader(false);
-    } 
+    }
   }
 
   useEffect(() => {
@@ -434,7 +433,7 @@ const MyComponent = () => {
                   </span>
                 </div>
 
-                <h1 className="font-bold">
+                <h1 className="text-sm font-semibold">
                   Showing {displayData?.length} of {data.length} Items
                 </h1>
               </div>
