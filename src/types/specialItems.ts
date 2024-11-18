@@ -43,3 +43,8 @@ export interface SpecialItemsApiResponse {
   status: boolean,
   data?: SpecialItems[] | null
 } 
+
+export interface SpecialItemsForHomePage {
+  title: string,
+  data?: SpecialItems[] | null
+} 

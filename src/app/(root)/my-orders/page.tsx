@@ -30,7 +30,6 @@ import type {
 
 import type PayloadForTrasactionLink from "~/types/payloadForTrasactionLink";
 import OrdersTable from "./orderstable";
-import { token221, token223 } from "~/types/tokens";
 import OrdersDataTable from "./OrdersDataTable";
 import { ModalProvider } from "~/components/ui/animated-modal";
 import { getMyOrders, getOrderStatus } from "~/_actions/my_orders";
@@ -40,7 +39,7 @@ const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJw
 const requestOptions: RequestInit = {
   method: "GET",
   headers: {
-    Authorization: `Bearer ${token223}`,
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
     "Content-Type": "application/json", // Optional, depending on your API
   },
   redirect: "follow", // Use the correct type for `redirect`
@@ -81,12 +80,12 @@ const MyComponent = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://ipos-dev.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
+        `${process.env.NEXT_PUBLIC_PASSKEY_IPOS}api/v1/ipos/payments/insertPaymentsDetailsResponsive`,
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token223}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
@@ -131,7 +130,7 @@ const MyComponent = () => {
     setLoader(true);
     try {
       const response = await fetch(
-        `https://booknet-dev.iconsole.com.au/api/special/customer?booknet_customer_id=${booknetCustomerId}&special=1`,
+        `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/special/customer?booknet_customer_id=${booknetCustomerId}&special=1`,
         requestOptions,
       );
       const result: GetSpecialOrderApiResponse =
@@ -142,7 +141,10 @@ const MyComponent = () => {
         // setMeta(result.meta);
         // setDataSpecialOrders(result.data);
       } else {
-        console.error("Unexpected result structure fetchDataSpecialOrders:", result);
+        console.error(
+          "Unexpected result structure fetchDataSpecialOrders:",
+          result,
+        );
         // Handle unexpected structure here
       }
     } catch (error) {
@@ -159,7 +161,7 @@ const MyComponent = () => {
     try {
       const x = await getMyOrders(checkoutData?.booknet_customer_id);
       if (typeof x !== "boolean" && x.status) {
-        console.log(x.data)
+        console.log(x.data);
         setDataOrders(x.data);
       }
     } catch (error) {
@@ -226,7 +228,7 @@ const MyComponent = () => {
     console.log(requestOptions);
     try {
       const response = await fetch(
-        "https://booknet-dev.iconsole.com.au/api/special/web",
+        `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/special/web`,
         {
           method: "PUT", // Assuming you're making a POST request
           headers: {
@@ -441,12 +443,11 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="mt-32 flex min-h-screen flex-col items-center">
+      <main className="mt-24 flex min-h-screen flex-col items-center">
         {/* {name}
       <Button onClick={()=>ChangeName()}>change name</Button> */}
         {loader && <Spinner />}
-        <div className="z-10 w-full p-4">
-          <h1 className="pb-3 text-center text-2xl font-bold">My Orders</h1>
+        <div className="w-full p-4">
           {/* <OrdersTable
             handlePayment={(x) => handlePayment(x)}
             data={dataOrders}

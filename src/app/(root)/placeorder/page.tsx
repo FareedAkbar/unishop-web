@@ -18,7 +18,6 @@ import { formatDate, formatDateTime } from "~/utils/dateAndTime";
 import { useRouter } from "next/navigation";
 import { generateOTP } from "~/utils/generateOTP";
 import Button from "~/components/ui-components/Button";
-import { outlet223, token221, token223 } from "~/types/tokens";
 import { Tabs } from "~/components/ui/tabs";
 import Input from "~/components/ui-components/Input";
 import Spinner from "~/components/spinner";
@@ -153,12 +152,12 @@ const MyComponent = () => {
   const fetchData = async (requestOptions: CreatePayloadBooksForTax[]) => {
     try {
       const response = await fetch(
-        "https://booknet-dev.iconsole.com.au/api/calculate?check_availability=0",
+        `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/calculate?check_availability=0`,
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token223}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
           body: JSON.stringify({ items: requestOptions, member_id: null }), // Send the payload as JSON
         },
@@ -229,12 +228,12 @@ const MyComponent = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://ipos-dev.iconsole.com.au/api/v1/ipos/payments/insertPaymentsDetailsResponsive",
+        `${process.env.NEXT_PUBLIC_PASSKEY_IPOS}api/v1/ipos/payments/insertPaymentsDetailsResponsive`,
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token223}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
@@ -294,12 +293,12 @@ const MyComponent = () => {
     console.log(requestOptions);
     try {
       const response = await fetch(
-        "https://booknet-dev.iconsole.com.au/api/orders/web",
+        `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/orders/web`,
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token223}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
@@ -376,10 +375,11 @@ const MyComponent = () => {
   const placeOrderApi = async (id: number) => {
     await setTrasactionData(null);
     const date = new Date();
+    const outlet = process.env.NEXT_PUBLIC_PASSKEY_OUTLET ?? ""
     const x = {
       order_type: shipping?.type == "free" ? 1 : 2,
       online_order_type: 1,
-      outlet_id: outlet223,
+      outlet_id: parseInt(outlet),
       tracking_id: generateOTP(12).toString(),
       order_status: 1,
       completed_date: formatDate(date),
@@ -546,13 +546,13 @@ const MyComponent = () => {
     till: number;
     cus_id: number;
     membership: null;
-    outlet_id: number;
+    outlet_id?: number;
   };
   type discounCouponType = {
     cus_id: number;
     code: string;
     // "till" : 1,
-    outlet_id: number;
+    outlet_id?: number;
   };
 
   type discount = {
@@ -571,13 +571,13 @@ const MyComponent = () => {
     try {
       const response = await fetch(
         discountType == "Voucher"
-          ? "https://ipos-dev.iconsole.com.au/api/v1/ipos/discounts/verifyVoucher"
-          : "https://ipos-dev.iconsole.com.au/api/v1/ipos/discounts/verifyCoupon",
+          ? `${process.env.NEXT_PUBLIC_PASSKEY_IPOS}api/v1/ipos/discounts/verifyVoucher`
+          : `${process.env.NEXT_PUBLIC_PASSKEY_IPOS}api/v1/ipos/discounts/verifyCoupon`,
         {
           method: "POST", // Assuming you're making a POST request
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token223}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
           body: JSON.stringify(requestOptions), // Send the payload as JSON
         },
@@ -606,6 +606,7 @@ const MyComponent = () => {
   };
 
   const handleclick = () => {
+    const outlet = process.env.NEXT_PUBLIC_PASSKEY_OUTLET ?? ""
     if (discountValue.trim().length > 0) {
       if (discountType == "Voucher") {
         const xData = {
@@ -615,7 +616,7 @@ const MyComponent = () => {
           till: 0,
           cus_id: userInfo?.customer_id ? userInfo?.customer_id : 0,
           membership: null,
-          outlet_id: outlet223,
+          outlet_id: parseInt(outlet),
         };
         getDiscounts(xData).catch((err) => console.log(err));
       } else {
@@ -623,7 +624,7 @@ const MyComponent = () => {
           cus_id: userInfo?.customer_id ? userInfo?.customer_id : 0,
           code: discountValue.trim(),
           // "till" : 1,
-          outlet_id: outlet223,
+          outlet_id: parseInt(outlet),
         };
         getDiscounts(xData).catch((err) => console.log(err));
       }

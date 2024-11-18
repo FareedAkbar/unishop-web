@@ -381,7 +381,7 @@ const MyComponent = () => {
 
   return (
     <div className="p-6 pt-32">
-      <div className="flex items-center justify-between lg:px-10 pb-4">
+      <div className="flex items-center justify-between lg:px-10 pb-2">
         {/* Left Arrow */}
         <div>
           <button
@@ -724,8 +724,8 @@ const MyComponent = () => {
         </div>
       </div>
       {/* Reviews Section */}
-      <div className="mt-16 flex flex-col gap-8 md:flex-row">
-        <div className="max-h-[487px] rounded-lg border p-6 shadow-md dark:bg-slate-800 md:w-1/2">
+      <div className="mt-16 flex flex-col gap-8  md:flex-row">
+        <div className="max-h-[477px] rounded-lg border p-6 shadow-md dark:bg-slate-800 md:w-1/2">
           <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
           {getReviewsLoader ? (
             // Skeleton loader
@@ -747,7 +747,7 @@ const MyComponent = () => {
               ))}
             </ScrollArea>
           ) : reviews?.[0] ? (
-            <ScrollArea className="h-[400px]">
+            <ScrollArea className="h-[300px]">
               {reviews.map((review, index) => (
                 <div key={index} className="mb-4 border-b pb-2">
                   <p className="font-semibold">{review.username}</p>

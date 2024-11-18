@@ -25,7 +25,6 @@ import SidebarCart from "../ui/sideCart/cartSidebar";
 import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
 import type { CategoryTreeNode, Category as CAT, SuperCategory, SideBarCategory } from "~/types/category";
-import { outlet221, outlet223 } from "~/types/tokens";
 import {
   FaBook,
   FaGraduationCap,
@@ -113,7 +112,7 @@ const Header = () => {
   //     if (
   //       category.parent === 0 &&
   //       category.booknet == 1 &&
-  //       category.outlet === outlet223
+  //       category.outlet === process.env.NEXT_PUBLIC_PASSKEY_OUTLET
   //     ) {
   //       const rootCategory = categoryMap[category.id];
   //       if (rootCategory) {
@@ -367,7 +366,7 @@ subCategory?.forEach((item) => {
     AiOutlineContacts: <AiOutlineContacts className="text-amber-600" />,
   };
   return (
-    <nav className="fixed left-0 top-0 z-[15] h-fit w-full">
+    <nav className="fixed left-0 top-0 z-10 h-fit w-full">
       <header className="flex flex-col bg-white px-4 pt-4 backdrop-blur dark:bg-slate-900 md:flex-row md:items-center">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
         <div className="flex items-center justify-between border-b pb-4 md:hidden">

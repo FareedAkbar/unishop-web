@@ -1,7 +1,6 @@
 "use server";
 
 import type DataCart from '~/types/book';
-import { token221, token223 } from '~/types/tokens';
 
 
 interface ApiResponse {
@@ -12,7 +11,7 @@ interface ApiResponse {
 const requestOptions: RequestInit = {
     method: "GET",
     headers: {
-        Authorization: `Bearer ${token223}`,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
         "Content-Type": "application/json", // Optional, depending on your API
     },
     redirect: "follow", // Use the correct type for `redirect`
@@ -20,7 +19,7 @@ const requestOptions: RequestInit = {
 export async function getBooks(genre_id: number): Promise<ApiResponse | boolean> {
     try {
         const response = await fetch(
-            `https://booknet-dev.iconsole.com.au/api/books/getBooksByGenreCat?category_id=${genre_id}&entries=1&images=1&detailed=1`,
+            `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/getBooksByGenreCat?category_id=${genre_id}&entries=1&images=1&detailed=1`,
             requestOptions,
         );
         const result: ApiResponse = (await response.json()) as ApiResponse;

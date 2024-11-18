@@ -48,7 +48,7 @@ const ProductCard = ({
   const tagNames: string[] = matchingTags?.map((tag) => tag?.tag_name) ?? [];
 
   return (
-    <div className="group relative m-2 flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-1 transition-transform duration-300 hover:scale-110 sm:w-64 md:w-64 lg:w-72">
+    <div className="group relative m-2 flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
       <div className="relative flex h-40 grow-0 items-center justify-center rounded-sm bg-gray-200 dark:bg-slate-600 sm:h-48 lg:h-64">
         {tagNames.length > 0 ? (
           <div className="absolute left-2 top-1 flex flex-col">
@@ -56,7 +56,7 @@ const ProductCard = ({
               return (
                 <span
                   key={tag}
-                  className="z-[12] mr-2 mt-1 rounded bg-red-500 px-1 py-0.5 text-[8px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
+                  className="z-[5] mr-2 mt-1 rounded bg-red-500 px-1 py-0.5 text-[8px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
                 >
                   {tag}
                 </span>
@@ -143,7 +143,7 @@ const ProductCard = ({
           ""
         )} */}
       </div>
-      <span className="mt-2 font-bold sm:mt-4" title={product?.item_name}>
+      <span className="mt-2 font-semibold sm:mt-4" title={product?.item_name}>
         {product?.item_name}
       </span>
       {product?.stock?.quantity ? (

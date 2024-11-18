@@ -42,7 +42,7 @@ function Footer() {
   const pathname = usePathname();
 
   return (
-    <footer className="bg-zinc-100 dark:bg-slate-900">
+    <footer className="bg-white border-t dark:bg-slate-900">
       <div className="container mx-auto pb-2 pt-8">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {/* logo side */}

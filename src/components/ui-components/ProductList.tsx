@@ -1,49 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ScrollArea } from "../ui/scroll-area";
-import { SpecialItems } from "~/types/specialItems";
-import { useAuthContext } from "~/Context/AuthContext";
-import { getSpecialItems } from "~/_actions/getitemsbycategory";
+import type { SpecialItems } from "~/types/specialItems";
 import { useRouter } from "next/navigation";
 
-interface Product {
-  id: number;
-  name: string;
-  category: string;
-  image: string;
-  price: number;
-}
-
 interface ProductListProps {
-  id: number,
   title?: string; // Optional title prop
   width?: string; // Optional width prop
+  index: number,
+  specialItems: SpecialItems[] | null
 }
 
 const ProductList: React.FC<ProductListProps> = ({
-  id,
   title,
   width = "w-64",
-
-
+  specialItems
 }) => {
-  const { productTags } = useAuthContext();
   const router = useRouter();
-  const [specialItems, setSpecialItems] = useState<SpecialItems[] | null>(null)
-  useEffect(() => {
-    const loadData = async () => {
-      console.log(id)
-      const x = await getSpecialItems(id)
-      if (typeof x != "boolean" && x.status && x.data) {
-        setSpecialItems(x?.data)
-        console.log(x.data)
-      }
-    };
-    loadData().catch((error) => {
-      console.error("Failed to load data in useEffect:", error);
-    });
-  }, [])
+
+
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     console.log(id)
+  //     const x = await getSpecialItems(id)
+  //     if (typeof x != "boolean" && x.status && x.data) {
+  //       setSpecialItems(x?.data)
+  //       console.log(x.data)
+  //     }
+  //   };
+  //   loadData().catch((error) => {
+  //     console.error("Failed to load data in useEffect:", error);
+  //   });
+  // }, [])
 
   return (
     <>
@@ -75,17 +64,17 @@ const ProductList: React.FC<ProductListProps> = ({
                       <Image
                         src={`https://ipos-storage.s3.amazonaws.com/${product.object_path}`}
                         alt={product.category_name}
-                        className="h-36 w-36 animate-swing rounded-lg object-cover"
-                        width={100}
-                        height={100}
+                        className="h-36 w-36 animate-swing rounded-lg object-contain"
+                        width={1000}
+                        height={1000}
                       />
                     ) : (
                       <Image
                         src={'/assets/images/bookicon.png'}
                         alt={"Item"}
-                        className="h-36 w-36 animate-swing rounded-lg object-cover"
-                        width={100}
-                        height={100}
+                        className="h-36 w-36 animate-swing rounded-lg object-contain"
+                        width={1000}
+                        height={1000}
                       />
                     )}
 

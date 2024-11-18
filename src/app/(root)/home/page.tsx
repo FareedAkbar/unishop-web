@@ -1,117 +1,61 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ImageSlider from "./ImageSlider";
 import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
-import ProductsSection from "~/components/ui-components/ProductsSection";
 import GraduationBanner from "./GraduationBanner";
 import ProductList from "~/components/ui-components/ProductList";
 import { FlipWords } from "~/components/ui/flip-words";
-import { Player } from "@lottiefiles/react-lottie-player";
 import AboutSection from "./AboutSection";
 import { useAuthContext } from "~/Context/AuthContext";
-import {
-  getItemsByCategory,
-  getSpecialItems,
-} from "~/_actions/getitemsbycategory";
-import { SpecialItems } from "~/types/specialItems";
+import type { SpecialItemsForHomePage } from "~/types/specialItems";
 import BackgroundBubbles from "~/components/ui-components/BackgroundBubbles";
-
-const bestSellingProducts = [
-  {
-    id: 1,
-    book_title: "Red North Coat",
-    item_sale_price: 180,
-    name: "Red North Coat",
-    price: 120,
-    originalPrice: 160,
-    memberPrice: 78.99,
-    discount: 40,
-    image: "/assets/images/products/product.png",
-    reviews: 88,
-    rating: 4.5,
-  },
-  {
-    id: 2,
-    book_title: "UOW Boxed Gift Pen",
-    item_sale_price: 120,
-    name: "Red North Coat",
-    price: 120,
-    originalPrice: 160,
-    memberPrice: 78.99,
-    discount: 45,
-    image: "/assets/images/products/product.png",
-    reviews: 88,
-    rating: 4.5,
-  },
-  {
-    id: 3,
-    book_title: "UOW Boxed Gift Pen",
-    item_sale_price: 120,
-    name: "Red North Coat",
-    price: 120,
-    originalPrice: 160,
-    memberPrice: 78.99,
-    discount: 40,
-    image: "/assets/images/products/product.png",
-    reviews: 88,
-    rating: 4.5,
-  },
-  {
-    id: 4,
-    book_title: "UOW Boxed Gift Pen",
-    item_sale_price: 120,
-    name: "Red North Coat",
-    price: 120,
-    originalPrice: 160,
-    memberPrice: 78.99,
-    discount: 45,
-    image: "/assets/images/products/product.png",
-    reviews: 88,
-    rating: 4.5,
-  },
-  {
-    id: 5,
-    book_title: "UOW Boxed Gift Pen",
-    item_sale_price: 120,
-    name: "Red North Coat",
-    price: 120,
-    originalPrice: 160,
-    memberPrice: 78.99,
-    discount: 45,
-    image: "/assets/images/products/product.png",
-    reviews: 88,
-    rating: 4.5,
-  },
-];
-const products = [
-  {
-    id: 1,
-    name: "Product 1",
-    category: "Category 1",
-    image: "/assets/images/bookicon.png",
-    price: 29.99,
-  },
-  {
-    id: 2,
-    name: "Product 2",
-    category: "Category 2",
-    image: "/assets/images/bookicon.png",
-    price: 39.99,
-  },
-  {
-    id: 3,
-    name: "Product 3",
-    category: "Category 3",
-    image: "/assets/images/bookicon.png",
-    price: 19.99,
-  },
-];
+import { getSpecialItems } from "~/_actions/getitemsbycategory";
+import type { ItemSpecialTag } from "~/types/productTags";
 
 const HomePage: React.FC = () => {
   const words = ["Imagine", "Create", "Inspire", "Transform"];
-  const [specialItems, setSpecialItems] = useState<SpecialItems[] | null>(null);
   const { productTags } = useAuthContext();
+  const [specialItems, setSpecialItems] = useState<SpecialItemsForHomePage[] | null>(null)
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    console.log(process.env.NEXT_PUBLIC_PASSKEY)
+    if (productTags && productTags?.length < 0) return;
+    if (isFirstRender.current) {
+      isFirstRender.current = false; // Prevents further API calls on first render
+    } else {
+      const loadData = async (Tag: ItemSpecialTag) => {
+        const x = await getSpecialItems(Tag.item_special_tags_id)
+        if (typeof x != "boolean" && x.status && x.data) {
+          if (x.data?.[0]) {
+            const newData = {
+              title: Tag.tag_name,
+              data: x?.data
+            }
+            setSpecialItems((prevData) => {
+              // If the previous data is null, initialize it as an array
+              const z = prevData?.find((item) => item.title == Tag.tag_name);
+              if (z) {
+                return prevData
+              } else {
+                if (!prevData) return [newData];
+
+                // Otherwise, return a new array with the previous data and the new item
+                return [...prevData, newData];
+              }
+
+            });
+          }
+        }
+      };
+      productTags?.map((item) => {
+        loadData(item).catch((error) => {
+          console.error("Failed to load data in useEffect:", error);
+        });
+      })
+    }
+
+  }, [productTags])
 
   return (
     <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 pt-32 dark:bg-slate-800 lg:pt-24">
@@ -151,14 +95,15 @@ const HomePage: React.FC = () => {
               </div>
             ))} */}
 
-          <div className="container mx-auto grid min-h-[450px] w-full p-5 pb-10 lg:grid-cols-2 lg:pl-48">
-            {productTags?.map((item) => (
+          <div className="container mx-auto grid min-h-[450px] w-full px-5 pb-10 lg:grid-cols-2 lg:pl-48">
+            {specialItems?.map((item, index) => (
               <>
                 <div className="-mr-4 w-full">
                   <ProductList
-                    id={item.item_special_tags_id}
-                    title={item.tag_name}
+                    title={item.title}
                     width="w-full"
+                    index={index}
+                    specialItems={item.data!}
                   />
                 </div>
               </>
