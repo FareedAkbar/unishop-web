@@ -57,9 +57,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     console.log(process.env.NEXT_PUBLIC_PASSKEY);
     if (productTags && productTags?.length < 0) return;
-    if (isFirstRender.current) {
-      isFirstRender.current = false; // Prevents further API calls on first render
-    } else {
+   
       const loadData = async (Tag: ItemSpecialTag) => {
         const x = await getSpecialItems(Tag.item_special_tags_id);
         if (typeof x != "boolean" && x.status && x.data) {
@@ -88,7 +86,7 @@ const HomePage: React.FC = () => {
           console.error("Failed to load data in useEffect:", error);
         });
       });
-    }
+    
   }, [productTags]);
 
   // Auto-slide functionality
@@ -178,7 +176,7 @@ const HomePage: React.FC = () => {
                   ))}
 
                   {/* Conditionally render only two lists for large screens */}
-                  {specialItems?.length! > 2 && (
+                  {specialItems && specialItems?.length > 2 && (
                     <div className="hidden w-full gap-6 lg:flex">
                       {getDisplayedItems().map((item, index) => (
                         <div key={`display-${index}`} className="w-full">
@@ -186,7 +184,7 @@ const HomePage: React.FC = () => {
                             title={item?.title}
                             width="w-full"
                             index={index}
-                            specialItems={item?.data!}
+                            specialItems={item?.data ?? null}
                           />
                         </div>
                       ))}
@@ -195,7 +193,7 @@ const HomePage: React.FC = () => {
                 </motion.div>
               </AnimatePresence>
 
-              {specialItems?.length! > 2 && (
+              {specialItems && specialItems?.length > 2 && (
                 <>
                   <button
                     onClick={handlePrevious}
