@@ -141,12 +141,12 @@ const HomePage: React.FC = () => {
 
       <div className="relative w-full">
         <div className="flex">
-          <div className="hidden lg:block lg:pl-20">
+          <div className="hidden lg:block lg:ml-20">
             <CategoriesSidebar />
           </div>
 
           <div className="mx-auto w-full px-5 pb-10">
-            <div className="relative min-h-[450px] lg:pl-64">
+            <div className="relative min-h-[450px] lg:ml-64">
               <AnimatePresence initial={false} mode="wait" custom={direction}>
                 <motion.div
                   key={currentIndex}
@@ -197,7 +197,7 @@ const HomePage: React.FC = () => {
                 <>
                   <button
                     onClick={handlePrevious}
-                    className="absolute left-48 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-2xl dark:bg-slate-700 lg:block"
+                    className="absolute top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-2xl dark:bg-slate-700 lg:block"
                   >
                     <FaLeftLong size={24} />
                   </button>
