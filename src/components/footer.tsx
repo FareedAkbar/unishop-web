@@ -62,7 +62,7 @@ function Footer() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 pl-4 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
               >
-                <FaMapMarkerAlt className="text-lg text-[#646464] dark:text-gray-300" />
+                <FaMapMarkerAlt className="text-md text-[#646464] dark:text-gray-300" />
                 Building 11, University of Wollongong
               </a>
               <a

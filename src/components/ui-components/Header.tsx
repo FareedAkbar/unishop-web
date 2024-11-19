@@ -634,8 +634,11 @@ const Header = () => {
               />
             )}
             <button
-              className={`fixed right-5 top-5 z-40 sm:block md:hidden ${isMobileMenuOpen ? "bg-white dark:bg-slate-700" : ""}`} // Ensure z-30 is applied
-              onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+              className={`fixed right-7 top-7 z-40 sm:block md:hidden ${isMobileMenuOpen ? "bg-white dark:bg-slate-700" : ""}`} // Ensure z-30 is applied
+              onClick={() => {
+                setOpenDropdown(null);
+                setMobileMenuOpen(false);
+              }}
             >
               <FaTimes className="text-xl text-red-500" />
             </button>
@@ -673,18 +676,29 @@ const Header = () => {
                 {headerCategory?.map((item) => (
                   <div key={item.type} className="mb-4">
                     <button
-                      onClick={() =>
-                        item.children?.[0]
-                          ? toggleCategory(item.type)
-                          : (router.push(
-                              `/products?category=${item.category_type_id}&name=${item.type}`,
-                            ),
-                            setMobileMenuOpen(false),
-                            setOpenCategories([]))
-                      }
+                      // onClick={() =>
+                      //   item.children?.[0]
+                      //     ? toggleCategory(item.type)
+                      //     : (router.push(
+                      //         `/products?category=${item.category_type_id}&name=${item.type}`,
+                      //       ),
+                      //       setMobileMenuOpen(false),
+                      //       setOpenCategories([]))
+                      // }
                       className="flex w-full items-center justify-between text-lg focus:outline-none"
                     >
-                      <div className="flex items-center">
+                      <div
+                        className="flex items-center"
+                        onClick={() => {
+                          router.push(
+                            `/products?category=${item.category_type_id}&name=${item.type}`,
+                          );
+                          setMobileMenuOpen(false);
+                          setOpenDropdown(null);
+                        }}
+                      >
+                        <AiOutlineFileText className="mr-2.5 h-5 w-5 text-orange-600" />
+
                         {/* {item.icon && (
                         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                         <span className="mr-3">{iconMap[item.icon]}</span>
@@ -694,11 +708,13 @@ const Header = () => {
                         {/* </Link> */}
                       </div>{" "}
                       {item.children?.[0] ? (
-                        openCategories.includes(item.type) ? (
-                          <FaChevronDown />
-                        ) : (
-                          <FaChevronRight />
-                        )
+                        <div onClick={() => toggleCategory(item.type)}>
+                          {openCategories.includes(item.type) ? (
+                            <FaChevronDown />
+                          ) : (
+                            <FaChevronRight />
+                          )}
+                        </div>
                       ) : null}
                     </button>
                     {openCategories.includes(item.type) &&
@@ -740,20 +756,33 @@ const Header = () => {
                   <div key={item.label} className="mb-4">
                     <button
                       onClick={() =>
-                        item.subItems ? toggleDropdown(item.label) : null
+                        item.subItems || item.label == "Pulse"
+                          ? toggleDropdown(item.label)
+                          : null
                       }
                       className="flex w-full items-center justify-between text-lg focus:outline-none"
                     >
                       <div className="flex items-center">
-                        {item.icon && (
-                          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                          <span className="mr-3">{iconMap[item.icon]}</span>
+                        {(item.icon || item.label === "Pulse") && (
+                          <span className="mr-2">
+                            {item.label === "Pulse" ? (
+                              <Image
+                                src="/assets/images/home/pulse-icon.webp"
+                                className="h-5 w-5 p-0.5"
+                                width={1000}
+                                height={1000}
+                                alt={item.label || "Icon"}
+                              />
+                            ) : (
+                              item.icon && iconMap[item.icon]
+                            )}
+                          </span>
                         )}
                         <Link href={item.href ?? ""} scroll={false}>
                           {item.label}
                         </Link>
                       </div>{" "}
-                      {item.subItems ? (
+                      {item.subItems || item.label == "Pulse" ? (
                         openDropdown === item.label ? (
                           <FaChevronDown />
                         ) : (
@@ -815,6 +844,27 @@ const Header = () => {
                             {subItem.category_name}
                           </Link>
                         ))} */}
+                      </div>
+                    )}
+                    {item.label === "Pulse" && openDropdown === item.label && (
+                      <div className="ml-4 mt-1">
+                        <a
+                          href="https://apps.apple.com/ie/app/uow-pulse-ltd/id6476544403"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block py-1 text-sm hover:underline"
+                        >
+                          Download on the App Store
+                        </a>
+
+                        <a
+                          href="https://play.google.com/store/apps/details?id=com.iitsols.pulseuowltd"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block py-1 text-sm hover:underline"
+                        >
+                          Get it on Google Play
+                        </a>
                       </div>
                     )}
                   </div>

@@ -133,7 +133,7 @@ const HomePage: React.FC = () => {
         <div className="self-center text-xl lg:text-5xl">
           <FlipWords
             words={["Imagine", "Create", "Inspire", "Transform"]}
-            className="text-red-500 dark:text-red-500 text-2xl lg:text-5xl"
+            className="text-red-500 dark:text-red-500 text-[22px] lg:text-5xl"
           />
           your reading adventure!
         </div>
@@ -150,7 +150,7 @@ const HomePage: React.FC = () => {
               <AnimatePresence initial={false} mode="wait" custom={direction}>
                 <motion.div
                   key={currentIndex}
-                  className={`flex flex-wrap gap-6 transition-none lg:flex-nowrap lg:overflow-x-hidden lg:transition-all`}
+                  className={`flex flex-wrap lg:gap-6 transition-none lg:flex-nowrap lg:overflow-x-hidden lg:transition-all`}
                   {...(isLargeScreen && {
                     custom: direction,
                     initial: "enter",
@@ -197,13 +197,13 @@ const HomePage: React.FC = () => {
                 <>
                   <button
                     onClick={handlePrevious}
-                    className="absolute top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-2xl dark:bg-slate-700 lg:block"
+                    className="absolute -left-10 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-xl dark:bg-slate-700 lg:block"
                   >
                     <FaLeftLong size={24} />
                   </button>
                   <button
                     onClick={handleNext}
-                    className="absolute right-0 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-2xl dark:bg-slate-700 lg:block"
+                    className="absolute right-0 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-xl dark:bg-slate-700 lg:block"
                   >
                     <FaRightLong size={24} />
                   </button>

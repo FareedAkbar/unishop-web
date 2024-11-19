@@ -27,6 +27,7 @@ import {
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
+import Image from "next/image";
 
 // Create a mapping of icon names to their corresponding components
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
@@ -433,22 +434,34 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               onClick={() =>
                 item.subItems ||
                 item.label === "Books" ||
-                item.label === "Text Book"
+                item.label === "Pulse"
                   ? toggleCategory2(item.label)
                   : null
               }
               className="duration-240 flex w-full items-center justify-between px-2 text-lg transition-transform hover:scale-105 focus:outline-none"
             >
               <div className="flex items-center">
-                {item.icon && (
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                  <span className="mr-2">{iconMap[item.icon]}</span>
+                {(item.icon || item.label === "Pulse") && (
+                  <span className="mr-2">
+                    {item.label === "Pulse" ? (
+                      <Image
+                        src="/assets/images/home/pulse-icon.webp"
+                        className="h-5 w-5 p-0.5"
+                        width={1000}
+                        height={1000}
+                        alt={item.label || "Icon"}
+                      />
+                    ) : (
+                      item.icon && iconMap[item.icon]
+                    )}
+                  </span>
                 )}
+
                 <Link href={item.href ?? ""} className="text-sm" scroll={false}>
                   {item.label}
                 </Link>
               </div>
-              {item.subItems ? (
+              {item.subItems || item.label == "Pulse" ? (
                 openCategory == item.label ? (
                   <FaChevronDown size={12} />
                 ) : (
@@ -478,6 +491,27 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       </Link>
                     ))}
                   </ScrollArea>
+                )}
+                {item.label === "Pulse" && (
+                  <div className="">
+                    <a
+                      href="https://apps.apple.com/ie/app/uow-pulse-ltd/id6476544403"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block py-1 text-sm hover:underline"
+                    >
+                      Download on the App Store
+                    </a>
+
+                    <a
+                      href="https://play.google.com/store/apps/details?id=com.iitsols.pulseuowltd"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block py-1 text-sm hover:underline"
+                    >
+                      Get it on Google Play
+                    </a>
+                  </div>
                 )}
                 {/* {item.label === "Text Book" && headerCategory?.[0]?.children?.map((subItem) => (
                       <Link

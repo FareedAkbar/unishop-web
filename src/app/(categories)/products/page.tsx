@@ -389,7 +389,7 @@ const MyComponent = () => {
         <div className="flex flex-grow flex-row sm:pt-10">
           <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
             {/* Header Section */}
-            <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4">
+            <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4 pl-2">
               <div className="text-left">
                 <h2 className="text-xl font-bold capitalize">
                   {" "}
@@ -419,13 +419,13 @@ const MyComponent = () => {
                     </SelectContent>
                   </NewSelect>
                 )}
-                <div className="relative">
+                <div className="relative flex">
                   <input
                     type="text"
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     placeholder="Search"
-                    className="w-full border-b border-gray-300 bg-gray-100 p-2 pl-8 text-sm focus:outline-none dark:bg-slate-700 dark:text-white"
+                    className="w-full border-b border-gray-300 rounded shadow-inner bg-gray-100 p-2 pl-8 text-sm focus:outline-none dark:bg-slate-700 dark:text-white"
                   />
                   <span className="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-white">
                     <FiSearch />
@@ -440,7 +440,7 @@ const MyComponent = () => {
 
             <ScrollArea className="h-[75vh] pb-10">
               <div
-                className="flex flex-wrap justify-center py-3"
+                className="flex flex-wrap justify-center gap-3 py-3"
                 // key={displayData ? displayData?.[0]?.item_id : "123"}
               >
                 {loader ? (
