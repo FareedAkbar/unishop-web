@@ -2,9 +2,8 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { PiEye } from "react-icons/pi";
 import { MdRemoveCircle } from "react-icons/md";
-import { AiOutlineHeart, AiOutlineEye } from "react-icons/ai"; // Adding icons used in ProductCard design
+import { AiOutlineEye } from "react-icons/ai"; // Adding icons used in ProductCard design
 import type { SpecialBookType } from "~/types/specialOrderBook";
 
 interface stock {

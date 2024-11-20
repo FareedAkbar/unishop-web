@@ -1,32 +1,31 @@
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
-// Sample book images - replace with your actual image URLs
 const bookImages = [
   "/images/bookicon.png",
   "/images/bookicon.png",
   "/images/bookicon.png",
   "/images/bookicon.png",
   "/images/bookicon.png",
-  "/images/bookicon.png"
+  "/images/bookicon.png",
 ];
 
 const generateRandomPosition = () => {
-  const top = Math.random() * 90; // Top percentage (to avoid going beyond the screen)
-  const left = Math.random() * 90; // Left percentage (to avoid going beyond the screen)
+  const top = Math.random() * 90;
+  const left = Math.random() * 90;
   return { top: `${top}%`, left: `${left}%` };
 };
 
 const generateRandomRotation = () => {
-  const rotation = Math.random() * 360; // Random rotation angle
-  return rotation; // Return only the angle as a number
+  const rotation = Math.random() * 360;
+  return rotation;
 };
 
 interface ImageData {
-  src: string; // Image source
+  src: string;
   position: { top: string; left: string };
-  rotation: number; // Store rotation as a number to animate it
-  opacity: number; // Add opacity to control fading effect
+  rotation: number;
+  opacity: number;
 }
 
 const BackgroundImages = () => {
@@ -36,7 +35,7 @@ const BackgroundImages = () => {
     const interval = setInterval(() => {
       const randomImage =
         bookImages[Math.floor(Math.random() * bookImages.length)]!;
-      
+
       const newImageData: ImageData = {
         src: randomImage,
         position: generateRandomPosition(),
@@ -66,13 +65,13 @@ const BackgroundImages = () => {
   }, [images]);
 
   return (
-    <div className="absolute inset-0 z-[-1] bg-opacity-20 blur-[2px] bg-red-200 pointer-events-none">
+    <div className="pointer-events-none absolute inset-0 z-[-1] bg-red-200 bg-opacity-20 blur-[2px]">
       {images.map((imageData, index) => (
         <Image
           key={index}
           src={imageData.src}
           alt="Book"
-          className="absolute  animate-swing"
+          className="absolute animate-swing"
           style={{
             top: imageData.position.top,
             left: imageData.position.left,
@@ -80,8 +79,8 @@ const BackgroundImages = () => {
             // animationDuration: `${3 + Math.random() * 2}s`, // Random swing duration
             // transform: `rotate(${imageData.rotation}deg)`, // Start at the initial rotation angle
             // transition: "opacity 3s ease, transform 3s ease", // Smooth opacity and transform changes
-            width: '100px', // Adjust image width
-            height: 'auto', // Maintain aspect ratio
+            width: "100px",
+            height: "auto",
           }}
           width={1000}
           height={1000}

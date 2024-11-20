@@ -106,7 +106,7 @@ input[type="radio"]:focus {
   }
 }
 
-.animate-bubble {
+.animate-square {
   animation: bubble linear infinite;
 }
 

@@ -14,9 +14,9 @@ import AlertBox from "../alertBox/alert";
 
 interface ProductsSectionProps {
   products: DataCart[];
-  targetDate?: Date; // Optional timer date
-  headingPartOne: string; // New prop for the first part of the heading
-  headingPartTwo: string; // New prop for the second part of the heading
+  targetDate?: Date;
+  headingPartOne: string;
+  headingPartTwo: string;
   loader?: boolean;
   viewAllButton?: () => void;
 }
@@ -65,7 +65,6 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
         productContainerRef.current.scrollWidth -
         productContainerRef.current.clientWidth;
 
-      // Update listInStart dynamically based on scroll position
       setListInStart(scrollLeft <= 0);
     }
   };
@@ -77,10 +76,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
   useEffect(() => {
     const ref = productContainerRef.current;
     if (ref) {
-      // Add the scroll event listener
       ref.addEventListener("scroll", updateIsListInStart);
-
-      // Clean up the event listener on unmount
       return () => {
         ref.removeEventListener("scroll", updateIsListInStart);
       };
@@ -166,7 +162,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
 
         <div className="w-full lg:w-[92vw]">
           <div
-            className="scrollbar-hidden mt-6 flex flex-wrap justify-center py-6 lg:flex-nowrap lg:overflow-x-auto  xl:flex-nowrap xl:overflow-x-auto"
+            className="scrollbar-hidden mt-6 flex flex-wrap justify-center py-6 lg:flex-nowrap lg:overflow-x-auto xl:flex-nowrap xl:overflow-x-auto"
             ref={productContainerRef}
           >
             {loader

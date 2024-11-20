@@ -42,7 +42,7 @@ export default function SignupFormDemo() {
     const selectedStateName =
       x?.find((state) => state.countryCode == stateId)?.label ?? "";
 
-    setValue("state", selectedStateName); // Set human-readable name
+    setValue("state", selectedStateName);
     setValue("city", "");
     setCityOptions(getCitiesForState(stateId));
   };
@@ -79,7 +79,6 @@ export default function SignupFormDemo() {
     } catch (error) {
       console.error("Failed to checkout:", error);
     }
-    // Handle form submission here
   };
 
   return (
@@ -175,15 +174,15 @@ export default function SignupFormDemo() {
                     id="state"
                     name="state"
                     options={states.map((state) => ({
-                      value: state.value.toString(), // Ensure value is a string
+                      value: state.value.toString(),
                       label: state.label,
                     }))}
                     // loader={loader}
                     value={field.value ? field.value : ""}
                     placeholder="Select your state/province"
                     onChange={(option) => {
-                      handleStateChange(option.value); // Call your existing state change handler
-                      field.onChange(option.value); // Update form state with the selected value
+                      handleStateChange(option.value);
+                      field.onChange(option.value);
                     }}
                     error={errors.state?.message}
                   />
@@ -202,14 +201,14 @@ export default function SignupFormDemo() {
                     id="city"
                     name="city"
                     options={cityOptions.map((city) => ({
-                      value: city.value.toString(), // Ensure value is a string
+                      value: city.value.toString(),
                       label: city.label,
                     }))}
                     // loader={loader}
                     value={field.value ? field.value : ""}
                     placeholder="Select your city"
                     error={errors.city?.message}
-                    onChange={(e) => field.onChange(e.value)} // Updated
+                    onChange={(e) => field.onChange(e.value)}
                   />
                 </div>
               )}

@@ -39,15 +39,17 @@ const GiftCategoryInfo: React.FC<GiftCategoryInfoProps> = ({ category }) => {
             </p>
           )}
           {category.history && (
-            <p className="mb-4 text-gray-600 dark:text-gray-300 text-justify">{category.history}</p>
+            <p className="mb-4 text-justify text-gray-600 dark:text-gray-300">
+              {category.history}
+            </p>
           )}
-          <p className="mb-4 font-semibold text-red-500 text-justify">
+          <p className="mb-4 text-justify font-semibold text-red-500">
             {category.featuredLocation}
           </p>
         </div>
 
         {category.featuredProducts && category.featuredProducts.length > 0 && (
-          <div className="w-full max-w-sm rounded-lg border dark:bg-slate-700 bg-red-100 p-4 shadow-md md:w-1/3">
+          <div className="w-full max-w-sm rounded-lg border bg-red-100 p-4 shadow-md dark:bg-slate-700 md:w-1/3">
             <h3 className="mb-2 text-center text-2xl font-bold text-red-600">
               Featured Products
             </h3>
@@ -77,7 +79,7 @@ const GiftCategoryInfo: React.FC<GiftCategoryInfoProps> = ({ category }) => {
         ))}
       </div>
 
-      <p className=" mt-6 text-center text-gray-700 dark:text-gray-300">
+      <p className="mt-6 text-center text-gray-700 dark:text-gray-300">
         <a href="/contact-us" className="text-red-600 underline">
           Contact us
         </a>{" "}

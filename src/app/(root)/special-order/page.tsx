@@ -1,12 +1,7 @@
 "use client";
 
-import { Controls, Player } from "@lottiefiles/react-lottie-player";
-// import Header from "~/components/header";
-import ProductGradient from "../../../components/productGradient";
 import { useRouter, useSearchParams } from "next/navigation";
-import BooksImage from "../../../../public/book.json";
 import { useAuthContext } from "~/Context/AuthContext";
-import type DataCart from "~/types/book";
 import { Suspense, useState } from "react";
 import SearchInput from "~/components/Fields/search";
 import { FiSearch } from "react-icons/fi";
@@ -17,9 +12,7 @@ import {
   SpecialOrderPayload,
 } from "~/types/specialOrderBook";
 import Spinner from "~/components/spinner";
-import Image from "next/image";
 import moment from "moment";
-import { FaCartPlus } from "react-icons/fa";
 import { motion } from "framer-motion";
 import BooknetForm from "~/components/Forms/booknet-form";
 import CheckoutForm from "~/components/Forms/checkout-form";
@@ -32,12 +25,12 @@ import SpecialOrderCard from "~/components/ui-components/SpecialOrderCard";
 import { AiOutlineArrowLeft, AiOutlineClose } from "react-icons/ai";
 
 interface ApiResponse {
-  // meta: PaginationData; // Adjust based on your actual structure
+  // meta: PaginationData;
   data: SpecialBookType[];
   status: boolean;
 }
 interface ApiBookDetailResponse {
-  // meta: PaginationData; // Adjust based on your actual structure
+  // meta: PaginationData;
   data: BookDetailType;
   status: boolean;
 }
@@ -46,27 +39,26 @@ const requestOptions: RequestInit = {
   method: "GET",
   headers: {
     Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-    "Content-Type": "application/json", // Optional, depending on your API
+    "Content-Type": "application/json",
   },
-  redirect: "follow", // Use the correct type for `redirect`
+  redirect: "follow",
 };
 
 const MyComponent = () => {
-  const { cartItems, addCartItems, removeCartItems } = useAuthContext();
-  const router = useRouter();
+  // const { cartItems, addCartItems, removeCartItems } = useAuthContext();
   const [loader, setLoader] = useState(false);
   const [data, setData] = useState<SpecialBookType[]>([]);
   const { toast } = useToast();
   const [dataDetail, setDataDetail] = useState<BookDetailType | null>(null);
   const [searchValue, setSearchValue] = useState<string>("");
-  const [bookeSearched, setBookSearched] = useState<SpecialBookType | null>(
+  const [bookSearched, setBookSearched] = useState<SpecialBookType | null>(
     null,
   );
   const [view, setView] = useState("checkout");
   const [showCheckout, setShowCheckout] = useState(false);
 
   const params = useSearchParams();
-  const detail = params.get("detail");
+  // const detail = params.get("detail");
 
   const fetchData = async (search: string) => {
     setLoader(true);
@@ -77,13 +69,11 @@ const MyComponent = () => {
       );
       const result: ApiResponse = (await response.json()) as ApiResponse;
 
-      // Check if result has the expected structure
       if (result?.status) {
         // setMeta(result.meta);
         setData(result.data);
       } else {
         console.error("Unexpected result structure fetchData:", result);
-        // Handle unexpected structure here
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -103,13 +93,11 @@ const MyComponent = () => {
       const result: ApiBookDetailResponse =
         (await response.json()) as ApiBookDetailResponse;
 
-      // Check if result has the expected structure
       if (result?.status) {
         // setMeta(result.meta);
         setDataDetail(result.data);
       } else {
         console.error("Unexpected result structure fetchDetail:", result);
-        // Handle unexpected structure here
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -117,8 +105,6 @@ const MyComponent = () => {
       setLoader(false);
     }
   };
-
-  // Handle add to cart
 
   const handleSearch = async () => {
     await fetchData(searchValue);
@@ -146,18 +132,17 @@ const MyComponent = () => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/special`,
         {
-          method: "POST", // Assuming you're making a POST request
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
-          body: JSON.stringify(requestOptions), // Send the payload as JSON
+          body: JSON.stringify(requestOptions),
         },
       );
 
       const result: ApiResponse = (await response.json()) as ApiResponse;
 
-      // Check if result has the expected structure
       if (result?.status) {
         toast({
           title: "Order Successful",
@@ -177,7 +162,6 @@ const MyComponent = () => {
             "Unfortunately, your order could not be processed. Please try again.",
         });
         console.error("Unexpected result structure placeOrderApiCall:", result);
-        // Handle unexpected structure here
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -202,7 +186,7 @@ const MyComponent = () => {
       member_id: null,
       special_order_items: [
         {
-          book_details: bookeSearched,
+          book_details: bookSearched,
           deal_id: null,
           quantity_item: 1.0,
           notes: "item",
@@ -253,8 +237,6 @@ const MyComponent = () => {
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center">
-        {/* {name}
-      <Button onClick={()=>ChangeName()}>change name</Button> */}
         {loader && <Spinner />}
         {!dataDetail && (
           <>
@@ -288,11 +270,10 @@ const MyComponent = () => {
 
         {dataDetail && (
           <div className="w-full rounded-lg bg-white p-4 pt-32 dark:bg-gray-800">
-            {/* Header with Close and Back buttons */}
             <div className="mb-6 flex items-center justify-between">
               <button
                 className="transform p-2 transition-transform duration-200 ease-in-out hover:scale-105 dark:text-gray-300 md:p-3 lg:p-4"
-                onClick={() => setDataDetail(null)} // Back button action
+                onClick={() => setDataDetail(null)}
               >
                 <AiOutlineArrowLeft size={24} />
               </button>
@@ -301,7 +282,7 @@ const MyComponent = () => {
               </h4>
               <button
                 className="transform p-2 transition-transform duration-200 ease-in-out hover:scale-105 dark:text-gray-300 md:p-3 lg:p-4"
-                onClick={() => setDataDetail(null)} // Close button action
+                onClick={() => setDataDetail(null)}
               >
                 <AiOutlineClose size={24} />
               </button>
@@ -314,7 +295,7 @@ const MyComponent = () => {
               {dataDetail?.shortDescription}
             </h5>
 
-            <div className="flex flex-col lg:items-start justify-between md:flex-row lg:justify-between">
+            <div className="flex flex-col justify-between md:flex-row lg:items-start lg:justify-between">
               {/* Details Section */}
               <div className="flex flex-col items-start justify-start gap-y-2 lg:w-1/2">
                 <motion.div
@@ -333,7 +314,7 @@ const MyComponent = () => {
                   />
                 </motion.div>
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
-                  {bookeSearched ? getPriceRange(bookeSearched) : ''}
+                  {bookSearched ? getPriceRange(bookSearched) : ""}
                 </span>
                 <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
                   <span className="font-bold">Format:</span>
@@ -376,7 +357,7 @@ const MyComponent = () => {
               </div>
 
               {/* Tabs Section */}
-              <div className=" mb-4 mt-10 lg:w-1/2 lg:px-10">
+              <div className="mb-4 mt-10 lg:w-1/2 lg:px-10">
                 {showCheckout && <Tabs tabs={tabs} />}
               </div>
             </div>

@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
@@ -13,7 +13,6 @@ import ProductCardSkeleton from "~/components/ui-components/ProductCardSkeleton"
 import {
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalProvider,
   useModal,
 } from "~/components/ui/animated-modal";
@@ -45,7 +44,7 @@ import { Player } from "@lottiefiles/react-lottie-player";
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
-  const isFirstRender = useRef(true);
+  // const isFirstRender = useRef(true);
   const [searchText, setSearchText] = useState("");
   const params = useSearchParams();
   const { setOpen } = useModal();
@@ -100,6 +99,7 @@ const MyComponent = () => {
       setName(name);
     }
   }, [params]);
+
   async function getProducts(page: number, id: number, category_type: number) {
     try {
       setLoader(true);
@@ -123,11 +123,9 @@ const MyComponent = () => {
 
   useEffect(() => {
     if (!subCategory) return;
-
-    // Determine subcategory details and parent category
     const genId = subCategory.find((item) => item.id == detail);
     const parentCat = subCategory.filter(
-      (item) => item.category_type_id == parent
+      (item) => item.category_type_id == parent,
     );
     const CategoryType = category?.find(
       (item) => item.category_type_id == parent,
@@ -161,11 +159,9 @@ const MyComponent = () => {
     selectedValues: Record<string, string | undefined>,
   ) => {
     return variations?.filter((variation) => {
-      // Check if every selected value matches in the variation's tags
       return Object.keys(selectedValues).every((tagName) => {
         const selectedValue = selectedValues[tagName];
 
-        // Only proceed if the selected value is not undefined
         if (!selectedValue) {
           return false;
         }
@@ -204,6 +200,7 @@ const MyComponent = () => {
       console.error("Failed to add item to cart:", error);
     }
   };
+
   const handleRemoveFromCart = async (item: DataCart) => {
     try {
       await removeCartItems(item);
@@ -240,8 +237,8 @@ const MyComponent = () => {
     )
       .filter(Boolean)
       .map((value) => ({
-        tagName, // include tagName in the result
-        dependencies, // include dependencies in the result
+        tagName,
+        dependencies,
         value: value!,
         label: value!,
       }));
@@ -288,6 +285,7 @@ const MyComponent = () => {
       setLoginAlert(true);
     }
   };
+
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
       typeof cartItems === "string"
@@ -322,9 +320,6 @@ const MyComponent = () => {
       : data;
     setDisplayData(x);
   };
-  // Calculate total pages based on filtered data and page size
-
-  // Get the data to be displayed for the current page
 
   useEffect(() => {
     filterResult();
@@ -356,10 +351,10 @@ const MyComponent = () => {
           newValues[tag] = undefined;
         });
       }
-
       return newValues;
     });
   };
+
   const handlePageChange = async (page: number) => {
     setCurrentPage(page);
     await getProducts(page, detail, 0);
@@ -425,7 +420,7 @@ const MyComponent = () => {
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     placeholder="Search"
-                    className="w-full border-b border-gray-300 rounded shadow-inner bg-gray-100 p-2 pl-8 text-sm focus:outline-none dark:bg-slate-700 dark:text-white"
+                    className="w-full rounded border-b border-gray-300 bg-gray-100 p-2 pl-8 text-sm shadow-inner focus:outline-none dark:bg-slate-700 dark:text-white"
                   />
                   <span className="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-white">
                     <FiSearch />
@@ -444,14 +439,12 @@ const MyComponent = () => {
                 // key={displayData ? displayData?.[0]?.item_id : "123"}
               >
                 {loader ? (
-                  // While loading, show skeleton loaders
                   Array.from({ length: 6 }, (_, index) => (
-                    <div key={index} className="p-2">
+                    <div key={index}>
                       <ProductCardSkeleton />
                     </div>
                   ))
                 ) : displayData && displayData.length > 0 ? (
-                  // When data is available, display the product cards
                   displayData.map((item: DataCart) => (
                     <ProductCard
                       key={item.item_id}
@@ -785,14 +778,9 @@ const MyComponent = () => {
                       );
                     },
                   )}
-
-                  {/* Display selected options */}
                 </div>
               )}
 
-              {/* {itemDetail?.item_id &&
-                !isItemInCart(itemDetail.item_id) &&
-                itemDetail?.stock?.quantity ? ( */}
               {itemDetail?.variations?.[0]?.variation_tags &&
                 Object.keys(selectedValues)[0] &&
                 filteredVariations?.[0]?.items_variable_items_id && (
@@ -816,15 +804,6 @@ const MyComponent = () => {
             </button>
           </div>
         </ModalContent>
-        {/* <ModalFooter className="gap-4">
-          <button
-            onClick={() => setOpen(false)}
-            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm dark:border-slate-950 dark:bg-slate-900"
-          >
-            Close
-          </button>
-         
-        </ModalFooter> */}
       </ModalBody>
       <AlertBox
         title="Login Your Account"

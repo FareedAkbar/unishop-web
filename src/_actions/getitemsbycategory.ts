@@ -4,26 +4,28 @@ import type DataCart from '~/types/book';
 import type { Pagination } from '~/types/pagination';
 import { SpecialItemsApiResponse } from '~/types/specialItems';
 
-
 interface ApiResponse {
-    // meta: PaginationData; // Adjust based on your actual structure
+    // meta: PaginationData; 
     data: DataCart[];
     meta: Pagination;
     status: boolean;
 }
+
 const requestOptions: RequestInit = {
     method: "GET",
     headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-        "Content-Type": "application/json", // Optional, depending on your API
+        "Content-Type": "application/json", 
     },
-    redirect: "follow", // Use the correct type for `redirect`
+    redirect: "follow", 
 };
+
 export async function getItemsByCategory(id: number | null, page: number,category_type: number): Promise<ApiResponse | boolean> {
     let x = ""
     if(category_type != 0){
         x = `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=0&book=0&category=${id}&page=${page}&images=1&detailed=1&special_tags_only=1&category_type=${category_type}` 
-    }else{
+    }
+    else {
         x = `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=0&book=0&category=${id}&page=${page}&images=1&detailed=1&special_tags_only=1`
     }
     try {
@@ -33,7 +35,6 @@ export async function getItemsByCategory(id: number | null, page: number,categor
         );
         const result: ApiResponse = (await response.json()) as ApiResponse;
 
-        // Check if result has the expected structure
         if (result?.status) {
             // setMeta(result.meta);
             console.log(result)
@@ -57,7 +58,6 @@ export async function getSpecialItems(id: number): Promise<SpecialItemsApiRespon
         );
         const result: SpecialItemsApiResponse = (await response.json()) as SpecialItemsApiResponse;
 
-        // Check if result has the expected structure
         if (result?.status) {
             // setMeta(result.meta);
             
@@ -71,7 +71,3 @@ export async function getSpecialItems(id: number): Promise<SpecialItemsApiRespon
         return false
     }
 };
-
-
-
-

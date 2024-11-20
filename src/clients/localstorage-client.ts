@@ -51,7 +51,7 @@ const STORAGE_MAPPER = {
   },
   BOOKNET_CUSTOMER_ID:{
     TYPE: {} as number | null,
-    KEY: "bookent_customer_id",
+    KEY: "booknet_customer_id",
     DEFAULT: null
   },
   FAV_ITEMS:{

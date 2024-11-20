@@ -2,9 +2,8 @@
 
 import type DataCart from '~/types/book';
 
-
 interface ApiResponse {
-    // meta: PaginationData; // Adjust based on your actual structure
+    // meta: PaginationData; 
     data: DataCart[];
     status: boolean;
 }
@@ -12,19 +11,20 @@ const requestOptions: RequestInit = {
     method: "GET",
     headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-        "Content-Type": "application/json", // Optional, depending on your API
+        "Content-Type": "application/json", 
     },
-    redirect: "follow", // Use the correct type for `redirect`
+    redirect: "follow", 
 };
+
 export async function getBooks(genre_id: number): Promise<ApiResponse | boolean> {
     try {
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/getBooksByGenreCat?category_id=${genre_id}&entries=1&images=1&detailed=1`,
             requestOptions,
         );
+
         const result: ApiResponse = (await response.json()) as ApiResponse;
 
-        // Check if result has the expected structure
         if (result?.status) {
             // setMeta(result.meta);
             console.log(result)
@@ -38,7 +38,3 @@ export async function getBooks(genre_id: number): Promise<ApiResponse | boolean>
         return false
     }
 };
-
-
-
-

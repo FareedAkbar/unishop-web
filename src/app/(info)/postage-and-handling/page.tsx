@@ -36,7 +36,7 @@ const MyComponent: React.FC = () => {
       </div>
 
       {/* Cards Section */}
-      <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
+      <div className="relative z-[5] -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
         {/* Card 1: Order Processing */}
         <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3 hover:scale-105 transition-all duration-300">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">

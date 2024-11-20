@@ -31,7 +31,7 @@ const DynamicInput = <T extends FieldValues>({
             <div>
               {options.map((option) => (
                 <div key={option.value}>
-                  <div className="border-t border-gray-300 my-4"></div>
+                  <div className="my-4 border-t border-gray-300" />
                   <label className="flex">
                     <input
                       type="radio"
@@ -41,7 +41,9 @@ const DynamicInput = <T extends FieldValues>({
                       className="form-radio"
                     />
                     <div className="flex flex-1">
-                      <span className="flex-1 text-center">{option.amount}</span>
+                      <span className="flex-1 text-center">
+                        {option.amount}
+                      </span>
                       <span className="flex-1 text-center">{option.type}</span>
                       <span className="flex-1 text-center">{option.label}</span>
                     </div>

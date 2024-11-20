@@ -1,7 +1,5 @@
 "use client";
 
-// import Header from "~/components/header";
-import SignupForm from "~/components/Forms/signup-form";
 import { Suspense } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -23,7 +21,6 @@ const MyComponent = () => {
           objectFit="cover"
           className="relative h-full w-full dark:hidden"
         />
-
         <Image
           src="/assets/images/home/home1.png"
           alt="background image flipped"
@@ -40,9 +37,14 @@ const MyComponent = () => {
             onClick={() => router.back()}
             className="fixed left-10 top-10 rounded-full bg-transparent p-2 shadow-md transition hover:bg-gray-200 dark:hover:bg-slate-700"
           >
-              <FaArrowLeft className="text-black dark:text-white" />
-              </button>
-          <CehckoutForm title="Welcome to Unishop" pushPath="/login" push subTitle="Create New Booknet Account"/>
+            <FaArrowLeft className="text-black dark:text-white" />
+          </button>
+          <CehckoutForm
+            title="Welcome to Unishop"
+            pushPath="/login"
+            push
+            subTitle="Create New Booknet Account"
+          />
         </div>
       </main>
     </div>

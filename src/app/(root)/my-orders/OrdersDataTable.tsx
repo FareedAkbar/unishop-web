@@ -17,29 +17,9 @@ interface dataTable {
 }
 
 const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
-  // Dummy data for orders
-  const generateDummyOrders = () => {
-    const orders = [];
-    const statuses = ["Completed", "Incompleted"];
-    for (let i = 1; i <= 100; i++) {
-      orders.push({
-        id: i,
-        orderId: `ORD-${i}`,
-        trackingId: `TRCK-${Math.random().toString(36).substring(2, 8)}`,
-        status: statuses[Math.floor(Math.random() * statuses.length)],
-        creationDate: new Date(
-          Date.now() - Math.floor(Math.random() * 10000000000),
-        ),
-        price: (Math.random() * 100).toFixed(2),
-      });
-    }
-    return orders;
-  };
   function getOrderStatusById(orderStatusId: number | null) {
     return orderStatus.find((status) => status.status_id === orderStatusId);
   }
-
-  // const tableData = generateDummyOrders();
 
   const columns = [
     { key: "order_id", header: "Order ID", isSortable: false },
@@ -51,7 +31,7 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: (info: GetSpecialOrder) => {
         const status = info.order_status;
-        const badgeColor = "bg-green-500"; // Simplified for now
+        const badgeColor = "bg-green-500";
         return (
           <span
             className={`inline-block rounded px-2 py-1 text-white ${badgeColor}`}

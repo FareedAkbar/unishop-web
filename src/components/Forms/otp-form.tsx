@@ -28,7 +28,10 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number,
+  ) => {
     // Move to the previous input if Backspace is pressed and the current input is empty
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       const prevInput = document.getElementById(`otp-input-${index - 1}`);
@@ -53,7 +56,8 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
           router.push("/");
         }
       } catch (err) {
-        const errorMessage = (err as Error).message || "An unknown error occurred";
+        const errorMessage =
+          (err as Error).message || "An unknown error occurred";
         setLoader(false);
         toast({
           title: "Login Failed",
@@ -86,7 +90,8 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
       }
       setLoader(false);
     } catch (err) {
-      const errorMessage = (err as Error).message || "An unknown error occurred";
+      const errorMessage =
+        (err as Error).message || "An unknown error occurred";
       setLoader(false);
       toast({
         title: "OTP Resend Failed",
@@ -97,15 +102,17 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
   };
 
   return (
-    <div className="flex items-center justify-center pt-20 lg:pt-0 lg:h-screen bg-transparent">
-      <div className="bg-white dark:bg-slate-800 p-8 border rounded-2xl max-w-sm w-full">
-        <h2 className="text-2xl font-bold text-center mb-4">OTP Verification</h2>
-        <p className="text-center mb-6 text-gray-600 dark:text-gray-300">
-          Enter the verification code we just sent to your email {loginResponse?.data.email}.
+    <div className="flex items-center justify-center bg-transparent pt-20 lg:h-screen lg:pt-0">
+      <div className="w-full max-w-sm rounded-2xl border bg-white p-8 dark:bg-slate-800">
+        <h2 className="mb-4 text-center text-2xl font-bold">
+          OTP Verification
+        </h2>
+        <p className="mb-6 text-center text-gray-600 dark:text-gray-300">
+          Enter the verification code we just sent to your email{" "}
+          {loginResponse?.data.email}.
         </p>
 
-        {/* OTP Inputs */}
-        <div className="flex justify-between mb-6">
+        <div className="mb-6 flex justify-between">
           {otp.map((value, index) => (
             <input
               key={index}
@@ -113,7 +120,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
               type="text"
               value={value}
               maxLength={1}
-              className="w-12 h-12 text-center text-2xl dark:bg-slate-700 font-semibold border-2 border-red-400 rounded-md focus:border-red-500 focus:outline-none"
+              className="h-12 w-12 rounded-md border-2 border-red-400 text-center text-2xl font-semibold focus:border-red-500 focus:outline-none dark:bg-slate-700"
               onChange={(e) => handleChange(e.target.value, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
               autoComplete="one-time-code"
@@ -121,8 +128,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
           ))}
         </div>
 
-        {/* Resend Link */}
-        <div className="text-center mb-4">
+        <div className="mb-4 text-center">
           <p className="text-gray-600 dark:text-gray-300">
             Don&apos;t Receive Code Yet?{" "}
             <a
@@ -135,11 +141,10 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
           </p>
         </div>
 
-        {/* Verify Button */}
         <Button
           title="Verify"
           onClick={handleVerify}
-          className="w-full h-12"
+          className="h-12 w-full"
           loading={loader}
         />
       </div>

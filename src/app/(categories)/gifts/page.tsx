@@ -1,8 +1,8 @@
 "use client";
+
 import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Spinner from "~/components/spinner";
-
 import { ModalProvider } from "~/components/ui/animated-modal";
 import { motion } from "framer-motion";
 import AlertBox from "~/components/alertBox/alert";
@@ -17,8 +17,8 @@ interface GiftCategory {
   mission?: string;
   featuredLocation: string;
   images: string[];
-  lastWord: string; // New attribute
-  featuredProducts: string[]; // New attribute
+  lastWord: string;
+  featuredProducts: string[];
 }
 
 const giftCategories: GiftCategory[] = [
@@ -27,14 +27,14 @@ const giftCategories: GiftCategory[] = [
     description:
       "Danielle Hulls is a photographer based in sunny Shellharbour, on the South Coast of New South Wales, Australia. She has been capturing the coastline from an aerial and land perspective for the better part of a decade, and printing her work to be displayed in homes, workspaces, and retail settings since 2021.",
     additionalInfo:
-      "Her work is much loved by locals and travellers for her unique perspective on the pristine coastline we call home.",
+      "Her work is much loved by locals and travelers for her unique perspective on the pristine coastline we call home.",
     featuredLocation:
       "Featured in store at UniShop, Danielle’s work showcases the finest views the Illawarra has to offer. ",
     images: [
       "/assets/images/gifts/danielle_hulls_photo1.jpg",
       "/assets/images/gifts/danielle_hulls_photo2.png",
     ],
-    lastWord: "Photography", // Last word of the name
+    lastWord: "Photography",
     featuredProducts: [
       "Prints",
       "Blank greeting cards",
@@ -55,7 +55,7 @@ const giftCategories: GiftCategory[] = [
       "/assets/images/gifts/marini_ferlazzo1.png",
       "/assets/images/gifts/marini_ferlazzo2.jpg",
     ],
-    lastWord: "Ferlazzo", // Last word of the name
+    lastWord: "Ferlazzo",
     featuredProducts: [
       "Mugs",
       "Coasters",
@@ -78,7 +78,7 @@ const giftCategories: GiftCategory[] = [
       "/assets/images/gifts/white_clay_mountain1.jpg",
       "/assets/images/gifts/white_clay_mountain2.jpg",
     ],
-    lastWord: "Mountain", // Last word of the name
+    lastWord: "Mountain",
     featuredProducts: [
       "Dangle earrings",
       "Stud earrings",
@@ -97,7 +97,7 @@ const giftCategories: GiftCategory[] = [
       "/assets/images/gifts/eliza_jade1.png",
       "/assets/images/gifts/eliza_jade2.png",
     ],
-    lastWord: "Candles", // Last word of the name
+    lastWord: "Candles",
     featuredProducts: ["Candles", "Room sprays", "Reed diffusers"],
   },
 ];
@@ -138,7 +138,6 @@ const MyComponent = () => {
       >
         {matchedCategory ? <GiftCategoryInfo category={matchedCategory} /> : ""}
       </motion.main>
-
       <AlertBox
         title="Login Your Account"
         description="Please login to add item to wishlist"

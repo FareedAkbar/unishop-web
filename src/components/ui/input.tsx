@@ -5,7 +5,7 @@ import { useMotionTemplate, useMotionValue, motion } from "framer-motion";
 
 const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   ({ className, type = "text", ...props }, ref) => {
-    const radius = 100; // Radius of the hover effect
+    const radius = 100; 
     const [visible, setVisible] = React.useState(false);
 
     const mouseX = useMotionValue(0);

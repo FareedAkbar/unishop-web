@@ -1,11 +1,11 @@
 "use server";
 
-import type { OrderStatusResponse } from '~/types/getSpecialBackOrders';
+// import type { OrderStatusResponse } from '~/types/getSpecialBackOrders';
 import type { ItemSpecialTag } from '~/types/productTags';
 
 
 interface ApiResponseStatus {
-    // meta: PaginationData; // Adjust based on your actual structure
+    // meta: PaginationData; 
     data: ItemSpecialTag[];
     status: boolean;
 }
@@ -13,11 +13,10 @@ const requestOptions: RequestInit = {
     method: "GET",
     headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-        "Content-Type": "application/json", // Optional, depending on your API
+        "Content-Type": "application/json", 
     },
-    redirect: "follow", // Use the correct type for `redirect`
+    redirect: "follow", 
 };
-
 
 export async function getProductTags(): Promise<ApiResponseStatus | boolean> {
     try {
@@ -27,14 +26,12 @@ export async function getProductTags(): Promise<ApiResponseStatus | boolean> {
         );
         const result: ApiResponseStatus =
             (await response.json()) as ApiResponseStatus;
-        // Check if result has the expected structure
         if (result?.status) {
             // setMeta(result.meta);
             return result
 
         } else {
             console.error("Unexpected result structure getProductTags:", result);
-            // Handle unexpected structure here
             return result
         }
     } catch (error) {
@@ -42,7 +39,3 @@ export async function getProductTags(): Promise<ApiResponseStatus | boolean> {
         return false
     }
 };
-
-
-
-

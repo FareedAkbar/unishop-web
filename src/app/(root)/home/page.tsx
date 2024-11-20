@@ -8,12 +8,12 @@ import ProductList from "~/components/ui-components/ProductList";
 import { FlipWords } from "~/components/ui/flip-words";
 import AboutSection from "./AboutSection";
 import { useAuthContext } from "~/Context/AuthContext";
-import BackgroundBubbles from "~/components/ui-components/BackgroundBubbles";
 import { getSpecialItems } from "~/_actions/getitemsbycategory";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaLeftLong, FaRightLong } from "react-icons/fa6";
 import { ItemSpecialTag } from "~/types/productTags";
 import { SpecialItemsForHomePage } from "~/types/specialItems";
+import BackgroundSquares from "~/components/ui-components/BackgroundSquares";
 
 const HomePage: React.FC = () => {
   const { productTags } = useAuthContext();
@@ -57,36 +57,35 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     console.log(process.env.NEXT_PUBLIC_PASSKEY);
     if (productTags && productTags?.length < 0) return;
-   
-      const loadData = async (Tag: ItemSpecialTag) => {
-        const x = await getSpecialItems(Tag.item_special_tags_id);
-        if (typeof x != "boolean" && x.status && x.data) {
-          if (x.data?.[0]) {
-            const newData = {
-              title: Tag.tag_name,
-              data: x?.data,
-            };
-            setSpecialItems((prevData) => {
-              // If the previous data is null, initialize it as an array
-              const z = prevData?.find((item) => item.title == Tag.tag_name);
-              if (z) {
-                return prevData;
-              } else {
-                if (!prevData) return [newData];
 
-                // Otherwise, return a new array with the previous data and the new item
-                return [...prevData, newData];
-              }
-            });
-          }
+    const loadData = async (Tag: ItemSpecialTag) => {
+      const x = await getSpecialItems(Tag.item_special_tags_id);
+      if (typeof x != "boolean" && x.status && x.data) {
+        if (x.data?.[0]) {
+          const newData = {
+            title: Tag.tag_name,
+            data: x?.data,
+          };
+          setSpecialItems((prevData) => {
+            // If the previous data is null, initialize it as an array
+            const z = prevData?.find((item) => item.title == Tag.tag_name);
+            if (z) {
+              return prevData;
+            } else {
+              if (!prevData) return [newData];
+
+              // Otherwise, return a new array with the previous data and the new item
+              return [...prevData, newData];
+            }
+          });
         }
-      };
-      productTags?.map((item) => {
-        loadData(item).catch((error) => {
-          console.error("Failed to load data in useEffect:", error);
-        });
+      }
+    };
+    productTags?.map((item) => {
+      loadData(item).catch((error) => {
+        console.error("Failed to load data in useEffect:", error);
       });
-    
+    });
   }, [productTags]);
 
   // Auto-slide functionality
@@ -123,9 +122,9 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 pt-32 dark:bg-slate-800 lg:pt-24">
-      <BackgroundBubbles />
+      <BackgroundSquares />
 
-      <div className="container mx-auto flex justify-center">
+      <div className="flex justify-center">
         <ImageSlider />
       </div>
 
@@ -133,7 +132,7 @@ const HomePage: React.FC = () => {
         <div className="self-center text-xl lg:text-5xl">
           <FlipWords
             words={["Imagine", "Create", "Inspire", "Transform"]}
-            className="text-red-500 dark:text-red-500 text-[22px] lg:text-5xl"
+            className="text-[22px] text-red-500 dark:text-red-500 lg:text-5xl"
           />
           your reading adventure!
         </div>
@@ -141,16 +140,16 @@ const HomePage: React.FC = () => {
 
       <div className="relative w-full">
         <div className="flex">
-          <div className="hidden lg:block lg:ml-20">
+          <div className="hidden lg:ml-20 lg:block">
             <CategoriesSidebar />
           </div>
 
           <div className="mx-auto w-full px-5 pb-10">
-            <div className="relative  lg:ml-64">
+            <div className="relative min-h-[350px] lg:ml-64">
               <AnimatePresence initial={false} mode="wait" custom={direction}>
                 <motion.div
                   key={currentIndex}
-                  className={`flex flex-wrap lg:gap-6 transition-none lg:flex-nowrap lg:overflow-x-hidden lg:transition-all`}
+                  className={`flex flex-wrap transition-none lg:flex-nowrap lg:gap-6 lg:overflow-x-hidden lg:transition-all`}
                   {...(isLargeScreen && {
                     custom: direction,
                     initial: "enter",
@@ -162,10 +161,7 @@ const HomePage: React.FC = () => {
                 >
                   {/* Render all lists for small screens */}
                   {specialItems?.map((item, index) => (
-                    <div
-                      key={index}
-                      className="w-full lg:hidden" // Show this only on small screens
-                    >
+                    <div key={index} className="w-full lg:hidden">
                       <ProductList
                         title={item.title}
                         width="w-full"

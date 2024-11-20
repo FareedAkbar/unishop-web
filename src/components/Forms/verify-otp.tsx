@@ -54,7 +54,7 @@ export default function VerifyOTPForm({ loginResponse }: LoginFormProps) {
       toast({
         title: "Login Failed",
         variant: "destructive",
-        description: errorMessage, // Use the error message from the thrown error
+        description: errorMessage, 
       });
       console.log(err);
     }

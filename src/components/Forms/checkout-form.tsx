@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import type { SubmitHandler } from "react-hook-form"; // Use import type
+import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
 import { Label } from "../ui/label";
@@ -31,12 +31,19 @@ interface checkout {
   push?: boolean;
   disabled?: boolean;
   handleData?: (data: CheckoutForm) => void;
-  title: string,
+  title: string;
   subTitle: string;
-  pushPath?: string
+  pushPath?: string;
 }
 
-export default function CehckoutForm({ push, handleData, disabled = false, title, subTitle,pushPath }: checkout) {
+export default function CehckoutForm({
+  push,
+  handleData,
+  disabled = false,
+  title,
+  subTitle,
+  pushPath,
+}: checkout) {
   // const [stateOptions, setStateOptions] = useState<
   //   { value: number; label: string }[]
   // >([]);
@@ -112,8 +119,6 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
   };
 
   const onSubmit: SubmitHandler<CehckoutFormValues> = async (data) => {
-    // Map the selected state and city IDs to their names
-
     // Get the human-readable state name based on the selected state ID
     const selectedStateName = data.state
       ? (states.find((state) => state.value.toString() === data.state)?.label ??
@@ -153,15 +158,15 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
           setLoader(false);
           if (res.status) {
             if (push && pushPath) {
-              console.log(res?.data)
-              void checkoutFormData(res?.data).then(()=>router.push(pushPath));
-              
+              console.log(res?.data);
+              void checkoutFormData(res?.data).then(() =>
+                router.push(pushPath),
+              );
             }
             if (!push && handleData) {
               handleData(res?.data);
             }
           }
-          
         })
         .catch((err) => {
           setLoader(false);
@@ -175,8 +180,6 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
       setLoader(false);
       console.error("Failed to checkout:", error);
     }
-
-    // Handle form submission here
   };
 
   return (
@@ -185,9 +188,8 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
         {title}
       </h2>
       <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-       {subTitle}
+        {subTitle}
       </p>
-
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">

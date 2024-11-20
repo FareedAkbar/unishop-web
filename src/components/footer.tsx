@@ -1,16 +1,6 @@
 "use client";
-import {
-  FaEnvelope,
-  FaFacebookF,
-  FaMapMarkerAlt,
-  FaPhoneAlt,
-} from "react-icons/fa";
-import {
-  AiOutlineTwitter,
-  AiFillYoutube,
-  AiOutlineInstagram,
-} from "react-icons/ai";
-import { BiLogoPinterestAlt } from "react-icons/bi";
+import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
+import { AiOutlineInstagram } from "react-icons/ai";
 import Logo from "../../public/pulseFooter2.png";
 import Image from "next/image";
 import Link from "next/link";
@@ -42,7 +32,7 @@ function Footer() {
   const pathname = usePathname();
 
   return (
-    <footer className="bg-white border-t dark:bg-slate-900">
+    <footer className="border-t bg-white dark:bg-slate-900">
       <div className="container mx-auto pb-2 pt-8">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {/* logo side */}

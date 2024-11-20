@@ -73,8 +73,6 @@ export default function BooknetForm({
       setLoader(false);
       console.error("Failed to checkout:", error);
     }
-
-    // Handle form submission here
   };
 
   return (

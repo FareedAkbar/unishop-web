@@ -22,10 +22,8 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         {/* <Suspense fallback={<Loading />}> */}
         <AuthProvider>
-          {/* <BackgroundBeamsWithCollision> */}
           {children}
           <Toaster />
-          {/* </BackgroundBeamsWithCollision> */}
         </AuthProvider>
         {/* </Suspense> */}
       </body>

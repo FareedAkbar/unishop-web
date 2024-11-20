@@ -2,10 +2,10 @@ import Image from "next/image";
 import React from "react";
 
 // Sample images - replace these with your actual image URLs
-const textBooksImage = '/images/home/textbook.png'; // Ensure it starts with a leading slash
-const stationaryImage = '/images/home/stationary.png'; // Ensure it starts with a leading slash
-const clothsImage = '/images/home/cloths.png'; // Ensure it starts with a leading slash
-const graduationGiftImage = '/images/home/grad.png'; // Ensure it starts with a leading slash
+const textBooksImage = "/images/home/textbook.png";
+const stationaryImage = "/images/home/stationary.png";
+const clothsImage = "/images/home/cloths.png";
+const graduationGiftImage = "/images/home/grad.png";
 
 const NewArrivals: React.FC = () => {
   return (
@@ -21,7 +21,6 @@ const NewArrivals: React.FC = () => {
         {/* Text Books */}
         <div className="group relative">
           <Image
-           
             src={textBooksImage}
             alt="Text Books"
             className="h-64 w-full rounded-lg object-cover"
@@ -32,7 +31,7 @@ const NewArrivals: React.FC = () => {
             <h4 className="text-xl font-semibold text-white">Text Books</h4>
             <p className="text-white">
               Discover a world of knowledge with our extensive collection of
-              textbooks at Unibar.
+              textbooks at Unishop.
             </p>
             <a href="#" className="text-red-500 underline">
               Shop Now
@@ -43,7 +42,7 @@ const NewArrivals: React.FC = () => {
         {/* Stationary & Merch */}
         <div className="group relative">
           <Image
-           width={1000}
+            width={1000}
             height={1000}
             src={stationaryImage}
             alt="Stationary & Merch"
@@ -65,7 +64,7 @@ const NewArrivals: React.FC = () => {
         {/* Cloths */}
         <div className="group relative">
           <Image
-           width={1000}
+            width={1000}
             height={1000}
             src={clothsImage}
             alt="Cloths"
@@ -83,7 +82,7 @@ const NewArrivals: React.FC = () => {
         {/* Graduation Gift */}
         <div className="group relative">
           <Image
-           width={1000}
+            width={1000}
             height={1000}
             src={graduationGiftImage}
             alt="Graduation Gift"

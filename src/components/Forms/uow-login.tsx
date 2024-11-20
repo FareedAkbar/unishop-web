@@ -11,11 +11,10 @@ import { LoginSchema } from "./schema";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useToast } from "~/hooks/use-toast";
 import { LoginResponse } from "~/types/loginResponse";
-import Spinner from "../spinner";
-import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+// import Spinner from "../spinner";
+// import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import Button from "../ui-components/Button";
 
-// Define the type of form inputs
 type FormValues = z.infer<typeof LoginSchema>;
 interface LoginFormProps {
   setView: (payload: string) => void;
@@ -26,7 +25,6 @@ interface LoginFormProps {
 export default function SignupFormDemo({
   setView,
   setLoginResponse,
-
 }: LoginFormProps) {
   const { login, sendOTP } = useAuthContext();
   const [loader, setLoader] = useState(false);
@@ -44,8 +42,6 @@ export default function SignupFormDemo({
     try {
       setLoader(true);
       const res = await login(data);
-
-
       if (typeof res !== "boolean" && res.status) {
         const response = await sendOTP({
           customer_id: res?.data.customer_id,
@@ -114,12 +110,11 @@ export default function SignupFormDemo({
             onClick={() => {
               //
             }}
-
             width="w-full"
             type="submit"
             loading={loader}
           />
-          <div className="mt-2 flex flex-col items-center justify-center  sm:flex-row">
+          <div className="mt-2 flex flex-col items-center justify-center sm:flex-row">
             <p>{`I don't have an account, `}</p>
             <Link href="signup" className="ml-1 text-red-500">
               signup
@@ -144,15 +139,6 @@ export default function SignupFormDemo({
     </div>
   );
 }
-
-const BottomGradient = () => {
-  return (
-    <>
-      <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
-      <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
-    </>
-  );
-};
 
 const LabelInputContainer = ({
   children,

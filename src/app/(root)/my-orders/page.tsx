@@ -28,11 +28,10 @@ import type {
   UpdateSpecialOrderPayload,
 } from "~/types/getSpecialBackOrders";
 
-import type PayloadForTrasactionLink from "~/types/payloadForTrasactionLink";
-import OrdersTable from "./orderstable";
 import OrdersDataTable from "./OrdersDataTable";
 import { ModalProvider } from "~/components/ui/animated-modal";
 import { getMyOrders, getOrderStatus } from "~/_actions/my_orders";
+import PayloadForTransactionLink from "~/types/payloadForTransactionLink";
 
 const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM`;
 
@@ -40,9 +39,9 @@ const requestOptions: RequestInit = {
   method: "GET",
   headers: {
     Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-    "Content-Type": "application/json", // Optional, depending on your API
+    "Content-Type": "application/json",
   },
-  redirect: "follow", // Use the correct type for `redirect`
+  redirect: "follow",
 };
 
 const MyComponent = () => {
@@ -60,23 +59,23 @@ const MyComponent = () => {
 
   const { toast } = useToast();
   const [transactionData, setTransactionData] =
-    useState<trasactionResponse | null>(null);
+    useState<transactionResponse | null>(null);
   const [isOpenPaymentAlert, setIsOpenPaymentAlert] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  type trasactionResponse = {
+  type transactionResponse = {
     amount: number | null;
     customer_id: number | null;
     link: string;
     unique_id: number | null;
   };
-  interface ApiResponseForTrasactionLink {
+  interface ApiResponseForTransactionLink {
     status: boolean;
-    data: trasactionResponse;
+    data: transactionResponse;
     message: string;
   }
   const getLinkForPayment = async (
-    requestOptions: PayloadForTrasactionLink,
+    requestOptions: PayloadForTransactionLink,
   ) => {
     try {
       const response = await fetch(
@@ -91,8 +90,8 @@ const MyComponent = () => {
         },
       );
 
-      const result: ApiResponseForTrasactionLink =
-        (await response.json()) as ApiResponseForTrasactionLink;
+      const result: ApiResponseForTransactionLink =
+        (await response.json()) as ApiResponseForTransactionLink;
 
       // Check if result has the expected structure
       if (result?.status) {
@@ -186,7 +185,6 @@ const MyComponent = () => {
       } catch (error) {
         console.error("Failed to load data:", error);
         setLoader(false);
-        // Optionally set an error state here
       }
     };
 
@@ -230,17 +228,17 @@ const MyComponent = () => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/special/web`,
         {
-          method: "PUT", // Assuming you're making a POST request
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(requestOptions), // Send the payload as JSON
+          body: JSON.stringify(requestOptions),
         },
       );
 
-      const result: ApiResponseForTrasactionLink =
-        (await response.json()) as ApiResponseForTrasactionLink;
+      const result: ApiResponseForTransactionLink =
+        (await response.json()) as ApiResponseForTransactionLink;
 
       // Check if result has the expected structure
       if (result?.status) {
@@ -261,7 +259,6 @@ const MyComponent = () => {
             "Unfortunately, your order could not be processed. Please try again.",
         });
         console.error("Unexpected result structure placeOrderApiCall:", result);
-        // Handle unexpected structure here
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -271,8 +268,6 @@ const MyComponent = () => {
   };
 
   async function convertPayload() {
-    // Check if inputArray is empty
-
     if (
       !Array.isArray(selectedItem?.special_order_items) ||
       selectedItem?.special_order_items.length === 0
@@ -281,7 +276,7 @@ const MyComponent = () => {
         "Input array is empty or not an array:",
         selectedItem?.special_order_items,
       );
-      return []; // Return an empty array if no valid input
+      return [];
     }
 
     const x = selectedItem?.special_order_items.map((item) => {
@@ -293,7 +288,7 @@ const MyComponent = () => {
         variable_id: item.variable_id,
         item_price: item.item_price,
         discounted_price: item.discounted_price,
-        deal_id: null, // Assuming deal_id is null since it's not provided
+        deal_id: null,
       };
     });
 
@@ -412,48 +407,11 @@ const MyComponent = () => {
     setIsOpenPaymentAlert(false);
   };
 
-  // const tabs = [
-  //   {
-  //     title: "A list of your recent Special Orders.",
-  //     value: "specialOrders",
-  //     hovering: false,
-  //     content: (
-  //       <OrdersTable
-  //         handlePayment={(x) => handlePayment(x)}
-  //         data={dataSpecialOrders}
-  //         orderStatus={orderStatus}
-  //         title="specialOrders"
-  //       />
-  //     ),
-  //   },
-  //   {
-  //     title: "A list of your recent Orders.",
-  //     value: "orders",
-  //     hovering: false,
-  //     content: (
-  //       <OrdersTable
-  //         handlePayment={(x) => handlePayment(x)}
-  //         data={dataOrders}
-  //         orderStatus={orderStatus}
-  //         title="orders"
-  //       />
-  //     ),
-  //   },
-  // ];
-
   return (
     <div>
       <main className="mt-24 flex min-h-screen flex-col items-center">
-        {/* {name}
-      <Button onClick={()=>ChangeName()}>change name</Button> */}
         {loader && <Spinner />}
         <div className="w-full p-4">
-          {/* <OrdersTable
-            handlePayment={(x) => handlePayment(x)}
-            data={dataOrders}
-            orderStatus={orderStatus}
-            title="orders"
-          /> */}
           <OrdersDataTable
             key={orderStatus.toString()}
             data={dataOrders}
@@ -465,9 +423,7 @@ const MyComponent = () => {
         <>
           <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
             <div className="relative mx-auto my-6 w-auto">
-              {/*content*/}
               <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
-                {/*header*/}
                 <div className="border-blueGray-200 flex items-start justify-between rounded-t border-b border-solid p-5">
                   <h3 className="text-3xl font-semibold"></h3>
                   <button
@@ -479,7 +435,6 @@ const MyComponent = () => {
                     </span>
                   </button>
                 </div>
-                {/*body*/}
                 <div className="flex h-screen w-screen items-center justify-center">
                   {loading && (
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
@@ -491,10 +446,9 @@ const MyComponent = () => {
                     className="h-screen w-screen border-none"
                     loading="lazy"
                     onLoad={() => setLoading(false)}
-                    sandbox="allow-scripts allow-same-origin" // Add this only if necessary
-                  ></iframe>
+                    sandbox="allow-scripts allow-same-origin"
+                  />
                 </div>
-                {/*footer*/}
                 <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">
                   <button
                     className="background-transparent mb-1 mr-1 px-6 py-2 text-sm font-bold uppercase text-red-500 outline-none transition-all duration-150 ease-linear focus:outline-none"
@@ -514,7 +468,7 @@ const MyComponent = () => {
               </div>
             </div>
           </div>
-          <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
+          <div className="fixed inset-0 z-40 bg-black opacity-25" />
         </>
       ) : null}
     </div>

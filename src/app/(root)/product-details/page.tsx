@@ -1,8 +1,7 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { FaArrowLeft, FaCartPlus, FaRegStar, FaStar } from "react-icons/fa";
+import { FaRegStar, FaStar } from "react-icons/fa";
 import moment from "moment";
 import Select from "~/components/Fields/select";
 import type { Media, SpecialTag, Variation, VariationTag } from "~/types/book";
@@ -10,11 +9,7 @@ import type DataCart from "~/types/book";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import ReviewForm from "~/components/Forms/ReviewForm";
-import {
-  HiArrowNarrowLeft,
-  HiOutlineMinus,
-  HiOutlinePlus,
-} from "react-icons/hi";
+import { HiArrowNarrowLeft } from "react-icons/hi";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import ProductsSection from "~/components/ui-components/ProductsSection";
@@ -22,13 +17,11 @@ import type { ReviewData } from "~/types/reviews";
 import { useToast } from "~/hooks/use-toast";
 import { getReviewsApi, submitReviewsApi } from "~/_actions/reviews";
 import AlertBox from "~/components/alertBox/alert";
-import { BsCartXFill, BsFillCartCheckFill } from "react-icons/bs";
+import { BsFillCartCheckFill } from "react-icons/bs";
 import { getBooks } from "~/_actions/getbooks";
 import { ItemSpecialTag } from "~/types/productTags";
 import { ModalProvider } from "~/components/ui/animated-modal";
 import Spinner from "~/components/spinner";
-
-
 
 const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
@@ -41,7 +34,7 @@ const MyComponent = () => {
     productDetail,
     increaseCartItemQuantity,
     checkoutData,
-    productTags
+    productTags,
   } = useAuthContext();
   const itemDetail = productDetail;
   const [category, setCategory] = useState<string>("");
@@ -85,7 +78,8 @@ const MyComponent = () => {
         ? (JSON.parse(cartItems) as DataCart[])
         : cartItems!;
     return newItems.findIndex(
-      (cartItem: DataCart) => cartItem.selected_variation?.items_variable_items_id === itemId,
+      (cartItem: DataCart) =>
+        cartItem.selected_variation?.items_variable_items_id === itemId,
     ) > -1
       ? true
       : false;
@@ -93,8 +87,7 @@ const MyComponent = () => {
   async function getProducts(page: number) {
     try {
       setLoader(true);
-      const x = await getItemsByCategory(parseInt(category) ?? 0, page,0);
-
+      const x = await getItemsByCategory(parseInt(category) ?? 0, page, 0);
 
       if (typeof x !== "boolean" && x.status) {
         setProducts(x.data);
@@ -147,7 +140,6 @@ const MyComponent = () => {
       } catch (error) {
         console.error("Failed to load data:", error);
         setLoader(false);
-        // Optionally set an error state here
       }
     };
     loadData().catch((error) => {
@@ -177,13 +169,11 @@ const MyComponent = () => {
       await getReviews(itemDetail?.item_id);
 
       smoothScrollTo(0, 1500);
-
     };
     loadData().catch((error) => {
       console.error("Failed to load data in useEffect:", error);
     });
   }, [itemDetail]);
-
 
   const handleSelectChange = (
     tagName: string,
@@ -192,12 +182,10 @@ const MyComponent = () => {
     setSelectedValues((prevValues) => {
       const newValues = { ...prevValues, [tagName]: selectedOption.value };
 
-      // Find the current tag's index
       const tagIndex = itemDetail?.variations?.[0]?.variation_tags.findIndex(
         (tag) => tag.items_variations_tags_name === tagName,
       );
 
-      // Reset only the dependent dropdowns
       if (tagIndex !== undefined && tagIndex !== -1) {
         const tagsToReset = itemDetail?.variations?.[0]?.variation_tags
           .slice(tagIndex + 1)
@@ -206,7 +194,6 @@ const MyComponent = () => {
           newValues[tag] = undefined;
         });
       }
-
       return newValues;
     });
   };
@@ -225,7 +212,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -239,8 +226,8 @@ const MyComponent = () => {
     )
       .filter(Boolean)
       .map((value) => ({
-        tagName, // include tagName in the result
-        dependencies, // include dependencies in the result
+        tagName,
+        dependencies,
         value: value!,
         label: value!,
       }));
@@ -258,7 +245,7 @@ const MyComponent = () => {
       Object.assign(x, { selectedValues: selectedValues });
     }
     try {
-      setSelectedValues({})
+      setSelectedValues({});
       await addCartItems(x);
     } catch (error) {
       console.error("Failed to add item to cart:", error);
@@ -381,7 +368,7 @@ const MyComponent = () => {
 
   return (
     <div className="p-6 pt-32">
-      <div className="flex items-center justify-between lg:px-10 pb-2">
+      <div className="flex items-center justify-between pb-2 lg:px-10">
         {/* Left Arrow */}
         <div>
           <button
@@ -392,16 +379,15 @@ const MyComponent = () => {
           </button>
         </div>
 
-
         {/* Title */}
         <h4 className="flex-1 text-center font-serif text-lg font-bold capitalize text-red-500 md:text-3xl">
           {itemDetail?.book_title ?? itemDetail?.item_name}
         </h4>
 
         {/* Invisible Placeholder */}
-        <div className="w-10"></div>
+        <div className="w-10" />
       </div>
-      <h6 className="capitalize pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
+      <h6 className="pb-2 text-center text-sm font-bold capitalize text-neutral-600 dark:text-neutral-100 md:text-xl">
         {itemDetail?.category_detail?.category_name}
       </h6>
       <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
@@ -467,11 +453,11 @@ const MyComponent = () => {
               <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                 ${" "}
                 {itemDetail?.variations?.[0] &&
-                  filteredVariations?.[0]?.items_variable_items_sale_price
+                filteredVariations?.[0]?.items_variable_items_sale_price
                   ? filteredVariations?.[0]?.items_variable_items_sale_price
                   : itemDetail?.variations?.[0]
                     ? itemDetail?.variations?.[0]
-                      .items_variable_items_sale_price
+                        .items_variable_items_sale_price
                     : itemDetail?.item_sale_price}
               </span>
             ) : (
@@ -543,7 +529,9 @@ const MyComponent = () => {
             </div>
           )}
 
-          {itemDetail?.pages !== undefined && itemDetail.pages !== null && itemDetail.pages ? (
+          {itemDetail?.pages !== undefined &&
+          itemDetail.pages !== null &&
+          itemDetail.pages ? (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                 Number of Pages:
@@ -552,7 +540,9 @@ const MyComponent = () => {
                 {itemDetail.pages}
               </span>
             </div>
-          ) : ''}
+          ) : (
+            ""
+          )}
 
           {itemDetail?.publisher?.publisher_name && (
             <div className="flex items-center justify-center">
@@ -666,10 +656,11 @@ const MyComponent = () => {
                         {options.map((option) => (
                           <button
                             key={option.value}
-                            className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
-                              ? "bg-red-500 text-white"
-                              : "border-red-500 bg-white dark:bg-slate-700"
-                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            className={`min-w-10 rounded border p-1 text-center ${
+                              selectedValues[tagName] === option.value
+                                ? "bg-red-500 text-white"
+                                : "border-red-500 bg-white dark:bg-slate-700"
+                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -696,15 +687,28 @@ const MyComponent = () => {
               })}
             </div>
           )}
-          {(itemDetail?.variations?.[0]) && filteredVariations?.[0]?.items_variable_items_id && Object.values(selectedValues).length == itemDetail?.tag_links?.length &&
-            isVariableItemInCart(filteredVariations?.[0]?.items_variable_items_id) ? (
-            <span className="pl-1 text-green-500 dark:text-green-500">
+          {itemDetail?.variations?.[0] &&
+          filteredVariations?.[0]?.items_variable_items_id &&
+          Object.values(selectedValues).length ==
+            itemDetail?.tag_links?.length &&
+          isVariableItemInCart(
+            filteredVariations?.[0]?.items_variable_items_id,
+          ) ? (
+            <span className="pl-1 text-green-500">
               Already added to your cart
             </span>
-          ) : ""}
-          {(itemDetail?.variations?.[0]) &&
-            !isVariableItemInCart(filteredVariations?.[0]?.items_variable_items_id ?? -1) && (!Object.values(selectedValues).some(value => value === undefined)) && Object.values(selectedValues).length == itemDetail?.tag_links?.length &&
-            (itemDetail?.variations?.[0]?.items_variable_items_sale_price ?? itemDetail?.item_sale_price) ? (
+          ) : (
+            ""
+          )}
+          {itemDetail?.variations?.[0] &&
+          !isVariableItemInCart(
+            filteredVariations?.[0]?.items_variable_items_id ?? -1,
+          ) &&
+          !Object.values(selectedValues).some((value) => value === undefined) &&
+          Object.values(selectedValues).length ==
+            itemDetail?.tag_links?.length &&
+          (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
+            itemDetail?.item_sale_price) ? (
             <button
               className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
               onClick={() => handleAddToCart(itemDetail)}
@@ -712,7 +716,9 @@ const MyComponent = () => {
               <BsFillCartCheckFill className="text-lg" />
               <div className="pl-2">Add to Cart</div>
             </button>
-          ) : itemDetail && (!itemDetail?.variations?.[0]) && !isItemInCart(itemDetail.item_id) ? (
+          ) : itemDetail &&
+            !itemDetail?.variations?.[0] &&
+            !isItemInCart(itemDetail.item_id) ? (
             <button
               className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
               onClick={() => handleAddToCart(itemDetail)}
@@ -720,29 +726,30 @@ const MyComponent = () => {
               <BsFillCartCheckFill className="text-lg" />
               <div className="pl-2">Add to Cart</div>
             </button>
-          ) : ""}
+          ) : (
+            ""
+          )}
         </div>
       </div>
       {/* Reviews Section */}
-      <div className="mt-16 flex flex-col gap-8  md:flex-row">
+      <div className="mt-16 flex flex-col gap-8 md:flex-row">
         <div className="max-h-[477px] rounded-lg border p-6 shadow-md dark:bg-slate-800 md:w-1/2">
           <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
           {getReviewsLoader ? (
-            // Skeleton loader
             <ScrollArea className="h-[300px]">
               {Array.from({ length: 3 }).map((_, index) => (
                 <div key={index} className="mb-4 animate-pulse border-b pb-2">
-                  <div className="mb-2 h-4 w-1/3 rounded bg-gray-300 dark:bg-gray-600"></div>
-                  <div className="mb-2 h-3 w-2/3 rounded bg-gray-200 dark:bg-gray-500"></div>
+                  <div className="mb-2 h-4 w-1/3 rounded bg-gray-300 dark:bg-gray-600" />
+                  <div className="mb-2 h-3 w-2/3 rounded bg-gray-200 dark:bg-gray-500" />
                   <div className="flex items-center gap-1 py-2">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <div
                         key={i}
                         className="h-4 w-4 rounded-full bg-gray-300 dark:bg-gray-600"
-                      ></div>
+                      />
                     ))}
                   </div>
-                  <div className="h-3 w-1/4 rounded bg-gray-200 dark:bg-gray-500"></div>
+                  <div className="h-3 w-1/4 rounded bg-gray-200 dark:bg-gray-500" />
                 </div>
               ))}
             </ScrollArea>
@@ -764,8 +771,9 @@ const MyComponent = () => {
                     )}
                   </div>
                   <p className="text-xs text-gray-500">
-                    {review?.created_at ? moment(review?.created_at).format("Do MMMM, YYYY") : ''}
-
+                    {review?.created_at
+                      ? moment(review?.created_at).format("Do MMMM, YYYY")
+                      : ""}
                   </p>
                 </div>
               ))}
@@ -778,7 +786,6 @@ const MyComponent = () => {
             </p>
           )}
         </div>
-        {/* Review Form */}
         <div className="md:w-1/2">
           <ReviewForm
             submitValues={(val) => handleSubmitReviews(val)}

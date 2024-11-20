@@ -2,14 +2,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   FaChevronDown,
-  FaChevronUp,
   FaBars,
   FaChevronRight,
   FaTimes,
   FaHome,
-  FaPhoneAlt,
 } from "react-icons/fa";
-import Input from "./Input"; // Assuming you have an Input component
+import Input from "./Input";
 import Image from "next/image";
 import Logo from "../../../public/unishop_logo_new.png";
 import { GoHeart } from "react-icons/go";
@@ -38,13 +36,7 @@ import {
   FaGift,
   FaClipboardList,
 } from "react-icons/fa";
-import {
-  AiOutlineFileText,
-  AiOutlineContacts,
-  AiOutlineHome,
-  AiOutlineLogout,
-} from "react-icons/ai";
-import { DivOverlay } from "leaflet";
+import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -73,17 +65,16 @@ const Header = () => {
   const path = usePathname();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSection, setActiveSection] = useState("home");
-
-  const [isMobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false); // State for hamburger menu
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
   const dropdownToggleRef = useRef<HTMLButtonElement | null>(null);
-  const dropdownRef = useRef<HTMLButtonElement | null>(null); // Ref for other dropdowns
+  const dropdownRef = useRef<HTMLButtonElement | null>(null);
 
   const toggleUserDropdown = () => {
     setUserDropdownOpen((prevState) => !prevState);
   };
+
   const toggleDropdown = (section: string) => {
     setOpenDropdown(openDropdown === section ? null : section);
   };
@@ -91,9 +82,11 @@ const Header = () => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
+
   const [headerCategory, setHeaderCategory] = useState<
     SideBarCategory[] | null
   >(null);
+
   const [openCategories, setOpenCategories] = useState<string[]>([]);
 
   // function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
@@ -137,7 +130,6 @@ const Header = () => {
 
   //   return tree;
   // }
-  // Define types
 
   type CategoriesMap = Record<number, SuperCategory & { children: CAT[] }>;
 
@@ -156,18 +148,17 @@ const Header = () => {
       targetCategory.children.push(item);
     }
   });
-  // Initialize category tree on mount
 
-  const handleSectionClick = (section: string, isDropdown = false) => {
-    setActiveSection(section);
-    console.log("ss", activeSection);
+  // const handleSectionClick = (section: string, isDropdown = false) => {
+  //   setActiveSection(section);
+  //   console.log("ss", activeSection);
 
-    router.push(section);
+  //   router.push(section);
 
-    if (isDropdown) {
-      setOpenDropdown(null); // Close dropdown when clicking a section
-    }
-  };
+  //   if (isDropdown) {
+  //     setOpenDropdown(null);
+  //   }
+  // };
 
   // Extend Category1 to include children
   interface CategoryTreeNode2 extends CAT {
@@ -190,14 +181,14 @@ const Header = () => {
         // Root category
         const rootCategory = categoriesMap[cat.id];
         if (rootCategory) {
-          categoryTree.push(rootCategory); // Check that it's defined
+          categoryTree.push(rootCategory);
         }
       } else {
         const parentCategory = categoriesMap[cat.parent];
         if (parentCategory) {
           const categoryToAdd = categoriesMap[cat.id];
           if (categoryToAdd) {
-            parentCategory.children.push(categoryToAdd); // Ensure it's defined
+            parentCategory.children.push(categoryToAdd);
           } else {
             console.error(`Category ID ${cat.id} not found in map.`);
           }
@@ -221,10 +212,9 @@ const Header = () => {
       return acc;
     }, {} as CategoriesMap);
 
-    // Ensure x is an array and has elements
     if (Array.isArray(x) && x.length > 0) {
       // Get all children from the built category tree
-      const allChildren: CAT[] = x.flatMap((node) => node.children); // Flatten all children
+      const allChildren: CAT[] = x.flatMap((node) => node.children);
       allChildren.forEach((item: CAT) => {
         const { category_type_id, outlet } = item;
         const targetCategory = categoriesMap[category_type_id];
@@ -236,7 +226,6 @@ const Header = () => {
       const result = Object.values(categoriesMap);
       setHeaderCategory(result);
     } else {
-      // Handle the case when x is empty
       subCategory.forEach((item: CAT) => {
         const { category_type_id, outlet } = item;
         const targetCategory = categoriesMap[category_type_id];
@@ -273,31 +262,6 @@ const Header = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  // Navigation items array with nested structure for Shop
-  // const navItems = [
-  //   { label: "Home", href: "/" },
-  //   {
-  //     label: "Shop",
-  //     subItems: [
-  //       {
-  //         label: "Product 1",
-  //         href: "#product1",
-  //         onClick: () => handleSectionClick("product1", true),
-  //       },
-  //       {
-  //         label: "Product 2",
-  //         href: "#product2",
-  //         onClick: () => handleSectionClick("product2", true),
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     label: "Contact",
-  //     href: "/contact-us",
-  //     onClick: () => handleSectionClick("/contact-us"),
-  //   },
-  // ];
 
   const handleLogout = async () => {
     try {
@@ -354,9 +318,9 @@ const Header = () => {
 
   const toggleSidebar = () => {
     if (path.includes("/checkout") || path.includes("/placeorder")) return;
-
     setIsSidebarOpen((prev) => !prev);
   };
+
   const iconMap: Record<string, JSX.Element> = {
     FaBook: <FaBook className="text-blue-700" />,
     FaGraduationCap: <FaGraduationCap />,
@@ -370,7 +334,7 @@ const Header = () => {
 
   interface SubcategoryListProps1 {
     subItems: CategoryTreeNode[];
-    openCategories: string[]; // Update: Allow multiple open categories
+    openCategories: string[];
     toggleCategory: (label: string) => void;
     setOpenCategories: React.Dispatch<React.SetStateAction<string[]>>;
     item: string;
@@ -417,13 +381,7 @@ const Header = () => {
               }}
               className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
             >
-              <span
-                className="mr-2 truncate text-left capitalize"
-                title={subItem.category_name}
-              >
-                {/* {subItem.category_name.length > 16
-                  ? `${subItem.category_name.slice(0, 25)}...`
-                  : subItem.category_name} */}
+              <span className="mr-2 text-left capitalize">
                 {subItem.category_name}
               </span>
               {subItem.children?.[0] &&
@@ -473,8 +431,6 @@ const Header = () => {
                   {subItem.label}
                 </span>
               </button>
-
-              {/* Render children if open */}
             </div>
           ))}
       </div>
@@ -483,17 +439,13 @@ const Header = () => {
 
   const toggleCategory = async (label: string) => {
     setOpenCategories((prev) => {
-      // Check if the clicked category is already open
       setOpenDropdown(null);
       if (prev.includes(label)) {
-        // Close the category and its children
         return prev.filter((cat) => cat !== label);
       } else {
-        // Close other top-level categories when opening a new one
         const newOpenCategories = prev.filter(
           (cat) => label.startsWith(cat) || cat.startsWith(label),
         );
-
         return [...newOpenCategories, label];
       }
     });
@@ -501,12 +453,10 @@ const Header = () => {
 
   useEffect(() => {
     if (isMobileMenuOpen) {
-      document.body.classList.add("overflow-hidden"); // Disable scrolling
+      document.body.classList.add("overflow-hidden");
     } else {
-      document.body.classList.remove("overflow-hidden"); // Enable scrolling
+      document.body.classList.remove("overflow-hidden");
     }
-
-    // Cleanup on component unmount
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
@@ -514,9 +464,9 @@ const Header = () => {
 
   return (
     <nav className="fixed left-0 top-0 z-10 h-fit w-full">
-      <header className="flex flex-col bg-white px-4 pb-2 pt-4 backdrop-blur dark:bg-slate-900 md:flex-row md:items-center lg:pb-0">
+      <header className="flex flex-col bg-white px-4 pb-2 pt-4 backdrop-blur dark:bg-slate-900 lg:flex-row lg:items-center lg:pb-0">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
-        <div className="flex items-center justify-between border-b pb-4 md:hidden">
+        <div className="flex items-center justify-between border-b pb-4 lg:hidden">
           <div
             className="flex-grow cursor-pointer text-center"
             onClick={() => {
@@ -613,7 +563,7 @@ const Header = () => {
         </div>
 
         {/* Search Bar (Visible on Small Screens) */}
-        <div className="mx-2 mt-2 md:hidden">
+        <div className="mx-2 mt-2 lg:hidden">
           <Input
             placeholder="What are you looking for?"
             value={searchTerm}
@@ -629,12 +579,12 @@ const Header = () => {
             {/* Overlay to reduce opacity */}
             {isMobileMenuOpen && (
               <div
-                className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50" // Dark overlay
+                className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50"
                 // onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
               />
             )}
             <button
-              className={`fixed right-7 top-7 z-40 sm:block md:hidden ${isMobileMenuOpen ? "bg-white dark:bg-slate-700" : ""}`} // Ensure z-30 is applied
+              className={`fixed right-7 top-7 z-40 sm:block lg:hidden ${isMobileMenuOpen ? "bg-white dark:bg-slate-700" : ""}`}
               onClick={() => {
                 setOpenDropdown(null);
                 setMobileMenuOpen(false);
@@ -642,7 +592,7 @@ const Header = () => {
             >
               <FaTimes className="text-xl text-red-500" />
             </button>
-            <div className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col bg-white p-6 dark:bg-slate-700 md:hidden md:w-1/2">
+            <div className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col bg-white p-6 dark:bg-slate-700 lg:hidden lg:w-1/2">
               <div className="z-40 flex w-[90%] justify-around gap-1 pb-4">
                 <Link
                   href="/"
@@ -661,32 +611,9 @@ const Header = () => {
                 </Link>
               </div>
               <nav className="overflow-scroll">
-                {/* <button
-                onClick={() => {
-                  router.push("/");
-                }}
-                className="mb-4 flex w-full items-center justify-between text-lg focus:outline-none"
-              >
-                <div className="flex items-center space-x-2">
-                  <AiOutlineHome className="mr-1 text-red-500" />
-                  <span>Home</span>
-                </div>
-              </button> */}
-
                 {headerCategory?.map((item) => (
                   <div key={item.type} className="mb-4">
-                    <button
-                      // onClick={() =>
-                      //   item.children?.[0]
-                      //     ? toggleCategory(item.type)
-                      //     : (router.push(
-                      //         `/products?category=${item.category_type_id}&name=${item.type}`,
-                      //       ),
-                      //       setMobileMenuOpen(false),
-                      //       setOpenCategories([]))
-                      // }
-                      className="flex w-full items-center justify-between text-lg focus:outline-none"
-                    >
+                    <button className="flex w-full items-center justify-between text-lg focus:outline-none">
                       <div
                         className="flex items-center"
                         onClick={() => {
@@ -729,27 +656,6 @@ const Header = () => {
                           setOpenCategories={setOpenCategories}
                         />
                       )}
-                    {/* {item.children && openDropdown === item.type && (
-                      <div className="ml-4 mt-1">
-                        {item.children.map((subItem) => (
-                          <button
-                            key={subItem.id}
-                            onClick={() =>
-                              subItem.children?.[0]
-                                ? toggleDropdown(subItem.category_name)
-                                : (router.push(
-                                  `/products?name=${item.type}&detail=${item.category_type_id}`,
-                                ),
-                                  setMobileMenuOpen(!isMobileMenuOpen),
-                                  setOpenDropdown(null))
-                            }
-                            className="block py-1 text-sm text-gray-700 hover:underline dark:text-gray-300"
-                          >
-                            {subItem.category_name}
-                          </button>
-                        ))}
-                      </div>
-                    )} */}
                   </div>
                 ))}
                 {categories.map((item) => (
@@ -819,31 +725,6 @@ const Header = () => {
                             ))}
                           </ScrollArea>
                         )}
-
-                        {/* {item.label === "Art & Gifts" &&
-                        headerCategoryGifts?.[0] &&
-                        headerCategoryGifts?.map((subItem) => (
-                          <Link
-                            key={subItem.id}
-                            href={`gifts?detail=${subItem.id}`}
-                            className="block py-1 text-sm hover:underline"
-                            onClick={() => setOpenDropdown(null)}
-                          >
-                            {subItem.category_name}
-                          </Link>
-                        ))}
-                      {item.label === "Merch & Clothing" &&
-                        headerCategoryClothings?.[0] &&
-                        headerCategoryClothings.map((subItem) => (
-                          <Link
-                            key={subItem.id}
-                            href={`cloths?detail=${subItem.id}`}
-                            className="block py-1 text-sm hover:underline"
-                            onClick={() => setOpenDropdown(null)}
-                          >
-                            {subItem.category_name}
-                          </Link>
-                        ))} */}
                       </div>
                     )}
                     {item.label === "Pulse" && openDropdown === item.label && (
@@ -875,7 +756,7 @@ const Header = () => {
         )}
 
         {/* Desktop Layout */}
-        <div className="mt-4 hidden w-full border-b pb-4 md:flex md:items-center md:justify-between">
+        <div className="mt-4 hidden w-full border-b pb-4 lg:flex lg:items-center lg:justify-between">
           <div className="flex w-full items-center">
             <div
               className="flex-grow cursor-pointer text-left"
@@ -891,51 +772,6 @@ const Header = () => {
                 className="flex-shrink-0 rounded-md shadow-2xl"
               />
             </div>
-
-            {/* <nav className="justify- flex flex-grow space-x-6">
-              {navItems.map((item, id) => (
-                <div key={id} className="group relative">
-                  <button
-                    onClick={() =>
-                      item.subItems
-                        ? toggleDropdown(item.label)
-                        : handleSectionClick(item.label.toLowerCase())
-                    }
-                    className={`relative flex items-center ${item.subItems ? "cursor-pointer" : ""}`}
-                    ref={dropdownRef}
-                  >
-                    <span
-                      className={`${activeSection === item.href ? "font-bold text-red-500 underline" : ""}`}
-                    >
-                      {item.label}
-                    </span>
-                    {item.subItems && (
-                      <span className="ml-1">
-                        {openDropdown === item.label ? (
-                          <FaChevronUp />
-                        ) : (
-                          <FaChevronDown />
-                        )}
-                      </span>
-                    )}
-                  </button>
-                  {item.subItems && openDropdown === item.label && (
-                    <div className="absolute z-10 mt-1 w-40 bg-white shadow-md">
-                      {item.subItems.map((subItem) => (
-                        <a
-                          key={subItem.label}
-                          href={subItem.href}
-                          onClick={subItem.onClick} // Call the onClick for subItems
-                          className="block px-4 py-2 hover:bg-gray-100"
-                        >
-                          {subItem.label}
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </nav> */}
 
             {/* Right Section: Search Bar and Icons */}
             <div className="flex items-center space-x-4">
@@ -996,7 +832,6 @@ const Header = () => {
                         {userInfo?.first_name} {userInfo?.last_name}
                       </span>
                     )}
-
                     <a
                       href="#account-settings"
                       className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
@@ -1017,7 +852,6 @@ const Header = () => {
 
                     {!isLoggedIn && (
                       <Link
-                        // onClick={() => handleLogout()}
                         href="/login"
                         className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                       >
@@ -1027,7 +861,6 @@ const Header = () => {
                     )}
 
                     <Link
-                      // onClick={() => handleLogout()}
                       href="/signup"
                       className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                     >
