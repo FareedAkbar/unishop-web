@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import Button from "~/components/ui-components/Button";
 import { useRouter } from "next/navigation";
-import { Player } from "@lottiefiles/react-lottie-player";
 
 const AboutSection: React.FC = () => {
   const router = useRouter();
@@ -11,8 +10,7 @@ const AboutSection: React.FC = () => {
   };
 
   return (
-    <div className="flex relative flex-col-reverse items-center gap-8 px-8 py-16 lg:flex-row">
-      {/* Text Content Section */}
+    <div className="flex relative flex-col-reverse items-center gap-8 px-8 pb-16 pt-5 lg:flex-row">
       <div className="space-y-6 lg:w-1/2">
       {/* <div className="absolute  -z-10 opacity-10 dark:opacity-40">
           <Player

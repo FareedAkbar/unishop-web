@@ -146,7 +146,7 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="mx-auto w-full px-5 pb-10">
-            <div className="relative min-h-[450px] lg:ml-64">
+            <div className="relative  lg:ml-64">
               <AnimatePresence initial={false} mode="wait" custom={direction}>
                 <motion.div
                   key={currentIndex}
