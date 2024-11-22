@@ -337,7 +337,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
           <div key={item.type} className="relative">
             <button
               type="button"
-              className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-105"
+              className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-105 focus:outline-none"
             >
               <div className="flex items-center justify-start">
                 <AiOutlineFileText className="mr-1.5 h-6 w-6 p-0.5 text-orange-600" />

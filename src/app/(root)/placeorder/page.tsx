@@ -632,20 +632,28 @@ const MyComponent = () => {
               <div className="flex flex-col justify-between lg:flex-row">
                 <div>
                   <span className="text-md mt-2">Credit Card - eWAY</span>
-                  <div className="ml-6 mt-3 flex flex-col">
-                    <span className="mt-4">{checkoutData?.address}</span>
-                    <span>
-                      {checkoutData?.country} {checkoutData?.city}{" "}
-                      {checkoutData?.state} {checkoutData?.postal_code}
-                    </span>
-                    <span className="mt-6">
-                      <a
-                        href={`tel:${checkoutData?.phone_number}`}
-                        className="mt-5 hover:text-red-400"
-                      >
+                  <div className="mt-3 flex flex-col">
+                    {/* Address */}
+                    <div className="mt-4">
+                      <span className="pr-1 font-medium text-red-500">
+                        Address:
+                      </span>
+                      <span className="block">{checkoutData?.address}</span>
+                      <span className="block">
+                        {checkoutData?.country}, {checkoutData?.city},{" "}
+                        {checkoutData?.state}, {checkoutData?.postal_code}
+                      </span>
+                    </div>
+
+                    {/* Phone Number */}
+                    <div className="mt-4">
+                      <span className="pr-1 font-medium text-red-500">
+                        Phone Number:
+                      </span>
+                      <span className="block">
                         {checkoutData?.phone_number}
-                      </a>
-                    </span>
+                      </span>
+                    </div>
                   </div>
                 </div>
                 {userInfo?.customer_id && (

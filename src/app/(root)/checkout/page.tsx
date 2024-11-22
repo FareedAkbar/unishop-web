@@ -112,8 +112,8 @@ const MyComponent = () => {
     <div>
       <main className="flex min-h-screen flex-col items-center justify-start pt-24 dark:bg-slate-900">
         <div className="grid w-full grid-cols-1 gap-12 px-4 lg:grid-cols-2">
-          <div className="py-10 lg:order-2 lg:h-screen">
-            <ScrollArea className="h-full flex-1 rounded-lg border p-4 dark:bg-slate-700">
+          <div className="py-10 lg:order-2 lg:h-full">
+            <ScrollArea className="h-[658px] flex-1 rounded-lg border p-4 dark:bg-slate-700">
               {items?.[0] ? (
                 items.map((item: DataCart) => (
                   <CartItem
@@ -157,8 +157,8 @@ const MyComponent = () => {
               )}
             </ScrollArea>
           </div>
-          <div className="w-full pt-16 lg:pt-0">
-            <Tabs tabs={tabs} key={items?.toString()} />
+          <div className="w-full relative pt-16 lg:pt-3  lg:h-full h-[55rem] md:h-[50rem] sm:h-[55rem] [perspective:1000px]">
+            <Tabs tabs={tabs} />
           </div>
         </div>
       </main>

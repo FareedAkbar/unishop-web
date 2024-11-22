@@ -375,7 +375,7 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center pt-32 lg:pt-20"
+        className="flex min-h-screen flex-col items-center pt-32 sm:pt-24 md:pt-24 lg:pt-20"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}

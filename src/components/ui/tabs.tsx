@@ -40,6 +40,7 @@ export const Tabs = ({
     }
     setActive(newTabs[0]!);
     setHovering(false);
+    console.log("id", idx);
   };
 
   return (
@@ -108,7 +109,7 @@ export const FadeInDiv = ({
   };
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative  h-full w-full">
       {tabs.map((tab, idx) => (
         <motion.div
           key={tab.value}
@@ -117,7 +118,7 @@ export const FadeInDiv = ({
             scale: 1 - idx * 0.1,
             top: hovering ? idx * -60 : 0,
             zIndex: -idx,
-            opacity: idx < 3 ? 1 - idx * 0.1 : 0,
+            opacity: 1 - idx * 0.5,
           }}
           animate={{
             y: isActive(tab) ? [0, 40, 0] : 0,
@@ -125,7 +126,7 @@ export const FadeInDiv = ({
           className={cn(
             "absolute left-0 top-0 h-full w-full",
             className,
-            tab.value != active.value ? "pointer-events-none opacity-50" : "",
+            tab.value != active.value ? "pointer-events-none" : "",
           )}
         >
           {tab.content}

@@ -25,7 +25,7 @@ import {
 } from "~/types/checkoutForm";
 import Button from "../ui-components/Button";
 
-type CehckoutFormValues = z.infer<typeof SignupSchema>;
+type CheckoutFormValues = z.infer<typeof SignupSchema>;
 
 interface checkout {
   push?: boolean;
@@ -36,7 +36,7 @@ interface checkout {
   pushPath?: string;
 }
 
-export default function CehckoutForm({
+export default function CheckoutForm({
   push,
   handleData,
   disabled = false,
@@ -87,7 +87,7 @@ export default function CehckoutForm({
     control,
     setValue,
     formState: { errors },
-  } = useForm<CehckoutFormValues>({
+  } = useForm<CheckoutFormValues>({
     resolver: zodResolver(SignupSchema),
     defaultValues,
   });
@@ -118,7 +118,7 @@ export default function CehckoutForm({
     setCityOptions(getCitiesForState(stateId));
   };
 
-  const onSubmit: SubmitHandler<CehckoutFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<CheckoutFormValues> = async (data) => {
     // Get the human-readable state name based on the selected state ID
     const selectedStateName = data.state
       ? (states.find((state) => state.value.toString() === data.state)?.label ??
@@ -183,7 +183,7 @@ export default function CehckoutForm({
   };
 
   return (
-    <div className="mx-auto w-full rounded-none border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
+    <div className="mx-auto w-full rounded-lg border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         {title}
       </h2>
@@ -345,7 +345,7 @@ export default function CehckoutForm({
           </div>
         </div> */}
         <Button
-          title="Checkout &rarr;"
+          title="Confirm &rarr;"
           type="submit"
           width="w-full"
           loading={loader}
