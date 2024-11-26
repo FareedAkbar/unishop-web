@@ -78,7 +78,7 @@ export default function SignupFormDemo({
 
       <form className="mb-2 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
+          <Label required htmlFor="email">Email Address</Label>
           <Input
             id="email"
             placeholder="projectmayhem@fc.com"
@@ -90,7 +90,7 @@ export default function SignupFormDemo({
           )}
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="password">Password</Label>
+          <Label required htmlFor="password">Password</Label>
           <Input
             id="password"
             placeholder="••••••••"

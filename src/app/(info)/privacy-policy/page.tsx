@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FaChevronDown, FaChevronUp, FaCheck } from "react-icons/fa";
 import { Player } from "@lottiefiles/react-lottie-player";
+import BackgroundSquares from "~/components/ui-components/BackgroundSquares";
 
 interface Section {
   title: string;
@@ -66,14 +67,15 @@ const PrivacyPolicy: React.FC = () => {
   return (
     <div className="relative min-h-screen p-8 pt-32">
       {/* Background Lottie Animation */}
-      <div className="absolute inset-0 top-40 -z-10 opacity-20 dark:opacity-70 dark:blur-sm">
+      {/* <div className="absolute inset-0 top-40 -z-10 opacity-20 dark:opacity-70 dark:blur-sm">
         <Player
           autoplay
           loop
           src="/assets/gifs/lists-bg.json"
           className="h-64 w-64 scale-[1.5]"
         />
-      </div>
+      </div> */}
+      <BackgroundSquares />
 
       {/* Page Header */}
       <h1 className="mb-6 text-center text-3xl font-extrabold text-red-600">

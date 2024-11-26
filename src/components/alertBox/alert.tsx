@@ -16,7 +16,7 @@ interface AlertBoxProps {
   onClose: () => void;
   onContinue: () => void;
   open: boolean;
-  children?: ReactNode
+  children?: ReactNode;
 }
 const AlertBox: React.FC<AlertBoxProps> = ({
   title,
@@ -24,25 +24,26 @@ const AlertBox: React.FC<AlertBoxProps> = ({
   onClose,
   onContinue,
   open,
-  children
+  children,
 }) => {
   return (
     <AlertDialog open={open}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="font-serif">{title}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {description}
-           
-          </AlertDialogDescription>
-          <AlertDialogDescription>
-          
-            {children}
-          </AlertDialogDescription>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+          <AlertDialogDescription>{children}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={()=>onClose()}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={()=>onContinue()} className="bg-red-500 hover:bg-red-400">Continue</AlertDialogAction>
+          <AlertDialogCancel onClick={() => onClose()}>
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => onContinue()}
+            className="bg-red-500 hover:bg-red-400"
+          >
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

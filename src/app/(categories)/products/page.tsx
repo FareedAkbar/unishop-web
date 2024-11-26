@@ -521,7 +521,7 @@ const MyComponent = () => {
                 <motion.div
                   key={"images"}
                   style={{
-                    rotate: Math.random() * 20 - 10,
+                    rotate: window.innerWidth > 768 ? Math.random() * 20 - 10 : 0,
                   }}
                   whileHover={{
                     scale: 1.1,
@@ -544,7 +544,7 @@ const MyComponent = () => {
                     alt={itemDetail?.object_path ?? ""}
                     width={500}
                     height={500}
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-44 md:w-44"
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-40 lg:w-44 md:w-40 lg:h-44"
                   />
                 </motion.div>
               </div>

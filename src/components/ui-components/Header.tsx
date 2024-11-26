@@ -6,6 +6,7 @@ import {
   FaChevronRight,
   FaTimes,
   FaHome,
+  FaPhoneAlt,
 } from "react-icons/fa";
 import Input from "./Input";
 import Image from "next/image";
@@ -478,12 +479,12 @@ const Header = () => {
               width={140}
               height={50}
               alt="Logo"
-              className="flex-shrink-0 rounded-md shadow-2xl"
+              className="flex-shrink-0 shadow-2xl"
             />
           </div>
 
           {/* Right Section: Heart, Cart, and User Dropdown Icons */}
-          <div className="flex items-center lg:space-x-4 space-x-2">
+          <div className="flex items-center space-x-2 lg:space-x-4">
             <div className="relative" onClick={() => router.push("/favorites")}>
               <GoHeart className="cursor-pointer text-xl" />
               {favItems?.length && favItems?.length > 0 ? (
@@ -603,11 +604,11 @@ const Header = () => {
                 </Link>
 
                 <Link
-                  href="/"
+                  href="/contact-us"
                   className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-red-500 p-2 text-white transition-transform hover:scale-105"
                 >
-                  <HiLogin size={16} />
-                  <span className="text-xs">Logout</span>
+                  <FaPhoneAlt size={16} />
+                  <span className="text-xs">Contact Us</span>
                 </Link>
               </div>
               <nav className="overflow-scroll">
@@ -744,7 +745,7 @@ const Header = () => {
                           rel="noopener noreferrer"
                           className="block py-1 text-sm hover:underline"
                         >
-                          Get it on Google Play
+                          Download on Google Play
                         </a>
                       </div>
                     )}
@@ -769,7 +770,7 @@ const Header = () => {
                 width={140}
                 height={50}
                 alt="Logo"
-                className="flex-shrink-0 rounded-md shadow-2xl"
+                className="flex-shrink-0 shadow-2xl"
               />
             </div>
 

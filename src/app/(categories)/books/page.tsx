@@ -447,7 +447,7 @@ const MyComponent = () => {
                 <motion.div
                   key={"images"}
                   style={{
-                    rotate: Math.random() * 20 - 10,
+                    rotate: window.innerWidth > 768 ? Math.random() * 20 - 10 : 0,
                   }}
                   whileHover={{
                     scale: 1.1,

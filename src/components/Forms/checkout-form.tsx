@@ -193,7 +193,9 @@ export default function CheckoutForm({
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
+          <Label htmlFor="email" required>
+            Email Address
+          </Label>
           <Input
             id="email"
             placeholder="projectmayhem@fc.com"
@@ -206,7 +208,9 @@ export default function CheckoutForm({
         </LabelInputContainer>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="address">Street Address</Label>
+          <Label htmlFor="address" required>
+            Street Address
+          </Label>
           <Input
             id="address"
             placeholder="123 Main St"
@@ -219,7 +223,9 @@ export default function CheckoutForm({
         </LabelInputContainer>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
-            <Label htmlFor="postal_code">Zip/Postal Code</Label>
+            <Label htmlFor="postal_code" required>
+              Zip/Postal Code
+            </Label>
             <Input
               id="postal_code"
               placeholder="12345"
@@ -233,7 +239,9 @@ export default function CheckoutForm({
             )}
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="country">Country</Label>
+            <Label htmlFor="country" required>
+              Country
+            </Label>
 
             <Input
               id="country"
@@ -265,7 +273,9 @@ export default function CheckoutForm({
         </div>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
-            <Label htmlFor="state">State/Province</Label>
+            <Label htmlFor="state" required>
+              State/Province
+            </Label>
             <Controller
               name="state"
               control={control}
@@ -292,7 +302,9 @@ export default function CheckoutForm({
             />
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="city">City</Label>
+            <Label htmlFor="city" required>
+              City
+            </Label>
             <Controller
               name="city"
               control={control}
@@ -318,7 +330,9 @@ export default function CheckoutForm({
         </div>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="phone_number">Phone Number</Label>
+          <Label htmlFor="phone_number" required>
+            Phone Number
+          </Label>
           <PhoneNumberInput
             id="phone_number"
             placeholder="(123) 456-7890"

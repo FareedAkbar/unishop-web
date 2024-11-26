@@ -622,13 +622,13 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="mb-8 min-h-screen justify-center pt-28 lg:pt-20">
-        <div className="z-10 bg-white px-6 dark:bg-slate-800">
+      <main className="pb-8 min-h-screen justify-center pt-28 lg:pt-20 dark:bg-slate-950">
+        <div className="z-10  px-6 ">
           <h2 className="mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
             Payment Method
           </h2>
           <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-            <div className="rounded-xl border p-4 lg:col-span-2 xl:col-span-2">
+            <div className="rounded-xl border p-4 lg:col-span-2 xl:col-span-2 dark:bg-slate-800">
               <div className="flex flex-col justify-between lg:flex-row">
                 <div>
                   <span className="text-md mt-2">Credit Card - eWAY</span>
@@ -722,17 +722,17 @@ const MyComponent = () => {
               </div>
             </div>
 
-            <div className="rounded-xl border p-4">
+            <div className="rounded-xl border p-4 dark:bg-slate-800">
               <h2 className="text-xl font-bold">Order Summary</h2>
               {calculateLoader && (
                 <div>
                   <div className="flex flex-col items-center justify-between">
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200" />
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200" />
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200" />
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200" />
+                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
+                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
+                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
+                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
                     <div className="relative h-2/3 w-full animate-pulse">
-                      <div className="mb-2 h-64 w-full rounded bg-gray-200" />
+                      <div className="mb-2 h-64 w-full rounded bg-gray-200 dark:bg-gray-600" />
                     </div>
                   </div>
                 </div>

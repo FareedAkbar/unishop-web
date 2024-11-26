@@ -85,7 +85,7 @@ export default function BooknetFormLogin({
       </p>
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="address">Username</Label>
+          <Label required htmlFor="address">Username</Label>
           <Input
             id="Username"
             placeholder="Enter username"
@@ -97,7 +97,7 @@ export default function BooknetFormLogin({
           )}
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="address">Password</Label>
+          <Label required htmlFor="address">Password</Label>
           <Input
             id="Password"
             placeholder="******"

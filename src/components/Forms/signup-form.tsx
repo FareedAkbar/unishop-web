@@ -92,7 +92,7 @@ export default function SignupFormDemo() {
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
+          <Label required htmlFor="email">Email Address</Label>
           <Input
             id="email"
             placeholder="projectmayhem@fc.com"
@@ -105,7 +105,7 @@ export default function SignupFormDemo() {
         </LabelInputContainer>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="address">Street Address</Label>
+          <Label required htmlFor="address">Street Address</Label>
           <Input
             id="address"
             placeholder="123 Main St"
@@ -118,7 +118,7 @@ export default function SignupFormDemo() {
         </LabelInputContainer>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
-            <Label htmlFor="postal_code">Zip/Postal Code</Label>
+            <Label required htmlFor="postal_code">Zip/Postal Code</Label>
             <Input
               id="postal_code"
               placeholder="12345"
@@ -132,7 +132,7 @@ export default function SignupFormDemo() {
             )}
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="country">Country</Label>
+            <Label required htmlFor="country">Country</Label>
 
             <Input
               id="country"
@@ -164,7 +164,7 @@ export default function SignupFormDemo() {
         </div>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
-            <Label htmlFor="state">State/Province</Label>
+            <Label required htmlFor="state">State/Province</Label>
             <Controller
               name="state"
               control={control}
@@ -191,7 +191,7 @@ export default function SignupFormDemo() {
             />
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="city">City</Label>
+            <Label required htmlFor="city">City</Label>
             <Controller
               name="city"
               control={control}
@@ -217,7 +217,7 @@ export default function SignupFormDemo() {
         </div>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="phone_number">Phone Number</Label>
+          <Label required htmlFor="phone_number">Phone Number</Label>
           <PhoneNumberInput
             id="phone_number"
             placeholder="(123) 456-7890"

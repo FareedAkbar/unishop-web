@@ -29,9 +29,9 @@ export default function BooknetForm({
   handleData,
   goTo,
   title = "Checkout",
-  disabled = false
+  disabled = false,
 }: checkoutBooknet) {
-  const { CheckoutApiWithUserName,checkoutFormData } = useAuthContext();
+  const { CheckoutApiWithUserName, checkoutFormData } = useAuthContext();
   const router = useRouter();
   const { toast } = useToast();
   const [loader, setLoader] = useState(false);
@@ -49,9 +49,8 @@ export default function BooknetForm({
       await CheckoutApiWithUserName(data)
         .then((res) => {
           if (res.status) {
-            
             if (push) {
-              void checkoutFormData(res?.data).then(()=>router.push(goTo));
+              void checkoutFormData(res?.data).then(() => router.push(goTo));
               // router.push(goTo);
             }
             if (!push && handleData) {
@@ -84,7 +83,9 @@ export default function BooknetForm({
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="address">Username</Label>
+          <Label required htmlFor="address">
+            Username
+          </Label>
           <Input
             id="Username"
             placeholder="Enter username"
@@ -96,7 +97,9 @@ export default function BooknetForm({
           )}
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="address">Password</Label>
+          <Label required htmlFor="address">
+            Password
+          </Label>
           <Input
             id="Password"
             placeholder="******"
