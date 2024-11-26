@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { PiBooksBold } from "react-icons/pi";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { FaGraduationCap, FaBook, FaTshirt, FaGift } from "react-icons/fa";
 
 const ImageSlider: React.FC = () => {
-  const router = useRouter(); 
+  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
 
@@ -20,7 +20,7 @@ const ImageSlider: React.FC = () => {
       route: "/books",
       icon: (
         <PiBooksBold className="sm:2xl mr-2 text-xl text-white lg:text-4xl" />
-      ), 
+      ),
     },
     {
       image: "/assets/images/home/stationary.png",
@@ -31,7 +31,7 @@ const ImageSlider: React.FC = () => {
       route: "/graduation",
       icon: (
         <FaGraduationCap className="sm:2xl mr-2 text-xl text-white lg:text-4xl" />
-      ), 
+      ),
     },
     {
       image: "/assets/images/home/text-books.png",
@@ -81,7 +81,7 @@ const ImageSlider: React.FC = () => {
           <div className="flex h-32 flex-col justify-between px-2 py-2 sm:h-52 md:h-60 md:px-6 lg:h-80 lg:px-10">
             <div className="flex items-center lg:mb-4">
               {slides[currentIndex]!.icon}
-              <span className="text-[9px] text-white sm:text-xl lg:text-lg">
+              <span className="text-xs text-white sm:text-xl lg:text-lg">
                 {slides[currentIndex]!.name}
               </span>
             </div>

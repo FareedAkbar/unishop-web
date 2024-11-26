@@ -337,7 +337,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
           <div key={item.type} className="relative">
             <button
               type="button"
-              className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-105"
+              className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-105 focus:outline-none"
             >
               <div className="flex items-center justify-start">
                 <AiOutlineFileText className="mr-1.5 h-6 w-6 p-0.5 text-orange-600" />
@@ -377,7 +377,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 </div>
               )}
             </button>
-            <div className="my-1 ml-2 h-px w-[50%] border-t border-gray-400" />
+            <div className="my-1 ml-2 h-px w-[85%] border-t border-gray-400" />
 
             {openCategories.includes(item.type) && item.children?.[0] && (
               <SubcategoryList1
@@ -433,7 +433,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 )
               ) : null}
             </button>
-            <div className="my-1.5 ml-2 h-px w-[50%] border-t border-gray-400" />
+            <div className="my-1.5 ml-2 h-px w-[85%] border-t border-gray-400" />
             {openCategory == item.label && (
               <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
                 {item.label === "Books" && genre && (
@@ -473,7 +473,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       rel="noopener noreferrer"
                       className="block py-1 text-sm hover:underline"
                     >
-                      Get it on Google Play
+                      Download on Google Play
                     </a>
                   </div>
                 )}

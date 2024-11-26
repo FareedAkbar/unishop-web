@@ -26,7 +26,7 @@ import {
 import Button from "../ui-components/Button";
 import { InputEmail } from "../Fields/email_field";
 
-type CehckoutFormValues = z.infer<typeof SignupSchema>;
+type CheckoutFormValues = z.infer<typeof SignupSchema>;
 
 interface checkout {
   push?: boolean;
@@ -37,7 +37,7 @@ interface checkout {
   pushPath?: string;
 }
 
-export default function CehckoutForm({
+export default function CheckoutForm({
   push,
   handleData,
   disabled = false,
@@ -88,7 +88,7 @@ export default function CehckoutForm({
     control,
     setValue,
     formState: { errors },
-  } = useForm<CehckoutFormValues>({
+  } = useForm<CheckoutFormValues>({
     resolver: zodResolver(SignupSchema),
     defaultValues,
   });
@@ -119,7 +119,7 @@ export default function CehckoutForm({
     setCityOptions(getCitiesForState(stateId));
   };
 
-  const onSubmit: SubmitHandler<CehckoutFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<CheckoutFormValues> = async (data) => {
     // Get the human-readable state name based on the selected state ID
     const selectedStateName = data.state
       ? (states.find((state) => state.value.toString() === data.state)?.label ??
@@ -184,7 +184,7 @@ export default function CehckoutForm({
   };
 
   return (
-    <div className="mx-auto w-full rounded-none border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
+    <div className="mx-auto w-full rounded-lg border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         {title}
       </h2>
@@ -194,7 +194,10 @@ export default function CehckoutForm({
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
+          
+          <Label htmlFor="email" required>
+            Email Address
+          </Label>
           <InputEmail
             id="email"
             placeholder="projectmayhem@fc.com"
@@ -207,7 +210,9 @@ export default function CehckoutForm({
         </LabelInputContainer>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="address">Street Address</Label>
+          <Label htmlFor="address" required>
+            Street Address
+          </Label>
           <Input
             id="address"
             placeholder="123 Main St"
@@ -220,7 +225,9 @@ export default function CehckoutForm({
         </LabelInputContainer>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
-            <Label htmlFor="postal_code">Zip/Postal Code</Label>
+            <Label htmlFor="postal_code" required>
+              Zip/Postal Code
+            </Label>
             <Input
               id="postal_code"
               placeholder="12345"
@@ -234,7 +241,9 @@ export default function CehckoutForm({
             )}
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="country">Country</Label>
+            <Label htmlFor="country" required>
+              Country
+            </Label>
 
             <Input
               id="country"
@@ -266,7 +275,9 @@ export default function CehckoutForm({
         </div>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
-            <Label htmlFor="state">State/Province</Label>
+            <Label htmlFor="state" required>
+              State/Province
+            </Label>
             <Controller
               name="state"
               control={control}
@@ -293,7 +304,9 @@ export default function CehckoutForm({
             />
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="city">City</Label>
+            <Label htmlFor="city" required>
+              City
+            </Label>
             <Controller
               name="city"
               control={control}
@@ -319,7 +332,9 @@ export default function CehckoutForm({
         </div>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="phone_number">Phone Number</Label>
+          <Label htmlFor="phone_number" required>
+            Phone Number
+          </Label>
           <PhoneNumberInput
             id="phone_number"
             placeholder="(123) 456-7890"
@@ -346,7 +361,7 @@ export default function CehckoutForm({
           </div>
         </div> */}
         <Button
-          title="Checkout &rarr;"
+          title="Confirm &rarr;"
           type="submit"
           width="w-full"
           loading={loader}

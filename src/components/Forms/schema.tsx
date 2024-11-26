@@ -162,7 +162,7 @@ const SignupSchema = z
     phone_number: z
       .string()
       .min(1, "Phone Number is required")
-      .regex(/^\(0[4]\) \d{4} \d{4}$/, "Invalid mobile number format"),
+      .regex(/^\(0[4]\) \d{4} \d{4}$/, "Invalid mobile number "),
   })
   .superRefine((data, ctx) => {
     const { postal_code, country } = data;

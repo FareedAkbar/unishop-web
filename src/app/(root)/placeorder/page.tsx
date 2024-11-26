@@ -669,30 +669,38 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="mb-8 min-h-screen justify-center pt-28 lg:pt-20">
-        <div className="z-10 bg-white px-6 dark:bg-slate-800">
+      <main className="pb-8 min-h-screen justify-center pt-28 lg:pt-20 dark:bg-slate-950">
+        <div className="z-10  px-6 ">
           <h2 className="mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
             Payment Method
           </h2>
           <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-            <div className="rounded-xl border p-4 lg:col-span-2 xl:col-span-2">
+            <div className="rounded-xl border p-4 lg:col-span-2 xl:col-span-2 dark:bg-slate-800">
               <div className="flex flex-col justify-between lg:flex-row">
                 <div>
                   <span className="text-md mt-2">Credit Card - eWAY</span>
-                  <div className="ml-6 mt-3 flex flex-col">
-                    <span className="mt-4">{checkoutData?.address}</span>
-                    <span>
-                      {checkoutData?.country} {checkoutData?.city}{" "}
-                      {checkoutData?.state} {checkoutData?.postal_code}
-                    </span>
-                    <span className="mt-6">
-                      <a
-                        href={`tel:${checkoutData?.phone_number}`}
-                        className="mt-5 hover:text-red-400"
-                      >
+                  <div className="mt-3 flex flex-col">
+                    {/* Address */}
+                    <div className="mt-4">
+                      <span className="pr-1 font-medium text-red-500">
+                        Address:
+                      </span>
+                      <span className="block">{checkoutData?.address}</span>
+                      <span className="block">
+                        {checkoutData?.country}, {checkoutData?.city},{" "}
+                        {checkoutData?.state}, {checkoutData?.postal_code}
+                      </span>
+                    </div>
+
+                    {/* Phone Number */}
+                    <div className="mt-4">
+                      <span className="pr-1 font-medium text-red-500">
+                        Phone Number:
+                      </span>
+                      <span className="block">
                         {checkoutData?.phone_number}
-                      </a>
-                    </span>
+                      </span>
+                    </div>
                   </div>
                 </div>
                 {userInfo?.customer_id && (

@@ -37,7 +37,7 @@ interface Category {
       href: "" ,
       // subItems: [
       //       { label: 'Download on the App Store', href: 'https://apps.apple.com/ie/app/uow-pulse-ltd/id6476544403' },
-      //       { label: 'Get it on Google Play', href: 'https://play.google.com/store/apps/details?id=com.iitsols.pulseuowltd' }
+      //       { label: 'Download on Google Play', href: 'https://play.google.com/store/apps/details?id=com.iitsols.pulseuowltd' }
       //     ] 
     },
     // { 

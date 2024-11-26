@@ -375,7 +375,7 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center pt-32 lg:pt-20"
+        className="flex min-h-screen flex-col items-center pt-32 sm:pt-24 md:pt-24 lg:pt-20"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
@@ -482,7 +482,7 @@ const MyComponent = () => {
             {pagination && (
               <div className="z-5 flex justify-between px-4 py-4">
                 <button
-                  className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black blur" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
@@ -492,7 +492,7 @@ const MyComponent = () => {
                   Page {currentPage ?? 1} of {totalPages ?? 1}
                 </span>
                 <button
-                  className={`rounded-full p-2 ${totalPages == 0 || currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${totalPages == 0 || currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black blur" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={totalPages == 0 || currentPage === totalPages}
                 >
@@ -521,7 +521,7 @@ const MyComponent = () => {
                 <motion.div
                   key={"images"}
                   style={{
-                    rotate: Math.random() * 20 - 10,
+                    rotate: window.innerWidth > 768 ? Math.random() * 20 - 10 : 0,
                   }}
                   whileHover={{
                     scale: 1.1,
@@ -544,7 +544,7 @@ const MyComponent = () => {
                     alt={itemDetail?.object_path ?? ""}
                     width={500}
                     height={500}
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-44 md:w-44"
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-40 lg:w-44 md:w-40 lg:h-44"
                   />
                 </motion.div>
               </div>
@@ -562,7 +562,7 @@ const MyComponent = () => {
                       : itemDetail?.item_sale_price}
                 </span>
                 {itemDetail?.SKU && (
-                  <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
+                  <span className="font-serif text-zinc-500 dark:text-neutral-300 lg:text-lg">
                     SKU: {itemDetail.SKU}
                   </span>
                 )}
