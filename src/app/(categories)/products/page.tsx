@@ -114,7 +114,7 @@ const MyComponent = () => {
       }
       setTimeout(() => {
         setLoader(false); // Reset flip state after changing the image
-      }, 1000);
+      }, 2000);
     } catch (error) {
       console.error("Failed to load data:", error);
       setLoader(false);
