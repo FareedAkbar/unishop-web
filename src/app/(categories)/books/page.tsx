@@ -487,7 +487,7 @@ const MyComponent = () => {
                           .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
-                <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
+                <span className="font-serif lg:text-lg text-zinc-500 dark:text-neutral-300">
                   SKU {itemDetail?.SKU}
                 </span>
               </div>
@@ -508,7 +508,7 @@ const MyComponent = () => {
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Published:
                   </span>
-                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                  <span className="pl-1 lg:text-sm text-xs text-neutral-700 dark:text-neutral-300">
                     {itemDetail?.introduced
                       ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
                       : ""}
