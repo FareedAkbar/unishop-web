@@ -24,6 +24,7 @@ import {
   type CheckoutForm,
 } from "~/types/checkoutForm";
 import Button from "../ui-components/Button";
+import { InputEmail } from "../Fields/email_field";
 
 type CheckoutFormValues = z.infer<typeof SignupSchema>;
 
@@ -193,10 +194,11 @@ export default function CheckoutForm({
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
+          
           <Label htmlFor="email" required>
             Email Address
           </Label>
-          <Input
+          <InputEmail
             id="email"
             placeholder="projectmayhem@fc.com"
             type="email"

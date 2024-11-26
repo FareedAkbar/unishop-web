@@ -20,6 +20,9 @@ import { Tabs } from "~/components/ui/tabs";
 import Input from "~/components/ui-components/Input";
 import Spinner from "~/components/spinner";
 import PayloadForTransactionLink from "~/types/payloadForTransactionLink";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import CartItem from "~/components/ui-components/CartItem";
+import AlertBox from "~/components/alertBox/alert";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -35,6 +38,8 @@ const MyComponent = () => {
     userInfo,
     // isLoggedIn,
     booknetCustomerId,
+    removeCartItems,
+    increaseCartItemQuantity
   } = useAuthContext();
   const [items, setItems] = useState<DataCart[]>([]);
   const [newItems, setNewItems] = useState<DataCart[]>([]);
@@ -52,6 +57,8 @@ const MyComponent = () => {
   const [transactionData, setTransactionData] =
     useState<transactionResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [removeItem, setRemoveItem] = useState<DataCart | null>(null);
+  const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState<boolean>(false);
   // const [socketStatus, setSocketStatus] = useState(true);
   const [totalAfterCalculation, setTotalAfterCalculation] =
     useState<TaxCalculationApiResponse>();
@@ -155,7 +162,7 @@ const MyComponent = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
-          body: JSON.stringify({ items: requestOptions, member_id: null }),
+          body: JSON.stringify({ items: requestOptions, member_id: checkoutData?.customer_id ? checkoutData?.customer_id : null }),
         },
       );
 
@@ -389,7 +396,7 @@ const MyComponent = () => {
         card_pan: "N.A.",
         ref_no: "N.A.",
       },
-      member_id: null,
+      member_id: checkoutData?.customer_id ? checkoutData?.customer_id : null,
       transaction_id: id.toString(),
       booknet_customer_id: booknetCustomerId,
       // guest: checkoutData?.uuid ? checkoutData?.uuid : null,
@@ -620,6 +627,46 @@ const MyComponent = () => {
     }
   };
 
+  const onChangeQuantity = async (id: number, number: number) => {
+    console.log(id, number);
+    await increaseCartItemQuantity(id, number);
+  };
+
+  const handleIncrease = async (id: number, number: number) => {
+    await increaseCartItemQuantity(id, number);
+  };
+
+  const handleDecrease = async (id: number, number: number) => {
+    await increaseCartItemQuantity(id, number);
+  };
+
+  const handleRemoveFromCart = async (item: DataCart) => {
+    if (item) {
+      try {
+        await removeCartItems(item);
+        setIsOpenDeleteAlert(false);
+      } catch (error) {
+        console.error("Failed to remove item from cart:", error);
+      }
+    }
+  };
+  const checkNewPrice = (id: number) => {
+    const newPrice = totalAfterCalculation?.items.filter((item) => item.item_id == id)
+    if(newPrice?.[0]){
+      return newPrice[0].final_price_including_tax
+    }else{
+      return 0
+    }
+  }
+  const checkOldPrice = (id: number) => {
+    const newPrice = totalAfterCalculation?.items.filter((item) => item.item_id == id)
+    if(newPrice?.[0]){
+      return newPrice[0].original_value
+    }else{
+      return 0
+    }
+  }
+
   return (
     <div>
       <main className="pb-8 min-h-screen justify-center pt-28 lg:pt-20 dark:bg-slate-950">
@@ -722,17 +769,67 @@ const MyComponent = () => {
               </div>
             </div>
 
-            <div className="rounded-xl border p-4 dark:bg-slate-800">
+            <ScrollArea className="h-[500px] flex-1 rounded-lg border p-4 dark:bg-slate-700">
+              {items?.[0] ? (
+                items.map((item: DataCart) => (
+                  <CartItem
+                    key={item.item_id}
+                    title={item.book_title}
+                    imageSrc={item?.object_path}
+                    price={totalAfterCalculation?.items ? checkOldPrice(item.item_id) : 0}
+                    newPrice={totalAfterCalculation?.items ? checkNewPrice(item.item_id) : 0}
+                    showRemove={true}
+                    onChangeQuantity={(id, number) =>
+                      onChangeQuantity(id, number)
+                    }
+                    onIncrease={() =>
+                      handleIncrease(item.item_id, item.quantity + 1)
+                    }
+                    onDecrease={() =>
+                      handleDecrease(item.item_id, item.quantity - 1)
+                    }
+                    itemQuantity={item.quantity}
+                    showQuantityIncrement={true}
+                    stock={item.stock}
+                    onRemove={() => {
+                      setRemoveItem(item);
+                      setIsOpenDeleteAlert(true);
+                    }}
+                    item={item}
+                  />
+                ))
+              ) : (
+                <div>
+                  <span className="text-lg font-bold text-red-600 dark:text-white">
+                    It appears that your cart is empty. Please choose items
+                    before proceeding to checkout.
+                  </span>
+                  <div className="mt-2">
+                    <Button
+                      title="Continue Shopping"
+                      onClick={() => router.push("/")}
+                    />
+                  </div>
+                </div>
+              )}
+            </ScrollArea>
+
+
+          </div>
+          <div className="grid lg:grid-cols-3 xl:grid-cols-3  gap-12">
+              <div></div>
+              <div></div>
+            <div className="rounded-xl border p-4 mt-4">
               <h2 className="text-xl font-bold">Order Summary</h2>
               {calculateLoader && (
                 <div>
                   <div className="flex flex-col items-center justify-between">
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
+                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200" />
+                    
+                    
+                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200" />
                     <div className="relative h-2/3 w-full animate-pulse">
-                      <div className="mb-2 h-64 w-full rounded bg-gray-200 dark:bg-gray-600" />
+                      <div className="mb-2 h-52 w-full rounded bg-gray-200" />
                     </div>
                   </div>
                 </div>
@@ -740,36 +837,36 @@ const MyComponent = () => {
               {!calculateLoader && (
                 <>
                   <div className="my-4 border-t border-gray-300" />
-                  <div className="grid grid-cols-2 justify-between">
+                  {/* <div className="grid grid-cols-2 justify-between">
                     <span className="text-sm">Cart Subtotal</span>
                     <span className="flex justify-end text-sm">
                       ${totalAfterCalculation?.original_price.toFixed(2)}
                     </span>
-                  </div>
+                  </div> */}
                   <div className="mt-2 grid grid-cols-2 justify-between">
-                    <span className="text-sm">Discounted Price</span>
+                    <span className="text-sm">Price</span>
                     <span className="flex justify-end text-sm">
                       $
-                      {totalAfterCalculation?.final_price_excluding_tax.toFixed(
+                      {items?.[0] ? totalAfterCalculation?.final_price_including_tax.toFixed(
                         2,
-                      )}
+                      ) : 0}
                     </span>
                   </div>
                   <div className="mt-2 grid grid-cols-2 justify-between">
-                    <span className="text-sm">Tax</span>
+                    <span className="text-sm">GST (Included)</span>
                     <span className="flex justify-end text-sm">
-                      ${totalAfterCalculation?.item_tax_price.toFixed(2)}
+                      ${items?.[0] ? totalAfterCalculation?.item_tax_price.toFixed(2) : 0}
                     </span>
                   </div>
-                  <div className="mt-2 grid grid-cols-2 justify-between">
-                    <span className="text-sm">Discounted Subtotal</span>
+                  {/* <div className="mt-2 grid grid-cols-2 justify-between">
+                    <span className="text-sm">Subtotal</span>
                     <span className="flex justify-end text-sm">
                       $
                       {totalAfterCalculation?.final_price_including_tax.toFixed(
                         2,
                       )}
                     </span>
-                  </div>
+                  </div> */}
                   <div className="mt-6 grid grid-cols-3 justify-between">
                     <div className="col-span-2 flex flex-col">
                       <span className="text-sm">Shipping</span>
@@ -788,14 +885,14 @@ const MyComponent = () => {
                     </div>
 
                     <span className="text-md flex justify-end font-bold">
-                      ${total.toFixed(2)}
+                      ${items?.[0] ? total.toFixed(2) : 0}
                     </span>
                   </div>
                   <div className="my-4 border-t border-gray-300" />
                   <div className="mt-6 flex">
                     <Button
                       onClick={() => handlePlaceOrder()}
-                      disabled={totalAfterCalculation ? false : true}
+                      disabled={totalAfterCalculation && items?.[0] ? false : true}
                       width="w-full"
                       title="Place Order"
                     />
@@ -804,6 +901,7 @@ const MyComponent = () => {
               )}
             </div>
           </div>
+
         </div>
       </main>
       {isOpenPaymentAlert ? (
@@ -858,6 +956,13 @@ const MyComponent = () => {
           <div className="fixed inset-0 z-40 bg-black opacity-25" />
         </>
       ) : null}
+      <AlertBox
+        title="Remove Item"
+        description="Are you sure you want to remove this item from cart?"
+        open={isOpenDeleteAlert}
+        onClose={() => setIsOpenDeleteAlert(false)}
+        onContinue={() => handleRemoveFromCart(removeItem!)}
+      />
       {/* <AlertBox
         title="Payment"
         description=""

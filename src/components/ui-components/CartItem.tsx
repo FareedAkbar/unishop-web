@@ -21,6 +21,7 @@ interface CartItemProps {
   showQuantityIncrement?: boolean;
   stock: Stock;
   item?: DataCart;
+  newPrice?: number
 }
 
 const CartItem: React.FC<CartItemProps> = ({
@@ -30,6 +31,7 @@ const CartItem: React.FC<CartItemProps> = ({
   onIncrease,
   onDecrease,
   onRemove,
+  newPrice,
   showRemove,
   onChangeQuantity,
   itemQuantity,
@@ -85,8 +87,19 @@ const CartItem: React.FC<CartItemProps> = ({
               {quantity ? quantity : 0}
             </span>
           </p>
+          {(newPrice == 0 || !newPrice || price == newPrice) && (
+            <p className="text-md font-bold">${price}</p>
+          )}
+          {newPrice && price != newPrice && newPrice != 0 && (
+            <p className="text-sm font-bold text-red-500 line-through">${price}</p>
+          )}
 
-          <p className="text-md font-bold">${price}</p>
+          {newPrice && price != newPrice && newPrice != 0 && (
+            <p className="text-md font-bold">${newPrice?.toFixed(
+              2,
+            )}</p>
+          )}
+
         </div>
 
         <div className="flex w-auto flex-col items-end gap-6">
@@ -114,11 +127,11 @@ const CartItem: React.FC<CartItemProps> = ({
       </div>
       {quantity && quantity > -1
         ? quantity < itemQuantity && (
-            <p className="rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-500">
-              {/* <MdWarning size={23} /> */}
-              {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`}
-            </p>
-          )
+          <p className="rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-500">
+            {/* <MdWarning size={23} /> */}
+            {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`}
+          </p>
+        )
         : ""}
       {(quantity == 0 || quantity == null) && (
         <p className="rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-500">
