@@ -127,14 +127,15 @@ const HomePage: React.FC = () => {
       <div className="flex justify-center">
         <ImageSlider />
       </div>
-
-      <div className="flex flex-col py-5">
-        <div className="self-center text-xl lg:text-5xl">
+      <div className="flex flex-col items-center px-4 py-5 md:px-10">
+        <div className="lg:flex md:flex lg:items-center text-center text-xl md:text-3xl lg:text-5xl">
           <FlipWords
             words={["Imagine", "Create", "Inspire", "Transform"]}
-            className="text-[22px] text-red-500 dark:text-red-500 lg:text-5xl"
+            className="font-bold text-red-500"
           />
-          your reading adventure!
+          <span className="mt-2 lg:mt-0 md:mt-0.5 block text-base md:text-2xl lg:text-4xl">
+            your reading adventure!
+          </span>
         </div>
       </div>
 

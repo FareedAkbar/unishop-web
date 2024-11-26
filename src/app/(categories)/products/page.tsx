@@ -482,7 +482,7 @@ const MyComponent = () => {
             {pagination && (
               <div className="z-5 flex justify-between px-4 py-4">
                 <button
-                  className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black blur" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
@@ -492,7 +492,7 @@ const MyComponent = () => {
                   Page {currentPage ?? 1} of {totalPages ?? 1}
                 </span>
                 <button
-                  className={`rounded-full p-2 ${totalPages == 0 || currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${totalPages == 0 || currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black blur" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={totalPages == 0 || currentPage === totalPages}
                 >
@@ -562,7 +562,7 @@ const MyComponent = () => {
                       : itemDetail?.item_sale_price}
                 </span>
                 {itemDetail?.SKU && (
-                  <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
+                  <span className="font-serif text-zinc-500 dark:text-neutral-300 lg:text-lg">
                     SKU: {itemDetail.SKU}
                   </span>
                 )}

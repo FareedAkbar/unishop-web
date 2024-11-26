@@ -86,7 +86,7 @@ const TermsAndConditions = () => {
             website is subject to these <a href="#">Terms of Use</a>.
           </p>
 
-          <ul className="list-none space-y-2">
+          <ul className="list-none space-y-2 text-left">
             <li className="flex items-start">
               <FaCheck className="mr-2 mt-2 h-4 w-4 flex-shrink-0 text-red-500" />
               Prices are in Australian Dollars (AUD).
@@ -129,10 +129,10 @@ const TermsAndConditions = () => {
             {/* Section Content with Animation */}
             <div
               className={`mt-2 overflow-hidden rounded bg-white transition-all duration-300 ease-in-out dark:bg-slate-700 ${
-                openSections[index] ? "max-h-[500px]" : "max-h-0"
+                openSections[index] ? "max-h-full" : "max-h-0"
               }`}
             >
-              <ul className="ml-6 mt-2 py-2">
+              <ul className="ml-2 mt-2 py-2 pr-1 text-sm lg:ml-6">
                 {section.content.map((item, idx) => (
                   <li
                     key={idx}
