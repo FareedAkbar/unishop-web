@@ -39,7 +39,7 @@ const MyComponent = () => {
     // isLoggedIn,
     booknetCustomerId,
     removeCartItems,
-    increaseCartItemQuantity
+    increaseCartItemQuantity,
   } = useAuthContext();
   const [items, setItems] = useState<DataCart[]>([]);
   const [newItems, setNewItems] = useState<DataCart[]>([]);
@@ -162,7 +162,12 @@ const MyComponent = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
-          body: JSON.stringify({ items: requestOptions, member_id: checkoutData?.customer_id ? checkoutData?.customer_id : null }),
+          body: JSON.stringify({
+            items: requestOptions,
+            member_id: checkoutData?.customer_id
+              ? checkoutData?.customer_id
+              : null,
+          }),
         },
       );
 
@@ -651,185 +656,202 @@ const MyComponent = () => {
     }
   };
   const checkNewPrice = (id: number) => {
-    const newPrice = totalAfterCalculation?.items.filter((item) => item.item_id == id)
-    if(newPrice?.[0]){
-      return newPrice[0].final_price_including_tax
-    }else{
-      return 0
+    const newPrice = totalAfterCalculation?.items.filter(
+      (item) => item.item_id == id,
+    );
+    if (newPrice?.[0]) {
+      return newPrice[0].final_price_including_tax;
+    } else {
+      return 0;
     }
-  }
+  };
   const checkOldPrice = (id: number) => {
-    const newPrice = totalAfterCalculation?.items.filter((item) => item.item_id == id)
-    if(newPrice?.[0]){
-      return newPrice[0].original_value
-    }else{
-      return 0
+    const newPrice = totalAfterCalculation?.items.filter(
+      (item) => item.item_id == id,
+    );
+    if (newPrice?.[0]) {
+      return newPrice[0].original_value;
+    } else {
+      return 0;
     }
-  }
+  };
 
   return (
     <div>
-      <main className="pb-8 min-h-screen justify-center pt-28 lg:pt-20 dark:bg-slate-950">
-        <div className="z-10  px-6 ">
-          <h2 className="mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
-            Payment Method
-          </h2>
-          <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-            <div className="rounded-xl border p-4 lg:col-span-2 xl:col-span-2 dark:bg-slate-800">
-              <div className="flex flex-col justify-between lg:flex-row">
-                <div>
-                  <span className="text-md mt-2">Credit Card - eWAY</span>
-                  <div className="mt-3 flex flex-col">
-                    {/* Address */}
-                    <div className="mt-4">
-                      <span className="pr-1 font-medium text-red-500">
-                        Address:
-                      </span>
-                      <span className="block">{checkoutData?.address}</span>
-                      <span className="block">
-                        {checkoutData?.country}, {checkoutData?.city},{" "}
-                        {checkoutData?.state}, {checkoutData?.postal_code}
-                      </span>
-                    </div>
-
-                    {/* Phone Number */}
-                    <div className="mt-4">
-                      <span className="pr-1 font-medium text-red-500">
-                        Phone Number:
-                      </span>
-                      <span className="block">
-                        {checkoutData?.phone_number}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                {userInfo?.customer_id && (
+      <main className="min-h-screen bg-gradient-to-r from-[#FFF2F2] to-[#FFEEEE] justify-center pb-8 pt-28 dark:bg-slate-950 lg:pt-20">
+        <div className="z-10 px-6">
+          <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 lg:gap-5 xl:grid-cols-5">
+            <div className="flex flex-col lg:col-span-3 xl:col-span-3">
+              <h2 className="mb-2 mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
+                Payment Method
+              </h2>
+              <div className="rounded-xl border p-4 dark:bg-slate-800 bg-white">
+                <div className="flex flex-col justify-between lg:flex-row">
                   <div>
-                    <div className="flex flex-col items-center">
-                      <div className="w-48 py-2">
-                        <Tabs tabs={tabs} changeTabName={setDiscountType} />
+                    <span className="text-md mt-2">Credit Card - eWAY</span>
+                    <div className="mt-3 flex flex-col">
+                      {/* Address */}
+                      <div className="mt-4">
+                        <span className="pr-1 font-medium text-red-500">
+                          Address:
+                        </span>
+                        <span className="block">{checkoutData?.address}</span>
+                        <span className="block">
+                          {checkoutData?.country}, {checkoutData?.city},{" "}
+                          {checkoutData?.state}, {checkoutData?.postal_code}
+                        </span>
                       </div>
 
-                      <div className="mt-2 flex h-10">
-                        <Input
-                          value={discountValue}
-                          icon
-                          onChange={(e) => {
-                            setDiscountValue(e.target.value);
-                          }}
-                        />
-                        <div className="ml-2 mt-1">
-                          <Button
-                            height="h-8"
-                            title={"Apply discount"}
-                            className="text-xs"
-                            loading={discountLoader}
-                            onClick={() => {
-                              handleclick();
+                      {/* Phone Number */}
+                      <div className="mt-4">
+                        <span className="pr-1 font-medium text-red-500">
+                          Phone Number:
+                        </span>
+                        <span className="block">
+                          {checkoutData?.phone_number}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  {userInfo?.customer_id && (
+                    <div>
+                      <div className="flex flex-col items-center">
+                        <div className="w-48 py-2">
+                          <Tabs tabs={tabs} changeTabName={setDiscountType} />
+                        </div>
+
+                        <div className="mt-2 flex h-10">
+                          <Input
+                            value={discountValue}
+                            icon
+                            onChange={(e) => {
+                              setDiscountValue(e.target.value);
                             }}
                           />
+                          <div className="ml-2 mt-1">
+                            <Button
+                              height="h-8"
+                              title={"Apply discount"}
+                              className="text-xs"
+                              loading={discountLoader}
+                              onClick={() => {
+                                handleclick();
+                              }}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
 
-              <div className="mb-4 mt-10">
-                <p className="mb-2 font-bold">Shipping Method</p>
-                <div className="flex flex-col">
-                  <div>
-                    {shippingOptions.map((option) => (
-                      <div key={option.value}>
-                        <div className="my-4 border-t border-gray-300" />
-                        <label className="flex items-center gap-4">
-                          <input
-                            type="radio"
-                            value={option.value}
-                            checked={shipping?.value === option.value}
-                            onChange={() => onChange(option)}
-                            className="form-radio"
-                          />
-                          <div className="flex flex-1 items-center">
-                            <span className="w-1/6 text-center">
-                              {option.amount}
-                            </span>
-                            <span className="w-1/6 text-center">
-                              {option.type}
-                            </span>
-                            <span className="w-2/3 pl-2 text-left">
-                              {option.label}
-                            </span>
-                          </div>
-                        </label>
-                      </div>
-                    ))}
+                <div className="mb-4 mt-10">
+                  <p className="mb-2 font-bold">Shipping Method</p>
+                  <div className="flex flex-col">
+                    <div>
+                      {shippingOptions.map((option) => (
+                        <div key={option.value}>
+                          <div className="my-4 border-t border-gray-300" />
+                          <label className="flex items-center gap-4">
+                            <input
+                              type="radio"
+                              value={option.value}
+                              checked={shipping?.value === option.value}
+                              onChange={() => onChange(option)}
+                              className="form-radio"
+                            />
+                            <div className="flex flex-1 items-center">
+                              <span className="w-1/6 text-center">
+                                {option.amount}
+                              </span>
+                              <span className="w-1/6 text-center">
+                                {option.type}
+                              </span>
+                              <span className="w-2/3 pl-2 text-left">
+                                {option.label}
+                              </span>
+                            </div>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <div className="lg:col-span-2 xl:col-span-2">
+              <h2 className="mb-2 mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
+                Cart Items
+              </h2>
 
-            <ScrollArea className="h-[500px] flex-1 rounded-lg border p-4 dark:bg-slate-700">
-              {items?.[0] ? (
-                items.map((item: DataCart) => (
-                  <CartItem
-                    key={item.item_id}
-                    title={item.book_title}
-                    imageSrc={item?.object_path}
-                    price={totalAfterCalculation?.items ? checkOldPrice(item.item_id) : 0}
-                    newPrice={totalAfterCalculation?.items ? checkNewPrice(item.item_id) : 0}
-                    showRemove={true}
-                    onChangeQuantity={(id, number) =>
-                      onChangeQuantity(id, number)
-                    }
-                    onIncrease={() =>
-                      handleIncrease(item.item_id, item.quantity + 1)
-                    }
-                    onDecrease={() =>
-                      handleDecrease(item.item_id, item.quantity - 1)
-                    }
-                    itemQuantity={item.quantity}
-                    showQuantityIncrement={true}
-                    stock={item.stock}
-                    onRemove={() => {
-                      setRemoveItem(item);
-                      setIsOpenDeleteAlert(true);
-                    }}
-                    item={item}
-                  />
-                ))
-              ) : (
-                <div>
-                  <span className="text-lg font-bold text-red-600 dark:text-white">
-                    It appears that your cart is empty. Please choose items
-                    before proceeding to checkout.
-                  </span>
-                  <div className="mt-2">
-                    <Button
-                      title="Continue Shopping"
-                      onClick={() => router.push("/")}
+              <ScrollArea className="h-[28rem] flex-1 rounded-lg border p-4 dark:bg-slate-800 bg-white">
+                {items?.[0] ? (
+                  items.map((item: DataCart) => (
+                    <CartItem
+                      key={item.item_id}
+                      title={item.book_title}
+                      imageSrc={item?.object_path}
+                      price={
+                        totalAfterCalculation?.items
+                          ? checkOldPrice(item.item_id)
+                          : 0
+                      }
+                      newPrice={
+                        totalAfterCalculation?.items
+                          ? checkNewPrice(item.item_id)
+                          : 0
+                      }
+                      showRemove={true}
+                      onChangeQuantity={(id, number) =>
+                        onChangeQuantity(id, number)
+                      }
+                      onIncrease={() =>
+                        handleIncrease(item.item_id, item.quantity + 1)
+                      }
+                      onDecrease={() =>
+                        handleDecrease(item.item_id, item.quantity - 1)
+                      }
+                      itemQuantity={item.quantity}
+                      showQuantityIncrement={true}
+                      stock={item.stock}
+                      onRemove={() => {
+                        setRemoveItem(item);
+                        setIsOpenDeleteAlert(true);
+                      }}
+                      item={item}
                     />
+                  ))
+                ) : (
+                  <div>
+                    <span className="text-lg font-bold text-red-600 dark:text-white">
+                      It appears that your cart is empty. Please choose items
+                      before proceeding to checkout.
+                    </span>
+                    <div className="mt-2">
+                      <Button
+                        title="Continue Shopping"
+                        onClick={() => router.push("/")}
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
-            </ScrollArea>
-
-
+                )}
+              </ScrollArea>
+            </div>
           </div>
-          <div className="grid lg:grid-cols-3 xl:grid-cols-3  gap-12">
-              <div></div>
-              <div></div>
-            <div className="rounded-xl border p-4 mt-4">
+          <div className="grid gap-12 lg:grid-cols-5 lg:gap-5 xl:grid-cols-5">
+            <div/>
+            <div/>
+            <div/>
+            <div className="mt-4 rounded-xl lg:col-span-2 xl:col-span-2 border bg-white p-4 dark:bg-slate-800">
               <h2 className="text-xl font-bold">Order Summary</h2>
               {calculateLoader && (
                 <div>
                   <div className="flex flex-col items-center justify-between">
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200" />
-                    
-                    
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200" />
+                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
+
+                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
                     <div className="relative h-2/3 w-full animate-pulse">
-                      <div className="mb-2 h-52 w-full rounded bg-gray-200" />
+                      <div className="mb-2 h-52 w-full rounded bg-gray-200 dark:bg-gray-600" />
                     </div>
                   </div>
                 </div>
@@ -847,15 +869,20 @@ const MyComponent = () => {
                     <span className="text-sm">Price</span>
                     <span className="flex justify-end text-sm">
                       $
-                      {items?.[0] ? totalAfterCalculation?.final_price_including_tax.toFixed(
-                        2,
-                      ) : 0}
+                      {items?.[0]
+                        ? totalAfterCalculation?.final_price_including_tax.toFixed(
+                            2,
+                          )
+                        : 0}
                     </span>
                   </div>
                   <div className="mt-2 grid grid-cols-2 justify-between">
                     <span className="text-sm">GST (Included)</span>
                     <span className="flex justify-end text-sm">
-                      ${items?.[0] ? totalAfterCalculation?.item_tax_price.toFixed(2) : 0}
+                      $
+                      {items?.[0]
+                        ? totalAfterCalculation?.item_tax_price.toFixed(2)
+                        : 0}
                     </span>
                   </div>
                   {/* <div className="mt-2 grid grid-cols-2 justify-between">
@@ -892,7 +919,9 @@ const MyComponent = () => {
                   <div className="mt-6 flex">
                     <Button
                       onClick={() => handlePlaceOrder()}
-                      disabled={totalAfterCalculation && items?.[0] ? false : true}
+                      disabled={
+                        totalAfterCalculation && items?.[0] ? false : true
+                      }
                       width="w-full"
                       title="Place Order"
                     />
@@ -901,7 +930,6 @@ const MyComponent = () => {
               )}
             </div>
           </div>
-
         </div>
       </main>
       {isOpenPaymentAlert ? (
