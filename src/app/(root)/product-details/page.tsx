@@ -779,7 +779,7 @@ const MyComponent = () => {
               ))}
             </ScrollArea>
           ) : (
-            <p className="text-md text-gray-700">
+            <p className="text-md text-gray-700 dark:text-gray-300">
               {
                 "This product hasn't been reviewed yet. Your feedback could help others!"
               }
