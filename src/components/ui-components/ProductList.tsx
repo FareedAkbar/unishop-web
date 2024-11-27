@@ -51,7 +51,7 @@ const ProductList: React.FC<ProductListProps> = ({
                 (product, index) =>
                   title == product?.tag_name && (
                     <motion.div
-                      key={product?.item_id ? product?.item_id + Math.random(): index} 
+                      key={product?.item_id} 
                       className={`flex w-full cursor-pointer items-center justify-between rounded-lg border border-neutral-300 bg-white p-3 shadow-lg dark:bg-slate-700 dark:text-white`}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{
