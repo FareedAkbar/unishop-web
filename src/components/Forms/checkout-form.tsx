@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import type { SubmitHandler } from "react-hook-form"; // Use import type
+import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
 import { Label } from "../ui/label";
@@ -24,19 +24,27 @@ import {
   type CheckoutForm,
 } from "~/types/checkoutForm";
 import Button from "../ui-components/Button";
+import { InputEmail } from "../Fields/email_field";
 
-type CehckoutFormValues = z.infer<typeof SignupSchema>;
+type CheckoutFormValues = z.infer<typeof SignupSchema>;
 
 interface checkout {
   push?: boolean;
   disabled?: boolean;
   handleData?: (data: CheckoutForm) => void;
-  title: string,
+  title: string;
   subTitle: string;
-  pushPath?: string
+  pushPath?: string;
 }
 
-export default function CehckoutForm({ push, handleData, disabled = false, title, subTitle,pushPath }: checkout) {
+export default function CheckoutForm({
+  push,
+  handleData,
+  disabled = false,
+  title,
+  subTitle,
+  pushPath,
+}: checkout) {
   // const [stateOptions, setStateOptions] = useState<
   //   { value: number; label: string }[]
   // >([]);
@@ -45,7 +53,7 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
   >([]);
   const { checkoutData, CheckoutApi, checkoutFormData } = useAuthContext();
   const [loader, setLoader] = useState(false);
-
+  console.log(disabled)
   const defaultValues = checkoutData
     ? {
         ...checkoutData,
@@ -80,7 +88,7 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
     control,
     setValue,
     formState: { errors },
-  } = useForm<CehckoutFormValues>({
+  } = useForm<CheckoutFormValues>({
     resolver: zodResolver(SignupSchema),
     defaultValues,
   });
@@ -111,9 +119,7 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
     setCityOptions(getCitiesForState(stateId));
   };
 
-  const onSubmit: SubmitHandler<CehckoutFormValues> = async (data) => {
-    // Map the selected state and city IDs to their names
-
+  const onSubmit: SubmitHandler<CheckoutFormValues> = async (data) => {
     // Get the human-readable state name based on the selected state ID
     const selectedStateName = data.state
       ? (states.find((state) => state.value.toString() === data.state)?.label ??
@@ -153,15 +159,15 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
           setLoader(false);
           if (res.status) {
             if (push && pushPath) {
-              console.log(res?.data)
-              void checkoutFormData(res?.data).then(()=>router.push(pushPath));
-              
+              console.log(res?.data);
+              void checkoutFormData(res?.data).then(() =>
+                router.push(pushPath),
+              );
             }
             if (!push && handleData) {
               handleData(res?.data);
             }
           }
-          
         })
         .catch((err) => {
           setLoader(false);
@@ -175,24 +181,24 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
       setLoader(false);
       console.error("Failed to checkout:", error);
     }
-
-    // Handle form submission here
   };
 
   return (
-    <div className="mx-auto w-full rounded-none border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
+    <div className="mx-auto w-full rounded-lg border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         {title}
       </h2>
       <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-       {subTitle}
+        {subTitle}
       </p>
-
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
-          <Input
+          
+          <Label htmlFor="email" required>
+            Email Address
+          </Label>
+          <InputEmail
             id="email"
             placeholder="projectmayhem@fc.com"
             type="email"
@@ -204,7 +210,9 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
         </LabelInputContainer>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="address">Street Address</Label>
+          <Label htmlFor="address" required>
+            Street Address
+          </Label>
           <Input
             id="address"
             placeholder="123 Main St"
@@ -217,7 +225,9 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
         </LabelInputContainer>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
-            <Label htmlFor="postal_code">Zip/Postal Code</Label>
+            <Label htmlFor="postal_code" required>
+              Zip/Postal Code
+            </Label>
             <Input
               id="postal_code"
               placeholder="12345"
@@ -231,7 +241,9 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
             )}
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="country">Country</Label>
+            <Label htmlFor="country" required>
+              Country
+            </Label>
 
             <Input
               id="country"
@@ -263,7 +275,9 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
         </div>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
-            <Label htmlFor="state">State/Province</Label>
+            <Label htmlFor="state" required>
+              State/Province
+            </Label>
             <Controller
               name="state"
               control={control}
@@ -290,7 +304,9 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
             />
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="city">City</Label>
+            <Label htmlFor="city" required>
+              City
+            </Label>
             <Controller
               name="city"
               control={control}
@@ -316,7 +332,9 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
         </div>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="phone_number">Phone Number</Label>
+          <Label htmlFor="phone_number" required>
+            Phone Number
+          </Label>
           <PhoneNumberInput
             id="phone_number"
             placeholder="(123) 456-7890"
@@ -343,7 +361,7 @@ export default function CehckoutForm({ push, handleData, disabled = false, title
           </div>
         </div> */}
         <Button
-          title="Checkout &rarr;"
+          title="Confirm &rarr;"
           type="submit"
           width="w-full"
           loading={loader}

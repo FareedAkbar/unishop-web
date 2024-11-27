@@ -2,21 +2,22 @@
 
 import type { addFavResponse, getFavResponse } from "~/types/favourite";
 
-
 export async function addToFavourite(item_id: number, booknet_customer_id: number): Promise<addFavResponse | boolean> {
     const payload = {
         booknet_customer_id: booknet_customer_id,
         item_id: item_id
     }
+
     const requestOptions: RequestInit = {
         method: "POST",
         headers: {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-            "Content-Type": "application/json", // Optional, depending on your API
+            "Content-Type": "application/json", 
         },
         body: JSON.stringify(payload),
-        redirect: "follow", // Use the correct type for `redirect`
+        redirect: "follow", 
     };
+
     try {
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/customer/wishlist`,
@@ -24,7 +25,6 @@ export async function addToFavourite(item_id: number, booknet_customer_id: numbe
         );
         const result: addFavResponse = (await response.json()) as addFavResponse;
 
-        // Check if result has the expected structure
         if (result?.status) {
 
             return result
@@ -37,20 +37,23 @@ export async function addToFavourite(item_id: number, booknet_customer_id: numbe
         return false
     }
 };
+
 export async function removeFromFavourite(item_id: number, booknet_customer_id: number): Promise<addFavResponse | boolean> {
     const payload = {
         booknet_customer_id: booknet_customer_id,
         item_id: item_id
     }
+
     const requestOptions: RequestInit = {
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-            "Content-Type": "application/json", // Optional, depending on your API
+            "Content-Type": "application/json", 
         },
         body: JSON.stringify(payload),
-        redirect: "follow", // Use the correct type for `redirect`
+        redirect: "follow", 
     };
+
     try {
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/customer/wishlist`,
@@ -58,7 +61,6 @@ export async function removeFromFavourite(item_id: number, booknet_customer_id: 
         );
         const result: addFavResponse = (await response.json()) as addFavResponse;
 
-        // Check if result has the expected structure
         if (result?.status) {
 
             return result
@@ -78,11 +80,12 @@ export async function getFavouriteItems(booknet_customer_id: number | null | und
         method: "GET",
         headers: {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-            "Content-Type": "application/json", // Optional, depending on your API
+            "Content-Type": "application/json", 
         },
        
-        redirect: "follow", // Use the correct type for `redirect`
+        redirect: "follow", 
     };
+
     try {
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/customer/wishlist?booknet_customer_id=${booknet_customer_id}`,
@@ -90,7 +93,6 @@ export async function getFavouriteItems(booknet_customer_id: number | null | und
         );
         const result: getFavResponse = (await response.json()) as getFavResponse;
 
-        // Check if result has the expected structure
         if (result?.status) {
             console.log("result",result)
             return result
@@ -103,7 +105,3 @@ export async function getFavouriteItems(booknet_customer_id: number | null | und
         return false
     }
 };
-
-
-
-

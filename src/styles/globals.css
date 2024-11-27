@@ -53,14 +53,14 @@
     --accent-foreground: 210 20% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 20% 98%;
-    --border: 215 27.9% 16.9%;
+    --border: 0 0% 15%;
     --input: 215 27.9% 16.9%;
     --ring: 216 12.2% 83.9%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
 }
 input[type="radio"] {
@@ -106,7 +106,7 @@ input[type="radio"]:focus {
   }
 }
 
-.animate-bubble {
+.animate-square {
   animation: bubble linear infinite;
 }
 

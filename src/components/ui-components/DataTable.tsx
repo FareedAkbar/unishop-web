@@ -13,10 +13,8 @@ import {
   FaChevronRight,
   FaCompress,
 } from "react-icons/fa";
-import { CiSearch } from "react-icons/ci";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { HiMiniViewColumns } from "react-icons/hi2";
 import { ModalBody, ModalContent, useModal } from "../ui/animated-modal";
 import { GetSpecialOrder } from "~/types/getSpecialBackOrders";
 import { FiSearch } from "react-icons/fi";
@@ -57,14 +55,13 @@ const DataTable: React.FC<DataTableProps> = ({
   );
   const [isFullScreen, setIsFullScreen] = useState(false);
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
   // Ensure rendering happens only after client-side hydration
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
-    setIsClient(true); // Ensure rendering happens only after client-side hydration
+    setIsClient(true);
   }, []);
 
   useEffect(() => {
@@ -90,7 +87,6 @@ const DataTable: React.FC<DataTableProps> = ({
     }
   };
 
-  // Handle fullscreen state change (including ESC key)
   useEffect(() => {
     const handleFullScreenChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
@@ -129,11 +125,11 @@ const DataTable: React.FC<DataTableProps> = ({
     }
 
     setFilteredData(filtered);
-    setCurrentPage(1); // Reset to first page on new filter
+    setCurrentPage(1);
   };
 
   const handleSearch = () => {
-    filterResult(); // Execute search on button click or enter
+    filterResult();
   };
 
   const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -185,19 +181,16 @@ const DataTable: React.FC<DataTableProps> = ({
     console.log("Viewing order ID:", order);
     setSelectedItem(order);
     setOpen(true);
-    // Add your view logic here
   };
 
-  // Calculate total pages based on filtered data and page size
   const totalPages = Math.ceil(filteredData?.length / pageSize);
 
-  // Get the data to be displayed for the current page
   const displayedData = filteredData?.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize,
   );
 
-  if (!isClient) return null; // Prevent mismatched SSR/CSR content
+  if (!isClient) return null;
 
   return (
     <>
@@ -210,7 +203,7 @@ const DataTable: React.FC<DataTableProps> = ({
         </h1>
         <div className="mb-4 flex justify-between">
           <div className="flex items-center">
-            <div className="ml-4"></div>
+            <div className="ml-4" />
           </div>
           <div className="flex items-center">
             <div className="relative">
@@ -349,7 +342,6 @@ const DataTable: React.FC<DataTableProps> = ({
                   Order Information
                 </h3>
 
-                {/* Using flex for attribute-value pairs */}
                 <div className="flex items-center">
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
                     Order ID:

@@ -6,14 +6,14 @@ interface Category {
     href?:string;
     subItems?: SubItem[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    icon:any;
+    icon: string;
   }
   
   interface SubItem {
     label: string;
     href: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    icon: any;
+    icon?: string;
   }
   export const categories: Category[] = [
     // {
@@ -34,7 +34,11 @@ interface Category {
     { 
       label: 'Pulse',
       icon: 'AiOutlineContacts',
-      href: "" 
+      href: "" ,
+      // subItems: [
+      //       { label: 'Download on the App Store', href: 'https://apps.apple.com/ie/app/uow-pulse-ltd/id6476544403' },
+      //       { label: 'Download on Google Play', href: 'https://play.google.com/store/apps/details?id=com.iitsols.pulseuowltd' }
+      //     ] 
     },
     // { 
     //   label: 'Graduation',

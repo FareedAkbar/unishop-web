@@ -1,27 +1,42 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 const bookWords = [
-  "Literature", "Fiction", "Non-fiction", "Author", "Genre", "Fantasy", 
-  "Novel", "Narrative", "Protagonist", "Plot", "Chapter", "Page", 
-  "Publishing", "Manuscript", "Editor", "Storyline", "Biography", "Mystery"
+  "Literature",
+  "Fiction",
+  "Non-fiction",
+  "Author",
+  "Genre",
+  "Fantasy",
+  "Novel",
+  "Narrative",
+  "Protagonist",
+  "Plot",
+  "Chapter",
+  "Page",
+  "Publishing",
+  "Manuscript",
+  "Editor",
+  "Storyline",
+  "Biography",
+  "Mystery",
 ];
 
 const generateRandomPosition = () => {
-  const top = Math.random() * 90; // Top percentage (to avoid going beyond the screen)
-  const left = Math.random() * 90; // Left percentage (to avoid going beyond the screen)
+  const top = Math.random() * 90;
+  const left = Math.random() * 90;
   return { top: `${top}%`, left: `${left}%` };
 };
 
 const generateRandomRotation = () => {
-  const rotation = Math.random() * 360; // Random rotation angle
-  return rotation; // Return only the angle as a number
+  const rotation = Math.random() * 360;
+  return rotation;
 };
 
 interface WordData {
   word: string;
   position: { top: string; left: string };
-  rotation: number; // Store rotation as a number to animate it
-  opacity: number; // Add opacity to control fading effect
+  rotation: number;
+  opacity: number;
 }
 
 const BackgroundWords = () => {
@@ -31,17 +46,16 @@ const BackgroundWords = () => {
     const interval = setInterval(() => {
       const randomWord =
         bookWords[Math.floor(Math.random() * bookWords.length)]!;
-      
+
       const newWordData: WordData = {
         word: randomWord,
         position: generateRandomPosition(),
-        rotation: generateRandomRotation(), // Set random rotation
+        rotation: generateRandomRotation(),
         opacity: 1,
       };
 
       setWords((prevWords) => [...prevWords, newWordData]);
 
-      // Limit the number of words on screen
       if (words.length > bookWords.length) {
         setTimeout(() => {
           setWords((currentWords) => {
@@ -61,17 +75,17 @@ const BackgroundWords = () => {
   }, [words]);
 
   return (
-    <div className="absolute inset-0 z-[-1] bg-opacity-20 bg-red-200 blur-[2px] pointer-events-none">
+    <div className="pointer-events-none absolute inset-0 z-[-1] bg-red-200 bg-opacity-20 blur-[2px]">
       {words.map((wordData, index) => (
         <span
           key={index}
-          className="absolute lg:text-3xl font-bold text-gray-400 transition-opacity duration-300 ease-in-out"
+          className="absolute font-bold text-gray-400 transition-opacity duration-300 ease-in-out lg:text-3xl"
           style={{
             top: wordData.position.top,
             left: wordData.position.left,
             opacity: wordData.opacity,
-            // animation: `swing ${3 + Math.random() * 2}s ease-in-out infinite`, // Random swing duration
-            transform: `rotate(${wordData.rotation}deg)`, // Start at the initial rotation angle
+            // animation: `swing ${3 + Math.random() * 2}s ease-in-out infinite`,
+            transform: `rotate(${wordData.rotation}deg)`,
             transition: "opacity 1s ease",
           }}
         >

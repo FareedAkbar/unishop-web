@@ -27,8 +27,8 @@ import {
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
+import Image from "next/image";
 
-// Create a mapping of icon names to their corresponding components
 // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 const iconMap: { [key: string]: JSX.Element } = {
   FaBook: <FaBook className="text-blue-700" />,
@@ -49,17 +49,19 @@ interface Category {
 
 interface SubcategoryListProps1 {
   subItems: CategoryTreeNode[];
-  openCategories: string[]; // Update: Allow multiple open categories
+  openCategories: string[];
   toggleCategory: (label: string) => void;
   setOpenCategories: React.Dispatch<React.SetStateAction<string[]>>;
   item: string;
 }
+
 interface SubcategoryListProps {
   subItems: Category[];
   openCategory: string | null;
   toggleCategory: (label: string) => void;
   isOpen: boolean;
 }
+
 const StaticGiftsRoutes = [
   {
     label: "Danielle Hulls Photography",
@@ -70,6 +72,7 @@ const StaticGiftsRoutes = [
   { label: "White Clay Mountain", icon: FaGift, href: "/gifts?desc=Mountain" },
   { label: "Eliza Jade Candles", icon: FaGift, href: "/gifts?desc=Candles" },
 ];
+
 const SubcategoryList1 = ({
   subItems,
   openCategories,
@@ -79,7 +82,7 @@ const SubcategoryList1 = ({
 }: SubcategoryListProps1) => {
   const router = useRouter();
   return (
-    <div className="absolute left-10 top-8 z-50 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
+    <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
       {subItems.map((subItem) => (
         <div key={subItem.category_name} className="relative">
           <button
@@ -97,13 +100,7 @@ const SubcategoryList1 = ({
             }}
             className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
           >
-            <span
-              className="mr-2 truncate text-left capitalize"
-              title={subItem.category_name}
-            >
-              {/* {subItem.category_name.length > 16
-                ? `${subItem.category_name.slice(0, 25)}...`
-                : subItem.category_name} */}
+            <span className="mr-2 text-left capitalize">
               {subItem.category_name}
             </span>
             {subItem.children?.[0] &&
@@ -123,7 +120,7 @@ const SubcategoryList1 = ({
                 <SubcategoryList1
                   subItems={subItem.children}
                   item={subItem.category_name}
-                  openCategories={openCategories} // Pass down multiple open categories
+                  openCategories={openCategories}
                   toggleCategory={(val) =>
                     toggleCategory(`${subItem.category_name}/${val}`)
                   }
@@ -145,20 +142,16 @@ const SubcategoryList1 = ({
               }}
               className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
             >
-              <span
-                className="mr-2 truncate text-left capitalize"
-                title={subItem.label}
-              >
+              <span className="mr-2 text-left capitalize" title={subItem.label}>
                 {subItem.label}
               </span>
             </button>
-
-            {/* Render children if open */}
           </div>
         ))}
     </div>
   );
 };
+
 const SubcategoryList = ({
   subItems,
   openCategory,
@@ -204,7 +197,7 @@ const SubcategoryList = ({
 };
 
 interface CategoriesSidebarProps {
-  className?: string; // Adding the className prop
+  className?: string;
 }
 
 const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
@@ -212,21 +205,17 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   const [openCategories, setOpenCategories] = useState<string[]>([]);
   const { genre, checkoutData, category, subCategory } = useAuthContext();
   const router = useRouter();
+  const sidebarRef = useRef<HTMLDivElement>(null);
   const [headerCategory, setHeaderCategory] = useState<
     SideBarCategory[] | null
   >(null);
 
-  const sidebarRef = useRef<HTMLDivElement>(null); // Ref for sidebar
-
   const toggleCategory = async (label: string) => {
     setOpenCategories((prev) => {
-      // Check if the clicked category is already open
       setOpenCategory(null);
       if (prev.includes(label)) {
-        // Close the category and its children
         return prev.filter((cat) => cat !== label);
       } else {
-        // Close other top-level categories when opening a new one
         const newOpenCategories = prev.filter(
           (cat) => label.startsWith(cat) || cat.startsWith(label),
         );
@@ -235,12 +224,11 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       }
     });
   };
+
   const toggleCategory2 = (label: string) => {
     setOpenCategories([]);
     setOpenCategory((pre) => (pre == label ? "" : label));
   };
-
-  // Define types
 
   type CategoriesMap = Record<number, SuperCategory & { children: CAT[] }>;
 
@@ -262,17 +250,16 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     // Step 2: Build the tree structure
     categories.forEach((cat) => {
       if (cat.parent === 0) {
-        // Root category
         const rootCategory = categoriesMap[cat.id];
         if (rootCategory) {
-          categoryTree.push(rootCategory); // Check that it's defined
+          categoryTree.push(rootCategory);
         }
       } else {
         const parentCategory = categoriesMap[cat.parent];
         if (parentCategory) {
           const categoryToAdd = categoriesMap[cat.id];
           if (categoryToAdd) {
-            parentCategory.children.push(categoryToAdd); // Ensure it's defined
+            parentCategory.children.push(categoryToAdd);
           } else {
             console.error(`Category ID ${cat.id} not found in map.`);
           }
@@ -288,7 +275,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   useEffect(() => {
     if (!category || !subCategory) return;
 
-    const x = buildCategoryTree(subCategory); // This should return CategoryTreeNode2[]
+    const x = buildCategoryTree(subCategory);
     const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
       if (cat.category_type_id) {
         acc[cat.category_type_id] = { ...cat, children: [] };
@@ -296,10 +283,8 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       return acc;
     }, {} as CategoriesMap);
 
-    // Ensure x is an array and has elements
     if (Array.isArray(x) && x.length > 0) {
-      // Get all children from the built category tree
-      const allChildren: CAT[] = x.flatMap((node) => node.children); // Flatten all children
+      const allChildren: CAT[] = x.flatMap((node) => node.children);
       allChildren.forEach((item: CAT) => {
         const { category_type_id, outlet } = item;
         const targetCategory = categoriesMap[category_type_id];
@@ -311,7 +296,6 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       const result = Object.values(categoriesMap);
       setHeaderCategory(result);
     } else {
-      // Handle the case when x is empty
       subCategory.forEach((item: CAT) => {
         const { category_type_id, outlet } = item;
         const targetCategory = categoriesMap[category_type_id];
@@ -324,7 +308,6 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     }
   }, [category, subCategory]);
 
-  // Close subcategories on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -354,15 +337,8 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
           <div key={item.type} className="relative">
             <button
               type="button"
-              className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-105"
+              className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-105 focus:outline-none"
             >
-              {/* <Link
-                        key={item.id}
-                        href={item.children?.[0] ? '#' : `books?detail=${item.id}`}
-                        className="flex items-center justify-between w-full text-sm transition-transform hover:scale-105"
-                        onClick={() => item.children ? setOpenCategories([]) : null}
-                        passHref
-                      > */}
               <div className="flex items-center justify-start">
                 <AiOutlineFileText className="mr-1.5 h-6 w-6 p-0.5 text-orange-600" />
                 {/* {item.object_path && (
@@ -400,10 +376,8 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   )}
                 </div>
               )}
-
-              {/* </Link> */}
             </button>
-            <div className="my-1 ml-2 h-px w-[50%] border-t border-gray-400" />
+            <div className="my-1 ml-2 h-px w-[85%] border-t border-gray-400" />
 
             {openCategories.includes(item.type) && item.children?.[0] && (
               <SubcategoryList1
@@ -414,16 +388,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 setOpenCategories={setOpenCategories}
               />
             )}
-            {/* {openCategories.includes(item.type) && item.type == "Gifts" && (
-                  <SubcategoryList1
-                    subItems={xx}
-                    openCategory={openCategory}
-                    toggleCategory={toggleCategory2}
-                    isOpen={false}
-                  />
-                )} */}
           </div>
-
           // )
         ))}
         {categories.map((item) => (
@@ -433,22 +398,34 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               onClick={() =>
                 item.subItems ||
                 item.label === "Books" ||
-                item.label === "Text Book"
+                item.label === "Pulse"
                   ? toggleCategory2(item.label)
                   : null
               }
               className="duration-240 flex w-full items-center justify-between px-2 text-lg transition-transform hover:scale-105 focus:outline-none"
             >
               <div className="flex items-center">
-                {item.icon && (
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                  <span className="mr-2">{iconMap[item.icon]}</span>
+                {(item.icon || item.label === "Pulse") && (
+                  <span className="mr-2">
+                    {item.label === "Pulse" ? (
+                      <Image
+                        src="/assets/images/home/pulse-icon.webp"
+                        className="h-5 w-5 p-0.5"
+                        width={1000}
+                        height={1000}
+                        alt={item.label || "Icon"}
+                      />
+                    ) : (
+                      item.icon && iconMap[item?.icon]
+                    )}
+                  </span>
                 )}
+
                 <Link href={item.href ?? ""} className="text-sm" scroll={false}>
                   {item.label}
                 </Link>
               </div>
-              {item.subItems ? (
+              {item.subItems || item.label == "Pulse" ? (
                 openCategory == item.label ? (
                   <FaChevronDown size={12} />
                 ) : (
@@ -456,7 +433,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 )
               ) : null}
             </button>
-            <div className="my-1.5 ml-2 h-px w-[50%] border-t border-gray-400" />
+            <div className="my-1.5 ml-2 h-px w-[85%] border-t border-gray-400" />
             {openCategory == item.label && (
               <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
                 {item.label === "Books" && genre && (
@@ -479,42 +456,28 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                     ))}
                   </ScrollArea>
                 )}
-                {/* {item.label === "Text Book" && headerCategory?.[0]?.children?.map((subItem) => (
-                      <Link
-                        key={subItem.id}
-                        href={`textbooks?detail=${subItem.id}`}
-                        className="block py-1 text-sm hover:underline"
-                        onClick={() => setOpenCategory(null)}
-                      >
-                        {subItem.category_name}
-                      </Link>
-                    )
-                 
-                )} */}
-                {/* {item.label === "Art & Gifts" &&
-                  headerCategoryGifts?.[0] &&
-                  headerCategoryGifts?.map((subItem) => (
-                    <Link
-                      key={subItem.id}
-                      href={`gifts?detail=${subItem.id}`}
+                {item.label === "Pulse" && (
+                  <div className="">
+                    <a
+                      href="https://apps.apple.com/ie/app/uow-pulse-ltd/id6476544403"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="block py-1 text-sm hover:underline"
-                      onClick={() => setOpenCategory(null)}
                     >
-                      {subItem.category_name}
-                    </Link>
-                  ))} */}
-                {/* {item.label === "Merch & Clothing" &&
-                  headerCategoryClothings?.[0] &&
-                  headerCategoryClothings.map((subItem) => (
-                    <Link
-                      key={subItem.id}
-                      href={`cloths?detail=${subItem.id}`}
+                      Download on the App Store
+                    </a>
+
+                    <a
+                      href="https://play.google.com/store/apps/details?id=com.iitsols.pulseuowltd"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="block py-1 text-sm hover:underline"
-                      onClick={() => setOpenCategory(null)}
                     >
-                      {subItem.category_name}
-                    </Link>
-                  ))} */}
+                      Download on Google Play
+                    </a>
+                  </div>
+                )}
+
                 {item.subItems?.[0] && (
                   <SubcategoryList
                     subItems={item.subItems}

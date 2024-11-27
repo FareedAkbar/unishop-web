@@ -54,7 +54,7 @@ export default function VerifyOTPForm({ loginResponse }: LoginFormProps) {
       toast({
         title: "Login Failed",
         variant: "destructive",
-        description: errorMessage, // Use the error message from the thrown error
+        description: errorMessage, 
       });
       console.log(err);
     }
@@ -74,12 +74,12 @@ export default function VerifyOTPForm({ loginResponse }: LoginFormProps) {
       <form className="mt-8 mb-2" onSubmit={handleSubmit(onSubmit)}>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
+          <Label required htmlFor="email">Email Address</Label>
           <p>{loginResponse?.data.email}</p>
 
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">OTP</Label>
+          <Label required htmlFor="email">OTP</Label>
           <Input
             id="otp"
             placeholder="Please enter OTP"

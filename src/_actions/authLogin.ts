@@ -6,7 +6,6 @@ import type { VerifyOTPResponse } from '~/types/loginResponse';
 import type UserType from '~/types/userType';
 import { apiRouter } from '~/utils/api-router';
 
-
 export async function VerifyOTPCApi(payload: VerifyOTP): Promise<VerifyOTPResponse | boolean> {
 
     try {
@@ -22,7 +21,6 @@ export async function VerifyOTPCApi(payload: VerifyOTP): Promise<VerifyOTPRespon
         const responsePayload: { status: boolean; data: UserType, message: string, token: string } =
             (await response.json()) as VerifyOTPResponse;
 
-        // Check if result has the expected structure
         if (response?.status) {
             cookies().set({
                 name: 'IS_LOGGED_IN',
@@ -40,7 +38,3 @@ export async function VerifyOTPCApi(payload: VerifyOTP): Promise<VerifyOTPRespon
         return false
     }
 };
-
-
-
-

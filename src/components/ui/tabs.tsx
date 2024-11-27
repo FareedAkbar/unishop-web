@@ -4,23 +4,19 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "~/lib/utils";
 
-
 type Tab = {
   title: string;
   value: string;
   content?: string | React.ReactNode;
 };
-type Value ={
-  val: string
-}
+
 export const Tabs = ({
   tabs: propTabs,
   containerClassName,
   activeTabClassName,
   tabClassName,
   contentClassName,
-  changeTabName
-
+  changeTabName,
 }: {
   tabs: Tab[];
   containerClassName?: string;
@@ -28,24 +24,24 @@ export const Tabs = ({
   tabClassName?: string;
   contentClassName?: string;
   changeTabName?: (payload: string) => void;
-
 }) => {
   const [active, setActive] = useState<Tab>(propTabs[0]!);
   const [tabs, setTabs] = useState<Tab[]>(propTabs);
-  
+
   const [hovering, setHovering] = useState(false);
-  
-    const moveSelectedTabToTop = (idx: number) => {
-      const newTabs = [...propTabs];
-      const selectedTab = newTabs.splice(idx, 1);
-      newTabs.unshift(selectedTab[0]!);
-      setTabs(newTabs);
-      if(changeTabName){
-        changeTabName(newTabs[0]?.value ?? "")
-      }
-      setActive(newTabs[0]!);
-      setHovering(false);
-    };
+
+  const moveSelectedTabToTop = (idx: number) => {
+    const newTabs = [...propTabs];
+    const selectedTab = newTabs.splice(idx, 1);
+    newTabs.unshift(selectedTab[0]!);
+    setTabs(newTabs);
+    if (changeTabName) {
+      changeTabName(newTabs[0]?.value ?? "");
+    }
+    setActive(newTabs[0]!);
+    setHovering(false);
+    console.log("id", idx);
+  };
 
   return (
     <>
@@ -88,7 +84,6 @@ export const Tabs = ({
       <FadeInDiv
         tabs={tabs}
         active={active}
-
         key={active.value}
         hovering={hovering}
         className={cn("mt-16", contentClassName)}
@@ -108,29 +103,31 @@ export const FadeInDiv = ({
   tabs: Tab[];
   active: Tab;
   hovering?: boolean;
-
 }) => {
   const isActive = (tab: Tab) => {
     return tab.value === tabs[0]!.value;
   };
 
   return (
-    <div className="relative h-full w-full" >
+    <div className="relative  h-full w-full">
       {tabs.map((tab, idx) => (
         <motion.div
-
           key={tab.value}
           layoutId={tab.value}
           style={{
             scale: 1 - idx * 0.1,
             top: hovering ? idx * -60 : 0,
             zIndex: -idx,
-            opacity: idx < 3 ? 1 - idx * 0.1 : 0,
+            opacity: 1 - idx * 0.5,
           }}
           animate={{
             y: isActive(tab) ? [0, 40, 0] : 0,
           }}
-          className={cn("absolute left-0 top-0 h-full w-full", className, tab.value != active.value ? 'pointer-events-none opacity-50' : '')}
+          className={cn(
+            "absolute left-0 top-0 h-full w-full",
+            className,
+            tab.value != active.value ? "pointer-events-none" : "",
+          )}
         >
           {tab.content}
         </motion.div>

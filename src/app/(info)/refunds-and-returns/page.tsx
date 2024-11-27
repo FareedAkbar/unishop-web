@@ -92,7 +92,7 @@ const MyComponent: React.FC = () => {
       </div>
 
       {/* Cards Section */}
-      <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
+      <div className="relative z-[5] -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
         <ReturnPolicyCard {...inStorePolicy} />
         <ReturnPolicyCard {...onlineOrderPolicy} />
       </div>

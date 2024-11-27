@@ -6,8 +6,8 @@ import type { SpecialItems } from "~/types/specialItems";
 import { useRouter } from "next/navigation";
 
 interface ProductListProps {
-  title?: string; // Optional title prop
-  width?: string; // Optional width prop
+  title?: string;
+  width?: string;
   index: number;
   specialItems: SpecialItems[] | null;
 }
@@ -36,7 +36,7 @@ const ProductList: React.FC<ProductListProps> = ({
   return (
     <>
       {specialItems?.[0] && (
-        <div className="flex flex-col space-y-4 p-5 pb-8">
+        <div className="flex flex-col space-y-4 p-3 pb-8">
           {title && (
             <h2 className="animate-bounce pl-3 text-xl font-bold text-gray-800 dark:text-white">
               {title}
@@ -51,16 +51,16 @@ const ProductList: React.FC<ProductListProps> = ({
                 (product, index) =>
                   title == product?.tag_name && (
                     <motion.div
-                      key={product.item_id}
+                      key={product?.item_id} 
                       className={`flex w-full cursor-pointer items-center justify-between rounded-lg border border-neutral-300 bg-white p-3 shadow-lg dark:bg-slate-700 dark:text-white`}
-                      initial={{ opacity: 0, x: -20 }} // Start position above
+                      initial={{ opacity: 0, x: -20 }}
                       animate={{
                         opacity: 1,
                         y: 0,
                         transition: { type: "spring", stiffness: 100 },
                       }}
-                      whileHover={{ scale: 1.05 }} // Scale effect on hover with origin to prevent cutting off
-                      transition={{ delay: index * 0.1 }} // Stagger effect
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ delay: index * 0.1 }}
                       onClick={() =>
                         router.push(
                           `/products?category=${product.category_type_id}&name=${product.category_name}&detail=${product.category}`,

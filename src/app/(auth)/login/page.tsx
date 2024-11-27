@@ -35,6 +35,7 @@ const MyComponent = () => {
       ),
     },
   ];
+
   return (
     <div className="relative flex h-screen flex-col items-center justify-center">
       <div className="absolute inset-0 hidden bg-cover bg-center lg:block">
@@ -46,7 +47,6 @@ const MyComponent = () => {
           objectFit="cover"
           className="relative h-full w-full dark:hidden"
         />
-
         <Image
           src="/assets/images/home/home1.png"
           alt="background image flipped"
@@ -61,8 +61,8 @@ const MyComponent = () => {
         {view == "login" && (
           <div className="relative">
             <button
-            onClick={() => router.back()}
-            className="fixed left-10 top-10 rounded-full bg-transparent p-2  transition hover:bg-gray-200 dark:hover:bg-slate-700"
+              onClick={() => router.back()}
+              className="fixed left-10 top-10 rounded-full bg-transparent p-2 transition hover:bg-gray-200 dark:hover:bg-slate-700"
             >
               <FaArrowLeft className="text-black dark:text-white" />
             </button>

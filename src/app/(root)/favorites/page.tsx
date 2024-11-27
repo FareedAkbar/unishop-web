@@ -1,6 +1,5 @@
 "use client";
 
-// import Header from "~/components/header";
 import { Suspense, useEffect, useRef, useState } from "react";
 // import Pagination from "~/components/pagination";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -57,7 +56,7 @@ const MyComponent = () => {
     checkoutData,
     favItems,
     removeFavourite,
-    setProductForDetail
+    setProductForDetail,
   } = useAuthContext();
   const { toast } = useToast();
   const router = useRouter();
@@ -143,7 +142,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -157,8 +156,8 @@ const MyComponent = () => {
     )
       .filter(Boolean)
       .map((value) => ({
-        tagName, // include tagName in the result
-        dependencies, // include dependencies in the result
+        tagName,
+        dependencies,
         value: value!,
         label: value!,
       }));
@@ -287,7 +286,7 @@ const MyComponent = () => {
     // Date range filter
 
     setFilteredData(filtered);
-    setCurrentPage(1); // Reset to first page on new filter
+    setCurrentPage(1);
   };
   // Calculate total pages based on filtered data and page size
   const totalPages = Math.ceil(
@@ -317,58 +316,53 @@ const MyComponent = () => {
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-         <div className="flex items-center justify-between lg:px-10 pb-4 w-screen">
-            {/* Left Arrow */}
-            <div className="w-10 flex justify-start">
+        <div className="flex w-screen items-center justify-between pb-4 lg:px-10">
+          {/* Left Arrow */}
+          <div className="flex w-10 justify-start">
             <button
               onClick={() => router.back()}
               className="rounded-full bg-transparent p-2 transition hover:bg-gray-200 dark:hover:bg-slate-700"
             >
               <HiArrowNarrowLeft className="text-3xl text-red-500" />
             </button>
-            </div>
-           
-
-            {/* Title */}
-            <h4 className="flex-1  bg-gradient-to-r from-red-700 via-red-400 to-red-700 bg-clip-text text-center text-4xl font-extrabold text-transparent">
-              Wishlist Wonders
-            </h4>
-
-            {/* Invisible Placeholder */}
-            <div className="w-10"></div>
           </div>
+
+          {/* Title */}
+          <h4 className="flex-1 bg-gradient-to-r from-red-700 via-red-400 to-red-700 bg-clip-text text-center text-4xl font-extrabold text-transparent">
+            Wishlist Wonders
+          </h4>
+
+          {/* Invisible Placeholder */}
+          <div className="w-10" />
+        </div>
         <div className="flex flex-row">
-         
           <div className="flex flex-col px-4">
-
-
-
             <ScrollArea className="max-h-[75vh] pb-5">
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 2 }, (_, index) => (
-                    <div key={index} className="p-2">
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
+                      <div key={index} className="p-2">
+                        <ProductCardSkeleton />
+                      </div>
+                    ))
                   : displayedData?.map((item: DataCart) => (
-                    <ProductCard
-                      key={item.book_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={async () => {
-                        if (item?.variations?.[0]) {
-                          await openDetail(item);
-                        } else {
-                          await handleAddToCart(item);
-                        }
-                      }}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
-                      handleFavourite={() => handleFavourite(item)}
-                      wishListLoader={wishListLoader}
-                    />
-                  ))}
+                      <ProductCard
+                        key={item.book_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={async () => {
+                          if (item?.variations?.[0]) {
+                            await openDetail(item);
+                          } else {
+                            await handleAddToCart(item);
+                          }
+                        }}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        openDetail={() => openDetail(item)}
+                        handleFavourite={() => handleFavourite(item)}
+                        wishListLoader={wishListLoader}
+                      />
+                    ))}
                 {!loader && !favItems[0] && (
                   <div className="flex h-full w-full flex-col items-center justify-center">
                     <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
@@ -377,8 +371,8 @@ const MyComponent = () => {
                     <Player
                       autoplay
                       loop
-                      src="/assets/gifs/emptywishlist.json" // Lottie animation path
-                      className="h-80 w-80" // Tailwind classes for responsive sizing
+                      src="/assets/gifs/emptywishlist.json"
+                      className="h-80 w-80"
                     />
                   </div>
                 )}
@@ -438,11 +432,11 @@ const MyComponent = () => {
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                   $
                   {itemDetail?.variations?.[0] &&
-                    filteredVariations?.[0]?.items_variable_items_sale_price
+                  filteredVariations?.[0]?.items_variable_items_sale_price
                     ? filteredVariations?.[0]?.items_variable_items_sale_price
                     : itemDetail?.variations?.[0]
                       ? itemDetail?.variations?.[0]
-                        .items_variable_items_sale_price
+                          .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
                 {itemDetail?.SKU && (
@@ -483,7 +477,9 @@ const MyComponent = () => {
                 </div>
               )}
 
-              {itemDetail?.pages !== undefined && itemDetail.pages !== null && itemDetail.pages ? (
+              {itemDetail?.pages !== undefined &&
+              itemDetail.pages !== null &&
+              itemDetail.pages ? (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
@@ -492,7 +488,9 @@ const MyComponent = () => {
                     {itemDetail.pages}
                   </span>
                 </div>
-              ):""}
+              ) : (
+                ""
+              )}
 
               {itemDetail?.publisher?.publisher_name && (
                 <div className="flex items-center justify-center">
@@ -525,9 +523,7 @@ const MyComponent = () => {
                     : ""}
                 </span>
               </div>
-              
 
-             
               {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>
                   <div>
@@ -589,7 +585,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                              currTag.items_variations_tags_name
+                                currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -627,10 +623,11 @@ const MyComponent = () => {
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
+                                  className={`min-w-10 rounded border p-1 text-center ${
+                                    selectedValues[tagName] === option.value
                                       ? "bg-red-500 text-white"
                                       : "border-red-500 bg-white dark:bg-slate-700"
-                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}
@@ -659,14 +656,9 @@ const MyComponent = () => {
                       );
                     },
                   )}
-
-                  {/* Display selected options */}
                 </div>
               )}
 
-              {/* {itemDetail?.item_id &&
-                !isItemInCart(itemDetail.item_id) &&
-                itemDetail?.stock?.quantity ? ( */}
               {itemDetail?.variations?.[0]?.variation_tags &&
                 Object.keys(selectedValues)[0] &&
                 filteredVariations?.[0]?.items_variable_items_id && (
@@ -690,15 +682,6 @@ const MyComponent = () => {
             </button>
           </div>
         </ModalContent>
-        {/* <ModalFooter className="gap-4">
-          <button
-            onClick={() => setOpen(false)}
-            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm dark:border-slate-950 dark:bg-slate-900"
-          >
-            Close
-          </button>
-         
-        </ModalFooter> */}
       </ModalBody>
     </div>
   );

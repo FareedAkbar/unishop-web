@@ -16,7 +16,7 @@ const MyComponent = () => {
     <div className="min-h-screen pt-28 lg:pt-16">
       <div className="flex flex-wrap items-center justify-between bg-white p-8 pb-14 shadow-md dark:bg-slate-600 lg:px-32">
         <div className="max-w-md flex-1 text-lg">
-          <div className="space-y-2 ">
+          <div className="space-y-2">
             <h2 className="text-xl font-semibold">
               ENQUIRE ABOUT HIRING YOUR GRADUATION ATTIRE
             </h2>
@@ -48,10 +48,10 @@ const MyComponent = () => {
       </div>
 
       {/* Cards Section */}
-      <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center lg:px-12">
+      <div className="relative z-[5] -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center lg:px-12">
         <div className="grid w-full max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-2">
           {/* Card 1: Hiring & Purchasing */}
-          <div className="rounded-lg  bg-red-100 p-6 shadow-lg dark:bg-slate-700">
+          <div className="rounded-lg bg-red-100 p-6 shadow-lg dark:bg-slate-700">
             <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
               <FaShoppingBag size={28} className="text-red-500" />
               Hiring & Purchasing
@@ -66,7 +66,7 @@ const MyComponent = () => {
           </div>
 
           {/* Card 2: Graduation Details */}
-          <div className="rounded-lg  bg-red-100 p-6 shadow-lg dark:bg-slate-700">
+          <div className="rounded-lg bg-red-100 p-6 shadow-lg dark:bg-slate-700">
             <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
               <FaGraduationCap size={28} className="text-red-500" />
               Graduation Details
@@ -90,9 +90,9 @@ const MyComponent = () => {
           width={1920}
           height={1080}
         />
-        <div className="flex w-full flex-col gap-8 lg:flex-row ">
+        <div className="flex w-full flex-col gap-8 lg:flex-row">
           {/* Purchase Charges Section */}
-          <div className="flex w-full flex-col items-center rounded-lg bg-white shadow-lg p-4 lg:w-1/2 lg:items-start">
+          <div className="flex w-full flex-col items-center rounded-lg bg-white p-4 shadow-lg lg:w-1/2 lg:items-start">
             <h2 className="mb-4 text-center text-2xl font-bold text-black lg:text-left">
               Purchase Charges
             </h2>
@@ -106,7 +106,7 @@ const MyComponent = () => {
           </div>
 
           {/* Size Guide Section */}
-          <div className="flex w-full flex-col items-center rounded-lg bg-white shadow-lg p-4 lg:w-1/2 lg:items-start">
+          <div className="flex w-full flex-col items-center rounded-lg bg-white p-4 shadow-lg lg:w-1/2 lg:items-start">
             <h2 className="mb-4 text-center text-2xl font-bold text-black lg:text-left">
               Size Guide
             </h2>

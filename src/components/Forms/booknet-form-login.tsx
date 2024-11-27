@@ -8,11 +8,9 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "~/lib/utils";
 import { booknetFormSchema } from "./schema";
-
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter } from "next/navigation";
 import type { CheckoutForm } from "~/types/checkoutForm";
-import Spinner from "../spinner";
 import Button from "../ui-components/Button";
 import { useToast } from "~/hooks/use-toast";
 import Link from "next/link";
@@ -74,8 +72,6 @@ export default function BooknetFormLogin({
       setLoader(false);
       console.error("Failed to checkout:", error);
     }
-
-    // Handle form submission here
   };
 
   return (
@@ -89,7 +85,7 @@ export default function BooknetFormLogin({
       </p>
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="address">Username</Label>
+          <Label required htmlFor="address">Username</Label>
           <Input
             id="Username"
             placeholder="Enter username"
@@ -101,7 +97,7 @@ export default function BooknetFormLogin({
           )}
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="address">Password</Label>
+          <Label required htmlFor="address">Password</Label>
           <Input
             id="Password"
             placeholder="******"

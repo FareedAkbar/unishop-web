@@ -3,7 +3,7 @@ import React from "react";
 
 const Spinner = () => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-slate-900 bg-opacity-75">
       <div className="relative flex items-center justify-center">
         {/* SVG Circular Loader with Red Gradient */}
         <svg

@@ -43,12 +43,12 @@ const ProductCard = ({
           tag.item_special_tags_id === specialTag.item_special_tags_id,
       ),
     )
-    .filter((tag): tag is ItemSpecialTag => Boolean(tag)); // Filter out undefined values in case there are no matches
+    .filter((tag): tag is ItemSpecialTag => Boolean(tag));
 
   const tagNames: string[] = matchingTags?.map((tag) => tag?.tag_name) ?? [];
 
   return (
-    <div className="group relative m-2 flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
+    <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
       <div className="relative flex h-40 grow-0 items-center justify-center rounded-sm bg-gray-200 dark:bg-slate-600 sm:h-48 lg:h-64">
         {tagNames.length > 0 ? (
           <div className="absolute left-2 top-1 flex flex-col">
@@ -66,19 +66,6 @@ const ProductCard = ({
         ) : (
           ""
         )}
-        {/* {product?.variations?.[0]?.items_variable_items_sale_price ?
-          (
-            <div className="absolute left-2 top-2 z-[12] rounded bg-red-500 px-1 py-0.5 text-[6px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1 sm:text-sm">
-              {product?.variations?.[0]?.items_variable_items_sale_price}
-            </div>
-          )
-
-          : product?.item_sale_price ?
-            (<div className="absolute left-2 top-2 z-[12] rounded bg-red-500 px-1 py-0.5 text-[6px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1 sm:text-sm">
-              {product?.item_sale_price}
-            </div>)
-
-            : ''} */}
 
         <Image
           src={
@@ -93,10 +80,7 @@ const ProductCard = ({
         />
         <div className="absolute right-5 top-2 flex">
           {showButton && !showAddToCart && (
-            <p
-              // onClick={() => handleAddToCart()}
-              className="rounded-full border-none bg-red-500 p-0.5 text-sm text-white sm:p-1 sm:text-xl"
-            >
+            <p className="rounded-full border-none bg-red-500 p-0.5 text-sm text-white sm:p-1 sm:text-xl">
               <AiOutlineShoppingCart />
             </p>
           )}
@@ -115,7 +99,6 @@ const ProductCard = ({
             )}
           </button>
           <button
-            // onClick={() => (openDetail ? openDetail() : "")}
             onClick={() => (openDetail ? openDetail() : "")}
             className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
           >
@@ -123,7 +106,6 @@ const ProductCard = ({
           </button>
         </div>
 
-        {/* {product?.item_sale_price ? ( */}
         {showButton &&
         (product?.variations?.[0]?.items_variable_items_sale_price ??
           product?.item_sale_price) ? (
@@ -138,16 +120,12 @@ const ProductCard = ({
         ) : (
           ""
         )}
-
-        {/* ) : (
-          ""
-        )} */}
       </div>
       <span className="mt-2 font-semibold sm:mt-4" title={product?.item_name}>
         {product?.item_name}
       </span>
       {product?.stock?.quantity ? (
-        <span className="truncate text-sm sm:text-sm lg:text-sm">
+        <span className="truncate text-sm">
           Available Stock: {product?.stock?.quantity}
         </span>
       ) : (
@@ -166,9 +144,6 @@ const ProductCard = ({
         ) : (
           ""
         )}
-      </div>
-      <div className="flex flex-row justify-between sm:mt-1">
-        {/* Additional details like rating can go here */}
       </div>
     </div>
   );

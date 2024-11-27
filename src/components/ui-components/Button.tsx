@@ -9,7 +9,7 @@ interface ButtonProps {
   width?: string;
   className?: string;
   disabled?: boolean;
-  type?: "button" | "submit" | "reset"; // Add type prop
+  type?: "button" | "submit" | "reset";
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -20,21 +20,21 @@ const Button: React.FC<ButtonProps> = ({
   height = "h-full",
   width = "w-fit",
   disabled,
-  className = "", // Default value for className
-  type = "button", // Default value for type
+  className = "",
+  type = "button",
 }) => {
   return (
     <button
-      type={type} // Use the type prop here
+      type={type}
       onClick={onClick}
       className={`${width} ${height} ${color} flex items-center justify-center rounded-md p-2 font-medium text-white transition-opacity duration-300 hover:opacity-90 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70 sm:px-6 sm:py-3 ${className}`}
       disabled={(disabled ?? loading) ? true : false}
-      style={{ minWidth: loading ? `${title.length * 11}px` : "auto" }} // Ensures consistent width
+      style={{ minWidth: loading ? `${title.length * 11}px` : "auto" }}
     >
       {loading ? (
         <svg
           aria-hidden="true"
-          className="h-6 w-6 animate-spin fill-red-700 text-gray-200" // Adjusted size for responsiveness
+          className="h-6 w-6 animate-spin fill-red-700 text-gray-200"
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

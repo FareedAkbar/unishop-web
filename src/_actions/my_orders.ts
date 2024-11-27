@@ -4,12 +4,12 @@ import type { GetSpecialOrder, GetSpecialOrderApiResponse, OrderStatus, OrderSta
 
 
 interface ApiResponse {
-    // meta: PaginationData; // Adjust based on your actual structure
+    // meta: PaginationData; 
     data: GetSpecialOrder[];
     status: boolean;
 }
 interface ApiResponseStatus {
-    // meta: PaginationData; // Adjust based on your actual structure
+    // meta: PaginationData; 
     data: OrderStatus[];
     status: boolean;
 }
@@ -19,15 +19,17 @@ export async function getMyOrders(booknetCustomerId: number): Promise<ApiRespons
         customer_id: null,
         booknet_customer_id: booknetCustomerId
     }
+
     const requestOptions: RequestInit = {
         method: "POST",
         headers: {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-            "Content-Type": "application/json", // Optional, depending on your API
+            "Content-Type": "application/json", 
         },
-        redirect: "follow", // Use the correct type for `redirect`,
+        redirect: "follow", 
         body: JSON.stringify(payload),
     };
+
     try {
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/orders/customer`,
@@ -36,7 +38,6 @@ export async function getMyOrders(booknetCustomerId: number): Promise<ApiRespons
         const result: GetSpecialOrderApiResponse =
             (await response.json()) as GetSpecialOrderApiResponse;
 
-        // Check if result has the expected structure
         if (result?.status) {
             // setMeta(result.meta);
             return result
@@ -57,10 +58,11 @@ export async function getOrderStatus(): Promise<ApiResponseStatus | boolean> {
         method: "GET",
         headers: {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-            "Content-Type": "application/json", // Optional, depending on your API
+            "Content-Type": "application/json", 
         },
-        redirect: "follow", // Use the correct type for `redirect`,
+        redirect: "follow",
     };
+    
     try {
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_PASSKEY_IPOS}api/v1/ipos/orders/getOrderStatuses`,
@@ -68,14 +70,12 @@ export async function getOrderStatus(): Promise<ApiResponseStatus | boolean> {
         );
         const result: OrderStatusResponse =
             (await response.json()) as OrderStatusResponse;
-        // Check if result has the expected structure
         if (result?.status) {
             // setMeta(result.meta);
             return result
 
         } else {
             console.error("Unexpected result structure getOrderStatus:", result);
-            // Handle unexpected structure here
             return result
         }
     } catch (error) {

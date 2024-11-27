@@ -2,10 +2,8 @@
 
 import type { getSubmitReviewResponse, ReviewData } from "~/types/reviews";
  
-
-
 interface ApiResponseReviews {
-    // meta: PaginationData; // Adjust based on your actual structure
+    // meta: PaginationData; 
     data: ReviewData[]
     status: boolean;
 }
@@ -13,22 +11,22 @@ const requestOptions: RequestInit = {
     method: "GET",
     headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-        "Content-Type": "application/json", // Optional, depending on your API
+        "Content-Type": "application/json", 
     },
-    redirect: "follow", // Use the correct type for `redirect`
+    redirect: "follow", 
 };
 
 export async function submitReviewsApi(ReviewData: ReviewData): Promise<getSubmitReviewResponse | boolean> {
-    console.log(ReviewData)
     const requestOptions: RequestInit = {
         method: "POST",
         headers: {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-            "Content-Type": "application/json", // Optional, depending on your API
+            "Content-Type": "application/json", 
         },
         body: JSON.stringify(ReviewData),
-        redirect: "follow", // Use the correct type for `redirect`
+        redirect: "follow", 
     };
+
     try {
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/review`,
@@ -36,7 +34,6 @@ export async function submitReviewsApi(ReviewData: ReviewData): Promise<getSubmi
         );
         const result: getSubmitReviewResponse = (await response.json()) as getSubmitReviewResponse;
 
-        // Check if result has the expected structure
         if (result?.status) {
 
             return result
@@ -50,12 +47,7 @@ export async function submitReviewsApi(ReviewData: ReviewData): Promise<getSubmi
     }
 };
 
-
-
-
-
 export async function getReviewsApi(id: number): Promise<ApiResponseReviews | boolean> {
-    console.log("id",id)
     try {
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/review?item_id=${id}`,
@@ -63,7 +55,6 @@ export async function getReviewsApi(id: number): Promise<ApiResponseReviews | bo
         );
         const result: ApiResponseReviews = (await response.json()) as ApiResponseReviews;
 
-        // Check if result has the expected structure
         if (result?.status) {
             // setMeta(result.meta);
             console.log("result structure:",result)

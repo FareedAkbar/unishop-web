@@ -11,7 +11,6 @@ import { cn } from "~/lib/utils";
 import { FaStar } from "react-icons/fa";
 import type { ReviewData } from "~/types/reviews";
 
-// Zod schema to validate form input
 const reviewSchema = z.object({
   // name: z.string().min(1, "Name is required").max(50, "Name is too long"),
   review: z.string().min(10, "Review must be at least 10 characters long"),
@@ -49,8 +48,6 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
         stars: rating,
       };
       submitValues(value);
-
-      // Reset form and rating after successful submission
       reset();
       setRating(0);
     } catch (error) {
@@ -79,7 +76,7 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
 
         {/* Rating Field */}
         <div className="flex items-center gap-2">
-          <Label>Rating</Label>
+          <Label required>Rating</Label>
           <div className="flex space-x-1">
             {Array.from({ length: 5 }, (_, index) => {
               const starValue = index + 1;
@@ -100,9 +97,8 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
           </div>
         </div>
 
-        {/* Review Field */}
         <LabelInputContainer>
-          <Label htmlFor="review">Review</Label>
+          <Label required htmlFor="review">Review</Label>
           <textarea
             id="review"
             className={cn(
@@ -112,13 +108,12 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
             placeholder="Write your review here..."
             rows={5}
             {...register("review")}
-          ></textarea>
+          />
           {errors.review && (
             <p className="text-sm text-red-500">{errors.review.message}</p>
           )}
         </LabelInputContainer>
 
-        {/* Submit Button */}
         <Button
           title="Submit Review"
           type="submit"
@@ -132,7 +127,6 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
   );
 }
 
-// LabelInputContainer Component
 const LabelInputContainer = ({
   children,
   className,

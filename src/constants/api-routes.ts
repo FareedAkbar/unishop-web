@@ -11,7 +11,6 @@ export enum PAGE_ROUTES {
   BOOKS = "/books",
   CHECKOUT = "/checkout",
   PLACEORDER = "/placeorder",
-  TEXTBOOKS = "/textbooks",
   POSTAGE_AND_HANDLING = "/postage-and-handling",
   REFUND_AND_RETURNS = "/refunds-and-returns",
   TERMS_AND_CONDITION = "/terms-and-conditions",
@@ -23,7 +22,6 @@ export enum PAGE_ROUTES {
   ORDER_CONFIRMED = "/order-confirmed",
   PRIVACY_POLICY = "/privacy-policy",
   FAVORITES="/favorites",
-  CLOTHS="/cloths",
   PRODUCTS="/products",
   PRODUCT_DETAILS="/product-details"
 }

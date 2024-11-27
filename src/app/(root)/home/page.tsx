@@ -8,30 +8,27 @@ import ProductList from "~/components/ui-components/ProductList";
 import { FlipWords } from "~/components/ui/flip-words";
 import AboutSection from "./AboutSection";
 import { useAuthContext } from "~/Context/AuthContext";
-import BackgroundBubbles from "~/components/ui-components/BackgroundBubbles";
 import { getSpecialItems } from "~/_actions/getitemsbycategory";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaLeftLong, FaRightLong } from "react-icons/fa6";
 import { ItemSpecialTag } from "~/types/productTags";
 import { SpecialItemsForHomePage } from "~/types/specialItems";
-
+import BackgroundSquares from "~/components/ui-components/BackgroundSquares";
 const HomePage: React.FC = () => {
   const { productTags } = useAuthContext();
   const [specialItems, setSpecialItems] = useState<
     SpecialItemsForHomePage[] | null
   >(null);
-  const isFirstRender = useRef(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("right");
-
   const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false); // Hover state
 
   // Hook to detect screen size
   useEffect(() => {
     const handleResize = () => {
       setIsLargeScreen(window.innerWidth >= 1024); // Tailwind `lg` breakpoint is 1024px
     };
-
     handleResize(); // Check on mount
     window.addEventListener("resize", handleResize);
 
@@ -55,48 +52,41 @@ const HomePage: React.FC = () => {
 
   // Load data for special items
   useEffect(() => {
-    console.log(process.env.NEXT_PUBLIC_PASSKEY);
     if (productTags && productTags?.length < 0) return;
-   
-      const loadData = async (Tag: ItemSpecialTag) => {
-        const x = await getSpecialItems(Tag.item_special_tags_id);
-        if (typeof x != "boolean" && x.status && x.data) {
-          if (x.data?.[0]) {
-            const newData = {
-              title: Tag.tag_name,
-              data: x?.data,
-            };
-            setSpecialItems((prevData) => {
-              // If the previous data is null, initialize it as an array
-              const z = prevData?.find((item) => item.title == Tag.tag_name);
-              if (z) {
-                return prevData;
-              } else {
-                if (!prevData) return [newData];
 
-                // Otherwise, return a new array with the previous data and the new item
-                return [...prevData, newData];
-              }
-            });
-          }
+    const loadData = async (Tag: ItemSpecialTag) => {
+      const x = await getSpecialItems(Tag.item_special_tags_id);
+      if (typeof x != "boolean" && x.status && x.data) {
+        if (x.data?.[0]) {
+          const newData = {
+            title: Tag.tag_name,
+            data: x?.data,
+          };
+          setSpecialItems((prevData) => {
+            const z = prevData?.find((item) => item.title == Tag.tag_name);
+            if (z) return prevData;
+            return prevData ? [...prevData, newData] : [newData];
+          });
         }
-      };
-      productTags?.map((item) => {
-        loadData(item).catch((error) => {
-          console.error("Failed to load data in useEffect:", error);
-        });
-      });
-    
+      }
+    };
+    productTags?.map((item) => {
+      loadData(item).catch((error) =>
+        console.error("Failed to load data:", error),
+      );
+    });
   }, [productTags]);
 
   // Auto-slide functionality
   useEffect(() => {
+    if (isHovered) return; // Pause animation when hovered
+
     const interval = setInterval(() => {
       handleNext();
     }, 7000);
 
     return () => clearInterval(interval);
-  }, [specialItems, currentIndex]);
+  }, [isHovered, specialItems, currentIndex]);
 
   const handleNext = () => {
     setDirection("right");
@@ -123,34 +113,32 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 pt-32 dark:bg-slate-800 lg:pt-24">
-      <BackgroundBubbles />
-
-      <div className="container mx-auto flex justify-center">
+      <BackgroundSquares />
+      <div className="flex justify-center">
         <ImageSlider />
       </div>
-
-      <div className="flex flex-col py-5">
-        <div className="self-center text-xl lg:text-5xl">
+      <div className="flex flex-col items-center px-4 py-5 md:px-10">
+        <div className="text-center text-xl md:flex md:text-3xl lg:flex lg:items-center lg:text-5xl">
           <FlipWords
             words={["Imagine", "Create", "Inspire", "Transform"]}
-            className="text-red-500 dark:text-red-500 text-2xl lg:text-5xl"
+            className="font-bold text-red-500"
           />
-          your reading adventure!
+          <span className="mt-2 block text-base md:mt-0.5 md:text-2xl lg:mt-0 lg:text-4xl">
+            your reading adventure!
+          </span>
         </div>
-      </div>
-
+      </div>{" "}
       <div className="relative w-full">
         <div className="flex">
-          <div className="hidden lg:block lg:ml-20">
+          <div className="hidden lg:ml-20 lg:block">
             <CategoriesSidebar />
           </div>
-
           <div className="mx-auto w-full px-5 pb-10">
-            <div className="relative min-h-[450px] lg:ml-64">
+            <div className="relative min-h-[350px] lg:ml-64">
               <AnimatePresence initial={false} mode="wait" custom={direction}>
                 <motion.div
                   key={currentIndex}
-                  className={`flex flex-wrap gap-6 transition-none lg:flex-nowrap lg:overflow-x-hidden lg:transition-all`}
+                  className="flex flex-wrap lg:flex-nowrap lg:gap-6"
                   {...(isLargeScreen && {
                     custom: direction,
                     initial: "enter",
@@ -160,50 +148,34 @@ const HomePage: React.FC = () => {
                     transition: { duration: 0.5, ease: "easeInOut" },
                   })}
                 >
-                  {/* Render all lists for small screens */}
-                  {specialItems?.map((item, index) => (
+                  {getDisplayedItems().map((item, index) => (
                     <div
-                      key={index}
-                      className="w-full lg:hidden" // Show this only on small screens
+                      key={`display-${index}`}
+                      className="w-full"
+                      onMouseEnter={() => setIsHovered(true)} 
+                      onMouseLeave={() => setIsHovered(false)} 
                     >
                       <ProductList
-                        title={item.title}
+                        title={item?.title}
                         width="w-full"
                         index={index}
-                        specialItems={item.data!}
+                        specialItems={item?.data ?? null}
                       />
                     </div>
                   ))}
-
-                  {/* Conditionally render only two lists for large screens */}
-                  {specialItems && specialItems?.length > 2 && (
-                    <div className="hidden w-full gap-6 lg:flex">
-                      {getDisplayedItems().map((item, index) => (
-                        <div key={`display-${index}`} className="w-full">
-                          <ProductList
-                            title={item?.title}
-                            width="w-full"
-                            index={index}
-                            specialItems={item?.data ?? null}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </motion.div>
               </AnimatePresence>
-
               {specialItems && specialItems?.length > 2 && (
                 <>
                   <button
                     onClick={handlePrevious}
-                    className="absolute top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-2xl dark:bg-slate-700 lg:block"
+                    className="absolute -left-10 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-xl dark:bg-slate-700 lg:block"
                   >
                     <FaLeftLong size={24} />
                   </button>
                   <button
                     onClick={handleNext}
-                    className="absolute right-0 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-2xl dark:bg-slate-700 lg:block"
+                    className="absolute right-0 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-xl dark:bg-slate-700 lg:block"
                   >
                     <FaRightLong size={24} />
                   </button>
@@ -213,7 +185,6 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </div>
-
       <AboutSection />
       <GraduationBanner />
     </div>

@@ -42,7 +42,7 @@ export default function SignupFormDemo() {
     const selectedStateName =
       x?.find((state) => state.countryCode == stateId)?.label ?? "";
 
-    setValue("state", selectedStateName); // Set human-readable name
+    setValue("state", selectedStateName);
     setValue("city", "");
     setCityOptions(getCitiesForState(stateId));
   };
@@ -79,7 +79,6 @@ export default function SignupFormDemo() {
     } catch (error) {
       console.error("Failed to checkout:", error);
     }
-    // Handle form submission here
   };
 
   return (
@@ -93,7 +92,7 @@ export default function SignupFormDemo() {
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
+          <Label required htmlFor="email">Email Address</Label>
           <Input
             id="email"
             placeholder="projectmayhem@fc.com"
@@ -106,7 +105,7 @@ export default function SignupFormDemo() {
         </LabelInputContainer>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="address">Street Address</Label>
+          <Label required htmlFor="address">Street Address</Label>
           <Input
             id="address"
             placeholder="123 Main St"
@@ -119,7 +118,7 @@ export default function SignupFormDemo() {
         </LabelInputContainer>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
-            <Label htmlFor="postal_code">Zip/Postal Code</Label>
+            <Label required htmlFor="postal_code">Zip/Postal Code</Label>
             <Input
               id="postal_code"
               placeholder="12345"
@@ -133,7 +132,7 @@ export default function SignupFormDemo() {
             )}
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="country">Country</Label>
+            <Label required htmlFor="country">Country</Label>
 
             <Input
               id="country"
@@ -165,7 +164,7 @@ export default function SignupFormDemo() {
         </div>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
           <LabelInputContainer>
-            <Label htmlFor="state">State/Province</Label>
+            <Label required htmlFor="state">State/Province</Label>
             <Controller
               name="state"
               control={control}
@@ -175,15 +174,15 @@ export default function SignupFormDemo() {
                     id="state"
                     name="state"
                     options={states.map((state) => ({
-                      value: state.value.toString(), // Ensure value is a string
+                      value: state.value.toString(),
                       label: state.label,
                     }))}
                     // loader={loader}
                     value={field.value ? field.value : ""}
                     placeholder="Select your state/province"
                     onChange={(option) => {
-                      handleStateChange(option.value); // Call your existing state change handler
-                      field.onChange(option.value); // Update form state with the selected value
+                      handleStateChange(option.value);
+                      field.onChange(option.value);
                     }}
                     error={errors.state?.message}
                   />
@@ -192,7 +191,7 @@ export default function SignupFormDemo() {
             />
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="city">City</Label>
+            <Label required htmlFor="city">City</Label>
             <Controller
               name="city"
               control={control}
@@ -202,14 +201,14 @@ export default function SignupFormDemo() {
                     id="city"
                     name="city"
                     options={cityOptions.map((city) => ({
-                      value: city.value.toString(), // Ensure value is a string
+                      value: city.value.toString(),
                       label: city.label,
                     }))}
                     // loader={loader}
                     value={field.value ? field.value : ""}
                     placeholder="Select your city"
                     error={errors.city?.message}
-                    onChange={(e) => field.onChange(e.value)} // Updated
+                    onChange={(e) => field.onChange(e.value)}
                   />
                 </div>
               )}
@@ -218,7 +217,7 @@ export default function SignupFormDemo() {
         </div>
 
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="phone_number">Phone Number</Label>
+          <Label required htmlFor="phone_number">Phone Number</Label>
           <PhoneNumberInput
             id="phone_number"
             placeholder="(123) 456-7890"

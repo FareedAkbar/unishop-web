@@ -3,15 +3,18 @@ import * as React from "react";
 import { cn } from "~/lib/utils";
 import { useMotionTemplate, useMotionValue, motion } from "framer-motion";
 
-const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
-  ({ className, type = "text", ...props }, ref) => {
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const InputEmail = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
+  ({ className, type = "email", ...props }, ref) => {
     const radius = 100; 
     const [visible, setVisible] = React.useState(false);
+    const [debounceTimer, setDebounceTimer] = React.useState<NodeJS.Timeout | null>(null);
+
 
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
-    // Define a type for the mouse event
     const handleMouseMove = (event: React.MouseEvent<HTMLInputElement>) => {
       const { currentTarget } = event;
       const { left, top } = currentTarget.getBoundingClientRect();
@@ -20,6 +23,40 @@ const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLI
       mouseY.set(event.clientY - top);
     };
 
+    const callApi = (email: string) => {
+        console.log(email)
+      };
+  
+
+    const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+       
+      const value = event.target.value;
+    //   setEmail(value);
+        
+    if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+
+      // Set a new timer
+      const newTimer = setTimeout(() => {
+        if (emailRegex.test(value)) {
+           callApi(value);
+        }
+      }, 2000);
+
+      setDebounceTimer(newTimer);
+    };
+
+    React.useEffect(() => {
+        // Cleanup on unmount
+        return () => {
+          if (debounceTimer) {
+            clearTimeout(debounceTimer);
+          }
+        };
+      }, [debounceTimer]);
+
+  
     return (
       <motion.div
         style={{
@@ -48,6 +85,9 @@ const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLI
             className
           )}
           ref={ref}
+          onChange={()=>console.log("Adsadsa")}
+          onInput={handleChange}
+        //   value={email}
           {...props}
         />
       </motion.div>
@@ -55,6 +95,6 @@ const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLI
   }
 );
 
-Input.displayName = "Input";
+InputEmail.displayName = "Input";
 
-export { Input };
+export { InputEmail };

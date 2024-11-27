@@ -7,7 +7,6 @@ import { HiOutlineMinus, HiOutlinePlus } from "react-icons/hi";
 import type { Stock } from "~/types/book";
 import type DataCart from "~/types/book";
 
-
 interface CartItemProps {
   title: string;
   price: number;
@@ -19,9 +18,10 @@ interface CartItemProps {
   showRemove: boolean;
   onChangeQuantity?: (id: number, quantity: number) => void;
   itemQuantity: number;
-  showQuantityIncriment?: boolean,
+  showQuantityIncrement?: boolean;
   stock: Stock;
-  item?: DataCart
+  item?: DataCart;
+  newPrice?: number
 }
 
 const CartItem: React.FC<CartItemProps> = ({
@@ -31,70 +31,92 @@ const CartItem: React.FC<CartItemProps> = ({
   onIncrease,
   onDecrease,
   onRemove,
+  newPrice,
   showRemove,
   onChangeQuantity,
   itemQuantity,
-  showQuantityIncriment,
+  showQuantityIncrement,
   stock,
-  item
+  item,
 }) => {
-  const quantity = item?.selected_variation?.stock ? item?.selected_variation?.stock.quantity : stock?.quantity ? stock.quantity : 0
+  const quantity = item?.selected_variation?.stock
+    ? item?.selected_variation?.stock.quantity
+    : stock?.quantity
+      ? stock.quantity
+      : 0;
 
   return (
-    <>
-      <div className="flex flex-row items-start space-x-4 border-b py-4 bg-white dark:bg-slate-700">
-        {/* Image */}
+    <div className="border-b dark:border-b dark:border-gray-400 border-gray-700">
+      <div className="flex flex-row items-start space-x-4  bg-white py-2 dark:bg-slate-800">
         <Image
-          src={imageSrc
-            ? `https://ipos-storage.s3.amazonaws.com/${imageSrc}`
-            : '/assets/images/products/product.png'}
+          src={
+            imageSrc
+              ? `https://ipos-storage.s3.amazonaws.com/${imageSrc}`
+              : "/assets/images/products/product.png"
+          }
           alt={title}
-          className="h-20 w-20 rounded bg-gray-200 object-contain mb-4 md:mb-0"
+          className="mb-4 h-20 w-20 rounded bg-gray-200 object-contain md:mb-0"
           width={800}
           height={800}
         />
-
-        {/* Product details */}
         <div className="flex-1">
-          <h3 className="font-semibold text-sm">{title}</h3>
-          {/* {item?.selected_variation?} */}
+          <h3 className="text-sm font-semibold">{title}</h3>
           {item?.selectedValues && (
-            
-                <div>
-                  <span className="font-semibold text-xs">Selected Variations</span>
-                  <ul>
-                    {Object.keys(item?.selectedValues).map((key) => (
-                      <>
-                        {item?.selectedValues[key] && (
-                          <p className="text-xs capitalize" key={key}>
-                           {key}:  <span className="pl-1 text-gray-500 dark:text-gray-200">{item?.selectedValues[key]}</span>
-                          </p>
-                        )}
-                      </>
-
-                    ))}
-                  </ul>
-                </div>
-             
+            <div>
+              <span className="text-xs font-semibold">Selected Variations</span>
+              <ul>
+                {Object.keys(item?.selectedValues).map((key) => (
+                  <>
+                    {item?.selectedValues[key] && (
+                      <p className="text-xs capitalize" key={key}>
+                        {key}:{" "}
+                        <span className="pl-1 text-gray-500 dark:text-gray-200">
+                          {item?.selectedValues[key]}
+                        </span>
+                      </p>
+                    )}
+                  </>
+                ))}
+              </ul>
+            </div>
           )}
 
           <p className="text-xs">
-            Available Stock: <span className="pl-1 text-gray-500 dark:text-gray-200">{quantity ? quantity : 0}</span>
+            Available Stock:{" "}
+            <span className="pl-1 text-gray-500 dark:text-gray-200">
+              {quantity ? quantity : 0}
+            </span>
           </p>
+          {(newPrice == 0 || !newPrice || price == newPrice) && (
+            <p className="text-md font-bold">${price}</p>
+          )}
+          
 
-          <p className="font-bold text-md">${price}</p>
+          {newPrice && price != newPrice && newPrice != 0 && (
+            <>
+              <p className="text-sm font-bold text-red-500 line-through">${price}</p>
+              <p className="text-md font-bold">${newPrice?.toFixed(
+                2,
+              )}</p>
+            </>
+          )}
+
         </div>
 
-        {/* Delete and Plus/Minus buttons */}
-        <div className="flex flex-col gap-6 items-end w-auto">
-          {/* Delete button at the top-right */}
-          <button className="self-end text-red-500 mb-2 text-sm" onClick={() => onRemove()}>
+        <div className="flex w-auto flex-col items-end gap-6">
+          <button
+            className="mb-2 self-end text-sm text-red-500"
+            onClick={() => onRemove()}
+          >
             <FaTrashAlt size={16} />
           </button>
 
-          {/* Plus and minus buttons at the bottom */}
-          <div className="flex items-center space-x-2 rounded bg-gray-200 dark:bg-gray-500 p-1  justify-between mt-auto w-auto">
-            <button className="p-1" disabled={itemQuantity < 2} onClick={onDecrease}>
+          <div className="mt-auto flex w-auto items-center justify-between space-x-2 rounded bg-gray-200 p-1 dark:bg-gray-500">
+            <button
+              className="p-1"
+              disabled={itemQuantity < 2}
+              onClick={onDecrease}
+            >
               <HiOutlineMinus size={14} />
             </button>
             <span className="text-sm">{itemQuantity}</span>
@@ -103,21 +125,22 @@ const CartItem: React.FC<CartItemProps> = ({
             </button>
           </div>
         </div>
-
       </div>
-      {quantity && quantity > -1 ? quantity < itemQuantity && (
-        <p className="bg-yellow-200 rounded dark:bg-yellow-500 p-3 text-sm">
-          {/* <MdWarning size={23} /> */}
-          {`Although we can't fulfill your request for quantity, we'll backorder the remaining ${itemQuantity - quantity}.`}
-        </p>
-      ) : ''}
+      {quantity && quantity > -1
+        ? quantity < itemQuantity && (
+          <p className="rounded bg-yellow-200 p-3 mb-2 text-sm dark:bg-yellow-700">
+            {/* <MdWarning size={23} /> */}
+            {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`}
+          </p>
+        )
+        : ""}
       {(quantity == 0 || quantity == null) && (
-        <p className="bg-yellow-200 rounded dark:bg-yellow-500 p-3 text-sm">
+        <p className="rounded bg-yellow-200 p-3 mb-2 text-sm dark:bg-yellow-700">
           {/* <MdWarning size={23} /> */}
-          {`Although we can't fulfill your request for quantity, we'll backorder the remaining ${itemQuantity}.`}
+          {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity}.`}
         </p>
       )}
-    </>
+    </div>
   );
 };
 

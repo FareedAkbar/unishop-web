@@ -12,13 +12,12 @@ import ProductCardSkeleton from "~/components/ui-components/ProductCardSkeleton"
 import {
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalProvider,
   useModal,
 } from "~/components/ui/animated-modal";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaCartPlus, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
@@ -26,7 +25,6 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { getBooks } from "~/_actions/getbooks";
 import { useToast } from "~/hooks/use-toast";
 import AlertBox from "~/components/alertBox/alert";
-import { randomData } from "~/constants/rendaom";
 import Select from "~/components/Fields/select";
 import { Variation } from "~/types/book";
 import { IoIosArrowRoundForward } from "react-icons/io";
@@ -88,7 +86,6 @@ const MyComponent = () => {
       } catch (error) {
         console.error("Failed to load data:", error);
         setLoader(false);
-        // Optionally set an error state here
       }
     };
 
@@ -145,6 +142,7 @@ const MyComponent = () => {
       console.error("Failed to add item to cart:", error);
     }
   };
+
   const handleRemoveFromCart = async (item: DataCart) => {
     try {
       await removeCartItems(item);
@@ -228,7 +226,7 @@ const MyComponent = () => {
     // Date range filter
 
     setFilteredData(filtered);
-    setCurrentPage(1); // Reset to first page on new filter
+    setCurrentPage(1);
   };
   // Calculate total pages based on filtered data and page size
   const totalPages = Math.ceil(
@@ -284,6 +282,7 @@ const MyComponent = () => {
         label: value!,
       }));
   };
+
   const handleSelectChange = (
     tagName: string,
     selectedOption: { value: string; label: string },
@@ -309,11 +308,13 @@ const MyComponent = () => {
       return newValues;
     });
   };
+
   const goToDetail = async (item: DataCart | null) => {
     await setProductForDetail(item);
     console.log(item);
     router.push(`/product-details?genre=${item?.genre_id}`);
   };
+
   return (
     <div>
       <motion.main
@@ -355,7 +356,7 @@ const MyComponent = () => {
 
             {/* Scrollable Product Section */}
             <ScrollArea className="h-[75vh] pb-5">
-              <div className="flex h-full flex-wrap items-center justify-center py-3">
+              <div className="flex h-full flex-wrap items-center justify-center gap-3 py-3">
                 {loader ? (
                   Array.from({ length: 6 }, (_, index) => (
                     <div key={index} className="p-2">
@@ -415,12 +416,12 @@ const MyComponent = () => {
               </span>
               <button
                 className={`rounded-full p-2 ${
-                  currentPage === totalPages
+                  (currentPage === totalPages || totalPages == 0)
                     ? "cursor-not-allowed bg-gray-200 text-black"
                     : "cursor-pointer bg-red-500 text-white"
                 }`}
                 onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
+                disabled={currentPage === totalPages || totalPages == 0}
               >
                 <FaChevronRight />
               </button>
@@ -446,7 +447,7 @@ const MyComponent = () => {
                 <motion.div
                   key={"images"}
                   style={{
-                    rotate: Math.random() * 20 - 10,
+                    rotate: window.innerWidth > 768 ? Math.random() * 20 - 10 : 0,
                   }}
                   whileHover={{
                     scale: 1.1,
@@ -486,7 +487,7 @@ const MyComponent = () => {
                           .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
-                <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
+                <span className="font-serif lg:text-lg text-zinc-500 dark:text-neutral-300">
                   SKU {itemDetail?.SKU}
                 </span>
               </div>
@@ -507,7 +508,7 @@ const MyComponent = () => {
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Published:
                   </span>
-                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                  <span className="pl-1 lg:text-sm text-xs text-neutral-700 dark:text-neutral-300">
                     {itemDetail?.introduced
                       ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
                       : ""}
@@ -684,11 +685,8 @@ const MyComponent = () => {
                       );
                     },
                   )}
-
-                  {/* Display selected options */}
                 </div>
               )}
-
               {itemDetail?.variations?.[0]?.variation_tags &&
                 Object.keys(selectedValues)[0] &&
                 filteredVariations?.[0]?.items_variable_items_id && (
@@ -700,19 +698,6 @@ const MyComponent = () => {
                     <div className="pl-2">Add to Cart</div>
                   </button>
                 )}
-              {/* {itemDetail?.item_id &&
-              !isItemInCart(itemDetail.item_id) &&
-              itemDetail?.stock?.quantity ? (
-                <button
-                  className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
-                  onClick={() => handleAddToCart(itemDetail)}
-                >
-                  <FaCartPlus className="text-lg" />
-                  <div className="pl-2">Add to Cart</div>
-                </button>
-              ) : (
-                ""
-              )} */}
             </div>
           </div>
           <div className="flex w-full justify-end">
@@ -725,15 +710,6 @@ const MyComponent = () => {
             </button>
           </div>
         </ModalContent>
-        {/* <ModalFooter className="gap-4">
-          <button
-            onClick={() => setOpen(false)}
-            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm dark:border-slate-950 dark:bg-slate-900"
-          >
-            Close
-          </button>
-         
-        </ModalFooter> */}
       </ModalBody>
       <AlertBox
         title="Login Your Account"

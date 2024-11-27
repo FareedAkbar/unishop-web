@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
-import Button from "~/components/ui-components/Button";
 import { motion } from "framer-motion";
 import { useAuthContext } from "~/Context/AuthContext";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -12,13 +11,12 @@ import Spinner from "~/components/spinner";
 
 const OrderConfirmed = () => {
   const router = useRouter();
-  const { orderTrasactionData } = useAuthContext();
+  const { orderTransactionData } = useAuthContext();
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 pb-16 pt-28 dark:bg-gray-900 sm:px-8">
-      {/* Thank You Message */}
       <motion.h2
-        className="mb-6 text-3xl font-bold text-red-500 "
+        className="mb-6 text-3xl font-bold text-red-500"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -73,21 +71,21 @@ const OrderConfirmed = () => {
         </div>
 
         <motion.div
-          className="flex h-fit flex-1 flex-col justify-center rounded-lg dark:bg-slate-800 border p-3 shadow-md"
+          className="flex h-fit flex-1 flex-col justify-center rounded-lg border p-3 shadow-md dark:bg-slate-800"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
           <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
-            <strong>Order ID:</strong> {orderTrasactionData?.order_id ?? 0}
+            <strong>Order ID:</strong> {orderTransactionData?.order_id ?? 0}
           </p>
           <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
             <strong>Tracking ID:</strong>{" "}
-            {orderTrasactionData?.tracking_id ?? 0}
+            {orderTransactionData?.tracking_id ?? 0}
           </p>
           <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
             <strong>Transaction ID:</strong>{" "}
-            {orderTrasactionData?.trasaction_id ?? 0}
+            {orderTransactionData?.transaction_id ?? 0}
           </p>
         </motion.div>
       </div>

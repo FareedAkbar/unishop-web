@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
@@ -13,7 +13,6 @@ import ProductCardSkeleton from "~/components/ui-components/ProductCardSkeleton"
 import {
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalProvider,
   useModal,
 } from "~/components/ui/animated-modal";
@@ -45,7 +44,7 @@ import { Player } from "@lottiefiles/react-lottie-player";
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
-  const isFirstRender = useRef(true);
+  // const isFirstRender = useRef(true);
   const [searchText, setSearchText] = useState("");
   const params = useSearchParams();
   const { setOpen } = useModal();
@@ -100,6 +99,7 @@ const MyComponent = () => {
       setName(name);
     }
   }, [params]);
+
   async function getProducts(page: number, id: number, category_type: number) {
     try {
       setLoader(true);
@@ -114,7 +114,7 @@ const MyComponent = () => {
       }
       setTimeout(() => {
         setLoader(false); // Reset flip state after changing the image
-      }, 1000);
+      }, 2000);
     } catch (error) {
       console.error("Failed to load data:", error);
       setLoader(false);
@@ -123,11 +123,9 @@ const MyComponent = () => {
 
   useEffect(() => {
     if (!subCategory) return;
-
-    // Determine subcategory details and parent category
     const genId = subCategory.find((item) => item.id == detail);
     const parentCat = subCategory.filter(
-      (item) => item.category_type_id == parent
+      (item) => item.category_type_id == parent,
     );
     const CategoryType = category?.find(
       (item) => item.category_type_id == parent,
@@ -161,11 +159,9 @@ const MyComponent = () => {
     selectedValues: Record<string, string | undefined>,
   ) => {
     return variations?.filter((variation) => {
-      // Check if every selected value matches in the variation's tags
       return Object.keys(selectedValues).every((tagName) => {
         const selectedValue = selectedValues[tagName];
 
-        // Only proceed if the selected value is not undefined
         if (!selectedValue) {
           return false;
         }
@@ -204,6 +200,7 @@ const MyComponent = () => {
       console.error("Failed to add item to cart:", error);
     }
   };
+
   const handleRemoveFromCart = async (item: DataCart) => {
     try {
       await removeCartItems(item);
@@ -240,8 +237,8 @@ const MyComponent = () => {
     )
       .filter(Boolean)
       .map((value) => ({
-        tagName, // include tagName in the result
-        dependencies, // include dependencies in the result
+        tagName,
+        dependencies,
         value: value!,
         label: value!,
       }));
@@ -288,6 +285,7 @@ const MyComponent = () => {
       setLoginAlert(true);
     }
   };
+
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
       typeof cartItems === "string"
@@ -322,9 +320,6 @@ const MyComponent = () => {
       : data;
     setDisplayData(x);
   };
-  // Calculate total pages based on filtered data and page size
-
-  // Get the data to be displayed for the current page
 
   useEffect(() => {
     filterResult();
@@ -356,10 +351,10 @@ const MyComponent = () => {
           newValues[tag] = undefined;
         });
       }
-
       return newValues;
     });
   };
+
   const handlePageChange = async (page: number) => {
     setCurrentPage(page);
     await getProducts(page, detail, 0);
@@ -380,7 +375,7 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center pt-32 lg:pt-20"
+        className="flex min-h-screen flex-col items-center pt-32 sm:pt-24 md:pt-24 lg:pt-20"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
@@ -389,7 +384,7 @@ const MyComponent = () => {
         <div className="flex flex-grow flex-row sm:pt-10">
           <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
             {/* Header Section */}
-            <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4">
+            <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4 pl-2">
               <div className="text-left">
                 <h2 className="text-xl font-bold capitalize">
                   {" "}
@@ -419,13 +414,13 @@ const MyComponent = () => {
                     </SelectContent>
                   </NewSelect>
                 )}
-                <div className="relative">
+                <div className="relative flex">
                   <input
                     type="text"
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     placeholder="Search"
-                    className="w-full border-b border-gray-300 bg-gray-100 p-2 pl-8 text-sm focus:outline-none dark:bg-slate-700 dark:text-white"
+                    className="w-full rounded border-b border-gray-300 bg-gray-100 p-2 pl-8 text-sm shadow-inner focus:outline-none dark:bg-slate-700 dark:text-white"
                   />
                   <span className="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-white">
                     <FiSearch />
@@ -440,18 +435,16 @@ const MyComponent = () => {
 
             <ScrollArea className="h-[75vh] pb-10">
               <div
-                className="flex flex-wrap justify-center py-3"
+                className="flex flex-wrap justify-center gap-3 py-3"
                 // key={displayData ? displayData?.[0]?.item_id : "123"}
               >
                 {loader ? (
-                  // While loading, show skeleton loaders
                   Array.from({ length: 6 }, (_, index) => (
-                    <div key={index} className="p-2">
+                    <div key={index}>
                       <ProductCardSkeleton />
                     </div>
                   ))
                 ) : displayData && displayData.length > 0 ? (
-                  // When data is available, display the product cards
                   displayData.map((item: DataCart) => (
                     <ProductCard
                       key={item.item_id}
@@ -489,7 +482,7 @@ const MyComponent = () => {
             {pagination && (
               <div className="z-5 flex justify-between px-4 py-4">
                 <button
-                  className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black blur" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
@@ -499,7 +492,7 @@ const MyComponent = () => {
                   Page {currentPage ?? 1} of {totalPages ?? 1}
                 </span>
                 <button
-                  className={`rounded-full p-2 ${totalPages == 0 || currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${totalPages == 0 || currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black blur" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={totalPages == 0 || currentPage === totalPages}
                 >
@@ -528,7 +521,7 @@ const MyComponent = () => {
                 <motion.div
                   key={"images"}
                   style={{
-                    rotate: Math.random() * 20 - 10,
+                    rotate: window.innerWidth > 768 ? Math.random() * 20 - 10 : 0,
                   }}
                   whileHover={{
                     scale: 1.1,
@@ -551,7 +544,7 @@ const MyComponent = () => {
                     alt={itemDetail?.object_path ?? ""}
                     width={500}
                     height={500}
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-44 md:w-44"
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-40 lg:w-44 md:w-40 lg:h-44"
                   />
                 </motion.div>
               </div>
@@ -569,7 +562,7 @@ const MyComponent = () => {
                       : itemDetail?.item_sale_price}
                 </span>
                 {itemDetail?.SKU && (
-                  <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
+                  <span className="font-serif text-zinc-500 dark:text-neutral-300 lg:text-lg">
                     SKU: {itemDetail.SKU}
                   </span>
                 )}
@@ -785,14 +778,9 @@ const MyComponent = () => {
                       );
                     },
                   )}
-
-                  {/* Display selected options */}
                 </div>
               )}
 
-              {/* {itemDetail?.item_id &&
-                !isItemInCart(itemDetail.item_id) &&
-                itemDetail?.stock?.quantity ? ( */}
               {itemDetail?.variations?.[0]?.variation_tags &&
                 Object.keys(selectedValues)[0] &&
                 filteredVariations?.[0]?.items_variable_items_id && (
@@ -816,15 +804,6 @@ const MyComponent = () => {
             </button>
           </div>
         </ModalContent>
-        {/* <ModalFooter className="gap-4">
-          <button
-            onClick={() => setOpen(false)}
-            className="w-28 rounded-md border border-gray-300 bg-gray-200 px-2 py-1 text-sm dark:border-slate-950 dark:bg-slate-900"
-          >
-            Close
-          </button>
-         
-        </ModalFooter> */}
       </ModalBody>
       <AlertBox
         title="Login Your Account"

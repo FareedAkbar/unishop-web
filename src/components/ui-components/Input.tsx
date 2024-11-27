@@ -24,7 +24,7 @@ const Input: React.FC<InputProps> = ({
   const [isVisible, setIsVisible] = useState(!animateOnClick);
   const [isFocused, setIsFocused] = useState(false);
 
-  const inputRef = useRef<HTMLDivElement>(null); // Reference for the input container
+  const inputRef = useRef<HTMLDivElement>(null);
 
   const handleIconClick = () => {
     if (animateOnClick) setIsVisible((prev) => !prev);
@@ -43,13 +43,15 @@ const Input: React.FC<InputProps> = ({
     setIsFocused(false);
   };
 
-  const isActive = isVisible || isFocused; // Determines if the input is active
+  const isActive = isVisible || isFocused;
 
-  // Detect click outside the input component
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
-       if(animateOnClick) setIsVisible(false);
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
+        if (animateOnClick) setIsVisible(false);
         setIsFocused(false);
       }
     };
@@ -62,10 +64,9 @@ const Input: React.FC<InputProps> = ({
 
   return (
     <div
-      ref={inputRef} // Attach ref to the input container
+      ref={inputRef}
       className="flex items-center justify-between rounded bg-gray-100 dark:bg-slate-700 dark:text-white"
     >
-      {/* Animated Input Field */}
       <div
         className={`overflow-hidden transition-all duration-500 ease-in-out ${
           isVisible ? `${width} opacity-100` : "w-0 opacity-0"

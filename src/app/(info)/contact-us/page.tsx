@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import { Player } from "@lottiefiles/react-lottie-player";
-import { FaPhoneAlt, FaEnvelope, FaUserTie, FaBuilding } from "react-icons/fa";
+import { FaPhoneAlt, FaUserTie, FaBuilding } from "react-icons/fa";
 import Spinner from "~/components/spinner";
 
 const MapContainerComponent = dynamic(() => import("~/components/map"), {
@@ -33,8 +33,8 @@ const MyComponent = () => {
         </div>
       </div>
 
-      <div className="relative z-10 -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
-        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
+      <div className="relative z-[5] -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
+        <div className="w-full rounded-lg text-left bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaPhoneAlt className="text-red-500" /> General Enquiries
           </h2>
@@ -58,7 +58,7 @@ const MyComponent = () => {
           </p>
         </div>
 
-        <div className="w-full rounded-lg bg-red-100 p-6 text-center shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
+        <div className="w-full rounded-lg text-left bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaUserTie className="text-red-500" /> Specialty Enquiries
           </h2>
@@ -66,7 +66,7 @@ const MyComponent = () => {
             Retail Operations Manager:
             <a
               href="mailto:uow-bookshop@uow.edu.au"
-              className="pl-1 text-red-500 underline transition-colors"
+              className="pl-1 text-red-500 underline transition-colors block"
             >
               uow-bookshop@uow.edu.au
             </a>
@@ -75,7 +75,7 @@ const MyComponent = () => {
             Events Coordinator: Anneliese Hennessy
             <a
               href="mailto:ahennessy@uow.edu.au"
-              className="text-red-500 underline transition-colors"
+              className="text-red-500 underline transition-colors block"
             >
               (ahennessy@uow.edu.au)
             </a>

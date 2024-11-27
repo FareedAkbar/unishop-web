@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "../button";
-import { MdDeleteForever, MdWarning } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
 import BookIcon from "../../../../public/bookIcon.png";
 // import isEmpty from "lodash/isEmpty";
 import Image from "next/image";
 import { Input } from "../input";
 interface Stock {
-  quantity: number; // Just use number; 0 is included
+  quantity: number;
 }
 
 interface CartItemCardProps {
@@ -19,7 +19,7 @@ interface CartItemCardProps {
   imageUrl: string | null;
   onRemove: () => void;
   showRemove: boolean;
-  showQuantityIncriment: boolean;
+  showQuantityIncrement: boolean;
   itemQuantity: number;
   stock: Stock;
   onChangeQuantity?: (id: number, quantity: number) => void;
@@ -36,7 +36,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   onChangeQuantity,
   itemQuantity,
   stock,
-  showQuantityIncriment = false,
+  showQuantityIncrement = false,
 }) => {
   const [quantity, setQuantity] = useState(itemQuantity > 1 ? itemQuantity : 1);
 
@@ -84,7 +84,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
               ${price ? price.toFixed(2) : 0}
             </p>
           </div>
-          {!showQuantityIncriment && (
+          {!showQuantityIncrement && (
             <div className="flex flex-row justify-between">
               <p className="text-sm">Quantity</p>
               <p className="text-sm text-gray-600">{itemQuantity}</p>
@@ -102,7 +102,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
             </div>
           )}
 
-          {showQuantityIncriment && (
+          {showQuantityIncrement && (
             <div className="flex flex-row items-center justify-between">
               <label
                 htmlFor={`quantity-${id}`}
@@ -151,11 +151,11 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           </Button>
         </div>
       )}
-      { stock.quantity < itemQuantity && (
+      {stock.quantity < itemQuantity && (
         <p className="bg-yellow-200 p-3 text-sm">
           {/* <MdWarning size={23} /> */}
-          We don&apos;t have as many quantity as you requested, but we&apos;ll back order
-          the remaining {itemQuantity - stock.quantity}.
+          We don&apos;t have as many quantity as you requested, but we&apos;ll
+          back order the remaining {itemQuantity - stock.quantity}.
         </p>
       )}
     </div>

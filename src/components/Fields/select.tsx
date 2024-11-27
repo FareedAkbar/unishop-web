@@ -11,10 +11,10 @@ interface SelectProps {
   options: Option[];
   value?: string;
   placeholder?: string;
-  loader?: boolean; // Add loader prop
+  loader?: boolean;
   error?: string;
-  onChange?: (option: Option) => void; // Update onChange type
-  isDisabled?: boolean
+  onChange?: (option: Option) => void;
+  isDisabled?: boolean;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -22,11 +22,11 @@ const Select: React.FC<SelectProps> = ({
   name,
   options,
   placeholder,
-  loader = false, // Default to false
+  loader = false,
   error,
   value,
   onChange,
-  isDisabled = false
+  isDisabled = false,
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
@@ -35,7 +35,7 @@ const Select: React.FC<SelectProps> = ({
     );
 
     if (selectedOption && onChange) {
-      onChange(selectedOption); // Send the entire option object
+      onChange(selectedOption);
     }
   };
 
@@ -47,9 +47,8 @@ const Select: React.FC<SelectProps> = ({
         className="block w-full rounded-md border px-3 py-2 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-400 dark:bg-slate-700 sm:text-sm"
         value={value}
         onChange={handleChange}
-        disabled={loader || isDisabled} // Disable select when loader is true
+        disabled={loader || isDisabled}
       >
-        {/* If loading, show a loading option */}
         {loader ? (
           <option value="" disabled>
             Loading...
@@ -70,7 +69,6 @@ const Select: React.FC<SelectProps> = ({
         )}
       </select>
 
-      {/* Display spinner when loading */}
       {loader && (
         <div className="absolute inset-y-0 right-0 flex items-center pr-3">
           <svg
@@ -86,12 +84,12 @@ const Select: React.FC<SelectProps> = ({
               r="10"
               stroke="currentColor"
               strokeWidth="4"
-            ></circle>
+            />
             <path
               className="opacity-75"
               fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-            ></path>
+            />
           </svg>
         </div>
       )}

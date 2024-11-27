@@ -5,7 +5,6 @@ import { Suspense, useEffect, useState } from "react";
 // import { useSearchParams, usePathname } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 import CheckoutForm from "~/components/Forms/checkout-form";
-
 import type DataCart from "~/types/book";
 import BooknetForm from "~/components/Forms/booknet-form";
 import CartItem from "~/components/ui-components/CartItem";
@@ -87,7 +86,13 @@ const MyComponent = () => {
       title: "Checkout",
       value: "checkout",
       content: (
-        <CheckoutForm title="Checkout" subTitle="" push={true} pushPath="/placeorder" disabled={!items?.[0] ? true : false} />
+        <CheckoutForm
+          title="Details"
+          subTitle=""
+          push={true}
+          pushPath="/placeorder"
+          disabled={!items?.[0] ? true : false}
+        />
       ),
     },
     {
@@ -95,6 +100,7 @@ const MyComponent = () => {
       value: "booknetForm",
       content: (
         <BooknetForm
+          title="Details"
           push={true}
           goTo="placeorder"
           disabled={!items?.[0] ? true : false}
@@ -102,15 +108,15 @@ const MyComponent = () => {
       ),
     },
   ];
- 
+  
 
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center justify-start pt-24 dark:bg-slate-900">
         <div className="grid w-full grid-cols-1 gap-12 px-4 lg:grid-cols-2">
-         
-          <div className=" lg:h-screen py-10 lg:order-2">
-            <ScrollArea className="flex-1 p-4 h-full border dark:bg-slate-700 rounded-lg">
+          <div className="pb-10 pt-10 md:pt-7 lg:order-2 lg:h-full lg:pt-16">
+            <h3 className="pb-5 text-lg font-bold">Cart Items</h3>
+            <ScrollArea className="h-[37rem] flex-1 rounded-lg border p-4 dark:bg-slate-800">
               {items?.[0] ? (
                 items.map((item: DataCart) => (
                   <CartItem
@@ -129,7 +135,7 @@ const MyComponent = () => {
                       handleDecrease(item.item_id, item.quantity - 1)
                     }
                     itemQuantity={item.quantity}
-                    showQuantityIncriment={true}
+                    showQuantityIncrement={true}
                     stock={item.stock}
                     onRemove={() => {
                       setRemoveItem(item);
@@ -141,7 +147,8 @@ const MyComponent = () => {
               ) : (
                 <div>
                   <span className="text-lg font-bold text-red-600 dark:text-white">
-                  It appears that your cart is empty. Please choose items before proceeding to checkout.
+                    It appears that your cart is empty. Please choose items
+                    before proceeding to checkout.
                   </span>
                   <div className="mt-2">
                     <Button
@@ -153,8 +160,8 @@ const MyComponent = () => {
               )}
             </ScrollArea>
           </div>
-          <div className=" w-full lg:pt-0 pt-16">
-            <Tabs tabs={tabs} key={items?.toString()} />
+          <div className="relative h-[55rem] w-full pt-16 [perspective:1000px] sm:h-[55rem] md:h-[50rem] lg:h-full lg:pt-3">
+            <Tabs tabs={tabs} key={items?.toString()}/>
           </div>
         </div>
       </main>
