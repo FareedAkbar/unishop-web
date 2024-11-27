@@ -90,14 +90,15 @@ const CartItem: React.FC<CartItemProps> = ({
           {(newPrice == 0 || !newPrice || price == newPrice) && (
             <p className="text-md font-bold">${price}</p>
           )}
-          {newPrice && price != newPrice && newPrice != 0 && (
-            <p className="text-sm font-bold text-red-500 line-through">${price}</p>
-          )}
+          
 
           {newPrice && price != newPrice && newPrice != 0 && (
-            <p className="text-md font-bold">${newPrice?.toFixed(
-              2,
-            )}</p>
+            <>
+              <p className="text-sm font-bold text-red-500 line-through">${price}</p>
+              <p className="text-md font-bold">${newPrice?.toFixed(
+                2,
+              )}</p>
+            </>
           )}
 
         </div>

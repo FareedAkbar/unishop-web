@@ -172,7 +172,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         </ScrollArea>
 
         {/* Cart Footer */}
-        <div className="fixed bottom-0 w-full p-3">
+        <div className="fixed lg:bottom-0 sm:bottom-20 w-full p-3">
           {/* Subtotal and Fees */}
           <div className="mb-2 flex justify-between">
             <span className="text-sm text-gray-500 dark:text-gray-200">
@@ -218,43 +218,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         </div> */}
 
         {/* Cart Content */}
-        <div className="h-[calc(100vh-96px)] overflow-y-auto px-4 pb-20 pt-16">
-          {/* <div className="mb-4 flex flex-row justify-between">
-            <h3 className="text-md font-semibold pl-2">
-              Items in cart: {items.length}
-            </h3>
-            <div className="flex flex-col text-right">
-              <h3 className="text-md font-semibold">Cart subtotal:</h3>
-              <h3 className="text-md font-semibold">${subTotal.toFixed(2)}</h3>
-            </div>
-          </div> */}
-
-          {/* Cart items */}
-          {/* {items.length > 0 ? (
-            items.map((item: DataCart, index: number) => (
-              <CartItemCard
-                key={`${index}-${item.item_id}`}
-                id={item.item_id}
-                name={item.book_title}
-                price={item.item_sale_price}
-                imageUrl={item.object_path}
-                showRemove={true}
-                onChangeQuantity={(id,number)=>onChangeQuantity(id,number)}
-                itemQuantity={item.quantity}
-                showQuantityIncrement={true}
-                stock={item.stock}
-                onRemove={() => {
-                  setRemoveItem(item);
-                  setIsOpenDeleteAlert(true);
-                }}
-              />
-            ))
-          ) : (
-            <div>
-              <p>You have no items in your shopping cart.</p>
-            </div>
-          )} */}
-        </div>
+    
 
         {/* Buttons */}
         {/* <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-2 p-4">

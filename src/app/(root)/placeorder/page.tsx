@@ -23,6 +23,7 @@ import PayloadForTransactionLink from "~/types/payloadForTransactionLink";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import CartItem from "~/components/ui-components/CartItem";
 import AlertBox from "~/components/alertBox/alert";
+import moment from "moment";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -192,7 +193,6 @@ const MyComponent = () => {
     const loadData = async () => {
       try {
         if (!items) return;
-        console.log(items);
         const itemsPayload = createItemsPayload(items);
 
         if (!itemsPayload[0]) return;
@@ -382,7 +382,7 @@ const MyComponent = () => {
       outlet_id: parseInt(outlet),
       tracking_id: generateOTP(12).toString(),
       order_status: 1,
-      completed_date: formatDate(date),
+      completed_date: moment().toLocaleString(),
       started: formatDateTime(date),
       details: "order Detail| UniShop",
       kitchen_comments: "",
@@ -464,10 +464,9 @@ const MyComponent = () => {
     console.log("Payment Socket");
 
     const handlePaymentStatus = async (dat: dataresponse) => {
-      console.log("PaymentStatus");
+    
       const { data } = dat;
-
-      console.log(data);
+      console.log("PaymentStatus",data);
 
       if (data.status) {
         setIsOpenPaymentAlert(false);
@@ -703,7 +702,7 @@ const MyComponent = () => {
                     </div>
                   </div>
                 </div>
-                {userInfo?.customer_id && (
+                {/* {checkoutData?.customer_id && (
                   <div>
                     <div className="flex flex-col items-center">
                       <div className="w-48 py-2">
@@ -732,7 +731,7 @@ const MyComponent = () => {
                       </div>
                     </div>
                   </div>
-                )}
+                )} */}
               </div>
 
               <div className="mb-4 mt-10">
