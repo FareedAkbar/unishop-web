@@ -53,7 +53,7 @@ export default function CheckoutForm({
   >([]);
   const { checkoutData, CheckoutApi, checkoutFormData } = useAuthContext();
   const [loader, setLoader] = useState(false);
-
+  console.log(disabled)
   const defaultValues = checkoutData
     ? {
         ...checkoutData,

@@ -108,6 +108,7 @@ const MyComponent = () => {
       ),
     },
   ];
+  
 
   return (
     <div>
@@ -160,7 +161,7 @@ const MyComponent = () => {
             </ScrollArea>
           </div>
           <div className="relative h-[55rem] w-full pt-16 [perspective:1000px] sm:h-[55rem] md:h-[50rem] lg:h-full lg:pt-3">
-            <Tabs tabs={tabs} />
+            <Tabs tabs={tabs} key={items?.toString()}/>
           </div>
         </div>
       </main>

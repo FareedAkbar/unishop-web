@@ -17,7 +17,7 @@ const requestOptions: RequestInit = {
     redirect: "follow", 
 };
 
-export async function getBooks(genre_id: number): Promise<ApiResponse | boolean> {
+export async function getMetaData(genre_id: number): Promise<ApiResponse | boolean> {
     try {
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/getBooksByGenreCat?genre_id=${genre_id}&category_id=27&entries=1&images=1&detailed=1`,
@@ -27,14 +27,14 @@ export async function getBooks(genre_id: number): Promise<ApiResponse | boolean>
 
         if (result?.status) {
             // setMeta(result.meta);
-            console.log("Result Structure:", result)
+            console.log("Result MetaData:", result)
             return result
         } else {
-            console.error("Unexpected resulttt structure:", result);
+            console.error("Unexpected resulttt getMetaData:", result);
             return result
         }
     } catch (error) {
-        console.error("Errorrr fetching data:", error);
+        console.error("Errorrr fetching getMetaData:", error);
         return false
     }
 };

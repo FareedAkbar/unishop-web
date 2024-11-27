@@ -416,12 +416,12 @@ const MyComponent = () => {
               </span>
               <button
                 className={`rounded-full p-2 ${
-                  currentPage === totalPages
+                  (currentPage === totalPages || totalPages == 0)
                     ? "cursor-not-allowed bg-gray-200 text-black"
                     : "cursor-pointer bg-red-500 text-white"
                 }`}
                 onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
+                disabled={currentPage === totalPages || totalPages == 0}
               >
                 <FaChevronRight />
               </button>
