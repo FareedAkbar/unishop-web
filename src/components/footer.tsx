@@ -70,7 +70,7 @@ function Footer() {
                 uow-bookshop@uow.edu.au
               </a>
             </div>
-            <div className="flex w-full justify-center gap-4 text-xl text-[#646464]">
+            <div className="flex w-full justify-start gap-4 text-xl text-[#646464]">
               {iconsTab.map(({ icon, link }, index) => (
                 <Link
                   key={index}

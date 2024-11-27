@@ -469,9 +469,8 @@ const MyComponent = () => {
     console.log("Payment Socket");
 
     const handlePaymentStatus = async (dat: dataresponse) => {
-    
       const { data } = dat;
-      console.log("PaymentStatus",data);
+      console.log("PaymentStatus", data);
 
       if (data.status) {
         setIsOpenPaymentAlert(false);
@@ -674,17 +673,20 @@ const MyComponent = () => {
       return 0;
     }
   };
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => setIsExpanded((prev) => !prev);
 
   return (
     <div>
-      <main className="min-h-screen bg-gradient-to-r from-[#FFF2F2] to-[#FFEEEE] justify-center pb-8 pt-28 dark:bg-slate-950 lg:pt-20">
+      <main className="min-h-screen justify-center bg-gradient-to-r from-[#FFF2F2] to-[#FFEEEE] pb-8 pt-28 dark:from-slate-700 dark:to-slate-700 lg:pt-20">
         <div className="z-10 px-6">
           <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 lg:gap-5 xl:grid-cols-5">
             <div className="flex flex-col lg:col-span-3 xl:col-span-3">
               <h2 className="mb-2 mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
                 Payment Method
               </h2>
-              <div className="rounded-xl border p-4 dark:bg-slate-800 bg-white">
+              <div className="rounded-xl border bg-white p-4 dark:bg-slate-800">
                 <div className="flex flex-col justify-between lg:flex-row">
                   <div>
                     <span className="text-md mt-2">Credit Card - eWAY</span>
@@ -778,14 +780,18 @@ const MyComponent = () => {
                 </div>
               </div>
             </div>
-            <div className="lg:col-span-2 xl:col-span-2">
+            <div className="flex flex-col lg:col-span-2 xl:col-span-2">
               <h2 className="mb-2 mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
                 Cart Items
               </h2>
 
-              <ScrollArea className="h-[28rem] flex-1 rounded-lg border p-4 dark:bg-slate-800 bg-white">
+              <ScrollArea
+                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 transition-all duration-300 dark:bg-slate-800 ${
+                  isExpanded ? "max-h-[28rem]" : "max-h-[10rem]"
+                }`}
+              >
                 {items?.[0] ? (
-                  items.map((item: DataCart) => (
+                  items.map((item) => (
                     <CartItem
                       key={item.item_id}
                       title={item.book_title}
@@ -835,56 +841,59 @@ const MyComponent = () => {
                   </div>
                 )}
               </ScrollArea>
-            </div>
-          </div>
-          <div className="grid gap-12 lg:grid-cols-5 lg:gap-5 xl:grid-cols-5">
-            <div/>
-            <div/>
-            <div/>
-            <div className="mt-4 rounded-xl lg:col-span-2 xl:col-span-2 border bg-white p-4 dark:bg-slate-800">
-              <h2 className="text-xl font-bold">Order Summary</h2>
-              {calculateLoader && (
-                <div>
-                  <div className="flex flex-col items-center justify-between">
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
+              {/* </div> */}
 
-                    <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
-                    <div className="relative h-2/3 w-full animate-pulse">
-                      <div className="mb-2 h-52 w-full rounded bg-gray-200 dark:bg-gray-600" />
+              {/* Expand/Collapse Toggle */}
+              <button
+                onClick={toggleExpand}
+                className="relative z-[5] border mx-auto -mt-5 flex w-fit items-center justify-center rounded-full bg-white px-3 py-1.5 text-red-500 shadow-md dark:bg-slate-600"
+              >
+                <span>{isExpanded ? "▲" : "▼"}</span>
+              </button>
+              <div className="mt-4 rounded-xl border bg-white p-4 dark:bg-slate-800 lg:col-span-2 xl:col-span-2">
+                <h2 className="text-xl font-bold">Order Summary</h2>
+                {calculateLoader && (
+                  <div>
+                    <div className="flex flex-col items-center justify-between">
+                      <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
+
+                      <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
+                      <div className="relative h-2/3 w-full animate-pulse">
+                        <div className="mb-2 h-52 w-full rounded bg-gray-200 dark:bg-gray-600" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-              {!calculateLoader && (
-                <>
-                  <div className="my-4 border-t border-gray-300" />
-                  {/* <div className="grid grid-cols-2 justify-between">
+                )}
+                {!calculateLoader && (
+                  <>
+                    <div className="my-2 border-t border-gray-300" />
+                    {/* <div className="grid grid-cols-2 justify-between">
                     <span className="text-sm">Cart Subtotal</span>
                     <span className="flex justify-end text-sm">
                       ${totalAfterCalculation?.original_price.toFixed(2)}
                     </span>
                   </div> */}
-                  <div className="mt-2 grid grid-cols-2 justify-between">
-                    <span className="text-sm">Price</span>
-                    <span className="flex justify-end text-sm">
-                      $
-                      {items?.[0]
-                        ? totalAfterCalculation?.final_price_including_tax.toFixed(
-                            2,
-                          )
-                        : 0}
-                    </span>
-                  </div>
-                  <div className="mt-2 grid grid-cols-2 justify-between">
-                    <span className="text-sm">GST (Included)</span>
-                    <span className="flex justify-end text-sm">
-                      $
-                      {items?.[0]
-                        ? totalAfterCalculation?.item_tax_price.toFixed(2)
-                        : 0}
-                    </span>
-                  </div>
-                  {/* <div className="mt-2 grid grid-cols-2 justify-between">
+                    <div className="mt-2 grid grid-cols-2 justify-between">
+                      <span className="text-sm">Price</span>
+                      <span className="flex justify-end text-sm">
+                        $
+                        {items?.[0]
+                          ? totalAfterCalculation?.final_price_including_tax.toFixed(
+                              2,
+                            )
+                          : 0}
+                      </span>
+                    </div>
+                    <div className="mt-2 grid grid-cols-2 justify-between">
+                      <span className="text-sm">GST (Included)</span>
+                      <span className="flex justify-end text-sm">
+                        $
+                        {items?.[0]
+                          ? totalAfterCalculation?.item_tax_price.toFixed(2)
+                          : 0}
+                      </span>
+                    </div>
+                    {/* <div className="mt-2 grid grid-cols-2 justify-between">
                     <span className="text-sm">Subtotal</span>
                     <span className="flex justify-end text-sm">
                       $
@@ -893,40 +902,41 @@ const MyComponent = () => {
                       )}
                     </span>
                   </div> */}
-                  <div className="mt-6 grid grid-cols-3 justify-between">
-                    <div className="col-span-2 flex flex-col">
-                      <span className="text-sm">Shipping</span>
-                      <span className="text-sm text-gray-600 dark:text-gray-300">
-                        {shipping?.label} - {shipping?.type}
+                    <div className="mt-2 grid grid-cols-3 justify-between">
+                      <div className="col-span-2 flex flex-col">
+                        <span className="text-sm">Shipping</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-300">
+                          {shipping?.label} - {shipping?.type}
+                        </span>
+                      </div>
+
+                      <span className="col-span-1 flex justify-end text-sm">
+                        ${shipping?.amount.toFixed(2)}
                       </span>
                     </div>
+                    <div className="mt-2 grid grid-cols-2 justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-md font-semibold">Order Total</span>
+                      </div>
 
-                    <span className="col-span-1 flex justify-end text-sm">
-                      ${shipping?.amount.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="mt-6 grid grid-cols-2 justify-between">
-                    <div className="flex flex-col">
-                      <span className="text-md font-bold">Order Total</span>
+                      <span className="text-md flex justify-end font-bold">
+                        ${items?.[0] ? total.toFixed(2) : 0}
+                      </span>
                     </div>
-
-                    <span className="text-md flex justify-end font-bold">
-                      ${items?.[0] ? total.toFixed(2) : 0}
-                    </span>
-                  </div>
-                  <div className="my-4 border-t border-gray-300" />
-                  <div className="mt-6 flex">
-                    <Button
-                      onClick={() => handlePlaceOrder()}
-                      disabled={
-                        totalAfterCalculation && items?.[0] ? false : true
-                      }
-                      width="w-full"
-                      title="Place Order"
-                    />
-                  </div>
-                </>
-              )}
+                    <div className="my-2 border-t border-gray-300" />
+                    <div className="mt-3 flex">
+                      <Button
+                        onClick={() => handlePlaceOrder()}
+                        disabled={
+                          totalAfterCalculation && items?.[0] ? false : true
+                        }
+                        width="w-full"
+                        title="Place Order"
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
