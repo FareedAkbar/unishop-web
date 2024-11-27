@@ -6,14 +6,14 @@ interface Category {
     href?:string;
     subItems?: SubItem[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    icon:any;
+    icon: string;
   }
   
   interface SubItem {
     label: string;
     href: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    icon?: any;
+    icon?: string;
   }
   export const categories: Category[] = [
     // {

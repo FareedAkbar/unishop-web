@@ -416,7 +416,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                         alt={item.label || "Icon"}
                       />
                     ) : (
-                      item.icon && iconMap[item.icon]
+                      item.icon && iconMap[item?.icon]
                     )}
                   </span>
                 )}
