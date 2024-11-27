@@ -76,7 +76,7 @@ export default function BooknetForm({
 
   return (
     <div className="mx-auto w-full rounded-lg border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
-      {loader && <Spinner />}
+      {/* {loader && <Spinner />} */}
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         {title}
       </h2>

@@ -82,7 +82,7 @@ const SubcategoryList1 = ({
 }: SubcategoryListProps1) => {
   const router = useRouter();
   return (
-    <div className="absolute left-10 top-8 z-50 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
+    <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
       {subItems.map((subItem) => (
         <div key={subItem.category_name} className="relative">
           <button

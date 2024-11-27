@@ -46,8 +46,8 @@ const CartItem: React.FC<CartItemProps> = ({
       : 0;
 
   return (
-    <>
-      <div className="flex flex-row items-start space-x-4 border-b bg-white py-4 dark:bg-slate-800">
+    <div className="border-b dark:border-b dark:border-gray-400 border-gray-700">
+      <div className="flex flex-row items-start space-x-4  bg-white py-2 dark:bg-slate-800">
         <Image
           src={
             imageSrc
@@ -128,19 +128,19 @@ const CartItem: React.FC<CartItemProps> = ({
       </div>
       {quantity && quantity > -1
         ? quantity < itemQuantity && (
-          <p className="rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-500">
+          <p className="rounded bg-yellow-200 p-3 mb-2 text-sm dark:bg-yellow-700">
             {/* <MdWarning size={23} /> */}
             {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`}
           </p>
         )
         : ""}
       {(quantity == 0 || quantity == null) && (
-        <p className="rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-500">
+        <p className="rounded bg-yellow-200 p-3 mb-2 text-sm dark:bg-yellow-700">
           {/* <MdWarning size={23} /> */}
           {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity}.`}
         </p>
       )}
-    </>
+    </div>
   );
 };
 
