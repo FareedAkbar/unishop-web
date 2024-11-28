@@ -23,6 +23,7 @@ const HomePage: React.FC = () => {
   const [direction, setDirection] = useState<"left" | "right">("right");
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [isHovered, setIsHovered] = useState(false); // Hover state
+  const isHoveredRef = useRef(false); // Use a ref to track hover state
 
   // Hook to detect screen size
   useEffect(() => {
@@ -79,14 +80,14 @@ const HomePage: React.FC = () => {
 
   // Auto-slide functionality
   useEffect(() => {
-    if (isHovered) return; // Pause animation when hovered
-
     const interval = setInterval(() => {
-      handleNext();
+      if (!isHoveredRef.current) {
+        handleNext();
+      }
     }, 7000);
 
     return () => clearInterval(interval);
-  }, [isHovered, specialItems, currentIndex]);
+  }, [specialItems]);
 
   const handleNext = () => {
     setDirection("right");
@@ -133,12 +134,12 @@ const HomePage: React.FC = () => {
           <div className="hidden lg:ml-20 lg:block">
             <CategoriesSidebar />
           </div>
-          <div className="mx-auto w-full px-5 pb-10">
-            <div className="relative min-h-[350px] lg:ml-64">
+          <div className="mx-auto w-full pl-5 pr-3 pb-10">
+            <div className="relative min-h-[360px] lg:ml-64">
               <AnimatePresence initial={false} mode="wait" custom={direction}>
                 <motion.div
                   key={currentIndex}
-                  className="flex flex-wrap lg:flex-nowrap lg:gap-6"
+                  className="flex flex-wrap p-3 lg:flex-nowrap pr-10"
                   {...(isLargeScreen && {
                     custom: direction,
                     initial: "enter",
@@ -152,8 +153,8 @@ const HomePage: React.FC = () => {
                     <div
                       key={`display-${index}`}
                       className="w-full"
-                      onMouseEnter={() => setIsHovered(true)} 
-                      onMouseLeave={() => setIsHovered(false)} 
+                      onMouseEnter={() => isHoveredRef.current =true} 
+                      onMouseLeave={() => isHoveredRef.current =false} 
                     >
                       <ProductList
                         title={item?.title}
