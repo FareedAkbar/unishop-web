@@ -504,7 +504,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
         )}
       </nav>
 
-      <div className="flex justify-evenly gap-1 py-1">
+      <div className="flex justify-center gap-2 pr-2 py-1">
         <Link
           href="/"
           className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"

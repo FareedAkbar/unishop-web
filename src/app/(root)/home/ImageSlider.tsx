@@ -43,7 +43,7 @@ const ImageSlider: React.FC = () => {
       icon: <FaBook className="sm:2xl mr-2 text-xl text-white lg:text-4xl" />, // Book icon
     },
     {
-      image: "/assets/images/home/hoodies-home.png",
+      image: "/assets/images/home/hoodies-home.jpg",
       name: "Hoodies",
       heading: "Cozy Hoodies",
       subheading: "Comfortable Styles",
