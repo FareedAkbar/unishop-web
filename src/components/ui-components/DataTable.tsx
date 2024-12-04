@@ -191,7 +191,7 @@ const DataTable: React.FC<DataTableProps> = ({
   );
 
   if (!isClient) return null;
-
+  console.log(selectedItem)
   return (
     <>
       <div
@@ -281,8 +281,8 @@ const DataTable: React.FC<DataTableProps> = ({
                       ?.mode === "asc" && <FaAngleUp className="ml-1 inline" />}
                     {sortOptions.find((sort) => sort.key === column.key)
                       ?.mode === "desc" && (
-                      <FaAngleDown className="ml-1 inline" />
-                    )}
+                        <FaAngleDown className="ml-1 inline" />
+                      )}
                   </th>
                 ) : null,
               )}
@@ -351,7 +351,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   </p>
                 </div>
 
-                <div className="mt-2 flex items-end">
+                <div className="mt-2 flex items-center">
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
                     Tracking ID:
                   </p>
@@ -362,21 +362,27 @@ const DataTable: React.FC<DataTableProps> = ({
 
                 <div className="mt-2 flex items-center">
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
-                    Actual Price:
+                    {selectedItem?.total_order_price == selectedItem?.total_discounted_price ? "Price: " : "Actual Price: "}
                   </p>
                   <p className="text-lg font-medium">
-                    ${selectedItem?.total_order_price}
+                    ${selectedItem?.total_order_price?.toFixed(
+                      2,
+                    )}
                   </p>
                 </div>
+                {selectedItem?.total_order_price == selectedItem?.total_discounted_price ? "" : (
+                  <div className="mt-2 flex items-center">
+                    <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
+                      Discounted Price:
+                    </p>
+                    <p className="text-lg font-medium">
+                      ${selectedItem?.total_discounted_price?.toFixed(
+                        2,
+                      )}
+                    </p>
+                  </div>
+                )}
 
-                <div className="mt-2 flex items-center">
-                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
-                    Discounted Price:
-                  </p>
-                  <p className="text-lg font-medium">
-                    ${selectedItem?.total_discounted_price}
-                  </p>
-                </div>
               </div>
 
               {/* Customer Info */}
