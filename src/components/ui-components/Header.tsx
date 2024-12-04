@@ -16,7 +16,7 @@ import { IoCartOutline } from "react-icons/io5";
 import { MdOutlinePersonOutline } from "react-icons/md";
 import { FiMoon, FiSearch, FiSun } from "react-icons/fi";
 import { TbSettings } from "react-icons/tb";
-import { HiLogin, HiLogout } from "react-icons/hi";
+import { HiLogin, HiLogout, HiOutlineMoon } from "react-icons/hi";
 import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
@@ -38,6 +38,7 @@ import {
   FaClipboardList,
 } from "react-icons/fa";
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
+import { PiMoon, PiMoonLight } from "react-icons/pi";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -788,9 +789,9 @@ const Header = () => {
                 className="relative"
                 onClick={() => router.push("/favorites")}
               >
-                <GoHeart className="cursor-pointer text-3xl" />
+                <GoHeart className="cursor-pointer text-xl" />
                 {favItems?.length && favItems?.length > 0 ? (
-                  <span className="absolute right-4 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                  <span className="absolute right-3 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
                     {favItems?.length}
                   </span>
                 ) : (
@@ -798,9 +799,9 @@ const Header = () => {
                 )}
               </div>
               <div className="relative" onClick={() => toggleSidebar()}>
-                <IoCartOutline className="cursor-pointer text-3xl" />
+                <IoCartOutline className="cursor-pointer text-xl" />
                 {cartItems?.length && cartItems?.length > 0 ? (
-                  <span className="absolute right-4 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                  <span className="absolute right-3 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
                     {cartItems?.length}
                   </span>
                 ) : (
@@ -809,9 +810,9 @@ const Header = () => {
               </div>
               <button onClick={() => toggleTheme(themeMode)}>
                 {themeMode == "dark" ? (
-                  <FiSun className="p-0.5 text-3xl text-gray-200" />
+                  <FiSun className="p-0.5 text-xl text-gray-200" />
                 ) : (
-                  <FiMoon className="text-3xl" />
+                  <PiMoon className="text-xl" />
                 )}
               </button>
 

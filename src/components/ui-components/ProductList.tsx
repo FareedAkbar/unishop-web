@@ -36,22 +36,20 @@ const ProductList: React.FC<ProductListProps> = ({
   return (
     <>
       {specialItems?.[0] && (
-        <div className="flex flex-col space-y-4 p-3 pb-8">
+        <div className="flex flex-col space-y-4 pb-5">
           {title && (
             <h2 className="animate-bounce pl-3 text-xl font-bold text-gray-800 dark:text-white">
               {title}
             </h2>
           )}
-          <ScrollArea className="scrollbar-hidden h-64 lg:pr-5">
-            <div
-              className={`flex flex-col gap-4 pb-6 pl-8 pt-2 lg:pr-6 ${width}`}
-            >
+          <ScrollArea className="scrollbar-hidden h-64">
+            <div className={`flex flex-col gap-5 pb-6 pl-8 pt-2 ${width}`}>
               {/* Flex container for horizontal spacing */}
               {specialItems?.map(
                 (product, index) =>
                   title == product?.tag_name && (
                     <motion.div
-                      key={product?.item_id} 
+                      key={product?.item_id}
                       className={`flex w-full cursor-pointer items-center justify-between rounded-lg border border-neutral-300 bg-white p-3 shadow-lg dark:bg-slate-700 dark:text-white`}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{
@@ -59,7 +57,7 @@ const ProductList: React.FC<ProductListProps> = ({
                         y: 0,
                         transition: { type: "spring", stiffness: 100 },
                       }}
-                      whileHover={{ scale: 1.05 }}
+                      whileHover={{ scale: 1.05, zIndex: 10 }}
                       transition={{ delay: index * 0.1 }}
                       onClick={() =>
                         router.push(
