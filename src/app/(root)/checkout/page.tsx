@@ -114,9 +114,9 @@ const MyComponent = () => {
     <div>
       <main className="flex min-h-screen flex-col items-center justify-start pt-24 dark:bg-slate-900">
         <div className="grid w-full grid-cols-1 gap-12 px-4 lg:grid-cols-2">
-          <div className="pb-10 pt-10 md:pt-7 lg:order-2 lg:h-full lg:pt-16">
+          <div className="pt-10 md:pt-7 mt-3 lg:order-2 lg:h-full lg:pt-8 rounded-lg border p-4 dark:bg-slate-800">
             <h3 className="pb-5 text-lg font-bold">Cart Items</h3>
-            <ScrollArea className="h-[37rem] flex-1 rounded-lg border p-4 dark:bg-slate-800">
+            <ScrollArea className="h-[24rem] flex-1">
               {items?.[0] ? (
                 items.map((item: DataCart) => (
                   <CartItem
@@ -161,7 +161,15 @@ const MyComponent = () => {
             </ScrollArea>
           </div>
           <div className="relative h-[55rem] w-full pt-16 [perspective:1000px] sm:h-[55rem] md:h-[50rem] lg:h-full lg:pt-3">
-            <Tabs tabs={tabs} key={items?.toString()}/>
+          <CheckoutForm
+          key={items?.toString()}
+          title="Details"
+          subTitle=""
+          push={true}
+          pushPath="/placeorder"
+          disabled={!items?.[0] ? true : false}
+        /> 
+        {/* <Tabs tabs={tabs} key={items?.toString()}/> */}
           </div>
         </div>
       </main>

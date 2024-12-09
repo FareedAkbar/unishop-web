@@ -1,8 +1,21 @@
+interface address {
+  address: string,
+  second_address?: string,
+  country?: string,
+  city?: string,
+  state?: string,
+  postal_code?: string,
+  country_code?: string,
+  phone_number?: string,
+  default_status?: number,
+  address_id?: number,
+}
+
 interface CheckoutForm {
 
   email: string | null; // Required, must be a valid email
   company?: string | null; // Optional
-  address?: string | null; // Optional
+  address?: address[] | null; // Optional
   second_address?: string | null; // Optional
   city?: string | null; // Optional
   state?: string | null; // Optional
@@ -13,7 +26,7 @@ interface CheckoutForm {
   phone_number?: string | null; // Optional
   customer_id?: number | null,
   uuid?: string | null,
-  booknet_customer_type_id?: number,
+  customer_type_id?: number,
   booknet_customer_id?: number | null,
   username?: string | null
   password?: string | null,
@@ -37,5 +50,15 @@ interface Booknet_customer_checkout {
 
 }
 
+interface get_address_from_email {
+  status: boolean,
+  data?: address[]
+}
 
-export type { CheckoutForm,booknet_customer_id,Booknet_customer_checkout,checkoutBooknetResponse }
+interface add_address_from_customer_id {
+  status: boolean,
+  data?: address
+}
+
+
+export type { CheckoutForm, booknet_customer_id, Booknet_customer_checkout, checkoutBooknetResponse,get_address_from_email,address ,add_address_from_customer_id}

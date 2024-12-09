@@ -309,8 +309,8 @@ const Header = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      if (checkoutData?.booknet_customer_id) {
-        await getFavourite(checkoutData?.booknet_customer_id);
+      if (checkoutData?.customer_id) {
+        await getFavourite(checkoutData?.customer_id);
       }
     };
     loadData().catch((error) => {

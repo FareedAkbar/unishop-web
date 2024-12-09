@@ -33,7 +33,7 @@ const MyComponent = () => {
     getCheckoutFormData,
     removeAllCartItems,
     uuidLocal,
-    // setTransactionData,
+    setTransactionData,
     // setUUID,
     token,
     userInfo,
@@ -55,7 +55,7 @@ const MyComponent = () => {
   const [isOpenPaymentAlert, setIsOpenPaymentAlert] = useState(false);
   const [discountType, setDiscountType] = useState("Voucher");
   const [discountValue, setDiscountValue] = useState("");
-  const [transactionData, setTransactionData] =
+  const [transactionData, setLocalTransactionData] =
     useState<transactionResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [removeItem, setRemoveItem] = useState<DataCart | null>(null);
@@ -120,11 +120,10 @@ const MyComponent = () => {
     if (!totalAfterCalculation) return;
 
     const amount = shipping?.amount ?? 0;
-    const ship = shipping?.amount ?? 0;
-
-    setTotal(amount + totalAfterCalculation?.final_price_including_tax + ship);
+    setTotal(amount + totalAfterCalculation?.final_price_including_tax);
     const x = mergedArray;
     setNewItems(x);
+    
   }, [totalAfterCalculation]);
 
   const createItemsPayload = (
@@ -250,7 +249,7 @@ const MyComponent = () => {
         (await response.json()) as ApiResponseForTransactionLink;
 
       if (result?.status) {
-        setTransactionData(result.data);
+        setLocalTransactionData(result.data);
         setIsOpenPaymentAlert(true);
         setLoading(true);
 
@@ -326,7 +325,7 @@ const MyComponent = () => {
             order_id: result?.data?.order_id,
             tracking_id: result.data?.tracking_id,
           };
-          // await setTransactionData(x);
+         await setTransactionData(x);
         } catch (error) {
           console.error("Failed to load data:", error);
         }
@@ -378,7 +377,7 @@ const MyComponent = () => {
   }
 
   const placeOrderApi = async (id: number) => {
-    setTransactionData(null);
+    setLocalTransactionData(null);
     const date = new Date();
     const outlet = process.env.NEXT_PUBLIC_PASSKEY_OUTLET ?? "";
     const x = {
@@ -387,7 +386,7 @@ const MyComponent = () => {
       outlet_id: parseInt(outlet),
       tracking_id: generateOTP(12).toString(),
       order_status: 1,
-      completed_date: moment().toLocaleString(),
+      completed_date: formatDateTime(date),
       started: formatDateTime(date),
       details: "order Detail| UniShop",
       kitchen_comments: "",
@@ -406,6 +405,7 @@ const MyComponent = () => {
       booknet_customer_id: booknetCustomerId,
       // guest: checkoutData?.uuid ? checkoutData?.uuid : null,
       order_items: await convertPayload(),
+      address_id: checkoutData?.address?.[0]?.address_id ?? null,
     };
     try {
       console.log(x);
@@ -489,7 +489,7 @@ const MyComponent = () => {
         });
         setIsOpenPaymentAlert(false);
       }
-      setTransactionData(null);
+      setLocalTransactionData(null);
     };
 
     socket.on("paymentStatus", handlePaymentStatus);
@@ -696,11 +696,15 @@ const MyComponent = () => {
                         <span className="pr-1 font-medium text-red-500">
                           Address:
                         </span>
-                        <span className="block">{checkoutData?.address}</span>
-                        <span className="block">
-                          {checkoutData?.country}, {checkoutData?.city},{" "}
-                          {checkoutData?.state}, {checkoutData?.postal_code}
-                        </span>
+                        <span className="block">{checkoutData?.address?.[0]?.address}</span>
+
+                        {checkoutData?.address?.[0]?.country ? (
+                          <span className="block">
+                            {checkoutData?.address?.[0]?.country}, {checkoutData?.address?.[0]?.city},{" "}
+                            {checkoutData?.address?.[0]?.state}, {checkoutData?.address?.[0]?.postal_code}
+                          </span>
+                        ) : ("")}
+
                       </div>
 
                       {/* Phone Number */}
@@ -709,7 +713,7 @@ const MyComponent = () => {
                           Phone Number:
                         </span>
                         <span className="block">
-                          {checkoutData?.phone_number}
+                          {checkoutData?.address?.[0]?.phone_number}
                         </span>
                       </div>
                     </div>
@@ -786,9 +790,8 @@ const MyComponent = () => {
               </h2>
 
               <ScrollArea
-                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 transition-all duration-300 dark:bg-slate-800 ${
-                  isExpanded ? "max-h-[28rem]" : "max-h-[10rem]"
-                }`}
+                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 transition-all duration-300 dark:bg-slate-800 ${isExpanded ? "max-h-[28rem]" : "max-h-[10rem]"
+                  }`}
               >
                 {items?.[0] ? (
                   items.map((item) => (
@@ -879,8 +882,8 @@ const MyComponent = () => {
                         $
                         {items?.[0]
                           ? totalAfterCalculation?.final_price_including_tax.toFixed(
-                              2,
-                            )
+                            2,
+                          )
                           : 0}
                       </span>
                     </div>

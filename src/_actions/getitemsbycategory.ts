@@ -37,14 +37,14 @@ export async function getItemsByCategory(id: number | null, page: number,categor
 
         if (result?.status) {
             // setMeta(result.meta);
-            console.log(result)
+            
             return result
         } else {
-            console.error("Unexpected result structure:", result);
+            console.error("Unexpected result getItemsByCategory:", result);
             return result
         }
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching getItemsByCategory:", error);
         return false
     }
 };

@@ -339,7 +339,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               type="button"
               className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-105 focus:outline-none"
             >
-              <div className="flex items-center justify-start">
+              <div className="flex items-center justify-start w-full">
                 <AiOutlineFileText className="mr-1.5 h-6 w-6 p-0.5 text-orange-600" />
                 {/* {item.object_path && (
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -356,7 +356,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                     />
                   )} */}
                 <span
-                  className="text-left text-sm"
+                  className="text-left text-sm whitespace-nowrap"
                   onClick={() => {
                     router.push(
                       `/products?category=${item.category_type_id}&name=${item.type}`,
@@ -368,11 +368,17 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                 </span>
               </div>
               {item.children?.[0] && (
-                <div onClick={() => toggleCategory(item.type)}>
+                <div onClick={() => toggleCategory(item.type)} className="w-full">
                   {openCategories.includes(item.type) ? (
-                    <FaChevronDown size={12} />
+                    <div className="flex justify-end">
+                      <FaChevronDown size={12} />
+                    </div>
+
                   ) : (
-                    <FaChevronRight size={12} />
+                    <div className="flex justify-end">
+                      <FaChevronRight size={12} />
+                    </div>
+
                   )}
                 </div>
               )}
@@ -397,8 +403,8 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               type="button"
               onClick={() =>
                 item.subItems ||
-                item.label === "Books" ||
-                item.label === "Pulse"
+                  item.label === "Books" ||
+                  item.label === "Pulse"
                   ? toggleCategory2(item.label)
                   : null
               }
@@ -427,9 +433,14 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               </div>
               {item.subItems || item.label == "Pulse" ? (
                 openCategory == item.label ? (
-                  <FaChevronDown size={12} />
-                ) : (
-                  <FaChevronRight size={12} />
+                  <div className="flex justify-end">
+                      <FaChevronDown size={12} />
+                    </div>
+
+                  ) : (
+                    <div className="flex justify-end">
+                      <FaChevronRight size={12} />
+                    </div>
                 )
               ) : null}
             </button>
@@ -491,7 +502,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
           </div>
         ))}
 
-        {checkoutData?.booknet_customer_id ? (
+        {checkoutData?.customer_id ? (
           <button
             onClick={() => router.push("/my-orders")}
             className="mb-2 flex w-full items-center px-2 text-lg transition-transform duration-300 hover:scale-105 focus:outline-none"

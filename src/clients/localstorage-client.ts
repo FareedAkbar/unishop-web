@@ -2,7 +2,7 @@
 import type DataCart from "~/types/book";
 import type UserType from "~/types/userType";
 import { isStringified } from "~/utils";
-import type { CheckoutForm} from "~/types/checkoutForm";
+import type { address, CheckoutForm} from "~/types/checkoutForm";
 import type { Genre } from "~/types/genre";
 import { type SuperCategory, type Category } from "~/types/category";
 import { type ItemSpecialTag } from "~/types/productTags";
@@ -72,6 +72,11 @@ const STORAGE_MAPPER = {
   PRODUCT_SPECIAL_TAGS:{
     TYPE: [] as ItemSpecialTag[] | null,
     KEY: "product_tags",
+    DEFAULT: null
+  },
+  BILLING_ADDRESS:{
+    TYPE: [] as address[] | null,
+    KEY: "billing_address",
     DEFAULT: null
   },
 };

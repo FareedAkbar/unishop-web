@@ -46,6 +46,7 @@ interface placeOrderPayload {
   transaction_id?: string | null,
   guest?: string | null;
   order_items: OrderItem[];
+  address_id: number | null
 }
 
 export type { placeOrderPayload, OrderItem }

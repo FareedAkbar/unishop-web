@@ -154,11 +154,11 @@ const MyComponent = () => {
   };
 
   const fetchDataOrders = async () => {
-    if (!checkoutData?.booknet_customer_id) return;
+    if (!checkoutData?.customer_id) return;
 
     setLoader(true);
     try {
-      const x = await getMyOrders(checkoutData?.booknet_customer_id);
+      const x = await getMyOrders(checkoutData?.customer_id);
       if (typeof x !== "boolean" && x.status) {
         console.log(x.data);
         setDataOrders(x.data);
@@ -171,8 +171,8 @@ const MyComponent = () => {
   };
 
   useEffect(() => {
-    if (!checkoutData?.booknet_customer_id) return;
-    console.log(checkoutData?.booknet_customer_id);
+    if (!checkoutData?.customer_id) return;
+    console.log(checkoutData?.customer_id);
     const loadData = async () => {
       try {
         setLoader(true);

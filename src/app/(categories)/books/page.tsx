@@ -311,7 +311,6 @@ const MyComponent = () => {
 
   const goToDetail = async (item: DataCart | null) => {
     await setProductForDetail(item);
-    console.log(item);
     router.push(`/product-details?genre=${item?.genre_id}`);
   };
 
