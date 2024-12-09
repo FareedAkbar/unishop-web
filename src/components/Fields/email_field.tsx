@@ -2,15 +2,20 @@
 import * as React from "react";
 import { cn } from "~/lib/utils";
 import { useMotionTemplate, useMotionValue, motion } from "framer-motion";
+import { get_address_from_email } from "~/types/checkoutForm";
+import { useAuthContext } from "~/Context/AuthContext";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const InputEmail = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
-  ({ className, type = "email", ...props }, ref) => {
-    const radius = 100; 
+const InputEmail = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement> & {
+  value?: string; // New prop explicitly defined
+}>(
+  ({ className, type = "email", value, ...props }, ref) => {
+    const radius = 100;
     const [visible, setVisible] = React.useState(false);
+    const { addBillingAddress } = useAuthContext();
     const [debounceTimer, setDebounceTimer] = React.useState<NodeJS.Timeout | null>(null);
-
+    const effectRan = React.useRef(false);
 
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
@@ -22,25 +27,59 @@ const InputEmail = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<
       mouseX.set(event.clientX - left);
       mouseY.set(event.clientY - top);
     };
+    const fetchData = async (email: string) => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/customer/address?email=${email}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
+            },
 
-    const callApi = (email: string) => {
-        console.log(email)
-      };
-  
+          },
+        );
+
+        const result: get_address_from_email = (await response.json()) as get_address_from_email;
+
+        // Check if result has the expected structure
+        if (result?.status) {
+          addBillingAddress(result?.data ?? null)
+        } else {
+          console.error("Unexpected result structure api/customer/address?email:", result);
+        }
+      } catch (error) {
+        console.error("Error fetching api/customer/address?email:", error);
+      }
+    };
+
+    const callApi = async (email: string) => {
+      console.log(email)
+      void fetchData(email)
+    };
+
+    React.useEffect(() => {
+      if (effectRan.current) return;
+      if (!value) return
+      void fetchData(value)
+      effectRan.current = true;
+    }, [value])
+
 
     const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-       
+
       const value = event.target.value;
-    //   setEmail(value);
-        
-    if (debounceTimer) {
+      //   setEmail(value);
+
+      if (debounceTimer) {
         clearTimeout(debounceTimer);
       }
 
       // Set a new timer
       const newTimer = setTimeout(() => {
         if (emailRegex.test(value)) {
-           callApi(value);
+          void callApi(value);
         }
       }, 2000);
 
@@ -48,15 +87,15 @@ const InputEmail = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<
     };
 
     React.useEffect(() => {
-        // Cleanup on unmount
-        return () => {
-          if (debounceTimer) {
-            clearTimeout(debounceTimer);
-          }
-        };
-      }, [debounceTimer]);
+      // Cleanup on unmount
+      return () => {
+        if (debounceTimer) {
+          clearTimeout(debounceTimer);
+        }
+      };
+    }, [debounceTimer]);
 
-  
+
     return (
       <motion.div
         style={{
@@ -85,9 +124,8 @@ const InputEmail = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<
             className
           )}
           ref={ref}
-          onChange={()=>console.log("Adsadsa")}
           onInput={handleChange}
-        //   value={email}
+          //   value={email}
           {...props}
         />
       </motion.div>

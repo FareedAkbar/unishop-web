@@ -16,8 +16,8 @@ interface ApiResponseStatus {
 
 export async function getMyOrders(booknetCustomerId: number): Promise<ApiResponse | boolean> {
     const payload = {
-        customer_id: null,
-        booknet_customer_id: booknetCustomerId
+        customer_id: booknetCustomerId,
+        // booknet_customer_id: null
     }
 
     const requestOptions: RequestInit = {

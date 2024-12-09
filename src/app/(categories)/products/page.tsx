@@ -251,13 +251,13 @@ const MyComponent = () => {
   };
 
   const handleFavourite = async (item: DataCart) => {
-    if (checkoutData?.booknet_customer_id) {
+    if (checkoutData?.customer_id) {
       setWishListLoader(true);
       if (
         item &&
         favItems?.some((favItem) => favItem.item_id === item.item_id)
       ) {
-        await removeFavourite(item, checkoutData.booknet_customer_id)
+        await removeFavourite(item, checkoutData.customer_id)
           .then((x) => {
             if (x) {
               toast({
@@ -269,7 +269,7 @@ const MyComponent = () => {
           })
           .finally(() => setWishListLoader(false));
       } else {
-        await addFavourite(item, checkoutData.booknet_customer_id)
+        await addFavourite(item, checkoutData.customer_id)
           .then((x) => {
             if (x) {
               toast({
@@ -439,7 +439,7 @@ const MyComponent = () => {
                 // key={displayData ? displayData?.[0]?.item_id : "123"}
               >
                 {loader ? (
-                  Array.from({ length: 6 }, (_, index) => (
+                  Array.from({ length: 5 }, (_, index) => (
                     <div key={index}>
                       <ProductCardSkeleton />
                     </div>

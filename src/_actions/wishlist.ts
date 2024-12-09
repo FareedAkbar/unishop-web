@@ -2,12 +2,12 @@
 
 import type { addFavResponse, getFavResponse } from "~/types/favourite";
 
-export async function addToFavourite(item_id: number, booknet_customer_id: number): Promise<addFavResponse | boolean> {
+export async function addToFavourite(item_id: number, customer_id: number): Promise<addFavResponse | boolean> {
     const payload = {
-        booknet_customer_id: booknet_customer_id,
+        customer_id: customer_id,
         item_id: item_id
     }
-
+    console.log(payload)
     const requestOptions: RequestInit = {
         method: "POST",
         headers: {
@@ -33,14 +33,14 @@ export async function addToFavourite(item_id: number, booknet_customer_id: numbe
             return result
         }
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error addToFavourite:", error);
         return false
     }
 };
 
-export async function removeFromFavourite(item_id: number, booknet_customer_id: number): Promise<addFavResponse | boolean> {
+export async function removeFromFavourite(item_id: number, customer_id: number): Promise<addFavResponse | boolean> {
     const payload = {
-        booknet_customer_id: booknet_customer_id,
+        customer_id: customer_id,
         item_id: item_id
     }
 
@@ -69,12 +69,12 @@ export async function removeFromFavourite(item_id: number, booknet_customer_id: 
             return result
         }
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error removeFromFavourite:", error);
         return false
     }
 };
 
-export async function getFavouriteItems(booknet_customer_id: number | null | undefined): Promise<getFavResponse | boolean> {
+export async function getFavouriteItems(customer_id: number | null | undefined): Promise<getFavResponse | boolean> {
 
     const requestOptions: RequestInit = {
         method: "GET",
@@ -88,20 +88,20 @@ export async function getFavouriteItems(booknet_customer_id: number | null | und
 
     try {
         const response = await fetch(
-            `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/customer/wishlist?booknet_customer_id=${booknet_customer_id}`,
+            `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/customer/wishlist?customer_id=${customer_id}`,
             requestOptions,
         );
         const result: getFavResponse = (await response.json()) as getFavResponse;
 
         if (result?.status) {
-            console.log("result",result)
+            
             return result
         } else {
             console.error("Unexpected result structure getFavouriteItems:", result);
             return result
         }
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching getFavouriteItems:", error);
         return false
     }
 };

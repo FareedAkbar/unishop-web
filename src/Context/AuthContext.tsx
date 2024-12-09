@@ -15,6 +15,7 @@ import type Register from "~/types/register";
 import type UserType from "~/types/userType";
 import { apiRouter } from "~/utils/api-router";
 import type {
+  address,
   Booknet_customer_checkout,
   checkoutBooknetResponse,
   CheckoutForm,
@@ -81,6 +82,7 @@ interface AuthContextProps {
   category?: SuperCategory[] | null;
   subCategory?: Category[] | null;
   checkoutData: CheckoutForm | null;
+  billing_address: address[] | null;
   appId: string;
   removeAllCartItems: () => Promise<boolean>;
   setTransactionData: (payload: transactionData | null) => Promise<boolean>;
@@ -109,6 +111,7 @@ interface AuthContextProps {
   getProductTagStatus: () => Promise<boolean>;
   productTags: ItemSpecialTag[] | null;
   setCheckoutData: React.Dispatch<SetStateAction<CheckoutForm | null>>;
+  addBillingAddress: (data: address[] | null) => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -140,7 +143,15 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
   const [productDetail, setProductDetail] = useState<DataCart | null>(null);
   const [productTags, setProductTags] = useState<ItemSpecialTag[] | null>(null);
+  const [billing_address, setBillingAddress] = useState<address[] | null>(null);
   const router = useRouter();
+
+
+
+  const addBillingAddress = (address: address[] | null) => {
+    setBillingAddress(address);
+    lsClient.setItem("BILLING_ADDRESS", address)
+  }
 
   const login = async (payload: Login): Promise<LoginResponse | boolean> => {
     const response = await apiRouter(
@@ -319,12 +330,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (responsePayload.status) {
       return true;
     } else if (!responsePayload.status) {
-      const itemExists = favItems.some((item) => item.item_id === item.item_id);
+      const itemExists = favItems.some((items) => items.item_id === item.item_id);
       if (itemExists) {
         setFavItems((prevFavItems) => {
           // If it exists, remove it by filtering out the item
           const updatedFavItems = prevFavItems.filter(
-            (item) => item.item_id !== item.item_id,
+            (items) => items.item_id !== item.item_id,
           );
           return updatedFavItems;
         });
@@ -338,13 +349,20 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     item: DataCart,
     booknet_customer_id: number,
   ): Promise<boolean> => {
-    const itemExists = favItems.some((item) => item.item_id === item.item_id);
+    const itemExists = favItems.some((items) => items.item_id === item.item_id);
     if (itemExists) {
       const newItemList = favItems.filter(
-        (item) => item.item_id !== item.item_id,
+        (items) => items.item_id !== item.item_id,
       );
       setFavItems(newItemList);
+      
+      
+      console.log(itemExists)
+      console.log("favItems",favItems)
+
+      console.log("newlist",newItemList)
     }
+   
     const response = await removeFromFavourite(
       item.item_id,
       booknet_customer_id,
@@ -356,7 +374,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return true;
     } else if (!responsePayload.status) {
       const itemExistsAgain = favItems.some(
-        (item) => item.item_id === item.item_id,
+        (items) => items.item_id === item.item_id,
       );
       if (!itemExistsAgain) {
         setFavItems((prevFavItems) => {
@@ -371,6 +389,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       return false;
     }
+    return false
   };
   const getFavourite = async (
     booknet_customer_id: number,
@@ -411,7 +430,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           (item) =>
             item.item_id === payload.item_id &&
             item?.selected_variation?.items_variable_items_id ==
-              payload?.selected_variation?.items_variable_items_id,
+            payload?.selected_variation?.items_variable_items_id,
         );
       } else {
         existingItemIndex = prev.findIndex(
@@ -457,18 +476,15 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     quantity: number,
     variable_id?: number,
   ): Promise<boolean> => {
-    console.log(variable_id);
     const updatedItems = cartItems.map((item) => {
       if (
         variable_id &&
         variable_id == item?.selected_variation?.items_variable_items_id &&
         item.item_id === item_id
       ) {
-        console.log("item", item);
         return { ...item, quantity: quantity };
       } else {
         if (!variable_id && item.item_id === item_id) {
-          console.log("item2", item);
           return { ...item, quantity: quantity };
         }
       }
@@ -559,6 +575,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const THEME_MODE = lsClient.getItem("THEME_MODE");
     const PRODUCT_DETAIL = lsClient.getItem("PRODUCT_DETAIL");
     const SPECIAL_TAGS = lsClient.getItem("PRODUCT_SPECIAL_TAGS");
+    const BILLING_ADDRESS = lsClient.getItem("BILLING_ADDRESS");
     setItems(
       cartItems
         ? typeof cartItems === "string"
@@ -567,6 +584,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         : [],
     );
     setProductTags(SPECIAL_TAGS);
+    setBillingAddress(BILLING_ADDRESS);
     setProductDetail(PRODUCT_DETAIL);
     setThemeMode(THEME_MODE);
     setUuidLocal(UUID);
@@ -617,7 +635,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const x = responsePayload.data.booknet_customer_id ?? null;
       setBooknetCustomerId(x);
       // setCheckoutData(responsePayload.data);
-      console.log(responsePayload.data);
+
       lsClient.setItem(
         "BOOKNET_CUSTOMER_ID",
         responsePayload?.data.booknet_customer_id ?? null,
@@ -625,6 +643,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // lsClient.setItem("CHECKOUT_DATA", responsePayload?.data ?? null);
       return responsePayload;
     } else {
+      console.log(response)
       throw new Error("failed"); // Throw an error with the message
     }
   };
@@ -649,10 +668,15 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const x = responsePayload.data.booknet_customer_id ?? null;
       setBooknetCustomerId(x);
       // lsClient.setItem("CHECKOUT_DATA", responsePayload.data);
-      lsClient.setItem(
-        "BOOKNET_CUSTOMER_ID",
-        responsePayload?.data?.booknet_customer_id ?? null,
-      );
+      if (responsePayload?.data?.booknet_customer_id) {
+        lsClient.setItem(
+          "BOOKNET_CUSTOMER_ID",
+          responsePayload?.data?.booknet_customer_id,
+        );
+      } else {
+        lsClient.setEmpty("BOOKNET_CUSTOMER_ID", null)
+      }
+
       return responsePayload;
     } else {
       throw new Error("failed"); // Throw an error with the message
@@ -703,6 +727,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         productTags,
         getSubCategory,
         subCategory,
+        billing_address,
+        addBillingAddress
       }}
     >
       {children}

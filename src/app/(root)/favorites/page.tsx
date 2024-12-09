@@ -35,13 +35,10 @@ const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
-  const [data, setData] = useState<DataCart[]>([]);
-  const isFirstRender = useRef(true);
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState<DataCart[] | null>(null);
   const params = useSearchParams();
   const { setOpen } = useModal();
-  const [detail, setDetail] = useState<string | null>(null);
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [wishListLoader, setWishListLoader] = useState<boolean>(false);
   const [selectedValues, setSelectedValues] = useState<
@@ -61,10 +58,6 @@ const MyComponent = () => {
   const { toast } = useToast();
   const router = useRouter();
 
-  useEffect(() => {
-    const d = params.get("detail");
-    setDetail(d);
-  }, [params]);
 
   // async function getFav (){
   //   try {
@@ -216,13 +209,13 @@ const MyComponent = () => {
     selectedValues,
   );
   const handleFavourite = async (item: DataCart) => {
-    if (checkoutData?.booknet_customer_id) {
+    if (checkoutData?.customer_id) {
       setWishListLoader(true);
       if (
         item &&
         favItems?.some((favItem) => favItem.item_id === item.item_id)
       ) {
-        await removeFavourite(item, checkoutData.booknet_customer_id)
+        await removeFavourite(item, checkoutData.customer_id)
           .then(async (x) => {
             if (x) {
               toast({
@@ -235,7 +228,7 @@ const MyComponent = () => {
           })
           .finally(() => setWishListLoader(false));
       } else {
-        await addFavourite(item, checkoutData.booknet_customer_id)
+        await addFavourite(item, checkoutData.customer_id)
           .then(async (x) => {
             if (x) {
               toast({
