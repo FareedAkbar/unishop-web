@@ -28,6 +28,7 @@ export async function getItemsByCategory(id: number | null, page: number,categor
     else {
         x = `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=0&book=0&category=${id}&page=${page}&images=1&detailed=1&special_tags_only=1`
     }
+    
     try {
         const response = await fetch(
             x,

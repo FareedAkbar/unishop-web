@@ -143,16 +143,16 @@ const MyComponent = () => {
     const loadData = async () => {
       // Fetch products based on `detail` or `parent`
       if (detail !== -1 && (genId || catId)) {
-        await getProducts(1, detail, 0);
+        await getProducts(currentPage, detail, 0);
       } else if (detail === -1 && parent) {
-        await getProducts(1, 0, parent);
+        await getProducts(currentPage, 0, parent);
       }
     };
 
     loadData().catch((error) => {
       console.error("Failed to load data in useEffect:", error);
     });
-  }, [subCategory, detail, name]);
+  }, [subCategory, detail, name, currentPage]);
 
   const filterVariationsBySelectedValues = (
     variations: Variation[],
@@ -357,7 +357,6 @@ const MyComponent = () => {
 
   const handlePageChange = async (page: number) => {
     setCurrentPage(page);
-    await getProducts(page, detail, 0);
   };
 
   const goToDetail = async (item: DataCart | null) => {
@@ -370,6 +369,7 @@ const MyComponent = () => {
       setName(genId.category_name);
     }
     setDetail(parseInt(id));
+    setCurrentPage(1);
   };
 
   return (

@@ -82,7 +82,7 @@ const SubcategoryList1 = ({
 }: SubcategoryListProps1) => {
   const router = useRouter();
   return (
-    <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
+    <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white overflow-x-visible">
       {subItems.map((subItem) => (
         <div key={subItem.category_name} className="relative">
           <button
@@ -328,10 +328,12 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   return (
     <aside
       ref={sidebarRef}
-      className={`absolute left-0 w-72 rounded-r-xl border-y border-r bg-white py-2 pl-4 pr-2 shadow-lg dark:bg-slate-700 ${className}`}
+      className={` absolute left-0 w-72  rounded-r-xl border-y border-r bg-white py-2 pl-4 pr-2 shadow-lg dark:bg-slate-700 ${className}`}
     >
+      {/* ${headerCategory && headerCategory?.length > 7 ? "h-[25vh] overflow-y-scroll overflow-x-hidden" : ""} */}
       <h2 className="text-lg font-bold">CATEGORIES</h2>
-      <nav className="relative py-3">
+      
+      <nav className={`relative  py-3 ${headerCategory && headerCategory?.length > 7 ? "h-[25vh] overflow-y-scroll overflow-x-hidden" : ""}`}>
         {headerCategory?.map((item) => (
           // item.id != 472 && (
           <div key={item.type} className="relative">
