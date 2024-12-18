@@ -7,11 +7,14 @@ import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColo
 
 // Define a plugin to add CSS variables for colors
 function addVariablesForColors({ addBase, theme }: any) {
-  let allColors = flattenColorPalette(theme("colors"));
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  const allColors = flattenColorPalette(theme("colors"));
   const newVars = Object.fromEntries(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   addBase({
     ":root": newVars,
   });
@@ -134,6 +137,7 @@ const config: Config = {
 		DEFAULT: ['Poppins', 'sans-serif'], 
 	  },
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [addVariablesForColors, require("tailwindcss-animate")],
 };
 

@@ -398,7 +398,7 @@ const MyComponent = () => {
             </ScrollArea>
 
             {/* Pagination Section */}
-            <div className="z-10 flex justify-between px-4 py-4">
+            <div className="z-[5] flex justify-between px-4 py-4">
               <button
                 className={`rounded-full p-2 ${
                   currentPage === 1

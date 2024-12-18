@@ -12,7 +12,7 @@ const ImageSlider: React.FC = () => {
 
   const slides = [
     {
-      image: "/assets/images/home/home1.png",
+      image: "/assets/images/home/UniShop_Banner_Books.png",
       name: "Books",
       heading: "Up to 20% off Books",
       subheading: "Wide Range of Titles",
@@ -54,7 +54,16 @@ const ImageSlider: React.FC = () => {
     {
       image: "/assets/images/home/UniShop_Website_06.png",
       name: "Gifts",
-      heading: "Unique Gifts",
+      heading: "MERCH, BOOKS AND BEYOND",
+      subheading: "",
+      button: "Shop Gifts",
+      route: "/gifts",
+      icon: <FaGift className="sm:2xl mr-2 text-xl text-white lg:text-4xl" />, // Gift icon
+    },
+    {
+      image: "/assets/images/home/UniShop_Banner_SHOP_LOCAL_1.png",
+      name: "Local",
+      heading: "SHOP LOCAL",
       subheading: "Perfect for Any Occasion",
       button: "Shop Gifts",
       route: "/gifts",
@@ -78,16 +87,14 @@ const ImageSlider: React.FC = () => {
     <div className={`flex w-full flex-col px-4 pb-4 pt-2`}>
       <div className={`${isFlipping ? "animate-fade-in-left" : ""}`}>
         <div className="absolute z-10 w-2/5 p-1 lg:block lg:pl-10 lg:pt-10">
-          <div className="flex h-32 flex-col justify-between px-2 py-2 sm:h-52 md:h-60 md:px-6 lg:h-80 lg:px-10">
+          <div className="flex h-10 flex-col justify-between px-2 py-2 sm:h-52 md:h-60 md:px-6 lg:h-80 lg:px-10">
             <div className="flex items-center lg:mb-4">
               {slides[currentIndex]!.icon}
               <span className="text-xs text-white sm:text-xl lg:text-lg">
                 {slides[currentIndex]!.name}
               </span>
             </div>
-            <div className="text-xl font-bold text-white sm:text-3xl lg:mb-4 lg:text-4xl">
-              {slides[currentIndex]!.heading}
-            </div>
+
             {/* <button
               className="flex w-fit flex-row items-center rounded border-none bg-red-600 px-1 text-[10px] text-white md:px-3 md:py-1.5 lg:px-4 lg:py-2 lg:text-base lg:font-bold"
               onClick={() => router.push(slides[currentIndex]!.route)} // Navigate to respective route
@@ -95,6 +102,12 @@ const ImageSlider: React.FC = () => {
               <span>{slides[currentIndex]!.button}</span>
               <IoIosArrowRoundForward className="ml-1 text-lg text-white lg:text-xl" />
             </button> */}
+          </div>
+
+          <div className="text-xl font-bold  sm:text-2xl lg:text-4xl text-white">{slides[currentIndex]!.heading}</div>
+
+          <div className="text-md font-bold text-white sm:text-1xl lg:mb-4 lg:text-2xl">
+            {slides[currentIndex]!.subheading}
           </div>
         </div>
         <div className="relative">
@@ -113,11 +126,10 @@ const ImageSlider: React.FC = () => {
         {slides.map((_, index) => (
           <div
             key={index}
-            className={`rounded-full ${
-              currentIndex === index
+            className={`rounded-full ${currentIndex === index
                 ? "h-3.5 w-3.5 border-2 border-black bg-red-500"
                 : "h-3 w-3 bg-gray-400"
-            }`}
+              }`}
           />
         ))}
       </div>
