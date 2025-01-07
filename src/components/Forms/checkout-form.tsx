@@ -187,6 +187,9 @@ export default function CheckoutForm({
   }
 
   const onSubmit: SubmitHandler<CheckoutFormValues> = async (data) => {
+
+    console.log("data",data)
+
     // Get the human-readable state name based on the selected state ID
     const selectedStateName = data.state
       ? (states.find((state) => state.value.toString() === data.state)?.label ??
@@ -316,7 +319,7 @@ export default function CheckoutForm({
       const xState = billing_address[addressIndex]?.state
         ? states.find((state) => state.label === billing_address[addressIndex]?.state)?.value
         : "";
-      console.log(xCity)
+      console.log("city",xCity)
 
       setValue("state", xState ?? "");
     }
