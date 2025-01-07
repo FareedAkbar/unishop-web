@@ -296,6 +296,7 @@ export default function CheckoutForm({
 
   console.log("errors",errors)
   console.log("disabled",disabled)
+  console.log("billing_address",billing_address)
 
   useEffect(() => {
     if (billing_address) {
