@@ -31,6 +31,7 @@ import { useToast } from "~/hooks/use-toast";
 import { ScrollArea } from "../ui/scroll-area";
 import { BsPencilSquare } from "react-icons/bs";
 import { BsPlusCircle } from "react-icons/bs";
+import { error } from "console";
 type CheckoutFormValues = z.infer<typeof SignupSchema>;
 
 interface checkout {
@@ -290,6 +291,7 @@ export default function CheckoutForm({
     }
   };
 
+  console.log(errors)
 
   useEffect(() => {
     if (billing_address) {
