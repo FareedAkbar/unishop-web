@@ -70,6 +70,7 @@ export default function CheckoutForm({
       address: billing_address[addressIndex]?.address,
       postal_code: billing_address[addressIndex]?.postal_code,
       phone_number: billing_address[addressIndex]?.phone_number,
+      country: "Australia",
       city:
         cities
           .find(
@@ -82,7 +83,8 @@ export default function CheckoutForm({
         ? states.find((state) => state.label === billing_address[addressIndex]?.state)?.value
         : null,
     }
-    : {};
+    : {
+    };
 
 
 
@@ -104,6 +106,7 @@ export default function CheckoutForm({
   };
 
   useEffect(() => {
+    setValue("country", "Australia");
     if (!checkoutData) return;
     setCityOptions(
       getCitiesForState(
