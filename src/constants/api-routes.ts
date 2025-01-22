@@ -23,7 +23,8 @@ export enum PAGE_ROUTES {
   PRIVACY_POLICY = "/privacy-policy",
   FAVORITES="/favorites",
   PRODUCTS="/products",
-  PRODUCT_DETAILS="/product-details"
+  PRODUCT_DETAILS="/product-details",
+  RESULT="/result"
 }
 
 export const API_ROUTES = {

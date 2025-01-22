@@ -19,7 +19,7 @@ import { TbSettings } from "react-icons/tb";
 import { HiLogin, HiLogout, HiOutlineMoon } from "react-icons/hi";
 import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import SidebarCart from "../ui/sideCart/cartSidebar";
 import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
@@ -39,6 +39,7 @@ import {
 } from "react-icons/fa";
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import { PiMoon, PiMoonLight } from "react-icons/pi";
+import Select from "../Fields/select";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -60,13 +61,20 @@ const Header = () => {
     productTags,
     getSubCategory,
     subCategory,
-    getCheckoutFormData,
+    getCheckoutFormData
   } = useAuthContext();
   const router = useRouter();
+
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const path = usePathname();
+  type newCAt = {
+    label: string,
+    value: string
+  }
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeSection, setActiveSection] = useState("home");
+  const [selectedCategory, setSelectedCategory] = useState<newCAt | null>(null);
+
+  const [searchError, setSearchError] = useState("");
   const [isMobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
@@ -90,6 +98,7 @@ const Header = () => {
   >(null);
 
   const [openCategories, setOpenCategories] = useState<string[]>([]);
+  const params = useSearchParams();
 
   // function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
   //   const categoryMap: Record<number, CategoryTreeNode> = {};
@@ -355,6 +364,7 @@ const Header = () => {
     },
     { label: "Eliza Jade Candles", icon: FaGift, href: "/gifts?desc=Candles" },
   ];
+
   const SubcategoryList1 = ({
     subItems,
     openCategories,
@@ -464,6 +474,44 @@ const Header = () => {
     };
   }, [isMobileMenuOpen]);
 
+
+
+  const handleSearchApi = async () => {
+    if (!searchTerm) {
+      setSearchError("Please enter title or description");
+      return
+    } else {
+      if(selectedCategory && selectedCategory.value != "0"){
+        router.push(`/result?type=${selectedCategory?.label}&id=${selectedCategory?.value}&searchTerm=${searchTerm}`);
+      }else{
+        router.push(`/result?searchTerm=${searchTerm}`);
+      }
+      
+      setSearchError("");
+    }
+
+  }
+
+  useEffect(() => {
+    const d = params.get("type");
+    const id = params.get("id");
+    const parentCat = params.get("searchTerm");
+
+    if (d && id && path.includes("/result")) {
+      setSelectedCategory({ label: d, value: id });
+    } else {
+      setSelectedCategory(null);
+    }
+    if (parentCat && path.includes("/result")) {
+      setSearchTerm(parentCat);
+    } else {
+      setSearchTerm("");
+    }
+
+  }, [path])
+ 
+  const newCat = [ {label: "All Categories", value: "0"},...(category ?? [])];
+
   return (
     <nav className="fixed left-0 top-0 z-10 h-fit w-full">
       <header className="flex flex-col bg-white px-4 pb-2 pt-4 backdrop-blur dark:bg-slate-900 lg:flex-row lg:items-center lg:pb-0">
@@ -565,15 +613,42 @@ const Header = () => {
         </div>
 
         {/* Search Bar (Visible on Small Screens) */}
-        <div className="mx-2 mt-2 lg:hidden">
-          <Input
-            placeholder="What are you looking for?"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            icon={<FiSearch />}
-            width="w-full "
-          />
-        </div>
+        {!path.includes('/products') && (
+          <div className="mx-2 mt-2 lg:hidden">
+            <div>
+              <Select
+                id="category"
+                name="category"
+                options={newCat?.map((cat) => ({
+                  value: 'category_type_id' in cat ? cat.category_type_id.toString() : cat.value, // Ensure value is a string
+                  label: 'type' in cat ? cat.type.toString() : cat.label,
+                })) ?? []}
+                // loader={loader}
+                value={selectedCategory?.value ?? ""}
+                // placeholder="All Categories"
+                onChange={(val) => {
+                  setSelectedCategory(val);
+                  setSearchTerm("");
+                }}
+
+              />
+            </div>
+            <div className="mt-2">
+              <Input
+                placeholder="What are you looking for?"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                icon={<FiSearch size={26} />}
+                width="w-56"
+                animateOnClick={false}
+                onIconClick={() => handleSearchApi()}
+                error={searchError}
+              />
+            </div>
+
+          </div>
+        )}
+
 
         {/* Mobile Menu for Navigation Items */}
         {isMobileMenuOpen && (
@@ -582,7 +657,7 @@ const Header = () => {
             {isMobileMenuOpen && (
               <div
                 className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50"
-                // onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
+              // onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
               />
             )}
             <button
@@ -777,14 +852,34 @@ const Header = () => {
 
             {/* Right Section: Search Bar and Icons */}
             <div className="flex items-center space-x-4">
-              {/* <Input
+              <div>
+                <Select
+                  id="category"
+                  name="category"
+                  options={newCat?.map((cat) => ({
+                    value: 'category_type_id' in cat ? cat.category_type_id.toString() : cat.value, // Ensure value is a string
+                  label: 'type' in cat ? cat.type.toString() : cat.label,
+                  })) ?? []}
+                  // loader={loader}
+                  value={selectedCategory?.value ?? ""}
+                  // placeholder="All Categories"
+                  onChange={(val) => {
+                    setSelectedCategory(val);
+                    setSearchTerm("");
+                  }}
+
+                />
+              </div>
+              <Input
                 placeholder="What are you looking for?"
                 value={searchTerm}
                 onChange={handleSearchChange}
                 icon={<FiSearch size={26} />}
                 width="w-56"
-                animateOnClick={true}
-              /> */}
+                animateOnClick={false}
+                onIconClick={() => handleSearchApi()}
+                error={searchError}
+              />
               <div
                 className="relative"
                 onClick={() => router.push("/favorites")}

@@ -47,6 +47,16 @@ const ProductCard = ({
 
   const tagNames: string[] = matchingTags?.map((tag) => tag?.tag_name) ?? [];
 
+
+  const manageUsage = () => {
+    if (product?.book_usages && product?.book_usages.length > 0) {
+      return product.book_usages
+        .filter((usage) => usage.default_semester === 1)
+        .map((usage) => usage.subject_code);
+    }
+    return [];
+  };
+
   return (
     <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
       <div className="relative flex h-40 grow-0 items-center justify-center rounded-sm bg-gray-200 dark:bg-slate-600 sm:h-48 lg:h-64">
@@ -71,7 +81,8 @@ const ProductCard = ({
           src={
             product?.object_path
               ? `https://ipos-storage.s3.amazonaws.com/${product.object_path}`
-              : "/assets/images/products/product.png"
+              : product?.media && product?.media.length > 0 ? `https://ipos-storage.s3.amazonaws.com/${product.media[0]?.object_path}`
+                : "/assets/images/products/product.png"
           }
           alt={product?.SKU_title ?? ""}
           width={1000}
@@ -92,7 +103,7 @@ const ProductCard = ({
             className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
           >
             {product?.item_id &&
-            favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
+              favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
               <AiFillHeart color="red" />
             ) : (
               <AiOutlineHeart />
@@ -107,13 +118,12 @@ const ProductCard = ({
         </div>
 
         {showButton &&
-        (product?.variations?.[0]?.items_variable_items_sale_price ??
-          product?.item_sale_price) ? (
+          (product?.variations?.[0]?.items_variable_items_sale_price ??
+            product?.item_sale_price) ? (
           <button
             onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
-            className={`absolute bottom-0 z-20 mt-4 w-full rounded-b-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${
-              !showAddToCart ? "bg-red-500" : "bg-black"
-            } hidden group-hover:block`}
+            className={`absolute bottom-0 z-20 mt-4 w-full rounded-b-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${!showAddToCart ? "bg-red-500" : "bg-black"
+              } hidden group-hover:block`}
           >
             {!showAddToCart ? "Remove From Cart" : "Add To Cart"}
           </button>
@@ -121,12 +131,32 @@ const ProductCard = ({
           ""
         )}
       </div>
-      <span className="mt-2 font-semibold sm:mt-4" title={product?.item_name}>
+      <span className="mt-2 font-semibold sm:mt-4 mb-1" title={product?.item_name}>
         {product?.item_name}
       </span>
+      {product?.SKU ? (
+        <span className="truncate text-xs">
+          SKU: {product?.SKU}
+        </span>
+      ) : (
+        ""
+      )}
       {product?.stock?.quantity ? (
-        <span className="truncate text-sm">
+        <span className="truncate text-xs">
           Available Stock: {product?.stock?.quantity}
+        </span>
+      ) : (
+        ""
+      )}
+
+      {product?.book_id && product?.food_id == null ? (
+        <span className="truncate text-xs">
+          {manageUsage().length > 0 ? (
+            `Textbook: ${manageUsage().join(", ")}`
+          ) : (
+            "Textbook not used this session"
+          )}
+
         </span>
       ) : (
         ""

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Suspense, useEffect, useRef, useState } from "react";
+
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
@@ -17,39 +18,56 @@ import {
 } from "~/components/ui/animated-modal";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaCartPlus, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { getBooks } from "~/_actions/getbooks";
-import { useToast } from "~/hooks/use-toast";
 import AlertBox from "~/components/alertBox/alert";
+import { useToast } from "~/hooks/use-toast";
+import type { Category, SuperCategory } from "~/types/category";
+import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import Select from "~/components/Fields/select";
-import { Variation } from "~/types/book";
+import type { Pagination } from "~/types/pagination";
+import type { Variation } from "~/types/book";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import { BsFillCartCheckFill } from "react-icons/bs";
+import {
+  Select as NewSelect,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "~/components/ui/select";
 import { FiSearch } from "react-icons/fi";
 import { Player } from "@lottiefiles/react-lottie-player";
 
-const PRODUCTS_PER_PAGE = 10;
-
 const MyComponent = () => {
-  const router = useRouter();
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
-  const isFirstRender = useRef(true);
+  // const isFirstRender = useRef(true);
   const [searchText, setSearchText] = useState("");
-  const [filteredData, setFilteredData] = useState<DataCart[] | null>(null);
   const params = useSearchParams();
   const { setOpen } = useModal();
-  const [detail, setDetail] = useState<string | null>(null);
+  const [detail, setDetail] = useState<number>(-1);
+  const [parent, setParent] = useState<number>(-1);
+  const [name, setName] = useState<string>("");
+  const [categoryType, setCategoryType] = useState<SuperCategory | null>(null);
+  const [subcategoryTypes, setSubcategoryTypes] = useState<Category[] | null>(
+    null,
+  );
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
+  const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
   const [wishListLoader, setWishListLoader] = useState<boolean>(false);
   const [selectedValues, setSelectedValues] = useState<
     Record<string, string | undefined>
   >({});
+  const [currentPage, setCurrentPage] = useState(pagination?.page ?? 1);
+  const [pageSize, setPageSize] = useState(pagination?.limit ?? 15);
+  const [totalPages, setTotalPages] = useState(pagination?.pages ?? 1);
+  const [displayData, setDisplayData] = useState<DataCart[] | null>(null);
+  const router = useRouter();
+  const { toast } = useToast();
   const {
     cartItems,
     addCartItems,
@@ -57,54 +75,48 @@ const MyComponent = () => {
     genre,
     addFavourite,
     removeFavourite,
-    checkoutData,
     favItems,
+    checkoutData,
+    category,
     setProductForDetail,
+    subCategory,
+    searchItems,
+    searchInCategory
   } = useAuthContext();
-  const { toast } = useToast();
 
   useEffect(() => {
-    const d = params.get("detail");
-    setDetail(d);
-  }, [params]);
-
-  useEffect(() => {
-    if (!genre) return;
-    const genId = genre?.find((item) => item.genre == detail);
-    if (!genId) return;
-    const loadData = async () => {
+    const fetchData = async () => {
+      const d = params.get("type");
+      const id = params.get("id");
+      const parentCat = params.get("searchTerm");
+  
       try {
-        setLoader(true);
-        const x = await getBooks(genId?.genre_id ?? 1);
-        if (typeof x !== "boolean" && x.status) {
-          console.log(x)
-          setData(x.data);
-          setFilteredData(x.data);
+        if (parentCat) {
+          setName(parentCat);
+          setLoader(true)
+          await searchInCategory(parentCat, id!);
+          setLoader(false)
         }
-        setLoader(false);
-        // setData(result);
-        // setTotalPages(result.totalPages);
       } catch (error) {
-        console.error("Failed to load data:", error);
-        setLoader(false);
+        console.error("Error fetching search results:", error);
+        setLoader(false)
       }
     };
+  
+    void fetchData(); // Call the async function
+  }, [params]);
 
-    loadData().catch((error) => {
-      console.error("Failed to load data in useEffect:", error);
-    });
-  }, [genre, detail]);
+  
+ 
 
   const filterVariationsBySelectedValues = (
     variations: Variation[],
     selectedValues: Record<string, string | undefined>,
   ) => {
     return variations?.filter((variation) => {
-      // Check if every selected value matches in the variation's tags
       return Object.keys(selectedValues).every((tagName) => {
         const selectedValue = selectedValues[tagName];
 
-        // Only proceed if the selected value is not undefined
         if (!selectedValue) {
           return false;
         }
@@ -152,6 +164,41 @@ const MyComponent = () => {
     }
   };
 
+  const getOptions = (
+    tagName: string,
+    dependencies: Record<string, string | undefined>,
+  ) => {
+    return Array.from(
+      new Set(
+        itemDetail?.variations
+          ?.filter((variation) => {
+            // Check all previous tag dependencies
+            return Object.keys(dependencies).every((key) => {
+              return variation.variation_tags.some(
+                (tag) =>
+                  tag.items_variations_tags_name === key &&
+                  tag.items_variations_tags_links_values_value ===
+                    dependencies[key],
+              );
+            });
+          })
+          .map((variation) => {
+            // Return only unique values for the current tag
+            return variation.variation_tags.find(
+              (tag) => tag.items_variations_tags_name === tagName,
+            )?.items_variations_tags_links_values_value;
+          }),
+      ),
+    )
+      .filter(Boolean)
+      .map((value) => ({
+        tagName,
+        dependencies,
+        value: value!,
+        label: value!,
+      }));
+  };
+
   const openDetail = async (item: DataCart) => {
     setOpen(true);
     setItemDetail(item);
@@ -159,13 +206,13 @@ const MyComponent = () => {
   };
 
   const handleFavourite = async (item: DataCart) => {
-    if (checkoutData?.booknet_customer_id) {
+    if (checkoutData?.customer_id) {
       setWishListLoader(true);
       if (
         item &&
         favItems?.some((favItem) => favItem.item_id === item.item_id)
       ) {
-        await removeFavourite(item, checkoutData.booknet_customer_id)
+        await removeFavourite(item, checkoutData.customer_id)
           .then((x) => {
             if (x) {
               toast({
@@ -177,7 +224,7 @@ const MyComponent = () => {
           })
           .finally(() => setWishListLoader(false));
       } else {
-        await addFavourite(item, checkoutData.booknet_customer_id)
+        await addFavourite(item, checkoutData.customer_id)
           .then((x) => {
             if (x) {
               toast({
@@ -206,14 +253,8 @@ const MyComponent = () => {
       : false;
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  // Get the products for the current page
-  const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
-
   const filterResult = () => {
-    let filtered = data;
+    let filtered = [...data];
 
     // Search filter
     if (searchText) {
@@ -225,63 +266,23 @@ const MyComponent = () => {
     }
 
     // Date range filter
-
-    setFilteredData(filtered);
-    setCurrentPage(1);
+    setCurrentPage(filtered ? 1 : (pagination?.page ?? 1)); // Reset to first page on new filter
+    setTotalPages(
+      Math.ceil(filtered ? filtered?.length / pageSize : 1 / pageSize),
+    );
+    const x = filtered
+      ? filtered?.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      : data;
+    setDisplayData(x);
   };
-  // Calculate total pages based on filtered data and page size
-  const totalPages = Math.ceil(
-    filteredData ? filteredData?.length / pageSize : 1 / pageSize,
-  );
-
-  // Get the data to be displayed for the current page
-  const displayedData = filteredData?.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  );
 
   useEffect(() => {
     filterResult();
-  }, [searchText, data]);
+  }, [searchText]);
 
   const goToLogin = () => {
     setLoginAlert(false);
     router.push("login");
-  };
-
-  const getOptions = (
-    tagName: string,
-    dependencies: Record<string, string | undefined>,
-  ) => {
-    return Array.from(
-      new Set(
-        itemDetail?.variations
-          ?.filter((variation) => {
-            // Check all previous tag dependencies
-            return Object.keys(dependencies).every((key) => {
-              return variation.variation_tags.some(
-                (tag) =>
-                  tag.items_variations_tags_name === key &&
-                  tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
-              );
-            });
-          })
-          .map((variation) => {
-            // Return only unique values for the current tag
-            return variation.variation_tags.find(
-              (tag) => tag.items_variations_tags_name === tagName,
-            )?.items_variations_tags_links_values_value;
-          }),
-      ),
-    )
-      .filter(Boolean)
-      .map((value) => ({
-        tagName, // include tagName in the result
-        dependencies, // include dependencies in the result
-        value: value!,
-        label: value!,
-      }));
   };
 
   const handleSelectChange = (
@@ -305,15 +306,27 @@ const MyComponent = () => {
           newValues[tag] = undefined;
         });
       }
-
       return newValues;
     });
   };
 
+  const handlePageChange = async (page: number) => {
+    setCurrentPage(page);
+  };
+
   const goToDetail = async (item: DataCart | null) => {
     await setProductForDetail(item);
-    router.push(`/product-details?genre=${item?.genre_id}`);
+    router.push(`/product-details?category=${item?.category}`);
   };
+  const handleChangeSubCategory = async (id: string) => {
+    const genId = subCategory?.find((item) => item.id == parseInt(id));
+    if (genId?.category_name) {
+      setName(genId.category_name);
+    }
+    setDetail(parseInt(id));
+    setCurrentPage(1);
+  };
+
   const manageUsage = () => {
     if (itemDetail?.book_usages && itemDetail?.book_usages.length > 0) {
       return itemDetail.book_usages
@@ -322,10 +335,11 @@ const MyComponent = () => {
     }
     return [];
   };
+
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center pb-5 pt-20"
+        className="flex min-h-screen flex-col items-center pt-32 sm:pt-24 md:pt-24 lg:pt-20"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
@@ -334,44 +348,31 @@ const MyComponent = () => {
         <div className="flex flex-grow flex-row sm:pt-10">
           <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
             {/* Header Section */}
-            <div className="flex w-full flex-wrap items-end justify-between pb-4">
-              <div className="text-left">
-                <h2 className="text-xl font-bold">Books</h2>
-                <p className="text-sm capitalize text-gray-500 dark:text-gray-300">
-                  {detail}
-                </p>
+            <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4 pl-2">
+              <div className="text-left flex flex-row items-center gap-3">
+                <h2 className="text-xl font-bold capitalize">
+                  Search results for:
+                </h2>
+                 <p className="font-semibold">{` '${name}'`}</p> 
+               
               </div>
 
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                    placeholder="Search"
-                    className="w-full border-b border-gray-300 bg-gray-100 p-2 pl-8 text-sm focus:outline-none dark:bg-slate-700 dark:text-white"
-                  />
-                  <span className="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-white">
-                    <FiSearch />
-                  </span>
-                </div>
-                <h1 className="text-sm font-semibold">
-                  Showing {displayedData?.length} of {data.length} Items
-                </h1>
-              </div>
+             
             </div>
 
-            {/* Scrollable Product Section */}
-            <ScrollArea className="h-[75vh] pb-5">
-              <div className="flex h-full flex-wrap items-center justify-center gap-3 py-3">
+            <ScrollArea className="h-[75vh] pb-10">
+              <div
+                className="flex flex-wrap justify-center gap-3 py-3"
+                // key={displayData ? displayData?.[0]?.item_id : "123"}
+              >
                 {loader ? (
-                  Array.from({ length: 6 }, (_, index) => (
-                    <div key={index} className="p-2">
+                  Array.from({ length: 5 }, (_, index) => (
+                    <div key={index}>
                       <ProductCardSkeleton />
                     </div>
                   ))
-                ) : displayedData && displayedData.length > 0 ? (
-                  displayedData.map((item: DataCart) => (
+                ) : searchItems && searchItems.length > 0 ? (
+                  searchItems.map((item: DataCart) => (
                     <ProductCard
                       key={item.item_id}
                       product={item}
@@ -390,9 +391,24 @@ const MyComponent = () => {
                     />
                   ))
                 ) : (
+                  // Only display the empty state when data loading is complete and no items are available
                   <div className="flex h-full w-full flex-col items-center justify-center">
-                    <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
-                      Currently, you have no items in this category.
+                    <p className="rounded bg-yellow-200 text-center lg:w-2/3 p-3 mb-2 text-sm dark:bg-yellow-700">
+          Your search returned no results. If you were searching for a subject code, it is possible textbooks have not been confirmed for this course yet. Please contact the Bookshop at
+                    <a
+                      href="tel:0242218050"
+                      className="text-red-500 underline hover:text-red-600 mx-1"
+                    >
+                      02 4221 8050
+                    </a>
+                    or
+                    <a
+                      href="mailto:uow-bookshop@uow.edu.au"
+                      className="text-red-500 underline hover:text-red-600 mx-1"
+                    >
+                      uow-bookshop@uow.edu.au
+                    </a>
+                    for further details.
                     </p>
                     <Player
                       autoplay
@@ -400,47 +416,42 @@ const MyComponent = () => {
                       src="/assets/gifs/emptywishlist.json"
                       className="h-80 w-80"
                     />
-                  </div>
+                </div>
+                
                 )}
               </div>
             </ScrollArea>
-
-            {/* Pagination Section */}
-            <div className="z-[5] flex justify-between px-4 py-4">
-              <button
-                className={`rounded-full p-2 ${currentPage === 1
-                    ? "cursor-not-allowed bg-gray-200 text-black"
-                    : "cursor-pointer bg-red-500 text-white"
-                  }`}
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <FaChevronLeft />
-              </button>
-              <span className="px-2">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                className={`rounded-full p-2 ${(currentPage === totalPages || totalPages == 0)
-                    ? "cursor-not-allowed bg-gray-200 text-black"
-                    : "cursor-pointer bg-red-500 text-white"
-                  }`}
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages || totalPages == 0}
-              >
-                <FaChevronRight />
-              </button>
-            </div>
+            {pagination && (
+              <div className="z-5 flex justify-between px-4 py-4">
+                <button
+                  className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black blur" : "cursor-pointer bg-red-500 text-white"}`}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  <FaChevronLeft />
+                </button>
+                <span className="px-2">
+                  Page {currentPage ?? 1} of {totalPages ?? 1}
+                </span>
+                <button
+                  className={`rounded-full p-2 ${totalPages == 0 || currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black blur" : "cursor-pointer bg-red-500 text-white"}`}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={totalPages == 0 || currentPage === totalPages}
+                >
+                  <FaChevronRight />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </motion.main>
 
       <ModalBody>
         <ModalContent>
-          <h4 className="pb-2 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
-            {itemDetail?.book_title}
+          <h4 className="text-center font-serif text-lg font-bold capitalize text-red-500 dark:text-neutral-100 md:text-2xl">
+            {itemDetail?.item_name}
           </h4>
-          <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
+          <h6 className="py-1.5 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}
           </h6>
           <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100">
@@ -464,7 +475,7 @@ const MyComponent = () => {
                     rotate: 0,
                     zIndex: 100,
                   }}
-                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
+                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
                 >
                   <Image
                     src={
@@ -475,7 +486,7 @@ const MyComponent = () => {
                     alt={itemDetail?.object_path ?? ""}
                     width={500}
                     height={500}
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-44 md:w-44"
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-40 lg:w-44 md:w-40 lg:h-44"
                   />
                 </motion.div>
               </div>
@@ -485,24 +496,26 @@ const MyComponent = () => {
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                   $
                   {itemDetail?.variations?.[0] &&
-                    filteredVariations?.[0]?.items_variable_items_sale_price
+                  filteredVariations?.[0]?.items_variable_items_sale_price
                     ? filteredVariations?.[0]?.items_variable_items_sale_price
                     : itemDetail?.variations?.[0]
                       ? itemDetail?.variations?.[0]
-                        .items_variable_items_sale_price
+                          .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
-                <span className="font-serif lg:text-lg text-zinc-500 dark:text-neutral-300">
-                  SKU {itemDetail?.SKU}
-                </span>
+                {itemDetail?.SKU && (
+                  <span className="font-serif text-zinc-500 dark:text-neutral-300 lg:text-lg">
+                    SKU: {itemDetail.SKU}
+                  </span>
+                )}
               </div>
               {itemDetail?.book_id && itemDetail?.food_id == null && (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Textbook:
+                  Textbook:
                   </span>
                   <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {manageUsage().length > 0 ? (
+                  {manageUsage().length > 0 ? (
                       `${manageUsage().join(", ")}`
                     ) : (
                       " not used this session"
@@ -510,68 +523,85 @@ const MyComponent = () => {
                   </span>
                 </div>
               )}
-              {itemDetail?.edition && (
-                <div className="flex items-center justify-center">
-                  <>
-                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                      Series:
-                    </span>
-                    <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                      {itemDetail?.edition}
-                    </span>
-                  </>
-                </div>
-              )}
-              {itemDetail?.introduced && (
+              {itemDetail?.barcode && (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Published:
+                    Barcode:
                   </span>
-                  <span className="pl-1 lg:text-sm text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail?.introduced
-                      ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
-                      : ""}
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.barcode}
+                  </span>
+                </div>
+              )}
+              {itemDetail?.edition && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Series:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.edition}
                   </span>
                 </div>
               )}
 
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Language:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.book_language}
-                </span>
-              </div>
-              {itemDetail?.pages ? (
+              {itemDetail?.book_language && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Language:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.book_language}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.pages !== undefined &&
+              itemDetail.pages !== null &&
+              itemDetail.pages ? (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
                   </span>
                   <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail?.pages}
+                    {itemDetail.pages}
                   </span>
                 </div>
               ) : (
                 ""
               )}
 
+              {itemDetail?.publisher?.publisher_name && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Publisher:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.publisher.publisher_name}
+                  </span>
+                </div>
+              )}
+
+              {itemDetail?.publisher?.country && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Country of Publication:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.publisher.country}
+                  </span>
+                </div>
+              )}
               <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Publisher:
+                  Created at:
                 </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher?.publisher_name}
-                </span>
-              </div>
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Country of Publication:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher?.country}
+                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                  {itemDetail?.introduced
+                    ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
+                    : ""}
                 </span>
               </div>
+
               {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>
                   <div>
@@ -633,7 +663,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                              currTag.items_variations_tags_name
+                                currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -671,10 +701,11 @@ const MyComponent = () => {
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
+                                  className={`min-w-10 rounded border p-1 text-center ${
+                                    selectedValues[tagName] === option.value
                                       ? "bg-red-500 text-white"
                                       : "border-red-500 bg-white dark:bg-slate-700"
-                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}
@@ -705,6 +736,7 @@ const MyComponent = () => {
                   )}
                 </div>
               )}
+
               {itemDetail?.variations?.[0]?.variation_tags &&
                 Object.keys(selectedValues)[0] &&
                 filteredVariations?.[0]?.items_variable_items_id && (
@@ -712,7 +744,7 @@ const MyComponent = () => {
                     className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
                     onClick={() => handleAddToCart(itemDetail)}
                   >
-                    <BsFillCartCheckFill className="text-lg" />
+                    <FaCartPlus className="text-lg" />
                     <div className="pl-2">Add to Cart</div>
                   </button>
                 )}
@@ -740,7 +772,7 @@ const MyComponent = () => {
   );
 };
 
-const BooksPage = () => {
+const ClothsPage = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <ModalProvider>
@@ -749,4 +781,4 @@ const BooksPage = () => {
     </Suspense>
   );
 };
-export default BooksPage;
+export default ClothsPage;

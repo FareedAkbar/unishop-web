@@ -8,6 +8,7 @@ interface InputProps {
   icon?: React.ReactNode;
   onIconClick?: () => void;
   width?: string;
+  error?: string;
   animateOnClick?: boolean;
 }
 
@@ -18,6 +19,7 @@ const Input: React.FC<InputProps> = ({
   onChange,
   icon,
   onIconClick,
+  error,
   width = "w-64",
   animateOnClick = false,
 }) => {
@@ -63,6 +65,7 @@ const Input: React.FC<InputProps> = ({
   }, []);
 
   return (
+    <div className="flex flex-col">
     <div
       ref={inputRef}
       className="flex items-center justify-between rounded bg-gray-100 dark:bg-slate-700 dark:text-white"
@@ -95,6 +98,9 @@ const Input: React.FC<InputProps> = ({
           {icon}
         </button>
       )}
+     
+    </div>
+    {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
   );
 };

@@ -101,7 +101,8 @@ export interface category_detail {
   web_visibility: number,
 }
 export default interface DataCart {
-  book_id: number;
+  book_id: number | null;
+  food_id: number | null;
   final_price_including_tax?: number; 
   quantity: number; 
   item_id: number;
@@ -159,9 +160,15 @@ export default interface DataCart {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectedValues?: any;
   reviews?: Review[],
-  category_detail?: category_detail
+  category_detail?: category_detail,
+  book_usages: book_usages[] | null
 }
 
+interface book_usages {
+  subject_name: string;
+  subject_code: string;
+  default_semester: number
+}
 
 export interface Media {
   object_id: number;

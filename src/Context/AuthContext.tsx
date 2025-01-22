@@ -49,6 +49,7 @@ import type {
 } from "~/types/favourite";
 import { getProductTags } from "~/_actions/product_tags";
 import type { ApiResponseStatus, ItemSpecialTag } from "~/types/productTags";
+import { getItemsBySearch } from "~/_actions/getitemsbycategory";
 
 type transactionData = {
   transaction_id?: string | null;
@@ -112,6 +113,8 @@ interface AuthContextProps {
   productTags: ItemSpecialTag[] | null;
   setCheckoutData: React.Dispatch<SetStateAction<CheckoutForm | null>>;
   addBillingAddress: (data: address[] | null) => void;
+  searchInCategory: (value: string, id: string) => Promise<boolean>;
+  searchItems: DataCart[];
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -130,6 +133,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [token, setToken] = useState<string | undefined>();
   const [themeMode, setThemeMode] = useState<string>("");
   const [cartItems, setItems] = useState<DataCart[]>([]);
+  const [searchItems, setSearchItems] = useState<DataCart[]>([]);
   const [favItems, setFavItems] = useState<DataCart[]>([]);
   const [orderTransactionData, setOrderTransactionData] =
     useState<transactionData | null>(null);
@@ -243,6 +247,25 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setGenre(responsePayload.data);
 
     lsClient.setItem("GENRE", responsePayload.data);
+
+    return true;
+  };
+
+  interface ApiResponse {
+    // meta: PaginationData; 
+    data: DataCart[];
+    status: boolean;
+}
+  const searchInCategory = async (value: string, id: string): Promise<boolean> => {
+    const response = await getItemsBySearch(value,id);
+
+    if (typeof response == "string") return false;
+
+    const responsePayload: { status: boolean; data: DataCart[] } =
+      response as ApiResponse;
+    if (!responsePayload.status) return false;
+    console.log(responsePayload.data)
+    setSearchItems(responsePayload.data);
 
     return true;
   };
@@ -728,7 +751,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         getSubCategory,
         subCategory,
         billing_address,
-        addBillingAddress
+        addBillingAddress,
+        searchInCategory,
+        searchItems
       }}
     >
       {children}

@@ -175,7 +175,7 @@ function Footer() {
             Privacy Policy | © {new Date().getFullYear()} PULSE
           </p>
           <p className="text-xs font-medium text-[#646464] dark:text-gray-300">
-            Design by{" "}
+            Designed by{" "}
             <a
               target="_blank"
               rel="noreferrer"
