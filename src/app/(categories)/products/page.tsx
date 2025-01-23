@@ -583,7 +583,14 @@ const MyComponent = () => {
                   </span>
                   <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                   {manageUsage().length > 0 ? (
-                      `${manageUsage().join(", ")}`
+                      manageUsage().map((item, index) => (
+                        <small
+                          key={index}
+                          className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 px-2 py-1 rounded mr-1"
+                        >
+                          {item}
+                        </small>
+                      ))
                     ) : (
                       " not used this session"
                     )}

@@ -409,8 +409,8 @@ const MyComponent = () => {
             <div className="z-[5] flex justify-between px-4 py-4">
               <button
                 className={`rounded-full p-2 ${currentPage === 1
-                    ? "cursor-not-allowed bg-gray-200 text-black"
-                    : "cursor-pointer bg-red-500 text-white"
+                  ? "cursor-not-allowed bg-gray-200 text-black"
+                  : "cursor-pointer bg-red-500 text-white"
                   }`}
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -422,8 +422,8 @@ const MyComponent = () => {
               </span>
               <button
                 className={`rounded-full p-2 ${(currentPage === totalPages || totalPages == 0)
-                    ? "cursor-not-allowed bg-gray-200 text-black"
-                    : "cursor-pointer bg-red-500 text-white"
+                  ? "cursor-not-allowed bg-gray-200 text-black"
+                  : "cursor-pointer bg-red-500 text-white"
                   }`}
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages || totalPages == 0}
@@ -503,7 +503,14 @@ const MyComponent = () => {
                   </span>
                   <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                     {manageUsage().length > 0 ? (
-                      `${manageUsage().join(", ")}`
+                      manageUsage().map((item, index) => (
+                        <small
+                          key={index}
+                          className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 px-2 py-1 rounded mr-1"
+                        >
+                          {item}
+                        </small>
+                      ))
                     ) : (
                       " not used this session"
                     )}
@@ -672,8 +679,8 @@ const MyComponent = () => {
                                 <button
                                   key={option.value}
                                   className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
-                                      ? "bg-red-500 text-white"
-                                      : "border-red-500 bg-white dark:bg-slate-700"
+                                    ? "bg-red-500 text-white"
+                                    : "border-red-500 bg-white dark:bg-slate-700"
                                     } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >

@@ -60,7 +60,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
       }
     }
   };
-
+ 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
       <div key={id} className="flex items-center">
@@ -68,6 +68,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           src={
             imageUrl
               ? `https://ipos-storage.s3.amazonaws.com/${imageUrl}`
+              
               : BookIcon
           }
           width={0}

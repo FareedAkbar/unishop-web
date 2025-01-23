@@ -134,14 +134,14 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
             <CgClose className="h-6 w-6" />
           </button>
         </div>
-
+       
         {/* Cart Items List */}
         <ScrollArea className="h-3/4 flex-1 p-4">
           {items.map((item: DataCart) => (
             <CartItem
               key={item.item_id}
               title={item.item_name}
-              imageSrc={item?.object_path}
+              imageSrc={item?.object_path ?? item.media[0]?.object_path}
               price={item.item_sale_price}
               showRemove={true}
               onChangeQuantity={(id, number) => onChangeQuantity(id, number)}

@@ -152,7 +152,17 @@ const ProductCard = ({
       {product?.book_id && product?.food_id == null ? (
         <span className="truncate text-xs">
           {manageUsage().length > 0 ? (
-            `Textbook: ${manageUsage().join(", ")}`
+            <>
+              Textbook:{" "}
+              {manageUsage().map((item, index) => (
+                <small
+                  key={index}
+                  className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 px-2 py-1 rounded mr-1"
+                >
+                  {item}
+                </small>
+              ))}
+            </>
           ) : (
             "Textbook not used this session"
           )}

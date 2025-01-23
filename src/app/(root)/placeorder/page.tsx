@@ -798,7 +798,7 @@ const MyComponent = () => {
                     <CartItem
                       key={item.item_id}
                       title={item.book_title}
-                      imageSrc={item?.object_path}
+                      imageSrc={item?.object_path ?? item.media[0]?.object_path}
                       price={
                         totalAfterCalculation?.items
                           ? checkOldPrice(item.item_id)

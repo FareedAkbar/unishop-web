@@ -365,7 +365,14 @@ const MyComponent = () => {
     .filter((tag): tag is ItemSpecialTag => Boolean(tag)); // Filter out undefined values in case there are no matches
 
   const tagNames: string[] = matchingTags?.map((tag) => tag?.tag_name) ?? [];
-
+  const manageUsage = () => {
+    if (itemDetail?.book_usages && itemDetail?.book_usages.length > 0) {
+      return itemDetail.book_usages
+        .filter((usage) => usage.default_semester === 1)
+        .map((usage) => usage.subject_code);
+    }
+    return [];
+  };
   return (
     <div className="p-6 pt-32">
       <div className="flex items-center justify-between pb-2 lg:px-10">
@@ -485,6 +492,27 @@ const MyComponent = () => {
               SKU: {itemDetail.SKU}
             </span>
           )}
+          {itemDetail?.book_id && itemDetail?.food_id == null && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Textbook:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    {manageUsage().length > 0 ? (
+                      manageUsage().map((item, index) => (
+                        <small
+                          key={index}
+                          className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 px-2 py-1 rounded mr-1"
+                        >
+                          {item}
+                        </small>
+                      ))
+                    ) : (
+                      " not used this session"
+                    )}
+                  </span>
+                </div>
+              )}
           {itemDetail?.barcode && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
