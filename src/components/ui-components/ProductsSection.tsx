@@ -162,7 +162,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
 
         <div className="w-full lg:w-[92vw]">
           <div
-            className="scrollbar-hidden mt-6 flex flex-wrap justify-center py-6 lg:flex-nowrap lg:overflow-x-auto xl:flex-nowrap xl:overflow-x-auto"
+            className="scrollbar-hidden mt-6 flex flex-wrap justify-center py-6 gap-4 lg:flex-nowrap lg:overflow-x-auto xl:flex-nowrap xl:overflow-x-auto"
             ref={productContainerRef}
           >
             {loader

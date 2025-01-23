@@ -195,10 +195,11 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
           <Button
             disabled={items?.[0] ? false : true}
             onClick={() => {
-              if (!isOpenAlert) {
-                // Check if alert is not already open
-                opencart();
-              }
+              // if (!isOpenAlert) {
+              //   // Check if alert is not already open
+              //   opencart();
+              // }
+              goToCheckout()
             }}
             className={`mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white ${items.length === 0 ? "disabled" : ""}`}
             title="Confirm Order"

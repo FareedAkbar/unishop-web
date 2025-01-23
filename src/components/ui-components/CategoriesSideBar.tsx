@@ -1,5 +1,5 @@
 "use Client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
   FaChevronRight,
@@ -324,11 +324,11 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
+const pathname = usePathname()
   return (
     <aside
       ref={sidebarRef}
-      className={` absolute left-0 w-72  rounded-r-xl border-y border-r bg-white py-2 pl-4 pr-2 shadow-lg dark:bg-slate-700 ${className}`}
+      className={`${pathname === "/" ? "" : "absolute"} left-0 w-72  rounded-r-xl border-y border-r bg-white py-2 pl-4 pr-2 shadow-lg dark:bg-slate-700 ${className}`}
     >
       {/* ${headerCategory && headerCategory?.length > 7 ? "h-[25vh] overflow-y-scroll overflow-x-hidden" : ""} */}
       <h2 className="text-lg font-bold">CATEGORIES</h2>

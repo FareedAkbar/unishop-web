@@ -405,12 +405,13 @@ const MyComponent = () => {
                 )}
               </div>
 
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-col md:flex-row sm:w-[700px] w-full items-center gap-2">
+                <div className="w-full">
                 {subcategoryTypes?.[0] && (
                   <NewSelect
                     onValueChange={(x: string) => handleChangeSubCategory(x)}
                   >
-                    <SelectTrigger className="w-72">
+                    <SelectTrigger>
                       <SelectValue placeholder="Select Category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -422,20 +423,21 @@ const MyComponent = () => {
                     </SelectContent>
                   </NewSelect>
                 )}
-                <div className="relative flex">
+                </div>
+                <div className="relative flex w-full">
                   <input
                     type="text"
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
-                    placeholder="Search"
-                    className="w-full rounded border-b border-gray-300 bg-gray-100 p-2 pl-8 text-sm shadow-inner focus:outline-none dark:bg-slate-700 dark:text-white"
+                    placeholder="Search in this category"
+                    className=" w-full rounded border-b border-gray-300 bg-gray-100 p-2 pl-8 text-sm shadow-inner focus:outline-none dark:bg-slate-700 dark:text-white"
                   />
                   <span className="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-white">
                     <FiSearch />
                   </span>
                 </div>
 
-                <h1 className="text-sm font-semibold">
+                <h1 className="text-sm font-semibold w-full">
                   Showing {displayData?.length} of {data.length} Items
                 </h1>
               </div>
@@ -510,7 +512,7 @@ const MyComponent = () => {
             )}
           </div>
         </div>
-      </motion.main>
+       </motion.main>
 
       <ModalBody>
         <ModalContent>

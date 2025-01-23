@@ -130,12 +130,12 @@ const HomePage: React.FC = () => {
         </div>
       </div>{" "}
       <div className="relative w-full">
-        <div className="flex">
-          <div className="hidden lg:ml-20 lg:block">
+        <div className="flex h-fit">
+          <div className="hidden lg:block">
             <CategoriesSidebar />
           </div>
-          <div className="mx-auto w-full pl-5 pr-3 pb-10">
-            <div className="relative min-h-[360px] lg:ml-64">
+          <div className={`mx-auto w-full pr-3 ${specialItems && specialItems?.length > 2 && "lg:pl-10"} pb-10`}>
+            <div className="relative min-h-[360px]">
               <AnimatePresence initial={false} mode="wait" custom={direction}>
                 <motion.div
                   key={currentIndex}
