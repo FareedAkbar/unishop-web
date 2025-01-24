@@ -477,9 +477,11 @@ const MyComponent = () => {
 
 const Page = () => {
   return (
+    <ModalProvider>
     <Suspense fallback={<Spinner />}>
       <MyComponent />
     </Suspense>
+    </ModalProvider>
   );
 };
 
