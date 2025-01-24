@@ -69,6 +69,7 @@ const DataTable: React.FC<DataTableProps> = ({
   }, [tableData]);
 
   const toggleFullScreen = () => {
+    if (typeof window !== "undefined") {
     const element = document.getElementById("tableContainer");
     if (!document.fullscreenElement) {
       element!.requestFullscreen().catch((err) => {
@@ -85,9 +86,11 @@ const DataTable: React.FC<DataTableProps> = ({
         );
       });
     }
+  }
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
     const handleFullScreenChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
     };
@@ -97,6 +100,7 @@ const DataTable: React.FC<DataTableProps> = ({
     return () => {
       document.removeEventListener("fullscreenchange", handleFullScreenChange);
     };
+  }
   }, []);
 
   useEffect(() => {

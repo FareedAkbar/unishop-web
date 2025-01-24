@@ -318,10 +318,13 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
         setOpenCategories([]);
       }
     };
-
+    if (typeof window !== "undefined") {
     document.addEventListener("mousedown", handleClickOutside);
+    }
     return () => {
+      if (typeof window !== "undefined") {
       document.removeEventListener("mousedown", handleClickOutside);
+      }
     };
   }, []);
 const pathname = usePathname()

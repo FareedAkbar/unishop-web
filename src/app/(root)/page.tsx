@@ -1,8 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import HomePage from "./home/page";
 import { Suspense } from "react";
-import Spinner from "~/components/spinner";
+
+
+ const Spinner = dynamic(
+  () => import('~/components/spinner'),
+  { ssr: false }
+)
 
 const Page = () => {
   return (

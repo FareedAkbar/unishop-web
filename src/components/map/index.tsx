@@ -40,10 +40,13 @@ type height = {
 
   useEffect(() => {
     return () => {
-      // Cleanup any existing map instance
-      if (document.querySelector('.leaflet-container')) {
-        document.querySelector('.leaflet-container')?.remove();
+      if (typeof window !== "undefined") {
+        if (document.querySelector('.leaflet-container')) {
+          document.querySelector('.leaflet-container')?.remove();
+        }
       }
+      // Cleanup any existing map instance
+     
     };
   }, []);
 

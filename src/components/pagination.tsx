@@ -1,7 +1,8 @@
 "use client";
 // components/Pagination.tsx
-import React from "react";
+import React, { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
+
 interface PaginationProps {
   currentPage: number;
   totalRecords: number;
@@ -43,7 +44,11 @@ const Pagination: React.FC<PaginationProps> = ({
           <button
             key={page}
             onClick={() => handlePageChange(page)}
-            className={`rounded-md px-4 py-2 ${currentPage === page ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"} hover:bg-blue-400`}
+            className={`rounded-md px-4 py-2 ${
+              currentPage === page
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700"
+            } hover:bg-blue-400`}
           >
             {page}
           </button>
@@ -61,4 +66,27 @@ const Pagination: React.FC<PaginationProps> = ({
   );
 };
 
-export default Pagination;
+const Page = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalRecords = 100; // Example total records
+  const limit = 10; // Records per page
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    console.log(`Navigated to page: ${page}`);
+    // Additional logic, such as fetching data, can be added here.
+  };
+
+  return (
+    <Suspense fallback={<></>}>
+      <Pagination
+        currentPage={currentPage}
+        totalRecords={totalRecords}
+        limit={limit}
+        onPageChange={handlePageChange}
+      />
+    </Suspense>
+  );
+};
+
+export default Page;

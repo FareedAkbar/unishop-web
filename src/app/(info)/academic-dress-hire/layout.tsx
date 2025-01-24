@@ -1,6 +1,7 @@
 
 
 import { type Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Uni Shop",
@@ -14,9 +15,9 @@ export default function RootLayout({
   return (
     
       <>
-      
+      <Suspense fallback={<></>}>
           {children}
-     
+          </Suspense>
           </>
   );
 }

@@ -17,6 +17,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
   const router = useRouter();
 
   const handleChange = (value: string, index: number) => {
+    if (typeof window !== "undefined") {
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
@@ -26,6 +27,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
       const nextInput = document.getElementById(`otp-input-${index + 1}`);
       nextInput && (nextInput as HTMLInputElement).focus();
     }
+  }
   };
 
   const handleKeyDown = (
@@ -33,7 +35,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
     index: number,
   ) => {
     // Move to the previous input if Backspace is pressed and the current input is empty
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
+    if (e.key === "Backspace" && !otp[index] && index > 0 && typeof window !== "undefined") {
       const prevInput = document.getElementById(`otp-input-${index - 1}`);
       prevInput && (prevInput as HTMLInputElement).focus();
     }

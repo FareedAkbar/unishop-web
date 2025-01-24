@@ -1,4 +1,5 @@
 'use client'
+import { Suspense } from "react";
 import Footer from "~/components/footer";
 import CategoriesSidebar from "~/components/ui-components/CategoriesSideBar";
 import Header from "~/components/ui-components/Header";
@@ -8,10 +9,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
+    <Suspense fallback={<></>}>
       <Header />
       <CategoriesSidebar className=" top-[calc(100px)] lg:block hidden" />
       {children}
       <Footer/>
+      </Suspense>
     </>
   );
 }

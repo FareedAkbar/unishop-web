@@ -48,6 +48,7 @@ const Input: React.FC<InputProps> = ({
   const isActive = isVisible || isFocused;
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         inputRef.current &&
@@ -62,6 +63,7 @@ const Input: React.FC<InputProps> = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }
   }, []);
 
   return (

@@ -1,9 +1,20 @@
+/* eslint-disable @typescript-eslint/await-thenable */
 import { cookieClient } from "~/clients/cookie-client";
 import { NextRequest, NextResponse } from "next/server";
 import { API_ROUTES, PAGE_ROUTES } from "~/constants/api-routes";
 import { PAGE_MAPPER, RESPONSE_MAPPER } from "~/constants/middleware-mapper";
 import { cookies } from 'next/headers'
 
+
+export async function create() {
+  const cookieStore = await cookies()
+  const x = cookieStore.get('IS_LOGGED_IN');
+
+  return x?.value ? true : false
+
+
+
+}
 export const routerReader = (req: NextRequest) => {
   const { getItem } = cookieClient(req);
   const URL = matchRoute(req.nextUrl.pathname) as typeof PAGE_ROUTES[keyof typeof PAGE_ROUTES];
@@ -12,8 +23,9 @@ export const routerReader = (req: NextRequest) => {
   const _RESPONSE_MAPPER = RESPONSE_MAPPER(req.url, REQ_ORIGIN);
 
   // Get the 'IS_LOGGED_IN' cookie value
-  const cookieStore = cookies();
-  const IS_LOGGED_IN = cookieStore.get('IS_LOGGED_IN')?.value === 'true'; // Explicit comparison to 'true'
+
+  // cookieStore.get('IS_LOGGED_IN')?.value === 'true';
+  const IS_LOGGED_IN = create()
 
   const IS_PAGE_OR_API = "PAGE"; // For now, always assume it's a page
 

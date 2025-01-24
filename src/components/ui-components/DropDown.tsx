@@ -5,16 +5,19 @@ import React from "react";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function useOutsideAlerter(ref: any, setX: any): void {
   React.useEffect(() => {
+    if (typeof window !== "undefined") {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function handleClickOutside(event: any) {
       if (ref.current && !ref.current.contains(event.target)) {
         setX(false);
       }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }
   }, [ref, setX]);
 }
 

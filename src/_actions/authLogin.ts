@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/await-thenable */
 "use server";
 
 import { cookies } from 'next/headers';
@@ -6,8 +7,11 @@ import type { VerifyOTPResponse } from '~/types/loginResponse';
 import type UserType from '~/types/userType';
 import { apiRouter } from '~/utils/api-router';
 
-export async function VerifyOTPCApi(payload: VerifyOTP): Promise<VerifyOTPResponse | boolean> {
 
+
+
+export async function VerifyOTPCApi(payload: VerifyOTP): Promise<VerifyOTPResponse | boolean> {
+  
     try {
         const response = await apiRouter(
             "VERIFYOTP",
@@ -22,12 +26,14 @@ export async function VerifyOTPCApi(payload: VerifyOTP): Promise<VerifyOTPRespon
             (await response.json()) as VerifyOTPResponse;
 
         if (response?.status) {
-            cookies().set({
-                name: 'IS_LOGGED_IN',
+            const cookieStore = await cookies();
+            cookieStore.set( {name: 'IS_LOGGED_IN',
                 value: 'true',
                 httpOnly: true,
                 path: '/',
-            })
+            });     
+
+                  
             return responsePayload
         } else {
             console.error("Unexpected result structure VerifyOTPCApi:", responsePayload);

@@ -70,11 +70,13 @@ export const ModalBody = ({
   const { open } = useModal();
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
     if (open) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
+  }
   }, [open]);
 
   const modalRef = useRef(null);
@@ -228,13 +230,15 @@ export const useOutsideClick = (
       }
       callback();
     };
-
+    if (typeof window !== "undefined") {
     document.addEventListener("mousedown", listener);
     document.addEventListener("touchstart", listener);
-
+    }
     return () => {
+      if (typeof window !== "undefined") {
       document.removeEventListener("mousedown", listener);
       document.removeEventListener("touchstart", listener);
+      }
     };
   }, [ref, callback]);
 };

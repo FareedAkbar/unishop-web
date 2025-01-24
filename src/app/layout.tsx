@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { AuthProvider } from "~/Context/AuthContext";
 import { Toaster } from "~/components/ui/toaster";
+import { Suspense } from "react";
 // import Loading from "./loading";
 
 export const metadata: Metadata = {
@@ -20,12 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body suppressHydrationWarning>
-        {/* <Suspense fallback={<Loading />}> */}
+        <Suspense fallback={<></>}>
         <AuthProvider>
           {children}
           <Toaster />
         </AuthProvider>
-        {/* </Suspense> */}
+        </Suspense>
       </body>
     </html>
   );

@@ -98,14 +98,17 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     // Prevent background scrolling when the sidebar is open
+    if (typeof window !== "undefined") {
     if (isOpen) {
       document.body.style.overflow = "hidden"; // Disable scrolling
     } else {
       document.body.style.overflow = ""; // Enable scrolling when sidebar is closed
     }
-
+  }
     return () => {
+      if (typeof window !== "undefined") {
       document.body.style.overflow = ""; // Clean up on component unmount
+      }
     };
   }, [isOpen]);
 
@@ -137,9 +140,9 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
        
         {/* Cart Items List */}
         <ScrollArea className="h-3/4 flex-1 p-4">
-          {items.map((item: DataCart) => (
+          {items.map((item: DataCart, index) => (
             <CartItem
-              key={item.item_id}
+              key={item.item_id + index}
               title={item.item_name}
               imageSrc={item?.object_path ?? item.media[0]?.object_path}
               price={item.item_sale_price}

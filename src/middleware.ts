@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { routerReader, saveReqOrigin } from "./utils/middleware-utils";
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const {
     NOT_FOUND,
     PROTECTED,
@@ -26,7 +26,7 @@ export function middleware(req: NextRequest) {
   if (PUBLIC) {
     console.log("PUBLIC");
     // STOP LOGGED-IN USERS FROM ACCESSING PUBLIC ROUTES LIKE LOGIN OR REGISTER
-    if (IS_LOGGED_IN && !PROTECTED) {
+    if (await IS_LOGGED_IN && !PROTECTED) {
       console.log("LOGGED IN AND NOT PROTECTED - REDIRECTING TO HOME");
       return RESPONSE_MAPPER[IS_PAGE_OR_API as keyof typeof RESPONSE_MAPPER]?.BASE; // Redirect to home
     }
@@ -36,7 +36,7 @@ export function middleware(req: NextRequest) {
   else if (PROTECTED) {
     console.log("PROTECTED");
     // STOP NON-LOGGED-IN USERS FROM ACCESSING PROTECTED ROUTES
-    if (!IS_LOGGED_IN) {
+    if (!(await IS_LOGGED_IN)) {
       console.log("NOT LOGGED IN - REDIRECTING TO LOGIN");
       return RESPONSE_MAPPER[IS_PAGE_OR_API as keyof typeof RESPONSE_MAPPER]?.UNAUTHORIZED; // Redirect to login
     }

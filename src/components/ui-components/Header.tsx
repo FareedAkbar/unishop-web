@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import {
   FaChevronDown,
   FaBars,
@@ -251,6 +251,7 @@ const Header = () => {
 
   // Close the dropdown if clicked outside
   useEffect(() => {
+    if (typeof window !== "undefined") {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         userDropdownRef.current &&
@@ -272,6 +273,7 @@ const Header = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }
   }, []);
 
   const handleLogout = async () => {
@@ -293,11 +295,13 @@ const Header = () => {
 
   // Apply theme based on state
   useEffect(() => {
+    if (typeof window !== "undefined") {
     if (themeMode == "dark") {
       document.body.classList.add("dark");
     } else {
       document.body.classList.remove("dark");
     }
+  }
   }, [themeMode]);
 
   useEffect(() => {
@@ -464,6 +468,7 @@ const Header = () => {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
     if (isMobileMenuOpen) {
       document.body.classList.add("overflow-hidden");
     } else {
@@ -472,6 +477,7 @@ const Header = () => {
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
+  }
   }, [isMobileMenuOpen]);
 
 
@@ -979,4 +985,14 @@ const Header = () => {
   );
 };
 
-export default Header;
+const Page = () => {
+  return (
+    <Suspense fallback={<>  </>}>
+      <Header />
+    </Suspense>
+  );
+};
+
+export default Page;
+
+
