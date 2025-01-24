@@ -7,11 +7,11 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-    <Suspense fallback={<></>}>
+    
       <Header />
       {children}
       <Footer />
-      </Suspense>
+    
     </>
   );
 }

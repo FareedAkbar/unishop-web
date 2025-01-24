@@ -231,6 +231,7 @@ export default function CheckoutForm({
       country_code: "61",
       phone_number: data.phone_number,
       default_status: 1,
+     
     }
     // compare address from the form and previous billing address and if yes then pick address from previous billing address
     const xx = billing_address && getObjectFromArray(newAddress)
@@ -249,6 +250,8 @@ export default function CheckoutForm({
       address: xx,
       customer_type_id: 6,
       uuid: uuid,
+       first_name: "",
+       last_name: ""
     };
 
 

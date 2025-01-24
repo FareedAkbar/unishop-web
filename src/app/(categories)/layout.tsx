@@ -9,12 +9,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-    <Suspense fallback={<></>}>
+
       <Header />
       <CategoriesSidebar className=" top-[calc(100px)] lg:block hidden" />
       {children}
-      <Footer/>
-      </Suspense>
+      <Footer />
+
     </>
   );
 }

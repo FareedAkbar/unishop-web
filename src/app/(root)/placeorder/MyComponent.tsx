@@ -431,7 +431,7 @@ const MyComponent = () => {
   // }, [uuidLocal]);
 
   useEffect(() => {
-    if (!checkoutData?.uuid) return;
+    if (!checkoutData?.uuid && !checkoutData?.customer_id) return;
     socket.disconnect();
     socket.connect();
     const connectHandler = () => {
@@ -464,7 +464,7 @@ const MyComponent = () => {
   }, [checkoutData]);
 
   const PaymentStatus = useCallback(() => {
-    if (!checkoutData?.uuid) return;
+    if (!checkoutData?.uuid && !checkoutData?.customer_id) return;
 
     console.log("Payment Socket");
 

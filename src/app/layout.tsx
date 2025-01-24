@@ -21,12 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body suppressHydrationWarning>
-        <Suspense fallback={<></>}>
+
         <AuthProvider>
           {children}
           <Toaster />
         </AuthProvider>
-        </Suspense>
+
       </body>
     </html>
   );
