@@ -321,10 +321,41 @@ const MyComponent = () => {
     if (itemDetail?.book_usages && itemDetail?.book_usages.length > 0) {
       return itemDetail.book_usages
         .filter((usage) => usage.default_semester === 1)
-        .map((usage) => usage.subject_code);
+        .map((usage) => ({
+          type_id: usage.type_id,  // Assuming `type_id` exists
+          subject_name: usage.subject_name,
+          subject_code: usage.subject_code // Assuming `subject_name` exists
+        }));
     }
     return [];
   };
+  const type = [
+    {
+      "item_book_type_id": 1,
+      "type_name": "Textbook",
+      "type_desc": "Textbook"
+    },
+    {
+      "item_book_type_id": 2,
+      "type_name": "Reference",
+      "type_desc": "Reference"
+    },
+    {
+      "item_book_type_id": 3,
+      "type_name": "Recommended",
+      "type_desc": "Recommended"
+    },
+    {
+      "item_book_type_id": 4,
+      "type_name": "Course Notes",
+      "type_desc": "Course Notes"
+    },
+    {
+      "item_book_type_id": 5,
+      "type_name": "General Reading",
+      "type_desc": "General Reading"
+    }
+  ]
 
   return (
     <div>
@@ -506,16 +537,21 @@ const MyComponent = () => {
                   </span>
                   <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                   {manageUsage().length > 0 ? (
-                      manageUsage().map((item, index) => (
-                        <small
-                          key={index}
-                          className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 px-2 py-1 rounded mr-1"
-                        >
-                          {item}
-                        </small>
-                      ))
-                    ) : (
-                      " not used this session"
+                      manageUsage().map((item, index) => {
+                        const matchedType = type.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
+                        return (
+                          <small
+                            key={index}
+                            className="bg-red-500 dark:bg-gray-700 text-gray-100 dark:text-gray-300 px-2 py-1 rounded mr-1"
+                          >
+                            {item.subject_name} {item.subject_code}, {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
+                          </small>
+                        )
+
+                      })
+                      )
+                    : (
+                    " not used this session"
                     )}
                   </span>
                 </div>

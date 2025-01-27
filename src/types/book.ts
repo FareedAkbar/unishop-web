@@ -167,7 +167,8 @@ export default interface DataCart {
 interface book_usages {
   subject_name: string;
   subject_code: string;
-  default_semester: number
+  default_semester: number;
+  type_id: number;
 }
 
 export interface Media {

@@ -797,7 +797,7 @@ const MyComponent = () => {
                   items.map((item) => (
                     <CartItem
                       key={item.item_id}
-                      title={item.book_title}
+                      title={item.item_name}
                       imageSrc={item?.object_path ?? item.media[0]?.object_path}
                       price={
                         totalAfterCalculation?.items

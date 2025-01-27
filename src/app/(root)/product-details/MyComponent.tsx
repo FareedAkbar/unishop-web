@@ -165,7 +165,7 @@ const MyComponent = () => {
   };
   useEffect(() => {
     if (!itemDetail) return;
-    if(typeof window === "undefined") return
+    if (typeof window === "undefined") return
     const loadData = async () => {
       await getReviews(itemDetail?.item_id);
 
@@ -213,7 +213,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -370,10 +370,41 @@ const MyComponent = () => {
     if (itemDetail?.book_usages && itemDetail?.book_usages.length > 0) {
       return itemDetail.book_usages
         .filter((usage) => usage.default_semester === 1)
-        .map((usage) => usage.subject_code);
+        .map((usage) => ({
+          type_id: usage.type_id,  // Assuming `type_id` exists
+          subject_name: usage.subject_name,
+          subject_code: usage.subject_code // Assuming `subject_name` exists
+        }));
     }
     return [];
   };
+  const type = [
+    {
+      "item_book_type_id": 1,
+      "type_name": "Textbook",
+      "type_desc": "Textbook"
+    },
+    {
+      "item_book_type_id": 2,
+      "type_name": "Reference",
+      "type_desc": "Reference"
+    },
+    {
+      "item_book_type_id": 3,
+      "type_name": "Recommended",
+      "type_desc": "Recommended"
+    },
+    {
+      "item_book_type_id": 4,
+      "type_name": "Course Notes",
+      "type_desc": "Course Notes"
+    },
+    {
+      "item_book_type_id": 5,
+      "type_name": "General Reading",
+      "type_desc": "General Reading"
+    }
+  ]
   return (
     <div className="p-6 pt-32">
       <div className="flex items-center justify-between pb-2 lg:px-10">
@@ -461,11 +492,11 @@ const MyComponent = () => {
               <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                 ${" "}
                 {itemDetail?.variations?.[0] &&
-                filteredVariations?.[0]?.items_variable_items_sale_price
+                  filteredVariations?.[0]?.items_variable_items_sale_price
                   ? filteredVariations?.[0]?.items_variable_items_sale_price
                   : itemDetail?.variations?.[0]
                     ? itemDetail?.variations?.[0]
-                        .items_variable_items_sale_price
+                      .items_variable_items_sale_price
                     : itemDetail?.item_sale_price}
               </span>
             ) : (
@@ -494,26 +525,31 @@ const MyComponent = () => {
             </span>
           )}
           {itemDetail?.book_id && itemDetail?.food_id == null && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Textbook:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {manageUsage().length > 0 ? (
-                      manageUsage().map((item, index) => (
-                        <small
-                          key={index}
-                          className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 px-2 py-1 rounded mr-1"
-                        >
-                          {item}
-                        </small>
-                      ))
-                    ) : (
-                      " not used this session"
-                    )}
-                  </span>
-                </div>
-              )}
+            <div className="flex items-center justify-center">
+              <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                Textbook:
+              </span>
+              <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                {manageUsage().length > 0 ? (
+                  manageUsage().map((item, index) => {
+                    const matchedType = type.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
+                    return (
+                      <small
+                        key={index}
+                        className="bg-red-500 dark:bg-gray-700 text-gray-100 dark:text-gray-300 px-2 py-1 rounded mr-1"
+                      >
+                        {item.subject_name} {item.subject_code}, {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
+                      </small>
+                    )
+
+                  })
+                )
+                  : (
+                    " not used this session"
+                  )}
+              </span>
+            </div>
+          )}
           {itemDetail?.barcode && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -559,8 +595,8 @@ const MyComponent = () => {
           )}
 
           {itemDetail?.pages !== undefined &&
-          itemDetail.pages !== null &&
-          itemDetail.pages ? (
+            itemDetail.pages !== null &&
+            itemDetail.pages ? (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                 Number of Pages:
@@ -685,11 +721,10 @@ const MyComponent = () => {
                         {options.map((option) => (
                           <button
                             key={option.value}
-                            className={`min-w-10 rounded border p-1 text-center ${
-                              selectedValues[tagName] === option.value
+                            className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
                                 ? "bg-red-500 text-white"
                                 : "border-red-500 bg-white dark:bg-slate-700"
-                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -717,12 +752,12 @@ const MyComponent = () => {
             </div>
           )}
           {itemDetail?.variations?.[0] &&
-          filteredVariations?.[0]?.items_variable_items_id &&
-          Object.values(selectedValues).length ==
+            filteredVariations?.[0]?.items_variable_items_id &&
+            Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-          isVariableItemInCart(
-            filteredVariations?.[0]?.items_variable_items_id,
-          ) ? (
+            isVariableItemInCart(
+              filteredVariations?.[0]?.items_variable_items_id,
+            ) ? (
             <span className="pl-1 text-green-500">
               Already added to your cart
             </span>
@@ -730,14 +765,14 @@ const MyComponent = () => {
             ""
           )}
           {itemDetail?.variations?.[0] &&
-          !isVariableItemInCart(
-            filteredVariations?.[0]?.items_variable_items_id ?? -1,
-          ) &&
-          !Object.values(selectedValues).some((value) => value === undefined) &&
-          Object.values(selectedValues).length ==
+            !isVariableItemInCart(
+              filteredVariations?.[0]?.items_variable_items_id ?? -1,
+            ) &&
+            !Object.values(selectedValues).some((value) => value === undefined) &&
+            Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-          (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
-            itemDetail?.item_sale_price) ? (
+            (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
+              itemDetail?.item_sale_price) ? (
             <button
               className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
               onClick={() => handleAddToCart(itemDetail)}
