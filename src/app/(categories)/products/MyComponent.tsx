@@ -41,7 +41,7 @@ import { FiSearch } from "react-icons/fi";
 
 import Spinner from "~/components/spinner";
 import dynamic from "next/dynamic";
- const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then(mod => mod.Player), { ssr: false });
+const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then(mod => mod.Player), { ssr: false });
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
@@ -373,7 +373,7 @@ const MyComponent = () => {
     setDetail(parseInt(id));
     setCurrentPage(1);
   };
-  
+
   const manageUsage = () => {
     if (itemDetail?.book_usages && itemDetail?.book_usages.length > 0) {
       return itemDetail.book_usages
@@ -440,22 +440,22 @@ const MyComponent = () => {
 
               <div className="flex flex-col md:flex-row sm:w-[700px] w-full items-center gap-2">
                 <div className="w-full">
-                {subcategoryTypes?.[0] && (
-                  <NewSelect
-                    onValueChange={(x: string) => handleChangeSubCategory(x)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {subcategoryTypes?.map((item) => (
-                        <SelectItem key={item.id} value={item.id.toString()}>
-                          {item.category_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </NewSelect>
-                )}
+                  {subcategoryTypes?.[0] && (
+                    <NewSelect
+                      onValueChange={(x: string) => handleChangeSubCategory(x)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {subcategoryTypes?.map((item) => (
+                          <SelectItem key={item.id} value={item.id.toString()}>
+                            {item.category_name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </NewSelect>
+                  )}
                 </div>
                 <div className="relative flex w-full">
                   <input
@@ -545,7 +545,7 @@ const MyComponent = () => {
             )}
           </div>
         </div>
-       </motion.main>
+      </motion.main>
 
       <ModalBody>
         <ModalContent>
@@ -610,31 +610,39 @@ const MyComponent = () => {
                   </span>
                 )}
               </div>
-              
+
               {itemDetail?.book_id && itemDetail?.food_id == null && (
                 <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Textbook:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+
                   {manageUsage().length > 0 ? (
-                      manageUsage().map((item, index) => {
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+
+                      {manageUsage().map((item, index) => {
                         const matchedType = type.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
                         return (
                           <small
                             key={index}
-                           className="bg-red-500 dark:bg-gray-700 text-gray-100 dark:text-gray-300 px-2 py-1 rounded mr-1"
+                            className="bg-red-500 dark:bg-gray-700 text-gray-100 dark:text-gray-300 px-2 py-1 rounded mr-1"
                           >
-                           {item.subject_name} {item.subject_code}, {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
+                            {item.subject_name} {item.subject_code}, {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
                           </small>
                         )
 
-                      })
-                      )
+                      })}
+
+                    </span>
+                  )
                     : (
-                    " not used this session"
+                      <>
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Textbook:
+                        </span>
+                        <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                          not used this session
+                        </span>
+                      </>
+
                     )}
-                  </span>
                 </div>
               )}
               {itemDetail?.barcode && (
@@ -816,8 +824,8 @@ const MyComponent = () => {
                                 <button
                                   key={option.value}
                                   className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
-                                      ? "bg-red-500 text-white"
-                                      : "border-red-500 bg-white dark:bg-slate-700"
+                                    ? "bg-red-500 text-white"
+                                    : "border-red-500 bg-white dark:bg-slate-700"
                                     } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
@@ -891,9 +899,9 @@ const MyComponent = () => {
 const Page = () => {
   return (
     <ModalProvider>
-    <Suspense fallback={<Spinner />}>
-      <MyComponent />
-    </Suspense>
+      <Suspense fallback={<Spinner />}>
+        <MyComponent />
+      </Suspense>
     </ModalProvider>
   );
 };

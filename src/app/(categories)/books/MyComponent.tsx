@@ -534,8 +534,10 @@ const MyComponent = () => {
                     Textbook:
                   </span>
                   <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {manageUsage().length > 0 ? (
-                      manageUsage().map((item, index) => {
+                  {manageUsage().length > 0 ? (
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+
+                      {manageUsage().map((item, index) => {
                         const matchedType = type.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
                         return (
                           <small
@@ -546,10 +548,20 @@ const MyComponent = () => {
                           </small>
                         )
 
-                      })
-                      )
+                      })}
+
+                    </span>
+                  )
                     : (
-                    " not used this session"
+                      <>
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Textbook:
+                        </span>
+                        <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                          Not used this session
+                        </span>
+                      </>
+
                     )}
                   </span>
                 </div>

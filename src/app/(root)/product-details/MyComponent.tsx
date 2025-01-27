@@ -526,28 +526,35 @@ const MyComponent = () => {
           )}
           {itemDetail?.book_id && itemDetail?.food_id == null && (
             <div className="flex items-center justify-center">
-              <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Textbook:
-              </span>
-              <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                {manageUsage().length > 0 ? (
-                  manageUsage().map((item, index) => {
+              {manageUsage().length > 0 ? (
+                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+               
+                  {manageUsage().map((item, index) => {
                     const matchedType = type.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
-                    return (
-                      <small
-                        key={index}
-                        className="bg-red-500 dark:bg-gray-700 text-gray-100 dark:text-gray-300 px-2 py-1 rounded mr-1"
-                      >
-                        {item.subject_name} {item.subject_code}, {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
-                      </small>
-                    )
+                  return (
+                  <small
+                    key={index}
+                    className="bg-red-500 dark:bg-gray-700 text-gray-100 dark:text-gray-300 px-2 py-1 rounded mr-1"
+                  >
+                    {item.subject_name} {item.subject_code}, {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
+                  </small>
+                  )
 
-                  })
-                )
-                  : (
-                    " not used this session"
-                  )}
-              </span>
+                  })}
+
+
+
+                </span>
+              ) : (
+                <>
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Textbook:
+                  </span>
+                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                    not used this session
+                  </span>
+                </>
+              )}
             </div>
           )}
           {itemDetail?.barcode && (
@@ -722,8 +729,8 @@ const MyComponent = () => {
                           <button
                             key={option.value}
                             className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
-                                ? "bg-red-500 text-white"
-                                : "border-red-500 bg-white dark:bg-slate-700"
+                              ? "bg-red-500 text-white"
+                              : "border-red-500 bg-white dark:bg-slate-700"
                               } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >

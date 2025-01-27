@@ -182,10 +182,10 @@ const ProductCard = ({
       )}
 
       {product?.book_id && product?.food_id == null ? (
-        <span className="truncate text-xs">
+        <span className="truncate text-sm">
           {manageUsage().length > 0 ? (
             <>
-              Textbook:{" "}
+             
               {manageUsage().map((item, index) => {
                 const matchedType = type.find((t) => t.item_book_type_id === item.type_id); // Find the matching type
                 return (
