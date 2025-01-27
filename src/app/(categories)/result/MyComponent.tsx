@@ -26,7 +26,6 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import AlertBox from "~/components/alertBox/alert";
 import { useToast } from "~/hooks/use-toast";
 import type { Category, SuperCategory } from "~/types/category";
-import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import Select from "~/components/Fields/select";
 import type { Pagination } from "~/types/pagination";
 import type { Variation } from "~/types/book";
@@ -43,12 +42,9 @@ const MyComponent = () => {
   const params = useSearchParams();
   const { setOpen } = useModal();
   const [detail, setDetail] = useState<number>(-1);
-  const [parent, setParent] = useState<number>(-1);
+
   const [name, setName] = useState<string>("");
-  const [categoryType, setCategoryType] = useState<SuperCategory | null>(null);
-  const [subcategoryTypes, setSubcategoryTypes] = useState<Category[] | null>(
-    null,
-  );
+ 
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
@@ -776,9 +772,9 @@ const MyComponent = () => {
 const Page = () => {
   return (
     <ModalProvider>
-    {/* <Suspense fallback={<Spinner />}> */}
+    <Suspense fallback={<Spinner />}>
       <MyComponent />
-    {/* </Suspense> */}
+    </Suspense>
     </ModalProvider>
   );
 };

@@ -1,10 +1,9 @@
-"use client";
-import dynamic from "next/dynamic";
+import React from "react";
 
-const MyComponent = dynamic(() => import('./MyComponent'), { ssr: false });
+const LazyMyComponent = React.lazy(() => import("./MyComponent"));
 
 const Page = () => {
-  return <MyComponent />;
+  return <LazyMyComponent />;
 };
 
 export default Page;

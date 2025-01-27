@@ -1,21 +1,14 @@
-"use client"
-import { Suspense } from "react";
-import dynamic from "next/dynamic";
 
+import React, { Suspense } from "react";
+import Spinner from '~/components/spinner';
 
-const MyComponent = dynamic(
-  () => import('./MyComponent'),
-  { ssr: false }
-)
-const Spinner = dynamic(
-    () => import('~/components/spinner'),
-    { ssr: false }
-  )
+const LazyMyComponent = React.lazy(() => import("./MyComponent"));
+
 
 const Page = () => {
   return (
     <Suspense fallback={<Spinner />}>
-      <MyComponent />
+      <LazyMyComponent />
     </Suspense>
   );
 };

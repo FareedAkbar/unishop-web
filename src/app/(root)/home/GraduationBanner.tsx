@@ -16,7 +16,7 @@ const GraduationBanner: React.FC = () => {
         <h1 className="font-sem text-md my-2 text-white sm:text-3xl lg:text-4xl">
           Celebrate Success with Memorable Graduation Gifts
         </h1>
-        <CountdownTimer targetDate={new Date("2024-10-25T10:00:00")} />
+        <CountdownTimer targetDate={new Date("2025-10-25T10:00:00")} />
         <button
           className="mt-4 inline-block w-16 rounded bg-red-600 py-2 text-[10px] text-white hover:bg-red-500 lg:w-28 lg:px-4 lg:text-base"
           onClick={() => {

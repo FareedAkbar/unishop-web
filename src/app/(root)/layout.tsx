@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import Footer from "~/components/footer";
 import Header from "~/components/ui-components/Header";
 
