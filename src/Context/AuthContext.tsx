@@ -50,6 +50,8 @@ import type {
 import { getProductTags } from "~/_actions/product_tags";
 import type { ApiResponseStatus, ItemSpecialTag } from "~/types/productTags";
 import { getItemsBySearch } from "~/_actions/getitemsbycategory";
+import { getTextBookTypeData } from "~/_actions/meta_actions";
+import { TextBookApiResponse, TextbookType } from "~/types/textbookType";
 
 type transactionData = {
   transaction_id?: string | null;
@@ -115,6 +117,9 @@ interface AuthContextProps {
   addBillingAddress: (data: address[] | null) => void;
   searchInCategory: (value: string, id: string) => Promise<boolean>;
   searchItems: DataCart[];
+  textbookType: TextbookType[] | null;
+  getTextBookType: () => Promise<boolean | void>;
+
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -147,6 +152,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
   const [productDetail, setProductDetail] = useState<DataCart | null>(null);
   const [productTags, setProductTags] = useState<ItemSpecialTag[] | null>(null);
+  const [textbookType, setTextbookType] = useState<TextbookType[] | null>(null);
   const [billing_address, setBillingAddress] = useState<address[] | null>(null);
   const router = useRouter();
 
@@ -444,6 +450,22 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const getTextBookType = async (): Promise<boolean | void> => {
+    const response = await getTextBookTypeData();
+    const responsePayload: {
+      status: boolean;
+      data: TextbookType[];
+    } = response as TextBookApiResponse;
+    console.log("data" , responsePayload.data)
+    if (responsePayload.status) {
+      lsClient.setItem("TEXTBOOK_TYPE", responsePayload.data);
+      setTextbookType(responsePayload.data);
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const addCartItems = async (payload: DataCart): Promise<boolean> => {
     setItems((prev) => {
       let existingItemIndex = -1;
@@ -599,6 +621,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const PRODUCT_DETAIL = lsClient.getItem("PRODUCT_DETAIL");
     const SPECIAL_TAGS = lsClient.getItem("PRODUCT_SPECIAL_TAGS");
     const BILLING_ADDRESS = lsClient.getItem("BILLING_ADDRESS");
+    const TEXTBOOK_TYPE = lsClient.getItem("TEXTBOOK_TYPE");
     setItems(
       cartItems
         ? typeof cartItems === "string"
@@ -616,6 +639,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setGenre(GENRE);
     setCategory(CATEGORY);
     setCheckoutData(checkoutData);
+    setTextbookType(TEXTBOOK_TYPE);
 
     if (isLoggedIn && userInfo) {
       setIsLoggedIn(true);
@@ -753,7 +777,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         billing_address,
         addBillingAddress,
         searchInCategory,
-        searchItems
+        searchItems,
+        getTextBookType,
+        textbookType,
       }}
     >
       {children}

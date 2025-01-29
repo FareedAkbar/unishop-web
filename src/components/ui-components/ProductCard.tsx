@@ -34,7 +34,7 @@ const ProductCard = ({
   wishListLoader = false,
   showButton = true,
 }: ProductProps) => {
-  const { favItems, productTags } = useAuthContext();
+  const { favItems, productTags, textbookType } = useAuthContext();
 
   const matchingTags = product?.special_tags
     ?.map((specialTag: SpecialTag) =>
@@ -187,7 +187,7 @@ const ProductCard = ({
             <>
              
               {manageUsage().map((item, index) => {
-                const matchedType = type.find((t) => t.item_book_type_id === item.type_id); // Find the matching type
+                const matchedType = textbookType?.find((t) => t.item_book_type_id === item.type_id); // Find the matching type
                 return (
                   <small
                     key={index}

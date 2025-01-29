@@ -10,6 +10,7 @@ const CountdownTimer = ({ targetDate }: { targetDate: Date }) => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    if (typeof window == 'undefined') return;
     setIsMounted(true);
     const timer = setInterval(() => {
       setTimeRemaining(calculateTimeRemaining(targetDate));

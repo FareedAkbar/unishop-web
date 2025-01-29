@@ -61,6 +61,7 @@ const MyComponent = () => {
     checkoutData,
     favItems,
     setProductForDetail,
+    textbookType
   } = useAuthContext();
   const { toast } = useToast();
 
@@ -394,7 +395,7 @@ const MyComponent = () => {
             </div>
 
             {/* Scrollable Product Section */}
-            <ScrollArea className="h-[75vh] pb-5">
+            <ScrollArea className="min-h-[75vh] pb-5">
               <div className="flex h-full flex-wrap items-center justify-center gap-3 py-3">
                 {loader ? (
                   Array.from({ length: 6 }, (_, index) => (
@@ -538,7 +539,7 @@ const MyComponent = () => {
                     <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
 
                       {manageUsage().map((item, index) => {
-                        const matchedType = type.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
+                        const matchedType = textbookType?.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
                         return (
                           <small
                             key={index}

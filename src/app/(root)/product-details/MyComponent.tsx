@@ -35,6 +35,7 @@ const MyComponent = () => {
     increaseCartItemQuantity,
     checkoutData,
     productTags,
+    textbookType
   } = useAuthContext();
   const itemDetail = productDetail;
   const [category, setCategory] = useState<string>("");
@@ -530,7 +531,7 @@ const MyComponent = () => {
                 <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                
                   {manageUsage().map((item, index) => {
-                    const matchedType = type.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
+                    const matchedType = textbookType?.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
                   return (
                   <small
                     key={index}

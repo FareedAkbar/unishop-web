@@ -41,6 +41,7 @@ import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import { PiMoon, PiMoonLight } from "react-icons/pi";
 import Select from "../Fields/select";
 
+
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
   const {
@@ -61,7 +62,8 @@ const Header = () => {
     productTags,
     getSubCategory,
     subCategory,
-    getCheckoutFormData
+    getCheckoutFormData,
+    getTextBookType
   } = useAuthContext();
   const router = useRouter();
 
@@ -318,6 +320,7 @@ const Header = () => {
     void getCheckoutFormData();
     void getCategory();
     void getSubCategory(-1);
+    void getTextBookType();
   }, []);
 
   useEffect(() => {

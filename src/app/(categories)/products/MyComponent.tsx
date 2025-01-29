@@ -81,6 +81,7 @@ const MyComponent = () => {
     category,
     setProductForDetail,
     subCategory,
+    textbookType
   } = useAuthContext();
 
   useEffect(() => {
@@ -423,7 +424,7 @@ const MyComponent = () => {
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-grow flex-row sm:pt-10">
-          <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
+          <div className="flex  w-[95vw] flex-col lg:pl-72">
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4 pl-2">
               <div className="text-left">
@@ -476,7 +477,7 @@ const MyComponent = () => {
               </div>
             </div>
 
-            <ScrollArea className="h-[75vh] pb-10">
+            <ScrollArea className="min-h-[75vh] pb-10">
               <div
                 className="flex flex-wrap justify-center gap-3 py-3"
               // key={displayData ? displayData?.[0]?.item_id : "123"}
@@ -618,7 +619,7 @@ const MyComponent = () => {
                     <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
 
                       {manageUsage().map((item, index) => {
-                        const matchedType = type.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
+                        const matchedType = textbookType?.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
                         return (
                           <small
                             key={index}

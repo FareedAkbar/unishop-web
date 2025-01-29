@@ -89,15 +89,14 @@ function Footer() {
           <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
             <p className="text-lg font-bold">Customer Service</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
-            {links.map((link,index) => (
+            {links.map((link, index) => (
               <Link
                 key={index}
                 href={link.href}
-                className={`text-sm font-medium ${
-                  pathname === link.href
-                    ? "text-red-500"
-                    : "text-[#646464] hover:text-red-500"
-                } dark:text-gray-300 dark:hover:text-red-500`}
+                className={`text-sm font-medium ${pathname === link.href
+                  ? "text-red-500"
+                  : "text-[#646464] hover:text-red-500"
+                  } dark:text-gray-300 dark:hover:text-red-500`}
               >
                 {link.title}
               </Link>
@@ -111,15 +110,15 @@ function Footer() {
             {category?.map(
               (item, index) =>
                 index < 7 && (
-                  <>
-                    <Link
-                    key={item.category_type_id}
-                      href={`products?category=${item.category_type_id}&name=${item.type}`}
-                      className="text-sm font-medium capitalize text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-                    >
-                      {item.type}
-                    </Link>
-                  </>
+
+                  <Link
+                    key={index}
+                    href={`products?category=${item.category_type_id}&name=${item.type}`}
+                    className="text-sm font-medium capitalize text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
+                  >
+                    {item.type}
+                  </Link>
+
                 ),
             )}
             {/* <span className="mb-2 block h-[4px] w-20 bg-red-500" />

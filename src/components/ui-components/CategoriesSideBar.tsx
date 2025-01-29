@@ -451,9 +451,9 @@ const pathname = usePathname()
             </button>
             <div className="my-1.5 ml-2 h-px w-[85%] border-t border-gray-400" />
             {openCategory == item.label && (
-              <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
+              <div className="absolute left-10 top-8 z-10 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
                 {item.label === "Books" && genre && (
-                  <ScrollArea className="h-[25vh]">
+                  <ScrollArea className="max-h-[25vh] overflow-y-scroll ">
                     {genre?.map((subItem) => (
                       <Link
                         key={subItem.genre}

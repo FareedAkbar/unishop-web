@@ -6,6 +6,7 @@ import type { address, CheckoutForm} from "~/types/checkoutForm";
 import type { Genre } from "~/types/genre";
 import { type SuperCategory, type Category } from "~/types/category";
 import { type ItemSpecialTag } from "~/types/productTags";
+import type { TextbookType } from "~/types/textbookType";
 
 
 const STORAGE_MAPPER = {
@@ -77,6 +78,11 @@ const STORAGE_MAPPER = {
   BILLING_ADDRESS:{
     TYPE: [] as address[] | null,
     KEY: "billing_address",
+    DEFAULT: null
+  },
+  TEXTBOOK_TYPE:{
+    TYPE: [] as TextbookType[] | null,
+    KEY: "textbook_type",
     DEFAULT: null
   },
 };

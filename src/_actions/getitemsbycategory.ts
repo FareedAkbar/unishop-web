@@ -52,7 +52,8 @@ export async function getItemsByCategory(id: number | null, page: number, catego
 
 
 export async function getItemsBySearch(val: string, id: string): Promise<ApiResponse | boolean> {
-    
+    console.log(val)
+    console.log(id)
     let x = ""
     if (id) {
         x = `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/searchUnishop?term=${val}&category_type_id=${id}`
@@ -69,7 +70,7 @@ export async function getItemsBySearch(val: string, id: string): Promise<ApiResp
 
         if (result?.status) {
             // setMeta(result.meta);
-           
+            console.log(result)
             return result
         } else {
             console.error("Unexpected result getItemsByCategory:", result);

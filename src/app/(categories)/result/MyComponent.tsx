@@ -71,7 +71,8 @@ const MyComponent = () => {
     setProductForDetail,
     subCategory,
     searchItems,
-    searchInCategory
+    searchInCategory,
+    textbookType
   } = useAuthContext();
 
   useEffect(() => {
@@ -381,7 +382,7 @@ const MyComponent = () => {
              
             </div>
 
-            <ScrollArea className="h-[75vh] pb-10">
+            <ScrollArea className="min-h-[75vh] pb-10">
               <div
                 className="flex flex-wrap justify-center gap-3 py-3"
                 // key={displayData ? displayData?.[0]?.item_id : "123"}
@@ -540,7 +541,7 @@ const MyComponent = () => {
                     <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
 
                       {manageUsage().map((item, index) => {
-                        const matchedType = type.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
+                        const matchedType = textbookType?.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
                         return (
                           <small
                             key={index}
