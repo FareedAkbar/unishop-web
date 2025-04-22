@@ -794,9 +794,9 @@ const MyComponent = () => {
                   }`}
               >
                 {items?.[0] ? (
-                  items.map((item) => (
+                  items.map((item, index) => (
                     <CartItem
-                      key={item.item_id}
+                      key={item.item_id + Math.random() + index}
                       title={item.item_name}
                       imageSrc={item?.object_path ?? item.media[0]?.object_path}
                       price={

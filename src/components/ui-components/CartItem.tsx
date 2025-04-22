@@ -49,7 +49,8 @@ const CartItem: React.FC<CartItemProps> = ({
     <div className="border-b dark:border-b dark:border-gray-400 border-gray-700">
       <div className="flex flex-row items-start space-x-4  bg-white py-2 dark:bg-slate-800">
         <Image
-          src={
+          src={item?.selected_variation?.media?.length && item?.selected_variation?.media[0]?.object_path
+            ? `https://ipos-storage.s3.amazonaws.com/${item?.selected_variation?.media[0]?.object_path}` :
             imageSrc
               ? `https://ipos-storage.s3.amazonaws.com/${imageSrc}`
               : "/assets/images/products/product.png"
@@ -65,28 +66,28 @@ const CartItem: React.FC<CartItemProps> = ({
             <div>
               <span className="text-xs font-semibold">Selected Variations</span>
               <ul>
-                {Object.keys(item?.selectedValues).map((key) => (
-                  <>
+                {Object.keys(item?.selectedValues).map((key, index) => (
+                  <div key={`cartItem--${index}`}>
                     {item?.selectedValues[key] && (
-                      <p className="text-xs capitalize" key={key}>
+                      <p className="text-xs capitalize" key={`cartItem-${item.item_id}-${index}`}>
                         {key}:{" "}
                         <span className="pl-1 text-gray-500 dark:text-gray-200">
                           {item?.selectedValues[key]}
                         </span>
                       </p>
                     )}
-                  </>
+                  </div>
                 ))}
               </ul>
             </div>
           )}
 
-          <p className="text-xs">
+          {/* <p className="text-xs">
             Available Stock:{" "}
             <span className="pl-1 text-gray-500 dark:text-gray-200">
               {quantity ? quantity : 0}
             </span>
-          </p>
+          </p> */}
           {(newPrice == 0 || !newPrice || price == newPrice) && (
             <p className="text-md font-bold">${price}</p>
           )}
@@ -130,14 +131,16 @@ const CartItem: React.FC<CartItemProps> = ({
         ? quantity < itemQuantity && (
           <p className="rounded bg-yellow-200 p-3 mb-2 text-sm dark:bg-yellow-700">
             {/* <MdWarning size={23} /> */}
-            {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`}
+            {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`} */}
+            {`This item is currently on backorder. It may take longer than usual to be ready for shipping/collection.`}
           </p>
         )
         : ""}
       {(quantity == 0 || quantity == null) && (
         <p className="rounded bg-yellow-200 p-3 mb-2 text-sm dark:bg-yellow-700">
           {/* <MdWarning size={23} /> */}
-          {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity}.`}
+          {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity}.`} */}
+          {`This item is currently on backorder. It may take longer than usual to be ready for shipping/collection.`}
         </p>
       )}
     </div>

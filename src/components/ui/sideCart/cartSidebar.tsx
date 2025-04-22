@@ -45,6 +45,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         : cartItems!;
     setItems(itemsCart);
   }, [cartItems]);
+ 
 
   useEffect(() => {
     const total = items.reduce(
@@ -142,7 +143,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         <ScrollArea className="h-3/4 flex-1 p-4">
           {items.map((item: DataCart, index) => (
             <CartItem
-              key={item.item_id + index}
+              key={`cartItems-${item.item_id}-${index}`}
               title={item.item_name}
               imageSrc={item?.object_path ?? item.media[0]?.object_path}
               price={item.item_sale_price}

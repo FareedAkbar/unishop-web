@@ -51,6 +51,8 @@ const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
     Record<string, string | undefined>
   >({});
+   const [selectedVariation, setSelectedVariation] = useState<Variation | null>(null);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const {
     cartItems,
     addCartItems,
@@ -158,6 +160,8 @@ const MyComponent = () => {
     setOpen(true);
     setItemDetail(item);
     setSelectedValues({});
+    setSelectedVariation(null);
+    setCurrentImageIndex(0);
   };
 
   const handleFavourite = async (item: DataCart) => {
@@ -308,6 +312,26 @@ const MyComponent = () => {
         });
       }
 
+      // Find matching variation only when all required tags are selected
+      const allTagsSelected = itemDetail?.variations?.[0]?.variation_tags.every(
+        (tag) => newValues[tag.items_variations_tags_name]
+      );
+
+      if (allTagsSelected && itemDetail?.variations) {
+        const matchedVariation = itemDetail.variations.find((variation) => {
+          return variation.variation_tags.every((tag) => {
+            return newValues[tag.items_variations_tags_name] ===
+              tag.items_variations_tags_links_values_value;
+          });
+        });
+
+        setSelectedVariation(matchedVariation ?? null); // Wrap in array if found, otherwise set to null
+        setCurrentImageIndex(0);
+      } else {
+        setSelectedVariation(null); // Reset if not all tags are selected
+        setCurrentImageIndex(0);
+      }
+
       return newValues;
     });
   };
@@ -420,6 +444,7 @@ const MyComponent = () => {
                       openDetail={() => openDetail(item)}
                       handleFavourite={() => handleFavourite(item)}
                       wishListLoader={wishListLoader}
+                      goToDetail={() => goToDetail(item)}
                     />
                   ))
                 ) : (
@@ -481,37 +506,63 @@ const MyComponent = () => {
           </h6>
           <div className="flex">
             <div>
-              <div className="flex items-center justify-center">
-                <motion.div
-                  key={"images"}
-                  style={{
-                    rotate: window.innerWidth > 768 ? Math.random() * 20 - 10 : 0,
-                  }}
-                  whileHover={{
-                    scale: 1.1,
-                    rotate: 0,
-                    zIndex: 100,
-                  }}
-                  whileTap={{
-                    scale: 1.1,
-                    rotate: 0,
-                    zIndex: 100,
-                  }}
-                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
-                >
-                  <Image
-                    src={
-                      itemDetail?.object_path
-                        ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                        : "/assets/images/products/product.png"
-                    }
-                    alt={itemDetail?.object_path ?? ""}
-                    width={500}
-                    height={500}
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-44 md:w-44"
-                  />
-                </motion.div>
-              </div>
+             <div className="flex flex-col items-center justify-center">
+                            <motion.div
+                              key={"images"}
+                              style={{
+                                rotate: window ? window.innerWidth > 768 ? Math.random() * 20 - 10 : 0 : 0,
+                              }}
+                              whileHover={{
+                                scale: 1.1,
+                                rotate: 0,
+                                zIndex: 100,
+                              }}
+                              whileTap={{
+                                scale: 1.1,
+                                rotate: 0,
+                                zIndex: 100,
+                              }}
+                              className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
+                            >
+                              <Image
+                                src={
+                                  selectedVariation?.media?.[currentImageIndex]?.object_path
+                                    ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
+                                    : itemDetail?.object_path
+                                      ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
+                                      : "/assets/images/products/product.png"
+                                }
+                                alt={
+                                  selectedVariation?.media?.[0]?.object_path
+                                    ? `${itemDetail?.item_name} - ${selectedValues.size ?? ''} ${selectedValues.color ?? ''}`
+                                    : itemDetail?.item_name ?? "Product image"
+                                }
+                                width={600}
+                                height={600}
+                                className="h-44 w-44 flex-shrink-0 rounded-lg object-contain md:h-40 lg:w-44 md:w-40 lg:h-44"
+                              />
+                            </motion.div>
+                            {((selectedVariation?.media && selectedVariation?.media?.length > 1) ?? (selectedVariation?.media?.length === 0 && itemDetail?.media && itemDetail?.media?.length > 1)) && (
+                              <div className="mt-2 flex gap-2 overflow-x-auto py-2">
+                                {(selectedVariation?.media?.length > 0 ? selectedVariation.media : itemDetail?.media ? itemDetail.media : []).map(
+                                  (media, index) => (
+                                    <button
+                                      key={index}
+                                      onClick={() => setCurrentImageIndex(index)}
+                                      className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? 'border-red-500' : 'border-gray-300'}`}
+                                    >
+                                      <Image
+                                        src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                                        alt={`Thumbnail ${index + 1}`}
+                                        width={48}
+                                        height={48}
+                                        className="h-full w-full object-cover"
+                                      />
+                                    </button>
+                                  ))}
+                              </div>
+                            )}
+                          </div>
             </div>
             <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
               <div className="flex flex-col">

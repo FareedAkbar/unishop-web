@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useRef } from "react";
 import Image from "next/image";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import moment from "moment";
@@ -46,8 +46,48 @@ const MyComponent = () => {
   const [submitLoader, setSubmitLoader] = useState<boolean>(false);
   const [getReviewsLoader, setGetReviewsLoader] = useState<boolean>(false);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
+  const [selectedVariation, setSelectedVariation] = useState<Variation | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { toast } = useToast();
   const params = useSearchParams();
+
+  type Position = {
+    px: number;
+    py: number;
+    percentX: number;
+    percentY: number;
+  };
+
+  const [isHovering, setIsHovering] = useState(false);
+  const [position, setPosition] = useState<Position>({ px: 0, py: 0, percentX: 0, percentY: 0 });
+  const imageRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (imageRef.current) {
+      const { left, top, width, height } = imageRef.current.getBoundingClientRect();
+      console.log(left,"left");
+      console.log(top,"top");
+      console.log(width,"width");
+      console.log(height,"height");
+      const x = e.clientX - left;
+      const y = e.clientY - top;
+
+      console.log(e.clientX, "x");
+      console.log(e.clientY, "y");
+
+      // Save both percentage for transform origin and pixels for lens placement
+      const percentX = (x / width) * 100;
+      const percentY = (y / height) * 100;
+      const xClamped = Math.max(0, Math.min(x, width));
+      const yClamped = Math.max(0, Math.min(y, height));
+      setPosition({
+        px: xClamped,
+        py: yClamped,
+        percentX,
+        percentY,
+      });
+    }
+  };
 
   useEffect(() => {
     const cat = params.get("category");
@@ -184,10 +224,12 @@ const MyComponent = () => {
     setSelectedValues((prevValues) => {
       const newValues = { ...prevValues, [tagName]: selectedOption.value };
 
+      // Find the current tag's index
       const tagIndex = itemDetail?.variations?.[0]?.variation_tags.findIndex(
         (tag) => tag.items_variations_tags_name === tagName,
       );
 
+      // Reset only the dependent dropdowns
       if (tagIndex !== undefined && tagIndex !== -1) {
         const tagsToReset = itemDetail?.variations?.[0]?.variation_tags
           .slice(tagIndex + 1)
@@ -196,6 +238,27 @@ const MyComponent = () => {
           newValues[tag] = undefined;
         });
       }
+
+      // Find matching variation only when all required tags are selected
+      const allTagsSelected = itemDetail?.variations?.[0]?.variation_tags.every(
+        (tag) => newValues[tag.items_variations_tags_name]
+      );
+
+      if (allTagsSelected && itemDetail?.variations) {
+        const matchedVariation = itemDetail.variations.find((variation) => {
+          return variation.variation_tags.every((tag) => {
+            return newValues[tag.items_variations_tags_name] ===
+              tag.items_variations_tags_links_values_value;
+          });
+        });
+
+        setSelectedVariation(matchedVariation ?? null); // Wrap in array if found, otherwise set to null
+        setCurrentImageIndex(0);
+      } else {
+        setSelectedVariation(null); // Reset if not all tags are selected
+        setCurrentImageIndex(0);
+      }
+
       return newValues;
     });
   };
@@ -406,6 +469,7 @@ const MyComponent = () => {
       "type_desc": "General Reading"
     }
   ]
+  
   return (
     <div className="p-6 pt-32">
       <div className="flex items-center justify-between pb-2 lg:px-10">
@@ -420,15 +484,16 @@ const MyComponent = () => {
         </div>
 
         {/* Title */}
-        <h4 className="flex-1 text-center font-serif text-lg font-bold capitalize text-red-500 md:text-3xl">
-          {itemDetail?.book_title ?? itemDetail?.item_name}
+        <h4 className="pb-2 text-center text-lg font-bold capitalize text-neutral-600 dark:text-neutral-100 md:text-3xl">
+          {itemDetail?.category_detail?.category_name}
         </h4>
+
 
         {/* Invisible Placeholder */}
         <div className="w-10" />
       </div>
-      <h6 className="pb-2 text-center text-sm font-bold capitalize text-neutral-600 dark:text-neutral-100 md:text-xl">
-        {itemDetail?.category_detail?.category_name}
+      <h6 className="flex-1 text-center font-serif text-sm font-bold capitalize text-red-500 md:text-2xl">
+        {itemDetail?.book_title ?? itemDetail?.item_name}
       </h6>
       <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
         {itemDetail?.description}
@@ -436,58 +501,59 @@ const MyComponent = () => {
       <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
         {itemDetail?.additional_notes}
       </h6>
-      <div className="flex flex-wrap gap-3">
-        <div className="mx-auto flex items-center">
-          {/* Thumbnails on the left */}
-          <div className="mr-4 flex flex-col space-y-2">
-            {itemDetail?.media?.[0] &&
-              itemDetail?.media?.map((image, index) => (
-                <Image
-                  key={index}
-                  src={`https://ipos-storage.s3.amazonaws.com/${image.object_path}`}
-                  alt={`Image ${index + 1}`}
-                  width={1000}
-                  height={1000}
-                  className={`h-24 w-24 cursor-pointer rounded-lg object-contain shadow ${selectedImage?.object_path.includes(image.object_path) ? "ring-1 ring-red-500" : ""}`}
-                  onClick={() => handleImageClick(image)}
-                />
-              ))}
+      <div className="flex relative flex-wrap gap-3">
+        <div className="mx-auto flex flex-col items-center">
+
+
+
+          <div className="cursor-zoom-in relative flex h-60 w-60 items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80"
+            ref={imageRef}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            onMouseMove={handleMouseMove}
+          >
+            <Image
+              src={
+                selectedVariation?.media?.[currentImageIndex]?.object_path
+                  ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
+                  : itemDetail?.object_path
+                    ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
+                    : "/assets/images/products/product.png"
+              }
+              alt={
+                selectedVariation?.media?.[0]?.object_path
+                  ? `${itemDetail?.item_name} - ${selectedValues.size ?? ''} ${selectedValues.color ?? ''}`
+                  : itemDetail?.item_name ?? "Product image"
+              }
+              width={2000}
+              height={2000}
+              className=" h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
+            />
           </div>
 
-          {/* Main Image */}
-          {selectedImage?.object_path ? (
-            <div className="flex h-60 w-60 items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80">
-              <Image
-                src={`https://ipos-storage.s3.amazonaws.com/${selectedImage.object_path}`}
-                alt="Selected Image"
-                width={2000}
-                height={2000}
-                className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
-              />
-            </div>
-          ) : itemDetail?.object_path ? (
-            <div className="flex h-60 w-60 items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80">
-              <Image
-                src={`https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`}
-                alt="Selected Image"
-                width={2000}
-                height={2000}
-                className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
-              />
-            </div>
-          ) : (
-            <div className="flex h-60 w-60 items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80">
-              <Image
-                src={`/assets/images/products/product.png`}
-                alt="Selected Image"
-                width={2000}
-                height={2000}
-                className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
-              />
+          {((selectedVariation?.media && selectedVariation?.media?.length > 1) ?? (selectedVariation?.media?.length === 0 && itemDetail?.media && itemDetail?.media?.length > 1)) && (
+            <div className="mt-2 flex gap-2 overflow-x-auto py-2">
+              {(selectedVariation?.media?.length > 0 ? selectedVariation.media : itemDetail?.media ? itemDetail.media : []).map(
+                (media, index) => (
+                  <button
+                    key={`thumbnail-${media.object_id ?? `fallback-${index}`}`}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? 'border-red-500' : 'border-gray-300'}`}
+                  >
+                    <Image
+                      src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                      alt={`Thumbnail ${index + 1}`}
+                      width={48}
+                      height={48}
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
+                ))}
             </div>
           )}
         </div>
-        <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
+
+        <div className="mx-auto  flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
           <div className="flex flex-col">
             {itemDetail ? (
               <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
@@ -504,12 +570,12 @@ const MyComponent = () => {
               ""
             )}
           </div>
-          {tagNames.length > 0 ? (
+          {tagNames?.length > 0 ? (
             <div className="flex">
-              {tagNames.map((tag) => {
+              {tagNames.map((tag, index) => {
                 return (
                   <span
-                    key={tag}
+                    key={`productTag-${tag}-${index}`}
                     className="mr-2 mt-1 rounded bg-red-500 px-1 py-0.5 text-[10px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
                   >
                     {tag}
@@ -529,17 +595,17 @@ const MyComponent = () => {
             <div className="flex items-center justify-center">
               {manageUsage().length > 0 ? (
                 <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-               
+
                   {manageUsage().map((item, index) => {
                     const matchedType = textbookType?.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
-                  return (
-                  <small
-                    key={index}
-                    className="bg-red-500 dark:bg-gray-700 text-gray-100 dark:text-gray-300 px-2 py-1 rounded mr-1"
-                  >
-                    {item.subject_name} {item.subject_code}, {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
-                  </small>
-                  )
+                    return (
+                      <small
+                        key={`usage-${item.subject_code}-${index}`}
+                        className="bg-red-500 dark:bg-gray-700 text-gray-100 dark:text-gray-300 px-2 py-1 rounded mr-1"
+                      >
+                        {item.subject_name} {item.subject_code}, {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
+                      </small>
+                    )
 
                   })}
 
@@ -654,10 +720,10 @@ const MyComponent = () => {
                     )}
 
                     <ul>
-                      {Object.keys(selectedValues).map((key) => (
-                        <>
+                      {Object.keys(selectedValues).map((key, index) => (
+                        <div key={`selectedValues-${key}-${index}-${index}`}>
                           {selectedValues[key] && (
-                            <li key={key} className="flex items-center">
+                            <li key={`selected-${key}-${index}`} className="flex items-center">
                               <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                 {key}:{" "}
                               </span>
@@ -667,7 +733,7 @@ const MyComponent = () => {
                             </li>
                           )}
                           {!selectedValues[key] && (
-                            <li key={key} className="text-red-400">
+                            <li key={`unselected-${key}-${index}`} className="text-red-400">
                               <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                 {key}:{" "}
                               </span>
@@ -676,7 +742,7 @@ const MyComponent = () => {
                               </span>{" "}
                             </li>
                           )}
-                        </>
+                        </div>
                       ))}
                     </ul>
                   </div>
@@ -717,7 +783,7 @@ const MyComponent = () => {
 
                 return (
                   <div
-                    key={tagName}
+                    key={`variation-tag-${tag.items_variations_tags_name}-${index}`}
                     className={`my-4 w-full ${tagName == "size" ? "flex items-center gap-1" : ""}`}
                   >
                     <h3 className="text-lg font-semibold capitalize">
@@ -726,9 +792,9 @@ const MyComponent = () => {
 
                     {tagName.toLowerCase().includes("size") ? (
                       <div className="scrollbar-hidden flex justify-center gap-2 overflow-x-auto px-1 pl-3 lg:max-w-full">
-                        {options.map((option) => (
+                        {options.map((option, optionIndex) => (
                           <button
-                            key={option.value}
+                            key={`${option.value}-${optionIndex}`}
                             className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
                               ? "bg-red-500 text-white"
                               : "border-red-500 bg-white dark:bg-slate-700"
@@ -801,13 +867,47 @@ const MyComponent = () => {
           ) : (
             ""
           )}
+   {isHovering && (
+          <div
+            className="absolute z-10 w-96 left-[55%] top-1/3 h-96 bg-white dark:bg-slate-700 dark:shadow-slate-500 overflow-hidden shadow-md pointer-events-none"
+            style={{
+             
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+           
+            <Image
+              src={
+                selectedVariation?.media?.[currentImageIndex]?.object_path
+                  ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
+                  : itemDetail?.object_path
+                    ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
+                    : "/assets/images/products/product.png"
+              }
+              style={{
+                position: "absolute",
+              
+                backgroundRepeat: "no-repeat",
+                transform: `scale(2)`,
+                transformOrigin: `${position.percentX}% ${position.percentY}%`,
+              }}
+              alt="Magnified view"
+              width={2000}
+              height={2000}
+              className="w-full h-full"
+              
+            />
+          </div>
+        )}
         </div>
+     
       </div>
+
       {/* Reviews Section */}
-      <div className="mt-16 flex flex-col gap-8 md:flex-row">
-        <div className="max-h-[477px] rounded-lg border p-6 shadow-md dark:bg-slate-800 md:w-1/2">
-          <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
-          {getReviewsLoader ? (
+      <div className="mt-16 flex flex-col gap-8 md:flex-row-reverse">
+        {/* {getReviewsLoader && (
+          <div className="max-h-[477px] rounded-lg border p-6 shadow-md dark:bg-slate-800 md:w-1/2">
+            <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
             <ScrollArea className="h-[300px]">
               {Array.from({ length: 3 }).map((_, index) => (
                 <div key={index} className="mb-4 animate-pulse border-b pb-2">
@@ -825,10 +925,15 @@ const MyComponent = () => {
                 </div>
               ))}
             </ScrollArea>
-          ) : reviews?.[0] ? (
+          </div>
+        )} */}
+        {!getReviewsLoader && reviews?.[0] && (
+          <div className="max-h-[477px] rounded-lg border p-6 shadow-md dark:bg-slate-800 md:w-1/2">
+            <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
+
             <ScrollArea className="h-[300px]">
               {reviews.map((review, index) => (
-                <div key={index} className="mb-4 border-b pb-2">
+                <div key={`review-${review.item_id ?? `fallback-${index}`}`} className="mb-4 border-b pb-2">
                   <p className="font-semibold">{review.username}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     {review.review}
@@ -836,9 +941,9 @@ const MyComponent = () => {
                   <div className="flex items-center gap-1 py-2">
                     {Array.from({ length: 5 }, (_, i) =>
                       i < (review.stars ?? 0) ? (
-                        <FaStar key={i} className="text-yellow-500" />
+                        <FaStar key={`star-${review.item_id}-${index}-${i}`} className="text-yellow-500" />
                       ) : (
-                        <FaRegStar key={i} className="text-gray-400" />
+                        <FaRegStar key={`regstar-${review.item_id}-${index}-${i}`} className="text-gray-400" />
                       ),
                     )}
                   </div>
@@ -850,14 +955,10 @@ const MyComponent = () => {
                 </div>
               ))}
             </ScrollArea>
-          ) : (
-            <p className="text-md text-gray-700 dark:text-gray-300">
-              {
-                "This product hasn't been reviewed yet. Your feedback could help others!"
-              }
-            </p>
-          )}
-        </div>
+          </div>
+        )}
+
+
         <div className="md:w-1/2">
           <ReviewForm
             submitValues={(val) => handleSubmitReviews(val)}

@@ -171,9 +171,9 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
                     <ProductCardSkeleton />
                   </div>
                 ))
-              : products.map((item) => (
+              : products.map((item,index) => (
                   <ProductCard
-                    key={item.book_id}
+                    key={`item.book_id-${item.book_id ?? index}-${index}`}
                     product={item}
                     showAddToCart={false}
                     showButton={false}

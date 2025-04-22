@@ -541,6 +541,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const removeCartItems = async (payload: DataCart): Promise<boolean> => {
+  
     const currentItems = lsClient.getItem("CART_ITEM") || [];
     const newItems: DataCart[] =
       typeof currentItems === "string"
@@ -552,12 +553,14 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           item?.selected_variation?.items_variable_items_id !==
           payload?.selected_variation?.items_variable_items_id,
       );
+ 
       lsClient.setItem("CART_ITEM", updatedItems);
       setItems(updatedItems);
     } else {
       const updatedItems = newItems.filter(
         (item: DataCart) => item.item_id !== payload.item_id,
       );
+  
       lsClient.setItem("CART_ITEM", updatedItems);
       setItems(updatedItems);
     }

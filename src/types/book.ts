@@ -70,6 +70,7 @@ export interface Variation {
   book_ISBN: string | null;
   book_language: string | null;
   subtitle: string | null;
+  media: Media[] | null;
   published_date: string | null;
   variation_tags: VariationTag[];
   cost_details: CostDetails;

@@ -410,6 +410,7 @@ const MyComponent = () => {
                       openDetail={() => openDetail(item)}
                       handleFavourite={() => handleFavourite(item)}
                       wishListLoader={wishListLoader}
+                      goToDetail={() => goToDetail(item)}
                     />
                   ))
                 ) : (
@@ -485,7 +486,7 @@ const MyComponent = () => {
                 <motion.div
                   key={"images"}
                   style={{
-                    rotate: window.innerWidth > 768 ? Math.random() * 20 - 10 : 0,
+                    rotate: typeof window !== "undefined" && window.innerWidth > 768 ? Math.random() * 20 - 10 : 0,
                   }}
                   whileHover={{
                     scale: 1.1,

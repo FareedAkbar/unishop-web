@@ -19,6 +19,7 @@ interface ProductProps {
   onAddToCart?: () => void;
   onRemoveFromCart?: () => void;
   openDetail?: () => void;
+  goToDetail?: () => void;
   handleFavourite?: () => void;
   product?: DataCart | null;
   wishListLoader?: boolean;
@@ -33,6 +34,7 @@ const ProductCard = ({
   handleFavourite,
   wishListLoader = false,
   showButton = true,
+  goToDetail,
 }: ProductProps) => {
   const { favItems, productTags, textbookType } = useAuthContext();
 
@@ -61,43 +63,17 @@ const ProductCard = ({
     return [];
   };
 
-  const type = [
-    {
-      "item_book_type_id": 1,
-      "type_name": "Textbook",
-      "type_desc": "Textbook"
-    },
-    {
-      "item_book_type_id": 2,
-      "type_name": "Reference",
-      "type_desc": "Reference"
-    },
-    {
-      "item_book_type_id": 3,
-      "type_name": "Recommended",
-      "type_desc": "Recommended"
-    },
-    {
-      "item_book_type_id": 4,
-      "type_name": "Course Notes",
-      "type_desc": "Course Notes"
-    },
-    {
-      "item_book_type_id": 5,
-      "type_name": "General Reading",
-      "type_desc": "General Reading"
-    }
-  ]
+
 
   return (
-    <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
+    <div  className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
       <div className="relative flex h-40 grow-0 items-center justify-center rounded-sm bg-gray-200 dark:bg-slate-600 sm:h-48 lg:h-64">
         {tagNames.length > 0 ? (
           <div className="absolute left-2 top-1 flex flex-col">
-            {tagNames.map((tag) => {
+            {tagNames.map((tag,index) => {
               return (
                 <span
-                  key={tag}
+                  key={`${tag}-${index}`}
                   className="z-[5] mr-2 mt-1 rounded bg-red-500 px-1 py-0.5 text-[8px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
                 >
                   {tag}
@@ -110,6 +86,7 @@ const ProductCard = ({
         )}
 
         <Image
+         onClick={goToDetail}
           src={
             product?.object_path
               ? `https://ipos-storage.s3.amazonaws.com/${product.object_path}`
@@ -119,7 +96,7 @@ const ProductCard = ({
           alt={product?.SKU_title ?? ""}
           width={1000}
           height={1000}
-          className="h-32 object-contain transition-transform duration-300 group-hover:scale-110 lg:h-56 lg:w-56" // Scale on hover
+          className="cursor-pointer h-32 object-contain transition-transform duration-300 group-hover:scale-110 lg:h-56 lg:w-56" // Scale on hover
         />
         <div className="absolute right-5 top-2 flex">
           {showButton && !showAddToCart && (
@@ -173,13 +150,13 @@ const ProductCard = ({
       ) : (
         ""
       )}
-      {product?.stock?.quantity ? (
+      {/* {product?.stock?.quantity ? (
         <span className="truncate text-xs">
           Available Stock: {product?.stock?.quantity}
         </span>
       ) : (
         ""
-      )}
+      )} */}
 
       {product?.book_id && product?.food_id == null ? (
         <span className="truncate text-sm">

@@ -30,7 +30,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     if(typeof window === "undefined") return
     const handleResize = () => {
-      setIsLargeScreen(window.innerWidth >= 1024); // Tailwind `lg` breakpoint is 1024px
+      setIsLargeScreen(window ? window.innerWidth >= 1024 : false); // Tailwind `lg` breakpoint is 1024px
     };
     handleResize(); // Check on mount
     window.addEventListener("resize", handleResize);

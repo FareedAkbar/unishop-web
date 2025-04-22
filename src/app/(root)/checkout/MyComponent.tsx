@@ -117,9 +117,9 @@ const MyComponent = () => {
             <h3 className="pb-5 text-lg font-bold">Cart Items</h3>
             <ScrollArea className="h-[24rem] flex-1">
               {items?.[0] ? (
-                items.map((item: DataCart) => (
+                items.map((item: DataCart, index) => (
                   <CartItem
-                    key={item.item_id}
+                    key={item.item_id + Math.random() + index}
                     title={item.item_name}
                     imageSrc={item?.object_path ?? item.media[0]?.object_path}
                     price={item.item_sale_price}
