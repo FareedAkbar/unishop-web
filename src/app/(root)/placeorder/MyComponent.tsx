@@ -123,7 +123,6 @@ const MyComponent = () => {
     setTotal(amount + totalAfterCalculation?.final_price_including_tax);
     const x = mergedArray;
     setNewItems(x);
-    
   }, [totalAfterCalculation]);
 
   const createItemsPayload = (
@@ -325,7 +324,7 @@ const MyComponent = () => {
             order_id: result?.data?.order_id,
             tracking_id: result.data?.tracking_id,
           };
-         await setTransactionData(x);
+          await setTransactionData(x);
         } catch (error) {
           console.error("Failed to load data:", error);
         }
@@ -679,7 +678,7 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="min-h-screen justify-center bg-gradient-to-r from-[#FFF2F2] to-[#FFEEEE] pb-8 pt-28 dark:from-slate-700 dark:to-slate-700 lg:pt-20">
+      <main className="min-h-screen justify-center bg-gradient-to-r from-[#FFF2F2] to-[#FFEEEE] pb-8 dark:from-slate-700 dark:to-slate-700">
         <div className="z-10 px-6">
           <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 lg:gap-5 xl:grid-cols-5">
             <div className="flex flex-col lg:col-span-3 xl:col-span-3">
@@ -696,15 +695,20 @@ const MyComponent = () => {
                         <span className="pr-1 font-medium text-red-500">
                           Address:
                         </span>
-                        <span className="block">{checkoutData?.address?.[0]?.address}</span>
+                        <span className="block">
+                          {checkoutData?.address?.[0]?.address}
+                        </span>
 
                         {checkoutData?.address?.[0]?.country ? (
                           <span className="block">
-                            {checkoutData?.address?.[0]?.country}, {checkoutData?.address?.[0]?.city},{" "}
-                            {checkoutData?.address?.[0]?.state}, {checkoutData?.address?.[0]?.postal_code}
+                            {checkoutData?.address?.[0]?.country},{" "}
+                            {checkoutData?.address?.[0]?.city},{" "}
+                            {checkoutData?.address?.[0]?.state},{" "}
+                            {checkoutData?.address?.[0]?.postal_code}
                           </span>
-                        ) : ("")}
-
+                        ) : (
+                          ""
+                        )}
                       </div>
 
                       {/* Phone Number */}
@@ -790,8 +794,9 @@ const MyComponent = () => {
               </h2>
 
               <ScrollArea
-                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 transition-all duration-300 dark:bg-slate-800 ${isExpanded ? "max-h-[28rem]" : "max-h-[10rem]"
-                  }`}
+                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 transition-all duration-300 dark:bg-slate-800 ${
+                  isExpanded ? "max-h-[28rem]" : "max-h-[10rem]"
+                }`}
               >
                 {items?.[0] ? (
                   items.map((item, index) => (
@@ -849,7 +854,7 @@ const MyComponent = () => {
               {/* Expand/Collapse Toggle */}
               <button
                 onClick={toggleExpand}
-                className="relative z-[5] border mx-auto -mt-5 flex w-fit items-center justify-center rounded-full bg-white px-3 py-1.5 text-red-500 shadow-md dark:bg-slate-600"
+                className="relative z-[5] mx-auto -mt-5 flex w-fit items-center justify-center rounded-full border bg-white px-3 py-1.5 text-red-500 shadow-md dark:bg-slate-600"
               >
                 <span>{isExpanded ? "▲" : "▼"}</span>
               </button>
@@ -882,8 +887,8 @@ const MyComponent = () => {
                         $
                         {items?.[0]
                           ? totalAfterCalculation?.final_price_including_tax.toFixed(
-                            2,
-                          )
+                              2,
+                            )
                           : 0}
                       </span>
                     </div>
@@ -919,7 +924,9 @@ const MyComponent = () => {
                     </div>
                     <div className="mt-2 grid grid-cols-2 justify-between">
                       <div className="flex flex-col">
-                        <span className="text-md font-semibold">Order Total</span>
+                        <span className="text-md font-semibold">
+                          Order Total
+                        </span>
                       </div>
 
                       <span className="text-md flex justify-end font-bold">
@@ -1014,6 +1021,5 @@ const MyComponent = () => {
     </div>
   );
 };
-
 
 export default MyComponent;

@@ -6,27 +6,27 @@ import { FaStore, FaTruck, FaUsers } from "react-icons/fa"; // Importing React I
 
 const MyComponent = () => {
   return (
-    <div className="pt-24 flex min-h-screen flex-col items-center justify-center">
+    <div className="flex min-h-screen flex-col items-center justify-center">
       {/* Image on Top */}
-      <div className="w-full max-w-screen-xl p-5 overflow-hidden rounded-xl">
+      <div className="w-full max-w-screen-xl overflow-hidden rounded-xl p-5">
         <Image
           src="/assets/images/About_us.jpg"
           alt="thumbnail"
-          className="h-auto w-full object-cover rounded-lg"
+          className="h-auto w-full rounded-lg object-cover"
           width={1000}
           height={1000}
         />
       </div>
 
       {/* Cards Section */}
-      <div className="grid grid-cols-1 gap-6 px-6 py-12 md:grid-cols-2 lg:grid-cols-3 max-w-screen-xl">
+      <div className="grid max-w-screen-xl grid-cols-1 gap-6 px-6 py-12 md:grid-cols-2 lg:grid-cols-3">
         {/* Card 1 */}
-        <div className="p-6 rounded-lg shadow-lg bg-red-100 dark:bg-slate-800 hover:scale-105 transition-all duration-300">
-          <FaStore className="text-red-500 text-4xl  mb-4 mx-auto" /> 
-          <h2 className="mb-4 text-xl font-semibold text-center text-red-500">
+        <div className="rounded-lg bg-red-100 p-6 shadow-lg transition-all duration-300 hover:scale-105 dark:bg-slate-800">
+          <FaStore className="mx-auto mb-4 text-4xl text-red-500" />
+          <h2 className="mb-4 text-center text-xl font-semibold text-red-500">
             UNISHOP IS NON-FOR-PROFIT
           </h2>
-          <p className="leading-relaxed text-center text-gray-600 dark:text-gray-300">
+          <p className="text-center leading-relaxed text-gray-600 dark:text-gray-300">
             Explore UniShop for exclusive UOW merchandise, from academic
             essentials and official gear to graduation collections. Delight in
             unique Aboriginal art, jewellery, and décor, and benefit from
@@ -36,26 +36,26 @@ const MyComponent = () => {
         </div>
 
         {/* Card 2 */}
-        <div className="p-6 rounded-lg shadow-lg bg-red-100 dark:bg-slate-800 hover:scale-105 transition-all duration-300">
-          <FaTruck className="text-red-500 text-4xl  mb-4 mx-auto" /> 
-          <h2 className="mb-4 text-xl font-semibold text-center text-red-500">
+        <div className="rounded-lg bg-red-100 p-6 shadow-lg transition-all duration-300 hover:scale-105 dark:bg-slate-800">
+          <FaTruck className="mx-auto mb-4 text-4xl text-red-500" />
+          <h2 className="mb-4 text-center text-xl font-semibold text-red-500">
             SHOP ONLINE OR IN-STORE
           </h2>
-          <p className="leading-relaxed text-center text-gray-600 dark:text-gray-300">
-            Enjoy convenient delivery or &quot;CLICK AND COLLECT&quot; options at UniShop,
-            located on the scenic UOW campus. As a UOW Pulse venture, your
-            purchases directly contribute to enriching student life through
-            events, clubs, and more.
+          <p className="text-center leading-relaxed text-gray-600 dark:text-gray-300">
+            Enjoy convenient delivery or &quot;CLICK AND COLLECT&quot; options
+            at UniShop, located on the scenic UOW campus. As a UOW Pulse
+            venture, your purchases directly contribute to enriching student
+            life through events, clubs, and more.
           </p>
         </div>
 
         {/* Card 3 */}
-        <div className="p-6 rounded-lg shadow-lg bg-red-100 dark:bg-slate-800 hover:scale-105 transition-all duration-300">
-          <FaUsers className="text-red-500 text-4xl  mb-4 mx-auto" /> 
-          <h2 className="mb-4 text-xl font-semibold text-center text-red-500">
+        <div className="rounded-lg bg-red-100 p-6 shadow-lg transition-all duration-300 hover:scale-105 dark:bg-slate-800">
+          <FaUsers className="mx-auto mb-4 text-4xl text-red-500" />
+          <h2 className="mb-4 text-center text-xl font-semibold text-red-500">
             SUPPORTING STUDENT LIFE
           </h2>
-          <p className="leading-relaxed text-center text-gray-600 dark:text-gray-300">
+          <p className="text-center leading-relaxed text-gray-600 dark:text-gray-300">
             UniShop is a UOW Pulse business, with all proceeds from everything
             you buy going straight back to enhancing the student experience on
             campus. Whether that’s through events, festivals, competitions, or
@@ -66,7 +66,5 @@ const MyComponent = () => {
     </div>
   );
 };
-
-
 
 export default MyComponent;

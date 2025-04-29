@@ -41,7 +41,10 @@ import { FiSearch } from "react-icons/fi";
 
 import Spinner from "~/components/spinner";
 import dynamic from "next/dynamic";
-const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then(mod => mod.Player), { ssr: false });
+const Player = dynamic(
+  () => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player),
+  { ssr: false },
+);
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
@@ -67,7 +70,9 @@ const MyComponent = () => {
   const [pageSize, setPageSize] = useState(pagination?.limit ?? 15);
   const [totalPages, setTotalPages] = useState(pagination?.pages ?? 1);
   const [displayData, setDisplayData] = useState<DataCart[] | null>(null);
-  const [selectedVariation, setSelectedVariation] = useState<Variation | null>(null);
+  const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
+    null,
+  );
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const router = useRouter();
@@ -84,7 +89,7 @@ const MyComponent = () => {
     category,
     setProductForDetail,
     subCategory,
-    textbookType
+    textbookType,
   } = useAuthContext();
 
   useEffect(() => {
@@ -111,7 +116,7 @@ const MyComponent = () => {
       setDisplayData(null); // Reset display data before fetching new data
       const x = await getItemsByCategory(id ?? 0, page, category_type);
       if (typeof x !== "boolean" && x.status) {
-        console.log(x)
+        console.log(x);
         setPagination(x.meta);
         setData(x.data);
         setDisplayData(x.data ? x.data : null);
@@ -229,7 +234,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -257,7 +262,6 @@ const MyComponent = () => {
     setSelectedVariation(null);
     setCurrentImageIndex(0);
   };
-
 
   const handleFavourite = async (item: DataCart) => {
     if (checkoutData?.customer_id) {
@@ -363,14 +367,16 @@ const MyComponent = () => {
 
       // Find matching variation only when all required tags are selected
       const allTagsSelected = itemDetail?.variations?.[0]?.variation_tags.every(
-        (tag) => newValues[tag.items_variations_tags_name]
+        (tag) => newValues[tag.items_variations_tags_name],
       );
 
       if (allTagsSelected && itemDetail?.variations) {
         const matchedVariation = itemDetail.variations.find((variation) => {
           return variation.variation_tags.every((tag) => {
-            return newValues[tag.items_variations_tags_name] ===
-              tag.items_variations_tags_links_values_value;
+            return (
+              newValues[tag.items_variations_tags_name] ===
+              tag.items_variations_tags_links_values_value
+            );
           });
         });
 
@@ -407,51 +413,51 @@ const MyComponent = () => {
       return itemDetail.book_usages
         .filter((usage) => usage.default_semester === 1)
         .map((usage) => ({
-          type_id: usage.type_id,  // Assuming `type_id` exists
+          type_id: usage.type_id, // Assuming `type_id` exists
           subject_name: usage.subject_name,
-          subject_code: usage.subject_code // Assuming `subject_name` exists
+          subject_code: usage.subject_code, // Assuming `subject_name` exists
         }));
     }
     return [];
   };
   const type = [
     {
-      "item_book_type_id": 1,
-      "type_name": "Textbook",
-      "type_desc": "Textbook"
+      item_book_type_id: 1,
+      type_name: "Textbook",
+      type_desc: "Textbook",
     },
     {
-      "item_book_type_id": 2,
-      "type_name": "Reference",
-      "type_desc": "Reference"
+      item_book_type_id: 2,
+      type_name: "Reference",
+      type_desc: "Reference",
     },
     {
-      "item_book_type_id": 3,
-      "type_name": "Recommended",
-      "type_desc": "Recommended"
+      item_book_type_id: 3,
+      type_name: "Recommended",
+      type_desc: "Recommended",
     },
     {
-      "item_book_type_id": 4,
-      "type_name": "Course Notes",
-      "type_desc": "Course Notes"
+      item_book_type_id: 4,
+      type_name: "Course Notes",
+      type_desc: "Course Notes",
     },
     {
-      "item_book_type_id": 5,
-      "type_name": "General Reading",
-      "type_desc": "General Reading"
-    }
-  ]
+      item_book_type_id: 5,
+      type_name: "General Reading",
+      type_desc: "General Reading",
+    },
+  ];
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center pt-20 sm:pt-10 md:pt-20 lg:pt-20"
+        className="flex min-h-screen flex-col items-center dark:bg-slate-900"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-grow flex-row sm:pt-10">
-          <div className="flex  w-[95vw] flex-col lg:pl-72">
+          <div className="flex flex-col">
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4 pl-2">
               <div className="text-left">
@@ -466,7 +472,7 @@ const MyComponent = () => {
                 )}
               </div>
 
-              <div className="flex flex-col md:flex-row sm:w-[700px] w-full items-center gap-2">
+              <div className="flex w-full flex-col items-center gap-2 sm:w-[700px] md:flex-row">
                 <div className="w-full">
                   {subcategoryTypes?.[0] && (
                     <NewSelect
@@ -491,14 +497,14 @@ const MyComponent = () => {
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     placeholder="Search in this category"
-                    className=" w-full rounded border-b border-gray-300 bg-gray-100 p-2 pl-8 text-sm shadow-inner focus:outline-none dark:bg-slate-700 dark:text-white"
+                    className="w-full rounded border-b border-gray-300 bg-gray-100 p-2 pl-8 text-sm shadow-inner focus:outline-none dark:bg-slate-700 dark:text-white"
                   />
                   <span className="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-white">
                     <FiSearch />
                   </span>
                 </div>
 
-                <h1 className="text-sm font-semibold w-full">
+                <h1 className="w-full text-sm font-semibold">
                   Showing {displayData?.length} of {data.length} Items
                 </h1>
               </div>
@@ -507,7 +513,7 @@ const MyComponent = () => {
             <ScrollArea className="min-h-[75vh] pb-10">
               <div
                 className="flex flex-wrap justify-center gap-3 py-3"
-              // key={displayData ? displayData?.[0]?.item_id : "123"}
+                // key={displayData ? displayData?.[0]?.item_id : "123"}
               >
                 {loader ? (
                   Array.from({ length: 5 }, (_, index) => (
@@ -593,7 +599,12 @@ const MyComponent = () => {
                 <motion.div
                   key={"images"}
                   style={{
-                    rotate: typeof window !== "undefined" ? window.innerWidth > 768 ? Math.random() * 20 - 10 : 0 : 0,
+                    rotate:
+                      typeof window !== "undefined"
+                        ? window.innerWidth > 768
+                          ? Math.random() * 20 - 10
+                          : 0
+                        : 0,
                   }}
                   whileHover={{
                     scale: 1.1,
@@ -617,32 +628,40 @@ const MyComponent = () => {
                     }
                     alt={
                       selectedVariation?.media?.[0]?.object_path
-                        ? `${itemDetail?.item_name} - ${selectedValues.size ?? ''} ${selectedValues.color ?? ''}`
-                        : itemDetail?.item_name ?? "Product image"
+                        ? `${itemDetail?.item_name} - ${selectedValues.size ?? ""} ${selectedValues.color ?? ""}`
+                        : (itemDetail?.item_name ?? "Product image")
                     }
                     width={800}
                     height={800}
-                    className="h-44 w-44 flex-shrink-0 rounded-lg object-contain md:h-48 md:w-48 lg:w-48  lg:h-48"
+                    className="h-44 w-44 flex-shrink-0 rounded-lg object-contain md:h-48 md:w-48 lg:h-48 lg:w-48"
                   />
                 </motion.div>
-                {((selectedVariation?.media && selectedVariation?.media?.length > 1) ?? (selectedVariation?.media?.length === 0 && itemDetail?.media && itemDetail?.media?.length > 1)) && (
+                {((selectedVariation?.media &&
+                  selectedVariation?.media?.length > 1) ??
+                  (selectedVariation?.media?.length === 0 &&
+                    itemDetail?.media &&
+                    itemDetail?.media?.length > 1)) && (
                   <div className="mt-2 flex gap-2 overflow-x-auto py-2">
-                    {(selectedVariation?.media?.length > 0 ? selectedVariation.media : itemDetail?.media ? itemDetail.media : []).map(
-                      (media, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setCurrentImageIndex(index)}
-                          className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? 'border-red-500' : 'border-gray-300'}`}
-                        >
-                          <Image
-                            src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
-                            alt={`Thumbnail ${index + 1}`}
-                            width={48}
-                            height={48}
-                            className="h-full w-full object-cover"
-                          />
-                        </button>
-                      ))}
+                    {(selectedVariation?.media?.length > 0
+                      ? selectedVariation.media
+                      : itemDetail?.media
+                        ? itemDetail.media
+                        : []
+                    ).map((media, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
+                      >
+                        <Image
+                          src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                          alt={`Thumbnail ${index + 1}`}
+                          width={48}
+                          height={48}
+                          className="h-full w-full object-cover"
+                        />
+                      </button>
+                    ))}
                   </div>
                 )}
               </div>
@@ -652,11 +671,11 @@ const MyComponent = () => {
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                   $
                   {itemDetail?.variations?.[0] &&
-                    filteredVariations?.[0]?.items_variable_items_sale_price
+                  filteredVariations?.[0]?.items_variable_items_sale_price
                     ? filteredVariations?.[0]?.items_variable_items_sale_price
                     : itemDetail?.variations?.[0]
                       ? itemDetail?.variations?.[0]
-                        .items_variable_items_sale_price
+                          .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
                 {itemDetail?.SKU && (
@@ -668,36 +687,34 @@ const MyComponent = () => {
 
               {itemDetail?.book_id && itemDetail?.food_id == null && (
                 <div className="flex items-center justify-center">
-
                   {manageUsage().length > 0 ? (
                     <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-
                       {manageUsage().map((item, index) => {
-                        const matchedType = textbookType?.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
+                        const matchedType = textbookType?.find(
+                          (t) => t.item_book_type_id === Number(item.type_id),
+                        ); // Find the matching type
                         return (
                           <small
                             key={index}
-                            className="bg-red-500 dark:bg-gray-700 text-gray-100 dark:text-gray-300 px-2 py-1 rounded mr-1"
+                            className="mr-1 rounded bg-red-500 px-2 py-1 text-gray-100 dark:bg-gray-700 dark:text-gray-300"
                           >
-                            {item.subject_name} {item.subject_code}, {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
+                            {item.subject_name} {item.subject_code},{" "}
+                            {matchedType?.type_name ?? ""}{" "}
+                            {/* Display type_name or fallback */}
                           </small>
-                        )
-
+                        );
                       })}
-
                     </span>
-                  )
-                    : (
-                      <>
-                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                          Textbook:
-                        </span>
-                        <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                          not used this session
-                        </span>
-                      </>
-
-                    )}
+                  ) : (
+                    <>
+                      <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                        Textbook:
+                      </span>
+                      <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                        not used this session
+                      </span>
+                    </>
+                  )}
                 </div>
               )}
               {itemDetail?.barcode && (
@@ -733,8 +750,8 @@ const MyComponent = () => {
               )}
 
               {itemDetail?.pages !== undefined &&
-                itemDetail.pages !== null &&
-                itemDetail.pages ? (
+              itemDetail.pages !== null &&
+              itemDetail.pages ? (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
@@ -795,10 +812,13 @@ const MyComponent = () => {
                         )}
 
                         <ul>
-                          {Object.keys(selectedValues).map((key,index) => (
-                            <div  key={`selected-${key}`}>
+                          {Object.keys(selectedValues).map((key, index) => (
+                            <div key={`selected-${key}`}>
                               {selectedValues[key] && (
-                                <li key={`selected-${key}-${index}`} className="flex items-center">
+                                <li
+                                  key={`selected-${key}-${index}`}
+                                  className="flex items-center"
+                                >
                                   <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                     {key}:{" "}
                                   </span>
@@ -808,7 +828,10 @@ const MyComponent = () => {
                                 </li>
                               )}
                               {!selectedValues[key] && (
-                                <li key={`unselected-${key}-${index}`} className="text-red-400">
+                                <li
+                                  key={`unselected-${key}-${index}`}
+                                  className="text-red-400"
+                                >
                                   <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                     {key}:{" "}
                                   </span>
@@ -840,7 +863,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                              currTag.items_variations_tags_name
+                                currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -878,10 +901,11 @@ const MyComponent = () => {
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border text-sm p-1 text-center ${selectedValues[tagName] === option.value
-                                    ? "bg-red-500 text-white"
-                                    : "border-red-500 bg-white dark:bg-slate-700"
-                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                  className={`min-w-10 rounded border p-1 text-center text-sm ${
+                                    selectedValues[tagName] === option.value
+                                      ? "bg-red-500 text-white"
+                                      : "border-red-500 bg-white dark:bg-slate-700"
+                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}
@@ -947,9 +971,6 @@ const MyComponent = () => {
     </div>
   );
 };
-
-
-
 
 const Page = () => {
   return (

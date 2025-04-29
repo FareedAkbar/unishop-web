@@ -1,15 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import React,{ Suspense, useState } from "react";
+import React, { Suspense, useState } from "react";
 import { FaChevronDown, FaChevronUp, FaCheck } from "react-icons/fa";
 
 import BackgroundSquares from "~/components/ui-components/BackgroundSquares";
 
-const Spinner = dynamic(
-  () => import('~/components/spinner'),
-  { ssr: false }
-)
+const Spinner = dynamic(() => import("~/components/spinner"), { ssr: false });
 
 interface Section {
   title: string;
@@ -71,7 +68,7 @@ const PrivacyPolicy: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen p-8 pt-32">
+    <div className="relative min-h-screen p-8">
       {/* Background Lottie Animation */}
       {/* <div className="absolute inset-0 top-40 -z-10 opacity-20 dark:opacity-70 dark:blur-sm">
         <Player
@@ -168,5 +165,3 @@ const Page = () => {
 };
 
 export default Page;
-
-

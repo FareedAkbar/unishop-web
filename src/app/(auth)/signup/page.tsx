@@ -43,7 +43,7 @@ const MyComponent = () => {
             title="Welcome to Unishop"
             pushPath="/login"
             push
-            subTitle="Create New Booknet Account"
+            // subTitle="Create New Booknet Account"
           />
         </div>
       </main>

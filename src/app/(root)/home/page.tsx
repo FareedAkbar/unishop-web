@@ -1,14 +1,9 @@
-
 "use client";
 
-import MyComponent from './MyComponent'
+import MyComponent from "./MyComponent";
 
 const Page = () => {
-  return (
-    
-      <MyComponent />
-    
-  );
+  return <MyComponent />;
 };
 
 export default Page;

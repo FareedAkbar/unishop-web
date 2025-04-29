@@ -70,15 +70,17 @@ export default function SignupFormDemo({
     <div className="z-30 mx-auto w-full max-w-md rounded-xl border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
       {/* {loader && <Spinner />} */}
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-        Login as a Pulse Member
+        Pulse Perks Login
       </h2>
       <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-        Login to Unishop with your Email and Password
+        Login to UniShop using your Pulse Perks membership credentials
       </p>
 
       <form className="mb-2 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
-          <Label required htmlFor="email">Email Address</Label>
+          <Label required htmlFor="email">
+            Email Address
+          </Label>
           <Input
             id="email"
             placeholder="projectmayhem@fc.com"
@@ -90,7 +92,9 @@ export default function SignupFormDemo({
           )}
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <Label required htmlFor="password">Password</Label>
+          <Label required htmlFor="password">
+            Password
+          </Label>
           <Input
             id="password"
             placeholder="••••••••"

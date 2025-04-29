@@ -35,7 +35,7 @@ const MyComponent = () => {
     increaseCartItemQuantity,
     checkoutData,
     productTags,
-    textbookType
+    textbookType,
   } = useAuthContext();
   const itemDetail = productDetail;
   const [category, setCategory] = useState<string>("");
@@ -46,7 +46,9 @@ const MyComponent = () => {
   const [submitLoader, setSubmitLoader] = useState<boolean>(false);
   const [getReviewsLoader, setGetReviewsLoader] = useState<boolean>(false);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
-  const [selectedVariation, setSelectedVariation] = useState<Variation | null>(null);
+  const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
+    null,
+  );
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { toast } = useToast();
   const params = useSearchParams();
@@ -59,16 +61,22 @@ const MyComponent = () => {
   };
 
   const [isHovering, setIsHovering] = useState(false);
-  const [position, setPosition] = useState<Position>({ px: 0, py: 0, percentX: 0, percentY: 0 });
+  const [position, setPosition] = useState<Position>({
+    px: 0,
+    py: 0,
+    percentX: 0,
+    percentY: 0,
+  });
   const imageRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (imageRef.current) {
-      const { left, top, width, height } = imageRef.current.getBoundingClientRect();
-      console.log(left,"left");
-      console.log(top,"top");
-      console.log(width,"width");
-      console.log(height,"height");
+      const { left, top, width, height } =
+        imageRef.current.getBoundingClientRect();
+      console.log(left, "left");
+      console.log(top, "top");
+      console.log(width, "width");
+      console.log(height, "height");
       const x = e.clientX - left;
       const y = e.clientY - top;
 
@@ -206,7 +214,7 @@ const MyComponent = () => {
   };
   useEffect(() => {
     if (!itemDetail) return;
-    if (typeof window === "undefined") return
+    if (typeof window === "undefined") return;
     const loadData = async () => {
       await getReviews(itemDetail?.item_id);
 
@@ -241,14 +249,16 @@ const MyComponent = () => {
 
       // Find matching variation only when all required tags are selected
       const allTagsSelected = itemDetail?.variations?.[0]?.variation_tags.every(
-        (tag) => newValues[tag.items_variations_tags_name]
+        (tag) => newValues[tag.items_variations_tags_name],
       );
 
       if (allTagsSelected && itemDetail?.variations) {
         const matchedVariation = itemDetail.variations.find((variation) => {
           return variation.variation_tags.every((tag) => {
-            return newValues[tag.items_variations_tags_name] ===
-              tag.items_variations_tags_links_values_value;
+            return (
+              newValues[tag.items_variations_tags_name] ===
+              tag.items_variations_tags_links_values_value
+            );
           });
         });
 
@@ -277,7 +287,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -435,43 +445,43 @@ const MyComponent = () => {
       return itemDetail.book_usages
         .filter((usage) => usage.default_semester === 1)
         .map((usage) => ({
-          type_id: usage.type_id,  // Assuming `type_id` exists
+          type_id: usage.type_id, // Assuming `type_id` exists
           subject_name: usage.subject_name,
-          subject_code: usage.subject_code // Assuming `subject_name` exists
+          subject_code: usage.subject_code, // Assuming `subject_name` exists
         }));
     }
     return [];
   };
   const type = [
     {
-      "item_book_type_id": 1,
-      "type_name": "Textbook",
-      "type_desc": "Textbook"
+      item_book_type_id: 1,
+      type_name: "Textbook",
+      type_desc: "Textbook",
     },
     {
-      "item_book_type_id": 2,
-      "type_name": "Reference",
-      "type_desc": "Reference"
+      item_book_type_id: 2,
+      type_name: "Reference",
+      type_desc: "Reference",
     },
     {
-      "item_book_type_id": 3,
-      "type_name": "Recommended",
-      "type_desc": "Recommended"
+      item_book_type_id: 3,
+      type_name: "Recommended",
+      type_desc: "Recommended",
     },
     {
-      "item_book_type_id": 4,
-      "type_name": "Course Notes",
-      "type_desc": "Course Notes"
+      item_book_type_id: 4,
+      type_name: "Course Notes",
+      type_desc: "Course Notes",
     },
     {
-      "item_book_type_id": 5,
-      "type_name": "General Reading",
-      "type_desc": "General Reading"
-    }
-  ]
-  
+      item_book_type_id: 5,
+      type_name: "General Reading",
+      type_desc: "General Reading",
+    },
+  ];
+
   return (
-    <div className="p-6 pt-32">
+    <div className="p-6">
       <div className="flex items-center justify-between pb-2 lg:px-10">
         {/* Left Arrow */}
         <div>
@@ -488,7 +498,6 @@ const MyComponent = () => {
           {itemDetail?.category_detail?.category_name}
         </h4>
 
-
         {/* Invisible Placeholder */}
         <div className="w-10" />
       </div>
@@ -501,12 +510,10 @@ const MyComponent = () => {
       <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
         {itemDetail?.additional_notes}
       </h6>
-      <div className="flex relative flex-wrap gap-3">
+      <div className="relative flex flex-wrap gap-3">
         <div className="mx-auto flex flex-col items-center">
-
-
-
-          <div className="cursor-zoom-in relative flex h-60 w-60 items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80"
+          <div
+            className="relative flex h-60 w-60 cursor-zoom-in items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80"
             ref={imageRef}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
@@ -522,48 +529,56 @@ const MyComponent = () => {
               }
               alt={
                 selectedVariation?.media?.[0]?.object_path
-                  ? `${itemDetail?.item_name} - ${selectedValues.size ?? ''} ${selectedValues.color ?? ''}`
-                  : itemDetail?.item_name ?? "Product image"
+                  ? `${itemDetail?.item_name} - ${selectedValues.size ?? ""} ${selectedValues.color ?? ""}`
+                  : (itemDetail?.item_name ?? "Product image")
               }
               width={2000}
               height={2000}
-              className=" h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
+              className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
             />
           </div>
 
-          {((selectedVariation?.media && selectedVariation?.media?.length > 1) ?? (selectedVariation?.media?.length === 0 && itemDetail?.media && itemDetail?.media?.length > 1)) && (
+          {((selectedVariation?.media &&
+            selectedVariation?.media?.length > 1) ??
+            (selectedVariation?.media?.length === 0 &&
+              itemDetail?.media &&
+              itemDetail?.media?.length > 1)) && (
             <div className="mt-2 flex gap-2 overflow-x-auto py-2">
-              {(selectedVariation?.media?.length > 0 ? selectedVariation.media : itemDetail?.media ? itemDetail.media : []).map(
-                (media, index) => (
-                  <button
-                    key={`thumbnail-${media.object_id ?? `fallback-${index}`}`}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? 'border-red-500' : 'border-gray-300'}`}
-                  >
-                    <Image
-                      src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
-                      alt={`Thumbnail ${index + 1}`}
-                      width={48}
-                      height={48}
-                      className="h-full w-full object-cover"
-                    />
-                  </button>
-                ))}
+              {(selectedVariation?.media?.length > 0
+                ? selectedVariation.media
+                : itemDetail?.media
+                  ? itemDetail.media
+                  : []
+              ).map((media, index) => (
+                <button
+                  key={`thumbnail-${media.object_id ?? `fallback-${index}`}`}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
+                >
+                  <Image
+                    src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                    alt={`Thumbnail ${index + 1}`}
+                    width={48}
+                    height={48}
+                    className="h-full w-full object-cover"
+                  />
+                </button>
+              ))}
             </div>
           )}
         </div>
 
-        <div className="mx-auto  flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
+        <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
           <div className="flex flex-col">
             {itemDetail ? (
               <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                 ${" "}
                 {itemDetail?.variations?.[0] &&
-                  filteredVariations?.[0]?.items_variable_items_sale_price
+                filteredVariations?.[0]?.items_variable_items_sale_price
                   ? filteredVariations?.[0]?.items_variable_items_sale_price
                   : itemDetail?.variations?.[0]
                     ? itemDetail?.variations?.[0]
-                      .items_variable_items_sale_price
+                        .items_variable_items_sale_price
                     : itemDetail?.item_sale_price}
               </span>
             ) : (
@@ -595,22 +610,21 @@ const MyComponent = () => {
             <div className="flex items-center justify-center">
               {manageUsage().length > 0 ? (
                 <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-
                   {manageUsage().map((item, index) => {
-                    const matchedType = textbookType?.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
+                    const matchedType = textbookType?.find(
+                      (t) => t.item_book_type_id === Number(item.type_id),
+                    ); // Find the matching type
                     return (
                       <small
                         key={`usage-${item.subject_code}-${index}`}
-                        className="bg-red-500 dark:bg-gray-700 text-gray-100 dark:text-gray-300 px-2 py-1 rounded mr-1"
+                        className="mr-1 rounded bg-red-500 px-2 py-1 text-gray-100 dark:bg-gray-700 dark:text-gray-300"
                       >
-                        {item.subject_name} {item.subject_code}, {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
+                        {item.subject_name} {item.subject_code},{" "}
+                        {matchedType?.type_name ?? ""}{" "}
+                        {/* Display type_name or fallback */}
                       </small>
-                    )
-
+                    );
                   })}
-
-
-
                 </span>
               ) : (
                 <>
@@ -669,8 +683,8 @@ const MyComponent = () => {
           )}
 
           {itemDetail?.pages !== undefined &&
-            itemDetail.pages !== null &&
-            itemDetail.pages ? (
+          itemDetail.pages !== null &&
+          itemDetail.pages ? (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                 Number of Pages:
@@ -723,7 +737,10 @@ const MyComponent = () => {
                       {Object.keys(selectedValues).map((key, index) => (
                         <div key={`selectedValues-${key}-${index}-${index}`}>
                           {selectedValues[key] && (
-                            <li key={`selected-${key}-${index}`} className="flex items-center">
+                            <li
+                              key={`selected-${key}-${index}`}
+                              className="flex items-center"
+                            >
                               <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                 {key}:{" "}
                               </span>
@@ -733,7 +750,10 @@ const MyComponent = () => {
                             </li>
                           )}
                           {!selectedValues[key] && (
-                            <li key={`unselected-${key}-${index}`} className="text-red-400">
+                            <li
+                              key={`unselected-${key}-${index}`}
+                              className="text-red-400"
+                            >
                               <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                 {key}:{" "}
                               </span>
@@ -795,10 +815,11 @@ const MyComponent = () => {
                         {options.map((option, optionIndex) => (
                           <button
                             key={`${option.value}-${optionIndex}`}
-                            className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
-                              ? "bg-red-500 text-white"
-                              : "border-red-500 bg-white dark:bg-slate-700"
-                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            className={`min-w-10 rounded border p-1 text-center ${
+                              selectedValues[tagName] === option.value
+                                ? "bg-red-500 text-white"
+                                : "border-red-500 bg-white dark:bg-slate-700"
+                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -826,12 +847,12 @@ const MyComponent = () => {
             </div>
           )}
           {itemDetail?.variations?.[0] &&
-            filteredVariations?.[0]?.items_variable_items_id &&
-            Object.values(selectedValues).length ==
+          filteredVariations?.[0]?.items_variable_items_id &&
+          Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-            isVariableItemInCart(
-              filteredVariations?.[0]?.items_variable_items_id,
-            ) ? (
+          isVariableItemInCart(
+            filteredVariations?.[0]?.items_variable_items_id,
+          ) ? (
             <span className="pl-1 text-green-500">
               Already added to your cart
             </span>
@@ -839,14 +860,14 @@ const MyComponent = () => {
             ""
           )}
           {itemDetail?.variations?.[0] &&
-            !isVariableItemInCart(
-              filteredVariations?.[0]?.items_variable_items_id ?? -1,
-            ) &&
-            !Object.values(selectedValues).some((value) => value === undefined) &&
-            Object.values(selectedValues).length ==
+          !isVariableItemInCart(
+            filteredVariations?.[0]?.items_variable_items_id ?? -1,
+          ) &&
+          !Object.values(selectedValues).some((value) => value === undefined) &&
+          Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-            (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
-              itemDetail?.item_sale_price) ? (
+          (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
+            itemDetail?.item_sale_price) ? (
             <button
               className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
               onClick={() => handleAddToCart(itemDetail)}
@@ -867,40 +888,36 @@ const MyComponent = () => {
           ) : (
             ""
           )}
-   {isHovering && (
-          <div
-            className="absolute z-10 w-96 left-[55%] top-1/3 h-96 bg-white dark:bg-slate-700 dark:shadow-slate-500 overflow-hidden shadow-md pointer-events-none"
-            style={{
-             
-              transform: 'translate(-50%, -50%)',
-            }}
-          >
-           
-            <Image
-              src={
-                selectedVariation?.media?.[currentImageIndex]?.object_path
-                  ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
-                  : itemDetail?.object_path
-                    ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                    : "/assets/images/products/product.png"
-              }
+          {isHovering && (
+            <div
+              className="pointer-events-none absolute left-[55%] top-1/3 z-10 h-96 w-96 overflow-hidden bg-white shadow-md dark:bg-slate-700 dark:shadow-slate-500"
               style={{
-                position: "absolute",
-              
-                backgroundRepeat: "no-repeat",
-                transform: `scale(2)`,
-                transformOrigin: `${position.percentX}% ${position.percentY}%`,
+                transform: "translate(-50%, -50%)",
               }}
-              alt="Magnified view"
-              width={2000}
-              height={2000}
-              className="w-full h-full"
-              
-            />
-          </div>
-        )}
+            >
+              <Image
+                src={
+                  selectedVariation?.media?.[currentImageIndex]?.object_path
+                    ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
+                    : itemDetail?.object_path
+                      ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
+                      : "/assets/images/products/product.png"
+                }
+                style={{
+                  position: "absolute",
+
+                  backgroundRepeat: "no-repeat",
+                  transform: `scale(2)`,
+                  transformOrigin: `${position.percentX}% ${position.percentY}%`,
+                }}
+                alt="Magnified view"
+                width={2000}
+                height={2000}
+                className="h-full w-full"
+              />
+            </div>
+          )}
         </div>
-     
       </div>
 
       {/* Reviews Section */}
@@ -933,7 +950,10 @@ const MyComponent = () => {
 
             <ScrollArea className="h-[300px]">
               {reviews.map((review, index) => (
-                <div key={`review-${review.item_id ?? `fallback-${index}`}`} className="mb-4 border-b pb-2">
+                <div
+                  key={`review-${review.item_id ?? `fallback-${index}`}`}
+                  className="mb-4 border-b pb-2"
+                >
                   <p className="font-semibold">{review.username}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     {review.review}
@@ -941,9 +961,15 @@ const MyComponent = () => {
                   <div className="flex items-center gap-1 py-2">
                     {Array.from({ length: 5 }, (_, i) =>
                       i < (review.stars ?? 0) ? (
-                        <FaStar key={`star-${review.item_id}-${index}-${i}`} className="text-yellow-500" />
+                        <FaStar
+                          key={`star-${review.item_id}-${index}-${i}`}
+                          className="text-yellow-500"
+                        />
                       ) : (
-                        <FaRegStar key={`regstar-${review.item_id}-${index}-${i}`} className="text-gray-400" />
+                        <FaRegStar
+                          key={`regstar-${review.item_id}-${index}-${i}`}
+                          className="text-gray-400"
+                        />
                       ),
                     )}
                   </div>
@@ -957,7 +983,6 @@ const MyComponent = () => {
             </ScrollArea>
           </div>
         )}
-
 
         <div className="md:w-1/2">
           <ReviewForm
@@ -986,7 +1011,6 @@ const MyComponent = () => {
   );
 };
 
-
 const Page = () => {
   return (
     <Suspense fallback={<Spinner />}>
@@ -996,5 +1020,3 @@ const Page = () => {
 };
 
 export default Page;
-
-

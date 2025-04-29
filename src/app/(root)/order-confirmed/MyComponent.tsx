@@ -9,13 +9,16 @@ import Link from "next/link";
 import { FaHome } from "react-icons/fa";
 import Spinner from "~/components/spinner";
 import dynamic from "next/dynamic";
- const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then(mod => mod.Player), { ssr: false });
+const Player = dynamic(
+  () => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player),
+  { ssr: false },
+);
 const OrderConfirmed = () => {
   const router = useRouter();
   const { orderTransactionData } = useAuthContext();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 pb-16 pt-28 dark:bg-gray-900 sm:px-8">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 pb-16 dark:bg-gray-900 sm:px-8">
       <motion.h2
         className="mb-6 text-3xl font-bold text-red-500"
         initial={{ opacity: 0, y: -20 }}
@@ -103,4 +106,3 @@ const Page = () => {
 };
 
 export default Page;
-

@@ -409,7 +409,7 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="mt-24 flex min-h-screen flex-col items-center">
+      <main className="flex min-h-screen flex-col items-center">
         {loader && <Spinner />}
         <div className="w-full p-4">
           <OrdersDataTable
@@ -478,13 +478,11 @@ const MyComponent = () => {
 const Page = () => {
   return (
     <ModalProvider>
-    <Suspense fallback={<Spinner />}>
-      <MyComponent />
-    </Suspense>
+      <Suspense fallback={<Spinner />}>
+        <MyComponent />
+      </Suspense>
     </ModalProvider>
   );
 };
 
 export default Page;
-
-

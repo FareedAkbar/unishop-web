@@ -11,14 +11,14 @@ import {
 } from "react-icons/fa";
 import dynamic from "next/dynamic";
 
-const Spinner = dynamic(
-    () => import('~/components/spinner'),
-    { ssr: false }
-  )
-  const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then(mod => mod.Player), { ssr: false });
+const Spinner = dynamic(() => import("~/components/spinner"), { ssr: false });
+const Player = dynamic(
+  () => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player),
+  { ssr: false },
+);
 const MyComponent = () => {
   return (
-    <div className="min-h-screen pt-28 lg:pt-16">
+    <div className="min-h-screen">
       <div className="flex flex-wrap items-center justify-between bg-white p-8 pb-14 shadow-md dark:bg-slate-600 lg:px-32">
         <div className="max-w-md flex-1 text-lg">
           <div className="space-y-2">
@@ -129,11 +129,11 @@ const MyComponent = () => {
   );
 };
 const Page = () => {
-    return (
-      <Suspense fallback={<Spinner />}>
-        <MyComponent />
-      </Suspense>
-    );
-  };
-  
-  export default Page;
+  return (
+    <Suspense fallback={<Spinner />}>
+      <MyComponent />
+    </Suspense>
+  );
+};
+
+export default Page;

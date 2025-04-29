@@ -28,7 +28,7 @@ const HomePage: React.FC = () => {
 
   // Hook to detect screen size
   useEffect(() => {
-    if(typeof window === "undefined") return
+    if (typeof window === "undefined") return;
     const handleResize = () => {
       setIsLargeScreen(window ? window.innerWidth >= 1024 : false); // Tailwind `lg` breakpoint is 1024px
     };
@@ -115,7 +115,7 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 pt-32 dark:bg-slate-800 lg:pt-24">
+    <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 dark:bg-slate-800">
       <BackgroundSquares />
       <div className="flex justify-center">
         <ImageSlider />
@@ -136,12 +136,14 @@ const HomePage: React.FC = () => {
           <div className="hidden lg:block">
             <CategoriesSidebar />
           </div>
-          <div className={`mx-auto w-full pr-3 ${specialItems && specialItems?.length > 2 && "lg:pl-10"} pb-10`}>
+          <div
+            className={`mx-auto w-full pr-3 ${specialItems && specialItems?.length > 2 && "lg:pl-10"} pb-10`}
+          >
             <div className="relative min-h-[360px]">
               <AnimatePresence initial={false} mode="wait" custom={direction}>
                 <motion.div
                   key={currentIndex}
-                  className="flex flex-wrap p-3 lg:flex-nowrap pr-10"
+                  className="flex flex-wrap p-3 pr-10 lg:flex-nowrap"
                   {...(isLargeScreen && {
                     custom: direction,
                     initial: "enter",
@@ -155,8 +157,8 @@ const HomePage: React.FC = () => {
                     <div
                       key={`display-${index}`}
                       className="w-full"
-                      onMouseEnter={() => isHoveredRef.current =true} 
-                      onMouseLeave={() => isHoveredRef.current =false} 
+                      onMouseEnter={() => (isHoveredRef.current = true)}
+                      onMouseLeave={() => (isHoveredRef.current = false)}
                     >
                       <ProductList
                         title={item?.title}
@@ -203,4 +205,3 @@ const HomePage: React.FC = () => {
 // };
 
 export default HomePage;
-

@@ -4,7 +4,10 @@ import dynamic from "next/dynamic";
 
 import { FaPhoneAlt, FaUserTie, FaBuilding } from "react-icons/fa";
 
- const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then(mod => mod.Player), { ssr: false });
+const Player = dynamic(
+  () => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player),
+  { ssr: false },
+);
 
 const MapContainerComponent = dynamic(() => import("~/components/map"), {
   ssr: false,
@@ -12,7 +15,7 @@ const MapContainerComponent = dynamic(() => import("~/components/map"), {
 
 const MyComponent = () => {
   return (
-    <div className="bg-gray-50 pt-28 dark:bg-slate-800 lg:pt-20">
+    <div className="bg-gray-50 dark:bg-slate-800">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between bg-white p-8 pb-14 shadow-md dark:bg-slate-600 lg:px-32">
         <div className="max-w-md flex-1 text-lg text-gray-700">
@@ -34,7 +37,7 @@ const MyComponent = () => {
       </div>
 
       <div className="relative z-[5] -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
-        <div className="w-full rounded-lg text-left bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
+        <div className="w-full rounded-lg bg-red-100 p-6 text-left shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaPhoneAlt className="text-red-500" /> General Enquiries
           </h2>
@@ -58,7 +61,7 @@ const MyComponent = () => {
           </p>
         </div>
 
-        <div className="w-full rounded-lg text-left bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
+        <div className="w-full rounded-lg bg-red-100 p-6 text-left shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaUserTie className="text-red-500" /> Specialty Enquiries
           </h2>
@@ -66,7 +69,7 @@ const MyComponent = () => {
             Retail Operations Manager:
             <a
               href="mailto:uow-bookshop@uow.edu.au"
-              className="pl-1 text-red-500 underline transition-colors block"
+              className="block pl-1 text-red-500 underline transition-colors"
             >
               uow-bookshop@uow.edu.au
             </a>
@@ -75,7 +78,7 @@ const MyComponent = () => {
             Events Coordinator: Anneliese Hennessy
             <a
               href="mailto:ahennessy@uow.edu.au"
-              className="text-red-500 underline transition-colors block"
+              className="block text-red-500 underline transition-colors"
             >
               (ahennessy@uow.edu.au)
             </a>

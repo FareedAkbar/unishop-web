@@ -4,12 +4,11 @@ import React, { Suspense } from "react";
 import { useState } from "react";
 import { FaChevronDown, FaChevronUp, FaCheck } from "react-icons/fa";
 import dynamic from "next/dynamic";
- const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then(mod => mod.Player), { ssr: false });
-const Spinner = dynamic(
-  () => import('~/components/spinner'),
-  { ssr: false }
-)
-
+const Player = dynamic(
+  () => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player),
+  { ssr: false },
+);
+const Spinner = dynamic(() => import("~/components/spinner"), { ssr: false });
 
 const TermsAndConditions = () => {
   const sections = [
@@ -68,7 +67,7 @@ const TermsAndConditions = () => {
   };
 
   return (
-    <div className="relative min-h-screen p-8 pt-32">
+    <div className="relative min-h-screen p-8">
       {/* Background Lottie Animation */}
       {/* Page Header */}
       <h1 className="mb-6 text-center text-3xl font-extrabold text-red-600">
@@ -167,4 +166,3 @@ const Page = () => {
 };
 
 export default Page;
-

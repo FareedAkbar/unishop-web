@@ -13,20 +13,16 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <body suppressHydrationWarning>
-
         <AuthProvider>
           {children}
           <Toaster />
         </AuthProvider>
-
       </body>
     </html>
   );

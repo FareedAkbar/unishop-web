@@ -39,7 +39,7 @@ interface checkout {
   disabled?: boolean;
   handleData?: (data: CheckoutForm) => void;
   title: string;
-  subTitle: string;
+  subTitle?: string;
   pushPath?: string;
 }
 
@@ -59,35 +59,40 @@ export default function CheckoutForm({
     { value: number; label: string }[]
   >([]);
   const { toast } = useToast();
-  const { checkoutData, CheckoutApi, checkoutFormData, billing_address } = useAuthContext();
+  const { checkoutData, CheckoutApi, checkoutFormData, billing_address } =
+    useAuthContext();
   const [loader, setLoader] = useState(false);
   const [addressIndex, setAddressIndex] = useState(0);
   const [showFormFields, setShowFormFields] = useState(true);
 
   const defaultValues = billing_address
     ? {
-      ...checkoutData,
-      address: billing_address[addressIndex]?.address,
-      postal_code: billing_address[addressIndex]?.postal_code,
-      phone_number: billing_address[addressIndex]?.phone_number,
-      country: "Australia",
-      city:
-        cities
-          .find(
-            (state) =>
-              state.stateCode ==
-              states.find((state) => state.label === billing_address[addressIndex]?.state)?.value)
-          ?.city.find((city) => city.label == billing_address[addressIndex]?.city)
-          ?.value.toString() ?? "",
-      state: billing_address[addressIndex]?.state
-        ? states.find((state) => state.label === billing_address[addressIndex]?.state)?.value
-        : null,
-    }
-    : {
-    };
-
-
-
+        ...checkoutData,
+        address: billing_address[addressIndex]?.address,
+        postal_code: billing_address[addressIndex]?.postal_code,
+        phone_number: billing_address[addressIndex]?.phone_number,
+        country: "Australia",
+        city:
+          cities
+            .find(
+              (state) =>
+                state.stateCode ==
+                states.find(
+                  (state) =>
+                    state.label === billing_address[addressIndex]?.state,
+                )?.value,
+            )
+            ?.city.find(
+              (city) => city.label == billing_address[addressIndex]?.city,
+            )
+            ?.value.toString() ?? "",
+        state: billing_address[addressIndex]?.state
+          ? states.find(
+              (state) => state.label === billing_address[addressIndex]?.state,
+            )?.value
+          : null,
+      }
+    : {};
 
   const {
     register,
@@ -110,7 +115,8 @@ export default function CheckoutForm({
     if (!checkoutData) return;
     setCityOptions(
       getCitiesForState(
-        states.find((state) => state.label === checkoutData.address?.[0]?.state)?.value ?? "",
+        states.find((state) => state.label === checkoutData.address?.[0]?.state)
+          ?.value ?? "",
       ),
     );
   }, [checkoutData]);
@@ -127,27 +133,27 @@ export default function CheckoutForm({
     setCityOptions(getCitiesForState(stateId));
   };
 
-
   const getObjectFromArray = (obj: address): address | null => {
     return billing_address
-      ? billing_address.find((item) =>
-        item.address === obj.address &&
-        item.second_address === obj.second_address &&
-        item.country === obj.country &&
-        item.city === obj.city &&
-        item.state === obj.state &&
-        item.postal_code === obj.postal_code &&
-        item.country_code === obj.country_code &&
-        item.phone_number === obj.phone_number
-      ) ?? null // Return null if no match is found
+      ? (billing_address.find(
+          (item) =>
+            item.address === obj.address &&
+            item.second_address === obj.second_address &&
+            item.country === obj.country &&
+            item.city === obj.city &&
+            item.state === obj.state &&
+            item.postal_code === obj.postal_code &&
+            item.country_code === obj.country_code &&
+            item.phone_number === obj.phone_number,
+        ) ?? null) // Return null if no match is found
       : null;
   };
 
   const addAddress = async (address: address, data: CheckoutForm) => {
     const payload = {
       ...address,
-      customer_id: data.customer_id
-    }
+      customer_id: data.customer_id,
+    };
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/customer/address`,
@@ -161,14 +167,15 @@ export default function CheckoutForm({
         },
       );
 
-      const result: add_address_from_customer_id = (await response.json()) as add_address_from_customer_id;
+      const result: add_address_from_customer_id =
+        (await response.json()) as add_address_from_customer_id;
 
       // Check if result has the expected structure
       if (result?.status && result?.data) {
         const newCheckoutData = {
           ...data,
           address: [result?.data],
-        }
+        };
         if (pushPath) {
           void checkoutFormData(newCheckoutData).then(() =>
             router.push(pushPath),
@@ -178,20 +185,21 @@ export default function CheckoutForm({
         toast({
           title: "Billing Address Added",
           variant: "success",
-          description:
-            "New Billing Address was Added",
+          description: "New Billing Address was Added",
         });
       } else {
-        console.error("Unexpected result structure api/customer/address?email:", result);
+        console.error(
+          "Unexpected result structure api/customer/address?email:",
+          result,
+        );
       }
     } catch (error) {
       console.error("Error fetching api/customer/address?email:", error);
     }
-  }
+  };
 
   const onSubmit: SubmitHandler<CheckoutFormValues> = async (data) => {
-
-    console.log("data",data)
+    console.log("data", data);
 
     // Get the human-readable state name based on the selected state ID
     const selectedStateName = data.state
@@ -205,7 +213,7 @@ export default function CheckoutForm({
     // Get the selected city name
     const selectedCityName = foundState
       ? (foundState.city.find((city) => city.value.toString() === data.city)
-        ?.label ?? "")
+          ?.label ?? "")
       : "";
 
     // Prepare the updated data object for submission
@@ -216,8 +224,7 @@ export default function CheckoutForm({
       toast({
         title: "Checkout Declined",
         variant: "destructive",
-        description:
-          "Something went wrong. Please try again.",
+        description: "Something went wrong. Please try again.",
       });
     }
     // create new address object
@@ -231,12 +238,12 @@ export default function CheckoutForm({
       country_code: "61",
       phone_number: data.phone_number,
       default_status: 1,
-     
-    }
+    };
     // compare address from the form and previous billing address and if yes then pick address from previous billing address
-    const xx = billing_address && getObjectFromArray(newAddress)
-      ? [getObjectFromArray(newAddress)!]
-      : [newAddress];
+    const xx =
+      billing_address && getObjectFromArray(newAddress)
+        ? [getObjectFromArray(newAddress)!]
+        : [newAddress];
 
     const updatedData = {
       ...data,
@@ -250,10 +257,9 @@ export default function CheckoutForm({
       address: xx,
       customer_type_id: 6,
       uuid: uuid,
-       first_name: "",
-       last_name: ""
+      first_name: "",
+      last_name: "",
     };
-
 
     try {
       // await checkoutFormData(updatedData);
@@ -264,96 +270,125 @@ export default function CheckoutForm({
           if (res.status && res?.data?.customer_id) {
             // check if the page render from checkout page or signup page
             if (push && pushPath) {
-              // check if the user already have billing address and want to add a new address 
-              if (billing_address && billing_address?.length > 0 && !getObjectFromArray(newAddress)) {
-                await addAddress(newAddress, res?.data)
+              // check if the user already have billing address and want to add a new address
+              if (
+                billing_address &&
+                billing_address?.length > 0 &&
+                !getObjectFromArray(newAddress)
+              ) {
+                await addAddress(newAddress, res?.data);
               } else {
                 const newCheckoutData = {
                   ...res?.data,
                   address: xx,
-                }
+                };
                 void checkoutFormData(newCheckoutData).then(() =>
                   router.push(pushPath),
                 );
               }
-
             }
             if (!push && handleData) {
               handleData(res?.data);
             }
           } else {
-            DeclineSnackMessage()
+            DeclineSnackMessage();
           }
         })
         .catch((err) => {
           setLoader(false);
           console.log(err);
-          DeclineSnackMessage()
+          DeclineSnackMessage();
         });
       // router.push("placeorder");
 
       // router.push("placeorder");
     } catch (error) {
       setLoader(false);
-      DeclineSnackMessage()
+      DeclineSnackMessage();
       console.error("Failed to checkout:", error);
     }
   };
 
-  console.log("errors",errors)
-  console.log("disabled",disabled)
-  console.log("billing_address",billing_address)
+  console.log("errors", errors);
+  console.log("disabled", disabled);
+  console.log("billing_address", billing_address);
 
   useEffect(() => {
     if (billing_address) {
       setCityOptions(
         getCitiesForState(
-          states.find((state) => state.label === billing_address[addressIndex]?.state)?.value ?? "",
+          states.find(
+            (state) => state.label === billing_address[addressIndex]?.state,
+          )?.value ?? "",
         ),
       );
-      setValue("address", billing_address[addressIndex]?.address ? billing_address[addressIndex]?.address : "")
-      setValue("postal_code", billing_address[addressIndex]?.postal_code ? billing_address[addressIndex]?.postal_code : "")
-      setValue("phone_number", billing_address[addressIndex]?.phone_number ? billing_address[addressIndex]?.phone_number : "")
-      const xCity = cities
-        .find(
-          (state) =>
-            state.stateCode ==
-            states.find((state) => state.label === billing_address[addressIndex]?.state)?.value)
-        ?.city.find((city) => city.label == billing_address[addressIndex]?.city)
-        ?.value.toString() ?? "";
+      setValue(
+        "address",
+        billing_address[addressIndex]?.address
+          ? billing_address[addressIndex]?.address
+          : "",
+      );
+      setValue(
+        "postal_code",
+        billing_address[addressIndex]?.postal_code
+          ? billing_address[addressIndex]?.postal_code
+          : "",
+      );
+      setValue(
+        "phone_number",
+        billing_address[addressIndex]?.phone_number
+          ? billing_address[addressIndex]?.phone_number
+          : "",
+      );
+      const xCity =
+        cities
+          .find(
+            (state) =>
+              state.stateCode ==
+              states.find(
+                (state) => state.label === billing_address[addressIndex]?.state,
+              )?.value,
+          )
+          ?.city.find(
+            (city) => city.label == billing_address[addressIndex]?.city,
+          )
+          ?.value.toString() ?? "";
 
       setValue("city", xCity);
 
       const xState = billing_address[addressIndex]?.state
-        ? states.find((state) => state.label === billing_address[addressIndex]?.state)?.value
+        ? states.find(
+            (state) => state.label === billing_address[addressIndex]?.state,
+          )?.value
         : "";
-      console.log("city",xCity)
+      console.log("city", xCity);
 
       setValue("state", xState ?? "");
     }
-  }, [addressIndex, billing_address])
+  }, [addressIndex, billing_address]);
 
   const onChange = (val: number) => {
-    setAddressIndex(val)
+    setAddressIndex(val);
   };
 
   useEffect(() => {
     if (!billing_address?.[0]) return;
-    setShowFormFields(false)
-  }, [billing_address])
+    setShowFormFields(false);
+  }, [billing_address]);
 
   return (
     <div className="mx-auto w-full rounded-lg border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         {title}
       </h2>
-      <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-        {subTitle}
-      </p>
+      {subTitle && (
+        <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
+          {subTitle}
+        </p>
+      )}
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
         <LabelInputContainer className="mb-4">
-
           <Label htmlFor="email" required>
             Email Address
           </Label>
@@ -369,17 +404,29 @@ export default function CheckoutForm({
           )}
         </LabelInputContainer>
         {billing_address?.[0] && (
-          <div className="flex justify-end cursor-pointer text-red-500" onClick={() => setShowFormFields(!showFormFields)}>{showFormFields ? (<div className="flex items-center">{<BsPencilSquare />} <div className="ml-1">Use Existing Address</div></div>) : (<div className="flex items-center">{<BsPlusCircle />} <div className="ml-1">Add New Billing Address</div></div>)}</div>
+          <div
+            className="flex cursor-pointer justify-end text-red-500"
+            onClick={() => setShowFormFields(!showFormFields)}
+          >
+            {showFormFields ? (
+              <div className="flex items-center">
+                {<BsPencilSquare />}{" "}
+                <div className="ml-1">Use Existing Address</div>
+              </div>
+            ) : (
+              <div className="flex items-center">
+                {<BsPlusCircle />}{" "}
+                <div className="ml-1">Add New Billing Address</div>
+              </div>
+            )}
+          </div>
         )}
         {!showFormFields && billing_address?.[0] && (
-          <ScrollArea className="h-[15rem] flex-1 rounded-lg border p-4 dark:bg-slate-800 mb-2 mt-2">
+          <ScrollArea className="mb-2 mt-2 h-[15rem] flex-1 rounded-lg border p-4 dark:bg-slate-800">
             {billing_address?.map((item, index) => (
               <React.Fragment key={index}>
-                <div className="rounded-lg border bg-white p-2 shadow-input dark:bg-slate-900 md:rounded-2xl m-2">
-
-
+                <div className="m-2 rounded-lg border bg-white p-2 shadow-input dark:bg-slate-900 md:rounded-2xl">
                   <label className="flex items-center gap-4">
-
                     <input
                       type="radio"
                       value={index}
@@ -388,23 +435,32 @@ export default function CheckoutForm({
                       className="form-radio"
                     />
                     <div>
-                      <div className="font-semibold">Billing Address {index + 1}: {item.phone_number} </div>
-
-
+                      <div className="font-semibold">
+                        Billing Address {index + 1}: {item.phone_number}{" "}
+                      </div>
                     </div>
                   </label>
-                  <div className="flex"><div className="mr-2 text-sm  rounded bg-red-500 px-1 py-0.5 text-[8px] text-white sm:px-2 sm:py-[2px]">Home </div><div>{item.address}</div></div>
-                  <div className="flex mb-4"><div className="font-semibold mr-2 text-sm text-gray-400">Region: </div><div className="text-sm text-gray-400">{item.state}, {item.city}, {item.postal_code}</div></div>
-
+                  <div className="flex">
+                    <div className="mr-2 rounded bg-red-500 px-1 py-0.5 text-[8px] text-sm text-white sm:px-2 sm:py-[2px]">
+                      Home{" "}
+                    </div>
+                    <div>{item.address}</div>
+                  </div>
+                  <div className="mb-4 flex">
+                    <div className="mr-2 text-sm font-semibold text-gray-400">
+                      Region:{" "}
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      {item.state}, {item.city}, {item.postal_code}
+                    </div>
+                  </div>
                 </div>
 
                 {/* <div className="font-semibold">Billing Address {index + 1} </div>
             <div className="flex"><div className="font-semibold mr-2">Address: </div><div>{item.address}</div></div>
             <div className="flex"><div className="font-semibold mr-2">State: </div><div>{item.state}</div></div>
             <div className="flex mb-3"><div className="font-semibold mr-2">City: </div><div>{item.city}</div></div> */}
-
               </React.Fragment>
-
             ))}
           </ScrollArea>
         )}
@@ -575,7 +631,7 @@ export default function CheckoutForm({
           }}
         />
       </form>
-    </div >
+    </div>
   );
 }
 

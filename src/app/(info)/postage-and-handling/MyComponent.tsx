@@ -8,11 +8,14 @@ import {
   FaEnvelope,
   FaPhoneAlt,
 } from "react-icons/fa";
- const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then(mod => mod.Player), { ssr: false });
+const Player = dynamic(
+  () => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player),
+  { ssr: false },
+);
 
 const MyComponent: React.FC = () => {
   return (
-    <div className="bg-gray-50 pt-28 dark:bg-slate-800 lg:pt-20">
+    <div className="bg-gray-50 dark:bg-slate-800">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between bg-white p-8 pb-14 shadow-md dark:bg-slate-600 lg:px-32">
         <div className="max-w-md flex-1 text-lg text-gray-700">
@@ -38,7 +41,7 @@ const MyComponent: React.FC = () => {
       {/* Cards Section */}
       <div className="relative z-[5] -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center">
         {/* Card 1: Order Processing */}
-        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3 hover:scale-105 transition-all duration-300">
+        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaShippingFast className="text-red-500" /> Order Processing
           </h2>
@@ -49,7 +52,7 @@ const MyComponent: React.FC = () => {
         </div>
 
         {/* Card 2: Delivery Charges */}
-        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md dark:bg-slate-700 sm:w-1/2 lg:w-1/3 hover:scale-105 transition-all duration-300">
+        <div className="w-full rounded-lg bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
           <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
             <FaDollarSign className="text-red-500" /> Delivery Charges
           </h2>
@@ -59,8 +62,8 @@ const MyComponent: React.FC = () => {
 
       {/* Address Section */}
       <div className="flex flex-wrap justify-center gap-14 p-8 text-center">
-        <div className="sm:w-1/2 lg:w-1/3 text-left ">
-          <h2 className="pb-2 flex items-center gap-2 text-xl font-bold">
+        <div className="text-left sm:w-1/2 lg:w-1/3">
+          <h2 className="flex items-center gap-2 pb-2 text-xl font-bold">
             <FaEnvelope className="text-red-500" /> Terms & Conditions
           </h2>
           <p className="">
@@ -76,8 +79,8 @@ const MyComponent: React.FC = () => {
           </p>
         </div>
 
-        <div className="sm:w-1/2 lg:w-1/3 text-left ">
-          <h2 className="pb-2 flex items-center gap-2 text-xl font-bold">
+        <div className="text-left sm:w-1/2 lg:w-1/3">
+          <h2 className="flex items-center gap-2 pb-2 text-xl font-bold">
             <FaPhoneAlt className="text-red-500" /> Delivery Enquiries
           </h2>
           <p>

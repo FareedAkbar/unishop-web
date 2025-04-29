@@ -269,7 +269,7 @@ const MyComponent = () => {
         )}
 
         {dataDetail && (
-          <div className="w-full rounded-lg bg-white p-4 pt-32 dark:bg-gray-800">
+          <div className="w-full rounded-lg bg-white p-4 dark:bg-gray-800">
             <div className="mb-6 flex items-center justify-between">
               <button
                 className="transform p-2 transition-transform duration-200 ease-in-out hover:scale-105 dark:text-gray-300 md:p-3 lg:p-4"
@@ -377,4 +377,3 @@ const Page = () => {
 };
 
 export default Page;
-

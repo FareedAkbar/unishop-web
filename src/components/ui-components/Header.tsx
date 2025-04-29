@@ -22,6 +22,8 @@ import { useAuthContext } from "~/Context/AuthContext";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import SidebarCart from "../ui/sideCart/cartSidebar";
 import Link from "next/link";
+import { RxCross2 } from "react-icons/rx";
+
 import { ScrollArea } from "../ui/scroll-area";
 import type {
   CategoryTreeNode,
@@ -40,7 +42,6 @@ import {
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import { PiMoon, PiMoonLight } from "react-icons/pi";
 import Select from "../Fields/select";
-
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -63,16 +64,16 @@ const Header = () => {
     getSubCategory,
     subCategory,
     getCheckoutFormData,
-    getTextBookType
+    getTextBookType,
   } = useAuthContext();
   const router = useRouter();
 
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const path = usePathname();
   type newCAt = {
-    label: string,
-    value: string
-  }
+    label: string;
+    value: string;
+  };
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<newCAt | null>(null);
 
@@ -254,28 +255,28 @@ const Header = () => {
   // Close the dropdown if clicked outside
   useEffect(() => {
     if (typeof window !== "undefined") {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        userDropdownRef.current &&
-        !userDropdownRef.current.contains(event.target as Node) &&
-        dropdownToggleRef.current &&
-        !dropdownToggleRef.current.contains(event.target as Node)
-      ) {
-        setUserDropdownOpen(false);
-      }
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setOpenDropdown(null);
-      }
-    };
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          userDropdownRef.current &&
+          !userDropdownRef.current.contains(event.target as Node) &&
+          dropdownToggleRef.current &&
+          !dropdownToggleRef.current.contains(event.target as Node)
+        ) {
+          setUserDropdownOpen(false);
+        }
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(event.target as Node)
+        ) {
+          setOpenDropdown(null);
+        }
+      };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
   }, []);
 
   const handleLogout = async () => {
@@ -298,12 +299,12 @@ const Header = () => {
   // Apply theme based on state
   useEffect(() => {
     if (typeof window !== "undefined") {
-    if (themeMode == "dark") {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
+      if (themeMode == "dark") {
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.remove("dark");
+      }
     }
-  }
   }, [themeMode]);
 
   useEffect(() => {
@@ -472,34 +473,33 @@ const Header = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-    if (isMobileMenuOpen) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
+      if (isMobileMenuOpen) {
+        document.body.classList.add("overflow-hidden");
+      } else {
+        document.body.classList.remove("overflow-hidden");
+      }
+      return () => {
+        document.body.classList.remove("overflow-hidden");
+      };
     }
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }
   }, [isMobileMenuOpen]);
-
-
 
   const handleSearchApi = async () => {
     if (!searchTerm) {
       setSearchError("Please enter title or description");
-      return
+      return;
     } else {
-      if(selectedCategory && selectedCategory.value != "0"){
-        router.push(`/result?type=${selectedCategory?.label}&id=${selectedCategory?.value}&searchTerm=${searchTerm}`);
-      }else{
+      if (selectedCategory && selectedCategory.value != "0") {
+        router.push(
+          `/result?type=${selectedCategory?.label}&id=${selectedCategory?.value}&searchTerm=${searchTerm}`,
+        );
+      } else {
         router.push(`/result?searchTerm=${searchTerm}`);
       }
-      
+
       setSearchError("");
     }
-
-  }
+  };
 
   useEffect(() => {
     const d = params.get("type");
@@ -516,13 +516,12 @@ const Header = () => {
     } else {
       setSearchTerm("");
     }
+  }, [path]);
 
-  }, [path])
- 
-  const newCat = [ {label: "All Categories", value: "0"},...(category ?? [])];
+  const newCat = [{ label: "All Categories", value: "0" }, ...(category ?? [])];
 
   return (
-    <nav className="fixed left-0 top-0 z-10 h-fit w-full">
+    <nav className="sticky left-0 top-0 z-10 h-fit w-full">
       <header className="flex flex-col bg-white px-4 pb-2 pt-4 backdrop-blur dark:bg-slate-900 lg:flex-row lg:items-center lg:pb-0">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
         <div className="flex items-center justify-between border-b pb-4 lg:hidden">
@@ -622,16 +621,21 @@ const Header = () => {
         </div>
 
         {/* Search Bar (Visible on Small Screens) */}
-        {!path.includes('/products') && (
+        {!path.includes("/products") && (
           <div className="mx-2 mt-2 lg:hidden">
             <div>
               <Select
                 id="category"
                 name="category"
-                options={newCat?.map((cat) => ({
-                  value: 'category_type_id' in cat ? cat.category_type_id.toString() : cat.value, // Ensure value is a string
-                  label: 'type' in cat ? cat.type.toString() : cat.label,
-                })) ?? []}
+                options={
+                  newCat?.map((cat) => ({
+                    value:
+                      "category_type_id" in cat
+                        ? cat.category_type_id.toString()
+                        : cat.value, // Ensure value is a string
+                    label: "type" in cat ? cat.type.toString() : cat.label,
+                  })) ?? []
+                }
                 // loader={loader}
                 value={selectedCategory?.value ?? ""}
                 // placeholder="All Categories"
@@ -639,7 +643,6 @@ const Header = () => {
                   setSelectedCategory(val);
                   setSearchTerm("");
                 }}
-
               />
             </div>
             <div className="mt-2">
@@ -654,10 +657,8 @@ const Header = () => {
                 error={searchError}
               />
             </div>
-
           </div>
         )}
-
 
         {/* Mobile Menu for Navigation Items */}
         {isMobileMenuOpen && (
@@ -666,7 +667,7 @@ const Header = () => {
             {isMobileMenuOpen && (
               <div
                 className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50"
-              // onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
+                onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
               />
             )}
             <button
@@ -676,7 +677,7 @@ const Header = () => {
                 setMobileMenuOpen(false);
               }}
             >
-              <FaTimes className="text-xl text-red-500" />
+              <RxCross2 className="text-xl text-red-500" />
             </button>
             <div className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col bg-white p-6 dark:bg-slate-700 lg:hidden lg:w-1/2">
               <div className="z-40 flex w-[90%] justify-around gap-1 pb-4">
@@ -696,7 +697,7 @@ const Header = () => {
                   <span className="text-xs">Contact Us</span>
                 </Link>
               </div>
-              <nav className="overflow-scroll">
+              <nav className="custom-scrollbar overflow-auto">
                 {headerCategory?.map((item) => (
                   <div key={item.type} className="mb-4">
                     <button className="flex w-full items-center justify-between text-lg focus:outline-none">
@@ -865,10 +866,15 @@ const Header = () => {
                 <Select
                   id="category"
                   name="category"
-                  options={newCat?.map((cat) => ({
-                    value: 'category_type_id' in cat ? cat.category_type_id.toString() : cat.value, // Ensure value is a string
-                  label: 'type' in cat ? cat.type.toString() : cat.label,
-                  })) ?? []}
+                  options={
+                    newCat?.map((cat) => ({
+                      value:
+                        "category_type_id" in cat
+                          ? cat.category_type_id.toString()
+                          : cat.value, // Ensure value is a string
+                      label: "type" in cat ? cat.type.toString() : cat.label,
+                    })) ?? []
+                  }
                   // loader={loader}
                   value={selectedCategory?.value ?? ""}
                   // placeholder="All Categories"
@@ -876,7 +882,6 @@ const Header = () => {
                     setSelectedCategory(val);
                     setSearchTerm("");
                   }}
-
                 />
               </div>
               <Input
@@ -990,12 +995,10 @@ const Header = () => {
 
 const Page = () => {
   return (
-    <Suspense fallback={<>  </>}>
+    <Suspense fallback={<> </>}>
       <Header />
     </Suspense>
   );
 };
 
 export default Page;
-
-

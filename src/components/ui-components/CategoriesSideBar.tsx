@@ -82,7 +82,7 @@ const SubcategoryList1 = ({
 }: SubcategoryListProps1) => {
   const router = useRouter();
   return (
-    <div className="absolute left-10 top-8 z-50 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white overflow-x-visible">
+    <div className="absolute left-10 top-8 z-50 w-60 overflow-x-visible rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
       {subItems.map((subItem) => (
         <div key={subItem.category_name} className="relative">
           <button
@@ -319,24 +319,26 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       }
     };
     if (typeof window !== "undefined") {
-    document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
       if (typeof window !== "undefined") {
-      document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("mousedown", handleClickOutside);
       }
     };
   }, []);
-const pathname = usePathname()
+  const pathname = usePathname();
   return (
     <aside
       ref={sidebarRef}
-      className={`${pathname === "/" ? "" : "absolute"} left-0 w-72  rounded-r-xl border-y border-r bg-white py-2 pl-4 pr-2 shadow-lg dark:bg-slate-700 ${className}`}
+      className={`${pathname === "/" ? "" : "sticky"} left-0 top-28 w-72 rounded-r-xl border-y border-r bg-white py-2 pl-4 pr-2 shadow-lg dark:bg-slate-700 ${className}`}
     >
       {/* ${headerCategory && headerCategory?.length > 7 ? "h-[25vh] overflow-y-scroll overflow-x-hidden" : ""} */}
       <h2 className="text-lg font-bold">CATEGORIES</h2>
-      
-      <nav className={`relative  py-3 ${headerCategory && headerCategory?.length > 7 ? "h-[25vh] overflow-y-scroll overflow-x-hidden" : ""}`}>
+
+      <nav
+        className={`relative py-3 ${headerCategory && headerCategory?.length > 7 ? "h-[25vh] overflow-x-hidden overflow-y-scroll" : ""}`}
+      >
         {headerCategory?.map((item) => (
           // item.id != 472 && (
           <div key={item.type} className="relative">
@@ -344,7 +346,7 @@ const pathname = usePathname()
               type="button"
               className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-105 focus:outline-none"
             >
-              <div className="flex items-center justify-start w-full">
+              <div className="flex w-full items-center justify-start">
                 <AiOutlineFileText className="mr-1.5 h-6 w-6 p-0.5 text-orange-600" />
                 {/* {item.object_path && (
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -361,7 +363,7 @@ const pathname = usePathname()
                     />
                   )} */}
                 <span
-                  className="text-left text-sm whitespace-nowrap"
+                  className="whitespace-nowrap text-left text-sm"
                   onClick={() => {
                     router.push(
                       `/products?category=${item.category_type_id}&name=${item.type}`,
@@ -373,17 +375,18 @@ const pathname = usePathname()
                 </span>
               </div>
               {item.children?.[0] && (
-                <div onClick={() => toggleCategory(item.type)} className="w-full">
+                <div
+                  onClick={() => toggleCategory(item.type)}
+                  className="w-full"
+                >
                   {openCategories.includes(item.type) ? (
                     <div className="flex justify-end">
                       <FaChevronDown size={12} />
                     </div>
-
                   ) : (
                     <div className="flex justify-end">
                       <FaChevronRight size={12} />
                     </div>
-
                   )}
                 </div>
               )}
@@ -408,8 +411,8 @@ const pathname = usePathname()
               type="button"
               onClick={() =>
                 item.subItems ||
-                  item.label === "Books" ||
-                  item.label === "Pulse"
+                item.label === "Books" ||
+                item.label === "Pulse"
                   ? toggleCategory2(item.label)
                   : null
               }
@@ -439,13 +442,12 @@ const pathname = usePathname()
               {item.subItems || item.label == "Pulse" ? (
                 openCategory == item.label ? (
                   <div className="flex justify-end">
-                      <FaChevronDown size={12} />
-                    </div>
-
-                  ) : (
-                    <div className="flex justify-end">
-                      <FaChevronRight size={12} />
-                    </div>
+                    <FaChevronDown size={12} />
+                  </div>
+                ) : (
+                  <div className="flex justify-end">
+                    <FaChevronRight size={12} />
+                  </div>
                 )
               ) : null}
             </button>
@@ -453,7 +455,7 @@ const pathname = usePathname()
             {openCategory == item.label && (
               <div className="absolute left-10 top-8 z-10 w-60 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
                 {item.label === "Books" && genre && (
-                  <ScrollArea className="max-h-[25vh] overflow-y-scroll ">
+                  <ScrollArea className="max-h-[25vh] overflow-y-scroll">
                     {genre?.map((subItem) => (
                       <Link
                         key={subItem.genre}
@@ -520,7 +522,7 @@ const pathname = usePathname()
         )}
       </nav>
 
-      <div className="flex justify-center gap-2 pr-2 py-1">
+      <div className="flex justify-center gap-2 py-1 pr-2">
         <Link
           href="/"
           className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"

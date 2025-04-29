@@ -45,7 +45,6 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         : cartItems!;
     setItems(itemsCart);
   }, [cartItems]);
- 
 
   useEffect(() => {
     const total = items.reduce(
@@ -100,15 +99,15 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
   useEffect(() => {
     // Prevent background scrolling when the sidebar is open
     if (typeof window !== "undefined") {
-    if (isOpen) {
-      document.body.style.overflow = "hidden"; // Disable scrolling
-    } else {
-      document.body.style.overflow = ""; // Enable scrolling when sidebar is closed
+      if (isOpen) {
+        document.body.style.overflow = "hidden"; // Disable scrolling
+      } else {
+        document.body.style.overflow = ""; // Enable scrolling when sidebar is closed
+      }
     }
-  }
     return () => {
       if (typeof window !== "undefined") {
-      document.body.style.overflow = ""; // Clean up on component unmount
+        document.body.style.overflow = ""; // Clean up on component unmount
       }
     };
   }, [isOpen]);
@@ -138,7 +137,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
             <CgClose className="h-6 w-6" />
           </button>
         </div>
-       
+
         {/* Cart Items List */}
         <ScrollArea className="h-3/4 flex-1 p-4">
           {items.map((item: DataCart, index) => (
@@ -176,7 +175,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         </ScrollArea>
 
         {/* Cart Footer */}
-        <div className="fixed lg:bottom-0 sm:bottom-20 w-full p-3">
+        <div className="fixed w-full p-3 sm:bottom-20 lg:bottom-0">
           {/* Subtotal and Fees */}
           <div className="mb-2 flex justify-between">
             <span className="text-sm text-gray-500 dark:text-gray-200">
@@ -203,10 +202,10 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
               //   // Check if alert is not already open
               //   opencart();
               // }
-              goToCheckout()
+              goToCheckout();
             }}
             className={`mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white ${items.length === 0 ? "disabled" : ""}`}
-            title="Confirm Order"
+            title="View Cart"
           />
           {/* Confirm Order
           </Button> */}
@@ -223,7 +222,6 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         </div> */}
 
         {/* Cart Content */}
-    
 
         {/* Buttons */}
         {/* <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-2 p-4">

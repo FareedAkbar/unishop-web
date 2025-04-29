@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 
 import {
@@ -12,7 +12,10 @@ import {
 import { IconType } from "react-icons";
 import dynamic from "next/dynamic";
 
-const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player), { ssr: false });
+const Player = dynamic(
+  () => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player),
+  { ssr: false },
+);
 
 // Reusable Card Component
 interface PolicyCardProps {
@@ -70,7 +73,7 @@ const onlineOrderPolicy = {
 
 const MyComponent: React.FC = () => {
   return (
-    <div className="bg-gray-50 pt-28 dark:bg-slate-800 lg:pt-20">
+    <div className="bg-gray-50 dark:bg-slate-800">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between bg-white p-8 pb-14 shadow-md dark:bg-slate-600 lg:px-32">
         <div className="max-w-md flex-1 text-lg text-gray-700">
@@ -83,7 +86,7 @@ const MyComponent: React.FC = () => {
             in-store and online purchases.
           </p>
         </div>
-        <div className="flex justify-center sm:mt-0 lg:w-fit w-full sm:flex-shrink-0">
+        <div className="flex w-full justify-center sm:mt-0 sm:flex-shrink-0 lg:w-fit">
           <Player
             autoplay
             loop
@@ -138,8 +141,4 @@ const MyComponent: React.FC = () => {
   );
 };
 
-
 export default MyComponent;
-
-
-

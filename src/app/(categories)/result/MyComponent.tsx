@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import {  Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
@@ -33,7 +33,10 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 
 import Spinner from "~/components/spinner";
 import dynamic from "next/dynamic";
- const Player = dynamic(() => import("@lottiefiles/react-lottie-player").then(mod => mod.Player), { ssr: false });
+const Player = dynamic(
+  () => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player),
+  { ssr: false },
+);
 const MyComponent = () => {
   const [loader, setLoader] = useState<boolean>(false);
   const [data, setData] = useState<DataCart[]>([]);
@@ -44,7 +47,7 @@ const MyComponent = () => {
   const [detail, setDetail] = useState<number>(-1);
 
   const [name, setName] = useState<string>("");
- 
+
   const [itemDetail, setItemDetail] = useState<DataCart | null>(null);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loginAlert, setLoginAlert] = useState<boolean>(false);
@@ -72,7 +75,7 @@ const MyComponent = () => {
     subCategory,
     searchItems,
     searchInCategory,
-    textbookType
+    textbookType,
   } = useAuthContext();
 
   useEffect(() => {
@@ -80,25 +83,22 @@ const MyComponent = () => {
       const d = params.get("type");
       const id = params.get("id");
       const parentCat = params.get("searchTerm");
-  
+
       try {
         if (parentCat) {
           setName(parentCat);
-          setLoader(true)
+          setLoader(true);
           await searchInCategory(parentCat, id!);
-          setLoader(false)
+          setLoader(false);
         }
       } catch (error) {
         console.error("Error fetching search results:", error);
-        setLoader(false)
+        setLoader(false);
       }
     };
-  
+
     void fetchData(); // Call the async function
   }, [params]);
-
-  
- 
 
   const filterVariationsBySelectedValues = (
     variations: Variation[],
@@ -323,45 +323,45 @@ const MyComponent = () => {
       return itemDetail.book_usages
         .filter((usage) => usage.default_semester === 1)
         .map((usage) => ({
-          type_id: usage.type_id,  // Assuming `type_id` exists
+          type_id: usage.type_id, // Assuming `type_id` exists
           subject_name: usage.subject_name,
-          subject_code: usage.subject_code // Assuming `subject_name` exists
+          subject_code: usage.subject_code, // Assuming `subject_name` exists
         }));
     }
     return [];
   };
   const type = [
     {
-      "item_book_type_id": 1,
-      "type_name": "Textbook",
-      "type_desc": "Textbook"
+      item_book_type_id: 1,
+      type_name: "Textbook",
+      type_desc: "Textbook",
     },
     {
-      "item_book_type_id": 2,
-      "type_name": "Reference",
-      "type_desc": "Reference"
+      item_book_type_id: 2,
+      type_name: "Reference",
+      type_desc: "Reference",
     },
     {
-      "item_book_type_id": 3,
-      "type_name": "Recommended",
-      "type_desc": "Recommended"
+      item_book_type_id: 3,
+      type_name: "Recommended",
+      type_desc: "Recommended",
     },
     {
-      "item_book_type_id": 4,
-      "type_name": "Course Notes",
-      "type_desc": "Course Notes"
+      item_book_type_id: 4,
+      type_name: "Course Notes",
+      type_desc: "Course Notes",
     },
     {
-      "item_book_type_id": 5,
-      "type_name": "General Reading",
-      "type_desc": "General Reading"
-    }
-  ]
+      item_book_type_id: 5,
+      type_name: "General Reading",
+      type_desc: "General Reading",
+    },
+  ];
 
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center pt-32 sm:pt-24 md:pt-24 lg:pt-20"
+        className="flex min-h-screen flex-col items-center"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
@@ -371,15 +371,12 @@ const MyComponent = () => {
           <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4 pl-2">
-              <div className="text-left flex flex-row items-center gap-3">
+              <div className="flex flex-row items-center gap-3 text-left">
                 <h2 className="text-xl font-bold capitalize">
                   Search results for:
                 </h2>
-                 <p className="font-semibold">{` '${name}'`}</p> 
-               
+                <p className="font-semibold">{` '${name}'`}</p>
               </div>
-
-             
             </div>
 
             <ScrollArea className="min-h-[75vh] pb-10">
@@ -416,22 +413,25 @@ const MyComponent = () => {
                 ) : (
                   // Only display the empty state when data loading is complete and no items are available
                   <div className="flex h-full w-full flex-col items-center justify-center">
-                    <p className="rounded bg-yellow-200 text-center lg:w-2/3 p-3 mb-2 text-sm dark:bg-yellow-700">
-          Your search returned no results. If you were searching for a subject code, it is possible textbooks have not been confirmed for this course yet. Please contact the Bookshop at
-                    <a
-                      href="tel:0242218050"
-                      className="text-red-500 underline hover:text-red-600 mx-1"
-                    >
-                      02 4221 8050
-                    </a>
-                    or
-                    <a
-                      href="mailto:uow-bookshop@uow.edu.au"
-                      className="text-red-500 underline hover:text-red-600 mx-1"
-                    >
-                      uow-bookshop@uow.edu.au
-                    </a>
-                    for further details.
+                    <p className="mb-2 rounded bg-yellow-200 p-3 text-center text-sm dark:bg-yellow-700 lg:w-2/3">
+                      Your search returned no results. If you were searching for
+                      a subject code, it is possible textbooks have not been
+                      confirmed for this course yet. Please contact the Bookshop
+                      at
+                      <a
+                        href="tel:0242218050"
+                        className="mx-1 text-red-500 underline hover:text-red-600"
+                      >
+                        02 4221 8050
+                      </a>
+                      or
+                      <a
+                        href="mailto:uow-bookshop@uow.edu.au"
+                        className="mx-1 text-red-500 underline hover:text-red-600"
+                      >
+                        uow-bookshop@uow.edu.au
+                      </a>
+                      for further details.
                     </p>
                     <Player
                       autoplay
@@ -439,8 +439,7 @@ const MyComponent = () => {
                       src="/assets/gifs/emptywishlist.json"
                       className="h-80 w-80"
                     />
-                </div>
-                
+                  </div>
                 )}
               </div>
             </ScrollArea>
@@ -486,7 +485,10 @@ const MyComponent = () => {
                 <motion.div
                   key={"images"}
                   style={{
-                    rotate: typeof window !== "undefined" && window.innerWidth > 768 ? Math.random() * 20 - 10 : 0,
+                    rotate:
+                      typeof window !== "undefined" && window.innerWidth > 768
+                        ? Math.random() * 20 - 10
+                        : 0,
                   }}
                   whileHover={{
                     scale: 1.1,
@@ -509,7 +511,7 @@ const MyComponent = () => {
                     alt={itemDetail?.object_path ?? ""}
                     width={500}
                     height={500}
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-40 lg:w-44 md:w-40 lg:h-44"
+                    className="h-36 w-36 flex-shrink-0 rounded-lg object-contain md:h-40 md:w-40 lg:h-44 lg:w-44"
                   />
                 </motion.div>
               </div>
@@ -535,28 +537,28 @@ const MyComponent = () => {
               {itemDetail?.book_id && itemDetail?.food_id == null && (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Textbook:
+                    Textbook:
                   </span>
                   <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {manageUsage().length > 0 ? (
-                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-
-                      {manageUsage().map((item, index) => {
-                        const matchedType = textbookType?.find((t) => t.item_book_type_id === Number(item.type_id)); // Find the matching type
-                        return (
-                          <small
-                            key={index}
-                            className="bg-red-500 dark:bg-gray-700 text-gray-100 dark:text-gray-300 px-2 py-1 rounded mr-1"
-                          >
-                            {item.subject_name} {item.subject_code}, {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
-                          </small>
-                        )
-
-                      })}
-
-                    </span>
-                  )
-                    : (
+                    {manageUsage().length > 0 ? (
+                      <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                        {manageUsage().map((item, index) => {
+                          const matchedType = textbookType?.find(
+                            (t) => t.item_book_type_id === Number(item.type_id),
+                          ); // Find the matching type
+                          return (
+                            <small
+                              key={index}
+                              className="mr-1 rounded bg-red-500 px-2 py-1 text-gray-100 dark:bg-gray-700 dark:text-gray-300"
+                            >
+                              {item.subject_name} {item.subject_code},{" "}
+                              {matchedType?.type_name ?? ""}{" "}
+                              {/* Display type_name or fallback */}
+                            </small>
+                          );
+                        })}
+                      </span>
+                    ) : (
                       <>
                         <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                           Textbook:
@@ -565,7 +567,6 @@ const MyComponent = () => {
                           not used this session
                         </span>
                       </>
-
                     )}
                   </span>
                 </div>
@@ -822,12 +823,11 @@ const MyComponent = () => {
 const Page = () => {
   return (
     <ModalProvider>
-    <Suspense fallback={<Spinner />}>
-      <MyComponent />
-    </Suspense>
+      <Suspense fallback={<Spinner />}>
+        <MyComponent />
+      </Suspense>
     </ModalProvider>
   );
 };
 
 export default Page;
-

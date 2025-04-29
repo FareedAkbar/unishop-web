@@ -129,7 +129,7 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex flex-col items-center pt-20"
+        className="flex flex-col items-center"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
@@ -156,4 +156,3 @@ const Page = () => {
 };
 
 export default Page;
-
