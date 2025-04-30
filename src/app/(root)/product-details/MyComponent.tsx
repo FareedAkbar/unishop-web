@@ -968,25 +968,28 @@ const MyComponent = () => {
                 title: "Details",
                 value: "Details",
                 content: (
-                  <div className="max-h-[477px] rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
+                  <div className="rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
                     <h3 className="mb-4 text-2xl font-bold text-red-600">
                       Details
                     </h3>
 
-                    <ScrollArea className="h-[300px]">
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <ScrollArea className="max-h-[300px] min-h-fit overflow-y-auto">
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
                         {itemDetail?.additional_notes ? (
                           itemDetail.additional_notes
                         ) : (
-                          <Player
-                            autoplay
-                            loop
-                            src="/assets/gifs/no-details.json"
-                            className="h-80 w-80"
-                          />
+                          <div>
+                            <p>No details available</p>
+                            <Player
+                              autoplay
+                              loop
+                              src="/assets/gifs/no-details.json"
+                              className="h-80 w-80"
+                            />
+                          </div>
                         )}
                         {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur non odio aspernatur nam recusandae quia, dolor est sunt, doloremque iure pariatur sit quis iste explicabo laudantium error facilis tempora sed. */}
-                      </p>
+                      </div>
                     </ScrollArea>
                   </div>
                 ),
@@ -1000,7 +1003,7 @@ const MyComponent = () => {
                       Reviews
                     </h3>
 
-                    <ScrollArea className="">
+                    <ScrollArea className="max-h-[300px] min-h-fit overflow-y-auto">
                       {!getReviewsLoader &&
                         reviews?.map((review, index) => (
                           <div
@@ -1037,17 +1040,22 @@ const MyComponent = () => {
                         ))}
                       {!getReviewsLoader &&
                         (!reviews?.length || reviews == null) && (
-                          <Player
-                            autoplay
-                            loop
-                            src="/assets/gifs/no-reviews.json"
-                            className="h-80 w-80"
-                          />
+                          <div>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              No reviews available
+                            </p>
+                            <Player
+                              autoplay
+                              loop
+                              src="/assets/gifs/no-reviews.json"
+                              className="h-80 w-80"
+                            />
+                          </div>
                         )}
                     </ScrollArea>
                     {getReviewsLoader && (
-                      <ScrollArea className="">
-                        {Array.from({ length: 3 }).map((_, index) => (
+                      <ScrollArea className="max-h-[300px] overflow-y-auto">
+                        {Array.from({ length: 6 }).map((_, index) => (
                           <div
                             key={index}
                             className="mb-4 animate-pulse border-b border-gray-600 pb-2 dark:border-gray-400"
