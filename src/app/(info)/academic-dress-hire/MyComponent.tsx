@@ -87,43 +87,128 @@ const MyComponent = () => {
       </div>
 
       {/* Image Section - Full Width */}
-      <div className="my-10 space-y-6 px-3">
-        <Image
-          src="/assets/images/graduation_attire/pricing.png"
-          alt="Graduation Gown"
-          className="h-auto w-full rounded-lg object-cover"
-          width={1920}
-          height={1080}
-        />
-        <div className="flex w-full flex-col gap-8 lg:flex-row">
-          {/* Purchase Charges Section */}
-          <div className="flex w-full flex-col items-center rounded-lg bg-white p-4 shadow-lg lg:w-1/2 lg:items-start">
-            <h2 className="mb-4 text-center text-2xl font-bold text-black lg:text-left">
-              Purchase Charges
-            </h2>
-            <Image
-              src="/assets/images/graduation_attire/charges.png"
-              alt="Graduation Ceremony"
-              className="h-auto w-full rounded-lg object-cover"
-              width={1920}
-              height={1080}
-            />
+      <div className="mx-auto max-w-5xl space-y-20 px-4 py-14">
+        {/* Purchase Pricing */}
+        <section className="rounded-2xl bg-white p-8 shadow-xl dark:bg-slate-800">
+          <div className="flex flex-col items-center md:flex-row md:gap-10">
+            <div className="w-full md:w-1/2">
+              <h2 className="mb-4 text-3xl font-bold text-red-500 dark:text-red-400">
+                Purchase Graduation Gowns & Accessories
+              </h2>
+              <p className="mb-4 text-gray-600 dark:text-gray-300">
+                All items can be purchased individually or as a set.
+              </p>
+              <ul className="space-y-2 text-gray-800 dark:text-gray-200">
+                {[
+                  ["Bachelor gown", "$215"],
+                  ["Masters gown", "$215"],
+                  ["PhD gown", "$320"],
+                  ["Hood", "$105"],
+                  ["Trencher (Cap)", "$60"],
+                  ["PhD Bonnet", "$156"],
+                ].map(([item, price], idx) => (
+                  <li
+                    key={idx}
+                    className="flex justify-between border-b border-dotted border-gray-300 py-1 dark:border-gray-600"
+                  >
+                    <span>{item}</span>
+                    <span>{price}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-6 flex w-full justify-center md:mt-0 md:w-1/2">
+              <Image
+                src="/assets/images/graduation_attire/cap.png"
+                alt="Graduation Cap"
+                width={300}
+                height={300}
+                className="object-contain"
+              />
+            </div>
           </div>
+        </section>
 
-          {/* Size Guide Section */}
-          <div className="flex w-full flex-col items-center rounded-lg bg-white p-4 shadow-lg lg:w-1/2 lg:items-start">
-            <h2 className="mb-4 text-center text-2xl font-bold text-black lg:text-left">
-              Size Guide
-            </h2>
-            <Image
-              src="/assets/images/graduation_attire/sizes.png"
-              alt="Graduation Event"
-              className="h-auto w-full rounded-lg object-cover"
-              width={1920}
-              height={1080}
-            />
+        {/* Hire Charges */}
+        <section className="rounded-2xl bg-white p-8 shadow-xl dark:bg-slate-800">
+          <div className="flex flex-col items-center justify-between md:flex-row md:gap-10">
+            <div className="w-full md:w-1/2">
+              <h2 className="mb-3 text-4xl font-extrabold text-red-500 dark:text-red-400">
+                Hire Charges
+              </h2>
+              <p className="mb-4 text-gray-600 dark:text-gray-300">
+                Hire includes gown, hood, and trencher (cap) if needed.
+              </p>
+              <ul className="space-y-2 text-gray-800 dark:text-gray-200">
+                {[
+                  ["1 day hire", "$50"],
+                  ["2 day hire", "$80"],
+                  ["7 day hire", "$150"],
+                ].map(([duration, charge], idx) => (
+                  <li
+                    key={idx}
+                    className="flex justify-between border-b border-dotted border-gray-300 py-1 dark:border-gray-600"
+                  >
+                    <span>{duration}</span>
+                    <span>{charge}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-6 flex w-full justify-center md:mt-0 md:w-1/2">
+              <Image
+                src="/assets/images/graduation_attire/cap.png"
+                alt="Graduation Cap"
+                width={300}
+                height={300}
+                className="object-contain"
+              />
+            </div>
           </div>
-        </div>
+        </section>
+
+        {/* Gown Size Guide */}
+        <section className="rounded-2xl bg-white p-8 shadow-xl dark:bg-slate-800">
+          <div className="flex flex-col items-center justify-between md:flex-row md:gap-10">
+            <div className="w-full md:w-1/2">
+              <h2 className="mb-6 text-center text-2xl font-bold text-red-500 dark:text-red-400">
+                Gown Size Guide
+              </h2>
+              <div className="grid grid-cols-2 gap-4 border-b border-gray-300 pb-2 text-left text-sm font-medium text-gray-800 dark:border-gray-600 dark:text-gray-200">
+                <div>If You Are</div>
+                <div>You Should Wear Gown Size</div>
+              </div>
+
+              <ul className="mt-2 grid grid-cols-2 gap-4 text-base text-gray-700 dark:text-gray-300">
+                {[
+                  [150, 110],
+                  [155, 115],
+                  [160, 120],
+                  [165, 120],
+                  [170, 125],
+                  [175, 130],
+                  [180, 130],
+                  [185, 135],
+                  [190, 140],
+                ].map(([height, size], idx) => (
+                  <React.Fragment key={idx}>
+                    <li className="py-0.5">{height} cm</li>
+                    <li className="py-0.5">{size}</li>
+                  </React.Fragment>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-6 flex justify-center">
+              <Image
+                src="/assets/images/graduation_attire/gown.png"
+                alt="Graduation Gown"
+                width={300}
+                height={300}
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

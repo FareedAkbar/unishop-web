@@ -121,7 +121,7 @@ export default function SignupFormDemo({
           <div className="mt-2 flex flex-col items-center justify-center sm:flex-row">
             <p>{`I don't have an account, `}</p>
             <Link href="signup" className="ml-1 text-red-500">
-              signup
+              SignUp
             </Link>
           </div>
         </div>

@@ -32,6 +32,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { BsPencilSquare } from "react-icons/bs";
 import { BsPlusCircle } from "react-icons/bs";
 import { error } from "console";
+import Link from "next/link";
 type CheckoutFormValues = z.infer<typeof SignupSchema>;
 
 interface checkout {
@@ -620,16 +621,24 @@ export default function CheckoutForm({
             />
           </div>
         </div> */}
-        <Button
-          title="Confirm &rarr;"
-          type="submit"
-          width="w-full"
-          loading={loader}
-          disabled={disabled}
-          onClick={() => {
-            //
-          }}
-        />
+        <div className="mx-auto flex max-w-sm flex-col justify-center">
+          <Button
+            title="Confirm &rarr;"
+            type="submit"
+            width="w-full"
+            loading={loader}
+            disabled={disabled}
+            onClick={() => {
+              //
+            }}
+          />
+          <div className="mt-2 flex flex-col items-center justify-center sm:flex-row">
+            <p>{`I don't have an account, `}</p>
+            <Link href="login" className="ml-1 text-red-500">
+              Login
+            </Link>
+          </div>
+        </div>
       </form>
     </div>
   );

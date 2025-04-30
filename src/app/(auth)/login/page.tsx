@@ -19,22 +19,22 @@ const MyComponent = () => {
     null,
   );
 
-  const tabs = [
-    {
-      title: "Guest Login",
-      value: "customerLogin",
-      content: (
-        <BooknetFormLogin push={true} goTo="/" title="Login as a Guest" />
-      ),
-    },
-    {
-      title: "UOW Login",
-      value: "uowLogin",
-      content: (
-        <LoginForm setView={setView} setLoginResponse={setLoginResponse} />
-      ),
-    },
-  ];
+  // const tabs = [
+  //   {
+  //     title: "Guest Login",
+  //     value: "customerLogin",
+  //     content: (
+  //       <BooknetFormLogin push={true} goTo="/" title="Login as a Guest" />
+  //     ),
+  //   },
+  //   {
+  //     title: "UOW Login",
+  //     value: "uowLogin",
+  //     content: (
+  //       <LoginForm setView={setView} setLoginResponse={setLoginResponse} />
+  //     ),
+  //   },
+  // ];
 
   return (
     <div className="relative flex h-screen flex-col items-center justify-center">
@@ -66,7 +66,8 @@ const MyComponent = () => {
             >
               <FaArrowLeft className="text-black dark:text-white" />
             </button>
-            <Tabs tabs={tabs} />
+            <LoginForm setView={setView} setLoginResponse={setLoginResponse} />
+            {/* <Tabs tabs={tabs} /> */}
           </div>
         )}
 
