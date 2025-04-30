@@ -12,14 +12,49 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import AlertBox from "~/components/alertBox/alert";
 import Button from "~/components/ui-components/Button";
 import { useRouter } from "next/navigation";
+import { get_address_from_email } from "~/types/checkoutForm";
 
 const MyComponent = () => {
-  const { cartItems, removeCartItems, increaseCartItemQuantity } =
+  const { cartItems, removeCartItems, increaseCartItemQuantity,addBillingAddress, userInfo } =
     useAuthContext();
   const router = useRouter();
   const [items, setItems] = useState<DataCart[]>([]);
   const [removeItem, setRemoveItem] = useState<DataCart | null>(null);
   const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState<boolean>(false);
+
+  const fetchData = async (email: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/customer/address?email=${email}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
+          },
+
+        },
+      );
+
+      const result: get_address_from_email = (await response.json()) as get_address_from_email;
+
+      // Check if result has the expected structure
+      if (result?.status) {
+        addBillingAddress(result?.data ?? null)
+      } else {
+        console.error("Unexpected result structure api/customer/address?email:", result);
+      }
+    } catch (error) {
+      console.error("Error fetching api/customer/address?email:", error);
+    }
+  };
+
+  useEffect(() => {
+    const email = userInfo?.email;
+    if (email) {
+      void fetchData(email);
+    }
+  }, []);
 
   // Handle add to cart
   // const handleAddToCart = async (item: any) => {

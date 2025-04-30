@@ -722,7 +722,7 @@ const MyComponent = () => {
                       </div>
                     </div>
                   </div>
-                  {userInfo?.customer_id && (
+                  {/* {userInfo?.customer_id && (
                     <div>
                       <div className="flex flex-col items-center">
                         <div className="w-48 py-2">
@@ -751,7 +751,7 @@ const MyComponent = () => {
                         </div>
                       </div>
                     </div>
-                  )}
+                  )} */}
                 </div>
 
                 <div className="mb-4 mt-10">

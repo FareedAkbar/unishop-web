@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { useForm, Controller } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,6 +33,7 @@ import { BsPencilSquare } from "react-icons/bs";
 import { BsPlusCircle } from "react-icons/bs";
 import { error } from "console";
 import Link from "next/link";
+import { Countries_States } from "../constants/countries_states";
 type CheckoutFormValues = z.infer<typeof SignupSchema>;
 
 interface checkout {
@@ -44,6 +45,8 @@ interface checkout {
   pushPath?: string;
 }
 
+
+
 export default function CheckoutForm({
   push,
   handleData,
@@ -52,47 +55,35 @@ export default function CheckoutForm({
   subTitle,
   pushPath,
 }: checkout) {
-  // const [stateOptions, setStateOptions] = useState<
-  //   { value: number; label: string }[]
-  // >([]);
-  const router = useRouter();
-  const [cityOptions, setCityOptions] = useState<
+  const [stateOptions, setStateOptions] = useState<
     { value: number; label: string }[]
   >([]);
+
+
+  const [selectedCountry, setSelectedCountry] = useState<
+    string
+  >();
+  const router = useRouter();
+
   const { toast } = useToast();
-  const { checkoutData, CheckoutApi, checkoutFormData, billing_address } =
+  const { checkoutData, checkoutFormData, billing_address, userInfo, CheckoutApi } =
     useAuthContext();
   const [loader, setLoader] = useState(false);
   const [addressIndex, setAddressIndex] = useState(0);
   const [showFormFields, setShowFormFields] = useState(true);
-
+  console.log(userInfo)
   const defaultValues = billing_address
     ? {
-        ...checkoutData,
-        address: billing_address[addressIndex]?.address,
-        postal_code: billing_address[addressIndex]?.postal_code,
-        phone_number: billing_address[addressIndex]?.phone_number,
-        country: "Australia",
-        city:
-          cities
-            .find(
-              (state) =>
-                state.stateCode ==
-                states.find(
-                  (state) =>
-                    state.label === billing_address[addressIndex]?.state,
-                )?.value,
-            )
-            ?.city.find(
-              (city) => city.label == billing_address[addressIndex]?.city,
-            )
-            ?.value.toString() ?? "",
-        state: billing_address[addressIndex]?.state
-          ? states.find(
-              (state) => state.label === billing_address[addressIndex]?.state,
-            )?.value
-          : null,
-      }
+      ...checkoutData,
+      address: billing_address[addressIndex]?.address,
+      postal_code: billing_address[addressIndex]?.postal_code,
+      phone_number: billing_address[addressIndex]?.phone_number,
+      country: billing_address[addressIndex]?.country,
+      city:
+        billing_address[addressIndex]?.city ?? "",
+      state: billing_address[addressIndex]?.state
+        ?? "",
+    }
     : {};
 
   const {
@@ -111,16 +102,16 @@ export default function CheckoutForm({
     return foundState ? foundState.city : [];
   };
 
-  useEffect(() => {
-    setValue("country", "Australia");
-    if (!checkoutData) return;
-    setCityOptions(
-      getCitiesForState(
-        states.find((state) => state.label === checkoutData.address?.[0]?.state)
-          ?.value ?? "",
-      ),
-    );
-  }, [checkoutData]);
+  //   useEffect(() => {
+
+  //     if (!checkoutData) return;
+  //     setValue("country", checkoutData?.address?.[0]?.country ?? "");
+  //     setValue(
+  //       "state", checkoutData?.address?.[0]?.state ?? ""
+  //     )
+  //     setValue("city", checkoutData?.address?.[0]?.city ?? "");
+  //     console.log("checkoutDataaaaaa",checkoutData)
+  // }, [checkoutData]);
 
   const handleStateChange = (e: string) => {
     const stateId = e;
@@ -131,22 +122,40 @@ export default function CheckoutForm({
 
     setValue("state", selectedStateName); // Set human-readable name
     setValue("city", "");
-    setCityOptions(getCitiesForState(stateId));
+    // setCityOptions(getCitiesForState(stateId));
+  };
+
+  const handleCountryChange = (selectedCountryName: string) => {
+
+    const selectedCountry = Countries_States.find(
+      (country) => country.name === selectedCountryName
+    );
+    setSelectedCountry(selectedCountryName);
+    if (selectedCountry) {
+      const states = selectedCountry.states.map((state) => ({
+        value: state.id,
+        label: state.name,
+      }));
+      setStateOptions(states);
+    } else {
+      setStateOptions([]);
+    }
+    // setStateOptions(Countries_States[country]);
   };
 
   const getObjectFromArray = (obj: address): address | null => {
     return billing_address
       ? (billing_address.find(
-          (item) =>
-            item.address === obj.address &&
-            item.second_address === obj.second_address &&
-            item.country === obj.country &&
-            item.city === obj.city &&
-            item.state === obj.state &&
-            item.postal_code === obj.postal_code &&
-            item.country_code === obj.country_code &&
-            item.phone_number === obj.phone_number,
-        ) ?? null) // Return null if no match is found
+        (item) =>
+          item.address === obj.address &&
+          item.second_address === obj.second_address &&
+          item.country === obj.country &&
+          item.city === obj.city &&
+          item.state === obj.state &&
+          item.postal_code === obj.postal_code &&
+          item.country_code === obj.country_code &&
+          item.phone_number === obj.phone_number,
+      ) ?? null) // Return null if no match is found
       : null;
   };
 
@@ -204,23 +213,23 @@ export default function CheckoutForm({
 
     // Get the human-readable state name based on the selected state ID
     const selectedStateName = data.state
-      ? (states.find((state) => state.value.toString() === data.state)?.label ??
+      ? (stateOptions.find((state) => state.value.toString() === data.state)?.label ??
         "")
       : "";
+    const newCountry = Countries_States.find((country) => country.name === selectedCountry)?.name ?? selectedCountry
+    // // Find the city options based on the selected state code
+    // const foundState = cities.find((state) => state.stateCode === data.state);
 
-    // Find the city options based on the selected state code
-    const foundState = cities.find((state) => state.stateCode === data.state);
-
-    // Get the selected city name
-    const selectedCityName = foundState
-      ? (foundState.city.find((city) => city.value.toString() === data.city)
-          ?.label ?? "")
-      : "";
+    // // Get the selected city name
+    // const selectedCityName = foundState
+    //   ? (foundState.city.find((city) => city.value.toString() === data.city)
+    //       ?.label ?? "")
+    //   : "";
 
     // Prepare the updated data object for submission
     const NAMESPACE = uuidv5("uniShop", uuidv5.URL);
 
-    const uuid = uuidv5(data.email, NAMESPACE);
+    const uuid = uuidv5(userInfo?.email ?? data.email ?? "", NAMESPACE);
     function DeclineSnackMessage() {
       toast({
         title: "Checkout Declined",
@@ -232,11 +241,11 @@ export default function CheckoutForm({
     const newAddress = {
       address: data?.address,
       second_address: data.address,
-      country: "Australia",
-      city: selectedCityName,
-      state: selectedStateName,
+      country: selectedCountry,
+      city: data?.city,
+      state: stateOptions.find((state) => state?.value === Number(data?.state))?.label.toString(),
       postal_code: data.postal_code,
-      country_code: "61",
+      country_code: Countries_States.find((country) => country.name === selectedCountry)?.phone_code ?? selectedCountry,
       phone_number: data.phone_number,
       default_status: 1,
     };
@@ -245,22 +254,24 @@ export default function CheckoutForm({
       billing_address && getObjectFromArray(newAddress)
         ? [getObjectFromArray(newAddress)!]
         : [newAddress];
-
+    console.log("xx", xx);
     const updatedData = {
       ...data,
-      country: "Australia",
-      stateCode: data.state,
-      cityCode: data.city,
-      state: selectedStateName,
-      city: selectedCityName,
-      customer_id: null,
-      country_code: "61",
+      email: userInfo?.email ?? data.email ?? "",
+      country: selectedCountry,
+      stateCode: stateOptions.find((state) => state?.value === Number(data?.state))?.value.toString(),
+      state: stateOptions.find((state) => state?.value === Number(data?.state))?.label.toString(),
+      city: data.city,
+      customer_id: userInfo?.customer_id ?? null,
+      country_code: Countries_States.find((country) => country.name === selectedCountry)?.phone_code ?? selectedCountry,
       address: xx,
       customer_type_id: 6,
-      uuid: uuid,
-      first_name: "",
-      last_name: "",
+      uuid: userInfo?.uuid ?? uuid,
+      first_name: userInfo?.first_name ?? "",
+      last_name: userInfo?.last_name ?? "",
     };
+
+    console.log("updatedData", updatedData);
 
     try {
       // await checkoutFormData(updatedData);
@@ -271,41 +282,38 @@ export default function CheckoutForm({
           if (res.status && res?.data?.customer_id) {
             // check if the page render from checkout page or signup page
             if (push && pushPath) {
-              // check if the user already have billing address and want to add a new address
-              if (
-                billing_address &&
-                billing_address?.length > 0 &&
-                !getObjectFromArray(newAddress)
-              ) {
-                await addAddress(newAddress, res?.data);
+              // check if the user already have billing address and want to add a new address 
+              if (billing_address && billing_address?.length > 0 && !getObjectFromArray(newAddress)) {
+                await addAddress(newAddress, res?.data)
               } else {
                 const newCheckoutData = {
                   ...res?.data,
                   address: xx,
-                };
+                }
                 void checkoutFormData(newCheckoutData).then(() =>
                   router.push(pushPath),
                 );
               }
+
             }
             if (!push && handleData) {
               handleData(res?.data);
             }
           } else {
-            DeclineSnackMessage();
+            DeclineSnackMessage()
           }
         })
         .catch((err) => {
           setLoader(false);
           console.log(err);
-          DeclineSnackMessage();
+          DeclineSnackMessage()
         });
       // router.push("placeorder");
 
       // router.push("placeorder");
     } catch (error) {
       setLoader(false);
-      DeclineSnackMessage();
+      DeclineSnackMessage()
       console.error("Failed to checkout:", error);
     }
   };
@@ -315,14 +323,26 @@ export default function CheckoutForm({
   console.log("billing_address", billing_address);
 
   useEffect(() => {
+    if(userInfo){
+      setValue("email", userInfo?.email ?? "");
+    }
+  }, [userInfo])
+  useEffect(() => {
+
     if (billing_address) {
-      setCityOptions(
-        getCitiesForState(
-          states.find(
-            (state) => state.label === billing_address[addressIndex]?.state,
-          )?.value ?? "",
-        ),
+      const selectedCountry = Countries_States.find(
+        (country) => country.name === billing_address[addressIndex]?.country
       );
+
+      if (selectedCountry) {
+        const states = selectedCountry.states.map((state) => ({
+          value: state.id,
+          label: state.name,
+        }));
+        setStateOptions(states);
+      } else {
+        setStateOptions([]);
+      }
       setValue(
         "address",
         billing_address[addressIndex]?.address
@@ -341,30 +361,20 @@ export default function CheckoutForm({
           ? billing_address[addressIndex]?.phone_number
           : "",
       );
-      const xCity =
-        cities
-          .find(
-            (state) =>
-              state.stateCode ==
-              states.find(
-                (state) => state.label === billing_address[addressIndex]?.state,
-              )?.value,
-          )
-          ?.city.find(
-            (city) => city.label == billing_address[addressIndex]?.city,
-          )
-          ?.value.toString() ?? "";
 
-      setValue("city", xCity);
+      setValue("city", billing_address[addressIndex]?.city
+        ? billing_address[addressIndex]?.city
+        : "");
 
-      const xState = billing_address[addressIndex]?.state
-        ? states.find(
-            (state) => state.label === billing_address[addressIndex]?.state,
-          )?.value
-        : "";
-      console.log("city", xCity);
-
-      setValue("state", xState ?? "");
+      const state = Countries_States.find(
+        (country) => country.phone_code === billing_address[addressIndex]?.country_code
+      )?.states?.find((state) => state.name.toString() === billing_address[addressIndex]?.state);
+      setValue("state", state?.id.toString() ?? "");
+      setSelectedCountry(
+        billing_address[addressIndex]?.country ?? "",
+      )
+      setValue("country", Countries_States.find((country) => country.phone_code === (billing_address[addressIndex]?.country_code))?.name ?? "");
+      console.log("state", state);
     }
   }, [addressIndex, billing_address]);
 
@@ -389,21 +399,24 @@ export default function CheckoutForm({
       )}
 
       <form className="mb-4 mt-8" onSubmit={handleSubmit(onSubmit)}>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="email" required>
-            Email Address
-          </Label>
-          <InputEmail
-            id="email"
-            placeholder="projectmayhem@fc.com"
-            type="email"
-            value={checkoutData?.email ?? ""}
-            {...register("email")}
-          />
-          {errors.email && (
-            <p className="text-sm text-red-500">{errors.email.message}</p>
-          )}
-        </LabelInputContainer>
+        {!userInfo?.email && (
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="email" required>
+              Email Address
+            </Label>
+            <InputEmail
+              id="email"
+              placeholder="projectmayhem@fc.com"
+              type="email"
+              value={checkoutData?.email ?? ""}
+              {...register("email")}
+            />
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email.message}</p>
+            )}
+          </LabelInputContainer>
+        )}
+
         {billing_address?.[0] && (
           <div
             className="flex cursor-pointer justify-end text-red-500"
@@ -499,7 +512,7 @@ export default function CheckoutForm({
                 )}
               </LabelInputContainer>
               <LabelInputContainer>
-                <Label htmlFor="country" required>
+                {/* <Label htmlFor="country" required>
                   Country
                 </Label>
 
@@ -510,7 +523,36 @@ export default function CheckoutForm({
                   type="text"
                   disabled
                   {...register("country")}
-                />
+                /> */}
+                <LabelInputContainer>
+                  <Label htmlFor="country" required>
+                    Country
+                  </Label>
+                  <Controller
+                    name="country"
+                    control={control}
+                    render={({ field }) => (
+                      <div>
+                        <Select
+                          id="country"
+                          name="country"
+                          options={Countries_States.map((country) => ({
+                            value: country.name.toString(), // Ensure value is a string
+                            label: country.name,
+                          }))}
+                          // loader={loader}
+                          value={field.value ? field.value : ""}
+                          placeholder="Select Country"
+                          onChange={(option) => {
+                            handleCountryChange(option.value); // Call your existing state change handler
+                            field.onChange(option.value); // Update form state with the selected value
+                          }}
+                          error={errors.country?.message}
+                        />
+                      </div>
+                    )}
+                  />
+                </LabelInputContainer>
                 {/* <Select
                     id="country"
                     name="country"
@@ -531,6 +573,7 @@ export default function CheckoutForm({
                   /> */}
               </LabelInputContainer>
             </div>
+
             <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0">
               <LabelInputContainer>
                 <Label htmlFor="state" required>
@@ -544,7 +587,7 @@ export default function CheckoutForm({
                       <Select
                         id="state"
                         name="state"
-                        options={states.map((state) => ({
+                        options={stateOptions.map((state) => ({
                           value: state.value.toString(), // Ensure value is a string
                           label: state.label,
                         }))}
@@ -565,27 +608,15 @@ export default function CheckoutForm({
                 <Label htmlFor="city" required>
                   City
                 </Label>
-                <Controller
-                  name="city"
-                  control={control}
-                  render={({ field }) => (
-                    <div>
-                      <Select
-                        id="city"
-                        name="city"
-                        options={cityOptions.map((city) => ({
-                          value: city.value.toString(), // Ensure value is a string
-                          label: city.label,
-                        }))}
-                        // loader={loader}
-                        value={field.value ? field.value : ""}
-                        placeholder="Select your city"
-                        error={errors.city?.message}
-                        onChange={(e) => field.onChange(e.value)} // Updated
-                      />
-                    </div>
-                  )}
+                <Input
+                  id="city"
+                  placeholder=""
+                  type="text"
+                  {...register("city")}
                 />
+                {errors.city && (
+                  <p className="text-sm text-red-500">{errors.city.message}</p>
+                )}
               </LabelInputContainer>
             </div>
 
@@ -593,14 +624,20 @@ export default function CheckoutForm({
               <Label htmlFor="phone_number" required>
                 Phone Number
               </Label>
-              <PhoneNumberInput
+              <Input
+                id="phone_number"
+                placeholder=""
+                type="text"
+                {...register("phone_number")}
+              />
+              {/* <PhoneNumberInput
                 id="phone_number"
                 placeholder="(123) 456-7890"
                 type="tel"
                 {...register("phone_number", {
                   required: "Phone Number is required",
                 })}
-              />
+              /> */}
               {errors.phone_number && (
                 <p className="text-sm text-red-500">
                   {errors.phone_number.message}
@@ -621,7 +658,7 @@ export default function CheckoutForm({
             />
           </div>
         </div> */}
-        <div className="mx-auto flex max-w-sm flex-col justify-center">
+        {/* <div className="mx-auto flex max-w-sm flex-col justify-center"> */}
           <Button
             title="Confirm &rarr;"
             type="submit"
@@ -632,13 +669,13 @@ export default function CheckoutForm({
               //
             }}
           />
-          <div className="mt-2 flex flex-col items-center justify-center sm:flex-row">
+          {/* <div className="mt-2 flex flex-col items-center justify-center sm:flex-row">
             <p>{`I don't have an account, `}</p>
             <Link href="login" className="ml-1 text-red-500">
               Login
             </Link>
           </div>
-        </div>
+        </div> */}
       </form>
     </div>
   );

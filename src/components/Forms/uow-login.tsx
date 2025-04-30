@@ -118,12 +118,12 @@ export default function SignupFormDemo({
             type="submit"
             loading={loader}
           />
-          <div className="mt-2 flex flex-col items-center justify-center sm:flex-row">
+          {/* <div className="mt-2 flex flex-col items-center justify-center sm:flex-row">
             <p>{`I don't have an account, `}</p>
             <Link href="signup" className="ml-1 text-red-500">
               SignUp
             </Link>
-          </div>
+          </div> */}
         </div>
         {/* <div className="mt-6 flex flex-col items-center">
           <div className="mb-2 text-gray-500">Sign In With</div>

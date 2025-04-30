@@ -55,16 +55,19 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
   }, [items]);
 
   const opencart = () => {
-    // if(isLoggedIn){
-    //   setIsOpenAlert(true);
-    // }else{
-    //   setLoginAlert(true)
-    // }
-    setIsOpenAlert(true);
+    if(isLoggedIn){
+      onClose();
+      router.push("checkout");
+      // setIsOpenAlert(true);
+    }else{
+      setLoginAlert(true)
+    }
+    // setIsOpenAlert(true);
   };
 
   const goToCheckout = () => {
     setIsOpenAlert(false);
+    setLoginAlert(false);
     onClose();
     router.push("checkout");
   };
@@ -198,11 +201,11 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
           <Button
             disabled={items?.[0] ? false : true}
             onClick={() => {
-              // if (!isOpenAlert) {
-              //   // Check if alert is not already open
-              //   opencart();
-              // }
-              goToCheckout();
+              if (!isOpenAlert) {
+                // Check if alert is not already open
+                opencart();
+              }
+              // goToCheckout();
             }}
             className={`mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white ${items.length === 0 ? "disabled" : ""}`}
             title="View Cart"
@@ -260,10 +263,12 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         onContinue={() => handleRemoveFromCart(removeItem!)}
       />
       <AlertBox
-        title="Login Your Account"
-        description="Please Login to proceed with checkout"
+        title="How would you like to continue"
+        description="Log in for a faster checkout and order tracking, or continue as a guest."
         open={loginAlert}
-        onClose={() => setLoginAlert(false)}
+        onClose={() => goToCheckout()}
+        cancelButtonText="Continue as Guest"
+        continueButtonText="Login"
         onContinue={() => goToLogin()}
       />
     </>

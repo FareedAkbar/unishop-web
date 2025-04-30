@@ -21,14 +21,13 @@ interface CheckoutForm {
   state?: string | null; // Optional
   postal_code?: string | null; // Optional
   country?: string | null; // Optional
-  cityCode?: string | null; // Optional
   stateCode?: string | null; // Optional
   phone_number?: string | null; // Optional
   customer_id?: number | null,
   uuid?: string | null,
   customer_type_id?: number,
   booknet_customer_id?: number | null,
-  username?: string | null
+  user_name?: string | null
   password?: string | null,
   duplicate?: number | null
 }

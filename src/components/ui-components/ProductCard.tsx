@@ -130,7 +130,7 @@ const ProductCard = ({
             product?.item_sale_price) ? (
           <button
             onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
-            className={`absolute bottom-0 z-20 mt-4 w-full rounded-b-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${!showAddToCart ? "bg-red-500" : "bg-black"
+            className={`absolute bottom-0 z-5 mt-4 w-full rounded-b-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${!showAddToCart ? "bg-red-500" : "bg-black"
               }`}
           >
             {!showAddToCart ? "Remove From Cart" : "Add To Cart"}

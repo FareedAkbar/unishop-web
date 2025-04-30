@@ -40,7 +40,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
       prevInput && (prevInput as HTMLInputElement).focus();
     }
   };
-
+ 
   const handleVerify = async () => {
     console.log("Verifying OTP:", otp.join(""));
     if (otp.join("").length === 4) {
@@ -55,6 +55,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
         setLoader(false);
 
         if (typeof res !== "boolean" && res.status) {
+        
           router.push("/");
         }
       } catch (err) {

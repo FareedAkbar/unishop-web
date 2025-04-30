@@ -158,11 +158,11 @@ const SignupSchema = z
     city: z.string().min(1, "City is required"),
     state: z.string().min(1, "State is required"),
     postal_code: z.string().min(1, "Postal code is required"),
-    country: z.string().optional(),
+    country: z.string().min(1, "Country is required"),
     phone_number: z
       .string()
       .min(1, "Phone Number is required")
-      .regex(/^\(0[4]\) \d{4} \d{4}$/, "Invalid mobile number "),
+      // .regex(/^\(0[4]\) \d{4} \d{4}$/, "Invalid mobile number "),
   })
   .superRefine((data, ctx) => {
     const { postal_code, country } = data;

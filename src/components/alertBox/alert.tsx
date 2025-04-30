@@ -17,6 +17,8 @@ interface AlertBoxProps {
   onContinue: () => void;
   open: boolean;
   children?: ReactNode;
+  cancelButtonText?: string;
+  continueButtonText?: string;
 }
 const AlertBox: React.FC<AlertBoxProps> = ({
   title,
@@ -25,6 +27,8 @@ const AlertBox: React.FC<AlertBoxProps> = ({
   onContinue,
   open,
   children,
+  cancelButtonText = "Cancel",
+  continueButtonText = "Continue",
 }) => {
   return (
     <AlertDialog open={open}>
@@ -36,13 +40,13 @@ const AlertBox: React.FC<AlertBoxProps> = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={() => onClose()}>
-            Cancel
+            {cancelButtonText}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={() => onContinue()}
             className="bg-red-500 hover:bg-red-400"
           >
-            Continue
+            {continueButtonText}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
