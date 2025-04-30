@@ -101,6 +101,7 @@ export interface category_detail {
   till_visibility: number,
   web_visibility: number,
 }
+
 export default interface DataCart {
   book_id: number | null;
   food_id: number | null;

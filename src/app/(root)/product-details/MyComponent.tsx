@@ -20,8 +20,9 @@ import AlertBox from "~/components/alertBox/alert";
 import { BsFillCartCheckFill } from "react-icons/bs";
 import { getBooks } from "~/_actions/getbooks";
 import { ItemSpecialTag } from "~/types/productTags";
-import { ModalProvider } from "~/components/ui/animated-modal";
+
 import Spinner from "~/components/spinner";
+import { Tabs } from "~/components/ui/tabs";
 
 const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
@@ -53,6 +54,8 @@ const MyComponent = () => {
   const { toast } = useToast();
   const params = useSearchParams();
 
+  console.log("itemDetail", itemDetail);
+
   type Position = {
     px: number;
     py: number;
@@ -71,17 +74,11 @@ const MyComponent = () => {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (imageRef.current) {
-      const { left, top, width, height } =
-        imageRef.current.getBoundingClientRect();
-      console.log(left, "left");
-      console.log(top, "top");
-      console.log(width, "width");
-      console.log(height, "height");
+      const { left, top, width, height } = imageRef.current.getBoundingClientRect();
+
       const x = e.clientX - left;
       const y = e.clientY - top;
 
-      console.log(e.clientX, "x");
-      console.log(e.clientY, "y");
 
       // Save both percentage for transform origin and pixels for lens placement
       const percentX = (x / width) * 100;
@@ -140,6 +137,7 @@ const MyComponent = () => {
 
       if (typeof x !== "boolean" && x.status) {
         setProducts(x.data);
+
       }
       setLoader(false);
 
@@ -182,6 +180,7 @@ const MyComponent = () => {
         const x = await getBooks(parseInt(genre) ?? 1);
         if (typeof x !== "boolean" && x.status) {
           setProducts(x.data);
+
         }
         setLoader(false);
         // setData(result);
@@ -365,13 +364,6 @@ const MyComponent = () => {
     selectedValues,
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-  const [selectedImage, setSelectedImage] = useState<Media | null>(
-    itemDetail?.media?.[0] ? itemDetail?.media?.[0] : null,
-  );
-  const handleImageClick = (imagePath: Media) => {
-    setSelectedImage(imagePath);
-  };
 
   const handleSubmitReviews = async (data: ReviewData) => {
     if (checkoutData?.booknet_customer_id) {
@@ -474,14 +466,16 @@ const MyComponent = () => {
       type_desc: "Course Notes",
     },
     {
-      item_book_type_id: 5,
-      type_name: "General Reading",
-      type_desc: "General Reading",
-    },
-  ];
+      "item_book_type_id": 5,
+      "type_name": "General Reading",
+      "type_desc": "General Reading"
+    }
+  ]
+
+
 
   return (
-    <div className="p-6">
+    <div className="p-6 pt-32 mt-16 md:mt-0">
       <div className="flex items-center justify-between pb-2 lg:px-10">
         {/* Left Arrow */}
         <div>
@@ -507,10 +501,8 @@ const MyComponent = () => {
       <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
         {itemDetail?.description}
       </h6>
-      <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
-        {itemDetail?.additional_notes}
-      </h6>
-      <div className="relative flex flex-wrap gap-3">
+
+      <div className="flex relative flex-wrap gap-3">
         <div className="mx-auto flex flex-col items-center">
           <div
             className="relative flex h-60 w-60 cursor-zoom-in items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80"
@@ -568,11 +560,12 @@ const MyComponent = () => {
           )}
         </div>
 
-        <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
+        <div className="mx-auto  flex max-w-sm flex-col items-start justify-start gap-x-4">
           <div className="flex flex-col">
             {itemDetail ? (
-              <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
+              <span className="font-sans text-2xl font-bold text-red-500 dark:text-neutral-300">
                 ${" "}
+
                 {itemDetail?.variations?.[0] &&
                 filteredVariations?.[0]?.items_variable_items_sale_price
                   ? filteredVariations?.[0]?.items_variable_items_sale_price
@@ -601,11 +594,26 @@ const MyComponent = () => {
           ) : (
             ""
           )}
-          {itemDetail?.SKU && (
-            <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
-              SKU: {itemDetail.SKU}
-            </span>
-          )}
+          <span className="font-serif text-md text-green-500 dark:text-neutral-300">
+            {filteredVariations?.[0] ? filteredVariations?.[0]?.stock?.quantity ? "In Stock" : "Backorder" :
+              itemDetail?.stock.quantity ? "In Stock" : "Backorder"
+            }
+          </span>
+          {filteredVariations?.[0] ? (
+            filteredVariations?.[0].items_variable_items_sku_number) && (
+              <span className="font-serif text-md text-zinc-500 dark:text-neutral-300">
+                SKU: {filteredVariations?.[0].items_variable_items_sku_number}
+              </span>
+
+            ) :
+            itemDetail?.SKU && (
+              <span className="font-serif text-md text-zinc-500 dark:text-neutral-300">
+                SKU: {itemDetail.SKU}
+              </span>
+
+            )}
+          
+
           {itemDetail?.book_id && itemDetail?.food_id == null && (
             <div className="flex items-center justify-center">
               {manageUsage().length > 0 ? (
@@ -615,15 +623,23 @@ const MyComponent = () => {
                       (t) => t.item_book_type_id === Number(item.type_id),
                     ); // Find the matching type
                     return (
-                      <small
-                        key={`usage-${item.subject_code}-${index}`}
-                        className="mr-1 rounded bg-red-500 px-2 py-1 text-gray-100 dark:bg-gray-700 dark:text-gray-300"
-                      >
-                        {item.subject_name} {item.subject_code},{" "}
-                        {matchedType?.type_name ?? ""}{" "}
-                        {/* Display type_name or fallback */}
-                      </small>
-                    );
+                      <div key={`usage-${item.subject_code}-${index}-name-type`}>
+                        <small
+                          key={`usage-${item.subject_code}-${index}-name`}
+                          className="bg-red-500  text-gray-100  px-2 py-1 rounded mr-1"
+                          >
+                          {item.subject_name} {item.subject_code} {/* Display type_name or fallback */}
+                        </small>
+                        <small
+                          key={`usage-${item.subject_code}-${index}-type`}
+                          className="bg-yellow-500  text-gray-700  px-2 py-1 rounded mr-1"
+                          >
+                          {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
+                        </small>
+                      </div>
+
+                    )
+
                   })}
                 </span>
               ) : (
@@ -652,7 +668,7 @@ const MyComponent = () => {
           {itemDetail?.edition && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Series:
+                Edition:
               </span>
               <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                 {itemDetail.edition}
@@ -660,10 +676,10 @@ const MyComponent = () => {
             </div>
           )}
 
-          {itemDetail?.introduced && (
+          {itemDetail?.book_id && itemDetail?.food_id == null && itemDetail?.introduced && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Created at:
+                Published:
               </span>
               <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                 {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
@@ -815,11 +831,10 @@ const MyComponent = () => {
                         {options.map((option, optionIndex) => (
                           <button
                             key={`${option.value}-${optionIndex}`}
-                            className={`min-w-10 rounded border p-1 text-center ${
-                              selectedValues[tagName] === option.value
-                                ? "bg-red-500 text-white"
-                                : "border-red-500 bg-white dark:bg-slate-700"
-                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            className={`min-w-10 text-sm rounded border p-1 text-center ${selectedValues[tagName] === option.value
+                              ? "bg-red-500 text-white"
+                              : "border-red-500 bg-white dark:bg-slate-700"
+                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -850,10 +865,10 @@ const MyComponent = () => {
           filteredVariations?.[0]?.items_variable_items_id &&
           Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-          isVariableItemInCart(
-            filteredVariations?.[0]?.items_variable_items_id,
-          ) ? (
-            <span className="pl-1 text-green-500">
+            isVariableItemInCart(
+              filteredVariations?.[0]?.items_variable_items_id,
+            ) ? (
+            <span className="pl-1 font-sans text-green-500">
               Already added to your cart
             </span>
           ) : (
@@ -869,7 +884,7 @@ const MyComponent = () => {
           (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
             itemDetail?.item_sale_price) ? (
             <button
-              className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
+              className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-sans text-white hover:bg-green-600"
               onClick={() => handleAddToCart(itemDetail)}
             >
               <BsFillCartCheckFill className="text-lg" />
@@ -879,7 +894,7 @@ const MyComponent = () => {
             !itemDetail?.variations?.[0] &&
             !isItemInCart(itemDetail.item_id) ? (
             <button
-              className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
+              className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-sans text-white hover:bg-green-600"
               onClick={() => handleAddToCart(itemDetail)}
             >
               <BsFillCartCheckFill className="text-lg" />
@@ -890,11 +905,13 @@ const MyComponent = () => {
           )}
           {isHovering && (
             <div
-              className="pointer-events-none absolute left-[55%] top-1/3 z-10 h-96 w-96 overflow-hidden bg-white shadow-md dark:bg-slate-700 dark:shadow-slate-500"
+              className="absolute z-10 w-96 md:right-[20%] top-1/3 h-96 bg-white dark:bg-slate-700 dark:shadow-slate-500 overflow-hidden shadow-md pointer-events-none"
               style={{
-                transform: "translate(-50%, -50%)",
+
+                transform: 'translate(-50%, -50%)',
               }}
             >
+
               <Image
                 src={
                   selectedVariation?.media?.[currentImageIndex]?.object_path
@@ -913,7 +930,8 @@ const MyComponent = () => {
                 alt="Magnified view"
                 width={2000}
                 height={2000}
-                className="h-full w-full"
+                className="w-full h-full"
+
               />
             </div>
           )}
@@ -921,7 +939,8 @@ const MyComponent = () => {
       </div>
 
       {/* Reviews Section */}
-      <div className="mt-16 flex flex-col gap-8 md:flex-row-reverse">
+
+      <div className="mt-16 flex flex-col md:flex-row gap-8 w-full">
         {/* {getReviewsLoader && (
           <div className="max-h-[477px] rounded-lg border p-6 shadow-md dark:bg-slate-800 md:w-1/2">
             <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
@@ -944,62 +963,109 @@ const MyComponent = () => {
             </ScrollArea>
           </div>
         )} */}
-        {!getReviewsLoader && reviews?.[0] && (
-          <div className="max-h-[477px] rounded-lg border p-6 shadow-md dark:bg-slate-800 md:w-1/2">
-            <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
+        <div className="w-full h-[500px] flex flex-col items-center justify-center ">
+          <Tabs tabs={[
+            {
+              title: "Details", value: "Details", content: (
+                <div className="max-h-[477px] rounded-lg bg-white border p-6 shadow-md dark:bg-slate-800 ">
+                  <h3 className="mb-4 text-2xl font-bold text-red-600">Details</h3>
 
-            <ScrollArea className="h-[300px]">
-              {reviews.map((review, index) => (
-                <div
-                  key={`review-${review.item_id ?? `fallback-${index}`}`}
-                  className="mb-4 border-b pb-2"
-                >
-                  <p className="font-semibold">{review.username}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {review.review}
-                  </p>
-                  <div className="flex items-center gap-1 py-2">
-                    {Array.from({ length: 5 }, (_, i) =>
-                      i < (review.stars ?? 0) ? (
-                        <FaStar
-                          key={`star-${review.item_id}-${index}-${i}`}
-                          className="text-yellow-500"
-                        />
-                      ) : (
-                        <FaRegStar
-                          key={`regstar-${review.item_id}-${index}-${i}`}
-                          className="text-gray-400"
-                        />
-                      ),
-                    )}
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    {review?.created_at
-                      ? moment(review?.created_at).format("Do MMMM, YYYY")
-                      : ""}
-                  </p>
+                  <ScrollArea className="h-[300px]">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {itemDetail?.additional_notes ? itemDetail.additional_notes : "No Details"}
+                      {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur non odio aspernatur nam recusandae quia, dolor est sunt, doloremque iure pariatur sit quis iste explicabo laudantium error facilis tempora sed. */}
+                    </p>
+                  </ScrollArea>
                 </div>
-              ))}
-            </ScrollArea>
-          </div>
-        )}
+              )
+            },
+            {
+              title: "Reviews", value: "reviews", content: (
+                <div className="max-h-[477px] rounded-lg bg-white border p-6 shadow-md dark:bg-slate-800 ">
+                  <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
 
-        <div className="md:w-1/2">
+                  <ScrollArea className="h-[300px]">
+                    {!getReviewsLoader && reviews?.map((review, index) => (
+                      <div key={`review-${review.item_id ?? `fallback-${index}`}`} className="mb-4 border-b pb-2">
+                        <p className="font-semibold">{review.username}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {review.review}
+                        </p>
+                        <div className="flex items-center gap-1 py-2">
+                          {Array.from({ length: 5 }, (_, i) =>
+                            i < (review.stars ?? 0) ? (
+                              <FaStar key={`star-${review.item_id}-${index}-${i}`} className="text-yellow-500" />
+                            ) : (
+                              <FaRegStar key={`regstar-${review.item_id}-${index}-${i}`} className="text-gray-400" />
+                            ),
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          {review?.created_at
+                            ? moment(review?.created_at).format("Do MMMM, YYYY")
+                            : ""}
+                        </p>
+                      </div>
+                    ))}
+                    {!getReviewsLoader && (!reviews?.length || reviews == null) && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        No reviews yet
+                      </p>
+                    )}
+
+                  </ScrollArea>
+                  {getReviewsLoader && (
+                    <ScrollArea className="h-[300px]">
+                      {Array.from({ length: 3 }).map((_, index) => (
+                        <div key={index} className="mb-4 animate-pulse border-b pb-2">
+                          <div className="mb-2 h-4 w-1/3 rounded bg-gray-300 dark:bg-gray-600" />
+                          <div className="mb-2 h-3 w-2/3 rounded bg-gray-200 dark:bg-gray-500" />
+                          <div className="flex items-center gap-1 py-2">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <div
+                                key={i}
+                                className="h-4 w-4 rounded-full bg-gray-300 dark:bg-gray-600"
+                              />
+                            ))}
+                          </div>
+                          <div className="h-3 w-1/4 rounded bg-gray-200 dark:bg-gray-500" />
+                        </div>
+                      ))}
+                    </ScrollArea>
+                  )}
+
+                </div>
+              )
+            }
+
+          ]} />
+
+        </div>
+
+        {/* {!getReviewsLoader && reviews?.[0] && (
+         
+        )} */}
+
+
+        <div className="md:w-1/2 flex-end lg:mt-24 md:mt-24">
           <ReviewForm
             submitValues={(val) => handleSubmitReviews(val)}
             submitLoader={submitLoader}
           />
         </div>
       </div>
-      <ProductsSection
-        products={products}
-        headingPartOne="Related"
-        headingPartTwo="Products"
-        loader={loader}
-        viewAllButton={() => {
-          router.back();
-        }}
-      />
+      <div className="mt-20">
+        <ProductsSection
+          products={products}
+          headingPartOne="Related"
+          headingPartTwo="Products"
+          loader={loader}
+          viewAllButton={() => {
+            router.back();
+          }}
+        />
+      </div>
+
       <AlertBox
         title="Login Your Account"
         description="Please Login to proceed with checkout"

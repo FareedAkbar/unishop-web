@@ -66,11 +66,11 @@ const ProductCard = ({
 
 
   return (
-    <div  className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
-      <div className="relative flex h-40 grow-0 items-center justify-center rounded-sm bg-gray-200 dark:bg-slate-600 sm:h-48 lg:h-64">
+    <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
+      <div className="relative flex h-40 grow-0 items-center justify-center rounded-sm bg-white dark:bg-slate-600 sm:h-48 lg:h-64">
         {tagNames.length > 0 ? (
           <div className="absolute left-2 top-1 flex flex-col">
-            {tagNames.map((tag,index) => {
+            {tagNames.map((tag, index) => {
               return (
                 <span
                   key={`${tag}-${index}`}
@@ -84,9 +84,8 @@ const ProductCard = ({
         ) : (
           ""
         )}
-
         <Image
-         onClick={goToDetail}
+          onClick={goToDetail}
           src={
             product?.object_path
               ? `https://ipos-storage.s3.amazonaws.com/${product.object_path}`
@@ -132,7 +131,7 @@ const ProductCard = ({
           <button
             onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
             className={`absolute bottom-0 z-20 mt-4 w-full rounded-b-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${!showAddToCart ? "bg-red-500" : "bg-black"
-              } hidden group-hover:block`}
+              }`}
           >
             {!showAddToCart ? "Remove From Cart" : "Add To Cart"}
           </button>
@@ -162,17 +161,26 @@ const ProductCard = ({
         <span className="truncate text-sm">
           {manageUsage().length > 0 ? (
             <>
-             
+
               {manageUsage().map((item, index) => {
                 const matchedType = textbookType?.find((t) => t.item_book_type_id === item.type_id); // Find the matching type
                 return (
-                  <small
-                    key={index}
-                    className="bg-red-500 dark:bg-gray-700 text-gray-100 dark:text-gray-300 px-2 py-1 text-md rounded mr-1"
-                  >
-                    {item.subject_name} {item.subject_code} , {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
-                  </small>
+                  <div key={`usage-${item.subject_code}-${index}-name-type`}>
+                    <small
+                      key={`usage-${item.subject_code}-${index}-name`}
+                      className="bg-red-500  text-gray-100  px-2 py-1 rounded mr-1"
+                    >
+                      {item.subject_name} {item.subject_code} {/* Display type_name or fallback */}
+                    </small>
+                    <small
+                      key={`usage-${item.subject_code}-${index}-type`}
+                      className="bg-yellow-500  text-gray-700  px-2 py-1 rounded mr-1"
+                    >
+                      {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
+                    </small>
+                  </div>
                 );
+
               })}
             </>
           ) : (

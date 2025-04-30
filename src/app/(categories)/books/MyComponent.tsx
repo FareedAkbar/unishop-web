@@ -274,7 +274,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -473,11 +473,10 @@ const MyComponent = () => {
             {/* Pagination Section */}
             <div className="z-[5] flex justify-between px-4 py-4">
               <button
-                className={`rounded-full p-2 ${
-                  currentPage === 1
+                className={`rounded-full p-2 ${currentPage === 1
                     ? "cursor-not-allowed bg-gray-200 text-black"
                     : "cursor-pointer bg-red-500 text-white"
-                }`}
+                  }`}
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
               >
@@ -487,11 +486,10 @@ const MyComponent = () => {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                className={`rounded-full p-2 ${
-                  currentPage === totalPages || totalPages == 0
+                className={`rounded-full p-2 ${currentPage === totalPages || totalPages == 0
                     ? "cursor-not-allowed bg-gray-200 text-black"
                     : "cursor-pointer bg-red-500 text-white"
-                }`}
+                  }`}
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages || totalPages == 0}
               >
@@ -519,11 +517,7 @@ const MyComponent = () => {
                 <motion.div
                   key={"images"}
                   style={{
-                    rotate: window
-                      ? window.innerWidth > 768
-                        ? Math.random() * 20 - 10
-                        : 0
-                      : 0,
+                    rotate: typeof window !== "undefined" ? window.innerWidth > 768 ? Math.random() * 20 - 10 : 0 : 0,
                   }}
                   whileHover={{
                     scale: 1.1,
@@ -547,40 +541,32 @@ const MyComponent = () => {
                     }
                     alt={
                       selectedVariation?.media?.[0]?.object_path
-                        ? `${itemDetail?.item_name} - ${selectedValues.size ?? ""} ${selectedValues.color ?? ""}`
-                        : (itemDetail?.item_name ?? "Product image")
+                        ? `${itemDetail?.item_name} - ${selectedValues.size ?? ''} ${selectedValues.color ?? ''}`
+                        : itemDetail?.item_name ?? "Product image"
                     }
                     width={600}
                     height={600}
-                    className="h-44 w-44 flex-shrink-0 rounded-lg object-contain md:h-40 md:w-40 lg:h-44 lg:w-44"
+                    className="h-44 w-44 flex-shrink-0 rounded-lg object-contain md:h-40 lg:w-44 md:w-40 lg:h-44"
                   />
                 </motion.div>
-                {((selectedVariation?.media &&
-                  selectedVariation?.media?.length > 1) ??
-                  (selectedVariation?.media?.length === 0 &&
-                    itemDetail?.media &&
-                    itemDetail?.media?.length > 1)) && (
+                {((selectedVariation?.media && selectedVariation?.media?.length > 1) ?? (selectedVariation?.media?.length === 0 && itemDetail?.media && itemDetail?.media?.length > 1)) && (
                   <div className="mt-2 flex gap-2 overflow-x-auto py-2">
-                    {(selectedVariation?.media?.length > 0
-                      ? selectedVariation.media
-                      : itemDetail?.media
-                        ? itemDetail.media
-                        : []
-                    ).map((media, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentImageIndex(index)}
-                        className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
-                      >
-                        <Image
-                          src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
-                          alt={`Thumbnail ${index + 1}`}
-                          width={48}
-                          height={48}
-                          className="h-full w-full object-cover"
-                        />
-                      </button>
-                    ))}
+                    {(selectedVariation?.media?.length > 0 ? selectedVariation.media : itemDetail?.media ? itemDetail.media : []).map(
+                      (media, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentImageIndex(index)}
+                          className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? 'border-red-500' : 'border-gray-300'}`}
+                        >
+                          <Image
+                            src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                            alt={`Thumbnail ${index + 1}`}
+                            width={48}
+                            height={48}
+                            className="h-full w-full object-cover"
+                          />
+                        </button>
+                      ))}
                   </div>
                 )}
               </div>
@@ -590,11 +576,11 @@ const MyComponent = () => {
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                   $
                   {itemDetail?.variations?.[0] &&
-                  filteredVariations?.[0]?.items_variable_items_sale_price
+                    filteredVariations?.[0]?.items_variable_items_sale_price
                     ? filteredVariations?.[0]?.items_variable_items_sale_price
                     : itemDetail?.variations?.[0]
                       ? itemDetail?.variations?.[0]
-                          .items_variable_items_sale_price
+                        .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
                 <span className="font-serif text-zinc-500 dark:text-neutral-300 lg:text-lg">
@@ -761,7 +747,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                                currTag.items_variations_tags_name
+                              currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -799,11 +785,10 @@ const MyComponent = () => {
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center ${
-                                    selectedValues[tagName] === option.value
+                                  className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
                                       ? "bg-red-500 text-white"
                                       : "border-red-500 bg-white dark:bg-slate-700"
-                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}
