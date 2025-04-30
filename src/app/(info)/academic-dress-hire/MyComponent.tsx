@@ -119,7 +119,7 @@ const MyComponent = () => {
             </div>
             <div className="mt-6 flex w-full justify-center md:mt-0 md:w-1/2">
               <Image
-                src="/assets/images/graduation_attire/cap.png"
+                src="/assets/images/graduation_attire/gown.png"
                 alt="Graduation Cap"
                 width={300}
                 height={300}
@@ -171,7 +171,7 @@ const MyComponent = () => {
         <section className="rounded-2xl bg-white p-8 shadow-xl dark:bg-slate-800">
           <div className="flex flex-col items-center justify-between md:flex-row md:gap-10">
             <div className="w-full md:w-1/2">
-              <h2 className="mb-6 text-center text-2xl font-bold text-red-500 dark:text-red-400">
+              <h2 className="mb-3 text-4xl font-extrabold text-red-500 dark:text-red-400">
                 Gown Size Guide
               </h2>
               <div className="grid grid-cols-2 gap-4 border-b border-gray-300 pb-2 text-left text-sm font-medium text-gray-800 dark:border-gray-600 dark:text-gray-200">
