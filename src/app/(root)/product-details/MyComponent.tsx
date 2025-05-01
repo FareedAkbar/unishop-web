@@ -216,6 +216,8 @@ const MyComponent = () => {
     const loadData = async () => {
       await getReviews(itemDetail?.item_id);
       setCurrentImage(itemDetail?.object_path ?? "");
+      setSelectedValues({});
+      setSelectedVariation(null);
       smoothScrollTo(0, 1500);
     };
     loadData().catch((error) => {
@@ -475,7 +477,7 @@ const MyComponent = () => {
  
 
   return (
-    <div className="p-6 md:mt-0">
+    <div className="p-6 md:mt-0" >
       <div className="flex items-center justify-between pb-2 lg:px-10">
         {/* Left Arrow */}
         <div>
