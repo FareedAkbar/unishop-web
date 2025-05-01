@@ -92,7 +92,9 @@ const SubcategoryList1 = ({
                 router.push(
                   `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
                 );
-                
+                setTimeout(() => {
+                  setOpenCategories([]);
+                }, 1000);
               } else {
                 router.push(
                   `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,

@@ -385,32 +385,32 @@ const Header = () => {
       <div className="">
         {subItems.map((subItem) => (
           <div key={subItem.category_name} className="relative">
+            <div className="flex w-full items-center justify-between">
             <button
               onClick={() => {
-                if (subItem.children?.[0]) {
-                  toggleCategory(`${subItem.category_name}`);
-                } else {
-                  router.push(
-                    `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
-                  );
-                  setTimeout(() => {
-                    setOpenCategories([]);
-                    setMobileMenuOpen(false);
-                  }, 1000);
-                }
+                router.push(
+                  `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
+                );
+                setTimeout(() => {
+                  setOpenCategories([]);
+                  setMobileMenuOpen(false);
+                }, 1000);
               }}
               className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
             >
               <span className="mr-2 text-left capitalize">
                 {subItem.category_name}
               </span>
-              {subItem.children?.[0] &&
-                (openCategories.includes(`${item}/${subItem.category_name}`) ? (
-                  <FaChevronDown />
-                ) : (
-                  <FaChevronRight />
-                ))}
+              
             </button>
+            {subItem.children?.[0] &&
+                (openCategories.includes(`${item}/${subItem.category_name}`) ? (
+                  <FaChevronDown onClick={()=> toggleCategory(`${subItem.category_name}`)}/>
+                ) : (
+                  <FaChevronRight onClick={()=> toggleCategory(`${subItem.category_name}`)}/>
+                ))}
+            </div>
+           
 
             {/* Render children if open */}
             {openCategories.some((cat) =>

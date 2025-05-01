@@ -174,7 +174,7 @@ const ProductCard = ({
                     </small>
                     <small
                       key={`usage-${item.subject_code}-${index}-type`}
-                      className="bg-yellow-500  text-gray-700  px-2 py-1 rounded mr-1"
+                      className="bg-yellow-200 dark:bg-yellow-500  text-black  px-2 py-1 rounded mr-1"
                     >
                       {matchedType?.type_name ?? ""} {/* Display type_name or fallback */}
                     </small>

@@ -116,7 +116,7 @@ const MyComponent = () => {
       setDisplayData(null); // Reset display data before fetching new data
       const x = await getItemsByCategory(id ?? 0, page, category_type);
       if (typeof x !== "boolean" && x.status) {
-        console.log(x);
+        
         setPagination(x.meta);
         setData(x.data);
         setDisplayData(x.data ? x.data : null);
@@ -491,7 +491,7 @@ const MyComponent = () => {
                     </NewSelect>
                   )}
                 </div>
-                <div className="relative flex w-full">
+                {/* <div className="relative flex w-full">
                   <input
                     type="text"
                     value={searchText}
@@ -502,7 +502,7 @@ const MyComponent = () => {
                   <span className="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-white">
                     <FiSearch />
                   </span>
-                </div>
+                </div> */}
 
                 <h1 className="w-full text-sm font-semibold">
                   Showing {displayData?.length} of {data.length} Items
@@ -714,7 +714,7 @@ const MyComponent = () => {
                             </small>
                             <small
                               key={`usage-${item.subject_code}-${index}-type`}
-                              className="mr-1 rounded bg-yellow-500 px-2 py-1 text-gray-700"
+                              className="mr-1 rounded bg-yellow-200 dark:bg-yellow-500 px-2 py-1 text-black"
                             >
                               {matchedType?.type_name ?? ""}{" "}
                               {/* Display type_name or fallback */}

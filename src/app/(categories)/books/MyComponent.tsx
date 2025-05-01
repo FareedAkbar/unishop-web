@@ -407,7 +407,7 @@ const MyComponent = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <div className="relative">
+                {/* <div className="relative">
                   <input
                     type="text"
                     value={searchText}
@@ -418,7 +418,7 @@ const MyComponent = () => {
                   <span className="absolute left-2 top-1/2 -translate-y-1/2 transform text-gray-500 dark:text-white">
                     <FiSearch />
                   </span>
-                </div>
+                </div> */}
                 <h1 className="text-sm font-semibold">
                   Showing {displayedData?.length} of {data.length} Items
                 </h1>

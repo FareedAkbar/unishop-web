@@ -215,7 +215,7 @@ const MyComponent = () => {
     if (typeof window === "undefined") return;
     const loadData = async () => {
       await getReviews(itemDetail?.item_id);
-
+      setCurrentImage(itemDetail?.object_path ?? "");
       smoothScrollTo(0, 1500);
     };
     loadData().catch((error) => {
@@ -472,7 +472,6 @@ const MyComponent = () => {
     },
   ];
 
-  console.log("itemDetail", itemDetail);
 
   return (
     <div className="p-6 md:mt-0">
@@ -498,8 +497,8 @@ const MyComponent = () => {
       <h6 className="flex-1 text-center font-serif text-sm font-bold capitalize text-red-500 md:text-2xl">
         {itemDetail?.book_title ?? itemDetail?.item_name}
       </h6>
-      <h6 className="pb-2 text-center text-sm font-sans text-neutral-600 dark:text-neutral-100 md:text-md">
-        {itemDetail?.description}
+      <h6 className="pb-2 text-center px-3 md:px-28 text-sm font-sans text-neutral-600 dark:text-neutral-100 md:text-md">
+        {itemDetail?.additional_notes}
       </h6>
 
       <div className="relative flex flex-wrap gap-3">
@@ -659,7 +658,7 @@ const MyComponent = () => {
                         </small>
                         <small
                           key={`usage-${item.subject_code}-${index}-type`}
-                          className="mr-1 rounded bg-yellow-500 px-2 py-1 text-gray-700"
+                          className="mr-1 rounded bg-yellow-200 dark:bg-yellow-500 px-2 py-1 text-black"
                         >
                           {matchedType?.type_name ?? ""}{" "}
                           {/* Display type_name or fallback */}
@@ -991,6 +990,7 @@ const MyComponent = () => {
         )} */}
         <div className="flex h-[500px] w-full flex-col items-center justify-center">
           <Tabs
+          key={`tabs-${itemDetail?.item_id}`}
             tabs={[
               {
                 title: "Details",
@@ -1010,7 +1010,7 @@ const MyComponent = () => {
                             </div>
 
 
-                            {itemDetail?.additional_notes && (
+                            {/* {itemDetail?.additional_notes && (
                               <div>
                                 <div className="">
                                   <h3 className="mt-4 mb-2 text-xl font-bold text-red-600">
@@ -1021,7 +1021,7 @@ const MyComponent = () => {
                                   </span>
                                 </div>
                               </div>
-                            )}
+                            )} */}
                           </div>
 
 

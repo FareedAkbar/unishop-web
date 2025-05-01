@@ -185,6 +185,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
                     //    }
                     //  }}
                     //  onRemoveFromCart={() => handleRemoveFromCart(item)}
+                    goToDetail={() => goToDetail(item)}
                     openDetail={() => goToDetail(item)}
                     handleFavourite={() => handleFavourite(item)}
                     //  wishListLoader={wishListLoader}
