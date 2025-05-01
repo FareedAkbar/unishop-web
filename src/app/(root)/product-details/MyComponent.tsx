@@ -261,11 +261,11 @@ const MyComponent = () => {
         });
 
         setSelectedVariation(matchedVariation ?? null); // Wrap in array if found, otherwise set to null
-      
+
         setCurrentImage(itemDetail?.object_path ?? "");
       } else {
         setSelectedVariation(null); // Reset if not all tags are selected
-       
+
         setCurrentImage(itemDetail?.object_path ?? "");
       }
 
@@ -472,6 +472,7 @@ const MyComponent = () => {
     },
   ];
 
+ 
 
   return (
     <div className="p-6 md:mt-0">
@@ -619,20 +620,20 @@ const MyComponent = () => {
           <span className="text-md font-serif text-green-500 dark:text-neutral-300">
             {filteredVariations?.[0]
               ? filteredVariations?.[0]?.stock?.quantity
-                ? "In Stock"
+                ? "In stock"
                 : "Backorder"
               : itemDetail?.stock.quantity
-                ? "In Stock"
+                ? "In stock"
                 : "Backorder"}
           </span>
           {filteredVariations?.[0]
             ? filteredVariations?.[0].items_variable_items_sku_number && (
-              <span className="text-md font-serif text-zinc-500 dark:text-neutral-300">
+              <span className="text-md font-serif text-zinc-700 dark:text-neutral-300">
                 SKU: {filteredVariations?.[0].items_variable_items_sku_number}
               </span>
             )
             : itemDetail?.SKU && (
-              <span className="text-md font-serif text-zinc-500 dark:text-neutral-300">
+              <span className="text-md font-serif text-zinc-700 dark:text-neutral-300">
                 SKU: {itemDetail.SKU}
               </span>
             )}
@@ -672,7 +673,7 @@ const MyComponent = () => {
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Textbook:
                   </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
                     not used this session
                   </span>
                 </>
@@ -684,83 +685,131 @@ const MyComponent = () => {
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                 Barcode:
               </span>
-              <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+              <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                 {itemDetail.barcode}
               </span>
             </div>
           )}
 
-          {itemDetail?.edition && (
-            <div className="flex items-center justify-center">
-              <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Edition:
-              </span>
-              <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                {itemDetail.edition}
-              </span>
-            </div>
-          )}
+
 
           {itemDetail?.book_id &&
-            itemDetail?.food_id == null &&
-            itemDetail?.introduced && (
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Published:
-                </span>
-                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                  {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
-                </span>
+            itemDetail?.food_id == null && (
+              <div className="">
+                {itemDetail?.audience && (
+                  <div className="flex items-center">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      Audience:
+                    </span>
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                      {itemDetail.audience}
+                    </span>
+                  </div>
+                )}
+                {itemDetail?.format && (
+                  <div className="flex items-center ">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      Format:
+                    </span>
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                      {itemDetail.format}
+                    </span>
+                  </div>
+                )}
+                {itemDetail?.book_language && (
+                  <div className="flex items-center">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      Language:
+                    </span>
+                    <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300 capitalize">
+                      {itemDetail.book_language}
+                    </span>
+                  </div>
+                )}
+                {itemDetail?.pages !== undefined &&
+                  itemDetail.pages !== null &&
+                  itemDetail.pages ? (
+                  <div className="flex items-center">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      Number of Pages:
+                    </span>
+                    <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                      {itemDetail.pages}
+                    </span>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {itemDetail?.introduced && (
+                  <div className="flex items-center ">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      Published:
+                    </span>
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                      {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
+                    </span>
+                  </div>
+                )}
+                {itemDetail?.publisher?.publisher_name && (
+                  <div className="flex items-center ">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      Publisher:
+                    </span>
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                      {itemDetail.publisher.publisher_name}
+                    </span>
+                  </div>
+                )}
+                {itemDetail?.country_of_publication && (
+                  <div className="flex items-center ">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      Country of Publication:
+                    </span>
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                      {itemDetail.country_of_publication}
+                    </span>
+                  </div>
+                )}
+                {itemDetail?.dimensions && (
+                  <div className="flex items-center ">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      Dimensions:
+                    </span>
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                      {itemDetail?.dimensions}
+                    </span>
+                  </div>
+                )}
+                {itemDetail?.weight && (
+                  <div className="flex items-center ">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      Weight:
+                    </span>
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                      {itemDetail?.weight}
+                    </span>
+                  </div>
+                )}
+                {itemDetail?.edition && (
+                  <div className="flex items-center ">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      Edition:
+                    </span>
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                      {itemDetail.edition}
+                    </span>
+                  </div>
+                )}
               </div>
-            )}
+            )
+          }
 
-          {itemDetail?.book_language && (
-            <div className="flex items-center justify-center">
-              <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Language:
-              </span>
-              <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                {itemDetail.book_language}
-              </span>
-            </div>
-          )}
 
-          {itemDetail?.pages !== undefined &&
-            itemDetail.pages !== null &&
-            itemDetail.pages ? (
-            <div className="flex items-center justify-center">
-              <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Number of Pages:
-              </span>
-              <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                {itemDetail.pages}
-              </span>
-            </div>
-          ) : (
-            ""
-          )}
 
-          {itemDetail?.publisher?.publisher_name && (
-            <div className="flex items-center justify-center">
-              <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Publisher:
-              </span>
-              <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                {itemDetail.publisher.publisher_name}
-              </span>
-            </div>
-          )}
 
-          {itemDetail?.publisher?.country && (
-            <div className="flex items-center justify-center">
-              <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Country of Publication:
-              </span>
-              <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                {itemDetail.publisher.country}
-              </span>
-            </div>
-          )}
+
+
+
           {itemDetail?.variations?.[0]?.variation_tags && (
             <div>
               <div>
@@ -990,7 +1039,7 @@ const MyComponent = () => {
         )} */}
         <div className="flex h-[500px] w-full flex-col items-center justify-center">
           <Tabs
-          key={`tabs-${itemDetail?.item_id}`}
+            key={`tabs-${itemDetail?.item_id}`}
             tabs={[
               {
                 title: "Details",

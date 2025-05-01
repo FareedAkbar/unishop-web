@@ -163,7 +163,13 @@ export default interface DataCart {
   selectedValues?: any;
   reviews?: Review[],
   category_detail?: category_detail,
-  book_usages: book_usages[] | null
+  book_usages: book_usages[] | null,
+  country_of_publication?: string | null,
+  dimensions?: string | null,
+  format?: string | null,
+  weight?: string | null,
+  audience?: string | null,
+
 }
 
 interface book_usages {

@@ -274,7 +274,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -473,11 +473,10 @@ const MyComponent = () => {
             {/* Pagination Section */}
             <div className="z-[5] flex justify-between px-4 py-4">
               <button
-                className={`rounded-full p-2 ${
-                  currentPage === 1
+                className={`rounded-full p-2 ${currentPage === 1
                     ? "cursor-not-allowed bg-gray-200 text-black"
                     : "cursor-pointer bg-red-500 text-white"
-                }`}
+                  }`}
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
               >
@@ -487,11 +486,10 @@ const MyComponent = () => {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                className={`rounded-full p-2 ${
-                  currentPage === totalPages || totalPages == 0
+                className={`rounded-full p-2 ${currentPage === totalPages || totalPages == 0
                     ? "cursor-not-allowed bg-gray-200 text-black"
                     : "cursor-pointer bg-red-500 text-white"
-                }`}
+                  }`}
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={currentPage === totalPages || totalPages == 0}
               >
@@ -507,9 +505,7 @@ const MyComponent = () => {
           <h4 className="pb-2 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
             {itemDetail?.book_title}
           </h4>
-          <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
-            {itemDetail?.description}
-          </h6>
+
           <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100">
             {itemDetail?.additional_notes}
           </h6>
@@ -561,46 +557,54 @@ const MyComponent = () => {
                   (selectedVariation?.media?.length === 0 &&
                     itemDetail?.media &&
                     itemDetail?.media?.length > 1)) && (
-                  <div className="mt-2 flex gap-2 overflow-x-auto py-2">
-                    {(selectedVariation?.media?.length > 0
-                      ? selectedVariation.media
-                      : itemDetail?.media
-                        ? itemDetail.media
-                        : []
-                    ).map((media, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentImageIndex(index)}
-                        className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
-                      >
-                        <Image
-                          src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
-                          alt={`Thumbnail ${index + 1}`}
-                          width={48}
-                          height={48}
-                          className="h-full w-full object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                )}
+                    <div className="mt-2 flex gap-2 overflow-x-auto py-2">
+                      {(selectedVariation?.media?.length > 0
+                        ? selectedVariation.media
+                        : itemDetail?.media
+                          ? itemDetail.media
+                          : []
+                      ).map((media, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentImageIndex(index)}
+                          className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
+                        >
+                          <Image
+                            src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                            alt={`Thumbnail ${index + 1}`}
+                            width={48}
+                            height={48}
+                            className="h-full w-full object-cover"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
               </div>
             </div>
-            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
+            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4">
               <div className="flex flex-col">
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                   $
                   {itemDetail?.variations?.[0] &&
-                  filteredVariations?.[0]?.items_variable_items_sale_price
+                    filteredVariations?.[0]?.items_variable_items_sale_price
                     ? filteredVariations?.[0]?.items_variable_items_sale_price
                     : itemDetail?.variations?.[0]
                       ? itemDetail?.variations?.[0]
-                          .items_variable_items_sale_price
+                        .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
-                <span className="font-serif text-zinc-500 dark:text-neutral-300 lg:text-lg">
-                  SKU {itemDetail?.SKU}
-                </span>
+                {filteredVariations?.[0]
+                  ? filteredVariations?.[0].items_variable_items_sku_number && (
+                    <span className="text-md font-serif text-zinc-500 dark:text-neutral-300">
+                      SKU: {filteredVariations?.[0].items_variable_items_sku_number}
+                    </span>
+                  )
+                  : itemDetail?.SKU && (
+                    <span className="text-md font-serif text-zinc-500 dark:text-neutral-300">
+                      SKU: {itemDetail.SKU}
+                    </span>
+                  )}
               </div>
               {itemDetail?.book_id && itemDetail?.food_id == null && (
                 <div className="flex items-center justify-center">
@@ -639,68 +643,117 @@ const MyComponent = () => {
                   </span>
                 </div>
               )}
-              {itemDetail?.edition && (
-                <div className="flex items-center justify-center">
-                  <>
-                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                      Series:
-                    </span>
-                    <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                      {itemDetail?.edition}
-                    </span>
-                  </>
-                </div>
-              )}
-              {itemDetail?.introduced && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Published:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300 lg:text-sm">
-                    {itemDetail?.introduced
-                      ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
-                      : ""}
-                  </span>
-                </div>
-              )}
+              {itemDetail?.book_id &&
+                itemDetail?.food_id == null && (
+                  <div className="">
+                    {itemDetail?.audience && (
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Audience:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.audience}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.format && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Format:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.format}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.book_language && (
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Language:
+                        </span>
+                        <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.book_language}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.pages !== undefined &&
+                      itemDetail.pages !== null &&
+                      itemDetail.pages ? (
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Number of Pages:
+                        </span>
+                        <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                          {itemDetail.pages}
+                        </span>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    {itemDetail?.introduced && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Published:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.publisher?.publisher_name && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Publisher:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {itemDetail.publisher.publisher_name}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.country_of_publication && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Country of Publication:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.country_of_publication}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.dimensions && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Dimensions:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail?.dimensions}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.weight && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Weight:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {itemDetail?.weight}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.edition && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Edition:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {itemDetail.edition}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )
+              }
 
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Language:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.book_language}
-                </span>
-              </div>
-              {itemDetail?.pages ? (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Number of Pages:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail?.pages}
-                  </span>
-                </div>
-              ) : (
-                ""
-              )}
-
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Publisher:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher?.publisher_name}
-                </span>
-              </div>
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Country of Publication:
-                </span>
-                <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.publisher?.country}
-                </span>
-              </div>
               {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>
                   <div>
@@ -762,7 +815,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                                currTag.items_variations_tags_name
+                              currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -800,11 +853,10 @@ const MyComponent = () => {
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center ${
-                                    selectedValues[tagName] === option.value
+                                  className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
                                       ? "bg-red-500 text-white"
                                       : "border-red-500 bg-white dark:bg-slate-700"
-                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}

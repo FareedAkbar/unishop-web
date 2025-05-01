@@ -169,7 +169,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -368,7 +368,7 @@ const MyComponent = () => {
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-grow flex-row sm:pt-10">
-          <div className="flex min-h-screen w-[95vw] flex-col lg:pl-72">
+          <div className="flex min-h-screen flex-col">
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4 pl-2">
               <div className="flex flex-row items-center gap-3 text-left">
@@ -382,7 +382,7 @@ const MyComponent = () => {
             <ScrollArea className="min-h-[75vh] pb-10">
               <div
                 className="flex flex-wrap justify-center gap-3 py-3"
-                // key={displayData ? displayData?.[0]?.item_id : "123"}
+              // key={displayData ? displayData?.[0]?.item_id : "123"}
               >
                 {loader ? (
                   Array.from({ length: 5 }, (_, index) => (
@@ -473,9 +473,9 @@ const MyComponent = () => {
           <h4 className="text-center font-serif text-lg font-bold capitalize text-red-500 dark:text-neutral-100 md:text-2xl">
             {itemDetail?.item_name}
           </h4>
-          <h6 className="py-1.5 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
+          {/* <h6 className="py-1.5 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
             {itemDetail?.description}
-          </h6>
+          </h6> */}
           <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100">
             {itemDetail?.additional_notes}
           </h6>
@@ -516,23 +516,29 @@ const MyComponent = () => {
                 </motion.div>
               </div>
             </div>
-            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
+            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 ">
               <div className="flex flex-col">
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                   $
                   {itemDetail?.variations?.[0] &&
-                  filteredVariations?.[0]?.items_variable_items_sale_price
+                    filteredVariations?.[0]?.items_variable_items_sale_price
                     ? filteredVariations?.[0]?.items_variable_items_sale_price
                     : itemDetail?.variations?.[0]
                       ? itemDetail?.variations?.[0]
-                          .items_variable_items_sale_price
+                        .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
-                {itemDetail?.SKU && (
-                  <span className="font-serif text-zinc-500 dark:text-neutral-300 lg:text-lg">
-                    SKU: {itemDetail.SKU}
-                  </span>
-                )}
+                {filteredVariations?.[0]
+                  ? filteredVariations?.[0].items_variable_items_sku_number && (
+                    <span className="text-md font-serif text-zinc-700 dark:text-neutral-300">
+                      SKU: {filteredVariations?.[0].items_variable_items_sku_number}
+                    </span>
+                  )
+                  : itemDetail?.SKU && (
+                    <span className="text-md font-serif text-zinc-700 dark:text-neutral-300">
+                      SKU: {itemDetail.SKU}
+                    </span>
+                  )}
               </div>
               {itemDetail?.book_id && itemDetail?.food_id == null && (
                 <div className="flex items-center justify-center">
@@ -581,74 +587,117 @@ const MyComponent = () => {
                   </span>
                 </div>
               )}
-              {itemDetail?.edition && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Series:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.edition}
-                  </span>
-                </div>
-              )}
+              {itemDetail?.book_id &&
+                itemDetail?.food_id == null && (
+                  <div className="">
+                    {itemDetail?.audience && (
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Audience:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.audience}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.format && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Format:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.format}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.book_language && (
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Language:
+                        </span>
+                        <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.book_language}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.pages !== undefined &&
+                      itemDetail.pages !== null &&
+                      itemDetail.pages ? (
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Number of Pages:
+                        </span>
+                        <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                          {itemDetail.pages}
+                        </span>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    {itemDetail?.introduced && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Published:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.publisher?.publisher_name && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Publisher:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {itemDetail.publisher.publisher_name}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.country_of_publication && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Country of Publication:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.country_of_publication}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.dimensions && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Dimensions:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail?.dimensions}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.weight && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Weight:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {itemDetail?.weight}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.edition && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Edition:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {itemDetail.edition}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )
+              }
 
-              {itemDetail?.book_language && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Language:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.book_language}
-                  </span>
-                </div>
-              )}
-
-              {itemDetail?.pages !== undefined &&
-              itemDetail.pages !== null &&
-              itemDetail.pages ? (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Number of Pages:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.pages}
-                  </span>
-                </div>
-              ) : (
-                ""
-              )}
-
-              {itemDetail?.publisher?.publisher_name && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Publisher:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.publisher.publisher_name}
-                  </span>
-                </div>
-              )}
-
-              {itemDetail?.publisher?.country && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Country of Publication:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.publisher.country}
-                  </span>
-                </div>
-              )}
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Created at:
-                </span>
-                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.introduced
-                    ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
-                    : ""}
-                </span>
-              </div>
 
               {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>
@@ -711,7 +760,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                                currTag.items_variations_tags_name
+                              currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -749,11 +798,10 @@ const MyComponent = () => {
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center ${
-                                    selectedValues[tagName] === option.value
-                                      ? "bg-red-500 text-white"
-                                      : "border-red-500 bg-white dark:bg-slate-700"
-                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                  className={`min-w-10 rounded border p-1 text-center ${selectedValues[tagName] === option.value
+                                    ? "bg-red-500 text-white"
+                                    : "border-red-500 bg-white dark:bg-slate-700"
+                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}

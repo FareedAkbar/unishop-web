@@ -116,7 +116,7 @@ const MyComponent = () => {
       setDisplayData(null); // Reset display data before fetching new data
       const x = await getItemsByCategory(id ?? 0, page, category_type);
       if (typeof x !== "boolean" && x.status) {
-        
+
         setPagination(x.meta);
         setData(x.data);
         setDisplayData(x.data ? x.data : null);
@@ -668,7 +668,7 @@ const MyComponent = () => {
                   )}
               </div>
             </div>
-            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
+            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4">
               <div className="flex flex-col">
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                   $
@@ -745,77 +745,118 @@ const MyComponent = () => {
                   </span>
                 </div>
               )}
-              {itemDetail?.edition && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Edition:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.edition}
-                  </span>
-                </div>
-              )}
               {itemDetail?.book_id &&
-                itemDetail?.food_id == null &&
-                itemDetail?.introduced && (
-                  <div className="flex items-center justify-center">
-                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                      Published:
-                    </span>
-                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                      {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
-                    </span>
+                itemDetail?.food_id == null && (
+                  <div className="">
+                    {itemDetail?.audience && (
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Audience:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.audience}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.format && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Format:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.format}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.book_language && (
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Language:
+                        </span>
+                        <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.book_language}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.pages !== undefined &&
+                      itemDetail.pages !== null &&
+                      itemDetail.pages ? (
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Number of Pages:
+                        </span>
+                        <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                          {itemDetail.pages}
+                        </span>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    {itemDetail?.introduced && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Published:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.publisher?.publisher_name && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Publisher:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {itemDetail.publisher.publisher_name}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.country_of_publication && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Country of Publication:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.country_of_publication}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.dimensions && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Dimensions:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail?.dimensions}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.weight && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Weight:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {itemDetail?.weight}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.edition && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Edition:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {itemDetail.edition}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                )}
+                )
+              }
 
-              {itemDetail?.book_language && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Language:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.book_language}
-                  </span>
-                </div>
-              )}
 
-              {itemDetail?.pages !== undefined &&
-                itemDetail.pages !== null &&
-                itemDetail.pages ? (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Number of Pages:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.pages}
-                  </span>
-                </div>
-              ) : (
-                ""
-              )}
-
-              {itemDetail?.publisher?.publisher_name && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Publisher:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.publisher.publisher_name}
-                  </span>
-                </div>
-              )}
-
-              {itemDetail?.publisher?.country && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Country of Publication:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.publisher.country}
-                  </span>
-                </div>
-              )}
-              
 
               {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>
