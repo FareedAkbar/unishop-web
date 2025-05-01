@@ -147,7 +147,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
             <CartItem
               key={`cartItems-${item.item_id}-${index}`}
               title={item.item_name}
-              imageSrc={item?.object_path ?? item.media[0]?.object_path}
+              imageSrc={item?.object_path ?? item.media?.[0]?.object_path ?? ""}
               price={item.item_sale_price}
               showRemove={true}
               onChangeQuantity={(id, number) => onChangeQuantity(id, number)}

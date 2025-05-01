@@ -51,11 +51,11 @@ const MyComponent = () => {
   const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
     null,
   );
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImage, setCurrentImage] = useState<string>(itemDetail?.object_path ?? "");
   const { toast } = useToast();
   const params = useSearchParams();
 
-  console.log("itemDetail", itemDetail);
+
 
   type Position = {
     px: number;
@@ -261,10 +261,12 @@ const MyComponent = () => {
         });
 
         setSelectedVariation(matchedVariation ?? null); // Wrap in array if found, otherwise set to null
-        setCurrentImageIndex(0);
+      
+        setCurrentImage(itemDetail?.object_path ?? "");
       } else {
         setSelectedVariation(null); // Reset if not all tags are selected
-        setCurrentImageIndex(0);
+       
+        setCurrentImage(itemDetail?.object_path ?? "");
       }
 
       return newValues;
@@ -285,7 +287,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -470,6 +472,8 @@ const MyComponent = () => {
     },
   ];
 
+  console.log("itemDetail", itemDetail);
+
   return (
     <div className="p-6 md:mt-0">
       <div className="flex items-center justify-between pb-2 lg:px-10">
@@ -494,7 +498,7 @@ const MyComponent = () => {
       <h6 className="flex-1 text-center font-serif text-sm font-bold capitalize text-red-500 md:text-2xl">
         {itemDetail?.book_title ?? itemDetail?.item_name}
       </h6>
-      <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
+      <h6 className="pb-2 text-center text-sm font-sans text-neutral-600 dark:text-neutral-100 md:text-md">
         {itemDetail?.description}
       </h6>
 
@@ -503,17 +507,20 @@ const MyComponent = () => {
           <div
             className="relative flex h-60 w-60 cursor-zoom-in items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80"
             ref={imageRef}
-            onMouseEnter={() => setIsHovering(true)}
+            onMouseEnter={() => currentImage ? setIsHovering(true) : null}
             onMouseLeave={() => setIsHovering(false)}
-            onMouseMove={handleMouseMove}
+            onMouseMove={(e) => currentImage ? handleMouseMove(e) : null}
           >
             <Image
               src={
-                selectedVariation?.media?.[currentImageIndex]?.object_path
-                  ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
-                  : itemDetail?.object_path
-                    ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                    : "/assets/images/products/product.png"
+                currentImage ? `https://ipos-storage.s3.amazonaws.com/${currentImage}` : "/assets/images/products/product.png"
+                // selectedVariation?.media?.[currentImageIndex]?.object_path
+                //   ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
+                //   : itemDetail?.media?.[currentImageIndex]?.object_path ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.media[currentImageIndex].object_path}` :
+
+                //     itemDetail?.object_path
+                //       ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
+                //       : "/assets/images/products/product.png"
               }
               alt={
                 selectedVariation?.media?.[0]?.object_path
@@ -526,34 +533,55 @@ const MyComponent = () => {
             />
           </div>
 
-          {((selectedVariation?.media &&
-            selectedVariation?.media?.length > 1) ??
-            (selectedVariation?.media?.length === 0 &&
+          {(
+            (!selectedVariation &&
               itemDetail?.media &&
-              itemDetail?.media?.length > 1)) && (
-            <div className="mt-2 flex gap-2 overflow-x-auto py-2">
-              {(selectedVariation?.media?.length > 0
-                ? selectedVariation.media
-                : itemDetail?.media
-                  ? itemDetail.media
+              itemDetail?.media?.length > 0)) && (
+              <div className="mt-2 flex gap-2 overflow-x-auto py-2">
+                {(itemDetail?.media
+                  ? [{ object_id: "001", object_path: itemDetail?.object_path ?? "" }, ...itemDetail.media]
                   : []
-              ).map((media, index) => (
-                <button
-                  key={`thumbnail-${media.object_id ?? `fallback-${index}`}`}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
-                >
-                  <Image
-                    src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
-                    alt={`Thumbnail ${index + 1}`}
-                    width={48}
-                    height={48}
-                    className="h-full w-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          )}
+                ).map((media, index) => (
+                  <button
+                    key={`thumbnail-${media.object_id ?? `fallback-${index}`}`}
+                    onClick={() => { setCurrentImage(media.object_path); }}
+                    className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImage === media.object_path ? "border-red-500" : "border-gray-300"}`}
+                  >
+                    <Image
+                      src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                      alt={`Thumbnail ${index + 1}`}
+                      width={48}
+                      height={48}
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+          {(selectedVariation?.media &&
+            selectedVariation?.media?.length > 1) && (
+              <div className="mt-2 flex gap-2 overflow-x-auto py-2">
+                {(selectedVariation?.media?.length > 0
+                  ? [{ object_id: "001", object_path: itemDetail?.object_path ?? "" }, ...selectedVariation.media]
+
+                  : []
+                ).map((media, index) => (
+                  <button
+                    key={`thumbnail-${media.object_id ?? `fallback-${index}`}`}
+                    onClick={() => { setCurrentImage(media.object_path); }}
+                    className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImage === media.object_path ? "border-red-500" : "border-gray-300"}`}
+                  >
+                    <Image
+                      src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                      alt={`Thumbnail ${index + 1}`}
+                      width={48}
+                      height={48}
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
         </div>
 
         <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4">
@@ -562,11 +590,11 @@ const MyComponent = () => {
               <span className="font-sans text-2xl font-bold text-red-500 dark:text-neutral-300">
                 ${" "}
                 {itemDetail?.variations?.[0] &&
-                filteredVariations?.[0]?.items_variable_items_sale_price
+                  filteredVariations?.[0]?.items_variable_items_sale_price
                   ? filteredVariations?.[0]?.items_variable_items_sale_price
                   : itemDetail?.variations?.[0]
                     ? itemDetail?.variations?.[0]
-                        .items_variable_items_sale_price
+                      .items_variable_items_sale_price
                     : itemDetail?.item_sale_price}
               </span>
             ) : (
@@ -600,15 +628,15 @@ const MyComponent = () => {
           </span>
           {filteredVariations?.[0]
             ? filteredVariations?.[0].items_variable_items_sku_number && (
-                <span className="text-md font-serif text-zinc-500 dark:text-neutral-300">
-                  SKU: {filteredVariations?.[0].items_variable_items_sku_number}
-                </span>
-              )
+              <span className="text-md font-serif text-zinc-500 dark:text-neutral-300">
+                SKU: {filteredVariations?.[0].items_variable_items_sku_number}
+              </span>
+            )
             : itemDetail?.SKU && (
-                <span className="text-md font-serif text-zinc-500 dark:text-neutral-300">
-                  SKU: {itemDetail.SKU}
-                </span>
-              )}
+              <span className="text-md font-serif text-zinc-500 dark:text-neutral-300">
+                SKU: {itemDetail.SKU}
+              </span>
+            )}
 
           {itemDetail?.book_id && itemDetail?.food_id == null && (
             <div className="flex items-center justify-center">
@@ -620,7 +648,7 @@ const MyComponent = () => {
                     ); // Find the matching type
                     return (
                       <div
-                        key={`usage-${item.subject_code}-${index}-name-type`}
+                        key={`usage-${item.subject_code}-${index}-name-type`} className="mb-1"
                       >
                         <small
                           key={`usage-${item.subject_code}-${index}-name`}
@@ -699,8 +727,8 @@ const MyComponent = () => {
           )}
 
           {itemDetail?.pages !== undefined &&
-          itemDetail.pages !== null &&
-          itemDetail.pages ? (
+            itemDetail.pages !== null &&
+            itemDetail.pages ? (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                 Number of Pages:
@@ -831,11 +859,10 @@ const MyComponent = () => {
                         {options.map((option, optionIndex) => (
                           <button
                             key={`${option.value}-${optionIndex}`}
-                            className={`min-w-10 rounded border p-1 text-center text-sm ${
-                              selectedValues[tagName] === option.value
-                                ? "bg-red-500 text-white"
-                                : "border-red-500 bg-white dark:bg-slate-700"
-                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            className={`min-w-10 rounded border p-1 text-center text-sm ${selectedValues[tagName] === option.value
+                              ? "bg-red-500 text-white"
+                              : "border-red-500 bg-white dark:bg-slate-700"
+                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -863,12 +890,12 @@ const MyComponent = () => {
             </div>
           )}
           {itemDetail?.variations?.[0] &&
-          filteredVariations?.[0]?.items_variable_items_id &&
-          Object.values(selectedValues).length ==
+            filteredVariations?.[0]?.items_variable_items_id &&
+            Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-          isVariableItemInCart(
-            filteredVariations?.[0]?.items_variable_items_id,
-          ) ? (
+            isVariableItemInCart(
+              filteredVariations?.[0]?.items_variable_items_id,
+            ) ? (
             <span className="pl-1 font-sans text-green-500">
               Already added to your cart
             </span>
@@ -876,14 +903,14 @@ const MyComponent = () => {
             ""
           )}
           {itemDetail?.variations?.[0] &&
-          !isVariableItemInCart(
-            filteredVariations?.[0]?.items_variable_items_id ?? -1,
-          ) &&
-          !Object.values(selectedValues).some((value) => value === undefined) &&
-          Object.values(selectedValues).length ==
+            !isVariableItemInCart(
+              filteredVariations?.[0]?.items_variable_items_id ?? -1,
+            ) &&
+            !Object.values(selectedValues).some((value) => value === undefined) &&
+            Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-          (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
-            itemDetail?.item_sale_price) ? (
+            (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
+              itemDetail?.item_sale_price) ? (
             <button
               className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-sans text-white hover:bg-green-600"
               onClick={() => handleAddToCart(itemDetail)}
@@ -913,11 +940,12 @@ const MyComponent = () => {
             >
               <Image
                 src={
-                  selectedVariation?.media?.[currentImageIndex]?.object_path
-                    ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
-                    : itemDetail?.object_path
-                      ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                      : "/assets/images/products/product.png"
+                  `https://ipos-storage.s3.amazonaws.com/${currentImage}`
+                  // selectedVariation?.media?.[currentImageIndex]?.object_path
+                  //   ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
+                  //   : itemDetail?.object_path
+                  //     ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
+                  //     : "/assets/images/products/product.png"
                 }
                 style={{
                   position: "absolute",
@@ -975,8 +1003,28 @@ const MyComponent = () => {
 
                     <ScrollArea className="max-h-[300px] min-h-fit overflow-y-auto">
                       <div className="text-sm text-gray-600 dark:text-gray-400">
-                        {itemDetail?.additional_notes ? (
-                          itemDetail.additional_notes
+                        {itemDetail?.detail ? (
+                          <div>
+                            <div>
+                              {itemDetail.detail}
+                            </div>
+
+
+                            {itemDetail?.additional_notes && (
+                              <div>
+                                <div className="">
+                                  <h3 className="mt-4 mb-2 text-xl font-bold text-red-600">
+                                    Additional Notes
+                                  </h3>
+                                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                                    {itemDetail.additional_notes}
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+
                         ) : (
                           <div>
                             <p>No details available</p>
@@ -1032,8 +1080,8 @@ const MyComponent = () => {
                             <p className="text-xs text-gray-500">
                               {review?.created_at
                                 ? moment(review?.created_at).format(
-                                    "Do MMMM, YYYY",
-                                  )
+                                  "Do MMMM, YYYY",
+                                )
                                 : ""}
                             </p>
                           </div>

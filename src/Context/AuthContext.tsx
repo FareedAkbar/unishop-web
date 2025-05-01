@@ -604,6 +604,10 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     lsClient.setEmpty("TOKEN", "");
     lsClient.setEmpty("IS_LOGGED_IN", false);
     lsClient.setEmpty("USER_INFO", null);
+    lsClient.setEmpty("CHECKOUT_DATA", null);
+    lsClient.setEmpty("BILLING_ADDRESS", null);
+    setBillingAddress(null);
+    setCheckoutData(null);
     setIsLoggedIn(false);
     setUserInfo(undefined);
     setToken(undefined);

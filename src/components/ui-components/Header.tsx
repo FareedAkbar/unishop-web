@@ -581,7 +581,7 @@ const Header = () => {
               {isUserDropdownOpen && (
                 <div className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md dark:bg-slate-700">
                    {checkoutData?.customer_id ? (
-                     <p className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600">
+                     <p className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600 capitalize">
                      {checkoutData?.user_name ?? "" }
                    </p>
                    ) : ""}
@@ -945,12 +945,12 @@ const Header = () => {
                     className="absolute right-0 z-10 mt-1 w-40 rounded-md bg-white px-1 py-2 shadow-md dark:bg-slate-700"
                   >
                     {userInfo?.first_name ? (
-                      <span className="text-md p-1 font-medium">
+                      <span className="text-md p-1 font-medium capitalize">
                         {userInfo?.first_name} {userInfo?.last_name}
                       </span>
                     ): 
                     checkoutData?.customer_id ? (
-                      <span className="text-md p-1 font-medium">
+                      <span className="text-md p-1 font-medium capitalize">
                       {checkoutData?.user_name ? checkoutData?.user_name : ""}
                     </span>
                     ) : ""

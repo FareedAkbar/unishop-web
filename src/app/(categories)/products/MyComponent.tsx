@@ -234,7 +234,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -513,7 +513,7 @@ const MyComponent = () => {
             <ScrollArea className="min-h-[75vh] pb-10">
               <div
                 className="flex flex-wrap justify-center gap-3 py-3"
-                // key={displayData ? displayData?.[0]?.item_id : "123"}
+              // key={displayData ? displayData?.[0]?.item_id : "123"}
               >
                 {loader ? (
                   Array.from({ length: 5 }, (_, index) => (
@@ -587,12 +587,14 @@ const MyComponent = () => {
           <h4 className="text-center font-serif text-lg font-bold capitalize text-red-500 dark:text-neutral-100 md:text-2xl">
             {itemDetail?.item_name}
           </h4>
-          <h6 className="py-1.5 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
-            {itemDetail?.description}
+          <h6 className="py-1.5 text-center text-sm font-sans text-neutral-600 dark:text-neutral-100">
+            {itemDetail?.additional_notes && itemDetail?.additional_notes?.length > 200
+              ? `${itemDetail.additional_notes.slice(0, 200)}...`
+              : itemDetail?.additional_notes}
           </h6>
-          <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100">
+          {/* <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100">
             {itemDetail?.additional_notes}
-          </h6>
+          </h6> */}
           <div className="flex">
             <div>
               <div className="flex flex-col items-center justify-center">
@@ -641,29 +643,29 @@ const MyComponent = () => {
                   (selectedVariation?.media?.length === 0 &&
                     itemDetail?.media &&
                     itemDetail?.media?.length > 1)) && (
-                  <div className="mt-2 flex gap-2 overflow-x-auto py-2">
-                    {(selectedVariation?.media?.length > 0
-                      ? selectedVariation.media
-                      : itemDetail?.media
-                        ? itemDetail.media
-                        : []
-                    ).map((media, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentImageIndex(index)}
-                        className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
-                      >
-                        <Image
-                          src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
-                          alt={`Thumbnail ${index + 1}`}
-                          width={48}
-                          height={48}
-                          className="h-full w-full object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                )}
+                    <div className="mt-2 flex gap-2 overflow-x-auto py-2">
+                      {(selectedVariation?.media?.length > 0
+                        ? selectedVariation.media
+                        : itemDetail?.media
+                          ? itemDetail.media
+                          : []
+                      ).map((media, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentImageIndex(index)}
+                          className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
+                        >
+                          <Image
+                            src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                            alt={`Thumbnail ${index + 1}`}
+                            width={48}
+                            height={48}
+                            className="h-full w-full object-cover"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
               </div>
             </div>
             <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
@@ -671,18 +673,24 @@ const MyComponent = () => {
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                   $
                   {itemDetail?.variations?.[0] &&
-                  filteredVariations?.[0]?.items_variable_items_sale_price
+                    filteredVariations?.[0]?.items_variable_items_sale_price
                     ? filteredVariations?.[0]?.items_variable_items_sale_price
                     : itemDetail?.variations?.[0]
                       ? itemDetail?.variations?.[0]
-                          .items_variable_items_sale_price
+                        .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
-                {itemDetail?.SKU && (
-                  <span className="font-serif text-zinc-500 dark:text-neutral-300 lg:text-lg">
-                    SKU: {itemDetail.SKU}
-                  </span>
-                )}
+                {filteredVariations?.[0]
+                  ? filteredVariations?.[0].items_variable_items_sku_number && (
+                    <span className="text-md font-serif text-zinc-500 dark:text-neutral-300">
+                      SKU: {filteredVariations?.[0].items_variable_items_sku_number}
+                    </span>
+                  )
+                  : itemDetail?.SKU && (
+                    <span className="text-md font-serif text-zinc-500 dark:text-neutral-300">
+                      SKU: {itemDetail.SKU}
+                    </span>
+                  )}
               </div>
 
               {itemDetail?.book_id && itemDetail?.food_id == null && (
@@ -694,14 +702,24 @@ const MyComponent = () => {
                           (t) => t.item_book_type_id === Number(item.type_id),
                         ); // Find the matching type
                         return (
-                          <small
-                            key={index}
-                            className="mr-1 rounded bg-red-500 px-2 py-1 text-gray-100 dark:bg-gray-700 dark:text-gray-300"
+                          <div
+                            key={`usage-${item.subject_code}-${index}-name-type`} className="mb-1"
                           >
-                            {item.subject_name} {item.subject_code},{" "}
-                            {matchedType?.type_name ?? ""}{" "}
-                            {/* Display type_name or fallback */}
-                          </small>
+                            <small
+                              key={`usage-${item.subject_code}-${index}-name`}
+                              className="mr-1 rounded bg-red-500 px-2 py-1 text-gray-100"
+                            >
+                              {item.subject_name} {item.subject_code}{" "}
+                              {/* Display type_name or fallback */}
+                            </small>
+                            <small
+                              key={`usage-${item.subject_code}-${index}-type`}
+                              className="mr-1 rounded bg-yellow-500 px-2 py-1 text-gray-700"
+                            >
+                              {matchedType?.type_name ?? ""}{" "}
+                              {/* Display type_name or fallback */}
+                            </small>
+                          </div>
                         );
                       })}
                     </span>
@@ -730,13 +748,25 @@ const MyComponent = () => {
               {itemDetail?.edition && (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Series:
+                    Edition:
                   </span>
                   <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                     {itemDetail.edition}
                   </span>
                 </div>
               )}
+              {itemDetail?.book_id &&
+                itemDetail?.food_id == null &&
+                itemDetail?.introduced && (
+                  <div className="flex items-center justify-center">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      Published:
+                    </span>
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                      {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
+                    </span>
+                  </div>
+                )}
 
               {itemDetail?.book_language && (
                 <div className="flex items-center justify-center">
@@ -750,8 +780,8 @@ const MyComponent = () => {
               )}
 
               {itemDetail?.pages !== undefined &&
-              itemDetail.pages !== null &&
-              itemDetail.pages ? (
+                itemDetail.pages !== null &&
+                itemDetail.pages ? (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
@@ -785,16 +815,7 @@ const MyComponent = () => {
                   </span>
                 </div>
               )}
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Created at:
-                </span>
-                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.introduced
-                    ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
-                    : ""}
-                </span>
-              </div>
+              
 
               {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>
@@ -863,7 +884,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                                currTag.items_variations_tags_name
+                              currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -901,11 +922,10 @@ const MyComponent = () => {
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center text-sm ${
-                                    selectedValues[tagName] === option.value
-                                      ? "bg-red-500 text-white"
-                                      : "border-red-500 bg-white dark:bg-slate-700"
-                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                  className={`min-w-10 rounded border p-1 text-center text-sm ${selectedValues[tagName] === option.value
+                                    ? "bg-red-500 text-white"
+                                    : "border-red-500 bg-white dark:bg-slate-700"
+                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}

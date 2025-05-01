@@ -165,7 +165,7 @@ const ProductCard = ({
               {manageUsage().map((item, index) => {
                 const matchedType = textbookType?.find((t) => t.item_book_type_id === item.type_id); // Find the matching type
                 return (
-                  <div key={`usage-${item.subject_code}-${index}-name-type`}>
+                  <div key={`usage-${item.subject_code}-${index}-name-type`} className="mb-1">
                     <small
                       key={`usage-${item.subject_code}-${index}-name`}
                       className="bg-red-500  text-gray-100  px-2 py-1 rounded mr-1"

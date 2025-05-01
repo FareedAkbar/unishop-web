@@ -85,10 +85,14 @@ const SubcategoryList1 = ({
     <div className="absolute left-10 top-8 z-50 w-60 overflow-x-visible rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
       {subItems.map((subItem) => (
         <div key={subItem.category_name} className="relative">
+          <div className="flex w-full items-center justify-between">
           <button
             onClick={() => {
               if (subItem.children?.[0]) {
-                toggleCategory(`${subItem.category_name}`);
+                router.push(
+                  `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
+                );
+                
               } else {
                 router.push(
                   `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
@@ -103,13 +107,16 @@ const SubcategoryList1 = ({
             <span className="mr-2 text-left capitalize">
               {subItem.category_name}
             </span>
-            {subItem.children?.[0] &&
-              (openCategories.includes(`${item}/${subItem.category_name}`) ? (
-                <FaChevronDown />
-              ) : (
-                <FaChevronRight />
-              ))}
+            
           </button>
+          {subItem.children?.[0] &&
+              (openCategories.includes(`${item}/${subItem.category_name}`) ? (
+                <FaChevronDown onClick={() => {toggleCategory(`${subItem.category_name}`);}}/>
+              ) : (
+                <FaChevronRight onClick={() => {toggleCategory(`${subItem.category_name}`);}}/>
+              ))}
+          </div>
+         
 
           {/* Render children if open */}
           {openCategories.some((cat) =>
