@@ -456,8 +456,8 @@ const MyComponent = () => {
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex flex-grow flex-row sm:pt-10">
-          <div className="flex flex-col">
+        <div className="flex w-full flex-grow flex-row sm:pt-10">
+          <div className="flex w-full flex-col">
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4 pl-2">
               <div className="text-left">

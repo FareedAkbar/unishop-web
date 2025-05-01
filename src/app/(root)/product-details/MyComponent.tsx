@@ -1001,7 +1001,7 @@ const MyComponent = () => {
                       Details
                     </h3>
 
-                    <ScrollArea className="max-h-[300px] min-h-fit overflow-y-auto">
+                    <ScrollArea className="h-72 overflow-y-auto">
                       <div className="text-sm text-gray-600 dark:text-gray-400">
                         {itemDetail?.detail ? (
                           <div>
@@ -1026,13 +1026,13 @@ const MyComponent = () => {
 
 
                         ) : (
-                          <div>
+                          <div className="flex flex-col items-center justify-center">
                             <p>No details available</p>
                             <Player
                               autoplay
                               loop
                               src="/assets/gifs/no-details.json"
-                              className="h-80 w-80"
+                              className="h-fit w-64 bg-yellow-300"
                             />
                           </div>
                         )}
@@ -1051,7 +1051,7 @@ const MyComponent = () => {
                       Reviews
                     </h3>
 
-                    <ScrollArea className="max-h-[300px] min-h-fit overflow-y-auto">
+                    <ScrollArea className="h-72 overflow-y-auto">
                       {!getReviewsLoader &&
                         reviews?.map((review, index) => (
                           <div
@@ -1088,7 +1088,7 @@ const MyComponent = () => {
                         ))}
                       {!getReviewsLoader &&
                         (!reviews?.length || reviews == null) && (
-                          <div>
+                          <div className="flex h-full flex-col items-center justify-center gap-5">
                             <p className="text-sm text-gray-600 dark:text-gray-400">
                               No reviews available
                             </p>
@@ -1096,13 +1096,13 @@ const MyComponent = () => {
                               autoplay
                               loop
                               src="/assets/gifs/no-reviews.json"
-                              className="h-80 w-80"
+                              className="h-fit w-72"
                             />
                           </div>
                         )}
                     </ScrollArea>
                     {getReviewsLoader && (
-                      <ScrollArea className="max-h-[300px] overflow-y-auto">
+                      <ScrollArea className="h-[300px] overflow-y-auto">
                         {Array.from({ length: 6 }).map((_, index) => (
                           <div
                             key={index}
