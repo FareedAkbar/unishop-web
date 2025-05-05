@@ -12,6 +12,7 @@ import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
 import type { ItemSpecialTag } from "~/types/productTags";
 import type { SpecialTag } from "~/types/book";
+import { FaCheckCircle } from "react-icons/fa";
 
 interface ProductProps {
   showAddToCart?: boolean;
@@ -64,7 +65,22 @@ const ProductCard = ({
 
   return (
     <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
-      <div className="relative flex h-40 grow-0 items-center justify-center rounded-sm bg-white dark:bg-slate-600 sm:h-48 lg:h-64">
+
+      {((product?.items_type === 1 && !product?.variations?.[0]) ?? product?.item_sale_price) && (
+        <div className="inset-0 absolute bg-black/30 dark:bg-white/30 z-[1] rounded" />
+      )}
+      {product?.items_type === 1 && (
+        <div className="absolute left-2 top-0 flex flex-col">
+          <span
+            className=" mr-2 mt-1  rounded-sm bg-red-500 px-1 py-0.5 text-[10px] text-white"
+          >
+            Variable Item
+          </span>
+
+        </div>
+      )}
+
+      <div className="relative flex flex-col h-40 grow-0 items-center justify-center rounded-sm bg-white mt-4  sm:h-48 lg:h-72">
         {tagNames.length > 0 ? (
           <div className="absolute left-2 top-1 flex flex-col">
             {tagNames.map((tag, index) => {
@@ -93,7 +109,7 @@ const ProductCard = ({
           alt={product?.SKU_title ?? ""}
           width={1000}
           height={1000}
-          className="h-32 cursor-pointer object-contain transition-transform duration-300 group-hover:scale-110 lg:h-56 lg:w-56" // Scale on hover
+          className="h-32 my-4 cursor-pointer object-contain transition-transform duration-300 group-hover:scale-110 lg:h-56 lg:w-56" // Scale on hover
         />
         <div className="absolute right-5 top-2 flex">
           {showButton && !showAddToCart && (
@@ -109,7 +125,7 @@ const ProductCard = ({
             className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
           >
             {product?.item_id &&
-            favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
+              favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
               <AiFillHeart color="red" />
             ) : (
               <AiOutlineHeart />
@@ -124,13 +140,12 @@ const ProductCard = ({
         </div>
 
         {showButton &&
-        (product?.variations?.[0]?.items_variable_items_sale_price ??
-          product?.item_sale_price) ? (
+          (product?.variations?.[0]?.items_variable_items_sale_price ??
+            product?.item_sale_price) ? (
           <button
             onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
-            className={`z-5 absolute bottom-0 mt-4 w-full rounded-b-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${
-              !showAddToCart ? "bg-red-500" : "bg-black"
-            }`}
+            className={`z-5 bottom-0 w-full rounded-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${!showAddToCart ? "bg-red-500" : "bg-black"
+              }`}
           >
             {!showAddToCart ? "Remove From Cart" : "Add To Cart"}
           </button>
@@ -199,6 +214,16 @@ const ProductCard = ({
           ""
         )}
       </div>
+      {product?.items_type != 1 && (
+        <span className="flex flex-row items-center gap-1 text-xs font-serif text-green-500 ">
+          <FaCheckCircle />
+          {product?.stock.quantity
+            ? "In stock"
+            : "Backorder"
+          }
+        </span>
+      )}
+
     </div>
   );
 };

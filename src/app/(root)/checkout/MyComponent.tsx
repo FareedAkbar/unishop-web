@@ -154,7 +154,7 @@ const MyComponent = () => {
                   <CartItem
                     key={item.item_id + Math.random() + index}
                     title={item.item_name}
-                    imageSrc={item?.object_path ?? item.media[0]?.object_path}
+                    imageSrc={item?.object_path ?? item.media?.[0]?.object_path ?? ""}
                     price={item.item_sale_price}
                     showRemove={true}
                     onChangeQuantity={(id, number) =>

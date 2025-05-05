@@ -17,7 +17,7 @@ interface SidebarCartProps {
 }
 
 const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
-  const { cartItems, removeCartItems, increaseCartItemQuantity, isLoggedIn } =
+  const { cartItems, removeCartItems, increaseCartItemQuantity, isLoggedIn,logout } =
     useAuthContext();
   const [items, setItems] = useState<DataCart[]>([]);
   const [subTotal, setSubtotal] = useState<number>(0);
@@ -72,6 +72,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
     router.push("checkout");
   };
   const goToLogin = () => {
+    void logout()
     setLoginAlert(false);
     onClose();
     router.push("login");

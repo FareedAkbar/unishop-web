@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, Suspense, useRef } from "react";
 import Image from "next/image";
-import { FaRegStar, FaStar } from "react-icons/fa";
+import { FaCheckCircle, FaRegStar, FaStar } from "react-icons/fa";
 import moment from "moment";
 import Select from "~/components/Fields/select";
 import type { Media, SpecialTag, Variation, VariationTag } from "~/types/book";
@@ -34,10 +34,11 @@ const MyComponent = () => {
     addCartItems,
     removeCartItems,
     productDetail,
-    increaseCartItemQuantity,
+    isLoggedIn,
     checkoutData,
     productTags,
     textbookType,
+    logout
   } = useAuthContext();
   const itemDetail = productDetail;
   const [category, setCategory] = useState<string>("");
@@ -289,7 +290,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -368,7 +369,7 @@ const MyComponent = () => {
   );
 
   const handleSubmitReviews = async (data: ReviewData) => {
-    if (checkoutData?.booknet_customer_id) {
+    if (isLoggedIn) {
       setSubmitLoader(true);
       const newData = {
         ...data,
@@ -420,6 +421,8 @@ const MyComponent = () => {
     }
   };
   const goToLogin = () => {
+    void logout()
+
     setLoginAlert(false);
 
     router.push("/login");
@@ -474,6 +477,96 @@ const MyComponent = () => {
     },
   ];
 
+  // console.log(itemDetail, "itemDetail");
+  function ImageMagnifier({
+    src,
+    width,
+    height,
+    magnifierHeight = 100,
+    magnifieWidth = 100,
+    zoomLevel = 1.5
+  }: {
+    src: string;
+    width?: string;
+    height?: string;
+    magnifierHeight?: number;
+    magnifieWidth?: number;
+    zoomLevel?: number;
+  }) {
+    const [[x, y], setXY] = useState([0, 0]);
+    const [[imgWidth, imgHeight], setSize] = useState([0, 0]);
+    const [showMagnifier, setShowMagnifier] = useState(false);
+    return (
+      <div
+        style={{
+          position: "relative",
+          height: height,
+          width: width
+        }}
+      >
+        <Image
+          src={src}
+
+          // style={{ height: height, width: width }}
+          onMouseEnter={(e) => {
+            // update image size and turn-on magnifier
+            const elem = e.currentTarget;
+            const { width, height } = elem.getBoundingClientRect();
+            setSize([width, height]);
+            setShowMagnifier(true);
+          }}
+          onMouseMove={(e) => {
+            // update cursor position
+            const elem = e.currentTarget;
+            const { top, left } = elem.getBoundingClientRect();
+
+            // calculate cursor position on the image
+            const x = e.pageX - left - window.pageXOffset;
+            const y = e.pageY - top - window.pageYOffset;
+            setXY([x, y]);
+          }}
+          onMouseLeave={() => {
+            // close magnifier
+            setShowMagnifier(false);
+          }}
+          width={2000}
+          height={2000}
+          className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
+          alt={"img"}
+        />
+
+        <div
+          style={{
+            display: showMagnifier ? "" : "none",
+            position: "absolute",
+
+            // prevent magnifier blocks the mousemove event of img
+            pointerEvents: "none",
+            // set size of magnifier
+            height: `${magnifierHeight}px`,
+            width: `${magnifieWidth}px`,
+            // move element center to cursor pos
+            top: `${y - magnifierHeight / 2}px`,
+            left: `${x - magnifieWidth / 2}px`,
+            opacity: "1", // reduce opacity so you can verify position
+            border: "1px solid lightgray",
+            // backgroundColor: "white",
+            backgroundImage: `url('${src}')`,
+            backgroundRepeat: "no-repeat",
+
+            //calculate zoomed image size
+            backgroundSize: `${imgWidth * zoomLevel + 100}px ${imgHeight * zoomLevel
+              }px`,
+
+            //calculate position of zoomed image.
+            backgroundPositionX: `${-x * zoomLevel + magnifieWidth / 2}px`,
+            backgroundPositionY: `${-y * zoomLevel + magnifierHeight / 2}px`
+          }}
+          className="bg-white dark:bg-slate-900"
+        ></div>
+      </div>
+    );
+  }
   return (
     <div className="p-6 md:mt-0">
       <div className="flex items-center justify-between pb-2 lg:px-10">
@@ -488,8 +581,8 @@ const MyComponent = () => {
         </div>
 
         {/* Title */}
-        <h4 className="pb-2 text-center text-lg font-bold capitalize text-neutral-600 dark:text-neutral-100 md:text-3xl">
-          {itemDetail?.category_detail?.category_name}
+        <h4 className="pb-2 text-center text-md font-bold capitalize text-neutral-600 dark:text-neutral-100 md:text-xl">
+          Category: {itemDetail?.category_detail?.category_name}
         </h4>
 
         {/* Invisible Placeholder */}
@@ -504,7 +597,15 @@ const MyComponent = () => {
 
       <div className="relative flex flex-wrap gap-3">
         <div className="mx-auto flex flex-col items-center">
-          <div
+          {ImageMagnifier({
+            src: currentImage ? `https://ipos-storage.s3.amazonaws.com/${currentImage}` : "/assets/images/products/product.png",
+            width: "100%",
+            height: "100%",
+            magnifierHeight: 200,
+            magnifieWidth: 200,
+            zoomLevel: 1.5
+          })}
+          {/* <div
             className="relative flex h-60 w-60 cursor-zoom-in items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80"
             ref={imageRef}
             onMouseEnter={() => (currentImage ? setIsHovering(true) : null)}
@@ -531,30 +632,56 @@ const MyComponent = () => {
               }
               width={2000}
               height={2000}
-              className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
+              className="h-56 w-56 rounded-lg object-cover lg:h-72 lg:w-72"
             />
-          </div>
+          </div> */}
 
-          {!selectedVariation &&
-            itemDetail?.media &&
-            itemDetail?.media?.length > 0 && (
-              <div className="mt-2 flex gap-2 overflow-x-auto py-2">
+
+          {(
+            (!selectedVariation &&
+              itemDetail?.media &&
+              itemDetail?.media?.length > 0)) && (
+              <div
+                className="mt-2 flex gap-2 overflow-x-auto h-fit">
                 {(itemDetail?.media
                   ? [
-                      {
-                        object_id: "001",
-                        object_path: itemDetail?.object_path ?? "",
-                      },
-                      ...itemDetail.media,
-                    ]
+                    {
+                      object_id: "001",
+                      object_path: itemDetail?.object_path ?? "",
+                    },
+                    ...itemDetail.media,
+                  ]
                   : []
                 ).map((media, index) => (
                   <button
-                    key={`thumbnail-${media.object_id ?? `fallback-${index}`}`}
-                    onClick={() => {
-                      setCurrentImage(media.object_path);
-                    }}
-                    className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImage === media.object_path ? "border-red-500" : "border-gray-300"}`}
+                    key={`thumbnail-${`fallback-${index}`}`}
+                    onClick={() => { setCurrentImage(media.object_path); }}
+                    className={`w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImage === media.object_path ? "border-red-500" : "border-gray-300"}`}
+                  >
+                    <Image
+
+                      src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                      alt={`Thumbnail ${index + 1}`}
+                      width={48}
+                      height={48}
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+          {(selectedVariation?.media &&
+            selectedVariation?.media?.length > 1) && (
+              <div className="mt-2 flex gap-2 overflow-x-auto h-fit ">
+                {(selectedVariation?.media?.length > 0
+                  ? [{ object_id: "001", object_path: itemDetail?.object_path ?? "" }, ...selectedVariation.media]
+
+                  : []
+                ).map((media, index) => (
+                  <button
+                    key={`thumbnail-${`fallback-${index}`}`}
+                    onClick={() => { setCurrentImage(media.object_path); }}
+                    className={`w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImage === media.object_path ? "border-red-500" : "border-gray-300"}`}
                   >
                     <Image
                       src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
@@ -567,7 +694,7 @@ const MyComponent = () => {
                 ))}
               </div>
             )}
-          {selectedVariation?.media && selectedVariation?.media?.length > 1 && (
+          {/* {selectedVariation?.media && selectedVariation?.media?.length > 1 && (
             <div className="mt-2 flex gap-2 overflow-x-auto py-2">
               {(selectedVariation?.media?.length > 0
                 ? [
@@ -596,7 +723,7 @@ const MyComponent = () => {
                 </button>
               ))}
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4">
@@ -605,11 +732,11 @@ const MyComponent = () => {
               <span className="font-sans text-2xl font-bold text-red-500 dark:text-neutral-300">
                 ${" "}
                 {itemDetail?.variations?.[0] &&
-                filteredVariations?.[0]?.items_variable_items_sale_price
+                  filteredVariations?.[0]?.items_variable_items_sale_price
                   ? filteredVariations?.[0]?.items_variable_items_sale_price
                   : itemDetail?.variations?.[0]
                     ? itemDetail?.variations?.[0]
-                        .items_variable_items_sale_price
+                      .items_variable_items_sale_price
                     : itemDetail?.item_sale_price}
               </span>
             ) : (
@@ -632,26 +759,50 @@ const MyComponent = () => {
           ) : (
             ""
           )}
-          <span className="text-md font-serif text-green-500 dark:text-neutral-300">
+          <span className="flex flex-row items-center text-md sm:text-sm font-serif text-green-500">
+            <FaCheckCircle />
             {filteredVariations?.[0]
               ? filteredVariations?.[0]?.stock?.quantity
                 ? "In stock"
                 : "Backorder"
               : itemDetail?.stock.quantity
                 ? "In stock"
-                : "Backorder"}
+                : "Backorder"
+                }
           </span>
+          {itemDetail?.book_id && itemDetail?.subtitle && (
+            <div className="flex items-center justify-center">
+              <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                Subtitle:
+              </span>
+              <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                {itemDetail.subtitle}
+              </span>
+            </div>
+          )}
           {filteredVariations?.[0]
             ? filteredVariations?.[0].items_variable_items_sku_number && (
-                <span className="text-md font-serif text-zinc-700 dark:text-neutral-300">
-                  SKU: {filteredVariations?.[0].items_variable_items_sku_number}
+              <div className="flex items-center justify-center">
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                  SKU:
                 </span>
-              )
+                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                  {filteredVariations?.[0].items_variable_items_sku_number}
+                </span>
+              </div>
+
+            )
             : itemDetail?.SKU && (
-                <span className="text-md font-serif text-zinc-700 dark:text-neutral-300">
-                  SKU: {itemDetail.SKU}
+              <div className="flex items-center justify-center">
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                  SKU:
                 </span>
-              )}
+                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                  {itemDetail.SKU}
+                </span>
+              </div>
+
+            )}
 
           {itemDetail?.book_id && itemDetail?.food_id == null && (
             <div className="flex items-center justify-center">
@@ -706,7 +857,16 @@ const MyComponent = () => {
               </span>
             </div>
           )}
-
+          {itemDetail?.shelf_location && (
+            <div className="flex items-center">
+              <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                Bin location:
+              </span>
+              <span className="pl-1 text-sm capitalize text-neutral-700 dark:text-neutral-300">
+                {itemDetail.shelf_location}
+              </span>
+            </div>
+          )}
           {itemDetail?.book_id && itemDetail?.food_id == null && (
             <div className="">
               {itemDetail?.audience && (
@@ -719,6 +879,7 @@ const MyComponent = () => {
                   </span>
                 </div>
               )}
+
               {itemDetail?.format && (
                 <div className="flex items-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -740,8 +901,8 @@ const MyComponent = () => {
                 </div>
               )}
               {itemDetail?.pages !== undefined &&
-              itemDetail.pages !== null &&
-              itemDetail.pages ? (
+                itemDetail.pages !== null &&
+                itemDetail.pages ? (
                 <div className="flex items-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
@@ -913,11 +1074,10 @@ const MyComponent = () => {
                         {options.map((option, optionIndex) => (
                           <button
                             key={`${option.value}-${optionIndex}`}
-                            className={`min-w-10 rounded border p-1 text-center text-sm ${
-                              selectedValues[tagName] === option.value
-                                ? "bg-red-500 text-white"
-                                : "border-red-500 bg-white dark:bg-slate-700"
-                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            className={`min-w-10 rounded border p-1 text-center text-sm ${selectedValues[tagName] === option.value
+                              ? "bg-red-500 text-white"
+                              : "border-red-500 bg-white dark:bg-slate-700"
+                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -945,27 +1105,30 @@ const MyComponent = () => {
             </div>
           )}
           {itemDetail?.variations?.[0] &&
-          filteredVariations?.[0]?.items_variable_items_id &&
-          Object.values(selectedValues).length ==
+            filteredVariations?.[0]?.items_variable_items_id &&
+            Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-          isVariableItemInCart(
-            filteredVariations?.[0]?.items_variable_items_id,
-          ) ? (
-            <span className="pl-1 font-sans text-green-500">
-              Already added to your cart
-            </span>
+            isVariableItemInCart(
+              filteredVariations?.[0]?.items_variable_items_id,
+            ) ? (
+            <button
+              className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-2 font-sans text-white hover:bg-red-600"
+              onClick={() => handleRemoveFromCart(itemDetail)}
+            >
+              <div className="pl-2">Remove from Cart</div>
+            </button>
           ) : (
             ""
           )}
           {itemDetail?.variations?.[0] &&
-          !isVariableItemInCart(
-            filteredVariations?.[0]?.items_variable_items_id ?? -1,
-          ) &&
-          !Object.values(selectedValues).some((value) => value === undefined) &&
-          Object.values(selectedValues).length ==
+            !isVariableItemInCart(
+              filteredVariations?.[0]?.items_variable_items_id ?? -1,
+            ) &&
+            !Object.values(selectedValues).some((value) => value === undefined) &&
+            Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-          (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
-            itemDetail?.item_sale_price) ? (
+            (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
+              itemDetail?.item_sale_price) ? (
             <button
               className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-sans text-white hover:bg-green-600"
               onClick={() => handleAddToCart(itemDetail)}
@@ -974,7 +1137,7 @@ const MyComponent = () => {
               <div className="pl-2">Add to Cart</div>
             </button>
           ) : itemDetail &&
-            !itemDetail?.variations?.[0] &&
+            itemDetail?.items_type != 1 &&
             !isItemInCart(itemDetail.item_id) ? (
             <button
               className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-sans text-white hover:bg-green-600"
@@ -986,7 +1149,20 @@ const MyComponent = () => {
           ) : (
             ""
           )}
-          {isHovering && (
+          {itemDetail &&
+            itemDetail?.items_type != 1 &&
+            isItemInCart(itemDetail.item_id) ? (
+            <button
+              className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-2 font-sans text-white hover:bg-red-600"
+              onClick={() => handleRemoveFromCart(itemDetail)}
+            >
+
+              <div className="pl-2">Remove from Cart</div>
+            </button>
+          ) : (
+            ""
+          )}
+          {/* {isHovering && (
             <div
               className="pointer-events-none absolute top-1/3 z-10 h-96 w-96 overflow-hidden bg-white shadow-md dark:bg-slate-700 dark:shadow-slate-500 md:right-[20%]"
               style={{
@@ -1015,7 +1191,7 @@ const MyComponent = () => {
                 className="h-full w-full"
               />
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
@@ -1131,8 +1307,8 @@ const MyComponent = () => {
                             <p className="text-xs text-gray-500">
                               {review?.created_at
                                 ? moment(review?.created_at).format(
-                                    "Do MMMM, YYYY",
-                                  )
+                                  "Do MMMM, YYYY",
+                                )
                                 : ""}
                             </p>
                           </div>

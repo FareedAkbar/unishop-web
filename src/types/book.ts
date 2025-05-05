@@ -169,7 +169,7 @@ export default interface DataCart {
   format?: string | null,
   weight?: string | null,
   audience?: string | null,
-
+  shelf_location: string | null,
 }
 
 interface book_usages {

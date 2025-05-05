@@ -17,7 +17,7 @@ import {
 } from "~/components/ui/animated-modal";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaCartPlus, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaCartPlus, FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
@@ -390,8 +390,26 @@ const MyComponent = () => {
       return newValues;
     });
   };
+  const smoothScrollTo = (targetPosition: number, duration: number) => {
+    const startPosition = window.scrollY;
+    const distance = targetPosition - startPosition;
+    let startTime: number | null = null;
+
+    const animation = (currentTime: number) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1);
+
+      window.scrollTo(0, startPosition + distance * progress);
+
+      if (timeElapsed < duration) requestAnimationFrame(animation);
+    };
+
+    requestAnimationFrame(animation);
+  };
 
   const handlePageChange = async (page: number) => {
+    smoothScrollTo(0, 1500);
     setCurrentPage(page);
   };
 
@@ -399,6 +417,7 @@ const MyComponent = () => {
     await setProductForDetail(item);
     router.push(`/product-details?category=${item?.category}`);
   };
+
   const handleChangeSubCategory = async (id: string) => {
     const genId = subCategory?.find((item) => item.id == parseInt(id));
     if (genId?.category_name) {
@@ -477,6 +496,7 @@ const MyComponent = () => {
                   {subcategoryTypes?.[0] && (
                     <NewSelect
                       onValueChange={(x: string) => handleChangeSubCategory(x)}
+                      value={detail.toString()}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select Category" />
@@ -528,7 +548,7 @@ const MyComponent = () => {
                       product={item}
                       showAddToCart={!isItemInCart(item.item_id)}
                       onAddToCart={async () => {
-                        if (item?.variations?.[0]) {
+                        if (item?.items_type == 1) {
                           await openDetail(item);
                         } else {
                           await handleAddToCart(item);
@@ -560,7 +580,7 @@ const MyComponent = () => {
             {pagination && (
               <div className="z-5 flex justify-between px-4 py-4">
                 <button
-                  className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black blur" : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black " : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
@@ -570,7 +590,7 @@ const MyComponent = () => {
                   Page {currentPage ?? 1} of {totalPages ?? 1}
                 </span>
                 <button
-                  className={`rounded-full p-2 ${totalPages == 0 || currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black blur" : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${totalPages == 0 || currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black " : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={totalPages == 0 || currentPage === totalPages}
                 >
@@ -680,16 +700,39 @@ const MyComponent = () => {
                         .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
+                <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                <FaCheckCircle />
+                  {filteredVariations?.[0]
+                    ? filteredVariations?.[0]?.stock?.quantity
+                      ? "In stock"
+                      : "Backorder"
+                    : itemDetail?.stock.quantity
+                      ? "In stock"
+                      : "Backorder"
+                  }
+                </span>
                 {filteredVariations?.[0]
                   ? filteredVariations?.[0].items_variable_items_sku_number && (
-                    <span className="text-md font-serif text-zinc-500 dark:text-neutral-300">
-                      SKU: {filteredVariations?.[0].items_variable_items_sku_number}
-                    </span>
+                    <div className="flex items-center justify-center">
+                      <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                        SKU:
+                      </span>
+                      <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                        {filteredVariations?.[0].items_variable_items_sku_number}
+                      </span>
+                    </div>
+
                   )
                   : itemDetail?.SKU && (
-                    <span className="text-md font-serif text-zinc-500 dark:text-neutral-300">
-                      SKU: {itemDetail.SKU}
-                    </span>
+                    <div className="flex items-center justify-center">
+                      <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                        SKU:
+                      </span>
+                      <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                        {itemDetail.SKU}
+                      </span>
+                    </div>
+
                   )}
               </div>
 
@@ -742,6 +785,16 @@ const MyComponent = () => {
                   </span>
                   <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                     {itemDetail.barcode}
+                  </span>
+                </div>
+              )}
+              {itemDetail?.shelf_location && (
+                <div className="flex items-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Bin location:
+                  </span>
+                  <span className="pl-1 text-sm capitalize text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.shelf_location}
                   </span>
                 </div>
               )}

@@ -18,7 +18,7 @@ import {
 } from "~/components/ui/animated-modal";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaCartPlus, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaCartPlus, FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
@@ -528,24 +528,45 @@ const MyComponent = () => {
                         .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
+                <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                <FaCheckCircle />
+                  {filteredVariations?.[0]
+                    ? filteredVariations?.[0]?.stock?.quantity
+                      ? "In stock"
+                      : "Backorder"
+                    : itemDetail?.stock.quantity
+                      ? "In stock"
+                      : "Backorder"
+                  }
+                </span>
                 {filteredVariations?.[0]
                   ? filteredVariations?.[0].items_variable_items_sku_number && (
-                    <span className="text-md font-serif text-zinc-700 dark:text-neutral-300">
-                      SKU: {filteredVariations?.[0].items_variable_items_sku_number}
-                    </span>
+                    <div className="flex items-center justify-center">
+                      <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                        SKU:
+                      </span>
+                      <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                        {filteredVariations?.[0].items_variable_items_sku_number}
+                      </span>
+                    </div>
+
                   )
                   : itemDetail?.SKU && (
-                    <span className="text-md font-serif text-zinc-700 dark:text-neutral-300">
-                      SKU: {itemDetail.SKU}
-                    </span>
+                    <div className="flex items-center justify-center">
+                      <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                        SKU:
+                      </span>
+                      <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                        {itemDetail.SKU}
+                      </span>
+                    </div>
+
                   )}
               </div>
               {itemDetail?.book_id && itemDetail?.food_id == null && (
                 <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Textbook:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+
+                  <span className="text-xs text-neutral-700 dark:text-neutral-300">
                     {manageUsage().length > 0 ? (
                       <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                         {manageUsage().map((item, index) => {
@@ -584,6 +605,16 @@ const MyComponent = () => {
                   </span>
                   <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
                     {itemDetail.barcode}
+                  </span>
+                </div>
+              )}
+              {itemDetail?.shelf_location && (
+                <div className="flex items-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Bin location:
+                  </span>
+                  <span className="pl-1 text-sm capitalize text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.shelf_location}
                   </span>
                 </div>
               )}
