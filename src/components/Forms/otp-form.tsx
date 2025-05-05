@@ -32,7 +32,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
       const allFilled = newOtp.every((digit) => digit !== "");
 
       if (isLast && allFilled) {
-        handleVerify();
+        handleVerify(newOtp); // use updated OTP array
       }
     }
   };
@@ -53,14 +53,18 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
     }
   };
 
-  const handleVerify = async () => {
-    console.log("Verifying OTP:", otp.join(""));
-    if (otp.join("").length === 4) {
+  const handleVerify = async (newOtp?: string[]) => {
+    const currentOtp = newOtp ?? otp;
+    const joinedOtp = currentOtp.join("");
+
+    console.log("Verifying OTP:", joinedOtp);
+
+    if (joinedOtp.length === 4) {
       try {
         const data = {
           customer_id: loginResponse?.data.customer_id,
           email: loginResponse?.data.email,
-          otp: otp.join(""),
+          otp: joinedOtp,
         };
         setLoader(true);
         const res = await verifyOTP(data);
