@@ -76,7 +76,7 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
 
         {/* Rating Field */}
         <div className="flex items-center gap-2">
-          <Label required>Rating</Label>
+          <Label>Rating</Label>
           <div className="flex space-x-1">
             {Array.from({ length: 5 }, (_, index) => {
               const starValue = index + 1;

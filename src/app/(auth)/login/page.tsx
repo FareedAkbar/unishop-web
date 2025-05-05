@@ -57,20 +57,22 @@ const MyComponent = () => {
           style={{ transform: "scaleX(-1)" }} // Flip image for dark mode
         />
       </div>
-      <main className="absolute top-32 z-10 lg:right-10 lg:top-3 lg:w-1/3">
-        {view == "login" && (
-          <div className="relative">
-            <button
-              onClick={() => router.back()}
-              className="fixed left-10 top-10 rounded-full bg-transparent p-2 transition hover:bg-gray-200 dark:hover:bg-slate-700"
-            >
-              <FaArrowLeft className="text-black dark:text-white" />
-            </button>
-            <LoginForm setView={setView} setLoginResponse={setLoginResponse} />
-            {/* <Tabs tabs={tabs} /> */}
-          </div>
-        )}
+      <main className="absolute top-32 z-10 lg:right-10 lg:top-0 lg:w-1/3">
+        <div className="relative">
+          <button
+            onClick={() => router.back()}
+            className="fixed left-10 top-10 rounded-full bg-transparent p-2 transition hover:bg-gray-200 dark:hover:bg-slate-700"
+          >
+            <FaArrowLeft className="text-black dark:text-white" />
+          </button>
+          {/* <LoginForm setView={setView} setLoginResponse={setLoginResponse} /> */}
+          {/* <Tabs tabs={tabs} /> */}
+        </div>
 
+        {view == "login" && (
+          <LoginForm setView={setView} setLoginResponse={setLoginResponse} />
+          // <VerifyOTPForm loginResponse={loginResponse} />
+        )}
         {view == "Verify-Otp" && (
           <OTPVerificationForm loginResponse={loginResponse} />
           // <VerifyOTPForm loginResponse={loginResponse} />

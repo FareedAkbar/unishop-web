@@ -18,16 +18,23 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
 
   const handleChange = (value: string, index: number) => {
     if (typeof window !== "undefined") {
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
+      const newOtp = [...otp];
+      newOtp[index] = value;
+      setOtp(newOtp);
 
-    // Move to the next input if a value is entered
-    if (value && index < 3) {
-      const nextInput = document.getElementById(`otp-input-${index + 1}`);
-      nextInput && (nextInput as HTMLInputElement).focus();
+      // Move to the next input if a value is entered
+      if (value && index < 3) {
+        const nextInput = document.getElementById(`otp-input-${index + 1}`);
+        nextInput && (nextInput as HTMLInputElement).focus();
+      }
+      // Trigger verify when all 4 digits are filled
+      const isLast = index === 3 && value;
+      const allFilled = newOtp.every((digit) => digit !== "");
+
+      if (isLast && allFilled) {
+        handleVerify();
+      }
     }
-  }
   };
 
   const handleKeyDown = (
@@ -35,12 +42,17 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
     index: number,
   ) => {
     // Move to the previous input if Backspace is pressed and the current input is empty
-    if (e.key === "Backspace" && !otp[index] && index > 0 && typeof window !== "undefined") {
+    if (
+      e.key === "Backspace" &&
+      !otp[index] &&
+      index > 0 &&
+      typeof window !== "undefined"
+    ) {
       const prevInput = document.getElementById(`otp-input-${index - 1}`);
       prevInput && (prevInput as HTMLInputElement).focus();
     }
   };
- 
+
   const handleVerify = async () => {
     console.log("Verifying OTP:", otp.join(""));
     if (otp.join("").length === 4) {
@@ -55,7 +67,6 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
         setLoader(false);
 
         if (typeof res !== "boolean" && res.status) {
-        
           router.push("/");
         }
       } catch (err) {
