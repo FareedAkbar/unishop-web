@@ -82,17 +82,17 @@ const CartItem: React.FC<CartItemProps> = ({
             </div>
           )}
 
-          <p className="text-xs">
-            Available Stock:{" "}
-            <span className="flex flex-row items-center gap-1 text-md sm:text-sm font-serif text-green-500">
-              <FaCheckCircle />
-              {quantity && quantity > 0
-                ? "In stock"
-                : "Backorder"
 
-              }
-            </span>
-          </p>
+
+          <span className="flex flex-row items-center gap-1 text-xs  font-serif text-green-500">
+            <FaCheckCircle />
+            {quantity && quantity > 0
+              ? "In stock"
+              : "Backorder"
+
+            }
+          </span>
+
           {(newPrice == 0 || !newPrice || price == newPrice) && (
             <p className="text-md font-bold">${price}</p>
           )}
