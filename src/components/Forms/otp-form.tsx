@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "../ui-components/Button";
 import type { LoginResponse } from "~/types/loginResponse";
 import { useAuthContext } from "~/Context/AuthContext";
@@ -15,7 +15,11 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
   const [loader, setLoader] = useState(false);
   const { verifyOTP, sendOTP } = useAuthContext();
   const router = useRouter();
+  const firstInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    firstInputRef.current?.focus();
+  }, []);
   const handleChange = (value: string, index: number) => {
     if (typeof window !== "undefined") {
       const newOtp = [...otp];
@@ -135,6 +139,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
             <input
               key={index}
               id={`otp-input-${index}`}
+              ref={index === 0 ? firstInputRef : null} // ⬅️ Add ref only to first input
               type="text"
               value={value}
               maxLength={1}

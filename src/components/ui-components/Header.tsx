@@ -256,18 +256,21 @@ const Header = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleClickOutside = (event: MouseEvent) => {
+        // Don't close if clicking on a link or button
+        const target = event.target as HTMLElement;
+        if (target.tagName === "A" || target.tagName === "BUTTON") {
+          return;
+        }
+
         if (
           userDropdownRef.current &&
-          !userDropdownRef.current.contains(event.target as Node) &&
+          !userDropdownRef.current.contains(target) &&
           dropdownToggleRef.current &&
-          !dropdownToggleRef.current.contains(event.target as Node)
+          !dropdownToggleRef.current.contains(target)
         ) {
           setUserDropdownOpen(false);
         }
-        if (
-          dropdownRef.current &&
-          !dropdownRef.current.contains(event.target as Node)
-        ) {
+        if (dropdownRef.current && !dropdownRef.current.contains(target)) {
           setOpenDropdown(null);
         }
       };
@@ -280,6 +283,8 @@ const Header = () => {
   }, []);
 
   const handleLogout = async () => {
+    console.log("logout clicked");
+
     try {
       void logout();
     } catch (error) {
@@ -376,8 +381,7 @@ const Header = () => {
   const handleLoginPage = () => {
     console.log("logout clicked");
     void logout();
-  
-  }
+  };
 
   const SubcategoryList1 = ({
     subItems,
@@ -386,7 +390,6 @@ const Header = () => {
     item,
     setOpenCategories,
   }: SubcategoryListProps1) => {
-    
     return (
       <div className="">
         {subItems.map((subItem) => (
@@ -407,16 +410,18 @@ const Header = () => {
                 <span className="mr-2 text-left capitalize">
                   {subItem.category_name}
                 </span>
-
               </button>
               {subItem.children?.[0] &&
                 (openCategories.includes(`${item}/${subItem.category_name}`) ? (
-                  <FaChevronDown onClick={() => toggleCategory(`${subItem.category_name}`)} />
+                  <FaChevronDown
+                    onClick={() => toggleCategory(`${subItem.category_name}`)}
+                  />
                 ) : (
-                  <FaChevronRight onClick={() => toggleCategory(`${subItem.category_name}`)} />
+                  <FaChevronRight
+                    onClick={() => toggleCategory(`${subItem.category_name}`)}
+                  />
                 ))}
             </div>
-
 
             {/* Render children if open */}
             {openCategories.some((cat) =>
@@ -590,13 +595,13 @@ const Header = () => {
                     <span className="text-md p-1 font-medium capitalize">
                       {userInfo?.first_name} {userInfo?.last_name}
                     </span>
-                  ) :
-                    checkoutData?.customer_id ? (
-                      <span className="text-md p-1 font-medium capitalize">
-                        {checkoutData?.user_name ? checkoutData?.user_name : ""}
-                      </span>
-                    ) : ""
-                  }
+                  ) : checkoutData?.customer_id ? (
+                    <span className="text-md p-1 font-medium capitalize">
+                      {checkoutData?.user_name ? checkoutData?.user_name : ""}
+                    </span>
+                  ) : (
+                    ""
+                  )}
 
                   {/* <a
                     href="#account-settings"
@@ -612,26 +617,22 @@ const Header = () => {
                     <HiLogin className="mr-2" />
                     Sign Up
                   </a> */}
-                  {isLoggedIn ? (
-                    <Link
-                      href=""
-                      onClick={() => handleLoginPage()}
-                      className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
-                    >
-                      <HiLogin className="mr-2" />
-                      Logout
-                    </Link>
-                  ) : ""}
-                  {!isLoggedIn ? (
-                    <a
-                      href=""
-                      onClick={() => handleLoginPage()}
-                      className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
-                    >
+
+                  <Link
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault(); // ⬅️ prevent navigation
+                      handleLogout();
+                    }}
+                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
+                  >
+                    {isLoggedIn ? (
                       <HiLogout className="mr-2" />
-                      Loginn
-                    </a>
-                  ) : ""}
+                    ) : (
+                      <HiLogin className="mr-2" />
+                    )}
+                    {isLoggedIn ? "Logout" : "Login"}
+                  </Link>
 
                   {/* <a
                     href="#logout"
@@ -974,13 +975,13 @@ const Header = () => {
                       <span className="text-md p-1 font-medium capitalize">
                         {userInfo?.first_name} {userInfo?.last_name}
                       </span>
-                    ) :
-                      checkoutData?.customer_id ? (
-                        <span className="text-md p-1 font-medium capitalize">
-                          {checkoutData?.user_name ? checkoutData?.user_name : ""}
-                        </span>
-                      ) : ""
-                    }
+                    ) : checkoutData?.customer_id ? (
+                      <span className="text-md p-1 font-medium capitalize">
+                        {checkoutData?.user_name ? checkoutData?.user_name : ""}
+                      </span>
+                    ) : (
+                      ""
+                    )}
 
                     {/* <a
                       href="#account-settings"
@@ -989,27 +990,21 @@ const Header = () => {
                       <TbSettings className="mr-2" />
                       Account Setting
                     </a> */}
-                    {isLoggedIn && (
-                      <Link
-                        onClick={() => handleLogout()}
-                        href=""
-                        className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
-                      >
-                        <HiLogin className="mr-2" />
-                        Logout
-                      </Link>
-                    )}
-
-                    {!isLoggedIn && (
-                      <Link
-                        href=""
-                        onClick={() => handleLogout()}
-                        className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
-                      >
+                    <Link
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault(); // ⬅️ prevent navigation
+                        handleLogout();
+                      }}
+                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
+                    >
+                      {isLoggedIn ? (
                         <HiLogout className="mr-2" />
-                        Login
-                      </Link>
-                    )}
+                      ) : (
+                        <HiLogin className="mr-2" />
+                      )}
+                      {isLoggedIn ? "Logout" : "Login"}
+                    </Link>
 
                     {/* <Link
                       href="/signup"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form"; // Use import type
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,6 +37,11 @@ export default function SignupFormDemo({
   } = useForm<FormValues>({
     resolver: zodResolver(LoginSchema),
   });
+  const firstInputRef = useCallback((element: HTMLInputElement | null) => {
+    if (element) {
+      element.focus(); // Auto-focus
+    }
+  }, []);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
@@ -86,7 +91,12 @@ export default function SignupFormDemo({
               id="email"
               placeholder="projectmayhem@fc.com"
               type="email"
+              autoComplete="email"
               {...register("email")}
+              ref={(e) => {
+                register("email").ref(e);
+                firstInputRef(e); // Custom autofocus ref
+              }}
             />
             {errors.email && (
               <p className="text-sm text-red-500">{errors.email.message}</p>
@@ -101,6 +111,7 @@ export default function SignupFormDemo({
               placeholder="••••••••"
               type="password"
               onSubmit={handleSubmit(onSubmit)}
+              autoComplete="current-password"
               {...register("user_password")}
             />
             {errors.user_password && (
