@@ -1,16 +1,12 @@
+'use client';
+import dynamic from 'next/dynamic';
 
-
-import React from "react";
-
-
-const LazyMyComponent = React.lazy(() => import("./MyComponent"));
+const LazyMyComponent = dynamic(() => import('./MyComponent'), {
+  ssr: false,
+});
 
 const Page = () => {
-  return (
-    
-      <LazyMyComponent />
-  
-  );
+  return <LazyMyComponent />;
 };
 
 export default Page;
