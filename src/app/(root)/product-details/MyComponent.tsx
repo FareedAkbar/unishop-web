@@ -1113,7 +1113,7 @@ const MyComponent = () => {
             ) ? (
             <button
               className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-2 font-sans text-white hover:bg-red-600"
-              onClick={() => handleRemoveFromCart(itemDetail)}
+              onClick={() => handleRemoveFromCart({...itemDetail, selected_variation:filteredVariations?.[0] })}
             >
               <div className="pl-2">Remove from Cart</div>
             </button>

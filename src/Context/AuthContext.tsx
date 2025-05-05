@@ -553,14 +553,15 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           item?.selected_variation?.items_variable_items_id !==
           payload?.selected_variation?.items_variable_items_id,
       );
- 
+     
       lsClient.setItem("CART_ITEM", updatedItems);
+      
       setItems(updatedItems);
     } else {
       const updatedItems = newItems.filter(
         (item: DataCart) => item.item_id !== payload.item_id,
       );
-  
+   
       lsClient.setItem("CART_ITEM", updatedItems);
       setItems(updatedItems);
     }

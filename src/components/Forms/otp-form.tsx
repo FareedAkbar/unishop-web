@@ -32,7 +32,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
       const allFilled = newOtp.every((digit) => digit !== "");
 
       if (isLast && allFilled) {
-        handleVerify(newOtp); // use updated OTP array
+       void handleVerify(newOtp); // use updated OTP array
       }
     }
   };
