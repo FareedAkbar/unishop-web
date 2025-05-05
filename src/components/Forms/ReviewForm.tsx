@@ -13,7 +13,7 @@ import type { ReviewData } from "~/types/reviews";
 
 const reviewSchema = z.object({
   // name: z.string().min(1, "Name is required").max(50, "Name is too long"),
-  review: z.string().min(10, "Review must be at least 10 characters long"),
+  review: z.string().min(1, "Please enter the review."),
 });
 
 type ReviewFormValues = z.infer<typeof reviewSchema>;
@@ -98,7 +98,9 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
         </div>
 
         <LabelInputContainer>
-          <Label required htmlFor="review">Review</Label>
+          <Label required htmlFor="review">
+            Review
+          </Label>
           <textarea
             id="review"
             className={cn(
