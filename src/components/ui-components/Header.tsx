@@ -373,6 +373,12 @@ const Header = () => {
     { label: "Eliza Jade Candles", icon: FaGift, href: "/gifts?desc=Candles" },
   ];
 
+  const handleLoginPage = () => {
+    console.log("logout clicked");
+    void logout();
+  
+  }
+
   const SubcategoryList1 = ({
     subItems,
     openCategories,
@@ -380,37 +386,37 @@ const Header = () => {
     item,
     setOpenCategories,
   }: SubcategoryListProps1) => {
-    const router = useRouter();
+    
     return (
       <div className="">
         {subItems.map((subItem) => (
           <div key={subItem.category_name} className="relative">
             <div className="flex w-full items-center justify-between">
-            <button
-              onClick={() => {
-                router.push(
-                  `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
-                );
-                setTimeout(() => {
-                  setOpenCategories([]);
-                  setMobileMenuOpen(false);
-                }, 1000);
-              }}
-              className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
-            >
-              <span className="mr-2 text-left capitalize">
-                {subItem.category_name}
-              </span>
-              
-            </button>
-            {subItem.children?.[0] &&
+              <button
+                onClick={() => {
+                  router.push(
+                    `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
+                  );
+                  setTimeout(() => {
+                    setOpenCategories([]);
+                    setMobileMenuOpen(false);
+                  }, 1000);
+                }}
+                className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
+              >
+                <span className="mr-2 text-left capitalize">
+                  {subItem.category_name}
+                </span>
+
+              </button>
+              {subItem.children?.[0] &&
                 (openCategories.includes(`${item}/${subItem.category_name}`) ? (
-                  <FaChevronDown onClick={()=> toggleCategory(`${subItem.category_name}`)}/>
+                  <FaChevronDown onClick={() => toggleCategory(`${subItem.category_name}`)} />
                 ) : (
-                  <FaChevronRight onClick={()=> toggleCategory(`${subItem.category_name}`)}/>
+                  <FaChevronRight onClick={() => toggleCategory(`${subItem.category_name}`)} />
                 ))}
             </div>
-           
+
 
             {/* Render children if open */}
             {openCategories.some((cat) =>
@@ -580,12 +586,18 @@ const Header = () => {
               </button>
               {isUserDropdownOpen && (
                 <div className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md dark:bg-slate-700">
-                   {checkoutData?.customer_id ? (
-                     <p className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600 capitalize">
-                     {checkoutData?.user_name ?? "" }
-                   </p>
-                   ) : ""}
-                 
+                  {userInfo?.first_name ? (
+                    <span className="text-md p-1 font-medium capitalize">
+                      {userInfo?.first_name} {userInfo?.last_name}
+                    </span>
+                  ) :
+                    checkoutData?.customer_id ? (
+                      <span className="text-md p-1 font-medium capitalize">
+                        {checkoutData?.user_name ? checkoutData?.user_name : ""}
+                      </span>
+                    ) : ""
+                  }
+
                   {/* <a
                     href="#account-settings"
                     className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
@@ -600,13 +612,27 @@ const Header = () => {
                     <HiLogin className="mr-2" />
                     Sign Up
                   </a> */}
-                  <a
-                    href="/login"
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
-                  >
-                    <HiLogout className="mr-2" />
-                    Login
-                  </a>
+                  {isLoggedIn ? (
+                    <Link
+                      href=""
+                      onClick={() => handleLoginPage()}
+                      className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
+                    >
+                      <HiLogin className="mr-2" />
+                      Logout
+                    </Link>
+                  ) : ""}
+                  {!isLoggedIn ? (
+                    <a
+                      href=""
+                      onClick={() => handleLoginPage()}
+                      className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
+                    >
+                      <HiLogout className="mr-2" />
+                      Loginn
+                    </a>
+                  ) : ""}
+
                   {/* <a
                     href="#logout"
                     className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
@@ -948,14 +974,14 @@ const Header = () => {
                       <span className="text-md p-1 font-medium capitalize">
                         {userInfo?.first_name} {userInfo?.last_name}
                       </span>
-                    ): 
-                    checkoutData?.customer_id ? (
-                      <span className="text-md p-1 font-medium capitalize">
-                      {checkoutData?.user_name ? checkoutData?.user_name : ""}
-                    </span>
-                    ) : ""
+                    ) :
+                      checkoutData?.customer_id ? (
+                        <span className="text-md p-1 font-medium capitalize">
+                          {checkoutData?.user_name ? checkoutData?.user_name : ""}
+                        </span>
+                      ) : ""
                     }
-                    
+
                     {/* <a
                       href="#account-settings"
                       className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
@@ -976,7 +1002,8 @@ const Header = () => {
 
                     {!isLoggedIn && (
                       <Link
-                        href="/login"
+                        href=""
+                        onClick={() => handleLogout()}
                         className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                       >
                         <HiLogout className="mr-2" />

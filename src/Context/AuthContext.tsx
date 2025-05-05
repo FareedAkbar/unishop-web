@@ -599,7 +599,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async (): Promise<void> => {
     // lsClient.cleanStorage();
-
+    console.log("logout", token);
     await LogOutApi();
 
     lsClient.setEmpty("TOKEN", "");
@@ -612,6 +612,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoggedIn(false);
     setUserInfo(undefined);
     setToken(undefined);
+    
     router.push("/login");
   };
 
