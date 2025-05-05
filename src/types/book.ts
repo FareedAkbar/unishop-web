@@ -176,6 +176,7 @@ interface book_usages {
   subject_name: string;
   subject_code: string;
   default_semester: number;
+  default_trimester: number;
   type_id: number;
 }
 

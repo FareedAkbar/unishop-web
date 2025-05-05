@@ -269,7 +269,7 @@ const MyComponent = () => {
     const x = {
       customer_id: checkoutData?.customer_id,
       guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
-      amount: 0.03,
+      amount: 10,
     };
 
     try {

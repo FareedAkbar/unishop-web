@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import Image from "next/image";
 import React from "react";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaCheckCircle, FaTrashAlt } from "react-icons/fa";
 import { HiOutlineMinus, HiOutlinePlus } from "react-icons/hi";
 import type { Stock } from "~/types/book";
 import type DataCart from "~/types/book";
@@ -82,16 +82,21 @@ const CartItem: React.FC<CartItemProps> = ({
             </div>
           )}
 
-          {/* <p className="text-xs">
+          <p className="text-xs">
             Available Stock:{" "}
-            <span className="pl-1 text-gray-500 dark:text-gray-200">
-              {quantity ? quantity : 0}
+            <span className="flex flex-row items-center gap-1 text-md sm:text-sm font-serif text-green-500">
+              <FaCheckCircle />
+              {quantity && quantity > 0
+                ? "In stock"
+                : "Backorder"
+
+              }
             </span>
-          </p> */}
+          </p>
           {(newPrice == 0 || !newPrice || price == newPrice) && (
             <p className="text-md font-bold">${price}</p>
           )}
-          
+
 
           {newPrice && price != newPrice && newPrice != 0 && (
             <>

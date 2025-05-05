@@ -350,7 +350,7 @@ const MyComponent = () => {
   const manageUsage = () => {
     if (itemDetail?.book_usages && itemDetail?.book_usages.length > 0) {
       return itemDetail.book_usages
-        .filter((usage) => usage.default_semester === 1)
+        .filter((usage) => (usage.default_semester === 1 || usage.default_trimester === 1))
         .map((usage) => ({
           type_id: usage.type_id, // Assuming `type_id` exists
           subject_name: usage.subject_name,

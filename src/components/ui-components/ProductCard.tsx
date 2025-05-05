@@ -53,7 +53,7 @@ const ProductCard = ({
   const manageUsage = () => {
     if (product?.book_usages && product?.book_usages.length > 0) {
       return product.book_usages
-        .filter((usage) => usage.default_semester === 1)
+        .filter((usage) => (usage.default_semester === 1 || usage.default_trimester === 1))
         .map((usage) => ({
           type_id: usage.type_id, // Assuming `type_id` exists
           subject_name: usage.subject_name,

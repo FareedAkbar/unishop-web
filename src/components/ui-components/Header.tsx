@@ -592,16 +592,17 @@ const Header = () => {
               {isUserDropdownOpen && (
                 <div className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md dark:bg-slate-700">
                   {userInfo?.first_name ? (
-                    <span className="text-md p-1 font-medium capitalize">
+                    <span className="text-xs p-1 font-medium capitalize bg-white">
                       {userInfo?.first_name} {userInfo?.last_name}
                     </span>
                   ) : checkoutData?.customer_id ? (
-                    <span className="text-md p-1 font-medium capitalize">
+                    <span className="text-xs p-1 font-medium capitalize bg-white">
                       {checkoutData?.user_name ? checkoutData?.user_name : ""}
                     </span>
                   ) : (
                     ""
                   )}
+                 
 
                   {/* <a
                     href="#account-settings"
@@ -622,7 +623,7 @@ const Header = () => {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault(); // ⬅️ prevent navigation
-                      handleLogout();
+                      void handleLogout();
                     }}
                     className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                   >
@@ -982,7 +983,7 @@ const Header = () => {
                     ) : (
                       ""
                     )}
-
+                    
                     {/* <a
                       href="#account-settings"
                       className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
@@ -994,7 +995,7 @@ const Header = () => {
                       href="#"
                       onClick={(e) => {
                         e.preventDefault(); // ⬅️ prevent navigation
-                        handleLogout();
+                        void handleLogout();
                       }}
                       className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
                     >

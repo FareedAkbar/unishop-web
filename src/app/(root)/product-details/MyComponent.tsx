@@ -440,7 +440,7 @@ const MyComponent = () => {
   const manageUsage = () => {
     if (itemDetail?.book_usages && itemDetail?.book_usages.length > 0) {
       return itemDetail.book_usages
-        .filter((usage) => usage.default_semester === 1)
+        .filter((usage) => (usage.default_semester === 1 || usage.default_trimester === 1))
         .map((usage) => ({
           type_id: usage.type_id, // Assuming `type_id` exists
           subject_name: usage.subject_name,
@@ -581,9 +581,12 @@ const MyComponent = () => {
         </div>
 
         {/* Title */}
-        <h4 className="pb-2 text-center text-md font-bold capitalize text-neutral-600 dark:text-neutral-100 md:text-xl">
-          Category: {itemDetail?.category_detail?.category_name}
-        </h4>
+        {itemDetail?.category_detail?.category_name && (
+          <h4 className="pb-2 text-center text-md font-bold capitalize text-neutral-600 dark:text-neutral-100 md:text-xl">
+            Category: {itemDetail?.category_detail?.category_name}
+          </h4>
+        )}
+
 
         {/* Invisible Placeholder */}
         <div className="w-10" />
@@ -759,8 +762,8 @@ const MyComponent = () => {
           ) : (
             ""
           )}
-          <span className="flex flex-row items-center text-md sm:text-sm font-serif text-green-500">
-            <FaCheckCircle />
+          <span className="flex flex-row items-center gap-1 text-md sm:text-sm font-serif text-green-500">
+            <FaCheckCircle />
             {filteredVariations?.[0]
               ? filteredVariations?.[0]?.stock?.quantity
                 ? "In stock"
@@ -768,7 +771,7 @@ const MyComponent = () => {
               : itemDetail?.stock.quantity
                 ? "In stock"
                 : "Backorder"
-                }
+            }
           </span>
           {itemDetail?.book_id && itemDetail?.subtitle && (
             <div className="flex items-center justify-center">
@@ -1113,7 +1116,7 @@ const MyComponent = () => {
             ) ? (
             <button
               className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-2 font-sans text-white hover:bg-red-600"
-              onClick={() => handleRemoveFromCart({...itemDetail, selected_variation:filteredVariations?.[0] })}
+              onClick={() => handleRemoveFromCart({ ...itemDetail, selected_variation: filteredVariations?.[0] })}
             >
               <div className="pl-2">Remove from Cart</div>
             </button>
