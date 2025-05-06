@@ -137,13 +137,13 @@ const HomePage: React.FC = () => {
             <CategoriesSidebar />
           </div>
           <div
-            className={`mx-auto w-full pr-3 ${specialItems && specialItems?.length > 2 && "lg:pl-10"} pb-10`}
+            className={`mx-auto w-full lg:pr-3 ${specialItems && specialItems?.length > 2 && "lg:pl-10"} pb-10`}
           >
-            <div className="relative min-h-[360px]">
+            <div className="relative lg:min-h-[360px]">
               <AnimatePresence initial={false} mode="wait" custom={direction}>
                 <motion.div
                   key={currentIndex}
-                  className="flex flex-wrap p-3 pr-10 lg:flex-nowrap"
+                  className="flex flex-wrap lg:flex-nowrap lg:p-3 lg:pr-10"
                   {...(isLargeScreen && {
                     custom: direction,
                     initial: "enter",

@@ -86,39 +86,45 @@ const SubcategoryList1 = ({
       {subItems.map((subItem) => (
         <div key={subItem.category_name} className="relative">
           <div className="flex w-full items-center justify-between">
-          <button
-            onClick={() => {
-              if (subItem.children?.[0]) {
-                router.push(
-                  `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
-                );
-                setTimeout(() => {
-                  setOpenCategories([]);
-                }, 1000);
-              } else {
-                router.push(
-                  `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
-                );
-                setTimeout(() => {
-                  setOpenCategories([]);
-                }, 1000);
-              }
-            }}
-            className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
-          >
-            <span className="mr-2 text-left capitalize">
-              {subItem.category_name}
-            </span>
-            
-          </button>
-          {subItem.children?.[0] &&
+            <button
+              onClick={() => {
+                if (subItem.children?.[0]) {
+                  router.push(
+                    `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
+                  );
+                  setTimeout(() => {
+                    setOpenCategories([]);
+                  }, 1000);
+                } else {
+                  router.push(
+                    `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
+                  );
+                  setTimeout(() => {
+                    setOpenCategories([]);
+                  }, 1000);
+                }
+              }}
+              className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
+            >
+              <span className="mr-2 text-left capitalize">
+                {subItem.category_name}
+              </span>
+            </button>
+            {subItem.children?.[0] &&
               (openCategories.includes(`${item}/${subItem.category_name}`) ? (
-                <FaChevronDown onClick={() => {toggleCategory(`${subItem.category_name}`);}}/>
+                <FaChevronDown
+                  onClick={() => {
+                    toggleCategory(`${subItem.category_name}`);
+                  }}
+                />
               ) : (
-                <FaChevronRight onClick={() => {toggleCategory(`${subItem.category_name}`);}}/>
+                <FaChevronRight
+                  onClick={() => {
+                    toggleCategory(`${subItem.category_name}`);
+                  }}
+                />
               ))}
           </div>
-         
 
           {/* Render children if open */}
           {openCategories.some((cat) =>
@@ -343,7 +349,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       className={`${pathname === "/" ? "" : "sticky"} left-0 top-28 w-72 rounded-r-xl border-y border-r bg-white py-2 pl-4 pr-2 shadow-lg dark:bg-slate-700 ${className}`}
     >
       {/* ${headerCategory && headerCategory?.length > 7 ? "h-[25vh] overflow-y-scroll overflow-x-hidden" : ""} */}
-      <h2 className="text-lg font-bold">CATEGORIES</h2>
+      <h2 className="scroll-mt-24 text-lg font-bold">CATEGORIES</h2>
 
       <nav
         className={`relative py-3 ${headerCategory && headerCategory?.length > 7 ? "h-[25vh] overflow-x-hidden overflow-y-scroll" : ""}`}
