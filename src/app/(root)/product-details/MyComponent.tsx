@@ -24,6 +24,7 @@ import { ItemSpecialTag } from "~/types/productTags";
 import Spinner from "~/components/spinner";
 import { Tabs } from "~/components/ui/tabs";
 import { Player } from "@lottiefiles/react-lottie-player";
+import { RxCrossCircled } from "react-icons/rx";
 
 const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
@@ -52,6 +53,7 @@ const MyComponent = () => {
   const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
     null,
   );
+  console.log(reviews)
   const [currentImage, setCurrentImage] = useState<string>(
     itemDetail?.object_path ?? "",
   );
@@ -762,17 +764,24 @@ const MyComponent = () => {
           ) : (
             ""
           )}
-          <span className="flex flex-row items-center gap-1 text-md sm:text-sm font-serif text-green-500">
-            <FaCheckCircle />
-            {filteredVariations?.[0]
-              ? filteredVariations?.[0]?.stock?.quantity
-                ? "In stock"
-                : "Backorder"
-              : itemDetail?.stock.quantity
-                ? "In stock"
-                : "Backorder"
-            }
-          </span>
+          {filteredVariations?.[0]
+            ? filteredVariations?.[0]?.stock?.quantity
+              ? <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                <FaCheckCircle /> In stock</span>
+              : itemDetail?.allow_special_order == 1 ?
+                <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                  <FaCheckCircle /> Backorder</span> :
+                <span className="flex flex-row items-center gap-1 text-sm font-serif text-red-500 ">
+                  <RxCrossCircled /> Out of stock</span>
+            : itemDetail?.stock.quantity
+              ? <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                <FaCheckCircle /> In stock</span>
+              : itemDetail?.allow_special_order == 1 ?
+                <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                  <FaCheckCircle /> Backorder</span> :
+                <span className="flex flex-row items-center gap-1 text-sm font-serif text-red-500 ">
+                  <RxCrossCircled /> Out of stock</span>
+          }
           {itemDetail?.book_id && itemDetail?.subtitle && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -810,31 +819,15 @@ const MyComponent = () => {
           {itemDetail?.book_id && itemDetail?.food_id == null && (
             <div className="flex items-center justify-center">
               {manageUsage().length > 0 ? (
-                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
                   {manageUsage().map((item, index) => {
                     const matchedType = textbookType?.find(
                       (t) => t.item_book_type_id === Number(item.type_id),
                     ); // Find the matching type
                     return (
-                      <div
-                        key={`usage-${item.subject_code}-${index}-name-type`}
-                        className="mb-1"
-                      >
-                        <small
-                          key={`usage-${item.subject_code}-${index}-name`}
-                          className="mr-1 rounded bg-red-500 px-2 py-1 text-gray-100"
-                        >
-                          {item.subject_name} {item.subject_code}{" "}
-                          {/* Display type_name or fallback */}
-                        </small>
-                        <small
-                          key={`usage-${item.subject_code}-${index}-type`}
-                          className="mr-1 rounded bg-yellow-200 px-2 py-1 text-black dark:bg-yellow-500"
-                        >
-                          {matchedType?.type_name ?? ""}{" "}
-                          {/* Display type_name or fallback */}
-                        </small>
-                      </div>
+                      <span key={`usage-${item.subject_code}-${index}-pair`} className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "bg-red-500 text-white" : "bg-yellow-200 dark:bg-yellow-500"} px-2 py-1 text-sm`}>
+                        {matchedType?.type_name ?? ""}: {item.subject_name} {item.subject_code}
+                      </span>
                     );
                   })}
                 </span>
@@ -1131,27 +1124,34 @@ const MyComponent = () => {
             Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
             (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
-              itemDetail?.item_sale_price) ? (
-            <button
-              className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-sans text-white hover:bg-green-600"
-              onClick={() => handleAddToCart(itemDetail)}
-            >
-              <BsFillCartCheckFill className="text-lg" />
-              <div className="pl-2">Add to Cart</div>
-            </button>
-          ) : itemDetail &&
-            itemDetail?.items_type != 1 &&
-            !isItemInCart(itemDetail.item_id) ? (
-            <button
-              className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-sans text-white hover:bg-green-600"
-              onClick={() => handleAddToCart(itemDetail)}
-            >
-              <BsFillCartCheckFill className="text-lg" />
-              <div className="pl-2">Add to Cart</div>
-            </button>
-          ) : (
-            ""
-          )}
+              itemDetail?.item_sale_price) ?
+            ((itemDetail?.variations?.[0]?.stock?.quantity ?? 0) > 0 || itemDetail?.allow_special_order == 1) ? (
+              <button
+                className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-sans text-white hover:bg-green-600"
+                onClick={() => handleAddToCart(itemDetail)}
+              >
+                <BsFillCartCheckFill className="text-lg" />
+                <div className="pl-2">Add to Cart</div>
+              </button>
+            ) : (
+              ""
+            ) : itemDetail &&
+              itemDetail?.items_type != 1 &&
+              !isItemInCart(itemDetail.item_id) ?
+              itemDetail?.allow_special_order == 1 || (itemDetail?.stock?.quantity ?? 0) > 0 ?
+                (
+                  <button
+                    className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-sans text-white hover:bg-green-600"
+                    onClick={() => handleAddToCart(itemDetail)}
+                  >
+                    <BsFillCartCheckFill className="text-lg" />
+                    <div className="pl-2">Add to Cart</div>
+                  </button>
+                ) : (
+                  ""
+                ) : (
+                ""
+              )}
           {itemDetail &&
             itemDetail?.items_type != 1 &&
             isItemInCart(itemDetail.item_id) ? (
@@ -1223,155 +1223,227 @@ const MyComponent = () => {
             </ScrollArea>
           </div>
         )} */}
-        <div className="flex h-[500px] w-full flex-col items-center justify-center">
-          <Tabs
-            key={`tabs-${itemDetail?.item_id}`}
-            tabs={[
-              {
-                title: "Details",
-                value: "Details",
-                content: (
-                  <div className="rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
-                    <h3 className="mb-4 text-2xl font-bold text-red-600">
-                      Details
-                    </h3>
 
-                    <ScrollArea className="h-72 overflow-y-auto">
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        {itemDetail?.detail ? (
-                          <div>
-                            <div>{itemDetail.detail}</div>
+        {(itemDetail?.detail && itemDetail?.detail.trim().length > 0) && reviews && reviews?.length > 0 ? (
+          <div className="flex h-[500px] w-full flex-col items-center justify-center">
+            <Tabs
+              key={`tabs-${itemDetail?.item_id}`}
+              tabs={[
+                {
+                  title: "Details",
+                  value: "Details",
+                  content: (
+                    <div className="rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
+                      <h3 className="mb-4 text-2xl font-bold text-red-600">
+                        Details
+                      </h3>
 
-                            {/* {itemDetail?.additional_notes && (
-                              <div>
-                                <div className="">
-                                  <h3 className="mt-4 mb-2 text-xl font-bold text-red-600">
-                                    Additional Notes
-                                  </h3>
-                                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                                    {itemDetail.additional_notes}
-                                  </span>
-                                </div>
-                              </div>
-                            )} */}
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center justify-center">
-                            <p>No details available</p>
-                            <Player
-                              autoplay
-                              loop
-                              src="/assets/gifs/no-details.json"
-                              className="h-fit w-64 bg-yellow-300"
-                            />
-                          </div>
-                        )}
-                        {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur non odio aspernatur nam recusandae quia, dolor est sunt, doloremque iure pariatur sit quis iste explicabo laudantium error facilis tempora sed. */}
-                      </div>
-                    </ScrollArea>
-                  </div>
-                ),
-              },
-              {
-                title: "Reviews",
-                value: "reviews",
-                content: (
-                  <div className="rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
-                    <h3 className="mb-4 text-2xl font-bold text-red-600">
-                      Reviews
-                    </h3>
+                      <ScrollArea className="h-72 overflow-y-auto">
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          {itemDetail?.detail ? (
+                            <div>
+                              <div>{itemDetail.detail}</div>
 
-                    <ScrollArea className="h-72 overflow-y-auto">
-                      {!getReviewsLoader &&
-                        reviews?.map((review, index) => (
-                          <div
-                            key={`review-${review.item_id ?? `fallback-${index}`}`}
-                            className="mb-4 border-b border-gray-600 pb-2 dark:border-gray-600"
-                          >
-                            <p className="font-semibold">{review.username}</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                              {review.review}
-                            </p>
-                            <div className="flex items-center gap-1 py-2">
-                              {Array.from({ length: 5 }, (_, i) =>
-                                i < (review.stars ?? 0) ? (
-                                  <FaStar
-                                    key={`star-${review.item_id}-${index}-${i}`}
-                                    className="text-yellow-500"
-                                  />
-                                ) : (
-                                  <FaRegStar
-                                    key={`regstar-${review.item_id}-${index}-${i}`}
-                                    className="text-gray-400"
-                                  />
-                                ),
-                              )}
+                              {/* {itemDetail?.additional_notes && (
+                   <div>
+                     <div className="">
+                       <h3 className="mt-4 mb-2 text-xl font-bold text-red-600">
+                         Additional Notes
+                       </h3>
+                       <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                         {itemDetail.additional_notes}
+                       </span>
+                     </div>
+                   </div>
+                 )} */}
                             </div>
-                            <p className="text-xs text-gray-500">
-                              {review?.created_at
-                                ? moment(review?.created_at).format(
-                                  "Do MMMM, YYYY",
-                                )
-                                : ""}
-                            </p>
-                          </div>
-                        ))}
-                      {!getReviewsLoader &&
-                        (!reviews?.length || reviews == null) && (
-                          <div className="flex h-full flex-col items-center justify-center gap-5">
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                              No reviews available
-                            </p>
-                            <Player
-                              autoplay
-                              loop
-                              src="/assets/gifs/no-reviews.json"
-                              className="h-fit w-72"
-                            />
-                          </div>
-                        )}
-                    </ScrollArea>
-                    {getReviewsLoader && (
-                      <ScrollArea className="h-[300px] overflow-y-auto">
-                        {Array.from({ length: 6 }).map((_, index) => (
-                          <div
-                            key={index}
-                            className="mb-4 animate-pulse border-b border-gray-600 pb-2 dark:border-gray-400"
-                          >
-                            <div className="mb-2 h-4 w-1/3 rounded bg-gray-300 dark:bg-gray-600" />
-                            <div className="mb-2 h-3 w-2/3 rounded bg-gray-200 dark:bg-gray-500" />
-                            <div className="flex items-center gap-1 py-2">
-                              {Array.from({ length: 5 }).map((_, i) => (
-                                <div
-                                  key={i}
-                                  className="h-4 w-4 rounded-full bg-gray-300 dark:bg-gray-600"
-                                />
-                              ))}
+                          ) : (
+                            <div className="flex flex-col items-center justify-center">
+                              <p>No details available</p>
+                              <Player
+                                autoplay
+                                loop
+                                src="/assets/gifs/no-details.json"
+                                className="h-fit w-64 bg-yellow-300"
+                              />
                             </div>
-                            <div className="h-3 w-1/4 rounded bg-gray-200 dark:bg-gray-500" />
-                          </div>
-                        ))}
+                          )}
+                          {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur non odio aspernatur nam recusandae quia, dolor est sunt, doloremque iure pariatur sit quis iste explicabo laudantium error facilis tempora sed. */}
+                        </div>
                       </ScrollArea>
-                    )}
-                  </div>
-                ),
-              },
-            ]}
-          />
-        </div>
+                    </div>
+                  ),
+                },
+                {
+                  title: "Reviews",
+                  value: "reviews",
+                  content: (
+                    <div className="rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
+                      <h3 className="mb-4 text-2xl font-bold text-red-600">
+                        Reviews
+                      </h3>
+
+                      <ScrollArea className="h-72 overflow-y-auto">
+                        {!getReviewsLoader &&
+                          reviews?.map((review, index) => (
+                            <div
+                              key={`review-${index}-${review.item_id ?? `fallback-${index}`}`}
+                              className="mb-4 border-b border-gray-200 pb-2 dark:border-gray-600"
+                            >
+                              <p className="font-semibold">{review.username}</p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {review.review}
+                              </p>
+                              <div className="flex items-center gap-1 py-2">
+                                {Array.from({ length: 5 }, (_, i) =>
+                                  i < (review.stars ?? 0) ? (
+                                    <FaStar
+                                      key={`star-${review.item_id}-${index}-${i}`}
+                                      className="text-yellow-500"
+                                    />
+                                  ) : (
+                                    <FaRegStar
+                                      key={`regstar-${review.item_id}-${index}-${i}`}
+                                      className="text-gray-400"
+                                    />
+                                  ),
+                                )}
+                              </div>
+                              <p className="text-xs text-gray-500">
+                                {review?.created_at
+                                  ? moment(review?.created_at).format(
+                                    "Do MMMM, YYYY",
+                                  )
+                                  : ""}
+                              </p>
+                            </div>
+                          ))}
+
+                      </ScrollArea>
+                      {getReviewsLoader && (
+                        <ScrollArea className="h-[300px] overflow-y-auto">
+                          {Array.from({ length: 6 }).map((_, index) => (
+                            <div
+                              key={index}
+                              className="mb-4 animate-pulse border-b border-gray-600 pb-2 dark:border-gray-400"
+                            >
+                              <div className="mb-2 h-4 w-1/3 rounded bg-gray-300 dark:bg-gray-600" />
+                              <div className="mb-2 h-3 w-2/3 rounded bg-gray-200 dark:bg-gray-500" />
+                              <div className="flex items-center gap-1 py-2">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                  <div
+                                    key={i}
+                                    className="h-4 w-4 rounded-full bg-gray-300 dark:bg-gray-600"
+                                  />
+                                ))}
+                              </div>
+                              <div className="h-3 w-1/4 rounded bg-gray-200 dark:bg-gray-500" />
+                            </div>
+                          ))}
+                        </ScrollArea>
+                      )}
+                    </div>
+                  ),
+                },
+
+              ]}
+            />
+          </div>
+        ) : (itemDetail?.detail && itemDetail?.detail.trim().length > 0) ? (
+          <div className="flex h-[500px] w-full flex-col items-center justify-center">
+            <div className="w-full rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
+              <h3 className="mb-4 text-2xl font-bold text-red-600">
+                Details
+              </h3>
+
+              <ScrollArea className="h-72 overflow-y-auto">
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  {itemDetail?.detail ? (
+                    <div>
+                      <div>{itemDetail.detail}</div>
+
+
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center">
+                      <p>No details available</p>
+                      <Player
+                        autoplay
+                        loop
+                        src="/assets/gifs/no-details.json"
+                        className="h-fit w-64 bg-yellow-300"
+                      />
+                    </div>
+                  )}
+                  {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur non odio aspernatur nam recusandae quia, dolor est sunt, doloremque iure pariatur sit quis iste explicabo laudantium error facilis tempora sed. */}
+                </div>
+              </ScrollArea>
+            </div>
+          </div>
+        ) : reviews && reviews?.length > 0 ? (
+          <div className="flex h-[500px] w-full flex-col items-center justify-center">
+            <div className="w-full rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
+              <h3 className="mb-4 text-2xl font-bold text-red-600">
+                Reviews
+              </h3>
+
+              <ScrollArea className="h-72 overflow-y-auto">
+                {!getReviewsLoader &&
+                  reviews?.map((review, index) => (
+                    <div
+                      key={`review-${index}-${review.item_id ?? `fallback-${index}`}`}
+                      className="mb-4 border-b border-gray-200 pb-2 dark:border-gray-600"
+                    >
+                      <p className="font-semibold">{review.username}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {review.review}
+                      </p>
+                      <div className="flex items-center gap-1 py-2">
+                        {Array.from({ length: 5 }, (_, i) =>
+                          i < (review.stars ?? 0) ? (
+                            <FaStar
+                              key={`star-${review.item_id}-${index}-${i}`}
+                              className="text-yellow-500"
+                            />
+                          ) : (
+                            <FaRegStar
+                              key={`regstar-${review.item_id}-${index}-${i}`}
+                              className="text-gray-400"
+                            />
+                          ),
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        {review?.created_at
+                          ? moment(review?.created_at).format(
+                            "Do MMMM, YYYY",
+                          )
+                          : ""}
+                      </p>
+                    </div>
+                  ))}
+
+              </ScrollArea>
+            </div>
+          </div>
+        ) :
+          <div className="h-1 w-full">
+          </div>
+        }
+
 
         {/* {!getReviewsLoader && reviews?.[0] && (
          
         )} */}
 
-        <div className="flex-end md:mt-24 md:w-1/2 lg:mt-24">
+        <div className="flex-end md:mt-14 md:w-1/2">
           <ReviewForm
             submitValues={(val) => handleSubmitReviews(val)}
             submitLoader={submitLoader}
           />
         </div>
       </div>
-      <div className="mt-20">
+      <div className="mt-2">
         <ProductsSection
           products={products}
           headingPartOne="Related"

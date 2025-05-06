@@ -5,6 +5,7 @@ import { type Metadata } from "next";
 import { AuthProvider } from "~/Context/AuthContext";
 import { Toaster } from "~/components/ui/toaster";
 import { Suspense } from "react";
+
 // import Loading from "./loading";
 
 export const metadata: Metadata = {
@@ -18,6 +19,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
+      <head>
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+      </head>
       <body suppressHydrationWarning>
         <AuthProvider>
           {children}

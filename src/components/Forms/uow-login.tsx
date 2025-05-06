@@ -14,6 +14,7 @@ import { LoginResponse } from "~/types/loginResponse";
 // import Spinner from "../spinner";
 // import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import Button from "../ui-components/Button";
+import GoogleLoginButton from "~/app/(auth)/login/googleLogin";
 
 type FormValues = z.infer<typeof LoginSchema>;
 interface LoginFormProps {
@@ -131,6 +132,7 @@ export default function SignupFormDemo({
               type="submit"
               loading={loader}
             />
+           
             {/* <div className="mt-2 flex flex-col items-center justify-center sm:flex-row">
             <p>{`I don't have an account, `}</p>
             <Link href="signup" className="ml-1 text-red-500">
@@ -153,6 +155,7 @@ export default function SignupFormDemo({
           </div>
         </div> */}
         </form>
+        <GoogleLoginButton />
       </div>
     </div>
   );

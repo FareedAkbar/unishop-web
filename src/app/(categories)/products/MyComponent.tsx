@@ -41,6 +41,8 @@ import { FiSearch } from "react-icons/fi";
 
 import Spinner from "~/components/spinner";
 import dynamic from "next/dynamic";
+import { RxCrossCircled } from "react-icons/rx";
+import { BsFillCartCheckFill } from "react-icons/bs";
 const Player = dynamic(
   () => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player),
   { ssr: false },
@@ -160,6 +162,7 @@ const MyComponent = () => {
       }
     };
 
+
     loadData().catch((error) => {
       console.error("Failed to load data in useEffect:", error);
     });
@@ -195,6 +198,7 @@ const MyComponent = () => {
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
+
     const x = item;
     if (item?.variations?.[0] && item?.tag_links) {
       Object.assign(x, { selected_variation: filteredVariations?.[0] });
@@ -219,7 +223,18 @@ const MyComponent = () => {
       console.error("Failed to remove item to cart:", error);
     }
   };
-
+  const isVariableItemInCart = (itemId: number) => {
+    const newItems: DataCart[] =
+      typeof cartItems === "string"
+        ? (JSON.parse(cartItems) as DataCart[])
+        : cartItems!;
+    return newItems.findIndex(
+      (cartItem: DataCart) =>
+        cartItem.selected_variation?.items_variable_items_id === itemId,
+    ) > -1
+      ? true
+      : false;
+  };
   const getOptions = (
     tagName: string,
     dependencies: Record<string, string | undefined>,
@@ -468,7 +483,7 @@ const MyComponent = () => {
   ];
 
 
-  console.log("itemDetail", displayData);
+
 
   return (
     <div>
@@ -704,17 +719,27 @@ const MyComponent = () => {
                         .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
-                <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
-                <FaCheckCircle />
-                  {filteredVariations?.[0]
-                    ? filteredVariations?.[0]?.stock?.quantity
-                      ? "In stock"
-                      : "Backorder"
-                    : itemDetail?.stock.quantity
-                      ? "In stock"
-                      : "Backorder"
-                  }
-                </span>
+
+
+                {filteredVariations?.[0]
+                  ? filteredVariations?.[0]?.stock?.quantity
+                    ? <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                      <FaCheckCircle /> In stock</span>
+                    : itemDetail?.allow_special_order == 1 ?
+                      <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                        <FaCheckCircle /> Backorder</span> :
+                      <span className="flex flex-row items-center gap-1 text-sm font-serif text-red-500 ">
+                        <RxCrossCircled /> Out of stock</span>
+                  : itemDetail?.stock.quantity
+                    ? <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                      <FaCheckCircle /> In stock</span>
+                    : itemDetail?.allow_special_order == 1 ?
+                      <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                        <FaCheckCircle /> Backorder</span> :
+                      <span className="flex flex-row items-center gap-1 text-sm font-serif text-red-500 ">
+                        <RxCrossCircled /> Out of stock</span>
+                }
+
                 {filteredVariations?.[0]
                   ? filteredVariations?.[0].items_variable_items_sku_number && (
                     <div className="flex items-center justify-center">
@@ -743,30 +768,15 @@ const MyComponent = () => {
               {itemDetail?.book_id && itemDetail?.food_id == null && (
                 <div className="flex items-center justify-center">
                   {manageUsage().length > 0 ? (
-                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                    <span className="text-sm text-neutral-700 dark:text-neutral-300">
                       {manageUsage().map((item, index) => {
                         const matchedType = textbookType?.find(
                           (t) => t.item_book_type_id === Number(item.type_id),
                         ); // Find the matching type
                         return (
-                          <div
-                            key={`usage-${item.subject_code}-${index}-name-type`} className="mb-1"
-                          >
-                            <small
-                              key={`usage-${item.subject_code}-${index}-name`}
-                              className="mr-1 rounded bg-red-500 px-2 py-1 text-gray-100"
-                            >
-                              {item.subject_name} {item.subject_code}{" "}
-                              {/* Display type_name or fallback */}
-                            </small>
-                            <small
-                              key={`usage-${item.subject_code}-${index}-type`}
-                              className="mr-1 rounded bg-yellow-200 dark:bg-yellow-500 px-2 py-1 text-black"
-                            >
-                              {matchedType?.type_name ?? ""}{" "}
-                              {/* Display type_name or fallback */}
-                            </small>
-                          </div>
+                          <span key={`usage-${item.subject_code}-${index}-pair`} className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "bg-red-500 text-white" : "bg-yellow-200 dark:bg-yellow-500"} px-2 py-1 text-sm`}>
+                            {matchedType?.type_name ?? ""}: {item.subject_name} {item.subject_code}
+                          </span>
                         );
                       })}
                     </span>
@@ -1011,7 +1021,7 @@ const MyComponent = () => {
                           key={tagName}
                           className={`my-4 w-full ${tagName == "size" ? "flex items-center gap-1" : ""}`}
                         >
-                          <h3 className="text-lg font-semibold capitalize">
+                          <h3 className="text-md font-semibold capitalize">
                             {tagName}
                           </h3>
 
@@ -1054,18 +1064,91 @@ const MyComponent = () => {
                   )}
                 </div>
               )}
-
-              {itemDetail?.variations?.[0]?.variation_tags &&
-                Object.keys(selectedValues)[0] &&
-                filteredVariations?.[0]?.items_variable_items_id && (
+              {itemDetail?.variations?.[0] &&
+                filteredVariations?.[0]?.items_variable_items_id &&
+                Object.values(selectedValues).length ==
+                itemDetail?.tag_links?.length &&
+                isVariableItemInCart(
+                  filteredVariations?.[0]?.items_variable_items_id,
+                ) ? (
+                <button
+                  className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-1 font-sans text-white hover:bg-red-600"
+                  onClick={() => handleRemoveFromCart({ ...itemDetail, selected_variation: filteredVariations?.[0] })}
+                >
+                  <div className="pl-2">Remove from Cart</div>
+                </button>
+              ) : (
+                ""
+              )}
+              {itemDetail?.variations?.[0] &&
+                !isVariableItemInCart(
+                  filteredVariations?.[0]?.items_variable_items_id ?? -1,
+                ) &&
+                !Object.values(selectedValues).some((value) => value === undefined) &&
+                Object.values(selectedValues).length ==
+                itemDetail?.tag_links?.length &&
+                (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
+                  itemDetail?.item_sale_price) ?
+                ((itemDetail?.variations?.[0]?.stock?.quantity ?? 0) > 0 || itemDetail?.allow_special_order == 1) ? (
                   <button
-                    className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
+                    className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-1 font-sans text-white hover:bg-green-600"
                     onClick={() => handleAddToCart(itemDetail)}
                   >
-                    <FaCartPlus className="text-lg" />
+                    <BsFillCartCheckFill className="text-lg" />
                     <div className="pl-2">Add to Cart</div>
                   </button>
-                )}
+                ) : (
+                  ""
+                ) : itemDetail &&
+                  itemDetail?.items_type != 1 &&
+                  !isItemInCart(itemDetail.item_id) ?
+                  itemDetail?.allow_special_order == 1 || (itemDetail?.stock?.quantity ?? 0) > 0 ?
+                    (
+                      <button
+                        className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-1 font-sans text-white hover:bg-green-600"
+                        onClick={() => handleAddToCart(itemDetail)}
+                      >
+                        <BsFillCartCheckFill className="text-lg" />
+                        <div className="pl-2">Add to Cart</div>
+                      </button>
+                    ) : (
+                      ""
+                    ) : (
+                    ""
+                  )}
+              {itemDetail &&
+                itemDetail?.items_type != 1 &&
+                isItemInCart(itemDetail.item_id) ? (
+                <button
+                  className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-1 font-sans text-white hover:bg-red-600"
+                  onClick={() => handleRemoveFromCart(itemDetail)}
+                >
+
+                  <div className="pl-2">Remove from Cart</div>
+                </button>
+              ) : (
+                ""
+              )}
+              {/* {itemDetail?.variations?.[0]?.variation_tags &&
+                Object.keys(selectedValues)[0] &&
+                filteredVariations?.[0]?.items_variable_items_id && (
+                  ((filteredVariations?.[0]?.stock?.quantity ?? 0) > 0 || itemDetail?.allow_special_order === 1) ?
+                    (<button
+                      className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
+                      onClick={() => handleAddToCart(itemDetail)}
+                    >
+                      <FaCartPlus className="text-lg" />
+                      <div className="pl-2">Add to Cart</div>
+                    </button>) :
+                    (
+                      <span className="flex flex-row items-center gap-1 text-xs font-serif text-red-500 ">
+                        <RxCrossCircled />
+                        <span className="text-sm font-bold text-red-500">
+                          Out of Stock
+                        </span>
+                      </span>
+                    )
+                )} */}
             </div>
           </div>
           <div className="flex w-full justify-end">

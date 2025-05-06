@@ -152,13 +152,22 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
               price={item.item_sale_price}
               showRemove={true}
               onChangeQuantity={(id, number) => onChangeQuantity(id, number)}
-              onIncrease={() =>
-                handleIncrease(
-                  item.item_id,
-                  item.quantity + 1,
-                  item?.selected_variation?.items_variable_items_id,
-                )
+              onIncrease={() => {
+                // Check if alert is not already open
+                if ((item.quantity >= (item?.stock?.quantity ?? 0)) && item.allow_special_order == 0) {
+                  console.log("Stock limit reached");
+                } else {
+                  console.log(item.quantity)
+                  console.log(item.stock?.quantity)
+                  console.log(item.allow_special_order)
+                 void handleIncrease(
+                    item.item_id,
+                    item.quantity + 1,
+                    item?.selected_variation?.items_variable_items_id,
+                  )
               }
+               
+              }}
               onDecrease={() =>
                 handleDecrease(
                   item.item_id,
