@@ -1,13 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { PiBooksBold } from "react-icons/pi";
-import {
-  IoIosArrowRoundForward,
-  IoIosArrowBack,
-  IoIosArrowForward,
-} from "react-icons/io";
-import { FaGraduationCap, FaBook, FaTshirt, FaGift } from "react-icons/fa";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 const ImageSlider: React.FC = () => {
   const router = useRouter();
@@ -16,64 +10,12 @@ const ImageSlider: React.FC = () => {
   const autoSlideRef = useRef<NodeJS.Timeout | null>(null);
 
   const slides = [
-    {
-      image: "/assets/images/home/UniShop_Banner_Books.png",
-      name: "Books",
-      heading: "Up to 20% off Books",
-      subheading: "Wide Range of Titles",
-      button: "Shop Books",
-      route: "/books",
-      icon: (
-        <PiBooksBold className="sm:2xl mr-2 text-xl text-white lg:text-4xl" />
-      ),
-    },
-    {
-      image: "/assets/images/home/stationary.png",
-      name: "Graduation",
-      heading: "Celebrate Graduation",
-      subheading: "Exclusive Offers",
-      button: "Shop Graduation",
-      route: "/graduation",
-      icon: (
-        <FaGraduationCap className="sm:2xl mr-2 text-xl text-white lg:text-4xl" />
-      ),
-    },
-    {
-      image: "/assets/images/home/text-books.png",
-      name: "Textbooks",
-      heading: "Textbooks Discount",
-      subheading: "Up to 15% off",
-      button: "Shop Textbooks",
-      route: "/textbooks",
-      icon: <FaBook className="sm:2xl mr-2 text-xl text-white lg:text-4xl" />,
-    },
-    {
-      image: "/assets/images/home/hoodies-home.jpg",
-      name: "Hoodies",
-      heading: "Cozy Hoodies",
-      subheading: "Comfortable Styles",
-      button: "Shop Hoodies",
-      route: "/hoodies",
-      icon: <FaTshirt className="sm:2xl mr-2 text-xl text-white lg:text-4xl" />,
-    },
-    {
-      image: "/assets/images/home/UniShop_Website_06.png",
-      name: "Gifts",
-      heading: "MERCH, BOOKS AND BEYOND",
-      subheading: "",
-      button: "Shop Gifts",
-      route: "/gifts",
-      icon: <FaGift className="sm:2xl mr-2 text-xl text-white lg:text-4xl" />,
-    },
-    {
-      image: "/assets/images/home/UniShop_Banner_SHOP_LOCAL_1.png",
-      name: "Local",
-      heading: "SHOP LOCAL",
-      subheading: "Perfect for Any Occasion",
-      button: "Shop Gifts",
-      route: "/gifts",
-      icon: <FaGift className="sm:2xl mr-2 text-xl text-white lg:text-4xl" />,
-    },
+    { image: "/assets/images/home/banner1.png", route: "/books" },
+    { image: "/assets/images/home/banner2.jpg", route: "/graduation" },
+    { image: "/assets/images/home/banner3.jpg", route: "/textbooks" },
+    { image: "/assets/images/home/banner4.jpg", route: "/hoodies" },
+    { image: "/assets/images/home/banner5.jpg", route: "/gifts" },
+    { image: "/assets/images/home/banner6.jpg", route: "/local" },
   ];
 
   const goToSlide = (index: number) => {
@@ -92,12 +34,8 @@ const ImageSlider: React.FC = () => {
     goToSlide((currentIndex - 1 + slides.length) % slides.length);
   };
 
-  // Auto-slide with pause on manual control
   useEffect(() => {
-    autoSlideRef.current = setInterval(() => {
-      goToNext();
-    }, 5500);
-
+    autoSlideRef.current = setInterval(goToNext, 5500);
     return () => {
       if (autoSlideRef.current) clearInterval(autoSlideRef.current);
     };
@@ -105,34 +43,17 @@ const ImageSlider: React.FC = () => {
 
   return (
     <div className="relative w-full px-4 pb-4 pt-2">
-      <div className={`${isFlipping ? "animate-fade-in-left" : ""}`}>
-        {/* Banner Content */}
-        <div className="absolute z-10 w-2/5 p-1 lg:block lg:pl-10 lg:pt-10">
-          <div className="flex h-10 flex-col justify-between px-2 py-2 sm:h-52 md:h-60 md:px-6 lg:h-80 lg:px-10">
-            <div className="flex items-center lg:mb-4">
-              {slides[currentIndex]!.icon}
-              <span className="text-xs text-white sm:text-xl lg:text-lg">
-                {slides[currentIndex]!.name}
-              </span>
-            </div>
-          </div>
-          <div className="text-lg font-bold text-white sm:text-2xl lg:text-4xl">
-            {slides[currentIndex]!.heading}
-          </div>
-          <div className="text-md sm:text-1xl font-bold text-white lg:mb-4 lg:text-2xl">
-            {slides[currentIndex]!.subheading}
-          </div>
-        </div>
-
+      <div className={`${isFlipping ? "animate-fade-in-right" : ""}`}>
         {/* Image */}
         <div className="relative">
           <Image
             src={slides[currentIndex]!.image}
-            alt={slides[currentIndex]!.name}
+            alt={`Slide ${currentIndex + 1}`}
             width={3000}
             height={3000}
-            objectFit="cover"
-            className={`relative h-36 w-full rounded-lg transition-transform duration-700 ease-in-out sm:h-72 lg:h-[400px] xl:h-[470px]`}
+            onClick={() => router.push(slides[currentIndex]!.route)}
+            className="relative h-36 w-full cursor-pointer rounded-lg transition-transform duration-700 ease-in-out sm:h-72 lg:h-[400px] xl:h-[470px]"
+            style={{ objectFit: "cover" }}
           />
 
           {/* Left Button */}

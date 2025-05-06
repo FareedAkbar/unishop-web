@@ -17,8 +17,13 @@ interface SidebarCartProps {
 }
 
 const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
-  const { cartItems, removeCartItems, increaseCartItemQuantity, isLoggedIn,logout } =
-    useAuthContext();
+  const {
+    cartItems,
+    removeCartItems,
+    increaseCartItemQuantity,
+    isLoggedIn,
+    logout,
+  } = useAuthContext();
   const [items, setItems] = useState<DataCart[]>([]);
   const [subTotal, setSubtotal] = useState<number>(0);
   const [isOpenAlert, setIsOpenAlert] = useState<boolean>(false);
@@ -55,12 +60,12 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
   }, [items]);
 
   const opencart = () => {
-    if(isLoggedIn){
+    if (isLoggedIn) {
       onClose();
       router.push("checkout");
       // setIsOpenAlert(true);
-    }else{
-      setLoginAlert(true)
+    } else {
+      setLoginAlert(true);
     }
     // setIsOpenAlert(true);
   };
@@ -72,7 +77,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
     router.push("checkout");
   };
   const goToLogin = () => {
-    void logout()
+    void logout();
     setLoginAlert(false);
     onClose();
     router.push("login");
@@ -133,7 +138,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
         {/* Cart Sidebar */}
         {/* Cart Header */}
         <div className="flex items-center justify-between border-b bg-gray-100 p-4 dark:bg-slate-700">
-          <h2 className="text-xl font-semibold text-red-500">Your Cart</h2>
+          <h2 className="text-xl font-semibold text-red-500">Cart Items</h2>
           <button
             onClick={onClose}
             className="absolute right-4 top-4 text-gray-600 hover:text-gray-900 dark:text-white dark:hover:text-gray-200"

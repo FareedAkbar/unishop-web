@@ -39,7 +39,7 @@ const MyComponent = () => {
     checkoutData,
     productTags,
     textbookType,
-    logout
+    logout,
   } = useAuthContext();
   const itemDetail = productDetail;
   const [category, setCategory] = useState<string>("");
@@ -423,7 +423,7 @@ const MyComponent = () => {
     }
   };
   const goToLogin = () => {
-    void logout()
+    void logout();
 
     setLoginAlert(false);
 
@@ -442,7 +442,10 @@ const MyComponent = () => {
   const manageUsage = () => {
     if (itemDetail?.book_usages && itemDetail?.book_usages.length > 0) {
       return itemDetail.book_usages
-        .filter((usage) => (usage.default_semester === 1 || usage.default_trimester === 1))
+        .filter(
+          (usage) =>
+            usage.default_semester === 1 || usage.default_trimester === 1,
+        )
         .map((usage) => ({
           type_id: usage.type_id, // Assuming `type_id` exists
           subject_name: usage.subject_name,
@@ -486,7 +489,7 @@ const MyComponent = () => {
     height,
     magnifierHeight = 100,
     magnifieWidth = 100,
-    zoomLevel = 1.5
+    zoomLevel = 1.5,
   }: {
     src: string;
     width?: string;
@@ -503,12 +506,11 @@ const MyComponent = () => {
         style={{
           position: "relative",
           height: height,
-          width: width
+          width: width,
         }}
       >
         <Image
           src={src}
-
           // style={{ height: height, width: width }}
           onMouseEnter={(e) => {
             // update image size and turn-on magnifier
@@ -533,7 +535,7 @@ const MyComponent = () => {
           }}
           width={2000}
           height={2000}
-          className="h-56 w-56 rounded-lg object-contain lg:h-72 lg:w-72"
+          className="h-56 w-56 cursor-zoom-in rounded-lg object-contain lg:h-72 lg:w-72"
           alt={"img"}
         />
 
@@ -562,7 +564,7 @@ const MyComponent = () => {
 
             //calculate position of zoomed image.
             backgroundPositionX: `${-x * zoomLevel + magnifieWidth / 2}px`,
-            backgroundPositionY: `${-y * zoomLevel + magnifierHeight / 2}px`
+            backgroundPositionY: `${-y * zoomLevel + magnifierHeight / 2}px`,
           }}
           className="bg-white dark:bg-slate-900"
         ></div>
@@ -584,11 +586,10 @@ const MyComponent = () => {
 
         {/* Title */}
         {itemDetail?.category_detail?.category_name && (
-          <h4 className="pb-2 text-center text-md font-bold capitalize text-neutral-600 dark:text-neutral-100 md:text-xl">
+          <h4 className="text-md pb-2 text-center font-bold capitalize text-neutral-600 dark:text-neutral-100 md:text-xl">
             Category: {itemDetail?.category_detail?.category_name}
           </h4>
         )}
-
 
         {/* Invisible Placeholder */}
         <div className="w-10" />
@@ -603,12 +604,14 @@ const MyComponent = () => {
       <div className="relative flex flex-wrap gap-3">
         <div className="mx-auto flex flex-col items-center">
           {ImageMagnifier({
-            src: currentImage ? `https://ipos-storage.s3.amazonaws.com/${currentImage}` : "/assets/images/products/product.png",
+            src: currentImage
+              ? `https://ipos-storage.s3.amazonaws.com/${currentImage}`
+              : "/assets/images/products/product.png",
             width: "100%",
             height: "100%",
             magnifierHeight: 200,
             magnifieWidth: 200,
-            zoomLevel: 1.5
+            zoomLevel: 1.5,
           })}
           {/* <div
             className="relative flex h-60 w-60 cursor-zoom-in items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80"
@@ -641,13 +644,10 @@ const MyComponent = () => {
             />
           </div> */}
 
-
-          {(
-            (!selectedVariation &&
-              itemDetail?.media &&
-              itemDetail?.media?.length > 0)) && (
-              <div
-                className="mt-2 flex gap-2 overflow-x-auto h-fit">
+          {!selectedVariation &&
+            itemDetail?.media &&
+            itemDetail?.media?.length > 0 && (
+              <div className="mt-2 flex h-fit gap-2 overflow-x-auto">
                 {(itemDetail?.media
                   ? [
                     {
@@ -660,32 +660,9 @@ const MyComponent = () => {
                 ).map((media, index) => (
                   <button
                     key={`thumbnail-${`fallback-${index}`}`}
-                    onClick={() => { setCurrentImage(media.object_path); }}
-                    className={`w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImage === media.object_path ? "border-red-500" : "border-gray-300"}`}
-                  >
-                    <Image
-
-                      src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
-                      alt={`Thumbnail ${index + 1}`}
-                      width={48}
-                      height={48}
-                      className="h-full w-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
-          {(selectedVariation?.media &&
-            selectedVariation?.media?.length > 1) && (
-              <div className="mt-2 flex gap-2 overflow-x-auto h-fit ">
-                {(selectedVariation?.media?.length > 0
-                  ? [{ object_id: "001", object_path: itemDetail?.object_path ?? "" }, ...selectedVariation.media]
-
-                  : []
-                ).map((media, index) => (
-                  <button
-                    key={`thumbnail-${`fallback-${index}`}`}
-                    onClick={() => { setCurrentImage(media.object_path); }}
+                    onClick={() => {
+                      setCurrentImage(media.object_path);
+                    }}
                     className={`w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImage === media.object_path ? "border-red-500" : "border-gray-300"}`}
                   >
                     <Image
@@ -699,6 +676,36 @@ const MyComponent = () => {
                 ))}
               </div>
             )}
+          {selectedVariation?.media && selectedVariation?.media?.length > 1 && (
+            <div className="mt-2 flex h-fit gap-2 overflow-x-auto">
+              {(selectedVariation?.media?.length > 0
+                ? [
+                  {
+                    object_id: "001",
+                    object_path: itemDetail?.object_path ?? "",
+                  },
+                  ...selectedVariation.media,
+                ]
+                : []
+              ).map((media, index) => (
+                <button
+                  key={`thumbnail-${`fallback-${index}`}`}
+                  onClick={() => {
+                    setCurrentImage(media.object_path);
+                  }}
+                  className={`w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImage === media.object_path ? "border-red-500" : "border-gray-300"}`}
+                >
+                  <Image
+                    src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                    alt={`Thumbnail ${index + 1}`}
+                    width={48}
+                    height={48}
+                    className="h-full w-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
           {/* {selectedVariation?.media && selectedVariation?.media?.length > 1 && (
             <div className="mt-2 flex gap-2 overflow-x-auto py-2">
               {(selectedVariation?.media?.length > 0
@@ -802,7 +809,6 @@ const MyComponent = () => {
                   {filteredVariations?.[0].items_variable_items_sku_number}
                 </span>
               </div>
-
             )
             : itemDetail?.SKU && (
               <div className="flex items-center justify-center">
@@ -813,7 +819,6 @@ const MyComponent = () => {
                   {itemDetail.SKU}
                 </span>
               </div>
-
             )}
 
           {itemDetail?.book_id && itemDetail?.food_id == null && (
@@ -1071,8 +1076,8 @@ const MyComponent = () => {
                           <button
                             key={`${option.value}-${optionIndex}`}
                             className={`min-w-10 rounded border p-1 text-center text-sm ${selectedValues[tagName] === option.value
-                              ? "bg-red-500 text-white"
-                              : "border-red-500 bg-white dark:bg-slate-700"
+                                ? "bg-red-500 text-white"
+                                : "border-red-500 bg-white dark:bg-slate-700"
                               } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
@@ -1109,7 +1114,12 @@ const MyComponent = () => {
             ) ? (
             <button
               className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-2 font-sans text-white hover:bg-red-600"
-              onClick={() => handleRemoveFromCart({ ...itemDetail, selected_variation: filteredVariations?.[0] })}
+              onClick={() =>
+                handleRemoveFromCart({
+                  ...itemDetail,
+                  selected_variation: filteredVariations?.[0],
+                })
+              }
             >
               <div className="pl-2">Remove from Cart</div>
             </button>
@@ -1159,7 +1169,6 @@ const MyComponent = () => {
               className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-2 font-sans text-white hover:bg-red-600"
               onClick={() => handleRemoveFromCart(itemDetail)}
             >
-
               <div className="pl-2">Remove from Cart</div>
             </button>
           ) : (

@@ -38,7 +38,7 @@ const ProductList: React.FC<ProductListProps> = ({
       {specialItems?.[0] && (
         <div className="flex flex-col space-y-4 pb-5">
           {title && (
-            <h2 className="animate-bounce pl-3 text-xl font-bold text-gray-800 dark:text-white">
+            <h2 className="animate-bounce pl-8 text-xl font-bold text-gray-800 dark:text-white">
               {title}
             </h2>
           )}
@@ -50,7 +50,7 @@ const ProductList: React.FC<ProductListProps> = ({
                   title == product?.tag_name && (
                     <motion.div
                       key={product?.item_id}
-                      className={`flex  mx-3 cursor-pointer items-center justify-between rounded-lg border border-neutral-300 bg-white p-3 shadow-lg dark:bg-slate-700 dark:text-white`}
+                      className={`mx-3 flex cursor-pointer items-center justify-between rounded-lg border border-neutral-300 bg-white p-3 shadow-lg dark:bg-slate-700 dark:text-white`}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{
                         opacity: 1,

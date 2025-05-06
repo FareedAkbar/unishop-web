@@ -29,6 +29,21 @@
   background: #555;
 }
 
+@keyframes fade-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-right {
+  animation: fade-in-right 0.5s ease-in-out;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

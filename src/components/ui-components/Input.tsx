@@ -49,60 +49,59 @@ const Input: React.FC<InputProps> = ({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node)
-      ) {
-        if (animateOnClick) setIsVisible(false);
-        setIsFocused(false);
-      }
-    };
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          inputRef.current &&
+          !inputRef.current.contains(event.target as Node)
+        ) {
+          if (animateOnClick) setIsVisible(false);
+          setIsFocused(false);
+        }
+      };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
   }, []);
 
   return (
     <div className="flex flex-col">
-    <div
-      ref={inputRef}
-      className="flex items-center justify-between rounded bg-gray-100 dark:bg-slate-700 dark:text-white"
-    >
       <div
-        className={`overflow-hidden transition-all duration-500 ease-in-out ${
-          isVisible ? `${width} opacity-100` : "w-0 opacity-0"
-        }`}
+        ref={inputRef}
+        className="flex items-center justify-between rounded bg-gray-100 dark:bg-slate-700 dark:text-white"
       >
-        <input
-          type={type}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          onKeyDown={handleEnterPress}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          className="w-full bg-transparent p-2 text-sm focus:outline-none"
-        />
-      </div>
-
-      {icon && (
-        <button
-          type="button"
-          className={`p-2 transition-transform duration-300 ${
-            isActive ? "text-red-500" : "text-black dark:text-white"
+        <div
+          className={`overflow-hidden transition-all duration-500 ease-in-out ${
+            isVisible ? `${width} opacity-100` : "w-0 opacity-0"
           }`}
-          onClick={handleIconClick}
         >
-          {icon}
-        </button>
-      )}
-     
-    </div>
-    {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+          <input
+            type={type}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            onKeyDown={handleEnterPress}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            className="w-full bg-transparent p-2 text-sm focus:outline-none"
+          />
+        </div>
+
+        {icon && (
+          <button
+            type="button"
+            className={`p-2 transition-transform duration-300 ${
+              isActive ? "text-red-500" : "text-black dark:text-white"
+            }`}
+            onClick={handleIconClick}
+          >
+            {icon}
+          </button>
+        )}
+      </div>
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
 };
