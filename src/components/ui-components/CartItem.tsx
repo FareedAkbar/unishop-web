@@ -46,7 +46,7 @@ const CartItem: React.FC<CartItemProps> = ({
       : 0;
 
   return (
-    <div className="border-b dark:border-b dark:border-gray-400 border-gray-700">
+    <div className="border-b dark:border-b dark:border-gray-400 border-gray-700 pr-3">
       <div className="flex flex-row items-start space-x-4  bg-white py-2 dark:bg-slate-800">
         <Image
           src={item?.selected_variation?.media?.length && item?.selected_variation?.media[0]?.object_path
@@ -86,8 +86,8 @@ const CartItem: React.FC<CartItemProps> = ({
 
 
 
-          {quantity && quantity > 0
-            ? (
+          {quantity && quantity > 0 && quantity >= itemQuantity 
+            ?  (
               <span className="flex flex-row items-center gap-1 text-xs  font-serif bg-green-500 p-1 text-white w-fit rounded">
                 <FaCheckCircle /> In stock
               </span>
@@ -143,7 +143,7 @@ const CartItem: React.FC<CartItemProps> = ({
           <p className="rounded bg-yellow-200 p-3 mb-2 text-sm dark:bg-yellow-700">
             {/* <MdWarning size={23} /> */}
             {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`} */}
-            {`Sufficient Stock. You can not add more than ${quantity} items to your cart.`}
+            {`You’ve reached the limit — only ${quantity} items can be added to your cart.`}
           </p>
         )
         : ""}
