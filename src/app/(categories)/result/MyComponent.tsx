@@ -77,7 +77,7 @@ const MyComponent = () => {
     searchInCategory,
     textbookType,
   } = useAuthContext();
-console.log("searchItems", searchItems);
+  console.log("searchItems", searchItems);
   useEffect(() => {
     const fetchData = async () => {
       const d = params.get("type");
@@ -529,7 +529,7 @@ console.log("searchItems", searchItems);
                       : itemDetail?.item_sale_price}
                 </span>
                 <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
-                <FaCheckCircle />
+                  <FaCheckCircle />
                   {filteredVariations?.[0]
                     ? filteredVariations?.[0]?.stock?.quantity
                       ? "In stock"
@@ -568,20 +568,15 @@ console.log("searchItems", searchItems);
 
                   <span className="text-xs text-neutral-700 dark:text-neutral-300">
                     {manageUsage().length > 0 ? (
-                      <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                      <span className="text-sm text-neutral-700 dark:text-neutral-300">
                         {manageUsage().map((item, index) => {
                           const matchedType = textbookType?.find(
                             (t) => t.item_book_type_id === Number(item.type_id),
                           ); // Find the matching type
                           return (
-                            <small
-                              key={index}
-                              className="mr-1 rounded bg-red-500 px-2 py-1 text-gray-100 dark:bg-gray-700 dark:text-gray-300"
-                            >
-                              {item.subject_name} {item.subject_code},{" "}
-                              {matchedType?.type_name ?? ""}{" "}
-                              {/* Display type_name or fallback */}
-                            </small>
+                            <span key={`usage-${item.subject_code}-${index}-pair`} className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "bg-red-500 text-white" : "bg-yellow-200 dark:bg-yellow-500"} px-2 py-1 text-sm`}>
+                              {matchedType?.type_name ?? ""}: {item.subject_name} {item.subject_code}
+                            </span>
                           );
                         })}
                       </span>
@@ -867,13 +862,22 @@ console.log("searchItems", searchItems);
               {itemDetail?.variations?.[0]?.variation_tags &&
                 Object.keys(selectedValues)[0] &&
                 filteredVariations?.[0]?.items_variable_items_id && (
-                  <button
-                    className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
-                    onClick={() => handleAddToCart(itemDetail)}
-                  >
-                    <FaCartPlus className="text-lg" />
-                    <div className="pl-2">Add to Cart</div>
-                  </button>
+                  ((filteredVariations?.[0]?.stock?.quantity ?? 0) > 0 || itemDetail?.allow_special_order === 1) ?
+                    (<button
+                      className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
+                      onClick={() => handleAddToCart(itemDetail)}
+                    >
+                      <FaCartPlus className="text-lg" />
+                      <div className="pl-2">Add to Cart</div>
+                    </button>) :
+                    (
+                      <span className="flex flex-row items-center gap-1 text-xs font-serif text-red-500 ">
+                        <FaCheckCircle />
+                        <span className="text-sm font-bold text-red-500">
+                          Out of Stock
+                        </span>
+                      </span>
+                    )
                 )}
             </div>
           </div>

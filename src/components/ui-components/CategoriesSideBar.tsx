@@ -81,6 +81,7 @@ const SubcategoryList1 = ({
   setOpenCategories,
 }: SubcategoryListProps1) => {
   const router = useRouter();
+  console.log("subItems", subItems)
   return (
     <div className="absolute left-10 top-8 z-50 w-60 overflow-x-visible rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
       {subItems.map((subItem) => (
@@ -343,6 +344,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     };
   }, []);
   const pathname = usePathname();
+  
   return (
     <aside
       ref={sidebarRef}

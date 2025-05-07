@@ -13,6 +13,7 @@ import type DataCart from "~/types/book";
 import type { ItemSpecialTag } from "~/types/productTags";
 import type { SpecialTag } from "~/types/book";
 import { FaCheckCircle } from "react-icons/fa";
+import { RxCrossCircled } from "react-icons/rx";
 
 interface ProductProps {
   showAddToCart?: boolean;
@@ -62,7 +63,7 @@ const ProductCard = ({
     }
     return [];
   };
-
+  
   return (
     <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
 
@@ -141,7 +142,7 @@ const ProductCard = ({
 
         {showButton &&
           (product?.variations?.[0]?.items_variable_items_sale_price ??
-            product?.item_sale_price) ? (
+            (product?.item_sale_price && (product?.stock?.quantity && product?.stock?.quantity > 0 || product?.allow_special_order == 1))) ? (
           <button
             onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
             className={`z-5 bottom-0 w-full rounded-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${!showAddToCart ? "bg-red-500" : "bg-black"
@@ -160,7 +161,7 @@ const ProductCard = ({
         {product?.item_name}
       </span>
       {product?.SKU ? (
-        <span className="truncate text-xs">SKU: {product?.SKU}</span>
+        <span className="truncate text-xs font-serif">SKU: {product?.SKU}</span>
       ) : (
         ""
       )}
@@ -184,21 +185,27 @@ const ProductCard = ({
                   key={`usage-${item.subject_code}-${index}-pair`}
                   className="flex flex-col items-start gap-1 sm:flex-row"
                 >
-                  <span className="inline-block w-fit rounded bg-red-500 px-2 py-1 text-xs text-white">
-                    {item.subject_name} {item.subject_code}
+                  <span className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "bg-red-500 text-white" : "bg-yellow-200 dark:bg-yellow-500"} px-2 py-1 text-xs `}>
+                    {matchedType?.type_name ?? ""}: {item.subject_name} {item.subject_code}
                   </span>
-                  <span className="inline-block w-fit rounded bg-yellow-200 px-2 py-1 text-xs text-black dark:bg-yellow-500">
-                    {matchedType?.type_name ?? ""}
-                  </span>
+                  {/* <span className="inline-block w-fit rounded bg-yellow-200 px-2 py-1 text-xs text-black dark:bg-yellow-500">
+                    
+                  </span> */}
                 </div>
               );
             })
           ) : (
-            <p>Textbook not used this session</p>
+            <p className="text-xs font-serif">Textbook not used this session</p>
           )}
         </div>
       ) : (
         ""
+      )}
+      {product?.shelf_location && (
+        <span className="flex flex-row items-center gap-1 text-xs font-serif ">
+
+          Bin Location: {product?.shelf_location}
+        </span>
       )}
 
       <div className="mt-1 flex gap-1 sm:mt-2 sm:gap-2">
@@ -215,13 +222,14 @@ const ProductCard = ({
         )}
       </div>
       {product?.items_type != 1 && (
-        <span className="flex flex-row items-center gap-1 text-xs font-serif text-green-500 ">
-          <FaCheckCircle />
-          {product?.stock.quantity
-            ? "In stock"
-            : "Backorder"
-          }
-        </span>
+
+
+        product?.stock.quantity
+
+          ? <span className="flex flex-row items-center gap-1 text-xs font-serif text-green-500 "><FaCheckCircle /> In stock</span>
+          : product?.allow_special_order == 1 ? <span className="flex flex-row items-center gap-1 text-xs font-serif text-green-500 "><FaCheckCircle />  Backorder</span> : <span className="flex flex-row items-center gap-1 text-xs font-serif text-red-500 "><RxCrossCircled /> Out of stock</span>
+
+
       )}
 
     </div>
