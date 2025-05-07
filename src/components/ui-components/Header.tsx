@@ -312,21 +312,15 @@ const Header = () => {
     }
   }, [themeMode]);
 
-  useEffect(() => {
-    // if(genre) return;
-    if (!productTags?.[0]) {
-      void getProductTagStatus();
-    }
-
-    void getGenre();
-  }, []);
 
   useEffect(() => {
     // if(category) return;
+    void getGenre();
     void getCheckoutFormData();
     void getCategory();
     void getSubCategory(-1);
     void getTextBookType();
+    
   }, []);
 
   useEffect(() => {

@@ -437,6 +437,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
   const getProductTagStatus = async (): Promise<boolean> => {
     const response = await getProductTags();
+    console.log("_______________________________________________________________")
     const responsePayload: {
       status: boolean;
       data: ItemSpecialTag[];

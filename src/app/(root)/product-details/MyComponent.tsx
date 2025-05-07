@@ -25,6 +25,7 @@ import Spinner from "~/components/spinner";
 import { Tabs } from "~/components/ui/tabs";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { RxCrossCircled } from "react-icons/rx";
+import { IoIosCloseCircle } from "react-icons/io";
 
 const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
@@ -39,6 +40,7 @@ const MyComponent = () => {
     checkoutData,
     productTags,
     textbookType,
+    userInfo,
     logout,
   } = useAuthContext();
   const itemDetail = productDetail;
@@ -378,9 +380,9 @@ const MyComponent = () => {
         item_id: itemDetail?.item_id,
         user_name: "",
         username: "",
-        booknet_customer_id: checkoutData?.booknet_customer_id,
-        customer_id: checkoutData?.customer_id
-          ? checkoutData?.customer_id
+        booknet_customer_id: checkoutData?.booknet_customer_id ?? null,
+        customer_id: userInfo?.customer_id
+          ? userInfo?.customer_id
           : null,
       };
       try {
@@ -773,21 +775,21 @@ const MyComponent = () => {
           )}
           {filteredVariations?.[0]
             ? filteredVariations?.[0]?.stock?.quantity
-              ? <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+              ? <span className="flex flex-row items-center gap-1 text-sm font-serif bg-green-500 p-1 text-white w-fit rounded ">
                 <FaCheckCircle /> In stock</span>
               : itemDetail?.allow_special_order == 1 ?
-                <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                <span className="flex flex-row items-center gap-1 text-sm font-serif bg-yellow-200 p-1  w-fit rounded ">
                   <FaCheckCircle /> Backorder</span> :
-                <span className="flex flex-row items-center gap-1 text-sm font-serif text-red-500 ">
-                  <RxCrossCircled /> Out of stock</span>
+                <span className="flex flex-row items-center gap-1 text-sm font-serif bg-red-500 p-1 text-white w-fit rounded ">
+                  <IoIosCloseCircle /> Out of stock</span>
             : itemDetail?.stock.quantity
-              ? <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+              ? <span className="flex flex-row items-center gap-1 text-sm font-serif bg-green-500 p-1 text-white w-fit rounded">
                 <FaCheckCircle /> In stock</span>
               : itemDetail?.allow_special_order == 1 ?
-                <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                <span className="flex flex-row items-center gap-1 text-sm font-serif bg-yellow-200 p-1  w-fit rounded ">
                   <FaCheckCircle /> Backorder</span> :
-                <span className="flex flex-row items-center gap-1 text-sm font-serif text-red-500 ">
-                  <RxCrossCircled /> Out of stock</span>
+                <span className="flex flex-row items-center gap-1 text-sm font-serif bg-red-500 p-1 text-white w-fit rounded ">
+                  <IoIosCloseCircle /> Out of stock</span>
           }
           {itemDetail?.book_id && itemDetail?.subtitle && (
             <div className="flex items-center justify-center">
@@ -1076,8 +1078,8 @@ const MyComponent = () => {
                           <button
                             key={`${option.value}-${optionIndex}`}
                             className={`min-w-10 rounded border p-1 text-center text-sm ${selectedValues[tagName] === option.value
-                                ? "bg-red-500 text-white"
-                                : "border-red-500 bg-white dark:bg-slate-700"
+                              ? "bg-red-500 text-white"
+                              : "border-red-500 bg-white dark:bg-slate-700"
                               } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >

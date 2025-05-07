@@ -16,7 +16,7 @@ import {
 } from "~/components/ui/animated-modal";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaCartPlus } from "react-icons/fa";
+import { FaCartPlus, FaCheckCircle } from "react-icons/fa";
 import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
@@ -24,10 +24,12 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { useToast } from "~/hooks/use-toast";
 
 import type { Variation, VariationTag } from "~/types/book";
-import { IoIosArrowRoundForward } from "react-icons/io";
+import { IoIosArrowRoundForward, IoIosCloseCircle } from "react-icons/io";
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import Spinner from "~/components/spinner";
 import dynamic from "next/dynamic";
+import { RxCrossCircled } from "react-icons/rx";
+import { BsFillCartCheckFill } from "react-icons/bs";
 const Player = dynamic(
   () => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player),
   { ssr: false },
@@ -45,6 +47,10 @@ const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
     Record<string, string | undefined>
   >({});
+  const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
+    null,
+  );
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const {
     cartItems,
     addCartItems,
@@ -55,6 +61,8 @@ const MyComponent = () => {
     favItems,
     removeFavourite,
     setProductForDetail,
+    textbookType,
+    userInfo
   } = useAuthContext();
   const { toast } = useToast();
   const router = useRouter();
@@ -120,6 +128,8 @@ const MyComponent = () => {
     setOpen(true);
     setItemDetail(item);
     setSelectedValues({});
+    setSelectedVariation(null);
+    setCurrentImageIndex(0);
   };
   const getOptions = (
     tagName: string,
@@ -135,7 +145,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -177,8 +187,42 @@ const MyComponent = () => {
         });
       }
 
+      // Find matching variation only when all required tags are selected
+      const allTagsSelected = itemDetail?.variations?.[0]?.variation_tags.every(
+        (tag) => newValues[tag.items_variations_tags_name],
+      );
+
+      if (allTagsSelected && itemDetail?.variations) {
+        const matchedVariation = itemDetail.variations.find((variation) => {
+          return variation.variation_tags.every((tag) => {
+            return (
+              newValues[tag.items_variations_tags_name] ===
+              tag.items_variations_tags_links_values_value
+            );
+          });
+        });
+
+        setSelectedVariation(matchedVariation ?? null); // Wrap in array if found, otherwise set to null
+        setCurrentImageIndex(0);
+      } else {
+        setSelectedVariation(null); // Reset if not all tags are selected
+        setCurrentImageIndex(0);
+      }
+
       return newValues;
     });
+  };
+  const isVariableItemInCart = (itemId: number) => {
+    const newItems: DataCart[] =
+      typeof cartItems === "string"
+        ? (JSON.parse(cartItems) as DataCart[])
+        : cartItems!;
+    return newItems.findIndex(
+      (cartItem: DataCart) =>
+        cartItem.selected_variation?.items_variable_items_id === itemId,
+    ) > -1
+      ? true
+      : false;
   };
   const filterVariationsBySelectedValues = (
     variations: Variation[],
@@ -209,14 +253,14 @@ const MyComponent = () => {
     selectedValues,
   );
   const handleFavourite = async (item: DataCart) => {
-    if (checkoutData?.customer_id) {
+    if (userInfo?.customer_id) {
       setWishListLoader(true);
       if (
         item &&
         favItems?.some((favItem) => favItem.item_id === item.item_id)
       ) {
-        await removeFavourite(item, checkoutData.customer_id)
-          .then(async (x) => {
+        await removeFavourite(item, userInfo.customer_id)
+          .then((x) => {
             if (x) {
               toast({
                 variant: "destructive",
@@ -224,12 +268,11 @@ const MyComponent = () => {
                 description: "Item has been removed successfully.",
               });
             }
-            // await getFav();
           })
           .finally(() => setWishListLoader(false));
       } else {
-        await addFavourite(item, checkoutData.customer_id)
-          .then(async (x) => {
+        await addFavourite(item, userInfo.customer_id)
+          .then((x) => {
             if (x) {
               toast({
                 variant: "success",
@@ -237,15 +280,11 @@ const MyComponent = () => {
                 description: "Item has been added successfully.",
               });
             }
-            // await getFav();
           })
-          .finally(() => {
-            setWishListLoader(false);
-          });
+          .finally(() => setWishListLoader(false));
       }
     }
   };
-
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
       typeof cartItems === "string"
@@ -300,6 +339,19 @@ const MyComponent = () => {
     await setProductForDetail(item);
     router.push(`/product-details`);
   };
+
+  const manageUsage = () => {
+    if (itemDetail?.book_usages && itemDetail?.book_usages.length > 0) {
+      return itemDetail.book_usages
+        .filter((usage) => (usage.default_semester === 1 || usage.default_trimester === 1))
+        .map((usage) => ({
+          type_id: usage.type_id, // Assuming `type_id` exists
+          subject_name: usage.subject_name,
+          subject_code: usage.subject_code, // Assuming `subject_name` exists
+        }));
+    }
+    return [];
+  };
   return (
     <div>
       <motion.main
@@ -334,28 +386,29 @@ const MyComponent = () => {
               <div className="flex flex-wrap justify-center py-3">
                 {loader
                   ? Array.from({ length: 2 }, (_, index) => (
-                      <div key={index} className="p-2">
-                        <ProductCardSkeleton />
-                      </div>
-                    ))
+                    <div key={index} className="p-2">
+                      <ProductCardSkeleton />
+                    </div>
+                  ))
                   : displayedData?.map((item: DataCart) => (
-                      <ProductCard
-                        key={item.book_id}
-                        product={item}
-                        showAddToCart={!isItemInCart(item.item_id)}
-                        onAddToCart={async () => {
-                          if (item?.variations?.[0]) {
-                            await openDetail(item);
-                          } else {
-                            await handleAddToCart(item);
-                          }
-                        }}
-                        onRemoveFromCart={() => handleRemoveFromCart(item)}
-                        openDetail={() => openDetail(item)}
-                        handleFavourite={() => handleFavourite(item)}
-                        wishListLoader={wishListLoader}
-                      />
-                    ))}
+                    <ProductCard
+                      key={item.book_id}
+                      product={item}
+                      showAddToCart={!isItemInCart(item.item_id)}
+                      onAddToCart={async () => {
+                        if (item?.variations?.[0]) {
+                          await openDetail(item);
+                        } else {
+                          await handleAddToCart(item);
+                        }
+                      }}
+                      onRemoveFromCart={() => handleRemoveFromCart(item)}
+                      openDetail={() => openDetail(item)}
+                      handleFavourite={() => handleFavourite(item)}
+                      wishListLoader={wishListLoader}
+                      goToDetail={() => goToDetail(item)}
+                    />
+                  ))}
                 {!loader && !favItems[0] && (
                   <div className="flex h-full w-full flex-col items-center justify-center">
                     <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
@@ -377,22 +430,29 @@ const MyComponent = () => {
 
       <ModalBody>
         <ModalContent>
-          <h4 className="pb-3 text-center font-serif text-lg font-bold text-red-500 dark:text-neutral-100 md:text-2xl">
+          <h4 className="text-center font-serif text-lg font-bold capitalize text-red-500 dark:text-neutral-100 md:text-2xl">
             {itemDetail?.item_name}
           </h4>
-          <h6 className="pb-2 text-center text-sm font-bold text-neutral-600 dark:text-neutral-100 md:text-xl">
-            {itemDetail?.description}
+          <h6 className="py-1.5 text-center text-sm font-sans text-neutral-600 dark:text-neutral-100">
+            {itemDetail?.additional_notes && itemDetail?.additional_notes?.length > 200
+              ? `${itemDetail.additional_notes.slice(0, 200)}...`
+              : itemDetail?.additional_notes}
           </h6>
-          <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100 md:text-lg">
+          {/* <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100">
             {itemDetail?.additional_notes}
-          </h6>
+          </h6> */}
           <div className="flex">
             <div>
-              <div className="flex items-center justify-center">
+              <div className="flex flex-col items-center justify-center">
                 <motion.div
                   key={"images"}
                   style={{
-                    rotate: Math.random() * 20 - 10,
+                    rotate:
+                      typeof window !== "undefined"
+                        ? window.innerWidth > 768
+                          ? Math.random() * 20 - 10
+                          : 0
+                        : 0,
                   }}
                   whileHover={{
                     scale: 1.1,
@@ -404,40 +464,141 @@ const MyComponent = () => {
                     rotate: 0,
                     zIndex: 100,
                   }}
-                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
+                  className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
                 >
                   <Image
                     src={
-                      itemDetail?.object_path
-                        ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                        : "/assets/images/products/product.png"
+                      selectedVariation?.media?.[currentImageIndex]?.object_path
+                        ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
+                        : itemDetail?.object_path
+                          ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
+                          : "/assets/images/products/product.png"
                     }
-                    alt={itemDetail?.object_path ?? ""}
-                    width={500}
-                    height={500}
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-64 md:w-44"
+                    alt={
+                      selectedVariation?.media?.[0]?.object_path
+                        ? `${itemDetail?.item_name} - ${selectedValues.size ?? ""} ${selectedValues.color ?? ""}`
+                        : (itemDetail?.item_name ?? "Product image")
+                    }
+                    width={800}
+                    height={800}
+                    className="h-44 w-44 flex-shrink-0 rounded-lg object-contain md:h-48 md:w-48 lg:h-48 lg:w-48"
                   />
                 </motion.div>
+                {((selectedVariation?.media &&
+                  selectedVariation?.media?.length > 1) ??
+                  (selectedVariation?.media?.length === 0 &&
+                    itemDetail?.media &&
+                    itemDetail?.media?.length > 1)) && (
+                    <div className="mt-2 flex gap-2 overflow-x-auto py-2">
+                      {(selectedVariation?.media?.length > 0
+                        ? selectedVariation.media
+                        : itemDetail?.media
+                          ? itemDetail.media
+                          : []
+                      ).map((media, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentImageIndex(index)}
+                          className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
+                        >
+                          <Image
+                            src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                            alt={`Thumbnail ${index + 1}`}
+                            width={48}
+                            height={48}
+                            className="h-full w-full object-cover"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
               </div>
             </div>
-            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
+            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4">
               <div className="flex flex-col">
                 <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
                   $
                   {itemDetail?.variations?.[0] &&
-                  filteredVariations?.[0]?.items_variable_items_sale_price
+                    filteredVariations?.[0]?.items_variable_items_sale_price
                     ? filteredVariations?.[0]?.items_variable_items_sale_price
                     : itemDetail?.variations?.[0]
                       ? itemDetail?.variations?.[0]
-                          .items_variable_items_sale_price
+                        .items_variable_items_sale_price
                       : itemDetail?.item_sale_price}
                 </span>
-                {itemDetail?.SKU && (
-                  <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
-                    SKU: {itemDetail.SKU}
-                  </span>
-                )}
+
+
+                {filteredVariations?.[0]
+                  ? filteredVariations?.[0]?.stock?.quantity
+                    ? <span className="flex flex-row items-center gap-1 text-sm font-serif bg-green-500 p-1 text-white w-fit rounded ">
+                      <FaCheckCircle /> In stock</span>
+                    : itemDetail?.allow_special_order == 1 ?
+                      <span className="flex flex-row items-center gap-1 text-sm font-serif bg-yellow-200 p-1  w-fit rounded ">
+                        <FaCheckCircle /> Backorder</span> :
+                      <span className="flex flex-row items-center gap-1 text-sm font-serif bg-red-500 p-1 text-white w-fit rounded ">
+                        <IoIosCloseCircle /> Out of stock</span>
+                  : itemDetail?.stock.quantity
+                    ? <span className="flex flex-row items-center gap-1 text-sm font-serif bg-green-500 p-1 text-white w-fit rounded">
+                      <FaCheckCircle /> In stock</span>
+                    : itemDetail?.allow_special_order == 1 ?
+                      <span className="flex flex-row items-center gap-1 text-sm font-serif bg-yellow-200 p-1  w-fit rounded ">
+                        <FaCheckCircle /> Backorder</span> :
+                      <span className="flex flex-row items-center gap-1 text-sm font-serif bg-red-500 p-1 text-white w-fit rounded ">
+                        <IoIosCloseCircle /> Out of stock</span>
+                }
+
+                {filteredVariations?.[0]
+                  ? filteredVariations?.[0].items_variable_items_sku_number && (
+                    <div className="flex items-center justify-center">
+                      <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                        SKU:
+                      </span>
+                      <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                        {filteredVariations?.[0].items_variable_items_sku_number}
+                      </span>
+                    </div>
+
+                  )
+                  : itemDetail?.SKU && (
+                    <div className="flex items-center justify-center">
+                      <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                        SKU:
+                      </span>
+                      <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                        {itemDetail.SKU}
+                      </span>
+                    </div>
+
+                  )}
               </div>
+
+              {itemDetail?.book_id && itemDetail?.food_id == null && (
+                <div className="flex items-center justify-center">
+                  {manageUsage().length > 0 ? (
+                    <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                      {manageUsage().map((item, index) => {
+                        const matchedType = textbookType?.find(
+                          (t) => t.item_book_type_id === Number(item.type_id),
+                        ); // Find the matching type
+                        return (
+                          <span key={`usage-${item.subject_code}-${index}-pair`} className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "bg-red-500 text-white" : "bg-yellow-200 dark:bg-yellow-500"} px-2 py-1 text-sm`}>
+                            {matchedType?.type_name ?? ""}: {item.subject_name} {item.subject_code}
+                          </span>
+                        );
+                      })}
+                    </span>
+                  ) : (
+                    <>
+                      <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                        Textbook:
+                      </span>
+                      <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                        not used this session
+                      </span>
+                    </>
+                  )}
+                </div>
+              )}
               {itemDetail?.barcode && (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -448,74 +609,128 @@ const MyComponent = () => {
                   </span>
                 </div>
               )}
-              {itemDetail?.edition && (
-                <div className="flex items-center justify-center">
+              {itemDetail?.shelf_location && (
+                <div className="flex items-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Series:
+                    Bin location:
                   </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.edition}
+                  <span className="pl-1 text-sm capitalize text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.shelf_location}
                   </span>
                 </div>
               )}
+              {itemDetail?.book_id &&
+                itemDetail?.food_id == null && (
+                  <div className="">
+                    {itemDetail?.audience && (
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Audience:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.audience}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.format && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Format:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.format}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.book_language && (
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Language:
+                        </span>
+                        <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.book_language}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.pages !== undefined &&
+                      itemDetail.pages !== null &&
+                      itemDetail.pages ? (
+                      <div className="flex items-center">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Number of Pages:
+                        </span>
+                        <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                          {itemDetail.pages}
+                        </span>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    {itemDetail?.introduced && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Published:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {moment(itemDetail.introduced).format("Do MMMM, YYYY")}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.publisher?.publisher_name && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Publisher:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {itemDetail.publisher.publisher_name}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.country_of_publication && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Country of Publication:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail.country_of_publication}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.dimensions && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Dimensions:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300 capitalize">
+                          {itemDetail?.dimensions}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.weight && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Weight:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {itemDetail?.weight}
+                        </span>
+                      </div>
+                    )}
+                    {itemDetail?.edition && (
+                      <div className="flex items-center ">
+                        <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                          Edition:
+                        </span>
+                        <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          {itemDetail.edition}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )
+              }
 
-              {itemDetail?.book_language && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Language:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.book_language}
-                  </span>
-                </div>
-              )}
 
-              {itemDetail?.pages !== undefined &&
-              itemDetail.pages !== null &&
-              itemDetail.pages ? (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Number of Pages:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.pages}
-                  </span>
-                </div>
-              ) : (
-                ""
-              )}
-
-              {itemDetail?.publisher?.publisher_name && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Publisher:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.publisher.publisher_name}
-                  </span>
-                </div>
-              )}
-
-              {itemDetail?.publisher?.country && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Country of Publication:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.publisher.country}
-                  </span>
-                </div>
-              )}
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Created at:
-                </span>
-                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.introduced
-                    ? moment(itemDetail.introduced).format("Do MMMM, YYYY")
-                    : ""}
-                </span>
-              </div>
 
               {itemDetail?.variations?.[0]?.variation_tags && (
                 <div>
@@ -533,10 +748,13 @@ const MyComponent = () => {
                         )}
 
                         <ul>
-                          {Object.keys(selectedValues).map((key) => (
-                            <>
+                          {Object.keys(selectedValues).map((key, index) => (
+                            <div key={`selected-${key}`}>
                               {selectedValues[key] && (
-                                <li key={key} className="flex items-center">
+                                <li
+                                  key={`selected-${key}-${index}`}
+                                  className="flex items-center"
+                                >
                                   <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                     {key}:{" "}
                                   </span>
@@ -546,7 +764,10 @@ const MyComponent = () => {
                                 </li>
                               )}
                               {!selectedValues[key] && (
-                                <li key={key} className="text-red-400">
+                                <li
+                                  key={`unselected-${key}-${index}`}
+                                  className="text-red-400"
+                                >
                                   <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                     {key}:{" "}
                                   </span>
@@ -555,7 +776,7 @@ const MyComponent = () => {
                                   </span>{" "}
                                 </li>
                               )}
-                            </>
+                            </div>
                           ))}
                         </ul>
                       </div>
@@ -578,7 +799,7 @@ const MyComponent = () => {
                           ) {
                             acc[currTag.items_variations_tags_name] =
                               selectedValues[
-                                currTag.items_variations_tags_name
+                              currTag.items_variations_tags_name
                               ];
                           }
                           return acc;
@@ -607,7 +828,7 @@ const MyComponent = () => {
                           key={tagName}
                           className={`my-4 w-full ${tagName == "size" ? "flex items-center gap-1" : ""}`}
                         >
-                          <h3 className="text-lg font-semibold capitalize">
+                          <h3 className="text-md font-semibold capitalize">
                             {tagName}
                           </h3>
 
@@ -616,11 +837,10 @@ const MyComponent = () => {
                               {options.map((option) => (
                                 <button
                                   key={option.value}
-                                  className={`min-w-10 rounded border p-1 text-center ${
-                                    selectedValues[tagName] === option.value
-                                      ? "bg-red-500 text-white"
-                                      : "border-red-500 bg-white dark:bg-slate-700"
-                                  } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                                  className={`min-w-10 rounded border p-1 text-center text-sm ${selectedValues[tagName] === option.value
+                                    ? "bg-red-500 text-white"
+                                    : "border-red-500 bg-white dark:bg-slate-700"
+                                    } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                                   onClick={() => handleSizeClick(option.value)}
                                 >
                                   {option.label}
@@ -651,18 +871,91 @@ const MyComponent = () => {
                   )}
                 </div>
               )}
-
-              {itemDetail?.variations?.[0]?.variation_tags &&
-                Object.keys(selectedValues)[0] &&
-                filteredVariations?.[0]?.items_variable_items_id && (
+              {itemDetail?.variations?.[0] &&
+                filteredVariations?.[0]?.items_variable_items_id &&
+                Object.values(selectedValues).length ==
+                itemDetail?.tag_links?.length &&
+                isVariableItemInCart(
+                  filteredVariations?.[0]?.items_variable_items_id,
+                ) ? (
+                <button
+                  className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-1 font-sans text-white hover:bg-red-600"
+                  onClick={() => handleRemoveFromCart({ ...itemDetail, selected_variation: filteredVariations?.[0] })}
+                >
+                  <div className="pl-2">Remove from Cart</div>
+                </button>
+              ) : (
+                ""
+              )}
+              {itemDetail?.variations?.[0] &&
+                !isVariableItemInCart(
+                  filteredVariations?.[0]?.items_variable_items_id ?? -1,
+                ) &&
+                !Object.values(selectedValues).some((value) => value === undefined) &&
+                Object.values(selectedValues).length ==
+                itemDetail?.tag_links?.length &&
+                (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
+                  itemDetail?.item_sale_price) ?
+                ((itemDetail?.variations?.[0]?.stock?.quantity ?? 0) > 0 || itemDetail?.allow_special_order == 1) ? (
                   <button
-                    className="flex items-center space-x-1 rounded-full bg-green-500 py-1 pl-2 pr-2 text-xs font-bold text-white"
+                    className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-1 font-sans text-white hover:bg-green-600"
                     onClick={() => handleAddToCart(itemDetail)}
                   >
-                    <FaCartPlus className="text-lg" />
+                    <BsFillCartCheckFill className="text-lg" />
                     <div className="pl-2">Add to Cart</div>
                   </button>
-                )}
+                ) : (
+                  ""
+                ) : itemDetail &&
+                  itemDetail?.items_type != 1 &&
+                  !isItemInCart(itemDetail.item_id) ?
+                  itemDetail?.allow_special_order == 1 || (itemDetail?.stock?.quantity ?? 0) > 0 ?
+                    (
+                      <button
+                        className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-1 font-sans text-white hover:bg-green-600"
+                        onClick={() => handleAddToCart(itemDetail)}
+                      >
+                        <BsFillCartCheckFill className="text-lg" />
+                        <div className="pl-2">Add to Cart</div>
+                      </button>
+                    ) : (
+                      ""
+                    ) : (
+                    ""
+                  )}
+              {itemDetail &&
+                itemDetail?.items_type != 1 &&
+                isItemInCart(itemDetail.item_id) ? (
+                <button
+                  className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-1 font-sans text-white hover:bg-red-600"
+                  onClick={() => handleRemoveFromCart(itemDetail)}
+                >
+
+                  <div className="pl-2">Remove from Cart</div>
+                </button>
+              ) : (
+                ""
+              )}
+              {/* {itemDetail?.variations?.[0]?.variation_tags &&
+                Object.keys(selectedValues)[0] &&
+                filteredVariations?.[0]?.items_variable_items_id && (
+                  ((filteredVariations?.[0]?.stock?.quantity ?? 0) > 0 || itemDetail?.allow_special_order === 1) ?
+                    (<button
+                      className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-2 font-bold text-white hover:bg-green-600"
+                      onClick={() => handleAddToCart(itemDetail)}
+                    >
+                      <FaCartPlus className="text-lg" />
+                      <div className="pl-2">Add to Cart</div>
+                    </button>) :
+                    (
+                      <span className="flex flex-row items-center gap-1 text-xs font-serif text-red-500 ">
+                        <RxCrossCircled />
+                        <span className="text-sm font-bold text-red-500">
+                          Out of Stock
+                        </span>
+                      </span>
+                    )
+                )} */}
             </div>
           </div>
           <div className="flex w-full justify-end">

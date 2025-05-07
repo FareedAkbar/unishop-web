@@ -84,14 +84,20 @@ const CartItem: React.FC<CartItemProps> = ({
 
 
 
-          <span className="flex flex-row items-center gap-1 text-xs  font-serif text-green-500">
-            <FaCheckCircle />
-            {quantity && quantity > 0
-              ? "In stock"
-              : "Backorder"
 
-            }
-          </span>
+
+          {quantity && quantity > 0
+            ? (
+              <span className="flex flex-row items-center gap-1 text-xs  font-serif bg-green-500 p-1 text-white w-fit rounded">
+                <FaCheckCircle /> In stock
+              </span>
+            )
+            : (<span className="flex flex-row items-center gap-1 text-xs  font-serif bg-yellow-200 p-1  w-fit rounded">
+              <FaCheckCircle /> Backorder
+            </span>)
+
+          }
+
 
           {(newPrice == 0 || !newPrice || price == newPrice) && (
             <p className="text-md font-bold">${price}</p>
@@ -132,6 +138,15 @@ const CartItem: React.FC<CartItemProps> = ({
           </div>
         </div>
       </div>
+      {quantity && quantity > -1
+        ? quantity == itemQuantity && item?.allow_special_order != 1 && (
+          <p className="rounded bg-yellow-200 p-3 mb-2 text-sm dark:bg-yellow-700">
+            {/* <MdWarning size={23} /> */}
+            {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`} */}
+            {`Sufficient Stock. You can not add more than ${quantity} items to your cart.`}
+          </p>
+        )
+        : ""}
       {quantity && quantity > -1
         ? quantity < itemQuantity && (
           <p className="rounded bg-yellow-200 p-3 mb-2 text-sm dark:bg-yellow-700">
