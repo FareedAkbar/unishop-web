@@ -84,7 +84,9 @@ export default function CheckoutForm({
       state: billing_address[addressIndex]?.state
         ?? "",
     }
-    : {};
+    : {
+
+    };
 
   const {
     register,
@@ -323,7 +325,7 @@ export default function CheckoutForm({
   console.log("billing_address", billing_address);
 
   useEffect(() => {
-    if(userInfo){
+    if (userInfo) {
       setValue("email", userInfo?.email ?? "");
     }
   }, [userInfo])
@@ -619,31 +621,29 @@ export default function CheckoutForm({
                 )}
               </LabelInputContainer>
             </div>
-
             <LabelInputContainer className="mb-4">
               <Label htmlFor="phone_number" required>
                 Phone Number
               </Label>
-              <Input
-                id="phone_number"
-                placeholder=""
-                type="text"
-                {...register("phone_number")}
-              />
-              {/* <PhoneNumberInput
-                id="phone_number"
-                placeholder="(123) 456-7890"
-                type="tel"
-                {...register("phone_number", {
-                  required: "Phone Number is required",
-                })}
-              /> */}
-              {errors.phone_number && (
-                <p className="text-sm text-red-500">
-                  {errors.phone_number.message}
-                </p>
-              )}
+              <div className="relative">
+                {/* Plus symbol */}
+               
+                <Input
+                  id="phone_number"
+                  placeholder=""
+                  type="text"
+                  {...register("phone_number")}
+                  className="pl-6" // increased padding for space
+                />
+
+                {errors.phone_number && (
+                  <p className="text-sm text-red-500">
+                    {errors.phone_number.message}
+                  </p>
+                )}
+              </div>
             </LabelInputContainer>
+
           </>
         )}
 
@@ -659,17 +659,17 @@ export default function CheckoutForm({
           </div>
         </div> */}
         {/* <div className="mx-auto flex max-w-sm flex-col justify-center"> */}
-          <Button
-            title="Confirm &rarr;"
-            type="submit"
-            width="w-full"
-            loading={loader}
-            disabled={disabled}
-            onClick={() => {
-              //
-            }}
-          />
-          {/* <div className="mt-2 flex flex-col items-center justify-center sm:flex-row">
+        <Button
+          title="Confirm &rarr;"
+          type="submit"
+          width="w-full"
+          loading={loader}
+          disabled={disabled}
+          onClick={() => {
+            //
+          }}
+        />
+        {/* <div className="mt-2 flex flex-col items-center justify-center sm:flex-row">
             <p>{`I don't have an account, `}</p>
             <Link href="login" className="ml-1 text-red-500">
               Login

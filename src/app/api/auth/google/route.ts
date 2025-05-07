@@ -2,16 +2,16 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { OAuth2Client } from 'google-auth-library';
 
-const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
-if (!clientId) {
-  throw new Error('Missing GOOGLE_CLIENT_ID');
-}
-
-const client = new OAuth2Client(clientId);
 
 export async function POST(req: NextRequest) {
-    
+  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+
+  if (!clientId) {
+    throw new Error('Missing GOOGLE_CLIENT_ID');
+  }
+
+  const client = new OAuth2Client(clientId);
   try {
     const { credential } = await req.json() as { credential: string };
 

@@ -47,7 +47,7 @@ const MyComponent = () => {
               href="tel:42218050"
               className="pl-1 text-red-500 underline transition-colors"
             >
-              4221 8050
+             (02) 4221 8050
             </a>
           </p>
           <p>

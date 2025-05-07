@@ -63,10 +63,12 @@ const MyComponent = () => {
             </h2>
 
             <p className="mt-4 text-center text-lg leading-relaxed text-zinc-500 dark:text-zinc-300">
-              Unishop provides graduation gowns and accessories throughout the
+              UniShop provides graduation gowns and accessories throughout the
               year. Gowns can be purchased as a beautiful keepsake of your time
-              at UOW. If you missed your graduation ceremony, hire a gown and
-              celebrate with family and friends!
+              at UOW. Alternatively, if you’ve been unable to attend your
+              graduation ceremony, you can hire gowns through UniShop and take
+              photos with family and friends to help celebrate your amazing
+              achievements!
             </p>
           </div>
 
@@ -78,9 +80,11 @@ const MyComponent = () => {
             </h2>
 
             <p className="mt-4 text-center text-lg leading-relaxed text-zinc-500 dark:text-zinc-300">
-              To hire or purchase graduation attire, visit the Customer Service
-              counter inside Unishop or use the contact details above. Note that
-              academic dress hire is limited during graduation ceremonies.
+              To hire or purchase, see the Customer Service counter inside
+              UniShop, use the contact details above, or purchase online.
+              Academic dress may be hired throughout the year, except during
+              graduation ceremony weeks, when all hire is managed by the
+              University of Wollongong from Level GA, Building 11.
             </p>
           </div>
         </div>
@@ -88,6 +92,43 @@ const MyComponent = () => {
 
       {/* Image Section - Full Width */}
       <div className="mx-auto max-w-5xl space-y-20 px-4 py-14">
+        {/* Hire Charges */}
+        <section className="rounded-2xl bg-white p-8 shadow-xl dark:bg-slate-800">
+          <div className="flex flex-col items-center justify-between md:flex-row md:gap-10">
+            <div className="w-full md:w-1/2">
+              <h2 className="mb-3 text-4xl font-extrabold text-red-500 dark:text-red-400">
+                Hire Charges
+              </h2>
+              <p className="mb-4 text-gray-600 dark:text-gray-300">
+                Hire includes gown, hood, and trencher (cap) if needed.
+              </p>
+              <ul className="space-y-2 text-gray-800 dark:text-gray-200">
+                {[
+                  ["1 day hire", "$50"],
+                  ["2 day hire", "$80"],
+                  ["7 day hire", "$150"],
+                ].map(([duration, charge], idx) => (
+                  <li
+                    key={idx}
+                    className="flex justify-between border-b border-dotted border-gray-300 py-1 dark:border-gray-600"
+                  >
+                    <span>{duration}</span>
+                    <span>{charge}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-6 flex w-full justify-center md:mt-0 md:w-1/2">
+              <Image
+                src="/assets/images/graduation_attire/cap.png"
+                alt="Graduation Cap"
+                width={300}
+                height={300}
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </section>
         {/* Purchase Pricing */}
         <section className="rounded-2xl bg-white p-8 shadow-xl dark:bg-slate-800">
           <div className="flex flex-col items-center md:flex-row md:gap-10">
@@ -128,45 +169,6 @@ const MyComponent = () => {
             </div>
           </div>
         </section>
-
-        {/* Hire Charges */}
-        <section className="rounded-2xl bg-white p-8 shadow-xl dark:bg-slate-800">
-          <div className="flex flex-col items-center justify-between md:flex-row md:gap-10">
-            <div className="w-full md:w-1/2">
-              <h2 className="mb-3 text-4xl font-extrabold text-red-500 dark:text-red-400">
-                Hire Charges
-              </h2>
-              <p className="mb-4 text-gray-600 dark:text-gray-300">
-                Hire includes gown, hood, and trencher (cap) if needed.
-              </p>
-              <ul className="space-y-2 text-gray-800 dark:text-gray-200">
-                {[
-                  ["1 day hire", "$50"],
-                  ["2 day hire", "$80"],
-                  ["7 day hire", "$150"],
-                ].map(([duration, charge], idx) => (
-                  <li
-                    key={idx}
-                    className="flex justify-between border-b border-dotted border-gray-300 py-1 dark:border-gray-600"
-                  >
-                    <span>{duration}</span>
-                    <span>{charge}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="mt-6 flex w-full justify-center md:mt-0 md:w-1/2">
-              <Image
-                src="/assets/images/graduation_attire/cap.png"
-                alt="Graduation Cap"
-                width={300}
-                height={300}
-                className="object-contain"
-              />
-            </div>
-          </div>
-        </section>
-
         {/* Gown Size Guide */}
         <section className="rounded-2xl bg-white p-8 shadow-xl dark:bg-slate-800">
           <div className="flex flex-col items-center justify-between md:flex-row md:gap-10">

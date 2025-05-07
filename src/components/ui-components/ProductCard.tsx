@@ -14,6 +14,7 @@ import type { ItemSpecialTag } from "~/types/productTags";
 import type { SpecialTag } from "~/types/book";
 import { FaCheckCircle } from "react-icons/fa";
 import { RxCrossCircled } from "react-icons/rx";
+import { IoIosCloseCircle } from "react-icons/io";
 
 interface ProductProps {
   showAddToCart?: boolean;
@@ -226,8 +227,8 @@ const ProductCard = ({
 
         product?.stock.quantity
 
-          ? <span className="flex flex-row items-center gap-1 text-xs font-serif text-green-500 "><FaCheckCircle /> In stock</span>
-          : product?.allow_special_order == 1 ? <span className="flex flex-row items-center gap-1 text-xs font-serif text-green-500 "><FaCheckCircle />  Backorder</span> : <span className="flex flex-row items-center gap-1 text-xs font-serif text-red-500 "><RxCrossCircled /> Out of stock</span>
+          ? <span className="flex flex-row items-center gap-1 text-xs font-serif bg-green-500 p-1 text-white w-fit rounded"><FaCheckCircle /> In stock</span>
+          : product?.allow_special_order == 1 ? <span className="flex flex-row items-center gap-1 text-xs font-serif bg-yellow-200 p-1  w-fit rounded"><FaCheckCircle />  Backorder</span> : <span className="flex flex-row items-center gap-1 text-xs font-serif bg-red-500 p-1 text-white w-fit rounded"><IoIosCloseCircle  /> Out of stock</span>
 
 
       )}

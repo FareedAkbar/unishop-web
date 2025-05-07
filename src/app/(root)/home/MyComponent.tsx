@@ -16,7 +16,7 @@ import { SpecialItemsForHomePage } from "~/types/specialItems";
 import BackgroundSquares from "~/components/ui-components/BackgroundSquares";
 import Spinner from "~/components/spinner";
 const HomePage: React.FC = () => {
-  const { productTags } = useAuthContext();
+  const { productTags ,getProductTagStatus} = useAuthContext();
   const [specialItems, setSpecialItems] = useState<
     SpecialItemsForHomePage[] | null
   >(null);
@@ -37,6 +37,12 @@ const HomePage: React.FC = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+      // if(genre) return;
+        void getProductTagStatus();
+      
+    }, []);
 
   const transitionVariants = {
     enter: (direction: "left" | "right") => ({
@@ -78,7 +84,9 @@ const HomePage: React.FC = () => {
         console.error("Failed to load data:", error),
       );
     });
+    console.log(productTags)
   }, [productTags]);
+  
 
   // Auto-slide functionality
   useEffect(() => {

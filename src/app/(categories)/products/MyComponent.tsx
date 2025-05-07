@@ -29,7 +29,7 @@ import { getItemsByCategory } from "~/_actions/getitemsbycategory";
 import Select from "~/components/Fields/select";
 import type { Pagination } from "~/types/pagination";
 import type { Variation } from "~/types/book";
-import { IoIosArrowRoundForward } from "react-icons/io";
+import { IoIosArrowRoundForward, IoIosCloseCircle } from "react-icons/io";
 import {
   Select as NewSelect,
   SelectTrigger,
@@ -92,6 +92,7 @@ const MyComponent = () => {
     setProductForDetail,
     subCategory,
     textbookType,
+    userInfo
   } = useAuthContext();
 
   useEffect(() => {
@@ -279,13 +280,13 @@ const MyComponent = () => {
   };
 
   const handleFavourite = async (item: DataCart) => {
-    if (checkoutData?.customer_id) {
+    if (userInfo?.customer_id) {
       setWishListLoader(true);
       if (
         item &&
         favItems?.some((favItem) => favItem.item_id === item.item_id)
       ) {
-        await removeFavourite(item, checkoutData.customer_id)
+        await removeFavourite(item, userInfo.customer_id)
           .then((x) => {
             if (x) {
               toast({
@@ -297,7 +298,7 @@ const MyComponent = () => {
           })
           .finally(() => setWishListLoader(false));
       } else {
-        await addFavourite(item, checkoutData.customer_id)
+        await addFavourite(item, userInfo.customer_id)
           .then((x) => {
             if (x) {
               toast({
@@ -723,21 +724,21 @@ const MyComponent = () => {
 
                 {filteredVariations?.[0]
                   ? filteredVariations?.[0]?.stock?.quantity
-                    ? <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                    ? <span className="flex flex-row items-center gap-1 text-sm font-serif bg-green-500 p-1 text-white w-fit rounded ">
                       <FaCheckCircle /> In stock</span>
                     : itemDetail?.allow_special_order == 1 ?
-                      <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                      <span className="flex flex-row items-center gap-1 text-sm font-serif bg-yellow-200 p-1  w-fit rounded ">
                         <FaCheckCircle /> Backorder</span> :
-                      <span className="flex flex-row items-center gap-1 text-sm font-serif text-red-500 ">
-                        <RxCrossCircled /> Out of stock</span>
+                      <span className="flex flex-row items-center gap-1 text-sm font-serif bg-red-500 p-1 text-white w-fit rounded ">
+                        <IoIosCloseCircle /> Out of stock</span>
                   : itemDetail?.stock.quantity
-                    ? <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                    ? <span className="flex flex-row items-center gap-1 text-sm font-serif bg-green-500 p-1 text-white w-fit rounded">
                       <FaCheckCircle /> In stock</span>
                     : itemDetail?.allow_special_order == 1 ?
-                      <span className="flex flex-row items-center gap-1 text-sm font-serif text-green-500 ">
+                      <span className="flex flex-row items-center gap-1 text-sm font-serif bg-yellow-200 p-1  w-fit rounded ">
                         <FaCheckCircle /> Backorder</span> :
-                      <span className="flex flex-row items-center gap-1 text-sm font-serif text-red-500 ">
-                        <RxCrossCircled /> Out of stock</span>
+                      <span className="flex flex-row items-center gap-1 text-sm font-serif bg-red-500 p-1 text-white w-fit rounded ">
+                        <IoIosCloseCircle /> Out of stock</span>
                 }
 
                 {filteredVariations?.[0]
