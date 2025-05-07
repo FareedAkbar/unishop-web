@@ -44,7 +44,7 @@ const Select: React.FC<SelectProps> = ({
       <select
         id={id}
         name={name}
-        className="block w-full rounded-md border px-3 py-2 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-400 dark:bg-slate-700 sm:text-sm"
+        className="block w-full rounded-md border p-2 shadow-sm focus:border-red-500 focus:outline-none focus:ring-red-400 dark:bg-slate-700 sm:text-sm"
         value={value}
         onChange={handleChange}
         disabled={loader || isDisabled}
@@ -56,12 +56,16 @@ const Select: React.FC<SelectProps> = ({
         ) : (
           <>
             {placeholder && (
-              <option value="" disabled>
+              <option value="" disabled className="text-sm">
                 {placeholder}
               </option>
             )}
             {options.map((option) => (
-              <option key={option.value} value={option.value}>
+              <option
+                key={option.value}
+                value={option.value}
+                className="text-sm"
+              >
                 {option.label}
               </option>
             ))}

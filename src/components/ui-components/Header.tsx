@@ -592,17 +592,16 @@ const Header = () => {
               {isUserDropdownOpen && (
                 <div className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md dark:bg-slate-700">
                   {userInfo?.first_name ? (
-                    <span className="text-xs p-1 font-medium capitalize bg-white">
+                    <span className="bg-white p-1 text-xs font-medium capitalize">
                       {userInfo?.first_name} {userInfo?.last_name}
                     </span>
                   ) : checkoutData?.customer_id ? (
-                    <span className="text-xs p-1 font-medium capitalize bg-white">
+                    <span className="bg-white p-1 text-xs font-medium capitalize">
                       {checkoutData?.user_name ? checkoutData?.user_name : ""}
                     </span>
                   ) : (
                     ""
                   )}
-                 
 
                   {/* <a
                     href="#account-settings"
@@ -656,29 +655,29 @@ const Header = () => {
 
         {/* Search Bar (Visible on Small Screens) */}
         {!path.includes("/products") && (
-          <div className="mx-2 mt-2 lg:hidden">
-            <div>
-              <Select
-                id="category"
-                name="category"
-                options={
-                  newCat?.map((cat) => ({
-                    value:
-                      "category_type_id" in cat
-                        ? cat.category_type_id.toString()
-                        : cat.value, // Ensure value is a string
-                    label: "type" in cat ? cat.type.toString() : cat.label,
-                  })) ?? []
-                }
-                // loader={loader}
-                value={selectedCategory?.value ?? ""}
-                // placeholder="All Categories"
-                onChange={(val) => {
-                  setSelectedCategory(val);
-                  setSearchTerm("");
-                }}
-              />
-            </div>
+          <div className="mx-2 mt-2 w-full max-w-screen-sm lg:hidden">
+            {/* <div className=""> */}
+            <Select
+              id="category"
+              name="category"
+              options={
+                newCat?.map((cat) => ({
+                  value:
+                    "category_type_id" in cat
+                      ? cat.category_type_id.toString()
+                      : cat.value, // Ensure value is a string
+                  label: "type" in cat ? cat.type.toString() : cat.label,
+                })) ?? []
+              }
+              // loader={loader}
+              value={selectedCategory?.value ?? ""}
+              // placeholder="All Categories"
+              onChange={(val) => {
+                setSelectedCategory(val);
+                setSearchTerm("");
+              }}
+            />
+            {/* </div> */}
             <div className="mt-2">
               <Input
                 placeholder="What are you looking for?"
@@ -856,7 +855,7 @@ const Header = () => {
                           rel="noopener noreferrer"
                           className="block py-1 text-sm hover:underline"
                         >
-                          Download on the App Store
+                          Download from the App Store
                         </a>
 
                         <a
@@ -865,7 +864,7 @@ const Header = () => {
                           rel="noopener noreferrer"
                           className="block py-1 text-sm hover:underline"
                         >
-                          Download on Google Play
+                          Download from the Play Store
                         </a>
                       </div>
                     )}
@@ -896,7 +895,7 @@ const Header = () => {
 
             {/* Right Section: Search Bar and Icons */}
             <div className="flex items-center space-x-4">
-              <div>
+              <div className="hidden lg:block">
                 <Select
                   id="category"
                   name="category"
@@ -983,7 +982,7 @@ const Header = () => {
                     ) : (
                       ""
                     )}
-                    
+
                     {/* <a
                       href="#account-settings"
                       className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"

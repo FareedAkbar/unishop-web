@@ -6,24 +6,24 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 const ImageSlider: React.FC = () => {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isFlipping, setIsFlipping] = useState(false);
+  const [prevIndex, setPrevIndex] = useState<number | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
   const autoSlideRef = useRef<NodeJS.Timeout | null>(null);
 
   const slides = [
     { image: "/assets/images/home/banner1.png", route: "/books" },
-    { image: "/assets/images/home/banner2.jpg", route: "/graduation" },
-    { image: "/assets/images/home/banner3.jpg", route: "/textbooks" },
+    { image: "/assets/images/home/banner2.jpg", route: "/academic-dress-hire" },
+    { image: "/assets/images/home/banner3.jpg", route: "/books" },
     { image: "/assets/images/home/banner4.jpg", route: "/hoodies" },
     { image: "/assets/images/home/banner5.jpg", route: "/gifts" },
     { image: "/assets/images/home/banner6.jpg", route: "/local" },
   ];
 
   const goToSlide = (index: number) => {
-    setIsFlipping(true);
-    setTimeout(() => {
-      setCurrentIndex(index);
-      setIsFlipping(false);
-    }, 300);
+    setPrevIndex(currentIndex);
+    setCurrentIndex(index);
+    setIsAnimating(true);
+    setTimeout(() => setIsAnimating(false), 800); // match animation duration
   };
 
   const goToNext = () => {
@@ -42,36 +42,45 @@ const ImageSlider: React.FC = () => {
   }, [currentIndex]);
 
   return (
-    <div className="relative w-full px-4 pb-4 pt-2">
-      <div className={`${isFlipping ? "animate-fade-in-right" : ""}`}>
-        {/* Image */}
-        <div className="relative">
+    <div className="relative w-full overflow-hidden px-4 pb-4 pt-2">
+      {/* Image wrapper with transition */}
+      <div className="relative h-40 w-full sm:h-72 lg:h-[550px]">
+        {prevIndex !== null && isAnimating && (
           <Image
-            src={slides[currentIndex]!.image}
-            alt={`Slide ${currentIndex + 1}`}
-            width={3000}
-            height={3000}
-            onClick={() => router.push(slides[currentIndex]!.route)}
-            className="relative h-36 w-full cursor-pointer rounded-lg transition-transform duration-700 ease-in-out sm:h-72 lg:h-[400px] xl:h-[470px]"
-            style={{ objectFit: "cover" }}
+            key={`prev-${prevIndex}`}
+            src={slides[prevIndex]!.image}
+            alt={`Slide ${prevIndex + 1}`}
+            fill
+            onClick={() => router.push(slides[prevIndex]!.route)}
+            className="absolute inset-0 h-full w-full cursor-pointer rounded-lg object-cover opacity-100 transition-opacity duration-700 ease-in-out"
+            style={{ zIndex: 10 }}
           />
-
-          {/* Left Button */}
-          <button
-            onClick={goToPrev}
-            className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white hover:bg-black/70 md:p-2"
-          >
-            <IoIosArrowBack size={24} />
-          </button>
-
-          {/* Right Button */}
-          <button
-            onClick={goToNext}
-            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white hover:bg-black/70 md:p-2"
-          >
-            <IoIosArrowForward size={24} />
-          </button>
-        </div>
+        )}
+        <Image
+          key={`current-${currentIndex}`}
+          src={slides[currentIndex]!.image}
+          alt={`Slide ${currentIndex + 1}`}
+          fill
+          onClick={() => router.push(slides[currentIndex]!.route)}
+          className={`absolute inset-0 h-full w-full cursor-pointer rounded-lg object-cover transition-opacity duration-700 ease-in-out ${
+            isAnimating ? "opacity-0" : "opacity-100"
+          }`}
+          style={{ zIndex: 20 }}
+        />
+        {/* Left Button */}
+        <button
+          onClick={goToPrev}
+          className="absolute left-2 top-1/2 z-30 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white hover:bg-black/70 md:p-2"
+        >
+          <IoIosArrowBack size={24} />
+        </button>
+        {/* Right Button */}
+        <button
+          onClick={goToNext}
+          className="absolute right-2 top-1/2 z-30 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white hover:bg-black/70 md:p-2"
+        >
+          <IoIosArrowForward size={24} />
+        </button>
       </div>
 
       {/* Dots Indicator */}

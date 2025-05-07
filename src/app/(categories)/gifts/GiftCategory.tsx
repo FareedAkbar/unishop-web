@@ -81,7 +81,7 @@ const GiftCategoryInfo: React.FC<GiftCategoryInfoProps> = ({ category }) => {
 
       <p className="mt-6 text-center text-gray-700 dark:text-gray-300">
         <a href="/contact-us" className="text-red-600 underline">
-          Contact us
+          Contact Us
         </a>{" "}
         for product details or purchase inquiries.
       </p>

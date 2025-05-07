@@ -93,10 +93,11 @@ function Footer() {
               <Link
                 key={index}
                 href={link.href}
-                className={`text-sm font-medium ${pathname === link.href
-                  ? "text-red-500"
-                  : "text-[#646464] hover:text-red-500"
-                  } dark:text-gray-300 dark:hover:text-red-500`}
+                className={`text-sm font-medium ${
+                  pathname === link.href
+                    ? "text-red-500"
+                    : "text-[#646464] hover:text-red-500"
+                } dark:text-gray-300 dark:hover:text-red-500`}
               >
                 {link.title}
               </Link>
@@ -110,7 +111,6 @@ function Footer() {
             {category?.map(
               (item, index) =>
                 index < 7 && (
-
                   <Link
                     key={index}
                     href={`products?category=${item.category_type_id}&name=${item.type}`}
@@ -118,7 +118,6 @@ function Footer() {
                   >
                     {item.type}
                   </Link>
-
                 ),
             )}
             {/* <span className="mb-2 block h-[4px] w-20 bg-red-500" />
@@ -159,7 +158,7 @@ function Footer() {
             <p className="text-lg font-bold">Working Hours</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <p className="text-sm font-bold text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
-              Monday - Friday:
+              Monday - Friday
             </p>
             <p className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
               8:00am - 5:00pm

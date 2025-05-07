@@ -497,7 +497,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       rel="noopener noreferrer"
                       className="block py-1 text-sm hover:underline"
                     >
-                      Download on the App Store
+                      Download from the App Store
                     </a>
 
                     <a
@@ -506,7 +506,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       rel="noopener noreferrer"
                       className="block py-1 text-sm hover:underline"
                     >
-                      Download on Google Play
+                      Download from the Play Store
                     </a>
                   </div>
                 )}
