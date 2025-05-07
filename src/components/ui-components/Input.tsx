@@ -1,4 +1,11 @@
-import React, { useState, useRef, useEffect, FocusEvent } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  FocusEvent,
+  ForwardRefRenderFunction,
+  forwardRef,
+} from "react";
 
 interface InputProps {
   placeholder?: string;
@@ -12,21 +19,24 @@ interface InputProps {
   animateOnClick?: boolean;
 }
 
-const Input: React.FC<InputProps> = ({
-  placeholder,
-  type = "text",
-  value,
-  onChange,
-  icon,
-  onIconClick,
-  error,
-  width = "w-64",
-  animateOnClick = false,
-}) => {
+const Input: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
+  {
+    placeholder,
+    type = "text",
+    value,
+    onChange,
+    icon,
+    onIconClick,
+    error,
+    width = "w-64",
+    animateOnClick = false,
+  },
+  ref,
+) => {
   const [isVisible, setIsVisible] = useState(!animateOnClick);
   const [isFocused, setIsFocused] = useState(false);
 
-  const inputRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const handleIconClick = () => {
     if (animateOnClick) setIsVisible((prev) => !prev);
@@ -51,8 +61,8 @@ const Input: React.FC<InputProps> = ({
     if (typeof window !== "undefined") {
       const handleClickOutside = (event: MouseEvent) => {
         if (
-          inputRef.current &&
-          !inputRef.current.contains(event.target as Node)
+          wrapperRef.current &&
+          !wrapperRef.current.contains(event.target as Node)
         ) {
           if (animateOnClick) setIsVisible(false);
           setIsFocused(false);
@@ -69,7 +79,7 @@ const Input: React.FC<InputProps> = ({
   return (
     <div className="flex flex-col">
       <div
-        ref={inputRef}
+        ref={wrapperRef}
         className="flex items-center justify-between rounded bg-gray-100 dark:bg-slate-700 dark:text-white"
       >
         <div
@@ -78,6 +88,7 @@ const Input: React.FC<InputProps> = ({
           }`}
         >
           <input
+            ref={ref}
             type={type}
             placeholder={placeholder}
             value={value}
@@ -106,4 +117,4 @@ const Input: React.FC<InputProps> = ({
   );
 };
 
-export default Input;
+export default forwardRef(Input);

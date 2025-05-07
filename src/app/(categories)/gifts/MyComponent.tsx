@@ -114,6 +114,8 @@ const MyComponent = () => {
     const d = params.get("desc");
     if (d) {
       setSubcategoryStatic(d);
+    } else {
+      setSubcategoryStatic("Photography");
     }
   }, [params]);
 

@@ -10,9 +10,9 @@ const GraduationBanner: React.FC = () => {
   return (
     <div className="m-4 flex flex-row items-center justify-between rounded bg-gradient-to-r from-red-900 to-red-400 p-4 sm:p-8">
       <div className="flex max-w-xl flex-col justify-center text-left">
-        <h3 className="text-xs font-semibold text-red-400 sm:text-sm">
+        {/* <h3 className="text-xs font-semibold text-red-400 sm:text-sm">
           Categories
-        </h3>
+        </h3> */}
         <h1 className="font-sem text-md my-2 text-white sm:text-3xl lg:text-4xl">
           Celebrate Success with Memorable Graduation Gifts
         </h1>

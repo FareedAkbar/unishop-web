@@ -14,9 +14,9 @@ const ImageSlider: React.FC = () => {
     { image: "/assets/images/home/banner1.png", route: "/books" },
     { image: "/assets/images/home/banner2.jpg", route: "/academic-dress-hire" },
     { image: "/assets/images/home/banner3.jpg", route: "/books" },
-    { image: "/assets/images/home/banner4.jpg", route: "/hoodies" },
+    { image: "/assets/images/home/banner4.jpg", route: "/books" },
     { image: "/assets/images/home/banner5.jpg", route: "/gifts" },
-    { image: "/assets/images/home/banner6.jpg", route: "/local" },
+    { image: "/assets/images/home/banner6.jpg", route: "/books" },
   ];
 
   const goToSlide = (index: number) => {

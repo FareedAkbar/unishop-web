@@ -83,6 +83,7 @@ const Header = () => {
   const userDropdownRef = useRef<HTMLDivElement | null>(null);
   const dropdownToggleRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLButtonElement | null>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const toggleUserDropdown = () => {
     setUserDropdownOpen((prevState) => !prevState);
@@ -655,7 +656,7 @@ const Header = () => {
 
         {/* Search Bar (Visible on Small Screens) */}
         {!path.includes("/products") && (
-          <div className="mx-2 mt-2 w-full max-w-screen-sm lg:hidden">
+          <div className="mx-2 mt-2 w-full lg:hidden">
             {/* <div className=""> */}
             <Select
               id="category"
@@ -675,16 +676,18 @@ const Header = () => {
               onChange={(val) => {
                 setSelectedCategory(val);
                 setSearchTerm("");
+                setTimeout(() => searchInputRef.current?.focus(), 0);
               }}
             />
             {/* </div> */}
             <div className="mt-2">
               <Input
+                ref={searchInputRef}
                 placeholder="What are you looking for?"
                 value={searchTerm}
                 onChange={handleSearchChange}
                 icon={<FiSearch size={26} />}
-                width="w-56"
+                // width="w-56"
                 animateOnClick={false}
                 onIconClick={() => handleSearchApi()}
                 error={searchError}
@@ -914,10 +917,12 @@ const Header = () => {
                   onChange={(val) => {
                     setSelectedCategory(val);
                     setSearchTerm("");
+                    searchInputRef.current?.focus();
                   }}
                 />
               </div>
               <Input
+                ref={searchInputRef}
                 placeholder="What are you looking for?"
                 value={searchTerm}
                 onChange={handleSearchChange}

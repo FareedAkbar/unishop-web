@@ -1,8 +1,8 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 import { FaChevronDown, FaChevronUp, FaCheck } from "react-icons/fa";
+import dynamic from "next/dynamic";
 
 import BackgroundSquares from "~/components/ui-components/BackgroundSquares";
 
@@ -30,11 +30,12 @@ const PrivacyPolicy: React.FC = () => {
     {
       title: "What We Do With the Information",
       content: [
-        "We require this information to understand your needs:",
+        "We require this information to understand your needs and provide better service, specifically for:",
         [
           "Internal record keeping.",
           "Improving our products and services.",
-          "Sending promotional emails.",
+          "Sending promotional emails about new products, offers, or information you may find interesting.",
+          "Contacting you for market research via email, phone, fax or mail.",
           "Customizing the website to your interests.",
         ],
       ],
@@ -42,58 +43,105 @@ const PrivacyPolicy: React.FC = () => {
     {
       title: "Security",
       content: [
-        "We implement physical, electronic, and managerial procedures to ensure your information is secure.",
+        "We implement suitable physical, electronic and managerial procedures to safeguard and secure the information we collect online.",
       ],
     },
     {
       title: "How We Use Cookies",
       content: [
+        "Cookies help analyze web traffic and let you know when you visit a particular site. They allow web applications to respond to your preferences individually.",
         [
-          "Cookies help improve the site experience by analyzing web traffic.",
-          "Cookies do not give us access to your computer or private data.",
-          "You can choose to accept or decline cookies in your browser settings.",
+          "We use traffic log cookies to identify used pages for statistical analysis.",
+          "Cookies do not give us access to your computer or any private data.",
+          "You can choose to accept or decline cookies via browser settings.",
         ],
       ],
     },
+    {
+      title: "Links to Other Websites",
+      content: [
+        "Our website may link to other websites. We are not responsible for the privacy practices of those sites. Please review their privacy statements.",
+      ],
+    },
+    {
+      title: "Controlling Your Personal Information",
+      content: [
+        "You can restrict the collection/use of your personal information:",
+        [
+          "Check for a box on forms to opt out of direct marketing.",
+          "Contact us to change your preferences at any time.",
+          "We do not sell, lease or distribute your personal info without consent or legal requirement.",
+          "You can request your personal data under the Data Protection Act 1998. A fee may apply.",
+          "If any information we hold is incorrect, contact us to correct it promptly.",
+        ],
+      ],
+    },
+    {
+      title: "List of Cookies We Collect",
+      content: [
+        "The table below shows the cookies we collect and what they store:",
+      ],
+    },
+  ];
+
+  const cookieData = [
+    [
+      "FORM_KEY",
+      "Stores randomly generated key used to prevent forged requests.",
+    ],
+    ["PHPSESSID", "Your session ID on the server."],
+    ["GUEST-VIEW", "Allows guests to view and edit their orders."],
+    ["PERSISTENT_SHOPPING_CART", "A link to cart and viewing history info."],
+    ["STF", "Info on products emailed to friends."],
+    ["STORE", "The store view or language selected."],
+    [
+      "USER_ALLOWED_SAVE_COOKIE",
+      "Indicates whether a customer allows cookies.",
+    ],
+    ["MAGE-CACHE-SESSID", "Facilitates caching of content on browser."],
+    ["MAGE-CACHE-STORAGE", "Facilitates caching of content on browser."],
+    [
+      "MAGE-CACHE-STORAGE-SECTION-INVALIDATION",
+      "Facilitates caching of content on browser.",
+    ],
+    ["MAGE-CACHE-TIMEOUT", "Facilitates caching of content on browser."],
+    ["SECTION-DATA-IDS", "Facilitates caching of content on browser."],
+    ["PRIVATE_CONTENT_VERSION", "Facilitates caching of content on browser."],
+    ["X-MAGENTO-VARY", "Facilitates caching of content on server."],
+    [
+      "MAGE-TRANSLATION-FILE-VERSION",
+      "Facilitates translation of content to other languages.",
+    ],
+    [
+      "MAGE-TRANSLATION-STORAGE",
+      "Facilitates translation of content to other languages.",
+    ],
   ];
 
   const [activeIndices, setActiveIndices] = useState<number[]>([]);
 
   const toggleSection = (index: number) => {
-    setActiveIndices((prevIndices) =>
-      prevIndices.includes(index)
-        ? prevIndices.filter((i) => i !== index)
-        : [...prevIndices, index],
+    setActiveIndices((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
     );
   };
 
   return (
-    <div className="relative min-h-screen p-8">
-      {/* Background Lottie Animation */}
-      {/* <div className="absolute inset-0 top-40 -z-10 opacity-20 dark:opacity-70 dark:blur-sm">
-        <Player
-          autoplay
-          loop
-          src="/assets/gifs/lists-bg.json"
-          className="h-64 w-64 scale-[1.5]"
-        />
-      </div> */}
+    <div className="relative min-h-screen p-6 pb-20 md:p-10">
       <BackgroundSquares />
 
-      {/* Page Header */}
       <h1 className="mb-6 text-center text-3xl font-extrabold text-red-600">
         Privacy Policy
       </h1>
-      <p className="mx-auto max-w-2xl pb-7 text-center leading-10 lg:text-lg">
-        This privacy policy outlines how the &quot;Store&quot; collects and
-        protects your information while using our website. We are committed to
-        safeguarding your privacy and will only use your information in
-        accordance with this policy. Please review this page periodically for
-        any updates.
+
+      <p className="mx-auto max-w-2xl pb-7 text-center leading-8 lg:text-lg">
+        This privacy policy explains how our website uses and protects any
+        information you give us. By continuing to use the website, you agree to
+        the terms described below. We may update this page from time to time, so
+        please check periodically.
       </p>
 
-      {/* Collapsible Sections */}
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-5xl">
         {sections.map((section, index) => (
           <div
             key={index}
@@ -113,41 +161,73 @@ const PrivacyPolicy: React.FC = () => {
               )}
             </div>
 
-            {/* Section Content with Animation */}
             <div
               className={`mt-2 overflow-hidden rounded bg-white transition-all duration-300 ease-in-out dark:bg-slate-700 ${
-                activeIndices.includes(index) ? "max-h-[500px]" : "max-h-0"
+                activeIndices.includes(index) ? "max-h-[2000px]" : "max-h-0"
               }`}
             >
-              <ul className="ml-3 mt-2 list-disc py-2 pr-1 lg:ml-6">
-                {section.content.map((item, idx) =>
-                  Array.isArray(item) ? (
-                    <ul key={idx} className="list-disc lg:ml-4">
-                      {item.map((subItem, subIdx) =>
-                        Array.isArray(subItem) ? (
-                          <li key={subIdx} className="mb-1 flex items-center">
-                            <FaCheck className="mr-2 h-4 w-4 text-red-500" />
-                            <strong className="">{subItem[0]}:</strong>{" "}
-                            {subItem[1]}
-                          </li>
-                        ) : (
-                          <li key={subIdx} className="mb-1 flex items-center">
-                            <FaCheck className="mr-2 h-4 w-4 text-red-500" />
-                            {subItem}
-                          </li>
-                        ),
-                      )}
-                    </ul>
-                  ) : (
-                    <li
-                      key={idx}
-                      className="mb-1 flex items-center text-gray-700 dark:text-gray-300"
-                    >
-                      {item}
-                    </li>
-                  ),
+              <div className="mt-3 px-4 pb-4 pt-1 text-gray-800 dark:text-gray-100">
+                <ul className="ml-4 space-y-2">
+                  {section.content.map((item, idx) =>
+                    Array.isArray(item) ? (
+                      <ul key={idx} className="ml-6 space-y-1">
+                        {item.map((sub, i) =>
+                          Array.isArray(sub) ? (
+                            <li key={i} className="flex items-start gap-2">
+                              <FaCheck className="mt-1 text-red-500" />
+                              <strong>{sub[0]}</strong>: {sub[1]}
+                            </li>
+                          ) : (
+                            <li key={i} className="flex items-start gap-2">
+                              <FaCheck className="mt-1 text-red-500" />
+                              {sub}
+                            </li>
+                          ),
+                        )}
+                      </ul>
+                    ) : (
+                      <li key={idx}>{item}</li>
+                    ),
+                  )}
+                </ul>
+
+                {/* Cookie Table */}
+                {section.title === "List of Cookies We Collect" && (
+                  <div className="mt-6 overflow-auto">
+                    <table className="min-w-full border border-gray-300 text-sm dark:border-gray-600">
+                      <thead className="bg-red-500 text-white dark:bg-red-600">
+                        <tr>
+                          <th className="border px-4 py-2 text-left">
+                            Cookie Name
+                          </th>
+                          <th className="border px-4 py-2 text-left">
+                            Cookie Description
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white dark:bg-slate-800">
+                        {cookieData.map(([name, description], idx) => (
+                          <tr
+                            key={idx}
+                            className={`border-t border-gray-200 dark:border-gray-700 ${
+                              idx % 2 === 0
+                                ? "bg-gray-50 dark:bg-slate-700"
+                                : ""
+                            }`}
+                          >
+                            <td className="px-4 py-2 font-medium text-gray-800 dark:text-white">
+                              {name}
+                            </td>
+                            <td className="px-4 py-2 text-gray-700 dark:text-gray-300">
+                              {description}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
-              </ul>
+              </div>
             </div>
           </div>
         ))}
@@ -156,12 +236,4 @@ const PrivacyPolicy: React.FC = () => {
   );
 };
 
-const Page = () => {
-  return (
-    <Suspense fallback={<Spinner />}>
-      <PrivacyPolicy />
-    </Suspense>
-  );
-};
-
-export default Page;
+export default PrivacyPolicy;
