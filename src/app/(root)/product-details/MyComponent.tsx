@@ -573,6 +573,8 @@ const MyComponent = () => {
       </div>
     );
   }
+
+  console.log(itemDetail, "itemDetail");
   return (
     <div className="p-6 md:mt-0">
       <div className="flex items-center justify-between pb-2 lg:px-10">
@@ -763,7 +765,7 @@ const MyComponent = () => {
                 return (
                   <span
                     key={`productTag-${tag}-${index}`}
-                    className="mr-2 mt-1 rounded bg-red-500 px-1 py-0.5 text-[10px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
+                    className="mr-2 mt-1 mb-1 rounded bg-red-500 px-1 py-0.5 text-[10px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
                   >
                     {tag}
                   </span>
@@ -957,16 +959,7 @@ const MyComponent = () => {
                   </span>
                 </div>
               )}
-              {itemDetail?.weight && (
-                <div className="flex items-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Weight:
-                  </span>
-                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                    {itemDetail?.weight}
-                  </span>
-                </div>
-              )}
+              
               {itemDetail?.edition && (
                 <div className="flex items-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -979,6 +972,16 @@ const MyComponent = () => {
               )}
             </div>
           )}
+          {itemDetail?.weighable && itemDetail?.weight ? (
+                <div className="flex items-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Weight:
+                  </span>
+                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                    {itemDetail?.weight}
+                  </span>
+                </div>
+              ):("")}
 
           {itemDetail?.variations?.[0]?.variation_tags && (
             <div>

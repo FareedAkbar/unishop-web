@@ -247,7 +247,7 @@ export default function CheckoutForm({
       city: data?.city,
       state: stateOptions.find((state) => state?.value === Number(data?.state))?.label.toString(),
       postal_code: data.postal_code,
-      country_code: Countries_States.find((country) => country.name === selectedCountry)?.phone_code ?? selectedCountry,
+      country_code: Countries_States.find((country) => country.name === selectedCountry)?.iso3 ?? selectedCountry,
       phone_number: data.phone_number,
       default_status: 1,
     };
@@ -265,7 +265,7 @@ export default function CheckoutForm({
       state: stateOptions.find((state) => state?.value === Number(data?.state))?.label.toString(),
       city: data.city,
       customer_id: userInfo?.customer_id ?? null,
-      country_code: Countries_States.find((country) => country.name === selectedCountry)?.phone_code ?? selectedCountry,
+      country_code: Countries_States.find((country) => country.name === selectedCountry)?.iso3 ?? selectedCountry,
       address: xx,
       customer_type_id: 6,
       uuid: userInfo?.uuid ?? uuid,
@@ -320,9 +320,7 @@ export default function CheckoutForm({
     }
   };
 
-  console.log("errors", errors);
-  console.log("disabled", disabled);
-  console.log("billing_address", billing_address);
+ 
 
   useEffect(() => {
     if (userInfo) {
@@ -369,13 +367,13 @@ export default function CheckoutForm({
         : "");
 
       const state = Countries_States.find(
-        (country) => country.phone_code === billing_address[addressIndex]?.country_code
+        (country) => country.iso3 === billing_address[addressIndex]?.country_code
       )?.states?.find((state) => state.name.toString() === billing_address[addressIndex]?.state);
       setValue("state", state?.id.toString() ?? "");
       setSelectedCountry(
         billing_address[addressIndex]?.country ?? "",
       )
-      setValue("country", Countries_States.find((country) => country.phone_code === (billing_address[addressIndex]?.country_code))?.name ?? "");
+      setValue("country", Countries_States.find((country) => country.iso3 === (billing_address[addressIndex]?.country_code))?.name ?? "");
       console.log("state", state);
     }
   }, [addressIndex, billing_address]);
@@ -467,7 +465,7 @@ export default function CheckoutForm({
                       Region:{" "}
                     </div>
                     <div className="text-sm text-gray-400">
-                      {item.state}, {item.city}, {item.postal_code}
+                    {item.country}, {item.state}, {item.city}, {item.postal_code}
                     </div>
                   </div>
                 </div>

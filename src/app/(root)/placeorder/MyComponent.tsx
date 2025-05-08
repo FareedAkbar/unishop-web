@@ -24,6 +24,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import CartItem from "~/components/ui-components/CartItem";
 import AlertBox from "~/components/alertBox/alert";
 import moment from "moment";
+import TableRates from "~/components/constants/tablerates";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -675,7 +676,42 @@ const MyComponent = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = () => setIsExpanded((prev) => !prev);
+  type ShippingRate = {
+    Country: string;
+    "Region/State": string;
+    "Zip/Postal Code": string;
+    weight_and_above: number;
+    shipping_price: number;
+  };
+  function getShippingPrice(
+    countryCode: string,
+    packageWeight: number,
+    rates: ShippingRate[]
+  ): number | null {
+    const countryRates = rates
+      .filter(rate => rate.Country === countryCode)
+      .sort((a, b) => a.weight_and_above - b.weight_and_above);
 
+    for (let i = countryRates.length - 1; i >= 0; i--) {
+      const rate = countryRates[i];
+      if (rate && packageWeight >= rate.weight_and_above) {
+        return rate.shipping_price;
+      }
+    }
+
+    return null; // No rate found
+  }
+  
+  const calculateWeight = () => {
+    let totalWeight = 0;
+    items.forEach((item) => {
+      if (item?.weight && item.weighable == 1) {
+        totalWeight += parseFloat(item.weight) * item.quantity;
+      }
+    });
+    return totalWeight;
+  }
+  console.log(calculateWeight());
   return (
     <div>
       <main className="min-h-screen justify-center bg-gradient-to-r from-[#FFF2F2] to-[#FFEEEE] pb-8 dark:from-slate-700 dark:to-slate-700">
@@ -753,39 +789,107 @@ const MyComponent = () => {
                     </div>
                   )} */}
                 </div>
+                {checkoutData?.address?.[0]?.country_code == "AUS" ? (
+                  <div className="mb-4 mt-10">
+                    <p className="mb-2 font-bold">Shipping Method</p>
+                    <div className="flex flex-col">
+                      <div>
+                        {shippingOptions.map((option) => (
+                          <div key={option.value}>
+                            <div className="my-4 border-t border-gray-300" />
+                            <label className="flex items-center gap-4">
+                              <input
+                                type="radio"
+                                value={option.value}
+                                checked={shipping?.value === option.value}
+                                onChange={() => onChange(option)}
+                                className="form-radio"
+                              />
+                              <div className="flex flex-1 items-center">
+                                <span className="w-1/6 text-center">
+                                  {option.amount}
+                                </span>
+                                <span className="w-1/6 text-center">
+                                  {option.type}
+                                </span>
+                                <span className="w-2/3 pl-2 text-left">
+                                  {option.label}
+                                </span>
+                              </div>
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mb-4 mt-10">
+                    <p className="mb-2 font-bold">Shipping Method</p>
+                    <div className="flex flex-col">
 
-                <div className="mb-4 mt-10">
-                  <p className="mb-2 font-bold">Shipping Method</p>
-                  <div className="flex flex-col">
-                    <div>
-                      {shippingOptions.map((option) => (
-                        <div key={option.value}>
+                      <div>
+                        <div className="my-4 border-t border-gray-300" />
+                        <label className="flex items-center gap-4">
+                          <input
+                            type="radio"
+                            value={"free"}
+                            checked={shipping?.value === "free"}
+                            onChange={() => onChange({ value: "free", amount: 0, type: "free", label: "Click and Collect. Pickup Instore only. you will be notified once the order is ready for collection." })}
+                            className="form-radio"
+                          />
+                          <div className="flex flex-1 items-center">
+                            <span className="w-1/6 text-center">
+                              {0}
+                            </span>
+                            <span className="w-1/6 text-center">
+                              {"Free"}
+                            </span>
+                            <span className="w-2/3 pl-2 text-left">
+                              {"Click and Collect. Pickup Instore only. you will be notified once the order is ready for collection."}
+                            </span>
+                          </div>
+                        </label>
+                      </div>
+                      {getShippingPrice(checkoutData?.address?.[0]?.country_code ?? "", calculateWeight(), TableRates) ? (
+                        <div>
                           <div className="my-4 border-t border-gray-300" />
                           <label className="flex items-center gap-4">
                             <input
                               type="radio"
-                              value={option.value}
-                              checked={shipping?.value === option.value}
-                              onChange={() => onChange(option)}
+                              value={"Delivery"}
+                              checked={shipping?.value === "Delivery"}
+                              onChange={() => onChange({ value: "Delivery", amount: getShippingPrice(checkoutData?.address?.[0]?.country_code ?? "", calculateWeight(), TableRates) ?? 0, type: "Delivery", label: "Shipping cost is calculated based on the total weight of your order." })}
                               className="form-radio"
                             />
                             <div className="flex flex-1 items-center">
                               <span className="w-1/6 text-center">
-                                {option.amount}
+                               ${getShippingPrice(checkoutData?.address?.[0]?.country_code ?? "", calculateWeight(), TableRates) ?? 0}
                               </span>
                               <span className="w-1/6 text-center">
-                                {option.type}
+                                {"Delivery"}
                               </span>
-                              <span className="w-2/3 pl-2 text-left">
-                                {option.label}
+                              <span className="flex flex-col w-2/3 pl-2 text-left">
+                              <p>
+
+                                {"Shipping cost is calculated based on the total weight of your order."}
+                              </p>
+                              <p>
+                                <b>Total Weight:</b> {calculateWeight()} kg
+
+                              </p>
                               </span>
                             </div>
                           </label>
                         </div>
-                      ))}
+                      ) : (
+                        ""
+                      )}
+
+
                     </div>
                   </div>
-                </div>
+                )}
+
               </div>
             </div>
             <div className="flex flex-col lg:col-span-2 xl:col-span-2">
@@ -794,9 +898,8 @@ const MyComponent = () => {
               </h2>
 
               <ScrollArea
-                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 transition-all duration-300 dark:bg-slate-800 ${
-                  isExpanded ? "max-h-[28rem]" : "max-h-[10rem]"
-                }`}
+                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 transition-all duration-300 dark:bg-slate-800 ${isExpanded ? "max-h-[28rem]" : "max-h-[10rem]"
+                  }`}
               >
                 {items?.[0] ? (
                   items.map((item, index) => (
@@ -887,8 +990,8 @@ const MyComponent = () => {
                         $
                         {items?.[0]
                           ? totalAfterCalculation?.final_price_including_tax.toFixed(
-                              2,
-                            )
+                            2,
+                          )
                           : 0}
                       </span>
                     </div>

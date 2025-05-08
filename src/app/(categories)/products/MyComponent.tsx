@@ -484,6 +484,7 @@ const MyComponent = () => {
   ];
 
 
+  console.log("itemDetail", displayData);
 
 
   return (
