@@ -84,7 +84,7 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
                 <FaStar
                   key={index}
                   className={`cursor-pointer text-3xl transition-colors ${
-                    (hover || rating) >= starValue
+                    (hover ?? rating) >= starValue
                       ? "text-yellow-500"
                       : "text-gray-400"
                   }`}

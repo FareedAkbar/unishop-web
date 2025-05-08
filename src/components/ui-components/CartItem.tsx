@@ -42,8 +42,7 @@ const CartItem: React.FC<CartItemProps> = ({
   const quantity = item?.selected_variation?.stock
     ? item?.selected_variation?.stock.quantity
     : stock?.quantity
-      ? stock.quantity
-      : 0;
+      ?? 0;
 
   return (
     <div className="border-b border-gray-700 pr-3 dark:border-b dark:border-gray-400">

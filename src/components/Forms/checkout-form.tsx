@@ -346,25 +346,21 @@ export default function CheckoutForm({
       setValue(
         "address",
         billing_address[addressIndex]?.address
-          ? billing_address[addressIndex]?.address
-          : "",
+          ?? "",
       );
       setValue(
         "postal_code",
         billing_address[addressIndex]?.postal_code
-          ? billing_address[addressIndex]?.postal_code
-          : "",
+          ?? "",
       );
       setValue(
         "phone_number",
         billing_address[addressIndex]?.phone_number
-          ? billing_address[addressIndex]?.phone_number
-          : "",
+          ?? "",
       );
 
       setValue("city", billing_address[addressIndex]?.city
-        ? billing_address[addressIndex]?.city
-        : "");
+        ?? "");
 
       const state = Countries_States.find(
         (country) => country.iso3 === billing_address[addressIndex]?.country_code
@@ -374,7 +370,7 @@ export default function CheckoutForm({
         billing_address[addressIndex]?.country ?? "",
       )
       setValue("country", Countries_States.find((country) => country.iso3 === (billing_address[addressIndex]?.country_code))?.name ?? "");
-      console.log("state", state);
+      
     }
   }, [addressIndex, billing_address]);
 

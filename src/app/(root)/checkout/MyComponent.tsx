@@ -194,7 +194,7 @@ const MyComponent = () => {
           </div>
           <div className="relative h-[55rem] w-full pt-16 [perspective:1000px] sm:h-[55rem] md:h-[50rem] lg:h-full lg:pt-3">
             <CheckoutForm
-              key={items?.toString()}
+              key={JSON.stringify(items)}
               title="Details"
               subTitle=""
               push={true}

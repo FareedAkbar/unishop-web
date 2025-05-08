@@ -413,7 +413,8 @@ const MyComponent = () => {
         {loader && <Spinner />}
         <div className="w-full p-4">
           <OrdersDataTable
-            key={orderStatus.toString()}
+          key={JSON.stringify(orderStatus)}
+            // key={orderStatus.toString()}
             data={dataOrders}
             orderStatus={orderStatus}
           />

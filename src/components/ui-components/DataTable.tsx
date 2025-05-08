@@ -226,8 +226,8 @@ const DataTable: React.FC<DataTableProps> = ({
             <div className="ml-4">
               <DatePicker
                 selectsRange
-                startDate={selectedDateRange[0]!}
-                endDate={selectedDateRange[1]!}
+                startDate={selectedDateRange[0] ?? undefined}
+                endDate={selectedDateRange[1] ?? undefined}
                 onChange={(update: [Date | null, Date | null]) =>
                   handleDateRangeChange(update)
                 }

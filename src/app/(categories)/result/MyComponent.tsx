@@ -131,7 +131,7 @@ const MyComponent = () => {
   };
 
   const filteredVariations: Variation[] = filterVariationsBySelectedValues(
-    itemDetail?.variations ? itemDetail?.variations : [],
+    itemDetail?.variations ?? [],
     selectedValues,
   );
 
@@ -576,8 +576,7 @@ const MyComponent = () => {
                       {(selectedVariation?.media?.length > 0
                         ? selectedVariation.media
                         : itemDetail?.media
-                          ? itemDetail.media
-                          : []
+                          ?? []
                       ).map((media, index) => (
                         <button
                           key={index}
@@ -937,8 +936,7 @@ const MyComponent = () => {
                               options={options}
                               value={
                                 selectedValues[tagName]
-                                  ? selectedValues[tagName]
-                                  : ""
+                                  ?? ""
                               }
                               placeholder={`Select ${tagName}`}
                               onChange={(option: {

@@ -592,7 +592,7 @@ const Header = () => {
                     </span>
                   ) : checkoutData?.customer_id ? (
                     <span className="bg-white p-1 text-xs font-medium capitalize">
-                      {checkoutData?.user_name ? checkoutData?.user_name : ""}
+                      {checkoutData?.user_name ?? ""}
                     </span>
                   ) : (
                     ""
@@ -976,7 +976,7 @@ const Header = () => {
                       </span>
                     ) : checkoutData?.customer_id ? (
                       <span className="text-md p-1 font-medium capitalize">
-                        {checkoutData?.user_name ? checkoutData?.user_name : ""}
+                        {checkoutData?.user_name ?? ""}
                       </span>
                     ) : (
                       ""

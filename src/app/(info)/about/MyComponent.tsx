@@ -27,12 +27,12 @@ const MyComponent = () => {
             UNISHOP IS NON-FOR-PROFIT
           </h2>
           <p className="text-center leading-relaxed text-gray-600 dark:text-gray-300">
-            Explore UniShop for exclusive UOW merchandise, from academic
+            {`Explore UniShop for exclusive UOW merchandise, from academic
             essentials and official gear to graduation collections. Delight in
             unique Aboriginal art, jewellery, and décor, and benefit from
             clothing sales, varied sizes, competitive prices, and free shipping
             on select items. Visit us in-store or online for an exceptional
-            shopping experience.
+            shopping experience.`}
           </p>
         </div>
 
@@ -43,10 +43,10 @@ const MyComponent = () => {
             SHOP ONLINE OR IN-STORE
           </h2>
           <p className="text-center leading-relaxed text-gray-600 dark:text-gray-300">
-            Enjoy convenient delivery or "CLICK AND COLLECT" options at UniShop,
+            {`Enjoy convenient delivery or "CLICK AND COLLECT" options at UniShop,
             located on the scenic UOW campus. As a UOW Pulse venture, your
             purchases directly contribute to enriching student life through
-            events, clubs, and more. Thank you for supporting the UOW community.
+            events, clubs, and more. Thank you for supporting the UOW community.`}
           </p>
         </div>
 
@@ -57,11 +57,11 @@ const MyComponent = () => {
             SUPPORTING STUDENT LIFE
           </h2>
           <p className="text-center leading-relaxed text-gray-600 dark:text-gray-300">
-            UniShop is a UOW Pulse business, with all proceeds from everything
+            {`UniShop is a UOW Pulse business, with all proceeds from everything
             you buy going straight back to enhancing the student experience on
             campus. Whether that's through events, festivals, competitions or
             through our clubs and societies. Thank you for supporting the UOW
-            campus experience.
+            campus experience.`}
           </p>
         </div>
       </div>

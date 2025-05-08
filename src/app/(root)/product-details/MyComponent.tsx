@@ -204,7 +204,7 @@ const MyComponent = () => {
     let startTime: number | null = null;
 
     const animation = (currentTime: number) => {
-      if (startTime === null) startTime = currentTime;
+      startTime ??= currentTime;
       const timeElapsed = currentTime - startTime;
       const progress = Math.min(timeElapsed / duration, 1);
 
@@ -368,7 +368,7 @@ const MyComponent = () => {
   };
 
   const filteredVariations: Variation[] = filterVariationsBySelectedValues(
-    itemDetail?.variations ? itemDetail?.variations : [],
+    itemDetail?.variations ?? [],
     selectedValues,
   );
 
@@ -382,8 +382,7 @@ const MyComponent = () => {
         username: "",
         booknet_customer_id: checkoutData?.booknet_customer_id ?? null,
         customer_id: userInfo?.customer_id
-          ? userInfo?.customer_id
-          : null,
+          ?? null,
       };
       try {
         await submitReviewsApi(newData)
@@ -1096,7 +1095,7 @@ const MyComponent = () => {
                         name={tagName}
                         options={options}
                         value={
-                          selectedValues[tagName] ? selectedValues[tagName] : ""
+                          selectedValues[tagName] ?? ""
                         }
                         placeholder={`Select ${tagName}`}
                         onChange={(option: { value: string; label: string }) =>

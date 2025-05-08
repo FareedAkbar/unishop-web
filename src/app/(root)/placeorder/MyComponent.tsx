@@ -136,7 +136,7 @@ const MyComponent = () => {
       quantity: book.quantity,
       item_id: book.item_id,
       cat_id: book.category,
-      textbook_id: book.book_id ? book.book_id : null,
+      textbook_id: book.book_id ?? null,
       is_textbook: book.book_id ? 1 : 0,
       variationId: book.selected_variation?.items_variable_items_id ?? null,
       variable_item: book.selected_variation?.items_variable_items_id ? 1 : 0,
@@ -165,8 +165,7 @@ const MyComponent = () => {
           body: JSON.stringify({
             items: requestOptions,
             member_id: checkoutData?.customer_id
-              ? checkoutData?.customer_id
-              : null,
+              ?? null,
           }),
         },
       );
@@ -400,7 +399,7 @@ const MyComponent = () => {
         card_pan: "N.A.",
         ref_no: "N.A.",
       },
-      member_id: checkoutData?.customer_id ? checkoutData?.customer_id : null,
+      member_id: checkoutData?.customer_id ?? null,
       transaction_id: id.toString(),
       booknet_customer_id: booknetCustomerId,
       // guest: checkoutData?.uuid ? checkoutData?.uuid : null,
@@ -439,16 +438,14 @@ const MyComponent = () => {
       console.log(
         "Connected to Id",
         checkoutData?.customer_id
-          ? checkoutData?.customer_id
-          : checkoutData?.uuid,
+          ?? checkoutData?.uuid,
       );
 
       socket.emit(
         "/studentHandshake",
         {
           student_id: checkoutData?.customer_id
-            ? checkoutData?.customer_id
-            : checkoutData?.uuid,
+            ?? checkoutData?.uuid,
         },
         () => {
           console.log("studentHandshake");
@@ -607,14 +604,14 @@ const MyComponent = () => {
           total_order_price: total,
           order_id: null,
           till: 0,
-          cus_id: userInfo?.customer_id ? userInfo?.customer_id : 0,
+          cus_id: userInfo?.customer_id ?? 0,
           membership: null,
           outlet_id: parseInt(outlet),
         };
         getDiscounts(xData).catch((err) => console.log(err));
       } else {
         const xData = {
-          cus_id: userInfo?.customer_id ? userInfo?.customer_id : 0,
+          cus_id: userInfo?.customer_id ?? 0,
           code: discountValue.trim(),
           // "till" : 1,
           outlet_id: parseInt(outlet),
