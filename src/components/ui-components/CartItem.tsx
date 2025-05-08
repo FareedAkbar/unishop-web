@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import Image from "next/image";
 import React from "react";
-import { FaCheckCircle, FaTrashAlt } from "react-icons/fa";
+import { FaArrowCircleLeft, FaCheckCircle, FaTrashAlt } from "react-icons/fa";
 import { HiOutlineMinus, HiOutlinePlus } from "react-icons/hi";
 import type { Stock } from "~/types/book";
 import type DataCart from "~/types/book";
@@ -21,7 +21,7 @@ interface CartItemProps {
   showQuantityIncrement?: boolean;
   stock: Stock;
   item?: DataCart;
-  newPrice?: number
+  newPrice?: number;
 }
 
 const CartItem: React.FC<CartItemProps> = ({
@@ -46,14 +46,16 @@ const CartItem: React.FC<CartItemProps> = ({
       : 0;
 
   return (
-    <div className="border-b dark:border-b dark:border-gray-400 border-gray-700 pr-3">
-      <div className="flex flex-row items-start space-x-4  bg-white py-2 dark:bg-slate-800">
+    <div className="border-b border-gray-700 pr-3 dark:border-b dark:border-gray-400">
+      <div className="flex flex-row items-start space-x-4 bg-white py-2 dark:bg-slate-800">
         <Image
-          src={item?.selected_variation?.media?.length && item?.selected_variation?.media[0]?.object_path
-            ? `https://ipos-storage.s3.amazonaws.com/${item?.selected_variation?.media[0]?.object_path}` :
-            imageSrc
-              ? `https://ipos-storage.s3.amazonaws.com/${imageSrc}`
-              : "/assets/images/products/product.png"
+          src={
+            item?.selected_variation?.media?.length &&
+            item?.selected_variation?.media[0]?.object_path
+              ? `https://ipos-storage.s3.amazonaws.com/${item?.selected_variation?.media[0]?.object_path}`
+              : imageSrc
+                ? `https://ipos-storage.s3.amazonaws.com/${imageSrc}`
+                : "/assets/images/products/product.png"
           }
           alt={title || "Product"}
           className="mb-4 h-20 w-20 rounded bg-gray-200 object-contain md:mb-0"
@@ -69,7 +71,10 @@ const CartItem: React.FC<CartItemProps> = ({
                 {Object.keys(item?.selectedValues).map((key, index) => (
                   <div key={`cartItem--${index}`}>
                     {item?.selectedValues[key] && (
-                      <p className="text-xs capitalize" key={`cartItem-${item.item_id}-${index}`}>
+                      <p
+                        className="text-xs capitalize"
+                        key={`cartItem-${item.item_id}-${index}`}
+                      >
                         {key}:{" "}
                         <span className="pl-1 text-gray-500 dark:text-gray-200">
                           {item?.selectedValues[key]}
@@ -82,37 +87,28 @@ const CartItem: React.FC<CartItemProps> = ({
             </div>
           )}
 
-
-
-
-
-          {quantity && quantity > 0 && quantity >= itemQuantity 
-            ?  (
-              <span className="flex flex-row items-center gap-1 text-xs  font-serif bg-green-500 p-1 text-white w-fit rounded">
-                <FaCheckCircle /> In stock
-              </span>
-            )
-            : (<span className="flex flex-row items-center gap-1 text-xs  font-serif bg-yellow-200 p-1  w-fit rounded">
-              <FaCheckCircle /> Backorder
-            </span>)
-
-          }
-
+          {quantity && quantity > 0 && quantity >= itemQuantity ? (
+            <span className="flex w-fit flex-row items-center gap-1 rounded bg-green-500 p-1 font-serif text-xs text-white">
+              <FaCheckCircle /> In stock
+            </span>
+          ) : (
+            <span className="flex w-fit flex-row items-center gap-1 rounded bg-yellow-200 p-1 font-serif text-xs text-black">
+              <FaArrowCircleLeft /> Backorder
+            </span>
+          )}
 
           {(newPrice == 0 || !newPrice || price == newPrice) && (
             <p className="text-md font-bold">${price}</p>
           )}
 
-
           {newPrice && price != newPrice && newPrice != 0 && (
             <>
-              <p className="text-sm font-bold text-red-500 line-through">${price.toFixed(2)}</p>
-              <p className="text-md font-bold">${newPrice?.toFixed(
-                2,
-              )}</p>
+              <p className="text-sm font-bold text-red-500 line-through">
+                ${price.toFixed(2)}
+              </p>
+              <p className="text-md font-bold">${newPrice?.toFixed(2)}</p>
             </>
           )}
-
         </div>
 
         <div className="flex w-auto flex-col items-end gap-6">
@@ -139,25 +135,26 @@ const CartItem: React.FC<CartItemProps> = ({
         </div>
       </div>
       {quantity && quantity > -1
-        ? quantity == itemQuantity && item?.allow_special_order != 1 && (
-          <p className="rounded bg-yellow-200 p-3 mb-2 text-sm dark:bg-yellow-700">
-            {/* <MdWarning size={23} /> */}
-            {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`} */}
-            {`You’ve reached the limit — only ${quantity} items can be added to your cart.`}
-          </p>
-        )
+        ? quantity == itemQuantity &&
+          item?.allow_special_order != 1 && (
+            <p className="mb-2 rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-700">
+              {/* <MdWarning size={23} /> */}
+              {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`} */}
+              {`You’ve reached the limit — only ${quantity} items can be added to your cart.`}
+            </p>
+          )
         : ""}
       {quantity && quantity > -1
         ? quantity < itemQuantity && (
-          <p className="rounded bg-yellow-200 p-3 mb-2 text-sm dark:bg-yellow-700">
-            {/* <MdWarning size={23} /> */}
-            {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`} */}
-            {`This item is currently on backorder. It may take longer than usual to be ready for shipping/collection.`}
-          </p>
-        )
+            <p className="mb-2 rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-700">
+              {/* <MdWarning size={23} /> */}
+              {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`} */}
+              {`This item is currently on backorder. It may take longer than usual to be ready for shipping/collection.`}
+            </p>
+          )
         : ""}
       {(quantity == 0 || quantity == null) && (
-        <p className="rounded bg-yellow-200 p-3 mb-2 text-sm dark:bg-yellow-700">
+        <p className="mb-2 rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-700">
           {/* <MdWarning size={23} /> */}
           {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity}.`} */}
           {`This item is currently on backorder. It may take longer than usual to be ready for shipping/collection.`}
