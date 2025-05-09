@@ -72,7 +72,10 @@ const ProductCard = ({
     <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
       {((product?.items_type === 1 && !product?.variations?.[0]) ??
         product?.item_sale_price) && (
-        <div className="absolute inset-0 z-[1] rounded bg-black/30 dark:bg-white/30" />
+        <div
+          className="absolute inset-0 z-[1] rounded bg-black/30 dark:bg-white/30"
+          title="Currently no variation is available"
+        />
       )}
       {product?.items_type === 1 && (
         <div className="absolute left-2 top-0 flex flex-col">
@@ -202,7 +205,9 @@ const ProductCard = ({
               );
             })
           ) : (
-            <p className="font-serif text-xs">Textbook not used this session</p>
+            <p className="font-serif text-xs">
+              Textbook is not used in this session
+            </p>
           )}
         </div>
       ) : (
