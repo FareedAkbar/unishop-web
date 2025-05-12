@@ -84,7 +84,7 @@ const MyComponent = () => {
     textbookType,
     userInfo
   } = useAuthContext();
-  console.log("searchItems", searchItems);
+  
   useEffect(() => {
     const fetchData = async () => {
       const d = params.get("type");
@@ -435,6 +435,7 @@ const MyComponent = () => {
                   ))
                 ) : searchItems && searchItems.length > 0 ? (
                   searchItems.map((item: DataCart) => (
+                    item.web_visibility === 1 &&
                     <ProductCard
                       key={item.item_id}
                       product={item}

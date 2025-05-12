@@ -91,14 +91,14 @@ const SubcategoryList1 = ({
               onClick={() => {
                 if (subItem.children?.[0]) {
                   router.push(
-                    `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
+                    `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`,
                   );
                   setTimeout(() => {
                     setOpenCategories([]);
                   }, 1000);
                 } else {
                   router.push(
-                    `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
+                    `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`,
                   );
                   setTimeout(() => {
                     setOpenCategories([]);
@@ -383,7 +383,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   className="whitespace-nowrap text-left text-sm"
                   onClick={() => {
                     router.push(
-                      `/products?category=${item.category_type_id}&name=${item.type}`,
+                      `/products?category=${item.category_type_id}&name=${item.type}&page=1`,
                     );
                     setOpenCategories([]);
                   }}

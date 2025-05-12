@@ -391,6 +391,7 @@ const MyComponent = () => {
                     </div>
                   ))
                   : displayedData?.map((item: DataCart) => (
+                    item.web_visibility === 1 &&
                     <ProductCard
                       key={item.book_id}
                       product={item}

@@ -68,7 +68,7 @@ const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
     Record<string, string | undefined>
   >({});
-  const [currentPage, setCurrentPage] = useState(pagination?.page ?? 1);
+  const [currentPage, setCurrentPage] = useState(pagination?.page ?? params.get("page") ? parseInt(params.get("page")!) : 1);
   const [pageSize, setPageSize] = useState(pagination?.limit ?? 15);
   const [totalPages, setTotalPages] = useState(pagination?.pages ?? 1);
   const [displayData, setDisplayData] = useState<DataCart[] | null>(null);
@@ -76,7 +76,7 @@ const MyComponent = () => {
     null,
   );
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
+  
   const router = useRouter();
   const { toast } = useToast();
   const {
@@ -99,7 +99,15 @@ const MyComponent = () => {
     const d = params.get("detail");
     const parentCat = params.get("category");
     const name = params.get("name");
-
+    const currentPage = params.get("page");
+    
+    if (currentPage) {
+      
+      setCurrentPage(parseInt(currentPage));
+    } else {
+      
+      setCurrentPage(1);
+    }
     if (d) {
       setDetail(parseInt(d));
     } else {
@@ -161,6 +169,7 @@ const MyComponent = () => {
       } else if (detail === -1 && parent) {
         await getProducts(currentPage, 0, parent);
       }
+      
     };
 
 
@@ -340,9 +349,9 @@ const MyComponent = () => {
     }
 
     // Date range filter
-    setCurrentPage(filtered ? 1 : (pagination?.page ?? 1)); // Reset to first page on new filter
+    setCurrentPage(params.get("page") ? parseInt(params.get("page")!) : 1); // Reset to first page on new filter
     setTotalPages(
-      Math.ceil(filtered ? filtered?.length / pageSize : 1 / pageSize),
+      Math.ceil(filtered ? filtered?.length / pageSize : params.get("page") ? parseInt(params.get("page")!) : 1 / pageSize),
     );
     const x = filtered
       ? filtered?.slice((currentPage - 1) * pageSize, currentPage * pageSize)
@@ -423,10 +432,23 @@ const MyComponent = () => {
 
     requestAnimationFrame(animation);
   };
+  const updateSearchParams = (newParams: Record<string, string | null>) => {
+    const currentParams = new URLSearchParams(params.toString());
+    for (const key in newParams) {
+      if (newParams[key] === null || newParams[key] === undefined) {
+          currentParams.delete(key); // delete if value is null or undefined
+      } else {
+          currentParams.set(key, newParams[key]); // set or update
+      }
+    }
+    router.push(`?${currentParams.toString()}`);
+  };
 
   const handlePageChange = async (page: number) => {
     smoothScrollTo(0, 1500);
     setCurrentPage(page);
+    updateSearchParams({ page: page.toString() });
+    
   };
 
   const goToDetail = async (item: DataCart | null) => {
@@ -484,7 +506,7 @@ const MyComponent = () => {
   ];
 
 
-  console.log("itemDetail", displayData);
+  
 
 
   return (
@@ -564,6 +586,7 @@ const MyComponent = () => {
                   ))
                 ) : displayData && displayData.length > 0 ? (
                   displayData.map((item: DataCart) => (
+                    item.web_visibility === 1 &&
                     <ProductCard
                       key={item.item_id}
                       product={item}

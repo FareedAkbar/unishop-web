@@ -702,13 +702,15 @@ const MyComponent = () => {
   const calculateWeight = () => {
     let totalWeight = 0;
     items.forEach((item) => {
-      if (item?.weight && item.weighable == 1) {
-        totalWeight += parseFloat(item.weight) * item.quantity;
+      if (item?.selected_variation?.weight && item.weighable == 1) {
+        totalWeight += parseFloat(item?.selected_variation?.weight) * item.quantity;
+      }else if (item?.weight && item.weighable == 1) {
+        totalWeight += parseFloat(item?.weight) * item.quantity;
       }
     });
     return totalWeight;
   }
-  console.log(calculateWeight());
+ 
   return (
     <div>
       <main className="min-h-screen justify-center bg-gradient-to-r from-[#FFF2F2] to-[#FFEEEE] pb-8 dark:from-slate-700 dark:to-slate-700">

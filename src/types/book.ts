@@ -75,6 +75,7 @@ export interface Variation {
   variation_tags: VariationTag[];
   cost_details: CostDetails;
   stock: Stock;
+  weight: string | null;
 }
 
 export interface SpecialTag {
@@ -171,6 +172,7 @@ export default interface DataCart {
   audience?: string | null,
   shelf_location: string | null,
   allow_special_order: number | null,
+  web_visibility: number | null,
 }
 
 interface book_usages {
