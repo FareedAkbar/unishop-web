@@ -12,7 +12,7 @@ const shippingOptions = [
     value: "fixed",
     amount: 10,
     type: "delivery",
-    label: "Fixed Rate- Austrlia wide",
+    label: "Fixed Rate- Australia wide",
     label2: "Metro NSW - 1-2 days",
     label3: "Regional NSW - 2-4 days",
     label4: "Interstate - 3-5 days",

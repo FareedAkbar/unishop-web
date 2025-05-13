@@ -791,7 +791,7 @@ const MyComponent = () => {
                 {checkoutData?.address?.[0]?.country_code == "AUS" ? (
                   <div className="mb-4 mt-4">
                     <p className="mb-2 font-bold">Shipping Method</p>
-                    <div className="grid sm:grid-cols-1 grid-cols-2  gap-4">
+                    <div className="grid  grid-cols-2  gap-4">
 
                       {shippingOptions.map((option) => (
                         <div key={option.value} className={`border rounded-3xl p-4`} style={{ backgroundColor: shipping?.value === option.value ? "#F2FFE4" : "" }}>
