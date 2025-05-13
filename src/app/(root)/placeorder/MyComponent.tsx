@@ -438,7 +438,7 @@ const MyComponent = () => {
       console.log(
         "Connected to Id",
         checkoutData?.customer_id
-          ?? checkoutData?.uuid,
+        ?? checkoutData?.uuid,
       );
 
       socket.emit(
@@ -698,19 +698,19 @@ const MyComponent = () => {
 
     return null; // No rate found
   }
-  
+
   const calculateWeight = () => {
     let totalWeight = 0;
     items.forEach((item) => {
       if (item?.selected_variation?.weight && item.weighable == 1) {
         totalWeight += parseFloat(item?.selected_variation?.weight) * item.quantity;
-      }else if (item?.weight && item.weighable == 1) {
+      } else if (item?.weight && item.weighable == 1) {
         totalWeight += parseFloat(item?.weight) * item.quantity;
       }
     });
     return totalWeight;
   }
- 
+
   return (
     <div>
       <main className="min-h-screen justify-center bg-gradient-to-r from-[#FFF2F2] to-[#FFEEEE] pb-8 dark:from-slate-700 dark:to-slate-700">
@@ -789,94 +789,129 @@ const MyComponent = () => {
                   )} */}
                 </div>
                 {checkoutData?.address?.[0]?.country_code == "AUS" ? (
-                  <div className="mb-4 mt-10">
+                  <div className="mb-4 mt-4">
                     <p className="mb-2 font-bold">Shipping Method</p>
-                    <div className="flex flex-col">
-                      <div>
-                        {shippingOptions.map((option) => (
-                          <div key={option.value}>
-                            <div className="my-4 border-t border-gray-300" />
-                            <label className="flex items-center gap-4">
-                              <input
-                                type="radio"
-                                value={option.value}
-                                checked={shipping?.value === option.value}
-                                onChange={() => onChange(option)}
-                                className="form-radio"
-                              />
-                              <div className="flex flex-1 items-center">
-                                <span className="w-1/6 text-center">
-                                  {option.amount}
-                                </span>
-                                <span className="w-1/6 text-center">
-                                  {option.type}
-                                </span>
-                                <span className="w-2/3 pl-2 text-left">
-                                  {option.label}
-                                </span>
+                    <div className="grid sm:grid-cols-1 grid-cols-2  gap-4">
+
+                      {shippingOptions.map((option) => (
+                        <div key={option.value} className={`border rounded-3xl p-4`} style={{ backgroundColor: shipping?.value === option.value ? "#F2FFE4" : "" }}>
+
+                          <label className="cursor-pointer">
+                            <input
+                              type="radio"
+                              value={option.value}
+                              checked={shipping?.value === option.value}
+                              onChange={() => onChange(option)}
+                              className="accent-green-500 "
+                              style={{ height: "20px", width: "20px" }}
+                            />
+                            <div className="text-5xl font-medium text-center">
+                              {option.amount == 0
+                                ? "Free" : "$" + option.amount}
+                            </div>
+                            <div className={`mt-3 flex flex-col items-center ${option.amount == 0 ? "gap-4" : "gap-1"}`}>
+
+                              <span className="text-2xl font-medium text-center capitalize">
+                                {option.type}
+                              </span>
+                              <div className="mt-2 text-lg">
+                                {option.label}
                               </div>
-                            </label>
-                          </div>
-                        ))}
-                      </div>
+                              <div className="">
+                                {option.label2}
+                              </div>
+                              <div className="text-sm  text-center">
+                                {option.label3}
+                              </div>
+                              <div className="text-sm  text-center">
+                                {option.label4}
+                              </div>
+                              <div className="text-sm  text-center">
+                                {option.label5}
+                              </div>
+                              <div className="text-sm  text-center">
+                                {option.label6}
+                              </div>
+
+                            </div>
+                          </label>
+                        </div>
+                      ))}
+
                     </div>
                   </div>
                 ) : (
                   <div className="mb-4 mt-10">
                     <p className="mb-2 font-bold">Shipping Method</p>
-                    <div className="flex flex-col">
+                    <div className="grid sm:grid-cols-1 grid-cols-2  gap-6">
+                      <div className={`border rounded-3xl p-4`} style={{ backgroundColor: shipping?.value === "free" ? "#F2FFE4" : "" }}>
 
-                      <div>
-                        <div className="my-4 border-t border-gray-300" />
-                        <label className="flex items-center gap-4">
+                        <label className="cursor-pointer">
                           <input
                             type="radio"
                             value={"free"}
                             checked={shipping?.value === "free"}
-                            onChange={() => onChange({ value: "free", amount: 0, type: "free", label: "Click and Collect. Pickup Instore only. you will be notified once the order is ready for collection." })}
-                            className="form-radio"
+                            onChange={() => onChange({ value: "free", amount: 0, type: "Click and Collect.", label: "Click and Collect at UniShop service desk." })}
+                            className="accent-green-500 "
+                            style={{ height: "20px", width: "20px" }}
                           />
-                          <div className="flex flex-1 items-center">
-                            <span className="w-1/6 text-center">
-                              {0}
-                            </span>
-                            <span className="w-1/6 text-center">
-                              {"Free"}
-                            </span>
-                            <span className="w-2/3 pl-2 text-left">
-                              {"Click and Collect. Pickup Instore only. you will be notified once the order is ready for collection."}
-                            </span>
+                          <div className="text-5xl font-medium text-center">
+                            Free
+
+                          </div>
+
+                          <div className="text-2xl my-4 font-medium text-center capitalize">
+                            Click and Collect
+                          </div>
+                          <div className={` flex flex-col items-start gap-4`}>
+
+                            <div className=" text-lg">
+                              Click and Collect at UniShop service desk.
+                            </div>
+                            <div className="">
+                              Building 11, 2 Northfields Avenue Keiraville
+                            </div>
+                            <div className="text-sm  ">
+                              You will be notified once the order is ready for collection.
+                            </div>
+
+
                           </div>
                         </label>
                       </div>
+
                       {getShippingPrice(checkoutData?.address?.[0]?.country_code ?? "", calculateWeight(), TableRates) ? (
-                        <div>
-                          <div className="my-4 border-t border-gray-300" />
-                          <label className="flex items-center gap-4">
+                        <div className={`border rounded-3xl p-4`} style={{ backgroundColor: shipping?.value === "free" ? "" : "#F2FFE4" }}>
+
+                          <label className="cursor-pointer">
                             <input
                               type="radio"
                               value={"Delivery"}
                               checked={shipping?.value === "Delivery"}
                               onChange={() => onChange({ value: "Delivery", amount: getShippingPrice(checkoutData?.address?.[0]?.country_code ?? "", calculateWeight(), TableRates) ?? 0, type: "Delivery", label: "Shipping cost is calculated based on the total weight of your order." })}
-                              className="form-radio"
+                              className="accent-green-500 "
+                              style={{ height: "20px", width: "20px" }}
                             />
-                            <div className="flex flex-1 items-center">
-                              <span className="w-1/6 text-center">
-                               ${getShippingPrice(checkoutData?.address?.[0]?.country_code ?? "", calculateWeight(), TableRates) ?? 0}
-                              </span>
-                              <span className="w-1/6 text-center">
-                                {"Delivery"}
-                              </span>
-                              <span className="flex flex-col w-2/3 pl-2 text-left">
-                              <p>
+                            <div className="text-5xl font-medium text-center">
+                              ${getShippingPrice(checkoutData?.address?.[0]?.country_code ?? "", calculateWeight(), TableRates) ?? 0}
+                            </div>
+                            <div className="text-2xl my-4 font-medium text-center capitalize">
+                              {"Delivery"}
+                            </div>
+                            <div className="flex flex-col items-start gap-4">
 
-                                {"Shipping cost is calculated based on the total weight of your order."}
-                              </p>
-                              <p>
-                                <b>Total Weight:</b> {calculateWeight()} kg
 
-                              </p>
-                              </span>
+                              <div className=" text-left">
+
+                                {"International Shipping, Table Rate"}
+
+                              </div>
+                              <div>
+                                {`Delivery times for international postage vary.`}
+                              </div>
+                              <div className="text-sm">
+                                {`Contact us for an estimate.`}
+                              </div>
                             </div>
                           </label>
                         </div>
