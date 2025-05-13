@@ -7,12 +7,13 @@ import {
   FaTimes,
   FaHome,
   FaPhoneAlt,
+  FaChevronUp,
 } from "react-icons/fa";
 import Input from "./Input";
 import Image from "next/image";
 import Logo from "../../../public/unishop_logo_new.png";
 import { GoHeart } from "react-icons/go";
-import { IoCartOutline } from "react-icons/io5";
+import { IoCartOutline, IoPersonOutline } from "react-icons/io5";
 import { MdOutlinePersonOutline } from "react-icons/md";
 import { FiMoon, FiSearch, FiSun } from "react-icons/fi";
 import { TbSettings } from "react-icons/tb";
@@ -84,6 +85,7 @@ const Header = () => {
   const dropdownToggleRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLButtonElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
   const toggleUserDropdown = () => {
     setUserDropdownOpen((prevState) => !prevState);
@@ -104,48 +106,6 @@ const Header = () => {
   const [openCategories, setOpenCategories] = useState<string[]>([]);
   const params = useSearchParams();
 
-  // function buildCategoryTree(categories: CAT[]): CategoryTreeNode[] {
-  //   const categoryMap: Record<number, CategoryTreeNode> = {};
-  //   const tree: CategoryTreeNode[] = [];
-
-  //   categories.forEach((category) => {
-  //     categoryMap[category.id] = {
-  //       id: category.id,
-  //       outlet: category.outlet,
-  //       category_name: category.category_name,
-  //       category_description: category.category_description,
-  //       deleted: category.deleted,
-  //       object_path: category.object_path ? category.object_path : '',
-  //       media_id: category.media_id,
-  //       booknet: category.booknet,
-  //       children: [],
-  //     };
-  //   });
-
-  //   categories.forEach((category) => {
-  //     if (
-  //       category.parent === 0 &&
-  //       category.booknet == 1 &&
-  //       category.outlet === process.env.NEXT_PUBLIC_PASSKEY_OUTLET
-  //     ) {
-  //       const rootCategory = categoryMap[category.id];
-  //       if (rootCategory) {
-  //         tree.push(rootCategory);
-  //       }
-  //     } else {
-  //       const parent = categoryMap[category.parent];
-  //       if (parent) {
-  //         const childCategory = categoryMap[category.id];
-  //         if (childCategory) {
-  //           parent.children!.push(childCategory);
-  //         }
-  //       }
-  //     }
-  //   });
-
-  //   return tree;
-  // }
-
   type CategoriesMap = Record<number, SuperCategory & { children: CAT[] }>;
 
   const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
@@ -164,18 +124,6 @@ const Header = () => {
     }
   });
 
-  // const handleSectionClick = (section: string, isDropdown = false) => {
-  //   setActiveSection(section);
-  //   console.log("ss", activeSection);
-
-  //   router.push(section);
-
-  //   if (isDropdown) {
-  //     setOpenDropdown(null);
-  //   }
-  // };
-
-  // Extend Category1 to include children
   interface CategoryTreeNode2 extends CAT {
     children: CategoryTreeNode2[];
   }
@@ -219,7 +167,7 @@ const Header = () => {
   useEffect(() => {
     if (!category || !subCategory) return;
 
-    const x = buildCategoryTree(subCategory); // This should return CategoryTreeNode2[]
+    const x = buildCategoryTree(subCategory);
     const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
       if (cat.category_type_id) {
         acc[cat.category_type_id] = { ...cat, children: [] };
@@ -228,7 +176,6 @@ const Header = () => {
     }, {} as CategoriesMap);
 
     if (Array.isArray(x) && x.length > 0) {
-      // Get all children from the built category tree
       const allChildren: CAT[] = x.flatMap((node) => node.children);
       allChildren.forEach((item: CAT) => {
         const { category_type_id, outlet } = item;
@@ -253,11 +200,9 @@ const Header = () => {
     }
   }, [category, subCategory]);
 
-  // Close the dropdown if clicked outside
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleClickOutside = (event: MouseEvent) => {
-        // Don't close if clicking on a link or button
         const target = event.target as HTMLElement;
         if (target.tagName === "A" || target.tagName === "BUTTON") {
           return;
@@ -284,37 +229,14 @@ const Header = () => {
   }, []);
 
   const handleLogout = async () => {
-    console.log("logout clicked");
-
     try {
       void logout();
     } catch (error) {
-      console.error("Logout failed:", error); // Handle the error as needed
+      console.error("Logout failed:", error);
     }
   };
 
-  // Handle theme toggle
-  const toggleTheme = async (theme: string) => {
-    if (theme == "dark") {
-      setTheme("light");
-    } else {
-      setTheme("dark");
-    }
-  };
-
-  // Apply theme based on state
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (themeMode == "dark") {
-        document.body.classList.add("dark");
-      } else {
-        document.body.classList.remove("dark");
-      }
-    }
-  }, [themeMode]);
-
-  useEffect(() => {
-    // if(category) return;
     void getGenre();
     void getCheckoutFormData();
     void getCategory();
@@ -371,11 +293,6 @@ const Header = () => {
     { label: "Eliza Jade Candles", icon: FaGift, href: "/gifts?desc=Candles" },
   ];
 
-  const handleLoginPage = () => {
-    console.log("logout clicked");
-    void logout();
-  };
-
   const SubcategoryList1 = ({
     subItems,
     openCategories,
@@ -425,7 +342,7 @@ const Header = () => {
                   <SubcategoryList1
                     subItems={subItem.children}
                     item={subItem.category_name}
-                    openCategories={openCategories} // Pass down multiple open categories
+                    openCategories={openCategories}
                     toggleCategory={(val) =>
                       toggleCategory(`${subItem.category_name}/${val}`)
                     }
@@ -524,6 +441,119 @@ const Header = () => {
 
   const newCat = [{ label: "All Categories", value: "0" }, ...(category ?? [])];
 
+  // Modified USBCategoryList1 component
+  const USBCategoryList1 = () => {
+    const renderSubcategories = (subItems: any[], level = 1) => (
+      <div className={`ml-${level * 4} mt-1`}>
+        {subItems.map((subItem) => (
+          <div key={subItem.category_name} className="py-1">
+            <Link
+              href={`/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`}
+              className="block text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
+            >
+              {subItem.category_name}
+            </Link>
+            {subItem.children?.length > 0 &&
+              renderSubcategories(subItem.children, level + 1)}
+          </div>
+        ))}
+      </div>
+    );
+
+    return (
+      <div className="hidden lg:block">
+        <div className="flex w-full items-center justify-center pt-4 lg:pt-0">
+          <nav className="flex gap-6 whitespace-nowrap px-4">
+            {headerCategory?.map((item) => (
+              <div
+                key={item.type}
+                className="relative inline-block"
+                onMouseEnter={() => setHoveredCategory(item.type)}
+                onMouseLeave={() => setHoveredCategory(null)}
+              >
+                <div className="group flex cursor-pointer items-center px-2 py-1">
+                  <Link
+                    href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
+                    className="flex items-center text-base font-medium text-gray-700 hover:text-red-500 dark:text-gray-200"
+                  >
+                    {item.type}
+                  </Link>
+                  {item.children?.[0] && (
+                    <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
+                  )}
+                </div>
+
+                {/* Dropdown menu on hover */}
+                {hoveredCategory === item.type && item.children?.[0] && (
+                  <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-slate-800">
+                    {renderSubcategories(item.children)}
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {categories.map((item) => (
+              <div
+                key={item.label}
+                className="relative inline-block"
+                onMouseEnter={() => setHoveredCategory(item.label)}
+                onMouseLeave={() => setHoveredCategory(null)}
+              >
+                <div className="group flex cursor-pointer items-center px-2 py-1">
+                  <Link
+                    href={item.href ?? ""}
+                    className="flex items-center text-base font-medium text-gray-700 hover:text-red-500 dark:text-gray-200"
+                    scroll={false}
+                  >
+                    {item.label}
+                  </Link>
+                  {(item.subItems || item.label == "Pulse") && (
+                    <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
+                  )}
+                </div>
+
+                {hoveredCategory === item.label &&
+                  (item.subItems || item.label === "Pulse") && (
+                    <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-slate-800">
+                      {item.subItems?.map((subItem) => (
+                        <Link
+                          key={subItem.label}
+                          href={subItem.href}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
+                        >
+                          {subItem.label}
+                        </Link>
+                      ))}
+                      {item.label === "Pulse" && (
+                        <>
+                          <Link
+                            href="https://apps.apple.com/ie/app/uow-pulse-ltd/id6476544403"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block px-4 py-2 text-sm hover:text-red-500 dark:hover:text-red-400"
+                          >
+                            Download from the App Store
+                          </Link>
+                          <Link
+                            href="https://play.google.com/store/apps/details?id=com.iitsols.pulseuowltd"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block px-4 py-2 text-sm hover:text-red-500 dark:hover:text-red-400"
+                          >
+                            Download from the Play Store
+                          </Link>
+                        </>
+                      )}
+                    </div>
+                  )}
+              </div>
+            ))}
+          </nav>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <nav className="sticky left-0 top-0 z-10 h-fit w-full">
       <header className="flex flex-col bg-white px-4 pb-2 pt-4 backdrop-blur dark:bg-slate-900 lg:flex-row lg:items-center lg:pb-0">
@@ -567,78 +597,17 @@ const Header = () => {
                 ""
               )}
             </div>
-            <button onClick={() => toggleTheme(themeMode)}>
-              {themeMode == "dark" ? (
-                <FiSun className="text-xl text-gray-200" />
-              ) : (
-                <FiMoon className="text-xl" />
-              )}
-            </button>
             <div className="relative" ref={userDropdownRef}>
               <button
                 ref={dropdownToggleRef}
                 className="cursor-pointer rounded-full bg-red-500 p-0.5"
-                onClick={toggleUserDropdown}
+                onClick={handleLogout}
               >
                 <MdOutlinePersonOutline className="text-xl text-white" />
               </button>
-              {isUserDropdownOpen && (
-                <div className="absolute right-0 z-10 mt-1 w-24 rounded-md bg-white px-1 py-2 shadow-md dark:bg-slate-700">
-                  {userInfo?.first_name ? (
-                    <span className="bg-white p-1 text-xs font-medium capitalize">
-                      {userInfo?.first_name} {userInfo?.last_name}
-                    </span>
-                  ) : checkoutData?.customer_id ? (
-                    <span className="bg-white p-1 text-xs font-medium capitalize">
-                      {checkoutData?.user_name ?? ""}
-                    </span>
-                  ) : (
-                    ""
-                  )}
-
-                  {/* <a
-                    href="#account-settings"
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
-                  >
-                    <TbSettings className="mr-2" />
-                    Account Settings
-                  </a> */}
-                  {/* <a
-                    href="/signup"
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
-                  >
-                    <HiLogin className="mr-2" />
-                    Sign Up
-                  </a> */}
-
-                  <Link
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault(); // ⬅️ prevent navigation
-                      void handleLogout();
-                    }}
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
-                  >
-                    {isLoggedIn ? (
-                      <HiLogout className="mr-2" />
-                    ) : (
-                      <HiLogin className="mr-2" />
-                    )}
-                    {isLoggedIn ? "Logout" : "Login"}
-                  </Link>
-
-                  {/* <a
-                    href="#logout"
-                    className="flex items-center p-1 text-[9px] font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
-                  >
-                    <HiLogin className="mr-2" />
-                    Logout
-                  </a> */}
-                </div>
-              )}
             </div>
             <button
-              className={`z-30 lg:p-3 ${isMobileMenuOpen ? "bg-white" : ""}`} // You can adjust the background color if needed
+              className={`z-30 lg:p-3 ${isMobileMenuOpen ? "bg-white" : ""}`}
               onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
             >
               <FaBars className="text-xl text-red-500" />
@@ -649,7 +618,6 @@ const Header = () => {
         {/* Search Bar (Visible on Small Screens) */}
         {!path.includes("/products") && (
           <div className="mt-2 w-full lg:hidden">
-            {/* <div className=""> */}
             <Select
               id="category"
               name="category"
@@ -658,20 +626,17 @@ const Header = () => {
                   value:
                     "category_type_id" in cat
                       ? cat.category_type_id.toString()
-                      : cat.value, // Ensure value is a string
+                      : cat.value,
                   label: "type" in cat ? cat.type.toString() : cat.label,
                 })) ?? []
               }
-              // loader={loader}
               value={selectedCategory?.value ?? ""}
-              // placeholder="All Categories"
               onChange={(val) => {
                 setSelectedCategory(val);
                 setSearchTerm("");
                 setTimeout(() => searchInputRef.current?.focus(), 0);
               }}
             />
-            {/* </div> */}
             <div className="mt-2">
               <Input
                 ref={searchInputRef}
@@ -679,7 +644,6 @@ const Header = () => {
                 value={searchTerm}
                 onChange={handleSearchChange}
                 icon={<FiSearch size={26} />}
-                // width="w-56"
                 animateOnClick={false}
                 onIconClick={() => handleSearchApi()}
                 error={searchError}
@@ -695,7 +659,7 @@ const Header = () => {
             {isMobileMenuOpen && (
               <div
                 className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50"
-                onClick={() => setMobileMenuOpen(false)} // Close the menu on overlay click
+                onClick={() => setMobileMenuOpen(false)}
               />
             )}
             <button
@@ -740,14 +704,7 @@ const Header = () => {
                         }}
                       >
                         <AiOutlineFileText className="mr-2.5 h-5 w-5 text-orange-600" />
-
-                        {/* {item.icon && (
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                        <span className="mr-3">{iconMap[item.icon]}</span>
-                      )} */}
-                        {/* <Link href={item.href ?? ""} scroll={false}> */}
                         {item.type}
-                        {/* </Link> */}
                       </div>{" "}
                       {item.children?.[0] ? (
                         <div onClick={() => toggleCategory(item.type)}>
@@ -871,7 +828,7 @@ const Header = () => {
         )}
 
         {/* Desktop Layout */}
-        <div className="mt-4 hidden w-full border-b pb-4 lg:flex lg:items-center lg:justify-between">
+        <div className="mt-4 hidden w-full flex-col border-b pb-4 lg:flex lg:items-center lg:justify-between">
           <div className="flex w-full items-center">
             <div
               className="flex-grow cursor-pointer text-left"
@@ -899,13 +856,11 @@ const Header = () => {
                       value:
                         "category_type_id" in cat
                           ? cat.category_type_id.toString()
-                          : cat.value, // Ensure value is a string
+                          : cat.value,
                       label: "type" in cat ? cat.type.toString() : cat.label,
                     })) ?? []
                   }
-                  // loader={loader}
                   value={selectedCategory?.value ?? ""}
-                  // placeholder="All Categories"
                   onChange={(val) => {
                     setSelectedCategory(val);
                     setSearchTerm("");
@@ -925,96 +880,41 @@ const Header = () => {
                 error={searchError}
               />
               <div
-                className="relative"
+                className="relative cursor-pointer rounded-full border border-black bg-transparent p-2 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white"
                 onClick={() => router.push("/favorites")}
               >
-                <GoHeart className="cursor-pointer text-xl" />
+                <GoHeart className="text-xl" />
                 {favItems?.length && favItems?.length > 0 ? (
-                  <span className="absolute right-3 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                  <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
                     {favItems?.length}
                   </span>
                 ) : (
                   ""
                 )}
               </div>
-              <div className="relative" onClick={() => toggleSidebar()}>
+              <div
+                className="relative cursor-pointer rounded-full border border-black bg-transparent p-2 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white"
+                onClick={() => toggleSidebar()}
+              >
                 <IoCartOutline className="cursor-pointer text-xl" />
                 {cartItems?.length && cartItems?.length > 0 ? (
-                  <span className="absolute right-3 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                  <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
                     {cartItems?.length}
                   </span>
                 ) : (
                   ""
                 )}
               </div>
-              <button onClick={() => toggleTheme(themeMode)}>
-                {themeMode == "dark" ? (
-                  <FiSun className="p-0.5 text-xl text-gray-200" />
-                ) : (
-                  <PiMoon className="text-xl" />
-                )}
-              </button>
 
-              <div className="relative">
-                <button
-                  className="mt-1 cursor-pointer rounded-full bg-red-500"
-                  onClick={toggleUserDropdown}
-                  ref={dropdownToggleRef}
-                >
-                  <MdOutlinePersonOutline className="p-1 text-3xl text-white" />
-                </button>
-                {isUserDropdownOpen && (
-                  <div
-                    ref={userDropdownRef}
-                    className="absolute right-0 z-10 mt-1 w-40 rounded-md bg-white px-1 py-2 shadow-md dark:bg-slate-700"
-                  >
-                    {userInfo?.first_name ? (
-                      <span className="text-md p-1 font-medium capitalize">
-                        {userInfo?.first_name} {userInfo?.last_name}
-                      </span>
-                    ) : checkoutData?.customer_id ? (
-                      <span className="text-md p-1 font-medium capitalize">
-                        {checkoutData?.user_name ?? ""}
-                      </span>
-                    ) : (
-                      ""
-                    )}
-
-                    {/* <a
-                      href="#account-settings"
-                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
-                    >
-                      <TbSettings className="mr-2" />
-                      Account Setting
-                    </a> */}
-                    <Link
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault(); // ⬅️ prevent navigation
-                        void handleLogout();
-                      }}
-                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
-                    >
-                      {isLoggedIn ? (
-                        <HiLogout className="mr-2" />
-                      ) : (
-                        <HiLogin className="mr-2" />
-                      )}
-                      {isLoggedIn ? "Logout" : "Login"}
-                    </Link>
-
-                    {/* <Link
-                      href="/signup"
-                      className="flex items-center p-1 text-sm font-medium hover:bg-gray-100 dark:hover:bg-slate-600"
-                    >
-                      <HiLogin className="mr-2" />
-                      Signup
-                    </Link> */}
-                  </div>
-                )}
+              <div
+                onClick={handleLogout}
+                className="relative cursor-pointer rounded-full border border-black bg-transparent p-1 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white"
+              >
+                <IoPersonOutline className="p-1 text-3xl" />
               </div>
             </div>
           </div>
+          <USBCategoryList1 />
         </div>
       </header>
       <SidebarCart

@@ -16,7 +16,7 @@ import { SpecialItemsForHomePage } from "~/types/specialItems";
 import BackgroundSquares from "~/components/ui-components/BackgroundSquares";
 import Spinner from "~/components/spinner";
 const HomePage: React.FC = () => {
-  const { productTags ,getProductTagStatus} = useAuthContext();
+  const { productTags, getProductTagStatus } = useAuthContext();
   const [specialItems, setSpecialItems] = useState<
     SpecialItemsForHomePage[] | null
   >(null);
@@ -39,10 +39,9 @@ const HomePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-      // if(genre) return;
-        void getProductTagStatus();
-      
-    }, []);
+    // if(genre) return;
+    void getProductTagStatus();
+  }, []);
 
   const transitionVariants = {
     enter: (direction: "left" | "right") => ({
@@ -84,9 +83,8 @@ const HomePage: React.FC = () => {
         console.error("Failed to load data:", error),
       );
     });
-    console.log(productTags)
+    console.log(productTags);
   }, [productTags]);
-  
 
   // Auto-slide functionality
   useEffect(() => {
@@ -131,11 +129,11 @@ const HomePage: React.FC = () => {
       <div className="flex flex-col items-center px-4 py-5 md:px-10">
         <div className="text-center text-xl md:flex md:text-3xl lg:flex lg:items-center lg:text-5xl">
           <FlipWords
-            words={["Imagine", "Create", "Inspire", "Transform"]}
+            words={["Merch", "Books", "Beyond"]}
             className="font-bold text-red-500"
           />
           <span className="mt-2 block text-base md:mt-0.5 md:text-2xl lg:mt-0 lg:text-4xl">
-            your reading adventure!
+            at UniShop!
           </span>
         </div>
       </div>{" "}

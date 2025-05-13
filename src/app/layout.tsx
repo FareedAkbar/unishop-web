@@ -5,6 +5,7 @@ import { type Metadata } from "next";
 import { AuthProvider } from "~/Context/AuthContext";
 import { Toaster } from "~/components/ui/toaster";
 import { Suspense } from "react";
+import { ThemeInitializer } from "~/components/ThemeInitializer";
 
 // import Loading from "./loading";
 
@@ -20,9 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <head>
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
+        <script
+          src="https://accounts.google.com/gsi/client"
+          async
+          defer
+        ></script>
       </head>
       <body suppressHydrationWarning>
+        <ThemeInitializer />
         <AuthProvider>
           {children}
           <Toaster />
