@@ -155,7 +155,7 @@ export default function SignupFormDemo({
           </div>
         </div> */}
         </form>
-        <GoogleLoginButton />
+        {/* <GoogleLoginButton /> */}
       </div>
     </div>
   );

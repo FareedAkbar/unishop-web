@@ -84,7 +84,7 @@ const MyComponent = () => {
     textbookType,
     userInfo
   } = useAuthContext();
-  console.log("searchItems", searchItems);
+  
   useEffect(() => {
     const fetchData = async () => {
       const d = params.get("type");
@@ -435,6 +435,7 @@ const MyComponent = () => {
                   ))
                 ) : searchItems && searchItems.length > 0 ? (
                   searchItems.map((item: DataCart) => (
+                    item.web_visibility === 1 &&
                     <ProductCard
                       key={item.item_id}
                       product={item}
@@ -596,9 +597,9 @@ const MyComponent = () => {
                   )}
               </div>
             </div>
-            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4">
+            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-1">
               <div className="flex flex-col">
-                <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
+                <span className="font-lato text-2xl font-bold text-red-500 dark:text-neutral-300">
                   $
                   {itemDetail?.variations?.[0] &&
                     filteredVariations?.[0]?.items_variable_items_sale_price
@@ -703,7 +704,7 @@ const MyComponent = () => {
               )}
               {itemDetail?.book_id &&
                 itemDetail?.food_id == null && (
-                  <div className="">
+                  <div className="flex flex-col gap-1">
                     {itemDetail?.audience && (
                       <div className="flex items-center">
                         <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">

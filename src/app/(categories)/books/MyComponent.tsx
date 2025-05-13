@@ -59,6 +59,8 @@ const MyComponent = () => {
     null,
   );
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(params.get("page") ? parseInt(params.get("page")!) : 1);
+  const [pageSize, setPageSize] = useState(15);
   const {
     cartItems,
     addCartItems,
@@ -76,6 +78,15 @@ const MyComponent = () => {
 
   useEffect(() => {
     const d = params.get("detail");
+    const currentPage = params.get("page");
+    
+    if (currentPage) {
+      
+      setCurrentPage(parseInt(currentPage));
+    } else {
+      
+      setCurrentPage(1);
+    }
     setDetail(d);
   }, [params]);
 
@@ -88,7 +99,7 @@ const MyComponent = () => {
         setLoader(true);
         const x = await getBooks(genId?.genre_id ?? 1);
         if (typeof x !== "boolean" && x.status) {
-          console.log(x);
+          
           setData(x.data);
           setFilteredData(x.data);
         }
@@ -219,11 +230,29 @@ const MyComponent = () => {
       : false;
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  
 
   // Get the products for the current page
   const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+
+  const updateSearchParams = (newParams: Record<string, string | null>) => {
+    const currentParams = new URLSearchParams(params.toString());
+    for (const key in newParams) {
+      if (newParams[key] === null || newParams[key] === undefined) {
+          currentParams.delete(key); // delete if value is null or undefined
+      } else {
+          currentParams.set(key, newParams[key]); // set or update
+      }
+    }
+    router.push(`?${currentParams.toString()}`);
+  };
+
+  const handlePageChange = async (page: number) => {
+    smoothScrollTo(0, 1500);
+    setCurrentPage(page);
+    updateSearchParams({ page: page.toString() });
+    
+  };
 
   const filterResult = () => {
     let filtered = data;
@@ -240,11 +269,11 @@ const MyComponent = () => {
     // Date range filter
 
     setFilteredData(filtered);
-    setCurrentPage(1);
+    setCurrentPage(params.get("page") ? parseInt(params.get("page")!) : 1); // Reset to first page on new filter
   };
   // Calculate total pages based on filtered data and page size
   const totalPages = Math.ceil(
-    filteredData ? filteredData?.length / pageSize : 1 / pageSize,
+    filteredData ? filteredData?.length / pageSize : params.get("page") ? parseInt(params.get("page")!) : 1 / pageSize,
   );
 
   // Get the data to be displayed for the current page
@@ -469,6 +498,7 @@ const MyComponent = () => {
                   ))
                 ) : displayedData && displayedData.length > 0 ? (
                   displayedData.map((item: DataCart) => (
+                    item.web_visibility === 1 &&
                     <ProductCard
                       key={item.item_id}
                       product={item}
@@ -510,7 +540,7 @@ const MyComponent = () => {
                   ? "cursor-not-allowed bg-gray-200 text-black"
                   : "cursor-pointer bg-red-500 text-white"
                   }`}
-                onClick={() => { setCurrentPage(currentPage - 1); smoothScrollTo(0, 1500) }}
+                onClick={() =>  handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
                 <FaChevronLeft />
@@ -523,7 +553,7 @@ const MyComponent = () => {
                   ? "cursor-not-allowed bg-gray-200 text-black"
                   : "cursor-pointer bg-red-500 text-white"
                   }`}
-                onClick={() => { setCurrentPage(currentPage + 1); smoothScrollTo(0, 1500) }}
+                onClick={() =>  handlePageChange(currentPage + 1) }
                 disabled={currentPage === totalPages || totalPages == 0}
               >
                 <FaChevronRight />
@@ -619,9 +649,9 @@ const MyComponent = () => {
                   )}
               </div>
             </div>
-            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4">
+            <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-1">
               <div className="flex flex-col">
-                <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
+                <span className="font-lato text-2xl font-bold text-red-500 dark:text-neutral-300">
                   $
                   {itemDetail?.variations?.[0] &&
                     filteredVariations?.[0]?.items_variable_items_sale_price
@@ -726,7 +756,7 @@ const MyComponent = () => {
               )}
               {itemDetail?.book_id &&
                 itemDetail?.food_id == null && (
-                  <div className="">
+                  <div className="flex flex-col gap-1">
                     {itemDetail?.audience && (
                       <div className="flex items-center">
                         <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">

@@ -57,7 +57,7 @@ const CartItem: React.FC<CartItemProps> = ({
                 : "/assets/images/products/product.png"
           }
           alt={title || "Product"}
-          className="mb-4 h-20 w-20 rounded bg-gray-200 object-contain md:mb-0"
+          className="mb-4 h-20 w-20 rounded bg-white dark:bg-slate-800 object-contain md:mb-0"
           width={800}
           height={800}
         />

@@ -391,7 +391,7 @@ const Header = () => {
               <button
                 onClick={() => {
                   router.push(
-                    `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}`,
+                    `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`,
                   );
                   setTimeout(() => {
                     setOpenCategories([]);
@@ -733,7 +733,7 @@ const Header = () => {
                         className="flex items-center"
                         onClick={() => {
                           router.push(
-                            `/products?category=${item.category_type_id}&name=${item.type}`,
+                            `/products?category=${item.category_type_id}&name=${item.type}&page=1`,
                           );
                           setMobileMenuOpen(false);
                           setOpenDropdown(null);
