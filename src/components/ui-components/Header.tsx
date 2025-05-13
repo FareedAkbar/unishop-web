@@ -313,7 +313,6 @@ const Header = () => {
     }
   }, [themeMode]);
 
-
   useEffect(() => {
     // if(category) return;
     void getGenre();
@@ -321,7 +320,6 @@ const Header = () => {
     void getCategory();
     void getSubCategory(-1);
     void getTextBookType();
-    
   }, []);
 
   useEffect(() => {
@@ -650,7 +648,7 @@ const Header = () => {
 
         {/* Search Bar (Visible on Small Screens) */}
         {!path.includes("/products") && (
-          <div className="mx-2 mt-2 w-full lg:hidden">
+          <div className="mt-2 w-full lg:hidden">
             {/* <div className=""> */}
             <Select
               id="category"
