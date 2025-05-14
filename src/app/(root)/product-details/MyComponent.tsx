@@ -572,6 +572,9 @@ const MyComponent = () => {
     );
   }
 
+
+  
+
   return (
     <div className="p-6 md:mt-0">
       <div className="flex items-center justify-between pb-2 lg:px-10">
@@ -598,6 +601,11 @@ const MyComponent = () => {
       <h6 className="flex-1 text-center font-serif text-sm font-bold capitalize text-red-500 md:text-2xl">
         {itemDetail?.book_title ?? itemDetail?.item_name}
       </h6>
+      {itemDetail?.author_first_name && (
+        <div className="flex flex-row text-center justify-center font-serif text-sm font-bold capitalize  md:text-lg">
+      <p className="text-red-500">by </p>  <p className="pl-2">{itemDetail?.author_first_name} {itemDetail?.author_last_name}</p>
+      </div>
+      )}
       <h6 className="md:text-md px-3 pb-2 text-center font-sans text-sm text-neutral-600 dark:text-neutral-100 md:px-28">
         {itemDetail?.additional_notes}
       </h6>
@@ -1053,7 +1061,7 @@ const MyComponent = () => {
                   </div>
                 </div>
               </div>
-
+                      <div className="mt-4 border-b border-gray-200"/>
               {itemDetail?.variations?.[0]?.variation_tags.map((tag, index) => {
                 const tagName = tag.items_variations_tags_name;
                 const prevTags =
@@ -1089,10 +1097,10 @@ const MyComponent = () => {
                 return (
                   <div
                     key={`variation-tag-${tag.items_variations_tags_name}-${index}`}
-                    className={`my-4 w-full ${tagName == "size" ? "flex items-center gap-1" : ""}`}
+                    className={`my-4 w-full flex items-center gap-1`}
                   >
-                    <h3 className="text-lg font-semibold capitalize">
-                      {tagName}
+                    <h3 className="font-medium capitalize pr-2">
+                      Select {tagName}
                     </h3>
 
                     {tagName.toLowerCase().includes("size") ? (
@@ -1120,6 +1128,7 @@ const MyComponent = () => {
                         onChange={(option: { value: string; label: string }) =>
                           handleSelectChange(tagName, option)
                         }
+                        
                         isDisabled={isDisabled}
                       />
                     )}

@@ -805,13 +805,13 @@ const MyComponent = () => {
                               className="accent-green-500 "
                               style={{ height: "20px", width: "20px" }}
                             />
-                            <div className="text-5xl font-medium text-center">
+                            <div className="text-3xl font-medium text-center">
                               {option.amount == 0
                                 ? "Free" : "$" + option.amount}
                             </div>
                             <div className={`mt-3 flex flex-col items-center ${option.amount == 0 ? "gap-4" : "gap-1"}`}>
 
-                              <span className="text-2xl font-medium text-center capitalize">
+                              <span className="text-xl font-medium text-center capitalize">
                                 {option.type}
                               </span>
                               <div className="mt-2 text-lg">
@@ -843,7 +843,7 @@ const MyComponent = () => {
                 ) : (
                   <div className="mb-4 mt-10">
                     <p className="mb-2 font-bold">Shipping Method</p>
-                    <div className="grid sm:grid-cols-1 grid-cols-2  gap-6">
+                    <div className="grid grid-cols-2  gap-6">
                       <div className={`border rounded-3xl p-4`} style={{ backgroundColor: shipping?.value === "free" ? "#F2FFE4" : "" }}>
 
                         <label className="cursor-pointer">
@@ -855,12 +855,12 @@ const MyComponent = () => {
                             className="accent-green-500 "
                             style={{ height: "20px", width: "20px" }}
                           />
-                          <div className="text-5xl font-medium text-center">
+                          <div className="text-3xl font-medium text-center">
                             Free
 
                           </div>
 
-                          <div className="text-2xl my-4 font-medium text-center capitalize">
+                          <div className="text-xl my-4 font-medium text-center capitalize">
                             Click and Collect
                           </div>
                           <div className={` flex flex-col items-start gap-4`}>
@@ -892,10 +892,10 @@ const MyComponent = () => {
                               className="accent-green-500 "
                               style={{ height: "20px", width: "20px" }}
                             />
-                            <div className="text-5xl font-medium text-center">
+                            <div className="text-3xl font-medium text-center">
                               ${getShippingPrice(checkoutData?.address?.[0]?.country_code ?? "", calculateWeight(), TableRates) ?? 0}
                             </div>
-                            <div className="text-2xl my-4 font-medium text-center capitalize">
+                            <div className="text-xl my-4 font-medium text-center capitalize">
                               {"Delivery"}
                             </div>
                             <div className="flex flex-col items-start gap-4">
@@ -916,7 +916,10 @@ const MyComponent = () => {
                           </label>
                         </div>
                       ) : (
-                        ""
+                        <div className="flex flex-col items-start gap-4">
+                          There is no shipping or delivery available for this address.
+                        </div>
+
                       )}
 
 
