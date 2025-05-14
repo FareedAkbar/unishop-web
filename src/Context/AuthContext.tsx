@@ -119,7 +119,6 @@ interface AuthContextProps {
   searchItems: DataCart[];
   textbookType: TextbookType[] | null;
   getTextBookType: () => Promise<boolean | void>;
-
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -156,12 +155,10 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [billing_address, setBillingAddress] = useState<address[] | null>(null);
   const router = useRouter();
 
-
-
   const addBillingAddress = (address: address[] | null) => {
     setBillingAddress(address);
-    lsClient.setItem("BILLING_ADDRESS", address)
-  }
+    lsClient.setItem("BILLING_ADDRESS", address);
+  };
 
   const login = async (payload: Login): Promise<LoginResponse | boolean> => {
     const response = await apiRouter(
@@ -220,7 +217,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } = response as VerifyOTPResponse;
     if (responsePayload.status) {
       setIsLoggedIn(true);
-      console.log(responsePayload);
+      // console.log(responsePayload);
       setToken(responsePayload.token);
       setUserInfo(responsePayload.data);
       lsClient.setItem("USER_INFO", responsePayload.data);
@@ -258,19 +255,22 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   interface ApiResponse {
-    // meta: PaginationData; 
+    // meta: PaginationData;
     data: DataCart[];
     status: boolean;
-}
-  const searchInCategory = async (value: string, id: string): Promise<boolean> => {
-    const response = await getItemsBySearch(value,id);
+  }
+  const searchInCategory = async (
+    value: string,
+    id: string,
+  ): Promise<boolean> => {
+    const response = await getItemsBySearch(value, id);
 
     if (typeof response == "string") return false;
 
     const responsePayload: { status: boolean; data: DataCart[] } =
       response as ApiResponse;
     if (!responsePayload.status) return false;
-    console.log(responsePayload.data)
+    console.log(responsePayload.data);
     setSearchItems(responsePayload.data);
 
     return true;
@@ -359,7 +359,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (responsePayload.status) {
       return true;
     } else if (!responsePayload.status) {
-      const itemExists = favItems.some((items) => items.item_id === item.item_id);
+      const itemExists = favItems.some(
+        (items) => items.item_id === item.item_id,
+      );
       if (itemExists) {
         setFavItems((prevFavItems) => {
           // If it exists, remove it by filtering out the item
@@ -384,14 +386,13 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         (items) => items.item_id !== item.item_id,
       );
       setFavItems(newItemList);
-      
-      
-      console.log(itemExists)
-      console.log("favItems",favItems)
 
-      console.log("newlist",newItemList)
+      // console.log(itemExists);
+      // console.log("favItems", favItems);
+
+      // console.log("newlist", newItemList);
     }
-   
+
     const response = await removeFromFavourite(
       item.item_id,
       booknet_customer_id,
@@ -418,7 +419,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       return false;
     }
-    return false
+    return false;
   };
   const getFavourite = async (
     booknet_customer_id: number,
@@ -437,7 +438,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
   const getProductTagStatus = async (): Promise<boolean> => {
     const response = await getProductTags();
-    console.log("_______________________________________________________________")
+    // console.log(
+    //   "_______________________________________________________________",
+    // );
     const responsePayload: {
       status: boolean;
       data: ItemSpecialTag[];
@@ -457,7 +460,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       status: boolean;
       data: TextbookType[];
     } = response as TextBookApiResponse;
-    console.log("data" , responsePayload.data)
+    // console.log("data", responsePayload.data);
     if (responsePayload.status) {
       lsClient.setItem("TEXTBOOK_TYPE", responsePayload.data);
       setTextbookType(responsePayload.data);
@@ -476,7 +479,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           (item) =>
             item.item_id === payload.item_id &&
             item?.selected_variation?.items_variable_items_id ==
-            payload?.selected_variation?.items_variable_items_id,
+              payload?.selected_variation?.items_variable_items_id,
         );
       } else {
         existingItemIndex = prev.findIndex(
@@ -542,7 +545,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const removeCartItems = async (payload: DataCart): Promise<boolean> => {
-  
     const currentItems = lsClient.getItem("CART_ITEM") || [];
     const newItems: DataCart[] =
       typeof currentItems === "string"
@@ -554,15 +556,15 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           item?.selected_variation?.items_variable_items_id !==
           payload?.selected_variation?.items_variable_items_id,
       );
-     
+
       lsClient.setItem("CART_ITEM", updatedItems);
-      
+
       setItems(updatedItems);
     } else {
       const updatedItems = newItems.filter(
         (item: DataCart) => item.item_id !== payload.item_id,
       );
-   
+
       lsClient.setItem("CART_ITEM", updatedItems);
       setItems(updatedItems);
     }
@@ -600,7 +602,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async (): Promise<void> => {
     // lsClient.cleanStorage();
-    console.log("logout", token);
+    // console.log("logout", token);
     await LogOutApi();
 
     lsClient.setEmpty("TOKEN", "");
@@ -613,7 +615,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoggedIn(false);
     setUserInfo(undefined);
     setToken(undefined);
-    
+
     router.push("/login");
   };
 
@@ -700,7 +702,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // lsClient.setItem("CHECKOUT_DATA", responsePayload?.data ?? null);
       return responsePayload;
     } else {
-      console.log(response)
+      console.log(response);
       throw new Error("failed"); // Throw an error with the message
     }
   };
@@ -731,7 +733,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           responsePayload?.data?.booknet_customer_id,
         );
       } else {
-        lsClient.setEmpty("BOOKNET_CUSTOMER_ID", null)
+        lsClient.setEmpty("BOOKNET_CUSTOMER_ID", null);
       }
 
       return responsePayload;

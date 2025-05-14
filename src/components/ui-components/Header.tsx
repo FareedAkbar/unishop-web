@@ -443,111 +443,94 @@ const Header = () => {
 
   // Modified USBCategoryList1 component
   const USBCategoryList1 = () => {
-    const renderSubcategories = (subItems: any[], level = 1) => (
-      <div className={`ml-${level * 4} mt-1`}>
-        {subItems.map((subItem) => (
-          <div key={subItem.category_name} className="py-1">
-            <Link
-              href={`/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`}
-              className="block text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
-            >
-              {subItem.category_name}
-            </Link>
-            {subItem.children?.length > 0 &&
-              renderSubcategories(subItem.children, level + 1)}
-          </div>
-        ))}
-      </div>
+    const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+      new Set(),
     );
+    const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+
+    const toggleCategory = (id: string | number) => {
+      const newSet = new Set(expandedCategories);
+      const key = String(id);
+      if (newSet.has(key)) {
+        newSet.delete(key);
+      } else {
+        newSet.add(key);
+      }
+      setExpandedCategories(newSet);
+    };
+
+    const renderSubcategories = (subItems: CategoryTreeNode[], level = 1) => {
+      return (
+        <div className={`pl-${level * 4} mt-1`}>
+          {subItems.map((subItem) => {
+            const hasChildren = subItem.children && subItem.children.length > 0;
+            const isExpanded = expandedCategories.has(String(subItem.id));
+            return (
+              <div key={subItem.id} className="py-1">
+                <div
+                  className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
+                  onClick={() => hasChildren && toggleCategory(subItem.id)}
+                >
+                  <Link
+                    href={`/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`}
+                    className="block"
+                  >
+                    {subItem.category_name}
+                  </Link>
+                  {hasChildren && (
+                    <span className="mr-1">
+                      {isExpanded ? (
+                        <FaChevronDown className="text-xs" />
+                      ) : (
+                        <FaChevronRight className="text-xs" />
+                      )}
+                    </span>
+                  )}
+                </div>
+                {hasChildren &&
+                  isExpanded &&
+                  renderSubcategories(subItem.children!, level + 1)}
+              </div>
+            );
+          })}
+        </div>
+      );
+    };
 
     return (
       <div className="hidden lg:block">
-        <div className="flex w-full items-center justify-center pt-4 lg:pt-0">
-          <nav className="flex gap-6 whitespace-nowrap px-4">
-            {headerCategory?.map((item) => (
-              <div
-                key={item.type}
-                className="relative inline-block"
-                onMouseEnter={() => setHoveredCategory(item.type)}
-                onMouseLeave={() => setHoveredCategory(null)}
-              >
-                <div className="group flex cursor-pointer items-center px-2 py-1">
-                  <Link
-                    href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
-                    className="flex items-center text-base font-medium text-gray-700 hover:text-red-500 dark:text-gray-200"
-                  >
-                    {item.type}
-                  </Link>
-                  {item.children?.[0] && (
-                    <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
-                  )}
-                </div>
+        <div className="flex w-full items-center justify-center pt-4">
+          <nav className="flex gap-6 whitespace-nowrap px-2">
+            {headerCategory?.map((item) => {
+              const hasChildren = item.children && item.children.length > 0;
 
-                {/* Dropdown menu on hover */}
-                {hoveredCategory === item.type && item.children?.[0] && (
-                  <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-slate-800">
-                    {renderSubcategories(item.children)}
+              return (
+                <div
+                  key={item.type}
+                  className="relative inline-block"
+                  onMouseEnter={() => setHoveredCategory(item.type)}
+                  onMouseLeave={() => setHoveredCategory(null)}
+                >
+                  <div className="group flex cursor-pointer items-center px-2 py-1">
+                    <Link
+                      href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
+                      className="flex items-center text-base font-medium text-gray-700 hover:text-red-500 dark:text-gray-200"
+                    >
+                      {item.type}
+                    </Link>
+                    {hasChildren && (
+                      <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
+                    )}
                   </div>
-                )}
-              </div>
-            ))}
 
-            {categories.map((item) => (
-              <div
-                key={item.label}
-                className="relative inline-block"
-                onMouseEnter={() => setHoveredCategory(item.label)}
-                onMouseLeave={() => setHoveredCategory(null)}
-              >
-                <div className="group flex cursor-pointer items-center px-2 py-1">
-                  <Link
-                    href={item.href ?? ""}
-                    className="flex items-center text-base font-medium text-gray-700 hover:text-red-500 dark:text-gray-200"
-                    scroll={false}
-                  >
-                    {item.label}
-                  </Link>
-                  {(item.subItems || item.label == "Pulse") && (
-                    <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
-                  )}
-                </div>
-
-                {hoveredCategory === item.label &&
-                  (item.subItems || item.label === "Pulse") && (
-                    <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-slate-800">
-                      {item.subItems?.map((subItem) => (
-                        <Link
-                          key={subItem.label}
-                          href={subItem.href}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
-                        >
-                          {subItem.label}
-                        </Link>
-                      ))}
-                      {item.label === "Pulse" && (
-                        <>
-                          <Link
-                            href="https://apps.apple.com/ie/app/uow-pulse-ltd/id6476544403"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block px-4 py-2 text-sm hover:text-red-500 dark:hover:text-red-400"
-                          >
-                            Download from the App Store
-                          </Link>
-                          <Link
-                            href="https://play.google.com/store/apps/details?id=com.iitsols.pulseuowltd"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block px-4 py-2 text-sm hover:text-red-500 dark:hover:text-red-400"
-                          >
-                            Download from the Play Store
-                          </Link>
-                        </>
-                      )}
+                  {hoveredCategory === item.type && hasChildren && (
+                    <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
+                      {renderSubcategories(item.children!)}
                     </div>
                   )}
-              </div>
-            ))}
+                </div>
+              );
+            })}
           </nav>
         </div>
       </div>
@@ -640,7 +623,7 @@ const Header = () => {
             <div className="mt-2">
               <Input
                 ref={searchInputRef}
-                placeholder="What are you looking for?"
+                placeholder="Enter keywords to search..."
                 value={searchTerm}
                 onChange={handleSearchChange}
                 icon={<FiSearch size={26} />}
@@ -870,7 +853,7 @@ const Header = () => {
               </div>
               <Input
                 ref={searchInputRef}
-                placeholder="What are you looking for?"
+                placeholder="Enter keywords to search..."
                 value={searchTerm}
                 onChange={handleSearchChange}
                 icon={<FiSearch size={26} />}
@@ -893,24 +876,49 @@ const Header = () => {
                 )}
               </div>
               <div
-                className="relative cursor-pointer rounded-full border border-black bg-transparent p-2 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white"
+                className="flex cursor-pointer items-center gap-2"
                 onClick={() => toggleSidebar()}
               >
-                <IoCartOutline className="cursor-pointer text-xl" />
-                {cartItems?.length && cartItems?.length > 0 ? (
-                  <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
-                    {cartItems?.length}
-                  </span>
-                ) : (
-                  ""
-                )}
+                <div className="relative rounded-full border border-black bg-transparent p-2 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white">
+                  <IoCartOutline className="cursor-pointer text-xl" />
+                  {cartItems?.length && cartItems?.length > 0 ? (
+                    <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                      {cartItems?.length}
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm">My Cart</p>
+                  <p className="text-red-500">
+                    $
+                    {cartItems?.reduce(
+                      (total, item) => total + item.item_sale_price,
+                      0,
+                    )}
+                  </p>
+                </div>
               </div>
-
               <div
+                className="flex cursor-pointer items-center gap-2"
                 onClick={handleLogout}
-                className="relative cursor-pointer rounded-full border border-black bg-transparent p-1 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white"
               >
-                <IoPersonOutline className="p-1 text-3xl" />
+                <div className="relative rounded-full border border-black bg-transparent p-1 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white">
+                  <IoPersonOutline className="p-1 text-3xl" />
+                </div>
+                <span>
+                  {userInfo ? (
+                    <>
+                      <p className="text-sm">My Account</p>
+                      <p className="text-red-500">
+                        {userInfo?.first_name} {userInfo?.last_name}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-sm">Signin</p>
+                  )}
+                </span>
               </div>
             </div>
           </div>

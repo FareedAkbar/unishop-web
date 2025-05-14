@@ -122,7 +122,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 dark:bg-slate-800">
-      <BackgroundSquares />
+      {/* <BackgroundSquares /> */}
       <div className="flex justify-center">
         <ImageSlider />
       </div>

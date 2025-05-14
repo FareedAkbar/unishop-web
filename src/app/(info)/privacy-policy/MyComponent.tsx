@@ -128,7 +128,7 @@ const PrivacyPolicy: React.FC = () => {
 
   return (
     <div className="relative min-h-screen p-6 pb-20 md:p-10">
-      <BackgroundSquares />
+      {/* <BackgroundSquares /> */}
 
       <h1 className="mb-6 text-center text-3xl font-extrabold text-red-600">
         Privacy Policy
