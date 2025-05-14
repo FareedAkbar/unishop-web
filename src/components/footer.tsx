@@ -91,6 +91,7 @@ function Footer() {
                 </Link>
               ))}
             </div>
+            <p className="text-sm">UOW Pulse ABN 28 915 832 337</p>
           </div>
 
           {/* middle div */}
@@ -179,7 +180,14 @@ function Footer() {
         {/* bottom center */}
         <div className="flex flex-col items-center pt-3 text-center">
           <p className="text-xs font-medium text-[#646464] dark:text-gray-300">
-            Privacy Policy | © {new Date().getFullYear()} PULSE
+            <a
+              rel="noreferrer"
+              href="/privacy-policy"
+              className="hover:text-red-500"
+            >
+              Privacy Policy
+            </a>{" "}
+            | © {new Date().getFullYear()} PULSE
           </p>
           <p className="text-xs font-medium text-[#646464] dark:text-gray-300">
             Designed by{" "}
