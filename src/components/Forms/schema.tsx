@@ -1,6 +1,7 @@
 import { z } from "zod";
 // Example ZIP code validation functions
 const zipCodeFormats: Record<string, RegExp> = {
+  "Afghanistan": /^\d{6}$/, // Afghanistan postal code
   "United States": /^\d{5}(-\d{4})?$/, // US ZIP code
   Canada: /^[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d$/, // Canadian postal code
   "United Kingdom": /^[A-Za-z]{1,2}\d[A-Za-z\d]? \d[A-Za-z]{2}$/, // UK postcode
@@ -41,6 +42,7 @@ const zipCodeFormats: Record<string, RegExp> = {
   "New Zealand": /^\d{4}$/, // New Zealand postal code
   Malaysia: /^\d{5}$/, // Malaysia postal code
   Philippines: /^\d{4}$/, // Philippines postal code
+  "Pitcairn Island": /^PCRN\s1ZZ$/, // Philippines postal code
   "Saudi Arabia": /^\d{5}$/, // Saudi Arabia postal code
   "United Arab Emirates": /^\d{5}$/, // UAE postal code
   Qatar: /^\d{5}$/, // Qatar postal code
@@ -132,13 +134,13 @@ const zipCodeFormats: Record<string, RegExp> = {
   "Marshall Islands": /^\d{5}$/, // Marshall Islands postal code
   "Federated States of Micronesia": /^\d{5}$/, // Federated States of Micronesia postal code
   "Northern Mariana Islands": /^\d{5}$/, // Northern Mariana Islands postal code
-  "American Samoa": /^\d{5}$/, // American Samoa postal code
+ 
   Guam: /^\d{5}$/, // Guam postal code
-  "U.S. Virgin Islands": /^\d{5}$/, // U.S. Virgin Islands postal code
+  "Virgin Islands (US)": /^\d{5}$/, // U.S. Virgin Islands postal code
 };
 const isValidZipCode = (zip: string, country: string): boolean => {
   const format = zipCodeFormats[country];
-  return format ? format.test(zip) : false;
+  return format ? format.test(zip) : true;
 };
 const LoginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -166,9 +168,10 @@ const SignupSchema = z
   })
   .superRefine((data, ctx) => {
     const { postal_code, country } = data;
-
+    console.log("country", country);
+    console.log("postal_code", postal_code);
     // Ensure that country is set
-    if (country && postal_code && !isValidZipCode(postal_code, "Australia")) {
+    if (country && postal_code && !isValidZipCode(postal_code, country)) {
       ctx.addIssue({
         path: ["postal_code"],
         message: "Invalid postal code for the given country",

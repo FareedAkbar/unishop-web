@@ -42,9 +42,9 @@ const Input = React.forwardRef<
       className="group/input relative rounded-lg p-[2px] transition duration-300"
     >
       <div className="relative">
-        {id && id == "phone_number" && (
+        {id && id.includes("phone") && (
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
-            +
+            {id.split("number")[1]?.includes("+") ? id.split("number")[1] : `+${id.split("number")[1]}`}
           </span>
         )}
 

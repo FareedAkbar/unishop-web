@@ -93,6 +93,7 @@ export default function CheckoutForm({
     handleSubmit,
     control,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<CheckoutFormValues>({
     resolver: zodResolver(SignupSchema),
@@ -249,6 +250,7 @@ export default function CheckoutForm({
       postal_code: data.postal_code,
       country_code: Countries_States.find((country) => country.name === selectedCountry)?.iso3 ?? selectedCountry,
       phone_number: data.phone_number,
+      phone_code: Countries_States.find((country) => country.name === selectedCountry)?.phone_code ?? "",
       default_status: 1,
     };
     // compare address from the form and previous billing address and if yes then pick address from previous billing address
@@ -259,6 +261,7 @@ export default function CheckoutForm({
     console.log("xx", xx);
     const updatedData = {
       ...data,
+      phone_code: Countries_States.find((country) => country.name === selectedCountry)?.phone_code ?? "",
       email: userInfo?.email ?? data.email ?? "",
       country: selectedCountry,
       stateCode: stateOptions.find((state) => state?.value === Number(data?.state))?.value.toString(),
@@ -383,6 +386,8 @@ export default function CheckoutForm({
     setShowFormFields(false);
   }, [billing_address]);
 
+
+ 
   return (
     <div className="mx-auto w-full rounded-lg border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
@@ -623,11 +628,13 @@ export default function CheckoutForm({
                 {/* Plus symbol */}
                
                 <Input
-                  id="phone_number"
+               
+                  id={"phone_number" + (Countries_States.find((country) => country.name === selectedCountry)?.phone_code ?? "")}
                   placeholder=""
                   type="text"
+                  // value={getFieldValues(getValues("phone_number"))}
                   {...register("phone_number")}
-                  className="pl-6" // increased padding for space
+                  className="pl-16" // increased padding for space
                 />
 
                 {errors.phone_number && (
