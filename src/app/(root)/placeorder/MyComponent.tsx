@@ -916,7 +916,7 @@ const MyComponent = () => {
                           </label>
                         </div>
                       ) : (
-                        <div className="flex flex-col items-start gap-4">
+                        <div className="flex flex-col items-start gap-4 ">
                           There is no shipping or delivery available for this address.
                         </div>
 
