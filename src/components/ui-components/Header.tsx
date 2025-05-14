@@ -869,10 +869,10 @@ const Header = () => {
                 error={searchError}
               />
               <div
-                className="relative cursor-pointer rounded-full border border-black bg-transparent p-2 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white"
+                className="relative cursor-pointer rounded-full border border-red-500 bg-transparent p-2 text-red-500 hover:border-transparent hover:bg-red-500 hover:text-white"
                 onClick={() => router.push("/favorites")}
               >
-                <GoHeart className="text-xl" />
+                <GoHeart className="text-lg" />
                 {favItems?.length && favItems?.length > 0 ? (
                   <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
                     {favItems?.length}
@@ -887,7 +887,7 @@ const Header = () => {
                   (total, item) => total + item.item_sale_price,
                   0,
                 )}`}
-                className="relative cursor-pointer rounded-full border border-black bg-transparent p-2 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white"
+                className="relative cursor-pointer rounded-full border border-red-500 bg-transparent p-2 text-red-500 hover:border-transparent hover:bg-red-500 hover:text-white"
               >
                 <IoCartOutline className="cursor-pointer text-xl" />
                 {cartItems?.length && cartItems?.length > 0 ? (
@@ -902,16 +902,16 @@ const Header = () => {
               <div
                 onClick={handleLogout}
                 title={userInfo ? "Logout" : "Signin"}
-                className="relative cursor-pointer rounded-full border border-black bg-transparent p-1 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white"
+                className="relative cursor-pointer rounded-full border border-red-500 bg-transparent p-1.5 text-red-500 hover:border-transparent hover:bg-red-500 hover:text-white"
               >
-                <IoPersonOutline className="p-1 text-3xl" />
+                <IoPersonOutline className="p-1 text-2xl" />
               </div>
               <div
                 onClick={() => router.push("/contact-us")}
                 title={"Contact Us"}
-                className="relative cursor-pointer rounded-full border border-black bg-transparent p-1 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white"
+                className="relative cursor-pointer rounded-full border border-red-500 bg-transparent p-1.5 text-red-500 hover:border-transparent hover:bg-red-500 hover:text-white"
               >
-                <BsTelephone className="p-1 text-3xl" />
+                <BsTelephone className="p-1 text-2xl" />
               </div>
             </div>
           </div>
