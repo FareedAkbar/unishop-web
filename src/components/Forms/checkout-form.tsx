@@ -456,22 +456,22 @@ export default function CheckoutForm({
                       className="form-radio"
                     />
                     <div>
-                      <div className="font-semibold">
+                      <div className="font-medium">
                         Billing Address {index + 1}: {item.phone_number}{" "}
                       </div>
                     </div>
                   </label>
                   <div className="flex">
-                    <div className="mr-2 rounded bg-red-500 px-1 py-0.5 text-[8px] text-sm text-white sm:px-2 sm:py-[2px]">
-                      Home{" "}
+                    <div className="mr-2 rounded py-0.5 text-[8px] text-sm font-semibold">
+                      Home:{" "}
                     </div>
                     <div>{item.address}</div>
                   </div>
                   <div className="mb-4 flex">
-                    <div className="mr-2 text-sm font-semibold text-gray-400">
+                    <div className="mr-2 text-sm font-semibold text-gray-600 dark:text-gray-400">
                       Region:{" "}
                     </div>
-                    <div className="text-sm text-gray-400">
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
                       {item.country}, {item.state}, {item.city},{" "}
                       {item.postal_code}
                     </div>
