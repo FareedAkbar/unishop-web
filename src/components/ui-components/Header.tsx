@@ -43,6 +43,7 @@ import {
 import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import { PiMoon, PiMoonLight } from "react-icons/pi";
 import Select from "../Fields/select";
+import { BsTelephone } from "react-icons/bs";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -461,7 +462,7 @@ const Header = () => {
 
     const renderSubcategories = (subItems: CategoryTreeNode[], level = 1) => {
       return (
-        <div className={`pl-${level * 4} mt-1`}>
+        <div className={`pl-${level * 2} mt-1`}>
           {subItems.map((subItem) => {
             const hasChildren = subItem.children && subItem.children.length > 0;
             const isExpanded = expandedCategories.has(String(subItem.id));
@@ -500,7 +501,7 @@ const Header = () => {
     return (
       <div className="hidden lg:block">
         <div className="flex w-full items-center justify-center pt-4">
-          <nav className="flex gap-6 whitespace-nowrap px-2">
+          <nav className="flex gap-8 whitespace-nowrap px-2">
             {headerCategory?.map((item) => {
               const hasChildren = item.children && item.children.length > 0;
 
@@ -525,7 +526,7 @@ const Header = () => {
 
                   {hoveredCategory === item.type && hasChildren && (
                     <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
-                      {renderSubcategories(item.children!)}
+                      {renderSubcategories(item.children!.slice(0, 5))}
                     </div>
                   )}
                 </div>
@@ -580,14 +581,19 @@ const Header = () => {
                 ""
               )}
             </div>
-            <div className="relative" ref={userDropdownRef}>
-              <button
-                ref={dropdownToggleRef}
-                className="cursor-pointer rounded-full bg-red-500 p-0.5"
-                onClick={handleLogout}
-              >
-                <MdOutlinePersonOutline className="text-xl text-white" />
-              </button>
+
+            <div
+              className="relative"
+              ref={userDropdownRef}
+              onClick={handleLogout}
+            >
+              <IoPersonOutline className="cursor-pointer text-xl" />
+            </div>
+            <div
+              className="relative"
+              onClick={() => router.push("/contact-us")}
+            >
+              <BsTelephone className="cursor-pointer text-xl" />
             </div>
             <button
               className={`z-30 lg:p-3 ${isMobileMenuOpen ? "bg-white" : ""}`}
@@ -876,49 +882,36 @@ const Header = () => {
                 )}
               </div>
               <div
-                className="flex cursor-pointer items-center gap-2"
                 onClick={() => toggleSidebar()}
+                title={`Total: $${cartItems?.reduce(
+                  (total, item) => total + item.item_sale_price,
+                  0,
+                )}`}
+                className="relative cursor-pointer rounded-full border border-black bg-transparent p-2 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white"
               >
-                <div className="relative rounded-full border border-black bg-transparent p-2 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white">
-                  <IoCartOutline className="cursor-pointer text-xl" />
-                  {cartItems?.length && cartItems?.length > 0 ? (
-                    <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
-                      {cartItems?.length}
-                    </span>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm">My Cart</p>
-                  <p className="text-red-500">
-                    $
-                    {cartItems?.reduce(
-                      (total, item) => total + item.item_sale_price,
-                      0,
-                    )}
-                  </p>
-                </div>
+                <IoCartOutline className="cursor-pointer text-xl" />
+                {cartItems?.length && cartItems?.length > 0 ? (
+                  <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                    {cartItems?.length}
+                  </span>
+                ) : (
+                  ""
+                )}
+              </div>
+
+              <div
+                onClick={handleLogout}
+                title={userInfo ? "Logout" : "Signin"}
+                className="relative cursor-pointer rounded-full border border-black bg-transparent p-1 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white"
+              >
+                <IoPersonOutline className="p-1 text-3xl" />
               </div>
               <div
-                className="flex cursor-pointer items-center gap-2"
-                onClick={handleLogout}
+                onClick={() => router.push("/contact-us")}
+                title={"Contact Us"}
+                className="relative cursor-pointer rounded-full border border-black bg-transparent p-1 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white"
               >
-                <div className="relative rounded-full border border-black bg-transparent p-1 hover:border-transparent hover:bg-red-500 hover:text-white dark:border-white">
-                  <IoPersonOutline className="p-1 text-3xl" />
-                </div>
-                <span>
-                  {userInfo ? (
-                    <>
-                      <p className="text-sm">My Account</p>
-                      <p className="text-red-500">
-                        {userInfo?.first_name} {userInfo?.last_name}
-                      </p>
-                    </>
-                  ) : (
-                    <p className="text-sm">Signin</p>
-                  )}
-                </span>
+                <BsTelephone className="p-1 text-3xl" />
               </div>
             </div>
           </div>

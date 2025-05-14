@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAuthContext } from "~/Context/AuthContext";
 import { usePathname } from "next/navigation";
+import { FiGlobe } from "react-icons/fi";
 
 const links = [
   { title: "Contact Us", href: "/contact-us" },
@@ -26,6 +27,12 @@ function Footer() {
     {
       icon: <AiOutlineInstagram />,
       link: "https://www.instagram.com/uowpulse_eatshop/",
+      label: "Instagram",
+    },
+    {
+      icon: <FiGlobe />,
+      link: "https://pulse.uow.edu.au/pulseperks/",
+      label: "Pulse Perks",
     },
   ];
   const { category } = useAuthContext();
@@ -71,12 +78,13 @@ function Footer() {
               </a>
             </div>
             <div className="flex w-full justify-start gap-4 text-xl text-[#646464]">
-              {iconsTab.map(({ icon, link }, index) => (
+              {iconsTab.map(({ icon, link, label }, index) => (
                 <Link
                   key={index}
                   href={link}
                   target="_blank"
                   rel="noopener noreferrer"
+                  title={label}
                   className="cursor-pointer rounded-full bg-red-200 p-2 transition-all hover:bg-red-500 hover:text-white"
                 >
                   <div>{icon}</div>
