@@ -478,7 +478,7 @@ const ProductModal = ({
                   </div>
                 </div>
               </div>
-
+              <div className="mt-4 border-b border-gray-200" />
               {itemDetail?.variations?.[0]?.variation_tags.map((tag, index) => {
                 const tagName = tag.items_variations_tags_name;
                 const prevTags =
@@ -516,8 +516,8 @@ const ProductModal = ({
                     key={tagName}
                     className={`my-4 w-full ${tagName == "size" ? "flex items-center gap-1" : ""}`}
                   >
-                    <h3 className="text-md font-semibold capitalize">
-                      {tagName}
+                    <h3 className="font-medium capitalize">
+                      Select {tagName}
                     </h3>
 
                     {tagName.toLowerCase().includes("size") ? (
