@@ -490,7 +490,7 @@ const Header = () => {
                 </div>
                 {hasChildren &&
                   isExpanded &&
-                  renderSubcategories(subItem.children!, level + 1)}
+                  renderSubcategories(subItem.children, level + 1)}
               </div>
             );
           })}

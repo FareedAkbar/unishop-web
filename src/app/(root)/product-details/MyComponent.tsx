@@ -200,23 +200,7 @@ const MyComponent = () => {
       console.error("Failed to load data in useEffect:", error);
     });
   }, [genre]);
-  const smoothScrollTo = (targetPosition: number, duration: number) => {
-    const startPosition = window.scrollY;
-    const distance = targetPosition - startPosition;
-    let startTime: number | null = null;
-
-    const animation = (currentTime: number) => {
-      startTime ??= currentTime;
-      const timeElapsed = currentTime - startTime;
-      const progress = Math.min(timeElapsed / duration, 1);
-
-      window.scrollTo(0, startPosition + distance * progress);
-
-      if (timeElapsed < duration) requestAnimationFrame(animation);
-    };
-
-    requestAnimationFrame(animation);
-  };
+ 
   useEffect(() => {
     if (!itemDetail) return;
     if (typeof window === "undefined") return;
@@ -225,7 +209,7 @@ const MyComponent = () => {
       setCurrentImage(itemDetail?.object_path ?? "");
       setSelectedValues({});
       setSelectedVariation(null);
-      smoothScrollTo(0, 1500);
+      
     };
     loadData().catch((error) => {
       console.error("Failed to load data in useEffect:", error);

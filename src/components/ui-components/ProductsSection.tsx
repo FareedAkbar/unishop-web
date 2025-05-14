@@ -68,9 +68,27 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
       setListInStart(scrollLeft <= 0);
     }
   };
+  const smoothScrollTo = (targetPosition: number, duration: number) => {
+    const startPosition = window.scrollY;
+    const distance = targetPosition - startPosition;
+    let startTime: number | null = null;
+
+    const animation = (currentTime: number) => {
+      startTime ??= currentTime;
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1);
+
+      window.scrollTo(0, startPosition + distance * progress);
+
+      if (timeElapsed < duration) requestAnimationFrame(animation);
+    };
+
+    requestAnimationFrame(animation);
+  };
   const router = useRouter();
   const goToDetail = async (item: DataCart) => {
     await setProductForDetail(item);
+    smoothScrollTo(0, 1500);
     // router.push(`/product-details?category=${item.category}`);
   };
   useEffect(() => {
@@ -167,30 +185,30 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
           >
             {loader
               ? Array.from({ length: 6 }, (_, index) => (
-                  <div key={index} className="p-2">
-                    <ProductCardSkeleton />
-                  </div>
-                ))
-              : products.map((item,index) => (
-                  <ProductCard
-                    key={`item.book_id-${item.book_id ?? index}-${index}`}
-                    product={item}
-                    showAddToCart={false}
-                    showButton={false}
-                    //  onAddToCart={async () => {
-                    //    if (item?.variations?.[0]) {
-                    //      await openDetail(item);
-                    //    } else {
-                    //      await handleAddToCart(item);
-                    //    }
-                    //  }}
-                    //  onRemoveFromCart={() => handleRemoveFromCart(item)}
-                    goToDetail={() => goToDetail(item)}
-                    openDetail={() => goToDetail(item)}
-                    handleFavourite={() => handleFavourite(item)}
-                    //  wishListLoader={wishListLoader}
-                  />
-                ))}
+                <div key={index} className="p-2">
+                  <ProductCardSkeleton />
+                </div>
+              ))
+              : products.map((item, index) => (
+                <ProductCard
+                  key={`item.book_id-${item.book_id ?? index}-${index}`}
+                  product={item}
+                  showAddToCart={false}
+                  showButton={false}
+                  //  onAddToCart={async () => {
+                  //    if (item?.variations?.[0]) {
+                  //      await openDetail(item);
+                  //    } else {
+                  //      await handleAddToCart(item);
+                  //    }
+                  //  }}
+                  //  onRemoveFromCart={() => handleRemoveFromCart(item)}
+                  goToDetail={() => goToDetail(item)}
+                  openDetail={() => goToDetail(item)}
+                  handleFavourite={() => handleFavourite(item)}
+                //  wishListLoader={wishListLoader}
+                />
+              ))}
           </div>
         </div>
 

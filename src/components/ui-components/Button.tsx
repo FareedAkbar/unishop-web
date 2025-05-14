@@ -19,7 +19,7 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   loading = false,
   color = "bg-red-500",
-  height = "h-full",
+  height = "h-fit",
   width = "w-fit",
   disabled,
   className = "",

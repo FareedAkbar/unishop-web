@@ -13,6 +13,7 @@ import { IoIosArrowRoundForward, IoIosCloseCircle } from "react-icons/io";
 import DataCart, { Variation } from "~/types/book";
 import moment from "moment";
 import { BsFillCartCheckFill } from "react-icons/bs";
+import Button from "./Button";
 
 interface ProductProps {
   itemDetail: DataCart | null;
@@ -98,7 +99,7 @@ const ProductModal = ({
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -126,7 +127,7 @@ const ProductModal = ({
       </h4>
       <h6 className="py-1.5 text-center font-sans text-sm text-neutral-600 dark:text-neutral-100">
         {itemDetail?.additional_notes &&
-        itemDetail?.additional_notes?.length > 200
+          itemDetail?.additional_notes?.length > 200
           ? `${itemDetail.additional_notes.slice(0, 200)}...`
           : itemDetail?.additional_notes}
       </h6>
@@ -181,27 +182,27 @@ const ProductModal = ({
               (selectedVariation?.media?.length === 0 &&
                 itemDetail?.media &&
                 itemDetail?.media?.length > 1)) && (
-              <div className="mt-2 flex gap-2 overflow-x-auto py-2">
-                {(selectedVariation?.media?.length > 0
-                  ? selectedVariation.media
-                  : (itemDetail?.media ?? [])
-                ).map((media, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
-                  >
-                    <Image
-                      src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
-                      alt={`Thumbnail ${index + 1}`}
-                      width={48}
-                      height={48}
-                      className="h-full w-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
+                <div className="mt-2 flex gap-2 overflow-x-auto py-2">
+                  {(selectedVariation?.media?.length > 0
+                    ? selectedVariation.media
+                    : (itemDetail?.media ?? [])
+                  ).map((media, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
+                    >
+                      <Image
+                        src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                        alt={`Thumbnail ${index + 1}`}
+                        width={48}
+                        height={48}
+                        className="h-full w-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
           </div>
         </div>
         <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-1">
@@ -209,7 +210,7 @@ const ProductModal = ({
             <span className="font-lato text-2xl font-bold text-red-500 dark:text-neutral-300">
               $
               {itemDetail?.variations?.[0] &&
-              filteredVariations?.[0]?.items_variable_items_sale_price
+                filteredVariations?.[0]?.items_variable_items_sale_price
                 ? filteredVariations?.[0]?.items_variable_items_sale_price
                 : itemDetail?.variations?.[0]
                   ? itemDetail?.variations?.[0].items_variable_items_sale_price
@@ -246,25 +247,25 @@ const ProductModal = ({
 
             {filteredVariations?.[0]
               ? filteredVariations?.[0].items_variable_items_sku_number && (
-                  <div className="flex items-center justify-center">
-                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                      SKU:
-                    </span>
-                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                      {filteredVariations?.[0].items_variable_items_sku_number}
-                    </span>
-                  </div>
-                )
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    SKU:
+                  </span>
+                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                    {filteredVariations?.[0].items_variable_items_sku_number}
+                  </span>
+                </div>
+              )
               : itemDetail?.SKU && (
-                  <div className="flex items-center justify-center">
-                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                      SKU:
-                    </span>
-                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                      {itemDetail.SKU}
-                    </span>
-                  </div>
-                )}
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    SKU:
+                  </span>
+                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.SKU}
+                  </span>
+                </div>
+              )}
           </div>
 
           {itemDetail?.book_id && itemDetail?.food_id == null && (
@@ -351,8 +352,8 @@ const ProductModal = ({
                 </div>
               )}
               {itemDetail?.pages !== undefined &&
-              itemDetail.pages !== null &&
-              itemDetail.pages ? (
+                itemDetail.pages !== null &&
+                itemDetail.pages ? (
                 <div className="flex items-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
@@ -524,11 +525,10 @@ const ProductModal = ({
                         {options.map((option) => (
                           <button
                             key={option.value}
-                            className={`min-w-10 rounded border p-1 text-center text-sm ${
-                              selectedValues[tagName] === option.value
-                                ? "bg-red-500 text-white"
-                                : "border-red-500 bg-white dark:bg-slate-700"
-                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            className={`min-w-10 rounded border p-1 text-center text-sm ${selectedValues[tagName] === option.value
+                              ? "bg-red-500 text-white"
+                              : "border-red-500 bg-white dark:bg-slate-700"
+                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -554,44 +554,43 @@ const ProductModal = ({
             </div>
           )}
           {itemDetail?.variations?.[0] &&
-          filteredVariations?.[0]?.items_variable_items_id &&
-          Object.values(selectedValues).length ==
+            filteredVariations?.[0]?.items_variable_items_id &&
+            Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-          isVariableItemInCart(
-            filteredVariations?.[0]?.items_variable_items_id,
-          ) ? (
-            <button
-              className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-1 font-sans text-white hover:bg-red-600"
-              onClick={() =>
+            isVariableItemInCart(
+              filteredVariations?.[0]?.items_variable_items_id,
+            ) ? (
+            <Button
+              variant="secondary"
+              title={"Remove from Cart"}
+              onClick={() => {
                 handleRemoveFromCart({
                   ...itemDetail,
                   selected_variation: filteredVariations?.[0],
                 })
-              }
-            >
-              <div className="pl-2">Remove from Cart</div>
-            </button>
+              }}
+            />
+
           ) : (
             ""
           )}
           {itemDetail?.variations?.[0] &&
-          !isVariableItemInCart(
-            filteredVariations?.[0]?.items_variable_items_id ?? -1,
-          ) &&
-          !Object.values(selectedValues).some((value) => value === undefined) &&
-          Object.values(selectedValues).length ==
+            !isVariableItemInCart(
+              filteredVariations?.[0]?.items_variable_items_id ?? -1,
+            ) &&
+            !Object.values(selectedValues).some((value) => value === undefined) &&
+            Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-          (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
-            itemDetail?.item_sale_price) ? (
+            (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
+              itemDetail?.item_sale_price) ? (
             (itemDetail?.variations?.[0]?.stock?.quantity ?? 0) > 0 ||
-            itemDetail?.allow_special_order == 1 ? (
-              <button
-                className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-1 font-sans text-white hover:bg-green-600"
+              itemDetail?.allow_special_order == 1 ? (
+              <Button
+                title={"Add to Cart"}
+                icon={<BsFillCartCheckFill className="text-lg" />}
                 onClick={() => handleAddToCart(itemDetail)}
-              >
-                <BsFillCartCheckFill className="text-lg" />
-                <div className="pl-2">Add to Cart</div>
-              </button>
+              />
+
             ) : (
               ""
             )
@@ -599,14 +598,14 @@ const ProductModal = ({
             itemDetail?.items_type != 1 &&
             !isItemInCart(itemDetail.item_id) ? (
             itemDetail?.allow_special_order == 1 ||
-            (itemDetail?.stock?.quantity ?? 0) > 0 ? (
-              <button
-                className="mt-auto flex items-center space-x-1 rounded bg-green-500 px-3 py-1 font-sans text-white hover:bg-green-600"
+              (itemDetail?.stock?.quantity ?? 0) > 0 ? (
+              <Button
+                title={"Add to Cart"}
+                icon={<BsFillCartCheckFill className="text-lg" />}
                 onClick={() => handleAddToCart(itemDetail)}
-              >
-                <BsFillCartCheckFill className="text-lg" />
-                <div className="pl-2">Add to Cart</div>
-              </button>
+              />
+
+
             ) : (
               ""
             )
@@ -614,14 +613,15 @@ const ProductModal = ({
             ""
           )}
           {itemDetail &&
-          itemDetail?.items_type != 1 &&
-          isItemInCart(itemDetail.item_id) ? (
-            <button
-              className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-1 font-sans text-white hover:bg-red-600"
+            itemDetail?.items_type != 1 &&
+            isItemInCart(itemDetail.item_id) ? (
+            <Button
+              variant="secondary"
+              title={"Remove from Cart"}
               onClick={() => handleRemoveFromCart(itemDetail)}
-            >
-              <div className="pl-2">Remove from Cart</div>
-            </button>
+            />
+
+
           ) : (
             ""
           )}
