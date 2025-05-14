@@ -15,6 +15,7 @@ import type { SpecialTag } from "~/types/book";
 import { FaArrowCircleLeft, FaCheckCircle } from "react-icons/fa";
 import { RxCrossCircled } from "react-icons/rx";
 import { IoIosCloseCircle } from "react-icons/io";
+import Button from "./Button";
 
 interface ProductProps {
   showAddToCart?: boolean;
@@ -79,13 +80,13 @@ const ProductCard = ({
       )}
       {product?.items_type === 1 && (
         <div className="absolute left-2 top-0 flex flex-col">
-          <span className="mr-2 mt-1 rounded-sm bg-red-500 px-1 py-0.5 text-[10px] text-white">
+          <span className="z-10 mr-2 mt-1 rounded-sm bg-red-500 px-1.5 py-0.5 text-[10px] text-white">
             Variable Item
           </span>
         </div>
       )}
 
-      <div className="relative mt-4 flex h-40 grow-0 flex-col items-center justify-center rounded-sm bg-white sm:h-48 lg:h-72">
+      <div className="relative my-4 flex h-40 grow-0 flex-col items-center justify-center rounded-sm bg-white sm:h-48 md:h-72">
         {tagNames.length > 0 ? (
           <div className="absolute left-2 top-1 flex flex-col">
             {tagNames.map((tag, index) => {
@@ -114,7 +115,7 @@ const ProductCard = ({
           alt={product?.SKU_title ?? ""}
           width={1000}
           height={1000}
-          className="my-4 h-32 cursor-pointer object-contain transition-transform duration-300 group-hover:scale-110 lg:h-56 lg:w-56" // Scale on hover
+          className="my-2 h-full w-full cursor-pointer object-contain transition-transform duration-300" // Scale on hover
         />
         <div className="absolute right-5 top-2 flex">
           {showButton && !showAddToCart && (
@@ -143,24 +144,21 @@ const ProductCard = ({
             <AiOutlineEye />
           </button>
         </div>
-
-        {showButton &&
-        (product?.variations?.[0]?.items_variable_items_sale_price ??
-          (product?.item_sale_price &&
-            ((product?.stock?.quantity && product?.stock?.quantity > 0) ||
-              product?.allow_special_order == 1))) ? (
-          <button
-            onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
-            className={`z-5 bottom-0 w-full rounded-sm py-1 text-xs text-white transition-colors sm:py-2 sm:text-sm ${
-              !showAddToCart ? "bg-red-500" : "bg-black"
-            }`}
-          >
-            {!showAddToCart ? "Remove From Cart" : "Add To Cart"}
-          </button>
-        ) : (
-          ""
-        )}
       </div>
+      {showButton &&
+      (product?.variations?.[0]?.items_variable_items_sale_price ??
+        (product?.item_sale_price &&
+          ((product?.stock?.quantity && product?.stock?.quantity > 0) ||
+            product?.allow_special_order == 1))) ? (
+        <Button
+          width="w-full"
+          onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
+          title={!showAddToCart ? "Remove From Cart" : "Add To Cart"}
+          variant={showAddToCart ? "primary" : "secondary"}
+        />
+      ) : (
+        ""
+      )}
       <span
         className="mb-1 mt-2 font-semibold sm:mt-4"
         title={product?.item_name}
