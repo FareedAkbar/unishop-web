@@ -146,7 +146,14 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
             <CgClose className="h-6 w-6" />
           </button>
         </div>
-
+        {items.length === 0 && (
+          <div className="p-3">
+            <p className="font-medium">
+              It appears that your cart is empty. Please choose items before
+              proceeding to checkout.
+            </p>
+          </div>
+        )}
         {/* Cart Items List */}
         <ScrollArea className="h-3/4 flex-1 p-4">
           {items.map((item: DataCart, index) => (
@@ -159,17 +166,18 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
               onChangeQuantity={(id, number) => onChangeQuantity(id, number)}
               onIncrease={() => {
                 // Check if alert is not already open
-                if ((item.quantity >= (item?.stock?.quantity ?? 0)) && item.allow_special_order == 0) {
+                if (
+                  item.quantity >= (item?.stock?.quantity ?? 0) &&
+                  item.allow_special_order == 0
+                ) {
                   console.log("Stock limit reached");
                 } else {
-                  
-                 void handleIncrease(
+                  void handleIncrease(
                     item.item_id,
                     item.quantity + 1,
                     item?.selected_variation?.items_variable_items_id,
-                  )
-              }
-               
+                  );
+                }
               }}
               onDecrease={() =>
                 handleDecrease(
