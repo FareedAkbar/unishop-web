@@ -15,8 +15,13 @@ import { useRouter } from "next/navigation";
 import { get_address_from_email } from "~/types/checkoutForm";
 
 const MyComponent = () => {
-  const { cartItems, removeCartItems, increaseCartItemQuantity,addBillingAddress, userInfo } =
-    useAuthContext();
+  const {
+    cartItems,
+    removeCartItems,
+    increaseCartItemQuantity,
+    addBillingAddress,
+    userInfo,
+  } = useAuthContext();
   const router = useRouter();
   const [items, setItems] = useState<DataCart[]>([]);
   const [removeItem, setRemoveItem] = useState<DataCart | null>(null);
@@ -32,17 +37,20 @@ const MyComponent = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
-
         },
       );
 
-      const result: get_address_from_email = (await response.json()) as get_address_from_email;
+      const result: get_address_from_email =
+        (await response.json()) as get_address_from_email;
 
       // Check if result has the expected structure
       if (result?.status) {
-        addBillingAddress(result?.data ?? null)
+        addBillingAddress(result?.data ?? null);
       } else {
-        console.error("Unexpected result structure api/customer/address?email:", result);
+        console.error(
+          "Unexpected result structure api/customer/address?email:",
+          result,
+        );
       }
     } catch (error) {
       console.error("Error fetching api/customer/address?email:", error);
@@ -144,17 +152,19 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center justify-start dark:bg-slate-900">
-        <div className="grid w-full grid-cols-1 gap-12 px-4 lg:grid-cols-2">
-          <div className="mt-3 rounded-lg border p-4 pt-10 dark:bg-slate-800 md:pt-7 lg:order-2 lg:h-full lg:pt-8">
+      <main className="flex flex-col items-center justify-start dark:bg-slate-900">
+        <div className="grid w-full grid-cols-1 gap-2 p-4 lg:grid-cols-2 lg:gap-12">
+          <div className="rounded-lg border p-4 dark:bg-slate-800 lg:order-2 lg:h-full">
             <h3 className="pb-5 text-lg font-bold">Cart Items</h3>
-            <ScrollArea className="h-[24rem] flex-1">
+            <ScrollArea className="h-full flex-1 lg:h-[24rem]">
               {items?.[0] ? (
                 items.map((item: DataCart, index) => (
                   <CartItem
                     key={item.item_id + Math.random() + index}
                     title={item.item_name}
-                    imageSrc={item?.object_path ?? item.media?.[0]?.object_path ?? ""}
+                    imageSrc={
+                      item?.object_path ?? item.media?.[0]?.object_path ?? ""
+                    }
                     price={item.item_sale_price}
                     showRemove={true}
                     onChangeQuantity={(id, number) =>
@@ -192,7 +202,7 @@ const MyComponent = () => {
               )}
             </ScrollArea>
           </div>
-          <div className="relative h-[55rem] w-full pt-16 [perspective:1000px] sm:h-[55rem] md:h-[50rem] lg:h-full lg:pt-3">
+          <div className="relative h-full w-full [perspective:1000px]">
             <CheckoutForm
               key={JSON.stringify(items)}
               title="Details"
