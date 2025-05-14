@@ -10,6 +10,8 @@ interface ButtonProps {
   className?: string;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
+  variant?: "primary" | "secondary";
+  icon?: React.ReactNode
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -22,12 +24,14 @@ const Button: React.FC<ButtonProps> = ({
   disabled,
   className = "",
   type = "button",
+  variant = "primary",
+  icon
 }) => {
   return (
     <button
       type={type}
       onClick={onClick}
-      className={`${width} ${height} ${color} flex items-center justify-center rounded-md p-2 font-medium text-white transition-opacity duration-300 hover:opacity-90 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70 sm:px-6 sm:py-3 ${className}`}
+      className={`${width} ${height} ${color} ${variant === "primary" ? "bg-red-500 text-white": "bg-white dark:bg-gray-800 border border-red-500 text-red-500"} font-sans flex items-center justify-center rounded-md py-2 px-2 text-sm font-medium  transition-opacity duration-300 shadow hover:shadow-md  focus:outline-none disabled:cursor-not-allowed disabled:opacity-70 ${className}`}
       disabled={(disabled ?? loading) ? true : false}
       style={{ minWidth: loading ? `${title.length * 11}px` : "auto" }}
     >
@@ -49,8 +53,8 @@ const Button: React.FC<ButtonProps> = ({
           />
         </svg>
       ) : (
-        <span className="text-xs sm:text-sm md:text-base lg:text-lg">
-          {title}
+        <span className="flex flex-row gap-2 text-sm">
+         {icon} {title}
         </span>
       )}
     </button>
