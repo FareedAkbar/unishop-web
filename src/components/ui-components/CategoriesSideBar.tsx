@@ -221,7 +221,7 @@ interface CategoriesSidebarProps {
 const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [openCategories, setOpenCategories] = useState<string[]>([]);
-  const { genre, checkoutData, category, subCategory, isLoggedIn } =
+  const { genre, checkoutData, category, subCategory, isLoggedIn, userInfo } =
     useAuthContext();
   const router = useRouter();
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -547,7 +547,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
           </div>
         ))}
 
-        {checkoutData?.customer_id ? (
+        {userInfo?.customer_id ? (
           <button
             onClick={() => router.push("/my-orders")}
             className="mb-2 flex w-full items-center px-2 text-lg transition-transform duration-300 hover:scale-105 focus:outline-none"

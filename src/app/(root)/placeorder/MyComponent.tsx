@@ -379,7 +379,7 @@ const MyComponent = () => {
     const date = new Date();
     const outlet = process.env.NEXT_PUBLIC_PASSKEY_OUTLET ?? "";
     const x = {
-      order_type: shipping?.type == "free" ? 1 : 2,
+      order_type: shipping?.value == "free" ? 1 : 2,
       online_order_type: 1,
       outlet_id: parseInt(outlet),
       tracking_id: generateOTP(12).toString(),

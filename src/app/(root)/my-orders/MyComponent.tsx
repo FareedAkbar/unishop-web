@@ -406,7 +406,7 @@ const MyComponent = () => {
   const closeModal = () => {
     setIsOpenPaymentAlert(false);
   };
-
+  
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center">

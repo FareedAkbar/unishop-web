@@ -70,37 +70,37 @@ const DataTable: React.FC<DataTableProps> = ({
 
   const toggleFullScreen = () => {
     if (typeof window !== "undefined") {
-    const element = document.getElementById("tableContainer");
-    if (!document.fullscreenElement) {
-      element!.requestFullscreen().catch((err) => {
-        console.error(
-          "Error attempting to enable full-screen mode:",
-          err.message,
-        );
-      });
-    } else {
-      document.exitFullscreen().catch((err) => {
-        console.error(
-          "Error attempting to exit full-screen mode:",
-          err.message,
-        );
-      });
+      const element = document.getElementById("tableContainer");
+      if (!document.fullscreenElement) {
+        element!.requestFullscreen().catch((err) => {
+          console.error(
+            "Error attempting to enable full-screen mode:",
+            err.message,
+          );
+        });
+      } else {
+        document.exitFullscreen().catch((err) => {
+          console.error(
+            "Error attempting to exit full-screen mode:",
+            err.message,
+          );
+        });
+      }
     }
-  }
   };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-    const handleFullScreenChange = () => {
-      setIsFullScreen(!!document.fullscreenElement);
-    };
+      const handleFullScreenChange = () => {
+        setIsFullScreen(!!document.fullscreenElement);
+      };
 
-    document.addEventListener("fullscreenchange", handleFullScreenChange);
+      document.addEventListener("fullscreenchange", handleFullScreenChange);
 
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullScreenChange);
-    };
-  }
+      return () => {
+        document.removeEventListener("fullscreenchange", handleFullScreenChange);
+      };
+    }
   }, []);
 
   useEffect(() => {
@@ -363,7 +363,14 @@ const DataTable: React.FC<DataTableProps> = ({
                     {selectedItem?.tracking_id}
                   </p>
                 </div>
-
+                <div className="mt-2 flex items-center">
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
+                    Order Type:
+                  </p>
+                  <p className="text-lg font-medium">
+                    {selectedItem?.order_type == 1 ? "Pickup" : "Delivery"}
+                  </p>
+                </div>
                 <div className="mt-2 flex items-center">
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
                     {selectedItem?.total_order_price == selectedItem?.total_discounted_price ? "Price: " : "Actual Price: "}

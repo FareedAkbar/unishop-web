@@ -588,8 +588,8 @@ const MyComponent = () => {
         {itemDetail?.book_title ?? itemDetail?.item_name}
       </h6>
       {itemDetail?.author_first_name && (
-        <div className="flex flex-row text-center justify-center font-serif text-sm   md:text-lg">
-          <p className="">by </p>  <p className="pl-2 capitalize font-bold">{itemDetail?.author_first_name} {itemDetail?.author_last_name}</p>
+        <div className="flex flex-row text-center justify-center font-serif text-sm mb-4">
+          <p className="">by </p>  <p className="pl-2 capitalize font-bold text-[#198AF3]">{itemDetail?.author_first_name} {itemDetail?.author_last_name}</p>
         </div>
       )}
       {/* <h6 className="md:text-md px-3 pb-2 text-center font-sans text-sm text-neutral-600 dark:text-neutral-100 md:px-28">
