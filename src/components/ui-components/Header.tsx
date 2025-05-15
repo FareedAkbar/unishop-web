@@ -263,7 +263,7 @@ const Header = () => {
   };
 
   interface SubcategoryListProps1 {
-    subItems: CategoryTreeNode[];
+    subItems: CategoryTreeNode[] | null;
     openCategories: string[];
     toggleCategory: (label: string) => void;
     setOpenCategories: React.Dispatch<React.SetStateAction<string[]>>;
@@ -293,7 +293,7 @@ const Header = () => {
   }: SubcategoryListProps1) => {
     return (
       <div className="">
-        {subItems.map((subItem) => (
+        {subItems?.map((subItem) => (
           <div key={subItem.category_name} className="relative">
             <div className="flex w-full items-center justify-between">
               <button
@@ -450,10 +450,10 @@ const Header = () => {
       setExpandedCategories(newSet);
     };
 
-    const renderSubcategories = (subItems: CategoryTreeNode[], level = 1) => {
+    const renderSubcategories = (subItems: CategoryTreeNode[], level = 1, type?: string) => {
       return (
         <div className={`pl-${level * 2} mt-1`}>
-          {subItems.map((subItem) => {
+          {subItems?.map((subItem) => {
             const hasChildren = subItem.children && subItem.children.length > 0;
             const isExpanded = expandedCategories.has(String(subItem.id));
             return (
@@ -484,6 +484,28 @@ const Header = () => {
               </div>
             );
           })}
+          {type == "Gifts" &&
+            StaticGiftsRoutes.map((subItem) => (
+              <div key={subItem.label} className="relative py-1">
+                <button
+                  onClick={() => {
+                    router.push(subItem.href);
+                    setTimeout(() => {
+                      setOpenCategories([]);
+                      setMobileMenuOpen(false);
+                    }, 500);
+                  }}
+                  className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
+                >
+                  <span
+                    className="mr-2 truncate text-left capitalize"
+                    title={subItem.label}
+                  >
+                    {subItem.label}
+                  </span>
+                </button>
+              </div>
+            ))}
         </div>
       );
     };
@@ -522,16 +544,22 @@ const Header = () => {
                     >
                       {item.type}
                     </Link>
-                    {hasChildren && (
-                      <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
-                    )}
+                    {hasChildren ? <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" /> :
+                      item.type == "Gifts" ? <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" /> : null}
                   </div>
 
-                  {hoveredCategory === item.type && hasChildren && (
+                  {hoveredCategory === item.type && hasChildren ? (
                     <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
-                      {renderSubcategories(item.children!)}
+                      {renderSubcategories(item.children!, 1, item.type)}
                     </div>
-                  )}
+                  ) :
+                    item.type == "Gifts" ? (
+                      <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
+                        {renderSubcategories([], 1, "Gifts")}
+                      </div>
+                    ) : null
+                  }
+
                 </div>
               );
             })}
@@ -697,7 +725,7 @@ const Header = () => {
                       >
                         {item.type}
                       </div>{" "}
-                      {item.children?.[0] ? (
+                      {(item.children?.[0] ?? item.type == "Gifts") ? (
                         <div onClick={() => toggleCategory(item.type)}>
                           {openCategories.includes(item.type) ? (
                             <FaChevronDown />
@@ -708,7 +736,7 @@ const Header = () => {
                       ) : null}
                     </button>
                     {openCategories.includes(item.type) &&
-                      item.children?.[0] && (
+                      (item.children?.[0] ?? item.type == "Gifts") && (
                         <SubcategoryList1
                           subItems={item.children}
                           openCategories={openCategories}

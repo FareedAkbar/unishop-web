@@ -48,7 +48,7 @@ interface Category {
 }
 
 interface SubcategoryListProps1 {
-  subItems: CategoryTreeNode[];
+  subItems: CategoryTreeNode[] | null;
   openCategories: string[];
   toggleCategory: (label: string) => void;
   setOpenCategories: React.Dispatch<React.SetStateAction<string[]>>;
@@ -84,7 +84,7 @@ const SubcategoryList1 = ({
   console.log("subItems", subItems);
   return (
     <div className="absolute left-10 top-8 z-50 w-60 overflow-x-visible rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
-      {subItems.map((subItem) => (
+      {subItems?.map((subItem) => (
         <div key={subItem.category_name} className="relative">
           <div className="flex w-full items-center justify-between">
             <button
@@ -294,7 +294,20 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   useEffect(() => {
     if (!category || !subCategory) return;
 
-    const x = buildCategoryTree(subCategory);
+
+    const modifiedSubCategories = [...subCategory];
+
+    // Step 1: Find the actual CAT node with type = "Gifts"
+    const giftsParentCat = subCategory.find(
+      (cat) => cat.type?.toLowerCase() === "gifts"
+    );
+   
+    
+
+    // Step 4: Build tree from subcategories
+    const tree = buildCategoryTree(modifiedSubCategories);
+
+    // const x = buildCategoryTree(subCategory);
     const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
       if (cat.category_type_id) {
         acc[cat.category_type_id] = { ...cat, children: [] };
@@ -302,20 +315,55 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       return acc;
     }, {} as CategoriesMap);
 
-    if (Array.isArray(x) && x.length > 0) {
-      const allChildren: CAT[] = x.flatMap((node) => node.children);
+    if (Array.isArray(tree) && tree.length > 0) {
+
+      const allChildren: CAT[] = tree.flatMap((node) => node.children);
+
       allChildren.forEach((item: CAT) => {
         const { category_type_id, outlet } = item;
+
         const targetCategory = categoriesMap[category_type_id];
         if (targetCategory && targetCategory.outlet_id === outlet) {
           targetCategory.children.push(item);
         }
+
       });
+      // if (giftsParentCat) {
+      //   const staticGiftChildren: CAT[] = StaticGiftsRoutes.map((route, idx) => ({
+      //     id: 100000 + idx,
+      //     category_name: route.label,
+      //     category_description: "",
+      //     category_type_id: giftsParentCat.category_type_id,
+      //     outlet: giftsParentCat.outlet,
+      //     parent: giftsParentCat.id, // ✅ use actual category ID, not type
+      //     deleted: 0,
+      //     media_id: 0,
+      //     booknet: 0,
+      //     gifts: 0,
+      //     arts: 0,
+      //     object_path: "",
+      //     clothings: null,
+      //     till_visibility: 1,
+      //     web_visibility: 1,
+      //     app_visibility: 1,
+      //     type: "Gifts",
+      //     children: [],
+      //   }));
+      //   console.log("staticGiftChildren", staticGiftChildren);
+      //   const giftsCategory = Object.values(categoriesMap).find(
+      //     (category) => category.type === "Gifts"
+      //   );
+      //   console.log("giftsCategory", staticGiftChildren);
+
+      //   if (giftsCategory && Array.isArray(giftsCategory.children)) {
+      //     giftsCategory.children = staticGiftChildren;
+      //   }
+      // }
 
       const result = Object.values(categoriesMap);
       setHeaderCategory(result);
     } else {
-      subCategory.forEach((item: CAT) => {
+      modifiedSubCategories.forEach((item: CAT) => {
         const { category_type_id, outlet } = item;
         const targetCategory = categoriesMap[category_type_id];
         if (targetCategory && targetCategory.outlet_id === outlet) {
@@ -326,7 +374,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       setHeaderCategory(result);
     }
   }, [category, subCategory]);
-
+  console.log("headerCategory", headerCategory);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -378,7 +426,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   {item.type}
                 </span>
               </div>
-              {item.children?.[0] && (
+              {(item.children?.[0] ?? item.type === "Gifts") && (
                 <div
                   onClick={() => toggleCategory(item.type)}
                   className="w-full"
@@ -397,7 +445,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
             </button>
             <div className="my-1 ml-2 h-px w-[85%] border-t border-gray-400" />
 
-            {openCategories.includes(item.type) && item.children?.[0] && (
+            {openCategories.includes(item.type) && (item.children?.[0] ?? item.type === "Gifts") && (
               <SubcategoryList1
                 subItems={item.children}
                 openCategories={openCategories}
@@ -415,8 +463,8 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               type="button"
               onClick={() =>
                 item.subItems ||
-                item.label === "Books" ||
-                item.label === "Pulse"
+                  item.label === "Books" ||
+                  item.label === "Pulse"
                   ? toggleCategory2(item.label)
                   : null
               }
