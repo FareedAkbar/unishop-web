@@ -888,7 +888,7 @@ const MyComponent = () => {
                           <div className="text-center text-3xl font-medium">
                             Free
                           </div>
-                          <div className="my-4 text-left text-xl font-medium capitalize">
+                          <div className="my-4 text-center text-xl font-medium capitalize">
                             Click and Collect
                           </div>
                           <div className="flex flex-col items-start gap-4">
@@ -966,7 +966,10 @@ const MyComponent = () => {
                           </label>
                         </div>
                       ) : (
-                        <div className="flex flex-col items-start gap-4">
+                        <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border p-4 text-center dark:border-white/30">
+                          <div className="text-center text-3xl font-medium">
+                            No shipping available
+                          </div>
                           There is no shipping or delivery available for this
                           address.
                         </div>
@@ -1113,18 +1116,17 @@ const MyComponent = () => {
                       </span>
                     </div>
                     {calculateWeight() > 0 && (
-                       <div className="mt-2 grid grid-cols-3 justify-between">
-                      <div className="col-span-2 flex flex-col">
-                        <span className="text-sm">Order Weight</span>
-                       
-                      </div>
+                      <div className="mt-2 grid grid-cols-3 justify-between">
+                        <div className="col-span-2 flex flex-col">
+                          <span className="text-sm">Order Weight</span>
+                        </div>
 
-                      <span className="col-span-1 flex justify-end text-sm">
-                        { calculateWeight().toFixed(2) } KG
-                      </span>
-                    </div>
+                        <span className="col-span-1 flex justify-end text-sm">
+                          {calculateWeight().toFixed(2)} KG
+                        </span>
+                      </div>
                     )}
-                   
+
                     <div className="mt-2 grid grid-cols-2 justify-between">
                       <div className="flex flex-col">
                         <span className="text-md font-semibold">

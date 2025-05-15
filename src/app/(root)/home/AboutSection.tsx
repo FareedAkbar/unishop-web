@@ -12,7 +12,9 @@ const AboutSection: React.FC = () => {
   return (
     <div className="relative flex flex-col-reverse items-start gap-8 px-8 pb-16 pt-5 lg:flex-row">
       <div className="space-y-6 lg:w-1/2">
-        <h2 className="text-3xl font-bold text-red-500">ABOUT UNISHOP</h2>
+        <h2 className="text-xl font-bold text-red-500 md:text-3xl lg:text-5xl">
+          ABOUT UNISHOP
+        </h2>
         <p className="text-md text-justify leading-relaxed text-zinc-600 dark:text-zinc-300">
           Welcome to UniShop, your one-stop shop for all your official UOW
           Merchandise, study essentials, textbooks, course notes, and graduation

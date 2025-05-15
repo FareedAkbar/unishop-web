@@ -13,7 +13,7 @@ import Input from "./Input";
 import Image from "next/image";
 import Logo from "../../../public/unishop_logo_new.png";
 import { GoHeart } from "react-icons/go";
-import { IoCartOutline, IoPersonOutline } from "react-icons/io5";
+import { IoCartOutline, IoPerson, IoPersonOutline } from "react-icons/io5";
 import { MdOutlinePersonOutline } from "react-icons/md";
 import { FiMoon, FiSearch, FiSun } from "react-icons/fi";
 import { TbSettings } from "react-icons/tb";
@@ -851,7 +851,7 @@ const Header = () => {
             </div>
 
             {/* Right Section: Search Bar and Icons */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
               <div className="hidden lg:block">
                 <Select
                   id="category"
@@ -887,6 +887,7 @@ const Header = () => {
               <div
                 className="relative cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
                 onClick={() => router.push("/favorites")}
+                title="Wishlist"
               >
                 <GoHeart className="text-xl" />
                 {favItems?.length && favItems?.length > 0 ? (
@@ -899,10 +900,7 @@ const Header = () => {
               </div>
               <div
                 onClick={() => toggleSidebar()}
-                title={`Total: $${cartItems?.reduce(
-                  (total, item) => total + item.item_sale_price,
-                  0,
-                )}`}
+                title={`Cart`}
                 className="relative cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
               >
                 <IoCartOutline className="cursor-pointer text-xl" />
@@ -916,18 +914,30 @@ const Header = () => {
               </div>
 
               <div
-                onClick={handleLogout}
-                title={userInfo ? "Logout" : "Signin"}
-                className="relative cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
-              >
-                <IoPersonOutline className="text-xl" />
-              </div>
-              <div
                 onClick={() => router.push("/contact-us")}
                 title={"Contact Us"}
                 className="relative cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
               >
                 <BsTelephone className="text-xl" />
+              </div>
+              <div className="flex items-center space-x-2">
+                <div
+                  onClick={handleLogout}
+                  title={userInfo ? "Logout" : "Signin"}
+                  className="relative flex cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
+                >
+                  {userInfo ? (
+                    <IoPerson className="text-xl" />
+                  ) : (
+                    <IoPersonOutline className="text-xl" />
+                  )}
+                </div>
+
+                {userInfo && (
+                  <div className="text-sm font-medium text-gray-800">
+                    {userInfo.first_name} {userInfo.last_name}
+                  </div>
+                )}
               </div>
             </div>
           </div>

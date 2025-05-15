@@ -456,9 +456,7 @@ const MyComponent = () => {
     },
   ];
 
-
-console.log("itemDetails", displayData);
-
+  console.log("itemDetails", displayData);
 
   return (
     <div>
@@ -490,7 +488,11 @@ console.log("itemDetails", displayData);
                   {subcategoryTypes?.[0] && (
                     <NewSelect
                       onValueChange={(x: string) => handleChangeSubCategory(x)}
-                      value={(detail != null && detail != undefined && detail > -1) ? detail.toString() : ""}
+                      value={
+                        detail != null && detail != undefined && detail > -1
+                          ? detail.toString()
+                          : ""
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select subcategory" />
@@ -526,7 +528,7 @@ console.log("itemDetails", displayData);
 
             <ScrollArea className="min-h-[75vh] pb-10">
               <div
-                className="flex flex-wrap justify-center gap-3 py-3"
+                className="flex flex-wrap justify-center gap-3 space-y-2 py-3"
                 // key={displayData ? displayData?.[0]?.item_id : "123"}
               >
                 {loader ? (

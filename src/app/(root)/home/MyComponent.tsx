@@ -127,7 +127,7 @@ const HomePage: React.FC = () => {
         <ImageSlider />
       </div>
       <div className="flex flex-col items-center px-4 py-5 md:px-10">
-        <div className="text-center text-xl md:flex md:text-3xl lg:flex lg:items-center lg:text-5xl">
+        <div className="flex text-center text-xl md:text-3xl lg:items-center lg:text-5xl">
           <FlipWords
             words={["Merch", "Books", "Beyond"]}
             className="font-bold text-red-500"

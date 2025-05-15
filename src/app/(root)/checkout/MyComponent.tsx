@@ -188,7 +188,7 @@ const MyComponent = () => {
                 ))
               ) : (
                 <div>
-                  <span className="text-lg font-bold text-red-600 dark:text-white">
+                  <span className="text-lg font-medium text-red-600 dark:text-white">
                     It appears that your cart is empty. Please choose items
                     before proceeding to checkout.
                   </span>
