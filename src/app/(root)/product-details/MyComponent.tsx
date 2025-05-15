@@ -592,9 +592,9 @@ const MyComponent = () => {
           <p className="">by </p>  <p className="pl-2 capitalize font-bold">{itemDetail?.author_first_name} {itemDetail?.author_last_name}</p>
         </div>
       )}
-      <h6 className="md:text-md px-3 pb-2 text-center font-sans text-sm text-neutral-600 dark:text-neutral-100 md:px-28">
+      {/* <h6 className="md:text-md px-3 pb-2 text-center font-sans text-sm text-neutral-600 dark:text-neutral-100 md:px-28">
         {itemDetail?.additional_notes}
-      </h6>
+      </h6> */}
 
       <div className="relative flex flex-wrap gap-3">
         <div className="mx-auto flex flex-col items-center">
@@ -807,7 +807,7 @@ const MyComponent = () => {
             ? filteredVariations?.[0].items_variable_items_sku_number && (
               <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  SKU:
+                  {itemDetail?.book_id && itemDetail?.food_id == null ? "ISBN:" : "SKU:"}
                 </span>
                 <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                   {filteredVariations?.[0].items_variable_items_sku_number}
@@ -817,7 +817,7 @@ const MyComponent = () => {
             : itemDetail?.SKU && (
               <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  SKU:
+                 {itemDetail?.book_id && itemDetail?.food_id == null ? "ISBN:" : "SKU:"}
                 </span>
                 <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                   {itemDetail.SKU}
@@ -872,7 +872,7 @@ const MyComponent = () => {
           {itemDetail?.shelf_location && (
             <div className="flex items-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Bin location:
+                Shelf location:
               </span>
               <span className="pl-1 text-sm capitalize text-neutral-700 dark:text-neutral-300">
                 {itemDetail.shelf_location}
@@ -1026,7 +1026,7 @@ const MyComponent = () => {
                               <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                 {key}:{" "}
                               </span>
-                              <span className="pl-1 text-neutral-700 dark:text-neutral-300">
+                              <span className="pl-1 capitalize text-neutral-700 dark:text-neutral-300">
                                 {selectedValues[key] ?? "Please Select"}
                               </span>
                             </li>
@@ -1039,7 +1039,7 @@ const MyComponent = () => {
                               <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                 {key}:{" "}
                               </span>
-                              <span className="pl-1 text-neutral-700 dark:text-neutral-300">
+                              <span className="pl-1 text-neutral-700  dark:text-neutral-300">
                                 {selectedValues[key] ?? "Please Select"}
                               </span>{" "}
                             </li>
@@ -1097,7 +1097,7 @@ const MyComponent = () => {
                         {options.map((option, optionIndex) => (
                           <button
                             key={`${option.value}-${optionIndex}`}
-                            className={`min-w-10 rounded border p-1 text-center text-sm ${selectedValues[tagName] === option.value
+                            className={`min-w-10 rounded border p-1 capitalize text-center text-sm ${selectedValues[tagName] === option.value
                               ? "bg-red-500 text-white"
                               : "border-red-500 bg-white dark:bg-slate-700"
                               } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
