@@ -470,7 +470,7 @@ const MyComponent = () => {
         <div className="flex w-full flex-grow flex-row">
           <div className="flex w-full flex-col">
             {/* Header Section */}
-            <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4 pl-2">
+            <div className="flex w-full flex-wrap items-end justify-between gap-2 py-4 pl-2">
               <div className="text-left">
                 <h2 className="text-xl font-bold capitalize">
                   {" "}
@@ -483,7 +483,7 @@ const MyComponent = () => {
                 )}
               </div>
 
-              <div className="flex w-full flex-col items-center gap-2 sm:w-[700px] md:flex-row">
+              <div className="flex w-full flex-col items-center gap-2 sm:w-[400px] md:flex-row">
                 <div className="w-full">
                   {subcategoryTypes?.[0] && (
                     <NewSelect

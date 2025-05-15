@@ -147,7 +147,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
         {items.length === 0 && (
-          <div className="p-4">
+          <div className="flex h-full flex-col items-center justify-center p-4">
             <span className="text-lg font-medium text-red-600 dark:text-white">
               It appears that your cart is empty. Please choose items before
               proceeding to checkout.

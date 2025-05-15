@@ -18,7 +18,12 @@ import {
 } from "~/components/ui/animated-modal";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaCartPlus, FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import {
+  FaCartPlus,
+  FaCheckCircle,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
 import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
@@ -83,9 +88,9 @@ const MyComponent = () => {
     searchItems,
     searchInCategory,
     textbookType,
-    userInfo
+    userInfo,
   } = useAuthContext();
-  
+
   useEffect(() => {
     const fetchData = async () => {
       const d = params.get("type");
@@ -177,7 +182,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -365,7 +370,10 @@ const MyComponent = () => {
   const manageUsage = () => {
     if (itemDetail?.book_usages && itemDetail?.book_usages.length > 0) {
       return itemDetail.book_usages
-        .filter((usage) => (usage.default_semester === 1 || usage.default_trimester === 1))
+        .filter(
+          (usage) =>
+            usage.default_semester === 1 || usage.default_trimester === 1,
+        )
         .map((usage) => ({
           type_id: usage.type_id, // Assuming `type_id` exists
           subject_name: usage.subject_name,
@@ -425,8 +433,8 @@ const MyComponent = () => {
 
             <ScrollArea className="min-h-[75vh] pb-10">
               <div
-                className="flex flex-wrap justify-center gap-3 py-3"
-              // key={displayData ? displayData?.[0]?.item_id : "123"}
+                className="flex flex-wrap justify-center gap-3 space-y-2 py-3"
+                // key={displayData ? displayData?.[0]?.item_id : "123"}
               >
                 {loader ? (
                   Array.from({ length: 5 }, (_, index) => (
@@ -435,26 +443,28 @@ const MyComponent = () => {
                     </div>
                   ))
                 ) : searchItems && searchItems.length > 0 ? (
-                  searchItems.map((item: DataCart) => (
-                    item.web_visibility === 1 &&
-                    <ProductCard
-                      key={item.item_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={async () => {
-                        if (item?.variations?.[0]) {
-                          await openDetail(item);
-                        } else {
-                          await handleAddToCart(item);
-                        }
-                      }}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
-                      handleFavourite={() => handleFavourite(item)}
-                      wishListLoader={wishListLoader}
-                      goToDetail={() => goToDetail(item)}
-                    />
-                  ))
+                  searchItems.map(
+                    (item: DataCart) =>
+                      item.web_visibility === 1 && (
+                        <ProductCard
+                          key={item.item_id}
+                          product={item}
+                          showAddToCart={!isItemInCart(item.item_id)}
+                          onAddToCart={async () => {
+                            if (item?.variations?.[0]) {
+                              await openDetail(item);
+                            } else {
+                              await handleAddToCart(item);
+                            }
+                          }}
+                          onRemoveFromCart={() => handleRemoveFromCart(item)}
+                          openDetail={() => openDetail(item)}
+                          handleFavourite={() => handleFavourite(item)}
+                          wishListLoader={wishListLoader}
+                          goToDetail={() => goToDetail(item)}
+                        />
+                      ),
+                  )
                 ) : (
                   // Only display the empty state when data loading is complete and no items are available
                   <div className="flex h-full w-full flex-col items-center justify-center">
@@ -515,7 +525,7 @@ const MyComponent = () => {
 
       <ModalBody>
         <ModalContent>
-           <ProductModal
+          <ProductModal
             itemDetail={itemDetail}
             selectedVariation={selectedVariation}
             currentImageIndex={currentImageIndex}
@@ -526,7 +536,6 @@ const MyComponent = () => {
             selectedValues={selectedValues}
             filteredVariations={filteredVariations}
             goToDetail={goToDetail}
-
           />
         </ModalContent>
       </ModalBody>
