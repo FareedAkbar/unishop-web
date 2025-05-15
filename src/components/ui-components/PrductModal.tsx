@@ -247,9 +247,9 @@ const ProductModal = ({
 
             {filteredVariations?.[0]
               ? filteredVariations?.[0].items_variable_items_sku_number && (
-                <div className="flex items-center justify-center">
+                <div className="flex mt-1 items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    SKU:
+                    {itemDetail?.book_id && itemDetail?.food_id == null ? "ISBN:" : "SKU:"}
                   </span>
                   <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                     {filteredVariations?.[0].items_variable_items_sku_number}
@@ -257,9 +257,9 @@ const ProductModal = ({
                 </div>
               )
               : itemDetail?.SKU && (
-                <div className="flex items-center justify-center">
+                <div className="flex mt-1 items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    SKU:
+                    {itemDetail?.book_id && itemDetail?.food_id == null ? "ISBN:" : "SKU:"}
                   </span>
                   <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                     {itemDetail.SKU}
@@ -288,14 +288,15 @@ const ProductModal = ({
                   })}
                 </span>
               ) : (
-                <>
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Textbook:
-                  </span>
-                  <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
-                    not used this session
-                  </span>
-                </>
+                ""
+                // <>
+                //   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                //     Textbook:
+                //   </span>
+                //   <span className="pl-1 text-xs text-neutral-700 dark:text-neutral-300">
+                //     not used this session
+                //   </span>
+                // </>
               )}
             </div>
           )}
@@ -312,7 +313,7 @@ const ProductModal = ({
           {itemDetail?.shelf_location && (
             <div className="flex items-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Bin location:
+                Shelf location:
               </span>
               <span className="pl-1 text-sm capitalize text-neutral-700 dark:text-neutral-300">
                 {itemDetail.shelf_location}

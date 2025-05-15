@@ -64,7 +64,7 @@ const Select: React.FC<SelectProps> = ({
               <option
                 key={option.value}
                 value={option.value}
-                className="text-sm"
+                className="text-sm capitalize"
               >
                 {option.label}
               </option>

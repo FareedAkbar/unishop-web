@@ -166,7 +166,7 @@ const ProductCard = ({
         {product?.item_name}
       </span>
       {product?.SKU ? (
-        <span className="truncate font-serif text-xs">SKU: {product?.SKU}</span>
+        <span className="truncate font-serif text-xs">{(product?.book_id && product?.food_id == null) ? "ISBN: " : "SKU: "} {product?.SKU}</span>
       ) : (
         ""
       )}
@@ -203,9 +203,10 @@ const ProductCard = ({
               );
             })
           ) : (
-            <p className="font-serif text-xs">
-              Textbook is not used in this session
-            </p>
+            ""
+            // <p className="font-serif text-xs">
+            //   Textbook is not used in this session
+            // </p>
           )}
         </div>
       ) : (
@@ -213,7 +214,7 @@ const ProductCard = ({
       )}
       {product?.shelf_location && (
         <span className="flex flex-row items-center gap-1 font-serif text-xs">
-          Bin Location: {product?.shelf_location}
+          Shelf location: {product?.shelf_location}
         </span>
       )}
 

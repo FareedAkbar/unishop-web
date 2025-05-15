@@ -456,6 +456,10 @@ const MyComponent = () => {
     },
   ];
 
+
+console.log("itemDetails", displayData);
+
+
   return (
     <div>
       <motion.main
@@ -486,10 +490,10 @@ const MyComponent = () => {
                   {subcategoryTypes?.[0] && (
                     <NewSelect
                       onValueChange={(x: string) => handleChangeSubCategory(x)}
-                      value={detail.toString()}
+                      value={(detail != null && detail != undefined && detail > -1) ? detail.toString() : ""}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select Category" />
+                        <SelectValue placeholder="Select subcategory" />
                       </SelectTrigger>
                       <SelectContent>
                         {subcategoryTypes?.map((item) => (
