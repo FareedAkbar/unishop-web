@@ -139,9 +139,6 @@ const HomePage: React.FC = () => {
       </div>{" "}
       <div className="relative w-full">
         <div className="flex h-fit">
-          <div className="hidden lg:block">
-            <CategoriesSidebar />
-          </div>
           <div
             className={`mx-auto w-full lg:pr-3 ${specialItems && specialItems?.length > 2 && "lg:pl-10"} pb-10`}
           >

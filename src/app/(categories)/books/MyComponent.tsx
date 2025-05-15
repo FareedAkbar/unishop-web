@@ -60,7 +60,9 @@ const MyComponent = () => {
     null,
   );
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [currentPage, setCurrentPage] = useState(params.get("page") ? parseInt(params.get("page")!) : 1);
+  const [currentPage, setCurrentPage] = useState(
+    params.get("page") ? parseInt(params.get("page")!) : 1,
+  );
   const [pageSize, setPageSize] = useState(15);
   const {
     cartItems,
@@ -73,19 +75,17 @@ const MyComponent = () => {
     favItems,
     setProductForDetail,
     textbookType,
-    userInfo
+    userInfo,
   } = useAuthContext();
   const { toast } = useToast();
 
   useEffect(() => {
     const d = params.get("detail");
     const currentPage = params.get("page");
-    
+
     if (currentPage) {
-      
       setCurrentPage(parseInt(currentPage));
     } else {
-      
       setCurrentPage(1);
     }
     setDetail(d);
@@ -100,7 +100,6 @@ const MyComponent = () => {
         setLoader(true);
         const x = await getBooks(genId?.genre_id ?? 1);
         if (typeof x !== "boolean" && x.status) {
-          
           setData(x.data);
           setFilteredData(x.data);
         }
@@ -144,7 +143,7 @@ const MyComponent = () => {
   };
 
   const filteredVariations: Variation[] = filterVariationsBySelectedValues(
-     itemDetail?.variations ?? [],
+    itemDetail?.variations ?? [],
     selectedValues,
   );
 
@@ -231,8 +230,6 @@ const MyComponent = () => {
       : false;
   };
 
-  
-
   // Get the products for the current page
   const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
 
@@ -240,9 +237,9 @@ const MyComponent = () => {
     const currentParams = new URLSearchParams(params.toString());
     for (const key in newParams) {
       if (newParams[key] === null || newParams[key] === undefined) {
-          currentParams.delete(key); // delete if value is null or undefined
+        currentParams.delete(key); // delete if value is null or undefined
       } else {
-          currentParams.set(key, newParams[key]); // set or update
+        currentParams.set(key, newParams[key]); // set or update
       }
     }
     router.push(`?${currentParams.toString()}`);
@@ -252,7 +249,6 @@ const MyComponent = () => {
     smoothScrollTo(0, 1500);
     setCurrentPage(page);
     updateSearchParams({ page: page.toString() });
-    
   };
 
   const filterResult = () => {
@@ -274,7 +270,11 @@ const MyComponent = () => {
   };
   // Calculate total pages based on filtered data and page size
   const totalPages = Math.ceil(
-    filteredData ? filteredData?.length / pageSize : params.get("page") ? parseInt(params.get("page")!) : 1 / pageSize,
+    filteredData
+      ? filteredData?.length / pageSize
+      : params.get("page")
+        ? parseInt(params.get("page")!)
+        : 1 / pageSize,
   );
 
   // Get the data to be displayed for the current page
@@ -306,7 +306,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -393,7 +393,10 @@ const MyComponent = () => {
   const manageUsage = () => {
     if (itemDetail?.book_usages && itemDetail?.book_usages.length > 0) {
       return itemDetail.book_usages
-        .filter((usage) => (usage.default_semester === 1 || usage.default_trimester === 1))
+        .filter(
+          (usage) =>
+            usage.default_semester === 1 || usage.default_trimester === 1,
+        )
         .map((usage) => ({
           type_id: usage.type_id, // Assuming `type_id` exists
           subject_name: usage.subject_name,
@@ -448,7 +451,6 @@ const MyComponent = () => {
     requestAnimationFrame(animation);
   };
 
-
   return (
     <div>
       <motion.main
@@ -458,7 +460,7 @@ const MyComponent = () => {
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex w-full flex-grow flex-row sm:pt-10">
+        <div className="flex w-full flex-grow flex-row">
           <div className="flex min-h-screen w-full flex-col">
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-5 pb-4">
@@ -498,26 +500,28 @@ const MyComponent = () => {
                     </div>
                   ))
                 ) : displayedData && displayedData.length > 0 ? (
-                  displayedData.map((item: DataCart) => (
-                    item.web_visibility === 1 &&
-                    <ProductCard
-                      key={item.item_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={async () => {
-                        if (item?.variations?.[0]) {
-                          await openDetail(item);
-                        } else {
-                          await handleAddToCart(item);
-                        }
-                      }}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
-                      handleFavourite={() => handleFavourite(item)}
-                      wishListLoader={wishListLoader}
-                      goToDetail={() => goToDetail(item)}
-                    />
-                  ))
+                  displayedData.map(
+                    (item: DataCart) =>
+                      item.web_visibility === 1 && (
+                        <ProductCard
+                          key={item.item_id}
+                          product={item}
+                          showAddToCart={!isItemInCart(item.item_id)}
+                          onAddToCart={async () => {
+                            if (item?.variations?.[0]) {
+                              await openDetail(item);
+                            } else {
+                              await handleAddToCart(item);
+                            }
+                          }}
+                          onRemoveFromCart={() => handleRemoveFromCart(item)}
+                          openDetail={() => openDetail(item)}
+                          handleFavourite={() => handleFavourite(item)}
+                          wishListLoader={wishListLoader}
+                          goToDetail={() => goToDetail(item)}
+                        />
+                      ),
+                  )
                 ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center">
                     <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
@@ -537,11 +541,12 @@ const MyComponent = () => {
             {/* Pagination Section */}
             <div className="z-[5] flex justify-between px-4 py-4">
               <button
-                className={`rounded-full p-2 ${currentPage === 1
-                  ? "cursor-not-allowed bg-gray-200 text-black"
-                  : "cursor-pointer bg-red-500 text-white"
-                  }`}
-                onClick={() =>  handlePageChange(currentPage - 1)}
+                className={`rounded-full p-2 ${
+                  currentPage === 1
+                    ? "cursor-not-allowed bg-gray-200 text-black"
+                    : "cursor-pointer bg-red-500 text-white"
+                }`}
+                onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
                 <FaChevronLeft />
@@ -550,11 +555,12 @@ const MyComponent = () => {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                className={`rounded-full p-2 ${currentPage === totalPages || totalPages == 0
-                  ? "cursor-not-allowed bg-gray-200 text-black"
-                  : "cursor-pointer bg-red-500 text-white"
-                  }`}
-                onClick={() =>  handlePageChange(currentPage + 1) }
+                className={`rounded-full p-2 ${
+                  currentPage === totalPages || totalPages == 0
+                    ? "cursor-not-allowed bg-gray-200 text-black"
+                    : "cursor-pointer bg-red-500 text-white"
+                }`}
+                onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages || totalPages == 0}
               >
                 <FaChevronRight />
@@ -566,7 +572,7 @@ const MyComponent = () => {
 
       <ModalBody>
         <ModalContent>
-           <ProductModal
+          <ProductModal
             itemDetail={itemDetail}
             selectedVariation={selectedVariation}
             currentImageIndex={currentImageIndex}
@@ -577,7 +583,6 @@ const MyComponent = () => {
             selectedValues={selectedValues}
             filteredVariations={filteredVariations}
             goToDetail={goToDetail}
-
           />
         </ModalContent>
       </ModalBody>

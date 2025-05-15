@@ -44,6 +44,7 @@ import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
 import { PiMoon, PiMoonLight } from "react-icons/pi";
 import Select from "../Fields/select";
 import { BsTelephone } from "react-icons/bs";
+import CategoriesSidebar from "./CategoriesSideBar";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -259,17 +260,6 @@ const Header = () => {
   const toggleSidebar = () => {
     if (path.includes("/checkout") || path.includes("/placeorder")) return;
     setIsSidebarOpen((prev) => !prev);
-  };
-
-  const iconMap: Record<string, JSX.Element> = {
-    FaBook: <FaBook className="text-blue-700" />,
-    FaGraduationCap: <FaGraduationCap />,
-    FaTshirt: <FaTshirt className="text-green-600" />,
-    FaPen: <FaPen className="text-yellow-600" />,
-    FaGift: <FaGift className="text-purple-600" />,
-    FaClipboardList: <FaClipboardList className="text-orange-600" />,
-    AiOutlineFileText: <AiOutlineFileText className="text-teal-600" />,
-    AiOutlineContacts: <AiOutlineContacts className="text-amber-600" />,
   };
 
   interface SubcategoryListProps1 {
@@ -502,7 +492,20 @@ const Header = () => {
       <div className="hidden lg:block">
         <div className="flex w-full items-center justify-center pt-4">
           <nav className="flex gap-8 whitespace-nowrap px-2">
-            {headerCategory?.map((item) => {
+            <div className="relative flex items-center px-2 py-1">
+              <div className="group relative cursor-pointer">
+                <span className="flex items-center text-base font-medium text-gray-700 hover:text-red-500 dark:text-gray-200">
+                  All Categories
+                  <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
+                </span>
+
+                <div className="pointer-events-none absolute left-0 top-full z-50 min-w-[200px] -translate-y-2 scale-95 opacity-0 transition-all duration-200 ease-in-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100">
+                  <CategoriesSidebar />
+                </div>
+              </div>
+            </div>
+
+            {headerCategory?.slice(0, 5).map((item) => {
               const hasChildren = item.children && item.children.length > 0;
 
               return (
@@ -526,7 +529,7 @@ const Header = () => {
 
                   {hoveredCategory === item.type && hasChildren && (
                     <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
-                      {renderSubcategories(item.children!.slice(0, 5))}
+                      {renderSubcategories(item.children!)}
                     </div>
                   )}
                 </div>
@@ -692,7 +695,6 @@ const Header = () => {
                           setOpenDropdown(null);
                         }}
                       >
-                        <AiOutlineFileText className="mr-2.5 h-5 w-5 text-orange-600" />
                         {item.type}
                       </div>{" "}
                       {item.children?.[0] ? (
@@ -730,21 +732,6 @@ const Header = () => {
                       className="flex w-full items-center justify-between text-lg focus:outline-none"
                     >
                       <div className="flex items-center">
-                        {(item.icon || item.label === "Pulse") && (
-                          <span className="mr-2">
-                            {item.label === "Pulse" ? (
-                              <Image
-                                src="/assets/images/home/pulse-icon.webp"
-                                className="h-5 w-5 p-0.5"
-                                width={1000}
-                                height={1000}
-                                alt={item.label || "Icon"}
-                              />
-                            ) : (
-                              item.icon && iconMap[item.icon]
-                            )}
-                          </span>
-                        )}
                         <Link href={item.href ?? ""} scroll={false}>
                           {item.label}
                         </Link>

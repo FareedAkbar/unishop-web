@@ -17,7 +17,12 @@ import {
 } from "~/components/ui/animated-modal";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaCartPlus, FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import {
+  FaCartPlus,
+  FaCheckCircle,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
 import moment from "moment";
 import React from "react";
 import ProductCard from "~/components/ui-components/ProductCard";
@@ -69,7 +74,11 @@ const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
     Record<string, string | undefined>
   >({});
-  const [currentPage, setCurrentPage] = useState(pagination?.page ?? params.get("page") ? parseInt(params.get("page")!) : 1);
+  const [currentPage, setCurrentPage] = useState(
+    (pagination?.page ?? params.get("page"))
+      ? parseInt(params.get("page")!)
+      : 1,
+  );
   const [pageSize, setPageSize] = useState(pagination?.limit ?? 15);
   const [totalPages, setTotalPages] = useState(pagination?.pages ?? 1);
   const [displayData, setDisplayData] = useState<DataCart[] | null>(null);
@@ -93,7 +102,7 @@ const MyComponent = () => {
     setProductForDetail,
     subCategory,
     textbookType,
-    userInfo
+    userInfo,
   } = useAuthContext();
 
   useEffect(() => {
@@ -103,10 +112,8 @@ const MyComponent = () => {
     const currentPage = params.get("page");
 
     if (currentPage) {
-
       setCurrentPage(parseInt(currentPage));
     } else {
-
       setCurrentPage(1);
     }
     if (d) {
@@ -128,7 +135,6 @@ const MyComponent = () => {
       setDisplayData(null); // Reset display data before fetching new data
       const x = await getItemsByCategory(id ?? 0, page, category_type);
       if (typeof x !== "boolean" && x.status) {
-
         setPagination(x.meta);
         setData(x.data);
         setDisplayData(x.data ? x.data : null);
@@ -170,9 +176,7 @@ const MyComponent = () => {
       } else if (detail === -1 && parent) {
         await getProducts(currentPage, 0, parent);
       }
-
     };
-
 
     loadData().catch((error) => {
       console.error("Failed to load data in useEffect:", error);
@@ -209,7 +213,6 @@ const MyComponent = () => {
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {
-
     const x = item;
     if (item?.variations?.[0] && item?.tag_links) {
       Object.assign(x, { selected_variation: filteredVariations?.[0] });
@@ -234,7 +237,6 @@ const MyComponent = () => {
       console.error("Failed to remove item to cart:", error);
     }
   };
- 
 
   const openDetail = async (item: DataCart) => {
     setOpen(true);
@@ -307,7 +309,13 @@ const MyComponent = () => {
     // Date range filter
     setCurrentPage(params.get("page") ? parseInt(params.get("page")!) : 1); // Reset to first page on new filter
     setTotalPages(
-      Math.ceil(filtered ? filtered?.length / pageSize : params.get("page") ? parseInt(params.get("page")!) : 1 / pageSize),
+      Math.ceil(
+        filtered
+          ? filtered?.length / pageSize
+          : params.get("page")
+            ? parseInt(params.get("page")!)
+            : 1 / pageSize,
+      ),
     );
     const x = filtered
       ? filtered?.slice((currentPage - 1) * pageSize, currentPage * pageSize)
@@ -404,7 +412,6 @@ const MyComponent = () => {
     smoothScrollTo(0, 1500);
     setCurrentPage(page);
     updateSearchParams({ page: page.toString() });
-
   };
 
   const goToDetail = async (item: DataCart | null) => {
@@ -421,7 +428,6 @@ const MyComponent = () => {
     setCurrentPage(1);
   };
 
-  
   const type = [
     {
       item_book_type_id: 1,
@@ -450,10 +456,6 @@ const MyComponent = () => {
     },
   ];
 
-
-
-
-
   return (
     <div>
       <motion.main
@@ -463,7 +465,7 @@ const MyComponent = () => {
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex w-full flex-grow flex-row sm:pt-10">
+        <div className="flex w-full flex-grow flex-row">
           <div className="flex w-full flex-col">
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-2 pb-4 pl-2">
@@ -521,7 +523,7 @@ const MyComponent = () => {
             <ScrollArea className="min-h-[75vh] pb-10">
               <div
                 className="flex flex-wrap justify-center gap-3 py-3"
-              // key={displayData ? displayData?.[0]?.item_id : "123"}
+                // key={displayData ? displayData?.[0]?.item_id : "123"}
               >
                 {loader ? (
                   Array.from({ length: 5 }, (_, index) => (
@@ -530,26 +532,28 @@ const MyComponent = () => {
                     </div>
                   ))
                 ) : displayData && displayData.length > 0 ? (
-                  displayData.map((item: DataCart) => (
-                    item.web_visibility === 1 &&
-                    <ProductCard
-                      key={item.item_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={async () => {
-                        if (item?.items_type == 1) {
-                          await openDetail(item);
-                        } else {
-                          await handleAddToCart(item);
-                        }
-                      }}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
-                      handleFavourite={() => handleFavourite(item)}
-                      wishListLoader={wishListLoader}
-                      goToDetail={() => goToDetail(item)}
-                    />
-                  ))
+                  displayData.map(
+                    (item: DataCart) =>
+                      item.web_visibility === 1 && (
+                        <ProductCard
+                          key={item.item_id}
+                          product={item}
+                          showAddToCart={!isItemInCart(item.item_id)}
+                          onAddToCart={async () => {
+                            if (item?.items_type == 1) {
+                              await openDetail(item);
+                            } else {
+                              await handleAddToCart(item);
+                            }
+                          }}
+                          onRemoveFromCart={() => handleRemoveFromCart(item)}
+                          openDetail={() => openDetail(item)}
+                          handleFavourite={() => handleFavourite(item)}
+                          wishListLoader={wishListLoader}
+                          goToDetail={() => goToDetail(item)}
+                        />
+                      ),
+                  )
                 ) : (
                   // Only display the empty state when data loading is complete and no items are available
                   <div className="flex h-full w-full flex-col items-center justify-center">
@@ -569,7 +573,7 @@ const MyComponent = () => {
             {pagination && (
               <div className="z-5 flex justify-between px-4 py-4">
                 <button
-                  className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black " : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
@@ -579,7 +583,7 @@ const MyComponent = () => {
                   Page {currentPage ?? 1} of {totalPages ?? 1}
                 </span>
                 <button
-                  className={`rounded-full p-2 ${totalPages == 0 || currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black " : "cursor-pointer bg-red-500 text-white"}`}
+                  className={`rounded-full p-2 ${totalPages == 0 || currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black" : "cursor-pointer bg-red-500 text-white"}`}
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={totalPages == 0 || currentPage === totalPages}
                 >
@@ -604,7 +608,6 @@ const MyComponent = () => {
             selectedValues={selectedValues}
             filteredVariations={filteredVariations}
             goToDetail={goToDetail}
-
           />
         </ModalContent>
       </ModalBody>

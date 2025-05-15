@@ -15,9 +15,9 @@ export default function RootLayout({
       {/* Main content with sidebar + children */}
       <div className="flex flex-1">
         {/* Sidebar on the left (visible only on large screens) */}
-        <aside className="hidden w-fit lg:block">
+        {/* <aside className="hidden w-fit lg:block">
           <CategoriesSidebar />
-        </aside>
+        </aside> */}
 
         {/* Main content area */}
         <main className="flex-1 overflow-auto p-4">{children}</main>

@@ -81,7 +81,7 @@ const SubcategoryList1 = ({
   setOpenCategories,
 }: SubcategoryListProps1) => {
   const router = useRouter();
-  console.log("subItems", subItems)
+  console.log("subItems", subItems);
   return (
     <div className="absolute left-10 top-8 z-50 w-60 overflow-x-visible rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 dark:text-white">
       {subItems.map((subItem) => (
@@ -219,7 +219,8 @@ interface CategoriesSidebarProps {
 const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [openCategories, setOpenCategories] = useState<string[]>([]);
-  const { genre, checkoutData, category, subCategory, isLoggedIn } = useAuthContext();
+  const { genre, checkoutData, category, subCategory, isLoggedIn } =
+    useAuthContext();
   const router = useRouter();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [headerCategory, setHeaderCategory] = useState<
@@ -344,14 +345,13 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     };
   }, []);
   const pathname = usePathname();
-  
+
   return (
     <aside
       ref={sidebarRef}
-      className={`${pathname === "/" ? "" : "sticky"} left-0 top-28 w-72 rounded-r-xl border-y border-r bg-white py-2 pl-4 pr-2 shadow-lg dark:bg-slate-700 ${className}`}
+      className={`${pathname === "/" ? "" : "sticky"} left-0 top-28 w-72 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 ${className}`}
     >
       {/* ${headerCategory && headerCategory?.length > 7 ? "h-[25vh] overflow-y-scroll overflow-x-hidden" : ""} */}
-      <h2 className="scroll-mt-24 text-lg font-bold">CATEGORIES</h2>
 
       <nav
         className={`relative py-3 ${headerCategory && headerCategory?.length > 7 ? "h-[25vh] overflow-x-hidden overflow-y-scroll" : ""}`}
@@ -364,23 +364,8 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-105 focus:outline-none"
             >
               <div className="flex w-full items-center justify-start">
-                <AiOutlineFileText className="mr-1.5 h-6 w-6 p-0.5 text-orange-600" />
-                {/* {item.object_path && (
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                    <Image
-                      src={
-                        item?.object_path
-                          ? `https://ipos-storage.s3.amazonaws.com/${item.object_path}`
-                          : "/assets/images/products/product.png"
-                      }
-                      alt={item?.object_path ?? ""}
-                      width={20}
-                      height={20}
-                      className="flex-shrink-0 rounded-md object-cover mr-3"
-                    />
-                  )} */}
                 <span
-                  className="whitespace-nowrap text-left text-sm"
+                  className="ml-1 whitespace-nowrap text-left text-sm capitalize"
                   onClick={() => {
                     router.push(
                       `/products?category=${item.category_type_id}&name=${item.type}&page=1`,
@@ -436,23 +421,11 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               className="duration-240 flex w-full items-center justify-between px-2 text-lg transition-transform hover:scale-105 focus:outline-none"
             >
               <div className="flex items-center">
-                {(item.icon || item.label === "Pulse") && (
-                  <span className="mr-2">
-                    {item.label === "Pulse" ? (
-                      <Image
-                        src="/assets/images/home/pulse-icon.webp"
-                        className="h-5 w-5 p-0.5"
-                        width={1000}
-                        height={1000}
-                        alt={item.label || "Icon"}
-                      />
-                    ) : (
-                      item.icon && iconMap[item?.icon]
-                    )}
-                  </span>
-                )}
-
-                <Link href={item.href ?? ""} className="text-sm" scroll={false}>
+                <Link
+                  href={item.href ?? ""}
+                  className="text-sm capitalize"
+                  scroll={false}
+                >
                   {item.label}
                 </Link>
               </div>
@@ -477,7 +450,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       <Link
                         key={subItem.genre}
                         href={`books?detail=${subItem.genre}`}
-                        className="block py-1 text-sm hover:underline"
+                        className="block py-1 text-sm capitalize hover:underline"
                         onClick={() => {
                           setOpenCategory(null);
                           setTimeout(() => {
@@ -526,36 +499,17 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
           </div>
         ))}
 
-        {(checkoutData?.customer_id) ? (
+        {checkoutData?.customer_id ? (
           <button
             onClick={() => router.push("/my-orders")}
             className="mb-2 flex w-full items-center px-2 text-lg transition-transform duration-300 hover:scale-105 focus:outline-none"
           >
-            <FaReceipt className="mr-2 text-indigo-600" />
             <span className="text-sm">My Orders</span>
           </button>
         ) : (
           ""
         )}
       </nav>
-
-      <div className="flex justify-center gap-2 py-1 pr-2">
-        <Link
-          href="/"
-          className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
-        >
-          <FaHome size={16} />
-          <span className="text-xs">Home</span>
-        </Link>
-
-        <Link
-          href="/contact-us"
-          className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
-        >
-          <FaPhoneAlt size={16} />
-          <span className="text-xs">Contact Us</span>
-        </Link>
-      </div>
     </aside>
   );
 };
