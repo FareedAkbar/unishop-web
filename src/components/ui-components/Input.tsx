@@ -80,7 +80,7 @@ const Input: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
     <div className="flex flex-col">
       <div
         ref={wrapperRef}
-        className="flex items-center justify-between rounded bg-gray-100 dark:bg-slate-700 dark:text-white"
+        className="flex items-center justify-between rounded border bg-gray-100 shadow dark:border-gray-600 dark:bg-slate-700 dark:text-white"
       >
         <div
           className={`overflow-hidden transition-all duration-500 ease-in-out ${

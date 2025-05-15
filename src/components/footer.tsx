@@ -175,6 +175,13 @@ function Footer() {
             <p className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
               Delivery and Click & Collect available
             </p>
+            <Image
+              src={"/assets/images/home/charity-logo.png"}
+              alt="charity-logo"
+              className="h-44 w-44 object-contain"
+              width={1000}
+              height={1000}
+            />
           </div>
         </div>
         {/* bottom center */}

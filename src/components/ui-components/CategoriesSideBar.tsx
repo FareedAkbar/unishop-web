@@ -107,7 +107,7 @@ const SubcategoryList1 = ({
               }}
               className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
             >
-              <span className="mr-2 text-left capitalize">
+              <span className="whitespace-normal text-left capitalize">
                 {subItem.category_name}
               </span>
             </button>
@@ -117,12 +117,14 @@ const SubcategoryList1 = ({
                   onClick={() => {
                     toggleCategory(`${subItem.category_name}`);
                   }}
+                  size={12}
                 />
               ) : (
                 <FaChevronRight
                   onClick={() => {
                     toggleCategory(`${subItem.category_name}`);
                   }}
+                  size={12}
                 />
               ))}
           </div>
@@ -349,7 +351,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   return (
     <aside
       ref={sidebarRef}
-      className={`${pathname === "/" ? "" : "sticky"} left-0 top-28 w-72 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 ${className}`}
+      className={`${pathname === "/" ? "" : "sticky"} left-0 top-28 z-10 w-72 rounded-xl border bg-white p-4 shadow-lg dark:bg-slate-700 ${className}`}
     >
       {/* ${headerCategory && headerCategory?.length > 7 ? "h-[25vh] overflow-y-scroll overflow-x-hidden" : ""} */}
 

@@ -164,8 +164,7 @@ const MyComponent = () => {
           },
           body: JSON.stringify({
             items: requestOptions,
-            member_id: checkoutData?.customer_id
-              ?? null,
+            member_id: checkoutData?.customer_id ?? null,
           }),
         },
       );
@@ -437,15 +436,13 @@ const MyComponent = () => {
       console.log("Connected to server", socket.id);
       console.log(
         "Connected to Id",
-        checkoutData?.customer_id
-        ?? checkoutData?.uuid,
+        checkoutData?.customer_id ?? checkoutData?.uuid,
       );
 
       socket.emit(
         "/studentHandshake",
         {
-          student_id: checkoutData?.customer_id
-            ?? checkoutData?.uuid,
+          student_id: checkoutData?.customer_id ?? checkoutData?.uuid,
         },
         () => {
           console.log("studentHandshake");
@@ -683,10 +680,10 @@ const MyComponent = () => {
   function getShippingPrice(
     countryCode: string,
     packageWeight: number,
-    rates: ShippingRate[]
+    rates: ShippingRate[],
   ): number | null {
     const countryRates = rates
-      .filter(rate => rate.Country === countryCode)
+      .filter((rate) => rate.Country === countryCode)
       .sort((a, b) => a.weight_and_above - b.weight_and_above);
 
     for (let i = countryRates.length - 1; i >= 0; i--) {
@@ -703,13 +700,14 @@ const MyComponent = () => {
     let totalWeight = 0;
     items.forEach((item) => {
       if (item?.selected_variation?.weight && item.weighable == 1) {
-        totalWeight += parseFloat(item?.selected_variation?.weight) * item.quantity;
+        totalWeight +=
+          parseFloat(item?.selected_variation?.weight) * item.quantity;
       } else if (item?.weight && item.weighable == 1) {
         totalWeight += parseFloat(item?.weight) * item.quantity;
       }
     });
     return totalWeight;
-  }
+  };
 
   return (
     <div>
@@ -788,145 +786,194 @@ const MyComponent = () => {
                     </div>
                   )} */}
                 </div>
-                {checkoutData?.address?.[0]?.country_code == "AUS" ? (
+                {checkoutData?.address?.[0]?.country_code === "AUS" ? (
                   <div className="mb-4 mt-4">
                     <p className="mb-2 font-bold">Shipping Method</p>
-                    <div className="grid  grid-cols-2  gap-4">
-
+                    <div className="grid-col-1 grid gap-4 lg:grid-cols-2 lg:gap-10 lg:px-10">
                       {shippingOptions.map((option) => (
-                        <div key={option.value} className={`border rounded-3xl p-4`} style={{ backgroundColor: shipping?.value === option.value ? "#F2FFE4" : "" }}>
-
+                        <div
+                          key={option.value}
+                          className={`rounded-3xl border ${
+                            shipping?.value === option.value
+                              ? "bg-[#F2FFE4] dark:bg-green-500/20"
+                              : "dark:border-white/30"
+                          } p-4`}
+                        >
                           <label className="cursor-pointer">
                             <input
                               type="radio"
                               value={option.value}
                               checked={shipping?.value === option.value}
                               onChange={() => onChange(option)}
-                              className="accent-green-500 "
+                              className="accent-green-500"
                               style={{ height: "20px", width: "20px" }}
                             />
-                            <div className="text-3xl font-medium text-center">
-                              {option.amount == 0
-                                ? "Free" : "$" + option.amount}
+                            <div className="text-center text-3xl font-medium">
+                              {option.amount === 0
+                                ? "Free"
+                                : "$" + option.amount}
                             </div>
-                            <div className={`mt-3 flex flex-col items-center ${option.amount == 0 ? "gap-4" : "gap-1"}`}>
 
-                              <span className="text-xl font-medium text-center capitalize">
-                                {option.type}
-                              </span>
-                              <div className="mt-2 text-lg">
-                                {option.label}
-                              </div>
-                              <div className="">
-                                {option.label2}
-                              </div>
-                              <div className="text-sm  text-center">
-                                {option.label3}
-                              </div>
-                              <div className="text-sm  text-center">
-                                {option.label4}
-                              </div>
-                              <div className="text-sm  text-center">
-                                {option.label5}
-                              </div>
-                              <div className="text-sm  text-center">
-                                {option.label6}
-                              </div>
+                            <div className="my-3 text-center text-xl font-medium capitalize">
+                              {option.type?.toLowerCase()}
+                            </div>
 
+                            <div
+                              className={`flex flex-col items-start ${
+                                option.amount === 0 ? "gap-4" : "gap-1"
+                              }`}
+                            >
+                              {option.label && (
+                                <div className="mt-2 text-left text-lg">
+                                  {option.label}
+                                </div>
+                              )}
+                              {option.label2 && (
+                                <div className="text-left">{option.label2}</div>
+                              )}
+                              {option.label3 && (
+                                <div className="text-left text-sm">
+                                  {option.label3}
+                                </div>
+                              )}
+                              {option.label4 && (
+                                <div className="text-left text-sm">
+                                  {option.label4}
+                                </div>
+                              )}
+                              {option.label5 && (
+                                <div className="text-left text-sm">
+                                  {option.label5}
+                                </div>
+                              )}
+                              {option.label6 && (
+                                <div className="text-left text-sm">
+                                  {option.label6}
+                                </div>
+                              )}
                             </div>
                           </label>
                         </div>
                       ))}
-
                     </div>
                   </div>
                 ) : (
                   <div className="mb-4 mt-10">
                     <p className="mb-2 font-bold">Shipping Method</p>
-                    <div className="grid grid-cols-2  gap-6">
-                      <div className={`border rounded-3xl p-4`} style={{ backgroundColor: shipping?.value === "free" ? "#F2FFE4" : "" }}>
-
+                    <div className="grid-col-1 grid gap-4 lg:grid-cols-2 lg:gap-10 lg:px-10">
+                      <div
+                        className={`rounded-3xl border ${
+                          shipping?.value === "free"
+                            ? "bg-[#F2FFE4] dark:bg-green-500/20"
+                            : "dark:border-white/30"
+                        } p-4`}
+                      >
                         <label className="cursor-pointer">
                           <input
                             type="radio"
                             value={"free"}
                             checked={shipping?.value === "free"}
-                            onChange={() => onChange({ value: "free", amount: 0, type: "Click and Collect.", label: "Click and Collect at UniShop service desk." })}
-                            className="accent-green-500 "
+                            onChange={() =>
+                              onChange({
+                                value: "free",
+                                amount: 0,
+                                type: "Click and Collect.",
+                                label:
+                                  "Click and Collect at UniShop service desk.",
+                              })
+                            }
+                            className="accent-green-500"
                             style={{ height: "20px", width: "20px" }}
                           />
-                          <div className="text-3xl font-medium text-center">
+                          <div className="text-center text-3xl font-medium">
                             Free
-
                           </div>
-
-                          <div className="text-xl my-4 font-medium text-center capitalize">
+                          <div className="my-4 text-left text-xl font-medium capitalize">
                             Click and Collect
                           </div>
-                          <div className={` flex flex-col items-start gap-4`}>
-
-                            <div className=" text-lg">
+                          <div className="flex flex-col items-start gap-4">
+                            <div className="text-lg">
                               Click and Collect at UniShop service desk.
                             </div>
-                            <div className="">
+                            <div>
                               Building 11, 2 Northfields Avenue Keiraville
                             </div>
-                            <div className="text-sm  ">
-                              You will be notified once the order is ready for collection.
+                            <div className="text-sm">
+                              You will be notified once the order is ready for
+                              collection.
                             </div>
-
-
                           </div>
                         </label>
                       </div>
 
-                      {getShippingPrice(checkoutData?.address?.[0]?.country_code ?? "", calculateWeight(), TableRates) ? (
-                        <div className={`border rounded-3xl p-4`} style={{ backgroundColor: shipping?.value === "free" ? "" : "#F2FFE4" }}>
-
+                      {getShippingPrice(
+                        checkoutData?.address?.[0]?.country_code ?? "",
+                        calculateWeight(),
+                        TableRates,
+                      ) ? (
+                        <div
+                          className={`rounded-3xl border p-4 ${
+                            shipping?.value === "Delivery"
+                              ? "bg-[#F2FFE4]"
+                              : "dark:border-white/30"
+                          }`}
+                        >
                           <label className="cursor-pointer">
                             <input
                               type="radio"
                               value={"Delivery"}
                               checked={shipping?.value === "Delivery"}
-                              onChange={() => onChange({ value: "Delivery", amount: getShippingPrice(checkoutData?.address?.[0]?.country_code ?? "", calculateWeight(), TableRates) ?? 0, type: "Delivery", label: "Shipping cost is calculated based on the total weight of your order." })}
-                              className="accent-green-500 "
+                              onChange={() =>
+                                onChange({
+                                  value: "Delivery",
+                                  amount:
+                                    getShippingPrice(
+                                      checkoutData?.address?.[0]
+                                        ?.country_code ?? "",
+                                      calculateWeight(),
+                                      TableRates,
+                                    ) ?? 0,
+                                  type: "Delivery",
+                                  label:
+                                    "Shipping cost is calculated based on the total weight of your order.",
+                                })
+                              }
+                              className="accent-green-500"
                               style={{ height: "20px", width: "20px" }}
                             />
-                            <div className="text-3xl font-medium text-center">
-                              ${getShippingPrice(checkoutData?.address?.[0]?.country_code ?? "", calculateWeight(), TableRates) ?? 0}
+                            <div className="text-center text-3xl font-medium">
+                              $
+                              {getShippingPrice(
+                                checkoutData?.address?.[0]?.country_code ?? "",
+                                calculateWeight(),
+                                TableRates,
+                              ) ?? 0}
                             </div>
-                            <div className="text-xl my-4 font-medium text-center capitalize">
-                              {"Delivery"}
+                            <div className="my-4 text-left text-xl font-medium capitalize">
+                              Delivery
                             </div>
                             <div className="flex flex-col items-start gap-4">
-
-
-                              <div className=" text-left">
-
-                                {"International Shipping, Table Rate"}
-
+                              <div className="text-left">
+                                International Shipping, Table Rate
                               </div>
-                              <div>
-                                {`Delivery times for international postage vary.`}
+                              <div className="text-left">
+                                Delivery times for international postage vary.
                               </div>
-                              <div className="text-sm">
-                                {`Contact us for an estimate.`}
+                              <div className="text-left text-sm">
+                                Contact us for an estimate.
                               </div>
                             </div>
                           </label>
                         </div>
                       ) : (
-                        <div className="flex flex-col items-start gap-4 ">
-                          There is no shipping or delivery available for this address.
+                        <div className="flex flex-col items-start gap-4">
+                          There is no shipping or delivery available for this
+                          address.
                         </div>
-
                       )}
-
-
                     </div>
                   </div>
                 )}
-
               </div>
             </div>
             <div className="flex flex-col lg:col-span-2 xl:col-span-2">
@@ -935,15 +982,18 @@ const MyComponent = () => {
               </h2>
 
               <ScrollArea
-                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 transition-all duration-300 dark:bg-slate-800 ${isExpanded ? "max-h-[28rem]" : "max-h-[10rem]"
-                  }`}
+                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 transition-all duration-300 dark:bg-slate-800 ${
+                  isExpanded ? "max-h-[28rem]" : "max-h-[10rem]"
+                }`}
               >
                 {items?.[0] ? (
                   items.map((item, index) => (
                     <CartItem
                       key={item.item_id + Math.random() + index}
                       title={item.item_name}
-                      imageSrc={item?.object_path ?? item.media?.[0]?.object_path ?? ""}
+                      imageSrc={
+                        item?.object_path ?? item.media?.[0]?.object_path ?? ""
+                      }
                       price={
                         totalAfterCalculation?.items
                           ? checkOldPrice(item.item_id)
@@ -1027,8 +1077,8 @@ const MyComponent = () => {
                         $
                         {items?.[0]
                           ? totalAfterCalculation?.final_price_including_tax.toFixed(
-                            2,
-                          )
+                              2,
+                            )
                           : 0}
                       </span>
                     </div>

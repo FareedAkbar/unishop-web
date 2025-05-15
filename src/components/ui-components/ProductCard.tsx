@@ -70,7 +70,7 @@ const ProductCard = ({
   };
 
   return (
-    <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
+    <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border border-gray-500 p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
       {((product?.items_type === 1 && !product?.variations?.[0]) ??
         product?.item_sale_price) && (
         <div
@@ -80,7 +80,7 @@ const ProductCard = ({
       )}
       {product?.items_type === 1 && (
         <div className="absolute left-2 top-0 flex flex-col">
-          <span className="z-10 mr-2 mt-1 rounded-sm bg-red-500 px-1.5 py-0.5 text-[10px] text-white">
+          <span className="z-[5] mr-2 mt-1 rounded-sm bg-red-500 px-1.5 py-0.5 text-[10px] text-white">
             Variable Item
           </span>
         </div>
