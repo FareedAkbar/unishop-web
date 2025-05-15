@@ -1112,6 +1112,19 @@ const MyComponent = () => {
                         ${shipping?.amount.toFixed(2)}
                       </span>
                     </div>
+                    {calculateWeight() > 0 && (
+                       <div className="mt-2 grid grid-cols-3 justify-between">
+                      <div className="col-span-2 flex flex-col">
+                        <span className="text-sm">Order Weight</span>
+                       
+                      </div>
+
+                      <span className="col-span-1 flex justify-end text-sm">
+                        { calculateWeight().toFixed(2) } KG
+                      </span>
+                    </div>
+                    )}
+                   
                     <div className="mt-2 grid grid-cols-2 justify-between">
                       <div className="flex flex-col">
                         <span className="text-md font-semibold">
@@ -1168,7 +1181,7 @@ const MyComponent = () => {
                     className="h-screen w-screen border-none"
                     loading="lazy"
                     onLoad={() => setLoading(false)}
-                    sandbox="allow-scripts allow-same-origin"
+                    // sandbox="allow-scripts allow-same-origin"
                   />
                 </div>
                 <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">

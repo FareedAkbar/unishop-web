@@ -21,11 +21,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
       <head>
+        {/* Google One Tap Login */}
         <script
           src="https://accounts.google.com/gsi/client"
           async
           defer
         ></script>
+
+        {/* GTM Inline Script */}
+       
       </head>
       <body suppressHydrationWarning>
         <ThemeInitializer />

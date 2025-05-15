@@ -49,7 +49,7 @@ const nextConfig = {
                 headers: [
                     {
                         key: 'Content-Security-Policy',
-                        value: "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.mastercard.com https://*.aexp-static.com https://*.americanexpress.com https://*.visa.com https://*.staticv.me https://*.discover.com https://*.discovercard.com https://*.ewaylabs.cloud https://*.ewaypayments.com https://*.google.com https://*.googleapis.com https://*.aexp-static.com https://*.cardinalcommerce.com https://*.eway.io https://*.newrelic.com https://*.nr-data.net https://*.ccdc02.com https://www.gstatic.com;",
+                        value:"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.mastercard.com https://*.aexp-static.com https://*.americanexpress.com https://*.visa.com https://*.staticv.me https://*.discover.com https://*.discovercard.com https://*.ewaylabs.cloud https://*.ewaypayments.com https://*.google.com https://*.googleapis.com https://*.aexp-static.com https://*.cardinalcommerce.com https://*.eway.io https://*.newrelic.com https://*.nr-data.net https://*.ccdc02.com https://www.gstatic.com https://www.googletagmanager.com;",
                     },
                 ],
             },
