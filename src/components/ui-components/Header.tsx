@@ -484,16 +484,13 @@ const Header = () => {
               </div>
             );
           })}
-          {type == "Gifts" &&
+          {type == "Gifts" && 
             StaticGiftsRoutes.map((subItem) => (
               <div key={subItem.label} className="relative py-1">
                 <button
                   onClick={() => {
                     router.push(subItem.href);
-                    setTimeout(() => {
-                      setOpenCategories([]);
-                      setMobileMenuOpen(false);
-                    }, 500);
+                    toggleCategory(subItem.href)
                   }}
                   className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
                 >
@@ -553,7 +550,7 @@ const Header = () => {
                       {renderSubcategories(item.children!, 1, item.type)}
                     </div>
                   ) :
-                    item.type == "Gifts" ? (
+                   (hoveredCategory === item.type && item.type == "Gifts") ? (
                       <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
                         {renderSubcategories([], 1, "Gifts")}
                       </div>
