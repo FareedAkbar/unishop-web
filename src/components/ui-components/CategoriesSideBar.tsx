@@ -105,7 +105,7 @@ const SubcategoryList1 = ({
                   }, 1000);
                 }
               }}
-              className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
+              className="flex w-full items-center justify-between py-1 text-sm hover:text-red-500 focus:outline-none"
             >
               <span className="whitespace-normal text-left capitalize">
                 {subItem.category_name}
@@ -158,7 +158,7 @@ const SubcategoryList1 = ({
                   setOpenCategories([]);
                 }, 500);
               }}
-              className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
+              className="flex w-full items-center justify-between py-1 text-sm hover:text-red-500 focus:outline-none"
             >
               <span className="mr-2 text-left capitalize" title={subItem.label}>
                 {subItem.label}
@@ -187,7 +187,7 @@ const SubcategoryList = ({
                 ? toggleCategory(subItem.label)
                 : router.push(subItem?.href ?? "")
             }
-            className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
+            className="flex w-full items-center justify-between py-1 text-sm hover:text-red-500 focus:outline-none"
           >
             <span>{subItem.label}</span>
             {subItem.subItems &&
@@ -294,15 +294,12 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   useEffect(() => {
     if (!category || !subCategory) return;
 
-
     const modifiedSubCategories = [...subCategory];
 
     // Step 1: Find the actual CAT node with type = "Gifts"
     const giftsParentCat = subCategory.find(
-      (cat) => cat.type?.toLowerCase() === "gifts"
+      (cat) => cat.type?.toLowerCase() === "gifts",
     );
-   
-    
 
     // Step 4: Build tree from subcategories
     const tree = buildCategoryTree(modifiedSubCategories);
@@ -316,7 +313,6 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     }, {} as CategoriesMap);
 
     if (Array.isArray(tree) && tree.length > 0) {
-
       const allChildren: CAT[] = tree.flatMap((node) => node.children);
 
       allChildren.forEach((item: CAT) => {
@@ -326,7 +322,6 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
         if (targetCategory && targetCategory.outlet_id === outlet) {
           targetCategory.children.push(item);
         }
-
       });
       // if (giftsParentCat) {
       //   const staticGiftChildren: CAT[] = StaticGiftsRoutes.map((route, idx) => ({
@@ -445,15 +440,18 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
             </button>
             <div className="my-1 ml-2 h-px w-[85%] border-t border-gray-400" />
 
-            {openCategories.includes(item.type) && (item.children?.[0] ?? item.type === "Gifts") && (
-              <SubcategoryList1
-                subItems={item.children}
-                openCategories={openCategories}
-                item={item.type}
-                toggleCategory={(val) => toggleCategory(`${item.type}/${val}`)}
-                setOpenCategories={setOpenCategories}
-              />
-            )}
+            {openCategories.includes(item.type) &&
+              (item.children?.[0] ?? item.type === "Gifts") && (
+                <SubcategoryList1
+                  subItems={item.children}
+                  openCategories={openCategories}
+                  item={item.type}
+                  toggleCategory={(val) =>
+                    toggleCategory(`${item.type}/${val}`)
+                  }
+                  setOpenCategories={setOpenCategories}
+                />
+              )}
           </div>
           // )
         ))}
@@ -463,8 +461,8 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
               type="button"
               onClick={() =>
                 item.subItems ||
-                  item.label === "Books" ||
-                  item.label === "Pulse"
+                item.label === "Books" ||
+                item.label === "Pulse"
                   ? toggleCategory2(item.label)
                   : null
               }
@@ -500,7 +498,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       <Link
                         key={subItem.genre}
                         href={`books?detail=${subItem.genre}`}
-                        className="block py-1 text-sm capitalize hover:underline"
+                        className="block py-1 text-sm capitalize hover:text-red-500"
                         onClick={() => {
                           setOpenCategory(null);
                           setTimeout(() => {
@@ -520,7 +518,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       href="https://apps.apple.com/ie/app/uow-pulse-ltd/id6476544403"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block py-1 text-sm hover:underline"
+                      className="block py-1 text-sm hover:text-red-500"
                     >
                       Download from the App Store
                     </a>
@@ -529,7 +527,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                       href="https://play.google.com/store/apps/details?id=com.iitsols.pulseuowltd"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block py-1 text-sm hover:underline"
+                      className="block py-1 text-sm hover:text-red-500"
                     >
                       Download from the Play Store
                     </a>

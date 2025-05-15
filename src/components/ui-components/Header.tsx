@@ -450,7 +450,11 @@ const Header = () => {
       setExpandedCategories(newSet);
     };
 
-    const renderSubcategories = (subItems: CategoryTreeNode[], level = 1, type?: string) => {
+    const renderSubcategories = (
+      subItems: CategoryTreeNode[],
+      level = 1,
+      type?: string,
+    ) => {
       return (
         <div className={`pl-${level * 2} mt-1`}>
           {subItems?.map((subItem) => {
@@ -484,13 +488,13 @@ const Header = () => {
               </div>
             );
           })}
-          {type == "Gifts" && 
+          {type == "Gifts" &&
             StaticGiftsRoutes.map((subItem) => (
               <div key={subItem.label} className="relative py-1">
                 <button
                   onClick={() => {
                     router.push(subItem.href);
-                    toggleCategory(subItem.href)
+                    toggleCategory(subItem.href);
                   }}
                   className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
                 >
@@ -541,22 +545,22 @@ const Header = () => {
                     >
                       {item.type}
                     </Link>
-                    {hasChildren ? <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" /> :
-                      item.type == "Gifts" ? <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" /> : null}
+                    {hasChildren ? (
+                      <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
+                    ) : item.type == "Gifts" ? (
+                      <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
+                    ) : null}
                   </div>
 
                   {hoveredCategory === item.type && hasChildren ? (
                     <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
                       {renderSubcategories(item.children!, 1, item.type)}
                     </div>
-                  ) :
-                   (hoveredCategory === item.type && item.type == "Gifts") ? (
-                      <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
-                        {renderSubcategories([], 1, "Gifts")}
-                      </div>
-                    ) : null
-                  }
-
+                  ) : hoveredCategory === item.type && item.type == "Gifts" ? (
+                    <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
+                      {renderSubcategories([], 1, "Gifts")}
+                    </div>
+                  ) : null}
                 </div>
               );
             })}
@@ -881,12 +885,12 @@ const Header = () => {
                 error={searchError}
               />
               <div
-                className="relative cursor-pointer rounded-full border border-red-500 bg-transparent p-2 text-red-500 hover:border-transparent hover:bg-red-500 hover:text-white"
+                className="relative cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
                 onClick={() => router.push("/favorites")}
               >
-                <GoHeart className="text-lg" />
+                <GoHeart className="text-xl" />
                 {favItems?.length && favItems?.length > 0 ? (
-                  <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                  <span className="absolute -bottom-0 -left-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
                     {favItems?.length}
                   </span>
                 ) : (
@@ -899,11 +903,11 @@ const Header = () => {
                   (total, item) => total + item.item_sale_price,
                   0,
                 )}`}
-                className="relative cursor-pointer rounded-full border border-red-500 bg-transparent p-2 text-red-500 hover:border-transparent hover:bg-red-500 hover:text-white"
+                className="relative cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
               >
                 <IoCartOutline className="cursor-pointer text-xl" />
                 {cartItems?.length && cartItems?.length > 0 ? (
-                  <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                  <span className="absolute -bottom-0 -left-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
                     {cartItems?.length}
                   </span>
                 ) : (
@@ -914,16 +918,16 @@ const Header = () => {
               <div
                 onClick={handleLogout}
                 title={userInfo ? "Logout" : "Signin"}
-                className="relative cursor-pointer rounded-full border border-red-500 bg-transparent p-1.5 text-red-500 hover:border-transparent hover:bg-red-500 hover:text-white"
+                className="relative cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
               >
-                <IoPersonOutline className="p-1 text-2xl" />
+                <IoPersonOutline className="text-xl" />
               </div>
               <div
                 onClick={() => router.push("/contact-us")}
                 title={"Contact Us"}
-                className="relative cursor-pointer rounded-full border border-red-500 bg-transparent p-1.5 text-red-500 hover:border-transparent hover:bg-red-500 hover:text-white"
+                className="relative cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
               >
-                <BsTelephone className="p-1 text-2xl" />
+                <BsTelephone className="text-xl" />
               </div>
             </div>
           </div>

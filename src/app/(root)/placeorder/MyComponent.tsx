@@ -750,7 +750,7 @@ const MyComponent = () => {
                           Phone Number:
                         </span>
                         <span className="block">
-                          {checkoutData?.address?.[0]?.phone_number}
+                          +{checkoutData?.address?.[0]?.phone_number}
                         </span>
                       </div>
                     </div>
