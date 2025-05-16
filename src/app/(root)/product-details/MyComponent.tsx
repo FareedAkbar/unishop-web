@@ -731,7 +731,7 @@ const MyComponent = () => {
 
         <div className="mx-auto flex flex-col items-start justify-start gap-x-4 gap-y-2">
           <div className="flex flex-col pb-2 text-left">
-            <div className="border-b border-dashed border-gray-400 dark:border-gray-600">
+            <div className="mb-2 border-b border-dashed border-gray-400 pb-2 dark:border-gray-600">
               <h6 className="flex-1 font-serif text-xl font-bold capitalize text-red-500 md:text-2xl">
                 {itemDetail?.book_title ?? itemDetail?.item_name}
               </h6>
