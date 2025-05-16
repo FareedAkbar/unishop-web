@@ -99,7 +99,7 @@ const ProductModal = ({
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -122,150 +122,170 @@ const ProductModal = ({
 
   return (
     <div>
-      <h4 className="text-center font-serif text-lg font-bold capitalize text-red-500 dark:text-neutral-100 md:text-2xl">
-        {itemDetail?.item_name}
-      </h4>
-      <h6 className="py-1.5 text-center font-sans text-sm text-neutral-600 dark:text-neutral-100">
-        {itemDetail?.additional_notes &&
-          itemDetail?.additional_notes?.length > 200
-          ? `${itemDetail.additional_notes.slice(0, 200)}...`
-          : itemDetail?.additional_notes}
-      </h6>
       {/* <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100">
             {itemDetail?.additional_notes}
           </h6> */}
-      <div className="flex">
-        <div>
-          <div className="flex flex-col items-center justify-center">
-            <motion.div
-              key={"images"}
-              style={{
-                rotate:
-                  typeof window !== "undefined"
-                    ? window.innerWidth > 768
-                      ? Math.random() * 20 - 10
-                      : 0
-                    : 0,
-              }}
-              whileHover={{
-                scale: 1.1,
-                rotate: 0,
-                zIndex: 100,
-              }}
-              whileTap={{
-                scale: 1.1,
-                rotate: 0,
-                zIndex: 100,
-              }}
-              className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl border bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
-            >
-              <Image
-                src={
-                  selectedVariation?.media?.[currentImageIndex]?.object_path
-                    ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
-                    : itemDetail?.object_path
-                      ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                      : "/assets/images/products/product.png"
-                }
-                alt={
-                  selectedVariation?.media?.[0]?.object_path
-                    ? `${itemDetail?.item_name} - ${selectedValues?.size ?? ""} ${selectedValues?.color ?? ""}`
-                    : (itemDetail?.item_name ?? "Product image")
-                }
-                width={800}
-                height={800}
-                className="h-44 w-44 flex-shrink-0 rounded-lg object-contain md:h-48 md:w-48 lg:h-48 lg:w-48"
-              />
-            </motion.div>
-            {((selectedVariation?.media &&
-              selectedVariation?.media?.length > 1) ??
-              (selectedVariation?.media?.length === 0 &&
-                itemDetail?.media &&
-                itemDetail?.media?.length > 1)) && (
-                <div className="mt-2 flex gap-2 overflow-x-auto py-2">
-                  {(selectedVariation?.media?.length > 0
-                    ? selectedVariation.media
-                    : (itemDetail?.media ?? [])
-                  ).map((media, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
-                    >
-                      <Image
-                        src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
-                        alt={`Thumbnail ${index + 1}`}
-                        width={48}
-                        height={48}
-                        className="h-full w-full object-cover"
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
-          </div>
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        {/* <div> */}
+        <div className="flex flex-col items-center justify-center">
+          {/* <motion.div
+            key={"images"}
+            style={{
+              rotate:
+                typeof window !== "undefined"
+                  ? window.innerWidth > 768
+                    ? Math.random() * 20 - 10
+                    : 0
+                  : 0,
+            }}
+            whileHover={{
+              scale: 1.1,
+              rotate: 0,
+              zIndex: 100,
+            }}
+            whileTap={{
+              scale: 1.1,
+              rotate: 0,
+              zIndex: 100,
+            }}
+            className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl m-3 border bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
+          > */}
+          <Image
+            src={
+              selectedVariation?.media?.[currentImageIndex]?.object_path
+                ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
+                : itemDetail?.object_path
+                  ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
+                  : "/assets/images/products/product.png"
+            }
+            alt={
+              selectedVariation?.media?.[0]?.object_path
+                ? `${itemDetail?.item_name} - ${selectedValues?.size ?? ""} ${selectedValues?.color ?? ""}`
+                : (itemDetail?.item_name ?? "Product image")
+            }
+            width={800}
+            height={800}
+            className="h-48 w-44 flex-shrink-0 rounded-lg object-contain md:h-56 md:w-48"
+          />
+          {/* </motion.div> */}
+          {((selectedVariation?.media &&
+            selectedVariation?.media?.length > 1) ??
+            (selectedVariation?.media?.length === 0 &&
+              itemDetail?.media &&
+              itemDetail?.media?.length > 1)) && (
+            <div className="mt-2 flex gap-2 overflow-x-auto py-2">
+              {(selectedVariation?.media?.length > 0
+                ? selectedVariation.media
+                : (itemDetail?.media ?? [])
+              ).map((media, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImageIndex === index ? "border-red-500" : "border-gray-300"}`}
+                >
+                  <Image
+                    src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
+                    alt={`Thumbnail ${index + 1}`}
+                    width={48}
+                    height={48}
+                    className="h-full w-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
+        {/* </div> */}
         <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-1">
           <div className="flex flex-col">
-            <span className="font-lato text-2xl font-bold text-red-500 dark:text-neutral-300">
-              $
-              {itemDetail?.variations?.[0] &&
-                filteredVariations?.[0]?.items_variable_items_sale_price
-                ? filteredVariations?.[0]?.items_variable_items_sale_price
-                : itemDetail?.variations?.[0]
-                  ? itemDetail?.variations?.[0].items_variable_items_sale_price
-                  : itemDetail?.item_sale_price}
-            </span>
-
-            {filteredVariations?.[0] ? (
-              filteredVariations?.[0]?.stock?.quantity ? (
-                <span className="flex w-fit flex-row items-center gap-1 rounded bg-green-500 p-1 font-serif text-sm text-white">
+            <div className="flex flex-col pb-2 text-left">
+              <div className="border-b border-dashed border-gray-400 dark:border-gray-600">
+                <h6 className="flex-1 font-serif text-xl font-bold capitalize text-red-500 md:text-2xl">
+                  {itemDetail?.book_title ?? itemDetail?.item_name}
+                </h6>
+                {itemDetail?.author_first_name && (
+                  <div className="mb-2 flex flex-row pb-2 font-serif text-sm">
+                    <p className="">by </p>{" "}
+                    <p className="pl-2 font-bold capitalize text-[#198AF3]">
+                      {itemDetail?.author_first_name}{" "}
+                      {itemDetail?.author_last_name}
+                    </p>
+                  </div>
+                )}
+              </div>
+              {itemDetail ? (
+                <span className="font-sans text-lg font-semibold text-red-500 dark:text-neutral-300 md:text-xl">
+                  ${" "}
+                  {itemDetail?.variations?.[0] &&
+                  filteredVariations?.[0]?.items_variable_items_sale_price
+                    ? filteredVariations?.[0]?.items_variable_items_sale_price
+                    : itemDetail?.variations?.[0]
+                      ? itemDetail?.variations?.[0]
+                          .items_variable_items_sale_price
+                      : itemDetail?.item_sale_price}
+                </span>
+              ) : (
+                ""
+              )}
+            </div>
+            <div className="flex w-full flex-col border-b border-dashed border-gray-400 pb-4 dark:border-gray-600 sm:flex-row sm:gap-10">
+              {filteredVariations?.[0] ? (
+                filteredVariations?.[0]?.stock?.quantity ? (
+                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-sm text-green-500">
+                    <FaCheckCircle /> In stock
+                  </span>
+                ) : itemDetail?.allow_special_order == 1 ? (
+                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
+                    <FaCheckCircle /> Backorder
+                  </span>
+                ) : (
+                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-sm text-red-500">
+                    <IoIosCloseCircle /> Out of stock
+                  </span>
+                )
+              ) : itemDetail?.stock.quantity ? (
+                <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-sm text-green-500">
                   <FaCheckCircle /> In stock
                 </span>
               ) : itemDetail?.allow_special_order == 1 ? (
-                <span className="flex w-fit flex-row items-center gap-1 rounded bg-yellow-200 p-1 font-serif text-sm text-black">
+                <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
                   <FaCheckCircle /> Backorder
                 </span>
               ) : (
-                <span className="flex w-fit flex-row items-center gap-1 rounded bg-red-500 p-1 font-serif text-sm text-white">
+                <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-sm text-red-500">
                   <IoIosCloseCircle /> Out of stock
                 </span>
-              )
-            ) : itemDetail?.stock?.quantity ? (
-              <span className="flex w-fit flex-row items-center gap-1 rounded bg-green-500 p-1 font-serif text-sm text-white">
-                <FaCheckCircle /> In stock
-              </span>
-            ) : itemDetail?.allow_special_order == 1 ? (
-              <span className="flex w-fit flex-row items-center gap-1 rounded bg-yellow-200 p-1 font-serif text-sm text-black">
-                <FaCheckCircle /> Backorder
-              </span>
-            ) : (
-              <span className="flex w-fit flex-row items-center gap-1 rounded bg-red-500 p-1 font-serif text-sm text-white">
-                <IoIosCloseCircle /> Out of stock
-              </span>
-            )}
-
-            {filteredVariations?.[0]
-              ? filteredVariations?.[0].items_variable_items_sku_number && (
-                <div className="flex mt-1 items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    {itemDetail?.book_id && itemDetail?.food_id == null ? "ISBN:" : "SKU:"}
-                  </span>
-                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                    {filteredVariations?.[0].items_variable_items_sku_number}
-                  </span>
-                </div>
-              )
-              : itemDetail?.SKU && (
-                <div className="flex mt-1 items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    {itemDetail?.book_id && itemDetail?.food_id == null ? "ISBN:" : "SKU:"}
-                  </span>
-                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                    {itemDetail.SKU}
-                  </span>
-                </div>
               )}
+
+              {filteredVariations?.[0]
+                ? filteredVariations?.[0].items_variable_items_sku_number && (
+                    <div className="mt-1 flex items-center justify-center">
+                      <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                        {itemDetail?.book_id && itemDetail?.food_id == null
+                          ? "ISBN:"
+                          : "SKU:"}
+                      </span>
+                      <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                        {
+                          filteredVariations?.[0]
+                            .items_variable_items_sku_number
+                        }
+                      </span>
+                    </div>
+                  )
+                : itemDetail?.SKU && (
+                    <div className="mt-1 flex items-center justify-center">
+                      <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                        {itemDetail?.book_id && itemDetail?.food_id == null
+                          ? "ISBN:"
+                          : "SKU:"}
+                      </span>
+                      <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                        {itemDetail.SKU}
+                      </span>
+                    </div>
+                  )}
+            </div>
           </div>
 
           {itemDetail?.book_id && itemDetail?.food_id == null && (
@@ -279,7 +299,7 @@ const ProductModal = ({
                     return (
                       <span
                         key={`usage-${item.subject_code}-${index}-pair`}
-                        className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "bg-red-500 text-white" : "bg-yellow-200 dark:bg-yellow-500"} px-2 py-1 text-sm`}
+                        className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "text-red-500" : "text-yellow-600 dark:text-yellow-500"} py-1 text-sm`}
                       >
                         {matchedType?.type_name ?? ""}: {item.subject_name}{" "}
                         {item.subject_code}
@@ -353,8 +373,8 @@ const ProductModal = ({
                 </div>
               )}
               {itemDetail?.pages !== undefined &&
-                itemDetail.pages !== null &&
-                itemDetail.pages ? (
+              itemDetail.pages !== null &&
+              itemDetail.pages ? (
                 <div className="flex items-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
@@ -479,7 +499,7 @@ const ProductModal = ({
                   </div>
                 </div>
               </div>
-              <div className="mt-4 border-b border-gray-200" />
+              <div className="mt-4 border-b border-dashed border-gray-400 dark:border-gray-600" />
               {itemDetail?.variations?.[0]?.variation_tags.map((tag, index) => {
                 const tagName = tag.items_variations_tags_name;
                 const prevTags =
@@ -517,19 +537,18 @@ const ProductModal = ({
                     key={tagName}
                     className={`my-4 w-full ${tagName == "size" ? "flex items-center gap-1" : ""}`}
                   >
-                    <h3 className="font-medium capitalize">
-                      Select {tagName}
-                    </h3>
+                    <h3 className="font-medium capitalize">Select {tagName}</h3>
 
                     {tagName.toLowerCase().includes("size") ? (
                       <div className="scrollbar-hidden flex justify-center gap-2 overflow-x-auto px-1 pl-3 lg:max-w-full">
                         {options.map((option) => (
                           <button
                             key={option.value}
-                            className={`min-w-10 rounded border p-1 text-center text-sm ${selectedValues[tagName] === option.value
-                              ? "bg-red-500 text-white"
-                              : "border-red-500 bg-white dark:bg-slate-700"
-                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            className={`min-w-10 rounded border p-1 text-center text-sm capitalize ${
+                              selectedValues[tagName] === option.value
+                                ? "bg-red-500 text-white"
+                                : "border-red-500 bg-white dark:bg-slate-700"
+                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -555,12 +574,12 @@ const ProductModal = ({
             </div>
           )}
           {itemDetail?.variations?.[0] &&
-            filteredVariations?.[0]?.items_variable_items_id &&
-            Object.values(selectedValues).length ==
+          filteredVariations?.[0]?.items_variable_items_id &&
+          Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-            isVariableItemInCart(
-              filteredVariations?.[0]?.items_variable_items_id,
-            ) ? (
+          isVariableItemInCart(
+            filteredVariations?.[0]?.items_variable_items_id,
+          ) ? (
             <Button
               variant="secondary"
               title={"Remove from Cart"}
@@ -568,30 +587,28 @@ const ProductModal = ({
                 handleRemoveFromCart({
                   ...itemDetail,
                   selected_variation: filteredVariations?.[0],
-                })
+                });
               }}
             />
-
           ) : (
             ""
           )}
           {itemDetail?.variations?.[0] &&
-            !isVariableItemInCart(
-              filteredVariations?.[0]?.items_variable_items_id ?? -1,
-            ) &&
-            !Object.values(selectedValues).some((value) => value === undefined) &&
-            Object.values(selectedValues).length ==
+          !isVariableItemInCart(
+            filteredVariations?.[0]?.items_variable_items_id ?? -1,
+          ) &&
+          !Object.values(selectedValues).some((value) => value === undefined) &&
+          Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-            (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
-              itemDetail?.item_sale_price) ? (
+          (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
+            itemDetail?.item_sale_price) ? (
             (itemDetail?.variations?.[0]?.stock?.quantity ?? 0) > 0 ||
-              itemDetail?.allow_special_order == 1 ? (
+            itemDetail?.allow_special_order == 1 ? (
               <Button
                 title={"Add to Cart"}
                 icon={<BsFillCartCheckFill className="text-lg" />}
                 onClick={() => handleAddToCart(itemDetail)}
               />
-
             ) : (
               ""
             )
@@ -599,14 +616,12 @@ const ProductModal = ({
             itemDetail?.items_type != 1 &&
             !isItemInCart(itemDetail.item_id) ? (
             itemDetail?.allow_special_order == 1 ||
-              (itemDetail?.stock?.quantity ?? 0) > 0 ? (
+            (itemDetail?.stock?.quantity ?? 0) > 0 ? (
               <Button
                 title={"Add to Cart"}
                 icon={<BsFillCartCheckFill className="text-lg" />}
                 onClick={() => handleAddToCart(itemDetail)}
               />
-
-
             ) : (
               ""
             )
@@ -614,15 +629,13 @@ const ProductModal = ({
             ""
           )}
           {itemDetail &&
-            itemDetail?.items_type != 1 &&
-            isItemInCart(itemDetail.item_id) ? (
+          itemDetail?.items_type != 1 &&
+          isItemInCart(itemDetail.item_id) ? (
             <Button
               variant="secondary"
               title={"Remove from Cart"}
               onClick={() => handleRemoveFromCart(itemDetail)}
             />
-
-
           ) : (
             ""
           )}
@@ -650,7 +663,7 @@ const ProductModal = ({
       </div>
       <div className="flex w-full justify-end">
         <button
-          className="mt-5 flex w-fit flex-row items-center justify-end rounded border-none bg-red-500 px-1 text-[10px] text-white hover:bg-red-600 md:px-3 md:py-1.5 lg:px-4 lg:py-2 lg:text-base"
+          className="mt-5 flex w-fit flex-row items-center justify-end rounded border-none bg-red-500 px-3 py-1.5 text-sm text-white hover:bg-red-600 lg:text-base"
           onClick={() => goToDetail(itemDetail!)}
         >
           <span>More Details</span>

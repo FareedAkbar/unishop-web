@@ -491,52 +491,52 @@ const MyComponent = () => {
             </div>
 
             {/* Scrollable Product Section */}
-            <ScrollArea className="min-h-[75vh] pb-5">
-              <div className="flex h-full flex-wrap items-center justify-center gap-3 space-y-2 py-3">
-                {loader ? (
-                  Array.from({ length: 6 }, (_, index) => (
-                    <div key={index} className="p-2">
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
-                ) : displayedData && displayedData.length > 0 ? (
-                  displayedData.map(
-                    (item: DataCart) =>
-                      item.web_visibility === 1 && (
-                        <ProductCard
-                          key={item.item_id}
-                          product={item}
-                          showAddToCart={!isItemInCart(item.item_id)}
-                          onAddToCart={async () => {
-                            if (item?.variations?.[0]) {
-                              await openDetail(item);
-                            } else {
-                              await handleAddToCart(item);
-                            }
-                          }}
-                          onRemoveFromCart={() => handleRemoveFromCart(item)}
-                          openDetail={() => openDetail(item)}
-                          handleFavourite={() => handleFavourite(item)}
-                          wishListLoader={wishListLoader}
-                          goToDetail={() => goToDetail(item)}
-                        />
-                      ),
-                  )
-                ) : (
-                  <div className="flex h-full w-full flex-col items-center justify-center">
-                    <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
-                      Currently, you have no items in this category.
-                    </p>
-                    <Player
-                      autoplay
-                      loop
-                      src="/assets/gifs/emptywishlist.json"
-                      className="h-80 w-80"
-                    />
+            {/* <ScrollArea className="min-h-[75vh] pb-5"> */}
+            <div className="flex h-full flex-wrap items-center justify-center gap-3 space-y-2 py-3">
+              {loader ? (
+                Array.from({ length: 6 }, (_, index) => (
+                  <div key={index} className="p-2">
+                    <ProductCardSkeleton />
                   </div>
-                )}
-              </div>
-            </ScrollArea>
+                ))
+              ) : displayedData && displayedData.length > 0 ? (
+                displayedData.map(
+                  (item: DataCart) =>
+                    item.web_visibility === 1 && (
+                      <ProductCard
+                        key={item.item_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={async () => {
+                          if (item?.variations?.[0]) {
+                            await openDetail(item);
+                          } else {
+                            await handleAddToCart(item);
+                          }
+                        }}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        openDetail={() => openDetail(item)}
+                        handleFavourite={() => handleFavourite(item)}
+                        wishListLoader={wishListLoader}
+                        goToDetail={() => goToDetail(item)}
+                      />
+                    ),
+                )
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-center">
+                  <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
+                    Currently, you have no items in this category.
+                  </p>
+                  <Player
+                    autoplay
+                    loop
+                    src="/assets/gifs/emptywishlist.json"
+                    className="h-80 w-80"
+                  />
+                </div>
+              )}
+            </div>
+            {/* </ScrollArea> */}
 
             {/* Pagination Section */}
             <div className="z-[5] flex justify-between px-4 py-4">

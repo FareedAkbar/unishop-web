@@ -41,8 +41,7 @@ const CartItem: React.FC<CartItemProps> = ({
 }) => {
   const quantity = item?.selected_variation?.stock
     ? item?.selected_variation?.stock.quantity
-    : stock?.quantity
-      ?? 0;
+    : (stock?.quantity ?? 0);
 
   return (
     <div className="border-b border-gray-700 pr-3 dark:border-b dark:border-gray-400">
@@ -57,7 +56,7 @@ const CartItem: React.FC<CartItemProps> = ({
                 : "/assets/images/products/product.png"
           }
           alt={title || "Product"}
-          className="mb-4 h-20 w-20 rounded bg-white dark:bg-slate-800 object-contain md:mb-0"
+          className="mb-4 h-20 w-20 rounded bg-white object-contain dark:bg-slate-800 md:mb-0"
           width={800}
           height={800}
         />
@@ -87,11 +86,11 @@ const CartItem: React.FC<CartItemProps> = ({
           )}
 
           {quantity && quantity > 0 && quantity >= itemQuantity ? (
-            <span className="flex w-fit flex-row items-center gap-1 rounded bg-green-500 p-1 font-serif text-xs text-white">
+            <span className="my-1 flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
               <FaCheckCircle /> In stock
             </span>
           ) : (
-            <span className="flex w-fit flex-row items-center gap-1 rounded bg-yellow-200 p-1 font-serif text-xs text-black">
+            <span className="my-1 flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
               <FaArrowCircleLeft /> Backorder
             </span>
           )}

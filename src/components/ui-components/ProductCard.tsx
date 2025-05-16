@@ -70,7 +70,7 @@ const ProductCard = ({
   };
 
   return (
-    <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border border-gray-500 p-2 transition-transform duration-300 hover:scale-105 sm:w-64 md:w-64 lg:w-72">
+    <div className="group relative flex w-44 flex-shrink-0 grow-0 flex-col rounded-md border border-gray-400 p-2 transition-transform duration-300 hover:scale-105 dark:border-gray-600 sm:w-64 md:w-64 lg:w-72">
       {((product?.items_type === 1 && !product?.variations?.[0]) ??
         product?.item_sale_price) && (
         <div
@@ -166,7 +166,10 @@ const ProductCard = ({
         {product?.item_name}
       </span>
       {product?.SKU ? (
-        <span className="truncate font-serif text-xs">{(product?.book_id && product?.food_id == null) ? "ISBN: " : "SKU: "} {product?.SKU}</span>
+        <span className="truncate font-serif text-xs">
+          {product?.book_id && product?.food_id == null ? "ISBN: " : "SKU: "}{" "}
+          {product?.SKU}
+        </span>
       ) : (
         ""
       )}
@@ -180,34 +183,34 @@ const ProductCard = ({
 
       {product?.book_id && product?.food_id == null ? (
         <div className="flex flex-wrap gap-2 text-sm">
-          {manageUsage().length > 0 ? (
-            manageUsage().map((item, index) => {
-              const matchedType = textbookType?.find(
-                (t) => t.item_book_type_id === item.type_id,
-              );
-              return (
-                <div
-                  key={`usage-${item.subject_code}-${index}-pair`}
-                  className="flex flex-col items-start gap-1 sm:flex-row"
-                >
-                  <span
-                    className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "bg-red-500 text-white" : "bg-yellow-200 dark:bg-yellow-500"} px-2 py-1 text-xs`}
-                  >
-                    {matchedType?.type_name ?? ""}: {item.subject_name}{" "}
-                    {item.subject_code}
-                  </span>
-                  {/* <span className="inline-block w-fit rounded bg-yellow-200 px-2 py-1 text-xs text-black dark:bg-yellow-500">
+          {
+            manageUsage().length > 0
+              ? manageUsage().map((item, index) => {
+                  const matchedType = textbookType?.find(
+                    (t) => t.item_book_type_id === item.type_id,
+                  );
+                  return (
+                    <div
+                      key={`usage-${item.subject_code}-${index}-pair`}
+                      className="flex flex-col items-start gap-1 sm:flex-row"
+                    >
+                      <span
+                        className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "text-red-500" : "text-yellow-600 dark:text-yellow-500"} py-1 text-sm`}
+                      >
+                        {matchedType?.type_name ?? ""}: {item.subject_name}{" "}
+                        {item.subject_code}
+                      </span>
+                      {/* <span className="inline-block w-fit rounded bg-yellow-200 px-2 py-1 text-xs text-black dark:bg-yellow-500">
                     
                   </span> */}
-                </div>
-              );
-            })
-          ) : (
-            ""
+                    </div>
+                  );
+                })
+              : ""
             // <p className="font-serif text-xs">
             //   Textbook is not used in this session
             // </p>
-          )}
+          }
         </div>
       ) : (
         ""
@@ -233,15 +236,15 @@ const ProductCard = ({
       </div>
       {product?.items_type != 1 &&
         (product?.stock.quantity ? (
-          <span className="flex w-fit flex-row items-center gap-1 rounded bg-green-500 p-1 font-serif text-xs text-white">
+          <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
             <FaCheckCircle /> In stock
           </span>
         ) : product?.allow_special_order == 1 ? (
-          <span className="flex w-fit flex-row items-center gap-1 rounded bg-yellow-200 p-1 font-serif text-xs text-black">
+          <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
             <FaArrowCircleLeft /> Backorder
           </span>
         ) : (
-          <span className="flex w-fit flex-row items-center gap-1 rounded bg-red-500 p-1 font-serif text-xs text-white">
+          <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-xs text-red-500">
             <IoIosCloseCircle /> Out of stock
           </span>
         ))}

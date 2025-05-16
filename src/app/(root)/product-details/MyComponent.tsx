@@ -1,7 +1,13 @@
 "use client";
 import React, { useState, useEffect, Suspense, useRef } from "react";
 import Image from "next/image";
-import { FaCheckCircle, FaRegStar, FaStar } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaChevronLeft,
+  FaChevronRight,
+  FaRegStar,
+  FaStar,
+} from "react-icons/fa";
 import moment from "moment";
 import Select from "~/components/Fields/select";
 import type { Media, SpecialTag, Variation, VariationTag } from "~/types/book";
@@ -27,7 +33,6 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import { RxCrossCircled } from "react-icons/rx";
 import { IoIosCloseCircle } from "react-icons/io";
 import Button from "~/components/ui-components/Button";
-
 
 const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
@@ -57,7 +62,6 @@ const MyComponent = () => {
   const [selectedVariation, setSelectedVariation] = useState<Variation | null>(
     null,
   );
-  console.log(reviews);
   const [currentImage, setCurrentImage] = useState<string>(
     itemDetail?.object_path ?? "",
   );
@@ -200,7 +204,7 @@ const MyComponent = () => {
       console.error("Failed to load data in useEffect:", error);
     });
   }, [genre]);
- 
+
   useEffect(() => {
     if (!itemDetail) return;
     if (typeof window === "undefined") return;
@@ -209,7 +213,6 @@ const MyComponent = () => {
       setCurrentImage(itemDetail?.object_path ?? "");
       setSelectedValues({});
       setSelectedVariation(null);
-      
     };
     loadData().catch((error) => {
       console.error("Failed to load data in useEffect:", error);
@@ -280,7 +283,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -521,7 +524,7 @@ const MyComponent = () => {
           }}
           width={2000}
           height={2000}
-          className="h-56 w-56 cursor-zoom-in rounded-lg object-contain lg:h-72 lg:w-72"
+          className="h-64 w-56 cursor-zoom-in rounded-lg object-contain lg:h-96 lg:w-80"
           alt={"img"}
         />
 
@@ -545,8 +548,9 @@ const MyComponent = () => {
             backgroundRepeat: "no-repeat",
 
             //calculate zoomed image size
-            backgroundSize: `${imgWidth * zoomLevel + 100}px ${imgHeight * zoomLevel
-              }px`,
+            backgroundSize: `${imgWidth * zoomLevel + 100}px ${
+              imgHeight * zoomLevel
+            }px`,
 
             //calculate position of zoomed image.
             backgroundPositionX: `${-x * zoomLevel + magnifieWidth / 2}px`,
@@ -558,12 +562,9 @@ const MyComponent = () => {
     );
   }
 
-
-
-
   return (
     <div className="p-6 md:mt-0">
-      <div className="flex items-center justify-between pb-2 lg:px-10">
+      <div className="flex items-center pb-5 lg:gap-10 lg:px-10">
         {/* Left Arrow */}
         <div>
           <button
@@ -576,174 +577,183 @@ const MyComponent = () => {
 
         {/* Title */}
         {itemDetail?.category_detail?.category_name && (
-          <h4 className="text-md pb-2 text-center font-bold capitalize text-neutral-600 dark:text-neutral-100 md:text-xl">
-            Category: {itemDetail?.category_detail?.category_name}
-          </h4>
+          <p>
+            Category
+            <h4 className="text-md pb-2 font-semibold capitalize text-red-500 md:text-xl">
+              {itemDetail?.category_detail?.category_name}
+            </h4>
+          </p>
         )}
 
         {/* Invisible Placeholder */}
-        <div className="w-10" />
+        {/* <div className="w-10" /> */}
       </div>
-      <h6 className="flex-1 text-center font-serif text-sm font-bold capitalize text-red-500 md:text-2xl">
-        {itemDetail?.book_title ?? itemDetail?.item_name}
-      </h6>
-      {itemDetail?.author_first_name && (
-        <div className="flex flex-row text-center justify-center font-serif text-sm mb-4">
-          <p className="">by </p>  <p className="pl-2 capitalize font-bold text-[#198AF3]">{itemDetail?.author_first_name} {itemDetail?.author_last_name}</p>
-        </div>
-      )}
+
       {/* <h6 className="md:text-md px-3 pb-2 text-center font-sans text-sm text-neutral-600 dark:text-neutral-100 md:px-28">
         {itemDetail?.additional_notes}
       </h6> */}
 
-      <div className="relative flex flex-wrap gap-3">
-        <div className="mx-auto flex flex-col items-center">
-          {ImageMagnifier({
-            src: currentImage
-              ? `https://ipos-storage.s3.amazonaws.com/${currentImage}`
-              : "/assets/images/products/product.png",
-            width: "100%",
-            height: "100%",
-            magnifierHeight: 200,
-            magnifieWidth: 200,
-            zoomLevel: 1.5,
-          })}
-          {/* <div
-            className="relative flex h-60 w-60 cursor-zoom-in items-center justify-center rounded-lg p-2 shadow lg:h-80 lg:w-80"
-            ref={imageRef}
-            onMouseEnter={() => (currentImage ? setIsHovering(true) : null)}
-            onMouseLeave={() => setIsHovering(false)}
-            onMouseMove={(e) => (currentImage ? handleMouseMove(e) : null)}
-          >
-            <Image
-              src={
-                currentImage
-                  ? `https://ipos-storage.s3.amazonaws.com/${currentImage}`
-                  : "/assets/images/products/product.png"
-                // selectedVariation?.media?.[currentImageIndex]?.object_path
-                //   ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
-                //   : itemDetail?.media?.[currentImageIndex]?.object_path ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.media[currentImageIndex].object_path}` :
+      <div className="relative flex flex-wrap justify-start gap-3">
+        <div className="relative mx-auto flex flex-col items-center justify-center">
+          {/* Navigation Arrows */}
+          <div className="flex w-full items-center justify-between px-4 md:px-10">
+            {selectedVariation?.media?.length &&
+            selectedVariation?.media?.length > 1 ? (
+              <button
+                className="rounded-full bg-white/70 p-2 text-gray-700 shadow-md transition hover:bg-white dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
+                onClick={() => {
+                  const images =
+                    selectedVariation?.media?.length &&
+                    selectedVariation.media.length > 1
+                      ? [
+                          {
+                            object_id: "001",
+                            object_path: itemDetail?.object_path ?? "",
+                          },
+                          ...selectedVariation.media,
+                        ]
+                      : itemDetail?.media?.length &&
+                          itemDetail?.media.length > 0
+                        ? [
+                            {
+                              object_id: "001",
+                              object_path: itemDetail?.object_path ?? "",
+                            },
+                            ...itemDetail.media,
+                          ]
+                        : [];
 
-                //     itemDetail?.object_path
-                //       ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                //       : "/assets/images/products/product.png"
-              }
-              alt={
-                selectedVariation?.media?.[0]?.object_path
-                  ? `${itemDetail?.item_name} - ${selectedValues.size ?? ""} ${selectedValues.color ?? ""}`
-                  : (itemDetail?.item_name ?? "Product image")
-              }
-              width={2000}
-              height={2000}
-              className="h-56 w-56 rounded-lg object-cover lg:h-72 lg:w-72"
-            />
-          </div> */}
-
-          {!selectedVariation &&
-            itemDetail?.media &&
-            itemDetail?.media?.length > 0 && (
-              <div className="mt-2 flex h-fit gap-2 overflow-x-auto">
-                {(itemDetail?.media
-                  ? [
-                    {
-                      object_id: "001",
-                      object_path: itemDetail?.object_path ?? "",
-                    },
-                    ...itemDetail.media,
-                  ]
-                  : []
-                ).map((media, index) => (
-                  <button
-                    key={`thumbnail-${`fallback-${index}`}`}
-                    onClick={() => {
-                      setCurrentImage(media.object_path);
-                    }}
-                    className={`w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImage === media.object_path ? "border-red-500" : "border-gray-300"}`}
-                  >
-                    <Image
-                      src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
-                      alt={`Thumbnail ${index + 1}`}
-                      width={48}
-                      height={48}
-                      className="h-full w-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
+                  const currentIndex = images.findIndex(
+                    (media) => media.object_path === currentImage,
+                  );
+                  const prevIndex =
+                    currentIndex === -1 || currentIndex === 0
+                      ? images.length - 1
+                      : currentIndex - 1;
+                  setCurrentImage(images[prevIndex]?.object_path!);
+                }}
+              >
+                <FaChevronLeft />
+              </button>
+            ) : (
+              ""
             )}
-          {selectedVariation?.media && selectedVariation?.media?.length > 1 && (
-            <div className="mt-2 flex h-fit gap-2 overflow-x-auto">
-              {(selectedVariation?.media?.length > 0
-                ? [
-                  {
-                    object_id: "001",
-                    object_path: itemDetail?.object_path ?? "",
-                  },
-                  ...selectedVariation.media,
-                ]
-                : []
-              ).map((media, index) => (
+
+            {/* Main Image Magnifier */}
+            <div className="relative w-full max-w-md">
+              {ImageMagnifier({
+                src: currentImage
+                  ? `https://ipos-storage.s3.amazonaws.com/${currentImage}`
+                  : "/assets/images/products/product.png",
+                width: "100%",
+                height: "100%",
+                magnifierHeight: 200,
+                magnifieWidth: 200,
+                zoomLevel: 1.5,
+              })}
+            </div>
+            {selectedVariation?.media?.length &&
+            selectedVariation?.media?.length > 1 ? (
+              <button
+                className="rounded-full bg-white/70 p-2 text-gray-700 shadow-md transition hover:bg-white dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
+                onClick={() => {
+                  const images =
+                    selectedVariation?.media?.length &&
+                    selectedVariation.media.length > 1
+                      ? [
+                          {
+                            object_id: "001",
+                            object_path: itemDetail?.object_path ?? "",
+                          },
+                          ...selectedVariation.media,
+                        ]
+                      : itemDetail?.media?.length && itemDetail.media.length > 0
+                        ? [
+                            {
+                              object_id: "001",
+                              object_path: itemDetail?.object_path ?? "",
+                            },
+                            ...itemDetail.media,
+                          ]
+                        : [];
+
+                  const currentIndex = images.findIndex(
+                    (media) => media.object_path === currentImage,
+                  );
+                  const nextIndex =
+                    currentIndex === -1 || currentIndex === images.length - 1
+                      ? 0
+                      : currentIndex + 1;
+                  setCurrentImage(images[nextIndex]?.object_path!);
+                }}
+              >
+                <FaChevronRight />
+              </button>
+            ) : (
+              ""
+            )}
+          </div>
+
+          {/* Thumbnails Section (same as before) */}
+          {selectedVariation?.media?.length &&
+          selectedVariation?.media?.length > 1 ? (
+            <div className="mt-4 flex h-fit w-full justify-center gap-2 overflow-x-auto px-2">
+              {[
+                {
+                  object_id: "001",
+                  object_path: itemDetail?.object_path ?? "",
+                },
+                ...selectedVariation.media,
+              ].map((media, index) => (
                 <button
-                  key={`thumbnail-${`fallback-${index}`}`}
-                  onClick={() => {
-                    setCurrentImage(media.object_path);
-                  }}
-                  className={`w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImage === media.object_path ? "border-red-500" : "border-gray-300"}`}
+                  key={`thumbnail-${index}`}
+                  onClick={() => setCurrentImage(media.object_path)}
+                  className={`h-24 w-20 rounded-md border ${
+                    currentImage === media.object_path
+                      ? "border-red-500 shadow-md"
+                      : "border-gray-300"
+                  }`}
                 >
                   <Image
                     src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
                     alt={`Thumbnail ${index + 1}`}
-                    width={48}
-                    height={48}
-                    className="h-full w-full object-cover"
+                    width={1000}
+                    height={1000}
+                    className="h-full w-full object-contain"
                   />
                 </button>
               ))}
             </div>
+          ) : (
+            ""
           )}
-          {/* {selectedVariation?.media && selectedVariation?.media?.length > 1 && (
-            <div className="mt-2 flex gap-2 overflow-x-auto py-2">
-              {(selectedVariation?.media?.length > 0
-                ? [
-                    {
-                      object_id: "001",
-                      object_path: itemDetail?.object_path ?? "",
-                    },
-                    ...selectedVariation.media,
-                  ]
-                : []
-              ).map((media, index) => (
-                <button
-                  key={`thumbnail-${media.object_id ?? `fallback-${index}`}`}
-                  onClick={() => {
-                    setCurrentImage(media.object_path);
-                  }}
-                  className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border ${currentImage === media.object_path ? "border-red-500" : "border-gray-300"}`}
-                >
-                  <Image
-                    src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
-                    alt={`Thumbnail ${index + 1}`}
-                    width={48}
-                    height={48}
-                    className="h-full w-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          )} */}
         </div>
 
-        <div className="mx-auto flex max-w-sm flex-col items-start justify-start gap-x-4 gap-y-2">
-          <div className="flex flex-col">
+        <div className="mx-auto flex flex-col items-start justify-start gap-x-4 gap-y-2">
+          <div className="flex flex-col pb-2 text-left">
+            <div className="border-b border-dashed border-gray-400 dark:border-gray-600">
+              <h6 className="flex-1 font-serif text-xl font-bold capitalize text-red-500 md:text-2xl">
+                {itemDetail?.book_title ?? itemDetail?.item_name}
+              </h6>
+              {itemDetail?.author_first_name && (
+                <div className="mb-2 flex flex-row pb-2 font-serif text-sm">
+                  <p className="">by </p>{" "}
+                  <p className="pl-2 font-bold capitalize text-[#198AF3]">
+                    {itemDetail?.author_first_name}{" "}
+                    {itemDetail?.author_last_name}
+                  </p>
+                </div>
+              )}
+            </div>
             {itemDetail ? (
-              <span className="font-sans text-2xl font-bold text-red-500 dark:text-neutral-300">
+              <span className="font-sans text-lg font-semibold text-red-500 dark:text-neutral-300 md:text-xl">
                 ${" "}
                 {itemDetail?.variations?.[0] &&
-                  filteredVariations?.[0]?.items_variable_items_sale_price
+                filteredVariations?.[0]?.items_variable_items_sale_price
                   ? filteredVariations?.[0]?.items_variable_items_sale_price
                   : itemDetail?.variations?.[0]
                     ? itemDetail?.variations?.[0]
-                      .items_variable_items_sale_price
+                        .items_variable_items_sale_price
                     : itemDetail?.item_sale_price}
               </span>
             ) : (
@@ -766,33 +776,60 @@ const MyComponent = () => {
           ) : (
             ""
           )}
-          {filteredVariations?.[0] ? (
-            filteredVariations?.[0]?.stock?.quantity ? (
-              <span className="flex w-fit flex-row items-center gap-1 rounded bg-green-500 p-1 font-serif text-sm text-white">
+          <div className="flex w-full gap-10 border-b border-dashed border-gray-400 pb-4 dark:border-gray-600">
+            {filteredVariations?.[0] ? (
+              filteredVariations?.[0]?.stock?.quantity ? (
+                <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-sm text-green-500">
+                  <FaCheckCircle /> In stock
+                </span>
+              ) : itemDetail?.allow_special_order == 1 ? (
+                <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
+                  <FaCheckCircle /> Backorder
+                </span>
+              ) : (
+                <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-sm text-red-500">
+                  <IoIosCloseCircle /> Out of stock
+                </span>
+              )
+            ) : itemDetail?.stock.quantity ? (
+              <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-sm text-green-500">
                 <FaCheckCircle /> In stock
               </span>
             ) : itemDetail?.allow_special_order == 1 ? (
-              <span className="flex w-fit flex-row items-center gap-1 rounded bg-yellow-200 p-1 font-serif text-sm">
+              <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
                 <FaCheckCircle /> Backorder
               </span>
             ) : (
-              <span className="flex w-fit flex-row items-center gap-1 rounded bg-red-500 p-1 font-serif text-sm text-white">
+              <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-sm text-red-500">
                 <IoIosCloseCircle /> Out of stock
               </span>
-            )
-          ) : itemDetail?.stock.quantity ? (
-            <span className="flex w-fit flex-row items-center gap-1 rounded bg-green-500 p-1 font-serif text-sm text-white">
-              <FaCheckCircle /> In stock
-            </span>
-          ) : itemDetail?.allow_special_order == 1 ? (
-            <span className="flex w-fit flex-row items-center gap-1 rounded bg-yellow-200 p-1 font-serif text-sm">
-              <FaCheckCircle /> Backorder
-            </span>
-          ) : (
-            <span className="flex w-fit flex-row items-center gap-1 rounded bg-red-500 p-1 font-serif text-sm text-white">
-              <IoIosCloseCircle /> Out of stock
-            </span>
-          )}
+            )}
+            {filteredVariations?.[0]
+              ? filteredVariations?.[0].items_variable_items_sku_number && (
+                  <div className="flex items-center justify-center">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      {itemDetail?.book_id && itemDetail?.food_id == null
+                        ? "ISBN:"
+                        : "SKU:"}
+                    </span>
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                      {filteredVariations?.[0].items_variable_items_sku_number}
+                    </span>
+                  </div>
+                )
+              : itemDetail?.SKU && (
+                  <div className="flex items-center justify-center">
+                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                      {itemDetail?.book_id && itemDetail?.food_id == null
+                        ? "ISBN:"
+                        : "SKU:"}
+                    </span>
+                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                      {itemDetail.SKU}
+                    </span>
+                  </div>
+                )}
+          </div>
           {itemDetail?.book_id && itemDetail?.subtitle && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -803,72 +840,40 @@ const MyComponent = () => {
               </span>
             </div>
           )}
-          {filteredVariations?.[0]
-            ? filteredVariations?.[0].items_variable_items_sku_number && (
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  {itemDetail?.book_id && itemDetail?.food_id == null ? "ISBN:" : "SKU:"}
-                </span>
-                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                  {filteredVariations?.[0].items_variable_items_sku_number}
-                </span>
-              </div>
-            )
-            : itemDetail?.SKU && (
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                 {itemDetail?.book_id && itemDetail?.food_id == null ? "ISBN:" : "SKU:"}
-                </span>
-                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                  {itemDetail.SKU}
-                </span>
-              </div>
-            )}
 
-          {itemDetail?.book_id && itemDetail?.food_id == null && (
+          {
+            itemDetail?.book_id &&
+              itemDetail?.food_id == null &&
+              (manageUsage().length > 0 ? (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                    {manageUsage().map((item, index) => {
+                      const matchedType = textbookType?.find(
+                        (t) => t.item_book_type_id === Number(item.type_id),
+                      ); // Find the matching type
+                      return (
+                        <span
+                          key={`usage-${item.subject_code}-${index}-pair`}
+                          className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "text-red-500" : "text-yellow-600 dark:text-yellow-500"} py-1 text-sm`}
+                        >
+                          {matchedType?.type_name ?? ""}: {item.subject_name}{" "}
+                          {item.subject_code}
+                        </span>
+                      );
+                    })}
+                  </span>
+                </div>
+              ) : null)
+            // <>
+            //   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+            //     Textbook:
+            //   </span>
+            //   <span className="pl-1 text-sm capitalize text-neutral-700 dark:text-neutral-300">
+            //     not used in this session
+            //   </span>
+            // </>
+          }
 
-            manageUsage().length > 0 ? (
-              <div className="flex items-center justify-center">
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  {manageUsage().map((item, index) => {
-                    const matchedType = textbookType?.find(
-                      (t) => t.item_book_type_id === Number(item.type_id),
-                    ); // Find the matching type
-                    return (
-                      <span
-                        key={`usage-${item.subject_code}-${index}-pair`}
-                        className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "bg-red-500 text-white" : "bg-yellow-200 dark:bg-yellow-500"} px-2 py-1 text-sm`}
-                      >
-                        {matchedType?.type_name ?? ""}: {item.subject_name}{" "}
-                        {item.subject_code}
-                      </span>
-                    );
-                  })}
-                </span>
-              </div>
-            ) : (
-              null
-              // <>
-              //   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-              //     Textbook:
-              //   </span>
-              //   <span className="pl-1 text-sm capitalize text-neutral-700 dark:text-neutral-300">
-              //     not used in this session
-              //   </span>
-              // </>
-            )
-
-          )}
-          {itemDetail?.barcode && (
-            <div className="flex items-center justify-center">
-              <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                Barcode:
-              </span>
-              <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                {itemDetail.barcode}
-              </span>
-            </div>
-          )}
           {itemDetail?.shelf_location && (
             <div className="flex items-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
@@ -912,8 +917,8 @@ const MyComponent = () => {
                 </div>
               )}
               {itemDetail?.pages !== undefined &&
-                itemDetail.pages !== null &&
-                itemDetail.pages ? (
+              itemDetail.pages !== null &&
+              itemDetail.pages ? (
                 <div className="flex items-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
@@ -978,27 +983,28 @@ const MyComponent = () => {
             </div>
           )}
           {filteredVariations?.[0]
-            ? filteredVariations?.[0].weight && itemDetail?.weighable && (
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Weight:
-                </span>
-                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                  {parseFloat(filteredVariations?.[0].weight).toFixed(2)} kg
-                </span>
-              </div>
-            )
-            : itemDetail?.weight && itemDetail?.weighable && (
-              <div className="flex items-center justify-center">
-                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                  Weight:
-                </span>
-                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                  {parseFloat(itemDetail.weight).toFixed(2)} kg
-                </span>
-              </div>
-            )}
-
+            ? filteredVariations?.[0].weight &&
+              itemDetail?.weighable && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Weight:
+                  </span>
+                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                    {parseFloat(filteredVariations?.[0].weight).toFixed(2)} kg
+                  </span>
+                </div>
+              )
+            : itemDetail?.weight &&
+              itemDetail?.weighable && (
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    Weight:
+                  </span>
+                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                    {parseFloat(itemDetail.weight).toFixed(2)} kg
+                  </span>
+                </div>
+              )}
 
           {itemDetail?.variations?.[0]?.variation_tags && (
             <div>
@@ -1039,7 +1045,7 @@ const MyComponent = () => {
                               <span className="font-bold capitalize text-neutral-700 dark:text-neutral-300">
                                 {key}:{" "}
                               </span>
-                              <span className="pl-1 text-neutral-700  dark:text-neutral-300">
+                              <span className="pl-1 text-neutral-700 dark:text-neutral-300">
                                 {selectedValues[key] ?? "Please Select"}
                               </span>{" "}
                             </li>
@@ -1050,7 +1056,7 @@ const MyComponent = () => {
                   </div>
                 </div>
               </div>
-              <div className="mt-4 border-b border-gray-200" />
+              <div className="mt-4 w-full border-b border-dashed border-gray-400 dark:border-gray-600" />
               {itemDetail?.variations?.[0]?.variation_tags.map((tag, index) => {
                 const tagName = tag.items_variations_tags_name;
                 const prevTags =
@@ -1086,9 +1092,9 @@ const MyComponent = () => {
                 return (
                   <div
                     key={`variation-tag-${tag.items_variations_tags_name}-${index}`}
-                    className={`my-4 w-full flex items-center gap-1`}
+                    className={`my-4 flex w-full items-center gap-1`}
                   >
-                    <h3 className="font-medium capitalize pr-2">
+                    <h3 className="pr-2 font-medium capitalize">
                       Select {tagName}
                     </h3>
 
@@ -1097,10 +1103,11 @@ const MyComponent = () => {
                         {options.map((option, optionIndex) => (
                           <button
                             key={`${option.value}-${optionIndex}`}
-                            className={`min-w-10 rounded border p-1 capitalize text-center text-sm ${selectedValues[tagName] === option.value
-                              ? "bg-red-500 text-white"
-                              : "border-red-500 bg-white dark:bg-slate-700"
-                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            className={`min-w-10 rounded border p-1 text-center text-sm capitalize ${
+                              selectedValues[tagName] === option.value
+                                ? "bg-red-500 text-white"
+                                : "border-red-500 bg-white dark:bg-slate-700"
+                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -1117,7 +1124,6 @@ const MyComponent = () => {
                         onChange={(option: { value: string; label: string }) =>
                           handleSelectChange(tagName, option)
                         }
-
                         isDisabled={isDisabled}
                       />
                     )}
@@ -1127,12 +1133,12 @@ const MyComponent = () => {
             </div>
           )}
           {itemDetail?.variations?.[0] &&
-            filteredVariations?.[0]?.items_variable_items_id &&
-            Object.values(selectedValues).length ==
+          filteredVariations?.[0]?.items_variable_items_id &&
+          Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-            isVariableItemInCart(
-              filteredVariations?.[0]?.items_variable_items_id,
-            ) ? (
+          isVariableItemInCart(
+            filteredVariations?.[0]?.items_variable_items_id,
+          ) ? (
             <Button
               variant={"secondary"}
               title="Remove from Cart"
@@ -1144,29 +1150,26 @@ const MyComponent = () => {
                 })
               }
             />
-            
           ) : (
             ""
           )}
           {itemDetail?.variations?.[0] &&
-            !isVariableItemInCart(
-              filteredVariations?.[0]?.items_variable_items_id ?? -1,
-            ) &&
-            !Object.values(selectedValues).some((value) => value === undefined) &&
-            Object.values(selectedValues).length ==
+          !isVariableItemInCart(
+            filteredVariations?.[0]?.items_variable_items_id ?? -1,
+          ) &&
+          !Object.values(selectedValues).some((value) => value === undefined) &&
+          Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-            (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
-              itemDetail?.item_sale_price) ? (
+          (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
+            itemDetail?.item_sale_price) ? (
             (itemDetail?.variations?.[0]?.stock?.quantity ?? 0) > 0 ||
-              itemDetail?.allow_special_order == 1 ? (
+            itemDetail?.allow_special_order == 1 ? (
               <Button
                 icon={<BsFillCartCheckFill className="text-lg" />}
                 title="Add to Cart"
                 // className="mt-auto flex items-center space-x-1 rounded"
                 onClick={() => handleAddToCart(itemDetail)}
               />
-                
-              
             ) : (
               ""
             )
@@ -1174,15 +1177,13 @@ const MyComponent = () => {
             itemDetail?.items_type != 1 &&
             !isItemInCart(itemDetail.item_id) ? (
             itemDetail?.allow_special_order == 1 ||
-              (itemDetail?.stock?.quantity ?? 0) > 0 ? (
+            (itemDetail?.stock?.quantity ?? 0) > 0 ? (
               <Button
                 icon={<BsFillCartCheckFill className="text-lg" />}
                 title="Add to Cart"
                 // className="mt-auto flex items-center space-x-1 rounded"
                 onClick={() => handleAddToCart(itemDetail)}
               />
-
-
             ) : (
               ""
             )
@@ -1190,15 +1191,14 @@ const MyComponent = () => {
             ""
           )}
           {itemDetail &&
-            itemDetail?.items_type != 1 &&
-            isItemInCart(itemDetail.item_id) ? (
+          itemDetail?.items_type != 1 &&
+          isItemInCart(itemDetail.item_id) ? (
             <Button
               variant={"secondary"}
               title="Remove from Cart"
               // className="mt-auto flex items-center space-x-1 rounded bg-red-500 px-3 py-2 font-sans text-white hover:bg-red-600"
               onClick={() => handleRemoveFromCart(itemDetail)}
             />
-
           ) : (
             ""
           )}
@@ -1262,9 +1262,9 @@ const MyComponent = () => {
         )} */}
 
         {itemDetail?.detail &&
-          itemDetail?.detail.trim().length > 0 &&
-          reviews &&
-          reviews?.length > 0 ? (
+        itemDetail?.detail.trim().length > 0 &&
+        reviews &&
+        reviews?.length > 0 ? (
           <div className="flex h-[500px] w-full flex-col items-center justify-center">
             <Tabs
               key={`tabs-${itemDetail?.item_id}`}
@@ -1352,8 +1352,8 @@ const MyComponent = () => {
                               <p className="text-xs text-gray-500">
                                 {review?.created_at
                                   ? moment(review?.created_at).format(
-                                    "Do MMMM, YYYY",
-                                  )
+                                      "Do MMMM, YYYY",
+                                    )
                                   : ""}
                               </p>
                             </div>

@@ -526,56 +526,56 @@ const MyComponent = () => {
               </div>
             </div>
 
-            <ScrollArea className="min-h-[75vh] pb-10">
-              <div
-                className="flex flex-wrap justify-center gap-3 space-y-2 py-3"
-                // key={displayData ? displayData?.[0]?.item_id : "123"}
-              >
-                {loader ? (
-                  Array.from({ length: 5 }, (_, index) => (
-                    <div key={index}>
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
-                ) : displayData && displayData.length > 0 ? (
-                  displayData.map(
-                    (item: DataCart) =>
-                      item.web_visibility === 1 && (
-                        <ProductCard
-                          key={item.item_id}
-                          product={item}
-                          showAddToCart={!isItemInCart(item.item_id)}
-                          onAddToCart={async () => {
-                            if (item?.items_type == 1) {
-                              await openDetail(item);
-                            } else {
-                              await handleAddToCart(item);
-                            }
-                          }}
-                          onRemoveFromCart={() => handleRemoveFromCart(item)}
-                          openDetail={() => openDetail(item)}
-                          handleFavourite={() => handleFavourite(item)}
-                          wishListLoader={wishListLoader}
-                          goToDetail={() => goToDetail(item)}
-                        />
-                      ),
-                  )
-                ) : (
-                  // Only display the empty state when data loading is complete and no items are available
-                  <div className="flex h-full w-full flex-col items-center justify-center">
-                    <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
-                      Currently, you have no items in this category.
-                    </p>
-                    <Player
-                      autoplay
-                      loop
-                      src="/assets/gifs/emptywishlist.json"
-                      className="h-80 w-80"
-                    />
+            {/* <ScrollArea className="min-h-[75vh] pb-10"> */}
+            <div
+              className="flex flex-wrap justify-center gap-3 space-y-2 py-3"
+              // key={displayData ? displayData?.[0]?.item_id : "123"}
+            >
+              {loader ? (
+                Array.from({ length: 5 }, (_, index) => (
+                  <div key={index}>
+                    <ProductCardSkeleton />
                   </div>
-                )}
-              </div>
-            </ScrollArea>
+                ))
+              ) : displayData && displayData.length > 0 ? (
+                displayData.map(
+                  (item: DataCart) =>
+                    item.web_visibility === 1 && (
+                      <ProductCard
+                        key={item.item_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={async () => {
+                          if (item?.items_type == 1) {
+                            await openDetail(item);
+                          } else {
+                            await handleAddToCart(item);
+                          }
+                        }}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        openDetail={() => openDetail(item)}
+                        handleFavourite={() => handleFavourite(item)}
+                        wishListLoader={wishListLoader}
+                        goToDetail={() => goToDetail(item)}
+                      />
+                    ),
+                )
+              ) : (
+                // Only display the empty state when data loading is complete and no items are available
+                <div className="flex h-full w-full flex-col items-center justify-center">
+                  <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
+                    Currently, you have no items in this category.
+                  </p>
+                  <Player
+                    autoplay
+                    loop
+                    src="/assets/gifs/emptywishlist.json"
+                    className="h-80 w-80"
+                  />
+                </div>
+              )}
+            </div>
+            {/* </ScrollArea> */}
             {pagination && (
               <div className="z-5 flex justify-between px-4 py-4">
                 <button
