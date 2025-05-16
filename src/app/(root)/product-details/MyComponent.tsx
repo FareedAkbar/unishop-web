@@ -630,7 +630,7 @@ const MyComponent = () => {
                     currentIndex === -1 || currentIndex === 0
                       ? images.length - 1
                       : currentIndex - 1;
-                  setCurrentImage(images[prevIndex]?.object_path!);
+                   setCurrentImage(images?.[prevIndex]?.object_path ?? "");
                 }}
               >
                 <FaChevronLeft />
@@ -684,7 +684,7 @@ const MyComponent = () => {
                     currentIndex === -1 || currentIndex === images.length - 1
                       ? 0
                       : currentIndex + 1;
-                  setCurrentImage(images[nextIndex]?.object_path!);
+                  setCurrentImage(images?.[nextIndex]?.object_path ?? "");
                 }}
               >
                 <FaChevronRight />
