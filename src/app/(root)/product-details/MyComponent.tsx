@@ -577,12 +577,12 @@ const MyComponent = () => {
 
         {/* Title */}
         {itemDetail?.category_detail?.category_name && (
-          <p>
+          <div>
             Category
             <h4 className="text-md pb-2 font-semibold capitalize text-red-500 md:text-xl">
               {itemDetail?.category_detail?.category_name}
             </h4>
-          </p>
+          </div>
         )}
 
         {/* Invisible Placeholder */}
