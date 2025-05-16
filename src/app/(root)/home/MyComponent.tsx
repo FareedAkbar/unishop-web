@@ -30,7 +30,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const handleResize = () => {
-      setIsLargeScreen(window ? window.innerWidth >= 1024 : false); // Tailwind `lg` breakpoint is 1024px
+      setIsLargeScreen(window.innerWidth >= 1024 ? true : false); // Tailwind `lg` breakpoint is 1024px
     };
     handleResize(); // Check on mount
     window.addEventListener("resize", handleResize);
@@ -89,7 +89,7 @@ const HomePage: React.FC = () => {
   // Auto-slide functionality
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!isHoveredRef.current) {
+      if (!isHoveredRef.current && isLargeScreen) {
         handleNext();
       }
     }, 7000);
@@ -120,8 +120,6 @@ const HomePage: React.FC = () => {
     return [specialItems[firstIndex], specialItems[secondIndex]];
   };
 
-
-
   return (
     <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 dark:bg-slate-800">
       {/* <BackgroundSquares /> */}
@@ -134,7 +132,7 @@ const HomePage: React.FC = () => {
             words={["Merch", "Books", "Beyond"]}
             className="font-bold text-red-500"
           />
-          <span className="mt-2 block text-base md:mt-0.5 md:text-2xl lg:mt-0 lg:text-4xl">
+          <span className="block text-base md:mt-0.5 md:text-2xl lg:text-4xl">
             at UniShop!
           </span>
         </div>
@@ -144,24 +142,42 @@ const HomePage: React.FC = () => {
           <div
             className={`mx-auto w-full lg:pr-3 ${specialItems && specialItems?.length > 2 && "lg:pl-10"} pb-10`}
           >
-            <div className="relative lg:min-h-[360px]">
-              <AnimatePresence initial={false} mode="wait" custom={direction}>
-                <motion.div
-                  key={currentIndex}
-                  className="flex flex-wrap lg:flex-nowrap lg:p-3 lg:pr-10"
-                  {...(isLargeScreen && {
-                    custom: direction,
-                    initial: "enter",
-                    animate: "center",
-                    exit: "exit",
-                    variants: transitionVariants,
-                    transition: { duration: 0.5, ease: "easeInOut" },
-                  })}
-                >
+            <div className="relative h-fit lg:min-h-[360px]">
+              {isLargeScreen ? (
+                <AnimatePresence initial={false} mode="wait" custom={direction}>
+                  <motion.div
+                    key={currentIndex}
+                    className="flex flex-wrap lg:flex-nowrap lg:p-3 lg:pr-10"
+                    custom={direction}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    variants={transitionVariants}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                  >
+                    {getDisplayedItems().map((item, index) => (
+                      <div
+                        key={`display-${index}`}
+                        className="h-fit w-full"
+                        onMouseEnter={() => (isHoveredRef.current = true)}
+                        onMouseLeave={() => (isHoveredRef.current = false)}
+                      >
+                        <ProductList
+                          title={item?.title}
+                          width="w-full"
+                          index={index}
+                          specialItems={item?.data ?? null}
+                        />
+                      </div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
+              ) : (
+                <div className="flex flex-wrap lg:flex-nowrap lg:p-3 lg:pr-10">
                   {getDisplayedItems().map((item, index) => (
                     <div
                       key={`display-${index}`}
-                      className="w-full"
+                      className="h-fit w-full"
                       onMouseEnter={() => (isHoveredRef.current = true)}
                       onMouseLeave={() => (isHoveredRef.current = false)}
                     >
@@ -173,8 +189,9 @@ const HomePage: React.FC = () => {
                       />
                     </div>
                   ))}
-                </motion.div>
-              </AnimatePresence>
+                </div>
+              )}
+
               {specialItems && specialItems?.length > 2 && (
                 <>
                   <button

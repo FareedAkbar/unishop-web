@@ -30,16 +30,16 @@ const GiftCategoryInfo: React.FC<GiftCategoryInfoProps> = ({ category }) => {
       )}
       <div className="mt-6 flex flex-col md:flex-row md:items-start md:gap-8">
         <div className="flex-1">
-          <p className="mb-4 text-justify text-gray-700 dark:text-gray-300">
+          <p className="mb-4 text-justify text-sm text-gray-700 dark:text-gray-300 md:text-base">
             {category.description}
           </p>
           {category.additionalInfo && (
-            <p className="mb-4 text-justify text-gray-600 dark:text-gray-300">
+            <p className="mb-4 text-justify text-sm text-gray-600 dark:text-gray-300 md:text-base">
               {category.additionalInfo}
             </p>
           )}
           {category.history && (
-            <p className="mb-4 text-justify text-gray-600 dark:text-gray-300">
+            <p className="mb-4 text-justify text-sm text-gray-600 dark:text-gray-300 md:text-base">
               {category.history}
             </p>
           )}

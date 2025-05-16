@@ -456,8 +456,6 @@ const MyComponent = () => {
     },
   ];
 
-  console.log("itemDetails", displayData);
-
   return (
     <div>
       <motion.main

@@ -20,7 +20,7 @@ const MyComponent = () => {
       <div className="flex flex-wrap items-center justify-between bg-white p-8 pb-14 shadow-md dark:bg-slate-600 lg:px-32">
         <div className="max-w-md flex-1 text-lg text-gray-700">
           <h1 className="mb-2 text-3xl font-bold text-red-600">Contact Us</h1>
-          <p className="text-justify dark:text-white">
+          <p className="text-justify text-sm dark:text-white md:text-base">
             Need assistance? The UniShop team is here to provide friendly and
             personalized service from start to finish. Reach out via phone or
             email for any inquiries.
@@ -47,7 +47,7 @@ const MyComponent = () => {
               href="tel:42218050"
               className="pl-1 text-red-500 underline transition-colors"
             >
-             (02) 4221 8050
+              (02) 4221 8050
             </a>
           </p>
           <p>

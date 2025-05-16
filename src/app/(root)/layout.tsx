@@ -7,7 +7,7 @@ export default function RootLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="flex-1 overflow-auto">{children}</main>
+      <main className="flex-1 overflow-auto p-4">{children}</main>
       <Footer />
     </div>
   );

@@ -42,7 +42,7 @@ const ProductList: React.FC<ProductListProps> = ({
               {title}
             </h2>
           )}
-          <ScrollArea className="scrollbar-hidden h-64">
+          <ScrollArea className="scrollbar-hidden max-h-64">
             <div className={`flex flex-col gap-5 pb-6 pl-8 pt-2 ${width}`}>
               {/* Flex container for horizontal spacing */}
               {specialItems?.map(

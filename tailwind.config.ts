@@ -38,6 +38,10 @@ const config: Config = {
 			// montserrat:['Montserrat','sans-serif']
 
   		},
+		 screens: {
+        'xs': '475px', // Small screen
+        '3xl': '2048px', // Ultra large screen
+      },
   		boxShadow: {
   			input: '`0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08)`',
   			card: '`0px 2px 4px rgba(0,0,0,0.1), 0px 1px 2px rgba(0,0,0,0.2)`'

@@ -3,10 +3,10 @@ import React from "react";
 
 export default function ProductCardSkeleton() {
   return (
-    <div className="w-44 sm:w-64 md:w-64 lg:w-72">
+    <div className="xs:w-56 w-full sm:w-64 lg:w-72">
       {/* Image Placeholder */}
       <div className="relative w-full animate-pulse">
-        <div className="mb-2 h-40 w-40 rounded bg-gray-200 dark:bg-gray-600 sm:h-48 sm:w-48 lg:h-56 lg:w-56 xl:h-64 xl:w-64" />
+        <div className="xs:w-56 mb-2 h-40 w-full rounded bg-gray-200 dark:bg-gray-600 sm:h-48 sm:w-48 lg:h-56 lg:w-56 xl:h-64 xl:w-64" />
       </div>
 
       {/* Text Section */}

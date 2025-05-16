@@ -8,6 +8,7 @@ import {
   FaHome,
   FaPhoneAlt,
   FaChevronUp,
+  FaRegTimesCircle,
 } from "react-icons/fa";
 import Input from "./Input";
 import Image from "next/image";
@@ -690,13 +691,13 @@ const Header = () => {
                 setMobileMenuOpen(false);
               }}
             >
-              <RxCross2 className="text-xl text-red-500" />
+              <FaRegTimesCircle className="text-2xl text-red-500" />
             </button>
-            <div className="fixed right-0 top-0 z-30 flex h-[80vh] w-full flex-col bg-white p-6 dark:bg-slate-700 lg:hidden lg:w-1/2">
+            <div className="fixed right-0 top-0 z-30 flex max-h-[80vh] w-full flex-col bg-white p-6 dark:bg-slate-700 lg:hidden lg:w-1/2">
               <div className="z-40 flex w-[90%] justify-around gap-1 pb-4">
                 <Link
                   href="/"
-                  className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-red-500 p-2 text-white transition-transform hover:scale-105"
+                  className="flex w-1/3 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
                 >
                   <FaHome size={16} />
                   <span className="text-xs">Home</span>
@@ -704,7 +705,7 @@ const Header = () => {
 
                 <Link
                   href="/contact-us"
-                  className="flex min-w-28 flex-row items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-red-500 p-2 text-white transition-transform hover:scale-105"
+                  className="flex w-1/3 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
                 >
                   <FaPhoneAlt size={16} />
                   <span className="text-xs">Contact Us</span>
@@ -712,10 +713,10 @@ const Header = () => {
               </div>
               <nav className="custom-scrollbar overflow-auto">
                 {headerCategory?.map((item) => (
-                  <div key={item.type} className="mb-4">
+                  <div key={item.type} className="mb-4 mr-3">
                     <button className="flex w-full items-center justify-between text-lg focus:outline-none">
                       <div
-                        className="flex items-center"
+                        className="flex items-center capitalize"
                         onClick={() => {
                           router.push(
                             `/products?category=${item.category_type_id}&name=${item.type}&page=1`,
@@ -751,7 +752,7 @@ const Header = () => {
                   </div>
                 ))}
                 {categories.map((item) => (
-                  <div key={item.label} className="mb-4">
+                  <div key={item.label} className="mb-4 mr-3">
                     <button
                       onClick={() =>
                         item.subItems || item.label == "Pulse"
@@ -934,8 +935,11 @@ const Header = () => {
                 </div>
 
                 {userInfo && (
-                  <div className="text-sm font-medium text-gray-800">
-                    {userInfo.first_name} {userInfo.last_name}
+                  <div className="text-sm font-medium capitalize text-gray-800">
+                    Welcome!
+                    <p className="font-bold">
+                      {userInfo.first_name} {userInfo.last_name}
+                    </p>
                   </div>
                 )}
               </div>

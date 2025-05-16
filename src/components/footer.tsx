@@ -41,7 +41,7 @@ function Footer() {
   return (
     <footer className="border-t bg-white dark:bg-slate-900">
       <div className="container mx-auto pb-2 pt-8">
-        <div className="grid grid-cols-1 gap-8 px-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 px-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {/* logo side */}
           <div className="flex flex-col items-center gap-8 text-center md:col-span-1 md:items-start md:text-left">
             <Image
