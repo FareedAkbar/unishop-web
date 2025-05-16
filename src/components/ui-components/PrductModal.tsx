@@ -204,7 +204,7 @@ const ProductModal = ({
                   {itemDetail?.book_title ?? itemDetail?.item_name}
                 </h6>
                 {itemDetail?.author_first_name && (
-                  <div className="mb-2 flex flex-row pb-2 font-serif text-sm">
+                  <div className="flex flex-row font-serif text-sm">
                     <p className="">by </p>{" "}
                     <p className="pl-2 font-bold capitalize text-[#198AF3]">
                       {itemDetail?.author_first_name}{" "}
