@@ -33,6 +33,7 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import { RxCrossCircled } from "react-icons/rx";
 import { IoIosCloseCircle } from "react-icons/io";
 import Button from "~/components/ui-components/Button";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
@@ -49,6 +50,9 @@ const MyComponent = () => {
     textbookType,
     userInfo,
     logout,
+    addFavourite,
+    removeFavourite,
+    favItems,
   } = useAuthContext();
   const itemDetail = productDetail;
   const [category, setCategory] = useState<string>("");
@@ -65,6 +69,8 @@ const MyComponent = () => {
   const [currentImage, setCurrentImage] = useState<string>(
     itemDetail?.object_path ?? "",
   );
+  const [wishListLoader, setWishListLoader] = useState<boolean>(false);
+
   const { toast } = useToast();
   const params = useSearchParams();
 
@@ -322,7 +328,41 @@ const MyComponent = () => {
       console.error("Failed to add item to cart:", error);
     }
   };
-
+  const handleFavourite = async (item: DataCart) => {
+    if (userInfo?.customer_id) {
+      setWishListLoader(true);
+      if (
+        item &&
+        favItems?.some((favItem) => favItem.item_id === item.item_id)
+      ) {
+        await removeFavourite(item, userInfo.customer_id)
+          .then((x) => {
+            if (x) {
+              toast({
+                variant: "destructive",
+                title: "Remove From Wishlist",
+                description: "Item has been removed successfully.",
+              });
+            }
+          })
+          .finally(() => setWishListLoader(false));
+      } else {
+        await addFavourite(item, userInfo.customer_id)
+          .then((x) => {
+            if (x) {
+              toast({
+                variant: "success",
+                title: "Added To Wishlist",
+                description: "Item has been added successfully.",
+              });
+            }
+          })
+          .finally(() => setWishListLoader(false));
+      }
+    } else {
+      setLoginAlert(true);
+    }
+  };
   const handleRemoveFromCart = async (item: DataCart) => {
     try {
       await removeCartItems(item);
@@ -630,7 +670,7 @@ const MyComponent = () => {
                     currentIndex === -1 || currentIndex === 0
                       ? images.length - 1
                       : currentIndex - 1;
-                   setCurrentImage(images?.[prevIndex]?.object_path ?? "");
+                  setCurrentImage(images?.[prevIndex]?.object_path ?? "");
                 }}
               >
                 <FaChevronLeft />
@@ -732,9 +772,32 @@ const MyComponent = () => {
         <div className="mx-auto flex flex-col items-start justify-start gap-x-4 gap-y-2">
           <div className="flex flex-col pb-2 text-left">
             <div className="mb-2 border-b border-dashed border-gray-400 pb-2 dark:border-gray-600">
-              <h6 className="flex-1 font-serif text-xl font-bold capitalize text-red-500 md:text-2xl">
-                {itemDetail?.book_title ?? itemDetail?.item_name}
-              </h6>
+              <div className="flex flex-row items-center justify-between gap-2">
+                <h6 className="flex-1 font-serif text-xl font-bold capitalize text-red-500 md:text-2xl">
+                  {itemDetail?.book_title ?? itemDetail?.item_name}
+                </h6>
+                <button
+                  disabled={wishListLoader}
+                  onClick={() => handleFavourite(itemDetail!)}
+                  title={
+                    favItems?.some(
+                      (favItem) => favItem.item_id === itemDetail?.item_id,
+                    )
+                      ? "Remove from wishlist"
+                      : "Add to wishlist"
+                  }
+                  className="rounded-full border border-red-500 bg-transparent p-1 text-sm text-red-500 hover:bg-red-500 hover:text-white sm:p-1.5 sm:text-xl"
+                >
+                  {itemDetail?.item_id &&
+                  favItems?.some(
+                    (favItem) => favItem.item_id === itemDetail.item_id,
+                  ) ? (
+                    <AiFillHeart />
+                  ) : (
+                    <AiOutlineHeart />
+                  )}
+                </button>
+              </div>
               {itemDetail?.author_first_name && (
                 <div className="flex flex-row font-serif text-sm">
                   <p className="">by </p>{" "}
