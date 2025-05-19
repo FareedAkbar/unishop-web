@@ -83,7 +83,6 @@ const HomePage: React.FC = () => {
         console.error("Failed to load data:", error),
       );
     });
-    console.log(productTags);
   }, [productTags]);
 
   // Auto-slide functionality

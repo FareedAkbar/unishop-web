@@ -457,16 +457,16 @@ const Header = () => {
       type?: string,
     ) => {
       return (
-        <div className={`pl-${level * 2} mt-1`}>
+        <div
+          className={`ml-${level * 2} mt-1`}
+          style={{ marginLeft: `${level / 2}rem` }}
+        >
           {subItems?.map((subItem) => {
             const hasChildren = subItem.children && subItem.children.length > 0;
             const isExpanded = expandedCategories.has(String(subItem.id));
             return (
               <div key={subItem.id} className="py-1">
-                <div
-                  className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
-                  onClick={() => hasChildren && toggleCategory(subItem.id)}
-                >
+                <div className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400">
                   <Link
                     href={`/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`}
                     className="block"
@@ -474,7 +474,10 @@ const Header = () => {
                     {subItem.category_name}
                   </Link>
                   {hasChildren && (
-                    <span className="mr-1">
+                    <span
+                      className="mr-1"
+                      onClick={() => toggleCategory(subItem.id)}
+                    >
                       {isExpanded ? (
                         <FaChevronDown className="text-xs" />
                       ) : (
@@ -529,12 +532,12 @@ const Header = () => {
               </div>
             </div>
 
-            {headerCategory?.slice(0, 5).map((item) => {
+            {headerCategory?.slice(0, 5).map((item, idx) => {
               const hasChildren = item.children && item.children.length > 0;
 
               return (
                 <div
-                  key={item.type}
+                  key={idx}
                   className="relative inline-block"
                   onMouseEnter={() => setHoveredCategory(item.type)}
                   onMouseLeave={() => setHoveredCategory(null)}

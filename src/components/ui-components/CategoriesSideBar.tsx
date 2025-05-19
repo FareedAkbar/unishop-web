@@ -397,9 +397,9 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
       <nav
         className={`relative py-3 ${headerCategory && headerCategory?.length > 7 ? "h-[25vh] overflow-x-hidden overflow-y-scroll" : ""}`}
       >
-        {headerCategory?.map((item) => (
+        {headerCategory?.map((item, idx) => (
           // item.id != 472 && (
-          <div key={item.type} className="relative">
+          <div key={idx} className="relative">
             <button
               type="button"
               className="flex w-full items-center justify-between pl-1 pr-2 transition-transform hover:scale-105 focus:outline-none"
