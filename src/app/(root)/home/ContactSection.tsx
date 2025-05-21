@@ -36,7 +36,7 @@ const ContactSection: React.FC = () => {
 
       {/* Image Section */}
       <div className="lg:w-1/2">
-        <MapContainerComponent height={500} />
+        <MapContainerComponent height={400} />
       </div>
     </div>
   );

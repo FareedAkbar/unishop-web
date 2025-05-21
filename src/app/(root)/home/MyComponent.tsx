@@ -126,35 +126,63 @@ const HomePage: React.FC = () => {
       <div className="flex justify-center">
         <ImageSlider />
       </div>
-      <div className="container mx-auto flex flex-col items-center px-4 py-5 md:px-10">
-        <div className="flex text-center text-xl md:text-3xl lg:items-center lg:text-5xl">
-          <FlipWords
-            words={["Merch", "Books", "Beyond"]}
-            className="font-bold text-red-500"
-          />
-          <span className="block text-base md:mt-0.5 md:text-2xl lg:text-4xl">
-            at UniShop!
-          </span>
-        </div>
-      </div>{" "}
-      <div className="relative w-full">
-        <div className="flex h-fit">
-          <div
-            className={`mx-auto w-full lg:pr-3 ${specialItems && specialItems?.length > 2 && "lg:pl-10"} pb-10`}
-          >
-            <div className="relative h-fit lg:min-h-[360px]">
-              {isLargeScreen ? (
-                <AnimatePresence initial={false} mode="wait" custom={direction}>
-                  <motion.div
-                    key={currentIndex}
-                    className="flex flex-wrap lg:flex-nowrap lg:p-3 lg:pr-10"
+      <div className="container mx-auto">
+        <div className="flex flex-col items-center px-4 py-5 md:px-10">
+          <div className="flex text-center text-xl md:text-3xl lg:items-center lg:text-5xl">
+            <FlipWords
+              words={["Merch", "Books", "Beyond"]}
+              className="font-bold text-red-500"
+            />
+            <span className="block text-base md:mt-0.5 md:text-2xl lg:text-4xl">
+              at UniShop!
+            </span>
+          </div>
+        </div>{" "}
+        <div className="relative w-full">
+          <div className="flex h-fit">
+            <div
+              className={`w-full lg:pr-3 ${specialItems && specialItems?.length > 2 && "lg:pl-10"} pb-10`}
+            >
+              <div className="relative h-fit lg:min-h-[360px]">
+                {isLargeScreen ? (
+                  <AnimatePresence
+                    initial={false}
+                    mode="wait"
                     custom={direction}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    variants={transitionVariants}
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
                   >
+                    <motion.div
+                      key={currentIndex}
+                      className={`flex flex-wrap lg:flex-nowrap lg:p-3 lg:pr-10 ${
+                        getDisplayedItems().length === 1
+                          ? "lg:justify-center"
+                          : "lg:justify-between"
+                      }`}
+                      custom={direction}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      variants={transitionVariants}
+                      transition={{ duration: 0.5, ease: "easeInOut" }}
+                    >
+                      {getDisplayedItems().map((item, index) => (
+                        <div
+                          key={`display-${index}`}
+                          className="h-fit w-full"
+                          onMouseEnter={() => (isHoveredRef.current = true)}
+                          onMouseLeave={() => (isHoveredRef.current = false)}
+                        >
+                          <ProductList
+                            title={item?.title}
+                            width="w-full"
+                            index={index}
+                            specialItems={item?.data ?? null}
+                          />
+                        </div>
+                      ))}
+                    </motion.div>
+                  </AnimatePresence>
+                ) : (
+                  <div className="flex flex-wrap lg:flex-nowrap lg:p-3 lg:pr-10">
                     {getDisplayedItems().map((item, index) => (
                       <div
                         key={`display-${index}`}
@@ -170,51 +198,33 @@ const HomePage: React.FC = () => {
                         />
                       </div>
                     ))}
-                  </motion.div>
-                </AnimatePresence>
-              ) : (
-                <div className="flex flex-wrap lg:flex-nowrap lg:p-3 lg:pr-10">
-                  {getDisplayedItems().map((item, index) => (
-                    <div
-                      key={`display-${index}`}
-                      className="h-fit w-full"
-                      onMouseEnter={() => (isHoveredRef.current = true)}
-                      onMouseLeave={() => (isHoveredRef.current = false)}
-                    >
-                      <ProductList
-                        title={item?.title}
-                        width="w-full"
-                        index={index}
-                        specialItems={item?.data ?? null}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+                  </div>
+                )}
 
-              {specialItems && specialItems?.length > 2 && (
-                <>
-                  <button
-                    onClick={handlePrevious}
-                    className="absolute -left-10 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-xl dark:bg-slate-700 lg:block"
-                  >
-                    <FaLeftLong size={24} />
-                  </button>
-                  <button
-                    onClick={handleNext}
-                    className="absolute right-0 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-xl dark:bg-slate-700 lg:block"
-                  >
-                    <FaRightLong size={24} />
-                  </button>
-                </>
-              )}
+                {specialItems && specialItems?.length > 2 && (
+                  <>
+                    <button
+                      onClick={handlePrevious}
+                      className="absolute -left-10 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-xl dark:bg-slate-700 lg:block"
+                    >
+                      <FaLeftLong size={24} />
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      className="absolute right-0 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-red-400 shadow-lg hover:text-red-500 hover:shadow-xl dark:bg-slate-700 lg:block"
+                    >
+                      <FaRightLong size={24} />
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
+        <AboutSection />
+        <ContactSection />
+        <GraduationBanner />
       </div>
-      <AboutSection />
-      <ContactSection />
-      <GraduationBanner />
     </div>
   );
 };

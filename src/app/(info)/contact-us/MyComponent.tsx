@@ -21,9 +21,10 @@ const MyComponent = () => {
         <div className="max-w-md flex-1 text-lg text-gray-700">
           <h1 className="mb-2 text-3xl font-bold text-red-600">Contact Us</h1>
           <p className="text-justify text-sm dark:text-white md:text-base">
-            Need assistance? The UniShop team is here to provide friendly and
-            personalized service from start to finish. Reach out via phone or
-            email for any inquiries.
+            The UniShop team are here to help! Providing friendly, personalised
+            service to make sure you’re fully satisfied with your shopping
+            experience from start to finish. Give us a call or send us an email
+            if you have an enquiry.
           </p>
         </div>
         <div className="flex justify-center sm:mt-0 sm:flex-shrink-0">

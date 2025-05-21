@@ -11,7 +11,7 @@ interface ButtonProps {
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   variant?: "primary" | "secondary";
-  icon?: React.ReactNode
+  icon?: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -25,13 +25,13 @@ const Button: React.FC<ButtonProps> = ({
   className = "",
   type = "button",
   variant = "primary",
-  icon
+  icon,
 }) => {
   return (
     <button
       type={type}
       onClick={onClick}
-      className={`${width} ${height} ${color} ${variant === "primary" ? "bg-red-500 text-white": "bg-white dark:bg-gray-800 border border-red-500 text-red-500"} font-sans flex items-center justify-center rounded-md py-2 px-2 text-sm font-medium  transition-opacity duration-300 shadow hover:shadow-md  focus:outline-none disabled:cursor-not-allowed disabled:opacity-70 ${className}`}
+      className={`${width} ${height} ${color} ${variant === "primary" ? "bg-red-500 text-white" : "border border-red-500 bg-white text-red-500 dark:bg-gray-800"} flex items-center justify-center rounded-md px-2 py-2 font-sans text-sm font-medium shadow transition-opacity duration-300 hover:shadow-md focus:outline-none disabled:cursor-not-allowed disabled:opacity-70 ${className}`}
       disabled={(disabled ?? loading) ? true : false}
       style={{ minWidth: loading ? `${title.length * 11}px` : "auto" }}
     >
@@ -53,8 +53,8 @@ const Button: React.FC<ButtonProps> = ({
           />
         </svg>
       ) : (
-        <span className="flex flex-row gap-2 text-sm">
-         {icon} {title}
+        <span className="flex flex-row gap-2">
+          {icon} {title}
         </span>
       )}
     </button>
