@@ -938,7 +938,7 @@ const Header = () => {
                 </div>
 
                 {userInfo && (
-                  <div className="text-sm font-medium capitalize text-gray-800">
+                  <div className="text-sm font-medium capitalize text-gray-800 dark:text-gray-300">
                     Welcome!
                     <p className="font-bold">
                       {userInfo.first_name} {userInfo.last_name}
