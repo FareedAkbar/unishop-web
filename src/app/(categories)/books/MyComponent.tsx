@@ -492,7 +492,7 @@ const MyComponent = () => {
 
             {/* Scrollable Product Section */}
             {/* <ScrollArea className="min-h-[75vh] pb-5"> */}
-            <div className="flex h-full flex-wrap items-center justify-center gap-3 space-y-2 py-3">
+            <div className="flex h-full min-h-[70vh] flex-wrap items-center justify-center gap-3 space-y-2 py-3">
               {loader ? (
                 Array.from({ length: 6 }, (_, index) => (
                   <div key={index} className="p-2">

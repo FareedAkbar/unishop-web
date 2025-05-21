@@ -466,7 +466,7 @@ const Header = () => {
             const isExpanded = expandedCategories.has(String(subItem.id));
             return (
               <div key={subItem.id} className="py-1">
-                <div className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400">
+                <div className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500">
                   <Link
                     href={`/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`}
                     className="block"

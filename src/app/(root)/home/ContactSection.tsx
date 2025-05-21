@@ -30,7 +30,7 @@ const ContactSection: React.FC = () => {
           title="Contact details"
           onClick={handleContactUsClick}
           className="mt-4"
-          width="w-full"
+          width="w-1/2 lg:w-1/3"
         />
       </div>
 

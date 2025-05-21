@@ -30,7 +30,7 @@ const AboutSection: React.FC = () => {
           title="About Us"
           onClick={handleAboutUsClick}
           className="mt-4"
-          width="w-full"
+          width="w-1/2 lg:w-1/3"
         />
       </div>
 

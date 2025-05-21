@@ -223,7 +223,7 @@ const HomePage: React.FC = () => {
         </div>
         <AboutSection />
         <ContactSection />
-        <GraduationBanner />
+        {/* <GraduationBanner /> */}
       </div>
     </div>
   );
