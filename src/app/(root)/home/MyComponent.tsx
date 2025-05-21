@@ -15,6 +15,7 @@ import { ItemSpecialTag } from "~/types/productTags";
 import { SpecialItemsForHomePage } from "~/types/specialItems";
 import BackgroundSquares from "~/components/ui-components/BackgroundSquares";
 import Spinner from "~/components/spinner";
+import ContactSection from "./ContactSection";
 const HomePage: React.FC = () => {
   const { productTags, getProductTagStatus } = useAuthContext();
   const [specialItems, setSpecialItems] = useState<
@@ -120,12 +121,12 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80 dark:bg-slate-800">
+    <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80">
       {/* <BackgroundSquares /> */}
       <div className="flex justify-center">
         <ImageSlider />
       </div>
-      <div className="flex flex-col items-center px-4 py-5 md:px-10">
+      <div className="container mx-auto flex flex-col items-center px-4 py-5 md:px-10">
         <div className="flex text-center text-xl md:text-3xl lg:items-center lg:text-5xl">
           <FlipWords
             words={["Merch", "Books", "Beyond"]}
@@ -212,6 +213,7 @@ const HomePage: React.FC = () => {
         </div>
       </div>
       <AboutSection />
+      <ContactSection />
       <GraduationBanner />
     </div>
   );

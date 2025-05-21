@@ -48,8 +48,8 @@ function Footer() {
               src={Logo}
               alt="footer_logo"
               width={1000}
-              height={350}
-              className="w-[10rem] sm:w-[12rem] xl:w-[16rem]"
+              height={1000}
+              className="h-fit w-[10rem] sm:w-[14rem] xl:w-[18rem]"
             />
 
             <div className="flex flex-col gap-3">
@@ -85,7 +85,7 @@ function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   title={label}
-                  className="cursor-pointer rounded-full bg-red-200 p-2 transition-all hover:bg-red-500 hover:text-white"
+                  className="cursor-pointer rounded-full bg-red-500 p-2 text-white transition-all"
                 >
                   <div>{icon}</div>
                 </Link>
@@ -96,7 +96,7 @@ function Footer() {
 
           {/* middle div */}
           <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
-            <p className="text-lg font-bold">Customer Service</p>
+            <p className="font-serif text-lg font-bold">Customer Service</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             {links.map((link, index) => (
               <Link
@@ -115,7 +115,7 @@ function Footer() {
 
           {/* shop online */}
           <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
-            <p className="text-lg font-bold">Shop Online</p>
+            <p className="font-serif text-lg font-bold">Shop Online</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             {category?.map(
               (item, index) =>
@@ -164,7 +164,7 @@ function Footer() {
 
           {/* working hours */}
           <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
-            <p className="text-lg font-bold">Working Hours</p>
+            <p className="font-serif text-lg font-bold">Working Hours</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <p className="text-sm font-bold text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
               Monday - Friday

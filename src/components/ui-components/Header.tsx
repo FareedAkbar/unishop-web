@@ -847,10 +847,10 @@ const Header = () => {
             >
               <Image
                 src={Logo}
-                width={140}
-                height={50}
+                width={1000}
+                height={1000}
                 alt="Logo"
-                className="flex-shrink-0 shadow-2xl"
+                className="h-20 w-56 flex-shrink-0 object-contain"
               />
             </div>
 

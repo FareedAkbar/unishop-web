@@ -2,6 +2,7 @@
 import React, { useState, useEffect, Suspense, useRef } from "react";
 import Image from "next/image";
 import {
+  FaArrowCircleLeft,
   FaCheckCircle,
   FaChevronLeft,
   FaChevronRight,
@@ -847,7 +848,7 @@ const MyComponent = () => {
                 </span>
               ) : itemDetail?.allow_special_order == 1 ? (
                 <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
-                  <FaCheckCircle /> Backorder
+                  <FaArrowCircleLeft /> Backorder
                 </span>
               ) : (
                 <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-sm text-red-500">
@@ -860,7 +861,7 @@ const MyComponent = () => {
               </span>
             ) : itemDetail?.allow_special_order == 1 ? (
               <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
-                <FaCheckCircle /> Backorder
+                <FaArrowCircleLeft /> Backorder
               </span>
             ) : (
               <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-sm text-red-500">
