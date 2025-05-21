@@ -117,8 +117,12 @@ const HomePage: React.FC = () => {
     if (!specialItems || specialItems.length === 0) return [];
     const firstIndex = currentIndex;
     const secondIndex = (currentIndex + 1) % specialItems.length;
+    if (specialItems.length === 1) {
+      return [specialItems[firstIndex]];
+    }
     return [specialItems[firstIndex], specialItems[secondIndex]];
   };
+
 
   return (
     <div className="relative z-[1] flex-1 overflow-hidden bg-opacity-80">
@@ -167,7 +171,11 @@ const HomePage: React.FC = () => {
                       {getDisplayedItems().map((item, index) => (
                         <div
                           key={`display-${index}`}
-                          className="h-fit w-full"
+                          className={`h-fit w-full ${
+                            getDisplayedItems().length != 1
+                              ? "lg:w-full"
+                              : "lg:w-[calc(50%-0.5rem)]"
+                          }`}
                           onMouseEnter={() => (isHoveredRef.current = true)}
                           onMouseLeave={() => (isHoveredRef.current = false)}
                         >
