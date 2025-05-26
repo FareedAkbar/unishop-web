@@ -42,58 +42,6 @@ function Footer() {
     <footer className="border-t bg-white dark:bg-slate-900">
       <div className="container mx-auto pb-2 pt-8">
         <div className="grid grid-cols-1 gap-8 px-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {/* logo side */}
-          <div className="flex flex-col items-center gap-8 text-center md:col-span-1 md:items-start md:text-left">
-            <Image
-              src={Logo}
-              alt="footer_logo"
-              width={1000}
-              height={1000}
-              className="h-fit w-[10rem] sm:w-[14rem] xl:w-[18rem]"
-            />
-
-            <div className="flex flex-col gap-3">
-              <a
-                href="https://www.google.com/maps?q=-34.40755818806117,150.87911127658157"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-              >
-                <FaMapMarkerAlt className="text-md text-[#646464] dark:text-gray-300" />
-                Building 11, University of Wollongong
-              </a>
-              <a
-                href="tel:(02) 4221 8050"
-                className="flex items-center gap-2 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-              >
-                <FaPhoneAlt className="text-[#646464] dark:text-gray-300" />{" "}
-                (02) 4221 8050
-              </a>
-              <a
-                href="mailto:uow-bookshop@uow.edu.au"
-                className="flex items-center gap-2 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-              >
-                <FaEnvelope className="text-[#646464] dark:text-gray-300" />{" "}
-                uow-bookshop@uow.edu.au
-              </a>
-            </div>
-            <div className="flex w-full justify-center gap-4 text-xl text-[#646464]">
-              {iconsTab.map(({ icon, link, label }, index) => (
-                <Link
-                  key={index}
-                  href={link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={label}
-                  className="cursor-pointer rounded-full bg-red-500 p-2 text-white transition-all"
-                >
-                  <div>{icon}</div>
-                </Link>
-              ))}
-            </div>
-            <p className="text-sm">UOW Pulse ABN 28 915 832 337</p>
-          </div>
-
           {/* middle div */}
           <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
             <p className="font-serif text-lg font-bold">Customer Service</p>
@@ -129,37 +77,6 @@ function Footer() {
                   </Link>
                 ),
             )}
-            {/* <span className="mb-2 block h-[4px] w-20 bg-red-500" />
-            <Link
-              href="#"
-              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-            >
-              Textbooks
-            </Link>
-            <Link
-              href="#"
-              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-            >
-              Books
-            </Link>
-            <Link
-              href="#"
-              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-            >
-              UOW Merchandise
-            </Link>
-            <Link
-              href="#"
-              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-            >
-              Stationery & Tech
-            </Link>
-            <Link
-              href="#"
-              className="text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-            >
-              Graduation
-            </Link> */}
           </div>
 
           {/* working hours */}
@@ -175,10 +92,65 @@ function Footer() {
             <p className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
               Delivery and Click & Collect available
             </p>
+          </div>
+          {/* logo side */}
+          <div className="flex flex-col items-center justify-end gap-2 text-center md:col-span-1 md:items-end md:text-right">
+            <Image
+              src={Logo}
+              alt="footer_logo"
+              width={1000}
+              height={1000}
+              className="h-fit w-[10rem] sm:w-[16rem] xl:w-[18rem]"
+            />
+
+            <div className="flex w-full justify-end gap-4 text-xl text-[#646464]">
+              {iconsTab.map(({ icon, link, label }, index) => (
+                <Link
+                  key={index}
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={label}
+                  className="cursor-pointer rounded-full bg-red-500 p-2 text-white transition-all"
+                >
+                  <div>{icon}</div>
+                </Link>
+              ))}
+            </div>
+            <div className="flex flex-col items-end gap-3 text-right">
+              <p className="text-sm">UOW Pulse ABN 28 915 832 337</p>
+
+              <a
+                href="https://www.google.com/maps?q=-34.40755818806117,150.87911127658157"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-row-reverse items-center gap-2 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
+              >
+                <FaMapMarkerAlt className="text-md text-[#646464] dark:text-gray-300" />
+                Building 11, University of Wollongong
+              </a>
+
+              <a
+                href="tel:(02) 4221 8050"
+                className="flex flex-row-reverse items-center gap-2 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
+              >
+                <FaPhoneAlt className="text-[#646464] dark:text-gray-300" />
+                (02) 4221 8050
+              </a>
+
+              <a
+                href="mailto:uow-bookshop@uow.edu.au"
+                className="flex flex-row-reverse items-center gap-2 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
+              >
+                <FaEnvelope className="text-[#646464] dark:text-gray-300" />
+                uow-bookshop@uow.edu.au
+              </a>
+            </div>
+
             <Image
               src={"/assets/images/home/charity-logo.png"}
               alt="charity-logo"
-              className="h-44 w-44 object-contain"
+              className="h-36 w-36 object-contain"
               width={1000}
               height={1000}
             />

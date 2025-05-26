@@ -519,7 +519,7 @@ const Header = () => {
       <div className="hidden lg:block">
         <div className="flex w-full items-center justify-center pt-4">
           <nav className="flex gap-8 whitespace-nowrap px-2">
-            <div className="relative flex items-center px-2 py-1">
+            {/* <div className="relative flex items-center px-2 py-1">
               <div className="group relative cursor-pointer">
                 <span className="flex items-center text-base font-medium text-gray-700 hover:text-red-500 dark:text-gray-200">
                   All Categories
@@ -530,9 +530,9 @@ const Header = () => {
                   <CategoriesSidebar />
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            {headerCategory?.slice(0, 5).map((item, idx) => {
+            {headerCategory?.map((item, idx) => {
               const hasChildren = item.children && item.children.length > 0;
 
               return (
@@ -545,7 +545,7 @@ const Header = () => {
                   <div className="group flex cursor-pointer items-center px-2 py-1">
                     <Link
                       href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
-                      className="flex items-center text-base font-medium text-gray-700 hover:text-red-500 dark:text-gray-200"
+                      className="flex items-center text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200"
                     >
                       {item.type}
                     </Link>
