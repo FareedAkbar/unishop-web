@@ -568,6 +568,52 @@ const Header = () => {
                 </div>
               );
             })}
+            {categories.map((item, idx) => {
+              const hasChildren = item.subItems && item.subItems.length > 0;
+
+              return (
+                <div
+                  key={`custom-${idx}`}
+                  className="relative inline-block"
+                  onMouseEnter={() => setHoveredCategory(item.label)}
+                  onMouseLeave={() => setHoveredCategory(null)}
+                >
+                  <div className="group flex cursor-pointer items-center px-2 py-1">
+                    {item.href ? (
+                      <Link
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <span className="text-base font-medium capitalize text-gray-700 dark:text-gray-200">
+                        {item.label}
+                      </span>
+                    )}
+                    {hasChildren ? (
+                      <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
+                    ) : null}
+                  </div>
+
+                  {hoveredCategory === item.label && hasChildren && (
+                    <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
+                      {item.subItems!.map((sub, subIdx) => (
+                        <Link
+                          key={subIdx}
+                          href={sub.href}
+                          className="block px-3 py-1 text-sm text-gray-700 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500"
+                        >
+                          {sub.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </nav>
         </div>
       </div>
