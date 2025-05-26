@@ -19,20 +19,6 @@ const ProductList: React.FC<ProductListProps> = ({
 }) => {
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const loadData = async () => {
-  //     console.log(id)
-  //     const x = await getSpecialItems(id)
-  //     if (typeof x != "boolean" && x.status && x.data) {
-  //       setSpecialItems(x?.data)
-  //       console.log(x.data)
-  //     }
-  //   };
-  //   loadData().catch((error) => {
-  //     console.error("Failed to load data in useEffect:", error);
-  //   });
-  // }, [])
-
   return (
     <>
       {specialItems?.[0] && (
@@ -42,15 +28,14 @@ const ProductList: React.FC<ProductListProps> = ({
               {title}
             </h2>
           )}
-          <ScrollArea className="scrollbar-hidden max-h-64">
-            <div className={`flex flex-col gap-5 pb-6 pl-8 pt-2 ${width}`}>
-              {/* Flex container for horizontal spacing */}
+          <ScrollArea className="scrollbar-hidden max-h-64 w-full overflow-hidden">
+            <div className={`flex flex-col gap-5 px-5 pb-6 pt-2 ${width}`}>
               {specialItems?.map(
                 (product, index) =>
                   title == product?.tag_name && (
                     <motion.div
                       key={product?.item_id}
-                      className={`mx-3 flex cursor-pointer items-center justify-between rounded-lg border border-neutral-300 bg-white p-3 shadow-lg dark:border-neutral-400 dark:bg-slate-700 dark:text-white`}
+                      className="mx-3 flex w-full min-w-0 items-center justify-between rounded-lg border border-neutral-300 bg-white p-3 shadow-lg dark:border-neutral-400 dark:bg-slate-700 dark:text-white"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{
                         opacity: 1,
@@ -69,7 +54,7 @@ const ProductList: React.FC<ProductListProps> = ({
                         <Image
                           src={`https://ipos-storage.s3.amazonaws.com/${product.object_path}`}
                           alt={product.category_name}
-                          className="h-20 w-20 animate-swing rounded-lg object-contain"
+                          className="h-20 w-20 flex-shrink-0 animate-swing rounded-lg object-contain"
                           width={1000}
                           height={1000}
                         />
@@ -77,28 +62,28 @@ const ProductList: React.FC<ProductListProps> = ({
                         <Image
                           src={"/assets/images/bookicon.png"}
                           alt={"Item"}
-                          className="h-20 w-20 animate-swing rounded-lg object-contain"
+                          className="h-20 w-20 flex-shrink-0 animate-swing rounded-lg object-contain"
                           width={1000}
                           height={1000}
                         />
                       )}
 
-                      <div className="flex flex-col">
-                        <span
-                          className="text-sm font-semibold text-gray-800 dark:text-white"
-                          title={product.item_name ?? ""}
-                        >
+                      <div className="ml-3 flex min-w-0 flex-1 flex-col overflow-hidden">
+                        {/* <span className="truncate text-sm font-semibold text-gray-800 dark:text-white">
                           {product.item_name}
+                        </span> */}
+                        <span className="overflow-hidden truncate text-ellipsis whitespace-nowrap text-sm font-semibold text-gray-800 dark:text-white">
+                          {product.item_name?.includes("Exercise")
+                            ? `${product.item_name} asdfghjkl;xcvbnm,.wertyuiop wsdfghjk wsdfghjk wertyui wertyui zxcvbnm wfghjk eryhujki werfkl`
+                            : product.item_name}
                         </span>
-                        <p className="flex justify-end text-xs text-gray-500 dark:text-gray-300">
+                        <p className="truncate text-xs text-gray-500 dark:text-gray-300">
                           {product.category_name}
                         </p>
-                        {product.item_sale_price ? (
+                        {product.item_sale_price && (
                           <span className="mt-2 flex justify-end font-bold text-red-500">
                             ${product.item_sale_price.toFixed(2)}
                           </span>
-                        ) : (
-                          ""
                         )}
                       </div>
                     </motion.div>

@@ -526,7 +526,7 @@ const MyComponent = () => {
 
             {/* <ScrollArea className="min-h-[75vh] pb-10"> */}
             <div
-              className="flex min-h-[70vh] flex-wrap justify-center gap-3 space-y-2 py-3"
+              className="flex min-h-[70vh] flex-wrap justify-center gap-4 py-3"
               // key={displayData ? displayData?.[0]?.item_id : "123"}
             >
               {loader ? (

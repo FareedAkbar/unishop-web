@@ -191,9 +191,9 @@ export default function CheckoutForm({
         }
 
         toast({
-          title: "Billing Address Added",
+          title: "Shipping Address Added",
           variant: "success",
-          description: "New Billing Address was Added",
+          description: "New Shipping Address was Added",
         });
       } else {
         console.error(
@@ -437,7 +437,7 @@ export default function CheckoutForm({
             ) : (
               <div className="flex items-center">
                 {<BsPlusCircle />}{" "}
-                <div className="ml-1">Add New Billing Address</div>
+                <div className="ml-1">Add New Shipping Address</div>
               </div>
             )}
           </div>
@@ -457,7 +457,7 @@ export default function CheckoutForm({
                     />
                     <div>
                       <div className="font-medium">
-                        Billing Address {index + 1}: {item.phone_number}{" "}
+                        Shipping Address {index + 1}: {item.phone_number}{" "}
                       </div>
                     </div>
                   </label>
@@ -478,7 +478,7 @@ export default function CheckoutForm({
                   </div>
                 </div>
 
-                {/* <div className="font-semibold">Billing Address {index + 1} </div>
+                {/* <div className="font-semibold">Shipping Address {index + 1} </div>
             <div className="flex"><div className="font-semibold mr-2">Address: </div><div>{item.address}</div></div>
             <div className="flex"><div className="font-semibold mr-2">State: </div><div>{item.state}</div></div>
             <div className="flex mb-3"><div className="font-semibold mr-2">City: </div><div>{item.city}</div></div> */}
