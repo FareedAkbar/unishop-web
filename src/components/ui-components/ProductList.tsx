@@ -18,7 +18,7 @@ const ProductList: React.FC<ProductListProps> = ({
   specialItems,
 }) => {
   const router = useRouter();
-
+console.log("Special Items:", specialItems);
   return (
     <>
       {specialItems?.[0] && (
@@ -29,7 +29,7 @@ const ProductList: React.FC<ProductListProps> = ({
             </h2>
           )}
           <ScrollArea className="scrollbar-hidden max-h-64 w-full overflow-hidden">
-            <div className={`flex flex-col gap-5 px-5 pb-6 pt-2 ${width}`}>
+            <div className={`flex flex-col gap-5 px-6 pb-6 pt-2 ${width}`}>
               {specialItems?.map(
                 (product, index) =>
                   title == product?.tag_name && (
@@ -69,13 +69,9 @@ const ProductList: React.FC<ProductListProps> = ({
                       )}
 
                       <div className="ml-3 flex min-w-0 flex-1 flex-col overflow-hidden">
-                        {/* <span className="truncate text-sm font-semibold text-gray-800 dark:text-white">
-                          {product.item_name}
-                        </span> */}
-                        <span className="overflow-hidden truncate text-ellipsis whitespace-nowrap text-sm font-semibold text-gray-800 dark:text-white">
-                          {product.item_name?.includes("Exercise")
-                            ? `${product.item_name} asdfghjkl;xcvbnm,.wertyuiop wsdfghjk wsdfghjk wertyui wertyui zxcvbnm wfghjk eryhujki werfkl`
-                            : product.item_name}
+                        
+                        <span className="overflow-hidden w-48 sm:w-64 lg:w-96 truncate text-ellipsis whitespace-nowrap text-sm font-semibold text-gray-800 dark:text-white">
+                          {product?.item_name}
                         </span>
                         <p className="truncate text-xs text-gray-500 dark:text-gray-300">
                           {product.category_name}

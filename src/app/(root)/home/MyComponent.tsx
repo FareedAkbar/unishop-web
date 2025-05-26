@@ -155,7 +155,7 @@ const HomePage: React.FC = () => {
                   >
                     <motion.div
                       key={currentIndex}
-                      className={`flex flex-wrap lg:flex-nowrap lg:p-3 lg:pr-10 ${
+                      className={`flex flex-wrap lg:flex-nowrap lg:p-3 lg:px-10 ${
                         getDisplayedItems().length === 1
                           ? "lg:justify-center"
                           : "lg:justify-between"
@@ -176,7 +176,7 @@ const HomePage: React.FC = () => {
                         >
                           <ProductList
                             title={item?.title}
-                            width={"w-full"}
+                            width={"w-full lg:w-[calc(80%-0.5rem)] xl:w-[calc(95%-0.5rem)]"}
                             index={index}
                             specialItems={item?.data ?? null}
                           />
