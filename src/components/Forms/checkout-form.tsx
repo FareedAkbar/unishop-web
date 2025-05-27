@@ -261,7 +261,7 @@ export default function CheckoutForm({
       billing_address && getObjectFromArray(newAddress)
         ? [getObjectFromArray(newAddress)!]
         : [newAddress];
-    console.log("xx", xx);
+    
     const updatedData = {
       ...data,
       phone_code:
@@ -285,9 +285,8 @@ export default function CheckoutForm({
       uuid: userInfo?.uuid ?? uuid,
       first_name: userInfo?.first_name ?? "",
       last_name: userInfo?.last_name ?? "",
+      account_type: "Layby Account",
     };
-
-    console.log("updatedData", updatedData);
 
     try {
       // await checkoutFormData(updatedData);
