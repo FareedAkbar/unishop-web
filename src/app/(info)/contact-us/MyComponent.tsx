@@ -42,7 +42,7 @@ const MyComponent = () => {
           {/* Card 1 */}
           <div className="w-full rounded-lg bg-red-100 p-6 text-left shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3">
             <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
-              <FaPhoneAlt className="text-red-500" /> General Enquiries
+              <FaPhoneAlt className="text-red-500" /> General/Order Enquiries
             </h2>
             <p>
               Phone:
@@ -69,9 +69,9 @@ const MyComponent = () => {
             <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-semibold">
               <FaUserTie className="text-red-500" /> Specialty Enquiries
             </h2>
-            <p>
+            <p className="mb-2">
               Retail Operations Manager / Retail, Merchandise & Branding
-              <p className="flex">
+              <span className="flex">
                 Yasmin Jenkin
                 <a
                   href="mailto:yjenkin@uow.edu.au"
@@ -79,11 +79,11 @@ const MyComponent = () => {
                 >
                   yjenkin@uow.edu.au
                 </a>
-              </p>
+              </span>
             </p>
             <p>
               Book Buyer & Events Coordinator / Academic Liaison Officer
-              <p className="flex">
+              <span className="flex">
                 Anneliese Hennessy
                 <a
                   href="mailto:ahennessy@uow.edu.au"
@@ -91,7 +91,7 @@ const MyComponent = () => {
                 >
                   ahennessy@uow.edu.au
                 </a>
-              </p>
+              </span>
             </p>
           </div>
         </div>
