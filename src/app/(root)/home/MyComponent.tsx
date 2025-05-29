@@ -143,20 +143,20 @@ const HomePage: React.FC = () => {
             </span>
           </div>
         </div>
-        <div className="mx-auto flex flex-wrap justify-evenly gap-4 px-4 py-5 md:px-10">
+        <div className="mx-auto flex flex-wrap justify-between px-4 py-5">
           <Image
             src="/assets/images/home/hom1.png"
             alt="hero"
             width={1000}
             height={1000}
-            className="h-fit w-full md:w-2/5 lg:w-1/3"
+            className="h-fit w-full md:w-2/5 md:pr-9 lg:w-1/2"
           />
           <Image
             src="/assets/images/home/hom2.png"
             alt="hero"
             width={1000}
             height={1000}
-            className="h-fit w-full md:w-2/5 lg:w-1/3"
+            className="h-fit w-full md:w-2/5 md:pl-9 lg:w-1/2"
           />
         </div>
         {/* <div className="relative w-full">

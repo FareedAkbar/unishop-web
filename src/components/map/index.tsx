@@ -1,9 +1,5 @@
 "use client";
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-} from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { useRef, useState } from "react";
 
 type Props = {
@@ -25,7 +21,8 @@ const placeId = "ChIJL7MK-3AZE2sRzpY_n6vPMSs"; // UOW UniShop
 
 const Map = ({ height = 500 }: Props) => {
   const mapRef = useRef<google.maps.Map | null>(null);
-  const [placeDetails, setPlaceDetails] = useState<google.maps.places.PlaceResult | null>(null);
+  const [placeDetails, setPlaceDetails] =
+    useState<google.maps.places.PlaceResult | null>(null);
 
   const handleLoad = (map: google.maps.Map) => {
     mapRef.current = map;
@@ -43,10 +40,13 @@ const Map = ({ height = 500 }: Props) => {
         ],
       },
       (place, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK && place?.geometry?.location) {
+        if (
+          status === google.maps.places.PlacesServiceStatus.OK &&
+          place?.geometry?.location
+        ) {
           setPlaceDetails(place);
         }
-      }
+      },
     );
   };
 
@@ -57,7 +57,11 @@ const Map = ({ height = 500 }: Props) => {
         libraries={["places"]}
       >
         <GoogleMap
-          mapContainerStyle={{ width: "100%", height: "100%", borderRadius: "10px" }}
+          mapContainerStyle={{
+            width: "100%",
+            height: "100%",
+            borderRadius: "10px",
+          }}
           center={center}
           zoom={16}
           onLoad={handleLoad}
@@ -80,10 +84,12 @@ const Map = ({ height = 500 }: Props) => {
             boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
             maxWidth: 300,
             fontFamily: "Arial, sans-serif",
-            zIndex: 100,
+            zIndex: 5,
           }}
         >
-          <strong style={{ fontSize: 16, color: "#1a73e8" }}>{placeDetails.name}</strong>
+          <strong style={{ fontSize: 16, color: "#1a73e8" }}>
+            {placeDetails.name}
+          </strong>
           <div style={{ fontSize: 14, color: "#555", marginBottom: 6 }}>
             {placeDetails.formatted_address}
           </div>
@@ -112,7 +118,11 @@ const Map = ({ height = 500 }: Props) => {
               href={`https://www.google.com/maps/dir/?api=1&destination_place_id=${placeId}`}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "#1a73e8", textDecoration: "none", marginRight: 8 }}
+              style={{
+                color: "#1a73e8",
+                textDecoration: "none",
+                marginRight: 8,
+              }}
             >
               ➤ Directions
             </a>

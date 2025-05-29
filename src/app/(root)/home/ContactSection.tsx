@@ -15,7 +15,7 @@ const ContactSection: React.FC = () => {
   return (
     <div className="relative flex flex-col-reverse items-start gap-8 pb-16 pt-5 lg:flex-row-reverse lg:px-8">
       <div className="space-y-6 lg:w-1/2">
-        <h2 className="text-xl font-bold text-red-500 md:text-3xl lg:text-5xl">
+        <h2 className="text-xl font-bold text-red-500 md:text-3xl">
           CONTACT US
         </h2>
         <p className="text-md text-justify leading-relaxed text-zinc-600 dark:text-zinc-300">

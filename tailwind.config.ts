@@ -11,7 +11,7 @@ function addVariablesForColors({ addBase, theme }: any) {
   const allColors = flattenColorPalette(theme("colors"));
   const newVars = Object.fromEntries(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -29,118 +29,128 @@ const config: Config = {
     "./node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-  	extend: {
-  		fontFamily: {
-			// sans:['Montserrat',...fontFamily.sans],
-			sans:['Lato',...fontFamily.sans],
-  			// sans: ['Poppins', ...fontFamily.sans],
-  			serif: ['Libre Baskerville', ...fontFamily.serif],
-			poppins: ["Poppins", "sans-serif"],
-			// montserrat:['Montserrat','sans-serif']
-
-  		},
-		 screens: {
-        'xs': '475px', // Small screen
-        '3xl': '2048px', // Ultra large screen
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: "1rem",
+        sm: "2rem",
+        lg: "4rem",
+        xl: "5rem",
+        "2xl": "6rem",
       },
-  		boxShadow: {
-  			input: '`0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08)`',
-  			card: '`0px 2px 4px rgba(0,0,0,0.1), 0px 1px 2px rgba(0,0,0,0.2)`'
-  		},
-  		colors: {
-  			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
-  			},
-  			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
-  			},
-  			background: 'hsl(var(--background))',
-  			foreground: 'hsl(var(--foreground))',
-  			card: {
-  				DEFAULT: 'hsl(var(--card))',
-  				foreground: 'hsl(var(--card-foreground))'
-  			},
-  			popover: {
-  				DEFAULT: 'hsl(var(--popover))',
-  				foreground: 'hsl(var(--popover-foreground))'
-  			},
-  			muted: {
-  				DEFAULT: 'hsl(var(--muted))',
-  				foreground: 'hsl(var(--muted-foreground))'
-  			},
-  			accent: {
-  				DEFAULT: 'hsl(var(--accent))',
-  				foreground: 'hsl(var(--accent-foreground))'
-  			},
-  			destructive: {
-  				DEFAULT: 'hsl(var(--destructive))',
-  				foreground: 'hsl(var(--destructive-foreground))'
-  			},
-  			border: 'hsl(var(--border))',
-  			input: 'hsl(var(--input))',
-  			ring: 'hsl(var(--ring))',
-  			chart: {
-  				'1': 'hsl(var(--chart-1))',
-  				'2': 'hsl(var(--chart-2))',
-  				'3': 'hsl(var(--chart-3))',
-  				'4': 'hsl(var(--chart-4))',
-  				'5': 'hsl(var(--chart-5))'
-  			},
-			inputbg:"#F0EEED"
-  		},
-  		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)',
-			xs: 'calc(var(--radius) - 6px)'
-  		},
-  		keyframes: {
-  			'accordion-down': {
-  				from: {
-  					height: '0'
-  				},
-  				to: {
-  					height: 'var(--radix-accordion-content-height)'
-  				}
-  			},
-  			'accordion-up': {
-  				from: {
-  					height: 'var(--radix-accordion-content-height)'
-  				},
-  				to: {
-  					height: '0'
-  				}
-  			},
-			  rotate: {
-				'0%': { transform: 'rotate(0deg)' },
-				'100%': { transform: 'rotate(360deg)' },
-			  },
-			  swing: {
-				'0%, 100%': { transform: 'rotate(-5deg)' },
-				'50%': { transform: 'rotate(5deg)' },
-			  },
-			  'flip-in': {
-				'0%': { transform: 'rotateY(-180deg)', opacity: '0' },
-				'100%': { transform: 'rotateY(0deg)', opacity: '1' },
-			  },
-			  'flip-out': {
-				'0%': { transform: 'rotateY(0deg)', opacity: '1' },
-				'100%': { transform: 'rotateY(180deg)', opacity: '0' },
-			  },
-  		},
-  		animation: {
-  			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out',
-			'swing': 'swing 5s ease-in-out infinite',
-			'flip-in': 'flip-in 0.5s ease-in-out forwards',
-        	'flip-out': 'flip-out 0.5s ease-in-out forwards',
-		},	
-  	},
-	  fontFamily: {
-		DEFAULT: ['Poppins', 'sans-serif'], 
-	  },
+    },
+    extend: {
+      fontFamily: {
+        // sans:['Montserrat',...fontFamily.sans],
+        sans: ["Lato", ...fontFamily.sans],
+        // sans: ['Poppins', ...fontFamily.sans],
+        serif: ["Libre Baskerville", ...fontFamily.serif],
+        poppins: ["Poppins", "sans-serif"],
+        // montserrat:['Montserrat','sans-serif']
+      },
+      screens: {
+        xs: "475px", // Small screen
+        "3xl": "2048px", // Ultra large screen
+      },
+      boxShadow: {
+        input:
+          "`0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08)`",
+        card: "`0px 2px 4px rgba(0,0,0,0.1), 0px 1px 2px rgba(0,0,0,0.2)`",
+      },
+      colors: {
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        chart: {
+          "1": "hsl(var(--chart-1))",
+          "2": "hsl(var(--chart-2))",
+          "3": "hsl(var(--chart-3))",
+          "4": "hsl(var(--chart-4))",
+          "5": "hsl(var(--chart-5))",
+        },
+        inputbg: "#F0EEED",
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+        xs: "calc(var(--radius) - 6px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
+        },
+        "accordion-up": {
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
+        },
+        rotate: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        swing: {
+          "0%, 100%": { transform: "rotate(-5deg)" },
+          "50%": { transform: "rotate(5deg)" },
+        },
+        "flip-in": {
+          "0%": { transform: "rotateY(-180deg)", opacity: "0" },
+          "100%": { transform: "rotateY(0deg)", opacity: "1" },
+        },
+        "flip-out": {
+          "0%": { transform: "rotateY(0deg)", opacity: "1" },
+          "100%": { transform: "rotateY(180deg)", opacity: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        swing: "swing 5s ease-in-out infinite",
+        "flip-in": "flip-in 0.5s ease-in-out forwards",
+        "flip-out": "flip-out 0.5s ease-in-out forwards",
+      },
+    },
+    fontFamily: {
+      DEFAULT: ["Poppins", "sans-serif"],
+    },
   },
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [addVariablesForColors, require("tailwindcss-animate")],
