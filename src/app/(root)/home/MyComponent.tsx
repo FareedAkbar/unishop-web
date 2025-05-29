@@ -16,6 +16,8 @@ import { SpecialItemsForHomePage } from "~/types/specialItems";
 import BackgroundSquares from "~/components/ui-components/BackgroundSquares";
 import Spinner from "~/components/spinner";
 import ContactSection from "./ContactSection";
+import CategoriesSection from "./CategoriesSection";
+import Image from "next/image";
 const HomePage: React.FC = () => {
   const { productTags, getProductTagStatus, category } = useAuthContext();
   const [specialItems, setSpecialItems] = useState<
@@ -26,7 +28,7 @@ const HomePage: React.FC = () => {
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [isHovered, setIsHovered] = useState(false); // Hover state
   const isHoveredRef = useRef(false); // Use a ref to track hover state
-  console.log(category)
+  // console.log(category);
   // Hook to detect screen size
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -131,16 +133,32 @@ const HomePage: React.FC = () => {
       </div>
       <div className="container mx-auto">
         <div className="flex flex-col items-center px-4 py-5 md:px-10">
-          <div className="flex text-center text-xl md:text-3xl lg:items-center lg:text-5xl">
+          <div className="flex text-center text-2xl md:text-3xl lg:items-center lg:text-5xl">
             <FlipWords
               words={["Merch", "Books", "Beyond"]}
               className="font-bold text-red-500"
             />
-            <span className="block text-base md:mt-0.5 md:text-2xl lg:text-4xl">
+            <span className="mt-0.5 block text-xl md:text-2xl lg:text-4xl">
               at UniShop!
             </span>
           </div>
-        </div>{" "}
+        </div>
+        <div className="mx-auto flex flex-wrap justify-evenly gap-4 px-4 py-5 md:px-10">
+          <Image
+            src="/assets/images/home/hom1.png"
+            alt="hero"
+            width={1000}
+            height={1000}
+            className="h-fit w-full md:w-2/5 lg:w-1/3"
+          />
+          <Image
+            src="/assets/images/home/hom2.png"
+            alt="hero"
+            width={1000}
+            height={1000}
+            className="h-fit w-full md:w-2/5 lg:w-1/3"
+          />
+        </div>
         {/* <div className="relative w-full">
           <div className="flex h-fit">
             <div
@@ -224,10 +242,7 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         </div> */}
-
-
-            
-
+        <CategoriesSection categories={category!} />
         <AboutSection />
         <ContactSection />
         {/* <GraduationBanner /> */}

@@ -42,7 +42,7 @@ const ImageSlider: React.FC = () => {
   }, [currentIndex]);
 
   return (
-    <div className="relative w-full overflow-hidden px-4 pb-4 pt-2">
+    <div className="relative w-full overflow-hidden pb-4 pt-2 sm:px-4">
       {/* Image wrapper with transition */}
       <div className="relative aspect-[3/1] w-full">
         {prevIndex !== null && isAnimating && (
