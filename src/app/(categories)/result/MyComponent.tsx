@@ -432,70 +432,69 @@ const MyComponent = () => {
             </div>
 
             {/* <ScrollArea className="min-h-[70vh] pb-10"> */}
-            <div
-              className="flex min-h-[70vh] flex-wrap justify-center gap-3 space-y-2 py-3"
-              // key={displayData ? displayData?.[0]?.item_id : "123"}
-            >
-              {loader ? (
-                Array.from({ length: 5 }, (_, index) => (
-                  <div key={index}>
-                    <ProductCardSkeleton />
+            <div className="min-h-[70vh]">
+              <div className="flex flex-wrap justify-center gap-4 py-3">
+                {loader ? (
+                  Array.from({ length: 5 }, (_, index) => (
+                    <div key={index}>
+                      <ProductCardSkeleton />
+                    </div>
+                  ))
+                ) : searchItems && searchItems.length > 0 ? (
+                  searchItems.map(
+                    (item: DataCart) =>
+                      item.web_visibility === 1 && (
+                        <ProductCard
+                          key={item.item_id}
+                          product={item}
+                          showAddToCart={!isItemInCart(item.item_id)}
+                          onAddToCart={async () => {
+                            if (item?.variations?.[0]) {
+                              await openDetail(item);
+                            } else {
+                              await handleAddToCart(item);
+                            }
+                          }}
+                          onRemoveFromCart={() => handleRemoveFromCart(item)}
+                          openDetail={() => openDetail(item)}
+                          handleFavourite={() => handleFavourite(item)}
+                          wishListLoader={wishListLoader}
+                          goToDetail={() => goToDetail(item)}
+                        />
+                      ),
+                  )
+                ) : (
+                  // Only display the empty state when data loading is complete and no items are available
+                  <div className="flex h-full w-full flex-col items-center justify-center">
+                    <p className="mb-2 rounded bg-yellow-200 p-3 text-center text-sm dark:bg-yellow-700 lg:w-2/3">
+                      Your search returned no results. If you were searching for
+                      a subject code, it is possible textbooks have not been
+                      confirmed for this course yet. Please contact the Bookshop
+                      at
+                      <a
+                        href="tel:0242218050"
+                        className="mx-1 text-red-500 underline hover:text-red-600"
+                      >
+                        02 4221 8050
+                      </a>
+                      or
+                      <a
+                        href="mailto:uow-bookshop@uow.edu.au"
+                        className="mx-1 text-red-500 underline hover:text-red-600"
+                      >
+                        uow-bookshop@uow.edu.au
+                      </a>
+                      for further details.
+                    </p>
+                    <Player
+                      autoplay
+                      loop
+                      src="/assets/gifs/emptywishlist.json"
+                      className="h-80 w-80"
+                    />
                   </div>
-                ))
-              ) : searchItems && searchItems.length > 0 ? (
-                searchItems.map(
-                  (item: DataCart) =>
-                    item.web_visibility === 1 && (
-                      <ProductCard
-                        key={item.item_id}
-                        product={item}
-                        showAddToCart={!isItemInCart(item.item_id)}
-                        onAddToCart={async () => {
-                          if (item?.variations?.[0]) {
-                            await openDetail(item);
-                          } else {
-                            await handleAddToCart(item);
-                          }
-                        }}
-                        onRemoveFromCart={() => handleRemoveFromCart(item)}
-                        openDetail={() => openDetail(item)}
-                        handleFavourite={() => handleFavourite(item)}
-                        wishListLoader={wishListLoader}
-                        goToDetail={() => goToDetail(item)}
-                      />
-                    ),
-                )
-              ) : (
-                // Only display the empty state when data loading is complete and no items are available
-                <div className="flex h-full w-full flex-col items-center justify-center">
-                  <p className="mb-2 rounded bg-yellow-200 p-3 text-center text-sm dark:bg-yellow-700 lg:w-2/3">
-                    Your search returned no results. If you were searching for a
-                    subject code, it is possible textbooks have not been
-                    confirmed for this course yet. Please contact the Bookshop
-                    at
-                    <a
-                      href="tel:0242218050"
-                      className="mx-1 text-red-500 underline hover:text-red-600"
-                    >
-                      02 4221 8050
-                    </a>
-                    or
-                    <a
-                      href="mailto:uow-bookshop@uow.edu.au"
-                      className="mx-1 text-red-500 underline hover:text-red-600"
-                    >
-                      uow-bookshop@uow.edu.au
-                    </a>
-                    for further details.
-                  </p>
-                  <Player
-                    autoplay
-                    loop
-                    src="/assets/gifs/emptywishlist.json"
-                    className="h-80 w-80"
-                  />
-                </div>
-              )}
+                )}
+              </div>
             </div>
             {/* </ScrollArea> */}
             {pagination && (
