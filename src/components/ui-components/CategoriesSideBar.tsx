@@ -294,7 +294,9 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
     if (!category || !subCategory) return;
 
     const modifiedSubCategories = [...subCategory];
-
+    console.log("category", category);
+    console.log("subCategory", subCategory);
+   
     // Step 1: Find the actual CAT node with type = "Gifts"
     const giftsParentCat = subCategory.find(
       (cat) => cat.type?.toLowerCase() === "gifts",
@@ -322,35 +324,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
           targetCategory.children.push(item);
         }
       });
-      // if (giftsParentCat) {
-      //   const staticGiftChildren: CAT[] = StaticGiftsRoutes.map((route, idx) => ({
-      //     id: 100000 + idx,
-      //     category_name: route.label,
-      //     category_description: "",
-      //     category_type_id: giftsParentCat.category_type_id,
-      //     outlet: giftsParentCat.outlet,
-      //     parent: giftsParentCat.id, // ✅ use actual category ID, not type
-      //     deleted: 0,
-      //     media_id: 0,
-      //     booknet: 0,
-      //     gifts: 0,
-      //     arts: 0,
-      //     object_path: "",
-      //     clothings: null,
-      //     till_visibility: 1,
-      //     web_visibility: 1,
-      //     app_visibility: 1,
-      //     type: "Gifts",
-      //     children: [],
-      //   }));
-      //   const giftsCategory = Object.values(categoriesMap).find(
-      //     (category) => category.type === "Gifts"
-      //   );
-
-      //   if (giftsCategory && Array.isArray(giftsCategory.children)) {
-      //     giftsCategory.children = staticGiftChildren;
-      //   }
-      // }
+     
 
       const result = Object.values(categoriesMap);
       setHeaderCategory(result);

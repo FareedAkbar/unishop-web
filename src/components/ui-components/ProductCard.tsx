@@ -73,18 +73,12 @@ const ProductCard = ({
     <div className="group relative flex w-full flex-shrink-0 grow-0 flex-col rounded-md border border-gray-400 p-2 shadow transition-transform duration-300 hover:scale-105 dark:border-gray-600 dark:bg-slate-900 xs:w-56 sm:w-64 lg:w-72">
       {((product?.items_type === 1 && !product?.variations?.[0]) ??
         product?.item_sale_price) && (
-        <div
-          className="absolute inset-0 z-[1] rounded bg-black/30 dark:bg-white/30"
-          title="Currently no variation is available"
-        />
-      )}
-      {product?.items_type === 1 && (
-        <div className="absolute left-2 top-0 flex flex-col">
-          <span className="z-[5] mr-2 mt-1 rounded-sm bg-red-500 px-1.5 py-0.5 text-[10px] text-white">
-            Variable Item
-          </span>
-        </div>
-      )}
+          <div
+            className="absolute inset-0 z-[1] rounded bg-black/30 dark:bg-white/30"
+            title="Currently no variation is available"
+          />
+        )}
+
 
       <div className="relative my-4 flex h-40 grow-0 flex-col items-center justify-center rounded-sm bg-white sm:h-48 md:h-72">
         {tagNames.length > 0 ? (
@@ -131,7 +125,7 @@ const ProductCard = ({
             className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
           >
             {product?.item_id &&
-            favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
+              favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
               <AiFillHeart color="red" />
             ) : (
               <AiOutlineHeart />
@@ -146,10 +140,10 @@ const ProductCard = ({
         </div>
       </div>
       {showButton &&
-      (product?.variations?.[0]?.items_variable_items_sale_price ??
-        (product?.item_sale_price &&
-          ((product?.stock?.quantity && product?.stock?.quantity > 0) ||
-            product?.allow_special_order == 1))) ? (
+        (product?.variations?.[0]?.items_variable_items_sale_price ??
+          (product?.item_sale_price &&
+            ((product?.stock?.quantity && product?.stock?.quantity > 0) ||
+              product?.allow_special_order == 1))) ? (
         <Button
           width="w-full"
           onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
@@ -186,26 +180,26 @@ const ProductCard = ({
           {
             manageUsage().length > 0
               ? manageUsage().map((item, index) => {
-                  const matchedType = textbookType?.find(
-                    (t) => t.item_book_type_id === item.type_id,
-                  );
-                  return (
-                    <div
-                      key={`usage-${item.subject_code}-${index}-pair`}
-                      className="flex flex-col items-start gap-1 sm:flex-row"
+                const matchedType = textbookType?.find(
+                  (t) => t.item_book_type_id === item.type_id,
+                );
+                return (
+                  <div
+                    key={`usage-${item.subject_code}-${index}-pair`}
+                    className="flex flex-col items-start gap-1 sm:flex-row"
+                  >
+                    <span
+                      className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "text-red-500" : "text-yellow-600 dark:text-yellow-500"} py-1 text-sm`}
                     >
-                      <span
-                        className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "text-red-500" : "text-yellow-600 dark:text-yellow-500"} py-1 text-sm`}
-                      >
-                        {matchedType?.type_name ?? ""}: {item.subject_name}{" "}
-                        {item.subject_code}
-                      </span>
-                      {/* <span className="inline-block w-fit rounded bg-yellow-200 px-2 py-1 text-xs text-black dark:bg-yellow-500">
+                      {matchedType?.type_name ?? ""}: {item.subject_name}{" "}
+                      {item.subject_code}
+                    </span>
+                    {/* <span className="inline-block w-fit rounded bg-yellow-200 px-2 py-1 text-xs text-black dark:bg-yellow-500">
                     
                   </span> */}
-                    </div>
-                  );
-                })
+                  </div>
+                );
+              })
               : ""
             // <p className="font-serif text-xs">
             //   Textbook is not used in this session
@@ -248,6 +242,13 @@ const ProductCard = ({
             <IoIosCloseCircle /> Out of stock
           </span>
         ))}
+      {product?.items_type === 1 && (
+
+        <span className="flex w-fit flex-row px-2 items-center gap-1 rounded bg-red-500 p-1 font-serif text-xs text-white">
+          Variable Item
+        </span>
+
+      )}
     </div>
   );
 };

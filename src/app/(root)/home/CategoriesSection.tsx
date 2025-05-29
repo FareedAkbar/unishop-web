@@ -2,10 +2,8 @@
 "use client";
 
 import { FC } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { SuperCategory } from "~/types/category";
-import { useAuthContext } from "~/Context/AuthContext";
+import type { SuperCategory } from "~/types/category";
 import Link from "next/link";
 
 interface CategoriesSectionProps {
@@ -13,13 +11,7 @@ interface CategoriesSectionProps {
 }
 
 const CategoriesSection: FC<CategoriesSectionProps> = ({ categories }) => {
-  const router = useRouter();
-  const { getCategory } = useAuthContext();
-  //   const handleClick = (item: SuperCategory) => {
-  //     router.push(
-  //       `/products?category=${item.category_type_id}&name=${item.type}&page=1`,
-  //     );
-  //   };
+
   const dummyImages = [
     "/assets/images/home/cat1.jpg",
     "/assets/images/home/cat2.jpg",
@@ -44,7 +36,7 @@ const CategoriesSection: FC<CategoriesSectionProps> = ({ categories }) => {
           >
             <div className="relative h-24 w-24 overflow-hidden rounded-md">
               <Image
-                src={dummyImages[idx]!}
+                src={item?.object_path ?? dummyImages[idx]!}
                 alt={item.type}
                 fill
                 className="object-cover"

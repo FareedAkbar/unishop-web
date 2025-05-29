@@ -296,7 +296,7 @@ const Header = () => {
       <div className="">
         {subItems?.map((subItem) => (
           <div key={subItem.category_name} className="relative">
-            <div className="flex w-full items-center justify-between">
+            <div className="flex w-full pl-2 items-center justify-between">
               <button
                 onClick={() => {
                   router.push(
@@ -346,7 +346,7 @@ const Header = () => {
         ))}
         {item == "Gifts" &&
           StaticGiftsRoutes.map((subItem) => (
-            <div key={subItem.label} className="relative">
+            <div key={subItem.label} className="relative pl-2">
               <button
                 onClick={() => {
                   router.push(subItem.href);
@@ -362,6 +362,25 @@ const Header = () => {
                   title={subItem.label}
                 >
                   {subItem.label}
+                </span>
+              </button>
+            </div>
+          ))}
+        {item == "Books" &&
+          genre?.map((subItem) => (
+            <div key={subItem.genre} className="relative  pl-2">
+              <button
+                onClick={() => {
+                  router.push(`books?detail=${subItem.genre}`);
+                  toggleCategory(`books?detail=${subItem.genre}`);
+                }}
+                className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
+              >
+                <span
+                  className="mr-2 truncate text-left capitalize"
+                  title={subItem.genre}
+                >
+                  {subItem.genre}
                 </span>
               </button>
             </div>
@@ -511,10 +530,30 @@ const Header = () => {
                 </button>
               </div>
             ))}
+          {type == "Books" &&
+            genre?.map((subItem) => (
+              <div key={subItem.genre} className="relative py-1">
+                <button
+                  onClick={() => {
+                    router.push(`books?detail=${subItem.genre}`);
+                    toggleCategory(`books?detail=${subItem.genre}`);
+                  }}
+                  className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
+                >
+                  <span
+                    className="mr-2 truncate text-left capitalize"
+                    title={subItem.genre}
+                  >
+                    {subItem.genre}
+                  </span>
+                </button>
+              </div>
+            ))}
+
         </div>
       );
     };
-
+    console.log(categories)
     return (
       <div className="hidden lg:block">
         <div className="flex w-full items-center justify-center pt-4">
@@ -549,6 +588,7 @@ const Header = () => {
                     >
                       {item.type}
                     </Link>
+
                     {hasChildren ? (
                       <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
                     ) : item.type == "Gifts" ? (
@@ -609,8 +649,10 @@ const Header = () => {
                           {sub.label}
                         </Link>
                       ))}
+
                     </div>
                   )}
+
                 </div>
               );
             })}

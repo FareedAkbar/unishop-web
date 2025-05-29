@@ -493,7 +493,7 @@ const MyComponent = () => {
                       }
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select subcategory" />
+                        <SelectValue placeholder="Select  category" />
                       </SelectTrigger>
                       <SelectContent>
                         {subcategoryTypes?.map((item) => (

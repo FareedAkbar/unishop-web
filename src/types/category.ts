@@ -5,6 +5,7 @@ export interface SuperCategory {
   type: string;
   description: string;
   outlet_id: number;
+  object_path: string | null;
 }
 
 type Category = {
