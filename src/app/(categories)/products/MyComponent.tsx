@@ -459,7 +459,7 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center"
+        className="container mx-auto flex min-h-screen flex-col items-center"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
@@ -469,7 +469,7 @@ const MyComponent = () => {
           <div className="flex w-full flex-col">
             {/* Header Section */}
             <div className="flex w-full flex-wrap items-end justify-between gap-2 py-4 pl-2">
-              <div className="text-left">
+              <div className="text-left lg:pl-16">
                 <h2 className="text-xl font-bold capitalize">
                   {" "}
                   {categoryType?.type}
@@ -481,7 +481,7 @@ const MyComponent = () => {
                 )}
               </div>
 
-              <div className="flex w-full flex-col items-center gap-2 sm:w-[400px] md:flex-row">
+              <div className="flex w-full flex-col items-center gap-2 sm:w-[400px] md:flex-row lg:pr-16">
                 <div className="w-full">
                   {subcategoryTypes?.[0] && (
                     <NewSelect

@@ -454,7 +454,7 @@ const MyComponent = () => {
   return (
     <div>
       <motion.main
-        className="flex min-h-screen flex-col items-center pb-5"
+        className="container mx-auto flex min-h-screen flex-col items-center pb-5"
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
