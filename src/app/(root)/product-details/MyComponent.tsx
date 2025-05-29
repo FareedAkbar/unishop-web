@@ -604,7 +604,7 @@ const MyComponent = () => {
   }
 
   return (
-    <div className="p-6 md:mt-0">
+    <div className="container mx-auto p-6 md:mt-0">
       <div className="flex items-center pb-5 lg:gap-10 lg:px-10">
         {/* Left Arrow */}
         <div>
