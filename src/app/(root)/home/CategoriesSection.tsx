@@ -30,8 +30,8 @@ const CategoriesSection: FC<CategoriesSectionProps> = ({ categories }) => {
   ];
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 className="mb-2 text-2xl font-semibold text-red-500">
-        Popular Categories
+      <h2 className="mb-2 text-xl font-semibold text-red-500 md:text-3xl lg:text-5xl">
+        POPULAR CATEGORIES
       </h2>
       <p>Browse one of our popular categories.</p>
       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
