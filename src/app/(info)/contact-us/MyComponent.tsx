@@ -67,22 +67,24 @@ const MyComponent = () => {
             <FaUserTie className="text-red-500" /> Specialty Enquiries
           </h2>
           <p>
-            Retail Operations Manager:
-            <a
-              href="mailto:uow-bookshop@uow.edu.au"
-              className="block pl-1 text-red-500 underline transition-colors"
+            Retail Operations Manager / Retail, Merchandise & Branding
+            <p className="flex"> Yasmin Jenkin <a
+              href="mailto:yjenkin@uow.edu.au"
+              className="block pl-2  text-red-500 underline transition-colors"
             >
-              uow-bookshop@uow.edu.au
-            </a>
+            yjenkin@uow.edu.au
+            </a></p>
+
           </p>
           <p>
-            Events Coordinator: Anneliese Hennessy
-            <a
+            Book Buyer & Events Coordinator / Academic Liaison Officer
+            <p className="flex"> Anneliese Hennessy  <a
               href="mailto:ahennessy@uow.edu.au"
-              className="block text-red-500 underline transition-colors"
+              className="block pl-2 text-red-500 underline transition-colors"
             >
-              (ahennessy@uow.edu.au)
-            </a>
+               ahennessy@uow.edu.au
+            </a></p>
+
           </p>
         </div>
       </div>
@@ -97,12 +99,12 @@ const MyComponent = () => {
       {/* Address Section */}
       <div className="flex flex-col gap-6 p-8 text-center lg:flex-row lg:justify-evenly">
         <div className="w-full max-w-xs text-left">
-          <h2 className="flex items-center gap-2 pb-2 text-lg font-semibold">
+          {/* <h2 className="flex items-center gap-2 pb-2 text-lg font-semibold">
             <FaBuilding className="text-red-500" /> Postal Address
           </h2>
           <p>UniShop</p>
           <p>P.O. Box U100</p>
-          <p>University of Wollongong P.O. NSW 2500</p>
+          <p>University of Wollongong P.O. NSW 2500</p> */}
         </div>
         <div className="w-full max-w-xs text-left">
           <h2 className="flex items-center gap-2 pb-2 text-lg font-semibold">

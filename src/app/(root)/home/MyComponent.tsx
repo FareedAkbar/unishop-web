@@ -17,7 +17,7 @@ import BackgroundSquares from "~/components/ui-components/BackgroundSquares";
 import Spinner from "~/components/spinner";
 import ContactSection from "./ContactSection";
 const HomePage: React.FC = () => {
-  const { productTags, getProductTagStatus } = useAuthContext();
+  const { productTags, getProductTagStatus, category } = useAuthContext();
   const [specialItems, setSpecialItems] = useState<
     SpecialItemsForHomePage[] | null
   >(null);
@@ -26,7 +26,7 @@ const HomePage: React.FC = () => {
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [isHovered, setIsHovered] = useState(false); // Hover state
   const isHoveredRef = useRef(false); // Use a ref to track hover state
-
+  console.log(category)
   // Hook to detect screen size
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -141,7 +141,7 @@ const HomePage: React.FC = () => {
             </span>
           </div>
         </div>{" "}
-        <div className="relative w-full">
+        {/* <div className="relative w-full">
           <div className="flex h-fit">
             <div
               className={`w-full lg:pr-3 ${specialItems && specialItems?.length > 2 && "lg:pl-10"} pb-10`}
@@ -223,7 +223,11 @@ const HomePage: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
+
+
+            
+
         <AboutSection />
         <ContactSection />
         {/* <GraduationBanner /> */}
