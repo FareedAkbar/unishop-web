@@ -34,6 +34,7 @@ import { BsPlusCircle } from "react-icons/bs";
 import { error } from "console";
 import Link from "next/link";
 import { Countries_States } from "../constants/countries_states";
+import _ from "lodash";
 type CheckoutFormValues = z.infer<typeof SignupSchema>;
 
 interface checkout {
@@ -393,6 +394,17 @@ export default function CheckoutForm({
     setShowFormFields(false);
   }, [billing_address]);
 
+  useEffect(() => {
+    if (errors && !_.isEmpty(errors) && !showFormFields) {
+      toast({
+        title: "Address Error",
+        variant: "destructive",
+        description: "Something went wrong. Please try with different address.",
+      });
+    
+    }
+  }, [errors]);
+  
   return (
     <div className="mx-auto w-full rounded-lg border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
