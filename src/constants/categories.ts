@@ -29,7 +29,7 @@ export const categories: Category[] = [
     href: "https://unishopuow.vitalsource.com/",
   },
   {
-    label: "Pulse",
+    label: "Join Pulse Perks",
     icon: "AiOutlineContacts",
     href: "",
     subItems: [

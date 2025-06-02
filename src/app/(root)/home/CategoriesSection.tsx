@@ -36,7 +36,7 @@ const CategoriesSection: FC<CategoriesSectionProps> = ({ categories }) => {
           >
             <div className="relative h-24 w-24 overflow-hidden rounded-md">
               <Image
-                src={item?.object_path ?? dummyImages[idx]!}
+                src={item?.object_path ? `https://ipos-storage.s3.amazonaws.com/${item?.object_path}`:  dummyImages[idx]!}
                 alt={item.type}
                 fill
                 className="object-cover"
