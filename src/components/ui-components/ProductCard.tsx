@@ -218,11 +218,11 @@ const ProductCard = ({
       <div className="mt-1 flex gap-1 sm:mt-2 sm:gap-2">
         {product?.variations?.[0]?.items_variable_items_sale_price ? (
           <span className="text-sm font-bold text-red-500 sm:text-lg">
-            ${product?.variations?.[0]?.items_variable_items_sale_price}
+            ${product?.variations?.[0]?.items_variable_items_sale_price.toFixed(2)}
           </span>
         ) : product?.item_sale_price ? (
           <span className="text-sm font-bold text-red-500 sm:text-lg">
-            ${product?.item_sale_price}
+            ${product?.item_sale_price.toFixed(2)}
           </span>
         ) : (
           ""

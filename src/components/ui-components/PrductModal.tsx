@@ -218,11 +218,11 @@ const ProductModal = ({
                   ${" "}
                   {itemDetail?.variations?.[0] &&
                   filteredVariations?.[0]?.items_variable_items_sale_price
-                    ? filteredVariations?.[0]?.items_variable_items_sale_price
+                    ? filteredVariations?.[0]?.items_variable_items_sale_price.toFixed(2)
                     : itemDetail?.variations?.[0]
                       ? itemDetail?.variations?.[0]
-                          .items_variable_items_sale_price
-                      : itemDetail?.item_sale_price}
+                          .items_variable_items_sale_price.toFixed(2)
+                      : itemDetail?.item_sale_price.toFixed(2)}
                 </span>
               ) : (
                 ""
