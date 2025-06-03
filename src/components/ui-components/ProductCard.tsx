@@ -68,9 +68,35 @@ const ProductCard = ({
     }
     return [];
   };
+interface TagJson {
+    forFrontDesk?: boolean;
+    [key: string]: unknown; // Allow other properties we don't care about
+}
+ const checkTag = (tagName: string): boolean => {
+    const yenIndex = tagName.indexOf('¥');
+    if (yenIndex === -1) {
+        return true;
+    }
+    
+    try {
+        const jsonStr = tagName.slice(yenIndex + 1);
+        const jsonObj = JSON.parse(jsonStr) as TagJson;
+        
+        // Explicitly check if forFrontDesk exists and is a boolean
+        if (typeof jsonObj.forFrontDesk === 'boolean') {
+            return !jsonObj.forFrontDesk;
+        }
+        
+        return true;
+    } catch (e) {
+        return true;
+    }
+};
+
+
 
   return (
-    <div className="group relative flex w-full flex-shrink-0 grow-0 flex-col rounded-md border border-gray-400 p-2 shadow transition-transform duration-300 hover:scale-105 dark:border-gray-600 dark:bg-slate-900 xs:w-56 sm:w-64 lg:w-72">
+    <div className="group relative flex w-full flex-shrink-0 grow-0 flex-col rounded-md border border-gray-400 p-2 shadow  dark:border-gray-600 dark:bg-slate-900 xs:w-56 sm:w-64 lg:w-72">
       {((product?.items_type === 1 && !product?.variations?.[0]) ??
         product?.item_sale_price) && (
           <div
@@ -80,16 +106,18 @@ const ProductCard = ({
         )}
 
 
-      <div className="relative my-4 flex h-40 grow-0 flex-col items-center justify-center rounded-sm bg-white sm:h-48 md:h-72">
+      <div className="relative my-4 flex h-40 grow-0 flex-col items-center justify-center rounded-sm bg-white dark:bg-slate-900 sm:h-48 md:h-72">
         {tagNames.length > 0 ? (
-          <div className="absolute left-2 top-1 flex flex-col">
+          <div className="absolute left-2 top-0 flex flex-col">
             {tagNames.map((tag, index) => {
+              
               return (
+                checkTag(tag) &&
                 <span
                   key={`${tag}-${index}`}
-                  className="z-[5] mr-2 mt-1 rounded bg-red-500 px-1 py-0.5 text-[8px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
+                  className="z-[5] mr-2 mt-1 rounded bg-gray-200 border border-gray-300 dark:border-gray-500  dark:bg-gray-700  px-1 py-0.5 text-[11px]  text-red-600 dark:text-red-500 sm:left-6 sm:top-6 sm:px-2 sm:py-1"
                 >
-                  {tag}
+                  {tag.split("¥")[0]}
                 </span>
               );
             })}
@@ -109,7 +137,7 @@ const ProductCard = ({
           alt={product?.SKU_title ?? ""}
           width={1000}
           height={1000}
-          className="my-2 h-full w-full cursor-pointer object-contain transition-transform duration-300" // Scale on hover
+          className="my-2 h-full w-full cursor-pointer object-contain transition-transform duration-300 hover:scale-105" // Scale on hover
         />
         <div className="absolute right-5 top-2 flex">
           {showButton && !showAddToCart && (

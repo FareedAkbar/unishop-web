@@ -27,6 +27,7 @@ export async function getProductTags(): Promise<ApiResponseStatus | boolean> {
         const result: ApiResponseStatus =
             (await response.json()) as ApiResponseStatus;
         if (result?.status) {
+            console.log("getProductTags result:", result);
             // setMeta(result.meta);
             return result
 

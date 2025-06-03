@@ -986,7 +986,7 @@ const MyComponent = () => {
 
               <ScrollArea
                 className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 transition-all duration-300 dark:bg-slate-800 ${
-                  isExpanded ? "max-h-[28rem]" : "max-h-[10rem]"
+                  isExpanded ? "max-h-[28rem]" : "max-h-[17rem]"
                 }`}
               >
                 {items?.[0] ? (

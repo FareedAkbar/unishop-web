@@ -603,6 +603,31 @@ const MyComponent = () => {
     );
   }
 
+  interface TagJson {
+    forFrontDesk?: boolean;
+    [key: string]: unknown; // Allow other properties we don't care about
+}
+   const checkTag = (tagName: string): boolean => {
+    const yenIndex = tagName.indexOf('¥');
+    if (yenIndex === -1) {
+        return true;
+    }
+    
+    try {
+        const jsonStr = tagName.slice(yenIndex + 1);
+        const jsonObj = JSON.parse(jsonStr) as TagJson;
+        
+        // Explicitly check if forFrontDesk exists and is a boolean
+        if (typeof jsonObj.forFrontDesk === 'boolean') {
+            return !jsonObj.forFrontDesk;
+        }
+        
+        return true;
+    } catch (e) {
+        return true;
+    }
+};
+
   return (
     <div className="container mx-auto p-6 md:mt-0">
       <div className="flex items-center pb-5 lg:gap-10 lg:px-10">
@@ -828,11 +853,12 @@ const MyComponent = () => {
             <div className="flex">
               {tagNames.map((tag, index) => {
                 return (
+                  checkTag(tag) && // Only render if checkTag returns true
                   <span
                     key={`productTag-${tag}-${index}`}
-                    className="mb-1 mr-2 mt-1 rounded bg-red-500 px-1 py-0.5 text-[10px] text-white sm:left-6 sm:top-6 sm:px-2 sm:py-1"
+                    className="mb-1 mr-2 mt-1 rounded bg-gray-200 border border-gray-300 dark:border-gray-500 dark:bg-gray-700  px-1 py-0.5 text-[11px]  text-red-600 dark:text-red-500 sm:left-6 sm:top-6 sm:px-2 sm:py-1"
                   >
-                    {tag}
+                    {tag.split("¥")[0]}
                   </span>
                 );
               })}
