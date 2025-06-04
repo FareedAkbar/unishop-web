@@ -11,7 +11,6 @@ interface CategoriesSectionProps {
 }
 
 const CategoriesSection: FC<CategoriesSectionProps> = ({ categories }) => {
-
   const dummyImages = [
     "/assets/images/home/cat1.jpg",
     "/assets/images/home/cat2.jpg",
@@ -27,7 +26,7 @@ const CategoriesSection: FC<CategoriesSectionProps> = ({ categories }) => {
       </h2>
       <p className="text-gray-500">Browse one of our popular categories.</p>
       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {categories.map((item, idx) => (
+        {categories?.map((item, idx) => (
           <Link
             key={item.category_type_id}
             href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
@@ -36,7 +35,11 @@ const CategoriesSection: FC<CategoriesSectionProps> = ({ categories }) => {
           >
             <div className="relative h-24 w-24 overflow-hidden rounded-md">
               <Image
-                src={item?.object_path ? `https://ipos-storage.s3.amazonaws.com/${item?.object_path}`:  dummyImages[idx]!}
+                src={
+                  item?.object_path
+                    ? `https://ipos-storage.s3.amazonaws.com/${item?.object_path}`
+                    : dummyImages[idx]!
+                }
                 alt={item.type}
                 fill
                 className="object-cover"

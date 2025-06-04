@@ -131,12 +131,12 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
       )}
 
       <div
-        className={`fixed right-0 top-0 z-30 h-screen w-full transform overflow-hidden border-l-2 bg-white shadow-lg transition-transform dark:bg-slate-800 lg:w-2/5 ${
+        className={`fixed right-0 top-0 z-30 w-full transform border-l-2 bg-white shadow-lg transition-transform dark:bg-slate-800 lg:w-2/5 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Cart Inner Layout */}
-        <div className="flex h-full flex-col">
+        <div className="flex h-screen flex-col">
           {/* Cart Header */}
           <div className="flex-shrink-0 border-b bg-gray-100 p-4 dark:bg-slate-700">
             <div className="flex items-center justify-between">
@@ -151,7 +151,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Cart Items Scrollable Area */}
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="h-[calc(100vh-30vh)] overflow-y-auto p-4 lg:h-[calc(100vh-160px)]">
             {items.length === 0 ? (
               <div className="flex h-full flex-col items-center justify-center p-4">
                 <span className="text-lg font-medium text-red-600 dark:text-white">
@@ -166,7 +166,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
             ) : (
-              <ScrollArea className="h-full">
+              <div className="space-y-4">
                 {items.map((item: DataCart, index) => (
                   <CartItem
                     key={`cartItems-${item.item_id}-${index}`}
@@ -210,12 +210,12 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
                     item={item}
                   />
                 ))}
-              </ScrollArea>
+              </div>
             )}
           </div>
 
           {/* Cart Footer (Fixed at bottom) */}
-          <div className="flex-shrink-0 border-t bg-white p-3 dark:bg-slate-800">
+          <div className="h-fit flex-shrink-0 border-t bg-white p-3 dark:bg-slate-800">
             <div className="mb-2 flex justify-between">
               <span className="text-sm text-gray-500 dark:text-gray-200">
                 Subtotal
@@ -223,15 +223,14 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
               <span className="text-sm">${subTotal.toFixed(2)}</span>
             </div>
             <Button
-              disabled={items?.[0] ? false : true}
+              // disabled={items?.[0] ? false : true}
               onClick={() => {
                 if (!isOpenAlert) {
                   opencart();
                 }
               }}
-              className={`mt-4 w-full rounded-md bg-red-600 py-2 text-sm text-white ${
-                items.length === 0 ? "disabled" : ""
-              }`}
+              width="w-full"
+              className={`mt-4`}
               title="View Cart"
             />
           </div>
