@@ -119,14 +119,13 @@ const ProductModal = ({
         label: value!,
       }));
   };
-  
 
   return (
     <div>
       {/* <h6 className="pb-4 text-center text-sm text-neutral-600 dark:text-neutral-100">
             {itemDetail?.additional_notes}
           </h6> */}
-      <div className="flex flex-wrap items-center justify-center gap-2">
+      <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:gap-5">
         {/* <div> */}
         <div className="flex flex-col items-center justify-center">
           {/* <motion.div
@@ -219,10 +218,13 @@ const ProductModal = ({
                   ${" "}
                   {itemDetail?.variations?.[0] &&
                   filteredVariations?.[0]?.items_variable_items_sale_price
-                    ? filteredVariations?.[0]?.items_variable_items_sale_price.toFixed(2)
+                    ? filteredVariations?.[0]?.items_variable_items_sale_price.toFixed(
+                        2,
+                      )
                     : itemDetail?.variations?.[0]
-                      ? itemDetail?.variations?.[0]
-                          .items_variable_items_sale_price.toFixed(2)
+                      ? itemDetail?.variations?.[0].items_variable_items_sale_price.toFixed(
+                          2,
+                        )
                       : itemDetail?.item_sale_price.toFixed(2)}
                 </span>
               ) : (
