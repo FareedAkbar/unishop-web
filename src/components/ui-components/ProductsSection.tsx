@@ -180,35 +180,35 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
 
         <div className="w-full lg:w-[92vw]">
           <div
-            className="scrollbar-hidden mt-6 flex flex-wrap justify-center py-6 gap-4 lg:flex-nowrap lg:overflow-x-auto xl:flex-nowrap xl:overflow-x-auto"
+            className="scrollbar-hidden mt-6 flex flex-wrap justify-center gap-4 py-6 lg:flex-nowrap lg:overflow-x-auto lg:pl-28 lg:pr-5 xl:flex-nowrap xl:overflow-x-auto"
             ref={productContainerRef}
           >
             {loader
               ? Array.from({ length: 6 }, (_, index) => (
-                <div key={index} className="p-2">
-                  <ProductCardSkeleton />
-                </div>
-              ))
+                  <div key={index} className="p-2">
+                    <ProductCardSkeleton />
+                  </div>
+                ))
               : products.map((item, index) => (
-                <ProductCard
-                  key={`item.book_id-${item.book_id ?? index}-${index}`}
-                  product={item}
-                  showAddToCart={false}
-                  showButton={false}
-                  //  onAddToCart={async () => {
-                  //    if (item?.variations?.[0]) {
-                  //      await openDetail(item);
-                  //    } else {
-                  //      await handleAddToCart(item);
-                  //    }
-                  //  }}
-                  //  onRemoveFromCart={() => handleRemoveFromCart(item)}
-                  goToDetail={() => goToDetail(item)}
-                  openDetail={() => goToDetail(item)}
-                  handleFavourite={() => handleFavourite(item)}
-                //  wishListLoader={wishListLoader}
-                />
-              ))}
+                  <ProductCard
+                    key={`item.book_id-${item.book_id ?? index}-${index}`}
+                    product={item}
+                    showAddToCart={false}
+                    showButton={false}
+                    //  onAddToCart={async () => {
+                    //    if (item?.variations?.[0]) {
+                    //      await openDetail(item);
+                    //    } else {
+                    //      await handleAddToCart(item);
+                    //    }
+                    //  }}
+                    //  onRemoveFromCart={() => handleRemoveFromCart(item)}
+                    goToDetail={() => goToDetail(item)}
+                    openDetail={() => goToDetail(item)}
+                    handleFavourite={() => handleFavourite(item)}
+                    //  wishListLoader={wishListLoader}
+                  />
+                ))}
           </div>
         </div>
 

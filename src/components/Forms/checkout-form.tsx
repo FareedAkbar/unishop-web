@@ -262,7 +262,7 @@ export default function CheckoutForm({
       billing_address && getObjectFromArray(newAddress)
         ? [getObjectFromArray(newAddress)!]
         : [newAddress];
-    
+
     const updatedData = {
       ...data,
       phone_code:
@@ -401,10 +401,9 @@ export default function CheckoutForm({
         variant: "destructive",
         description: "Something went wrong. Please try with different address.",
       });
-    
     }
   }, [errors]);
-  
+
   return (
     <div className="mx-auto w-full rounded-lg border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">

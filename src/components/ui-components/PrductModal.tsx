@@ -664,13 +664,13 @@ const ProductModal = ({
                 )} */}
         </div>
       </div>
-      <div className="flex w-full justify-end">
+      <div className="group flex w-full justify-end">
         <button
           className="mt-5 flex w-fit flex-row items-center justify-end rounded border-none bg-red-500 px-3 py-1.5 text-sm text-white hover:bg-red-600 lg:text-base"
           onClick={() => goToDetail(itemDetail!)}
         >
           <span>More Details</span>
-          <IoIosArrowRoundForward className="ml-1 text-lg text-white lg:text-xl" />
+          <IoIosArrowRoundForward className="ml-1 text-lg text-white transition-all group-hover:translate-x-1 lg:text-xl" />
         </button>
       </div>
     </div>

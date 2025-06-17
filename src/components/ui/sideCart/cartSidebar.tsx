@@ -161,7 +161,10 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
                 <div className="mt-2 self-center">
                   <Button
                     title="Continue Shopping"
-                    onClick={() => router.push("/")}
+                    onClick={() => {
+                      router.push("/");
+                      onClose();
+                    }}
                   />
                 </div>
               </div>

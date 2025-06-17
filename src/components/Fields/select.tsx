@@ -44,7 +44,7 @@ const Select: React.FC<SelectProps> = ({
       <select
         id={id}
         name={name}
-        className="block w-full rounded-md border p-2 capitalize shadow-sm selection:text-white focus:border-red-500 focus:outline-none focus:ring-red-400 dark:bg-slate-700 dark:text-white sm:text-sm"
+        className="block w-full cursor-pointer rounded-md border p-2 capitalize shadow-sm selection:text-white focus:border-red-500 focus:outline-none focus:ring-red-400 dark:bg-slate-700 dark:text-white sm:text-sm"
         value={value}
         onChange={handleChange}
         disabled={loader || isDisabled}
@@ -64,7 +64,7 @@ const Select: React.FC<SelectProps> = ({
               <option
                 key={option.value}
                 value={option.value}
-                className="text-sm capitalize"
+                className="cursor-pointer text-sm capitalize"
               >
                 {option.label}
               </option>

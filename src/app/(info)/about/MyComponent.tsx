@@ -6,7 +6,7 @@ import { FaStore, FaTruck, FaUsers } from "react-icons/fa"; // Importing React I
 
 const MyComponent = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center">
       {/* Image on Top */}
       <div className="w-full max-w-screen-xl overflow-hidden rounded-xl p-5">
         <Image

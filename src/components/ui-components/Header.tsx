@@ -4,10 +4,8 @@ import {
   FaChevronDown,
   FaBars,
   FaChevronRight,
-  FaTimes,
   FaHome,
   FaPhoneAlt,
-  FaChevronUp,
   FaRegTimesCircle,
 } from "react-icons/fa";
 import Input from "./Input";
@@ -15,16 +13,12 @@ import Image from "next/image";
 import Logo from "../../../public/unishop_logo_new.png";
 import { GoHeart } from "react-icons/go";
 import { IoCartOutline, IoPerson, IoPersonOutline } from "react-icons/io5";
-import { MdOutlinePersonOutline } from "react-icons/md";
-import { FiMoon, FiSearch, FiSun } from "react-icons/fi";
-import { TbSettings } from "react-icons/tb";
-import { HiLogin, HiLogout, HiOutlineMoon } from "react-icons/hi";
+import { FiSearch } from "react-icons/fi";
 import { categories } from "~/constants/categories";
 import { useAuthContext } from "~/Context/AuthContext";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import SidebarCart from "../ui/sideCart/cartSidebar";
 import Link from "next/link";
-import { RxCross2 } from "react-icons/rx";
 
 import { ScrollArea } from "../ui/scroll-area";
 import type {
@@ -33,19 +27,10 @@ import type {
   SuperCategory,
   SideBarCategory,
 } from "~/types/category";
-import {
-  FaBook,
-  FaGraduationCap,
-  FaTshirt,
-  FaPen,
-  FaGift,
-  FaClipboardList,
-} from "react-icons/fa";
-import { AiOutlineFileText, AiOutlineContacts } from "react-icons/ai";
-import { PiMoon, PiMoonLight } from "react-icons/pi";
+import { FaGift } from "react-icons/fa";
+
 import Select from "../Fields/select";
 import { BsTelephone } from "react-icons/bs";
-import CategoriesSidebar from "./CategoriesSideBar";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -296,7 +281,7 @@ const Header = () => {
       <div className="">
         {subItems?.map((subItem) => (
           <div key={subItem.category_name} className="relative">
-            <div className="flex w-full pl-2 items-center justify-between">
+            <div className="flex w-full items-center justify-between pl-2">
               <button
                 onClick={() => {
                   router.push(
@@ -368,7 +353,7 @@ const Header = () => {
           ))}
         {item == "Books" &&
           genre?.map((subItem) => (
-            <div key={subItem.genre} className="relative  pl-2">
+            <div key={subItem.genre} className="relative pl-2">
               <button
                 onClick={() => {
                   router.push(`books?detail=${subItem.genre}`);
@@ -484,8 +469,8 @@ const Header = () => {
             const hasChildren = subItem.children && subItem.children.length > 0;
             const isExpanded = expandedCategories.has(String(subItem.id));
             return (
-              <div key={subItem.id} className="py-1">
-                <div className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500">
+              <div key={subItem.id} className="group py-1">
+                <div className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 group-hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500">
                   <Link
                     href={`/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`}
                     className="block"
@@ -494,14 +479,14 @@ const Header = () => {
                   </Link>
                   {hasChildren && (
                     <span
-                      className="mr-1"
+                      className={`mr-1 ${isExpanded ? "rotate-180" : ""}`}
                       onClick={() => toggleCategory(subItem.id)}
                     >
-                      {isExpanded ? (
-                        <FaChevronDown className="text-xs" />
-                      ) : (
+                      {/* {isExpanded ? ( */}
+                      <FaChevronDown className="text-xs" />
+                      {/* ) : (
                         <FaChevronRight className="text-xs" />
-                      )}
+                      )} */}
                     </span>
                   )}
                 </div>
@@ -549,11 +534,10 @@ const Header = () => {
                 </button>
               </div>
             ))}
-
         </div>
       );
     };
-    console.log(categories)
+    console.log(categories);
     return (
       <div className="hidden lg:block">
         <div className="flex w-full items-center justify-center pt-4">
@@ -624,12 +608,12 @@ const Header = () => {
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200"
+                        className="flex items-center text-base font-medium capitalize text-gray-700 group-hover:text-red-500 dark:text-gray-200"
                       >
                         {item.label}
                       </Link>
                     ) : (
-                      <span className="text-base font-medium capitalize text-gray-700 dark:text-gray-200">
+                      <span className="text-base font-medium capitalize text-gray-700 group-hover:text-red-500 dark:text-gray-200">
                         {item.label}
                       </span>
                     )}
@@ -649,10 +633,8 @@ const Header = () => {
                           {sub.label}
                         </Link>
                       ))}
-
                     </div>
                   )}
-
                 </div>
               );
             })}

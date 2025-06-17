@@ -75,7 +75,7 @@ const MyComponent: React.FC = () => {
   return (
     <div className="bg-gray-50 dark:bg-slate-800">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between bg-white p-8 pb-14 shadow-md dark:bg-slate-600 lg:px-32">
+      <div className="flex flex-wrap items-center justify-center bg-white p-8 pb-14 shadow-md dark:bg-slate-600 lg:justify-between lg:px-32">
         <div className="max-w-md flex-1 text-lg text-gray-700">
           <h1 className="mb-2 text-3xl font-bold text-red-600">
             Refunds & Returns

@@ -249,6 +249,7 @@ const MyComponent = () => {
       if (result?.status) {
         setLocalTransactionData(result.data);
         setIsOpenPaymentAlert(true);
+
         setLoading(true);
 
         // window.open(result.data.link);
@@ -262,7 +263,18 @@ const MyComponent = () => {
       // setCalculateLoader(false);
     }
   };
+  useEffect(() => {
+    if (isOpenPaymentAlert) {
+      document.body.style.overflow = "hidden"; // Prevent background scroll
+    } else {
+      document.body.style.overflow = ""; // Restore scroll
+    }
 
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpenPaymentAlert]);
   const handlePlaceOrder = async () => {
     // await placeOrderApi(797498821);
     const x = {
@@ -711,14 +723,14 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="min-h-screen justify-center bg-gradient-to-r from-[#FFF2F2] to-[#FFEEEE] pb-8 dark:from-slate-700 dark:to-slate-700">
+      <main className="min-h-screen justify-center pb-8 dark:from-slate-700 dark:to-slate-700">
         <div className="z-10 px-6">
-          <div className="xs:grid-cols-1 mt-3 grid justify-center gap-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 lg:gap-5 xl:grid-cols-5">
+          <div className="mt-3 grid justify-center gap-12 xs:grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 lg:gap-5 xl:grid-cols-5">
             <div className="flex flex-col lg:col-span-3 xl:col-span-3">
               <h2 className="mb-2 mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
                 Payment Method
               </h2>
-              <div className="rounded-xl border bg-white p-4 dark:bg-slate-800">
+              <div className="rounded-xl border bg-white p-4 shadow dark:bg-slate-800">
                 <div className="flex flex-col justify-between lg:flex-row">
                   <div>
                     <span className="text-md mt-2">Credit Card - eWAY</span>
@@ -985,7 +997,7 @@ const MyComponent = () => {
               </h2>
 
               <ScrollArea
-                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 transition-all duration-300 dark:bg-slate-800 ${
+                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 shadow transition-all duration-300 dark:bg-slate-800 ${
                   isExpanded ? "max-h-[28rem]" : "max-h-[17rem]"
                 }`}
               >
@@ -1051,7 +1063,7 @@ const MyComponent = () => {
               >
                 <span>{isExpanded ? "▲" : "▼"}</span>
               </button>
-              <div className="mt-4 rounded-xl border bg-white p-4 dark:bg-slate-800 lg:col-span-2 xl:col-span-2">
+              <div className="mt-4 rounded-xl border bg-white p-4 shadow dark:bg-slate-800 lg:col-span-2 xl:col-span-2">
                 <h2 className="text-xl font-bold">Order Summary</h2>
                 {calculateLoader && (
                   <div>
@@ -1156,58 +1168,50 @@ const MyComponent = () => {
           </div>
         </div>
       </main>
-      {isOpenPaymentAlert ? (
+      {isOpenPaymentAlert && (
         <>
-          <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
-            <div className="relative mx-auto my-6 w-auto">
-              <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
-                <div className="border-blueGray-200 flex items-start justify-between rounded-t border-b border-solid p-5">
-                  <h3 className="text-3xl font-semibold"></h3>
-                  <button
-                    className="float-right ml-auto border-0 bg-transparent p-1 text-3xl font-semibold leading-none text-black opacity-5 outline-none focus:outline-none"
-                    onClick={() => setIsOpenPaymentAlert(false)}
-                  >
-                    <span className="block h-6 w-6 bg-transparent text-2xl text-black opacity-5 outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button>
-                </div>
-                <div className="flex h-screen w-screen items-center justify-center">
-                  {loading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                      <Spinner />
-                    </div>
-                  )}
-                  <iframe
-                    src={transactionData?.link}
-                    className="h-screen w-screen border-none"
-                    loading="lazy"
-                    onLoad={() => setLoading(false)}
-                    // sandbox="allow-scripts allow-same-origin"
-                  />
-                </div>
-                <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">
-                  <button
-                    className="background-transparent mb-1 mr-1 px-6 py-2 text-sm font-bold uppercase text-red-500 outline-none transition-all duration-150 ease-linear focus:outline-none"
-                    type="button"
-                    onClick={() => closeModal()}
-                  >
-                    Close
-                  </button>
-                  {/* <button
-                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => setIsOpenPaymentAlert(false)}
-                  >
-                    Save Changes
-                  </button> */}
-                </div>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="relative w-full max-w-4xl rounded-lg bg-white shadow-lg">
+              {/* Header */}
+              <div className="flex items-center justify-between border-b p-4">
+                <h3 className="text-xl font-semibold">Payment</h3>
+                <button
+                  onClick={() => setIsOpenPaymentAlert(false)}
+                  className="text-2xl font-bold text-gray-500 hover:text-black"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Loader and Iframe */}
+              <div className="relative h-[80vh] w-full">
+                {loading && (
+                  <div className="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80">
+                    <Spinner />
+                  </div>
+                )}
+                <iframe
+                  src={transactionData?.link}
+                  className="h-full w-full border-none"
+                  loading="lazy"
+                  onLoad={() => setLoading(false)}
+                />
+              </div>
+
+              {/* Footer */}
+              <div className="flex justify-end border-t p-4">
+                <button
+                  className="px-4 py-2 text-sm font-semibold text-red-500 hover:underline"
+                  onClick={closeModal}
+                >
+                  Close
+                </button>
               </div>
             </div>
           </div>
-          <div className="fixed inset-0 z-40 bg-black opacity-25" />
         </>
-      ) : null}
+      )}
+
       <AlertBox
         title="Remove Item"
         description="Are you sure you want to remove this item from cart?"

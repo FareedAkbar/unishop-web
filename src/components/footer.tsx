@@ -103,7 +103,7 @@ function Footer() {
               className="h-fit w-[10rem] sm:w-[16rem] xl:w-[18rem]"
             />
 
-            <div className="flex w-full justify-end gap-4 text-xl text-[#646464]">
+            <div className="flex w-full justify-center gap-4 text-xl text-[#646464] md:justify-end">
               {iconsTab.map(({ icon, link, label }, index) => (
                 <Link
                   key={index}
