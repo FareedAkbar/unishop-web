@@ -63,7 +63,7 @@ const MyComponent = () => {
     removeFavourite,
     setProductForDetail,
     textbookType,
-    userInfo
+    userInfo,
   } = useAuthContext();
   const { toast } = useToast();
   const router = useRouter();
@@ -146,7 +146,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                  dependencies[key],
+                    dependencies[key],
               );
             });
           })
@@ -344,7 +344,10 @@ const MyComponent = () => {
   const manageUsage = () => {
     if (itemDetail?.book_usages && itemDetail?.book_usages.length > 0) {
       return itemDetail.book_usages
-        .filter((usage) => (usage.default_semester === 1 || usage.default_trimester === 1))
+        .filter(
+          (usage) =>
+            usage.default_semester === 1 || usage.default_trimester === 1,
+        )
         .map((usage) => ({
           type_id: usage.type_id, // Assuming `type_id` exists
           subject_name: usage.subject_name,
@@ -362,7 +365,7 @@ const MyComponent = () => {
         exit={{ opacity: 0, x: -100 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="flex w-screen items-center justify-between pb-4 lg:px-10">
+        <div className="flex w-[90vw] items-center justify-between pb-4 lg:px-10">
           {/* Left Arrow */}
           <div className="flex w-10 justify-start">
             <button
@@ -383,56 +386,58 @@ const MyComponent = () => {
         </div>
         <div className="flex flex-row">
           <div className="flex flex-col px-4">
-            <ScrollArea className="max-h-[75vh] pb-5">
-              <div className="flex flex-wrap justify-center py-3">
-                {loader
-                  ? Array.from({ length: 2 }, (_, index) => (
+            {/* <ScrollArea className="max-h-[75vh] pb-5"> */}
+            <div className="flex flex-wrap justify-center gap-5 overflow-y-auto py-3">
+              {loader
+                ? Array.from({ length: 2 }, (_, index) => (
                     <div key={index} className="p-2">
                       <ProductCardSkeleton />
                     </div>
                   ))
-                  : displayedData?.map((item: DataCart) => (
-                    item.web_visibility === 1 &&
-                    <ProductCard
-                      key={item.book_id}
-                      product={item}
-                      showAddToCart={!isItemInCart(item.item_id)}
-                      onAddToCart={async () => {
-                        if (item?.variations?.[0]) {
-                          await openDetail(item);
-                        } else {
-                          await handleAddToCart(item);
-                        }
-                      }}
-                      onRemoveFromCart={() => handleRemoveFromCart(item)}
-                      openDetail={() => openDetail(item)}
-                      handleFavourite={() => handleFavourite(item)}
-                      wishListLoader={wishListLoader}
-                      goToDetail={() => goToDetail(item)}
-                    />
-                  ))}
-                {!loader && !favItems[0] && (
-                  <div className="flex h-full w-full flex-col items-center justify-center">
-                    <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
-                      Currently, you have no items in your wishlist.
-                    </p>
-                    <Player
-                      autoplay
-                      loop
-                      src="/assets/gifs/emptywishlist.json"
-                      className="h-80 w-80"
-                    />
-                  </div>
-                )}
-              </div>
-            </ScrollArea>
+                : displayedData?.map(
+                    (item: DataCart) =>
+                      item.web_visibility === 1 && (
+                        <ProductCard
+                          key={item.book_id}
+                          product={item}
+                          showAddToCart={!isItemInCart(item.item_id)}
+                          onAddToCart={async () => {
+                            if (item?.variations?.[0]) {
+                              await openDetail(item);
+                            } else {
+                              await handleAddToCart(item);
+                            }
+                          }}
+                          onRemoveFromCart={() => handleRemoveFromCart(item)}
+                          openDetail={() => openDetail(item)}
+                          handleFavourite={() => handleFavourite(item)}
+                          wishListLoader={wishListLoader}
+                          goToDetail={() => goToDetail(item)}
+                        />
+                      ),
+                  )}
+              {!loader && !favItems[0] && (
+                <div className="flex h-full w-full flex-col items-center justify-center">
+                  <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
+                    Currently, you have no items in your wishlist.
+                  </p>
+                  <Player
+                    autoplay
+                    loop
+                    src="/assets/gifs/emptywishlist.json"
+                    className="h-80 w-80"
+                  />
+                </div>
+              )}
+            </div>
+            {/* </ScrollArea> */}
           </div>
         </div>
       </motion.main>
 
       <ModalBody>
         <ModalContent>
-           <ProductModal
+          <ProductModal
             itemDetail={itemDetail}
             selectedVariation={selectedVariation}
             currentImageIndex={currentImageIndex}
@@ -443,7 +448,6 @@ const MyComponent = () => {
             selectedValues={selectedValues}
             filteredVariations={filteredVariations}
             goToDetail={goToDetail}
-
           />
         </ModalContent>
       </ModalBody>

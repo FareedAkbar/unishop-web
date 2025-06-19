@@ -110,6 +110,7 @@ const MyComponent = () => {
       // setCalculateLoader(false);
     }
   };
+  console.log("dataOrders", dataOrders);
 
   const fetchOrderStatus = async () => {
     setLoader(true);
@@ -406,14 +407,14 @@ const MyComponent = () => {
   const closeModal = () => {
     setIsOpenPaymentAlert(false);
   };
-  
+
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center">
         {loader && <Spinner />}
         <div className="w-full p-4">
           <OrdersDataTable
-          key={JSON.stringify(orderStatus)}
+            key={JSON.stringify(orderStatus)}
             // key={orderStatus.toString()}
             data={dataOrders}
             orderStatus={orderStatus}

@@ -31,6 +31,7 @@ import { FaGift } from "react-icons/fa";
 
 import Select from "../Fields/select";
 import { BsTelephone } from "react-icons/bs";
+import Button from "./Button";
 
 const Header = () => {
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -638,6 +639,16 @@ const Header = () => {
                 </div>
               );
             })}
+            <div className="flex items-center justify-end">
+              {userInfo?.customer_id ? (
+                <Button
+                  onClick={() => router.push("/my-orders")}
+                  title="My Orders"
+                />
+              ) : (
+                ""
+              )}
+            </div>
           </nav>
         </div>
       </div>

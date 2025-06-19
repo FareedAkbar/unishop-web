@@ -59,6 +59,7 @@ const MyComponent = () => {
   const [transactionData, setLocalTransactionData] =
     useState<transactionResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [placeOrderLoader, setPlaceOrderLoader] = useState<boolean>(false);
   const [removeItem, setRemoveItem] = useState<DataCart | null>(null);
   const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState<boolean>(false);
   // const [socketStatus, setSocketStatus] = useState(true);
@@ -276,6 +277,7 @@ const MyComponent = () => {
     };
   }, [isOpenPaymentAlert]);
   const handlePlaceOrder = async () => {
+    setPlaceOrderLoader(true);
     // await placeOrderApi(797498821);
     const x = {
       customer_id: checkoutData?.customer_id,
@@ -290,6 +292,7 @@ const MyComponent = () => {
     } catch (error) {
       console.error("Failed to load data:", error);
     }
+    setPlaceOrderLoader(false);
   };
 
   type socketResponse = {
@@ -1159,6 +1162,7 @@ const MyComponent = () => {
                         }
                         width="w-full"
                         title="Place Order"
+                        loading={placeOrderLoader}
                       />
                     </div>
                   </>

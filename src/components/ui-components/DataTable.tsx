@@ -98,7 +98,10 @@ const DataTable: React.FC<DataTableProps> = ({
       document.addEventListener("fullscreenchange", handleFullScreenChange);
 
       return () => {
-        document.removeEventListener("fullscreenchange", handleFullScreenChange);
+        document.removeEventListener(
+          "fullscreenchange",
+          handleFullScreenChange,
+        );
       };
     }
   }, []);
@@ -195,7 +198,7 @@ const DataTable: React.FC<DataTableProps> = ({
   );
 
   if (!isClient) return null;
-  console.log(selectedItem)
+  console.log(selectedItem);
   return (
     <>
       <div
@@ -246,6 +249,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 <input
                   type="checkbox"
                   checked={column.isVisible}
+                  className="accent-red-500"
                   onChange={() => handleColumnToggle(column.key)}
                 />
                 <span className="ml-1">{column.header}</span>
@@ -285,8 +289,8 @@ const DataTable: React.FC<DataTableProps> = ({
                       ?.mode === "asc" && <FaAngleUp className="ml-1 inline" />}
                     {sortOptions.find((sort) => sort.key === column.key)
                       ?.mode === "desc" && (
-                        <FaAngleDown className="ml-1 inline" />
-                      )}
+                      <FaAngleDown className="ml-1 inline" />
+                    )}
                   </th>
                 ) : null,
               )}
@@ -310,6 +314,13 @@ const DataTable: React.FC<DataTableProps> = ({
                 </td>
               </tr>
             ))}
+            {displayedData?.length === 0 && (
+              <tr>
+                <td colSpan={columns.length + 1} className="p-4 text-center">
+                  No data available
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
         <div className="mt-4 flex justify-between">
@@ -373,27 +384,28 @@ const DataTable: React.FC<DataTableProps> = ({
                 </div>
                 <div className="mt-2 flex items-center">
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
-                    {selectedItem?.total_order_price == selectedItem?.total_discounted_price ? "Price: " : "Actual Price: "}
+                    {selectedItem?.total_order_price ==
+                    selectedItem?.total_discounted_price
+                      ? "Price: "
+                      : "Actual Price: "}
                   </p>
                   <p className="text-lg font-medium">
-                    ${selectedItem?.total_order_price?.toFixed(
-                      2,
-                    )}
+                    ${selectedItem?.total_order_price?.toFixed(2)}
                   </p>
                 </div>
-                {selectedItem?.total_order_price == selectedItem?.total_discounted_price ? "" : (
+                {selectedItem?.total_order_price ==
+                selectedItem?.total_discounted_price ? (
+                  ""
+                ) : (
                   <div className="mt-2 flex items-center">
                     <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
                       Discounted Price:
                     </p>
                     <p className="text-lg font-medium">
-                      ${selectedItem?.total_discounted_price?.toFixed(
-                        2,
-                      )}
+                      ${selectedItem?.total_discounted_price?.toFixed(2)}
                     </p>
                   </div>
                 )}
-
               </div>
 
               {/* Customer Info */}
