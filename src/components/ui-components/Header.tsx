@@ -34,7 +34,6 @@ import { BsTelephone } from "react-icons/bs";
 import Button from "./Button";
 
 const Header = () => {
-  const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
   const {
     logout,
     getGenre,
@@ -70,7 +69,7 @@ const Header = () => {
   const [searchError, setSearchError] = useState("");
   const [isMobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const userDropdownRef = useRef<HTMLDivElement | null>(null);
+
   const dropdownToggleRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLButtonElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -189,32 +188,25 @@ const Header = () => {
     }
   }, [category, subCategory]);
 
+  const userDropdownRef = useRef<HTMLDivElement>(null);
+  const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
+
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const handleClickOutside = (event: MouseEvent) => {
-        const target = event.target as HTMLElement;
-        if (target.tagName === "A" || target.tagName === "BUTTON") {
-          return;
-        }
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
 
-        if (
-          userDropdownRef.current &&
-          !userDropdownRef.current.contains(target) &&
-          dropdownToggleRef.current &&
-          !dropdownToggleRef.current.contains(target)
-        ) {
-          setUserDropdownOpen(false);
-        }
-        if (dropdownRef.current && !dropdownRef.current.contains(target)) {
-          setOpenDropdown(null);
-        }
-      };
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(target)
+      ) {
+        setUserDropdownOpen(false);
+      }
+    };
 
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const handleLogout = async () => {
@@ -538,7 +530,6 @@ const Header = () => {
         </div>
       );
     };
-    console.log(categories);
     return (
       <div className="hidden lg:block">
         <div className="flex w-full items-center justify-center pt-4">
@@ -698,14 +689,64 @@ const Header = () => {
                 ""
               )}
             </div>
+            <div className="relative" ref={userDropdownRef}>
+              <IoPersonOutline
+                className="cursor-pointer text-xl"
+                onClick={() => setUserDropdownOpen((prev) => !prev)}
+              />
 
-            <div
+              {isUserDropdownOpen && (
+                <div className="absolute right-0 top-10 z-50 w-40 rounded-lg border bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+                  {userInfo ? (
+                    <>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                        {userInfo.first_name} {userInfo.last_name}
+                      </p>
+                      <p className="mb-3 text-xs text-gray-600 dark:text-gray-400">
+                        {userInfo.email}
+                      </p>
+                      <Button
+                        title="Logout"
+                        onClick={handleLogout}
+                        className="w-full"
+                      />
+                      {/* <button
+                        onClick={handleLogout}
+                        className="w-full rounded bg-red-500 px-3 py-1.5 text-sm text-white hover:bg-red-600"
+                      >
+                        Logout
+                      </button> */}
+                    </>
+                  ) : (
+                    <Button
+                      title="Login"
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        router.push("/login");
+                      }}
+                      className="w-full"
+                    />
+                    // <button
+                    //   onClick={() => {
+                    //     setUserDropdownOpen(false);
+                    //     router.push("/login");
+                    //   }}
+                    //   className="w-full rounded bg-blue-500 px-3 py-1.5 text-sm text-white hover:bg-blue-600"
+                    // >
+                    //   Login
+                    // </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* <div
               className="relative"
               ref={userDropdownRef}
               onClick={handleLogout}
             >
               <IoPersonOutline className="cursor-pointer text-xl" />
-            </div>
+            </div> */}
             <div
               className="relative"
               onClick={() => router.push("/contact-us")}
@@ -1005,7 +1046,77 @@ const Header = () => {
               >
                 <BsTelephone className="text-xl" />
               </div>
-              <div className="flex items-center space-x-2">
+              <div
+                className="relative flex items-center space-x-2"
+                ref={userDropdownRef}
+              >
+                <div
+                  onClick={() => setUserDropdownOpen((prev) => !prev)}
+                  title={userInfo ? "Profile" : "Sign in"}
+                  className="relative flex cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
+                >
+                  {userInfo ? (
+                    <IoPerson className="text-xl" />
+                  ) : (
+                    <IoPersonOutline className="text-xl" />
+                  )}
+                </div>
+
+                {userInfo && (
+                  <div className="text-sm font-medium capitalize text-gray-800 dark:text-gray-300">
+                    Welcome!
+                    <p className="font-bold">
+                      {userInfo.first_name} {userInfo.last_name}
+                    </p>
+                  </div>
+                )}
+
+                {isUserDropdownOpen && (
+                  <div className="absolute right-0 top-12 z-50 w-48 rounded-lg border bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+                    {userInfo ? (
+                      <>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                          {userInfo.first_name} {userInfo.last_name}
+                        </p>
+                        <p className="mb-3 text-xs text-gray-600 dark:text-gray-400">
+                          {userInfo.email}
+                        </p>
+                        <Button
+                          title="Logout"
+                          onClick={handleLogout}
+                          className="w-full"
+                        />
+                        {/* <button
+                          onClick={handleLogout}
+                          className="w-full rounded bg-red-500 px-3 py-1.5 text-sm text-white hover:bg-red-600"
+                        >
+                          Logout
+                        </button> */}
+                      </>
+                    ) : (
+                      <Button
+                        title="Login"
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          router.push("/login");
+                        }}
+                        className="w-full"
+                      />
+                      // <button
+                      //   onClick={() => {
+                      //     setUserDropdownOpen(false);
+                      //     router.push("/login");
+                      //   }}
+                      //   className="w-full rounded bg-blue-500 px-3 py-1.5 text-sm text-white hover:bg-blue-600"
+                      // >
+                      //   Login
+                      // </button>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* <div className="flex items-center space-x-2">
                 <div
                   onClick={handleLogout}
                   title={userInfo ? "Logout" : "Signin"}
@@ -1026,7 +1137,7 @@ const Header = () => {
                     </p>
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
           <USBCategoryList1 />

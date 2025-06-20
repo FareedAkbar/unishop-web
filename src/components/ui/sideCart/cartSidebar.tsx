@@ -226,7 +226,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
               <span className="text-sm">${subTotal.toFixed(2)}</span>
             </div>
             <Button
-              // disabled={items?.[0] ? false : true}
+              disabled={items?.[0] ? false : true}
               onClick={() => {
                 if (!isOpenAlert) {
                   opencart();

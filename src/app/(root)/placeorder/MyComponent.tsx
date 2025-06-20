@@ -328,6 +328,7 @@ const MyComponent = () => {
       if (result?.status) {
         toast({
           title: "Order Successful",
+          variant: "success",
           description: "Your order has been processed successfully.",
         });
 
