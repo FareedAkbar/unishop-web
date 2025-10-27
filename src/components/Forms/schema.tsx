@@ -1,7 +1,7 @@
 import { z } from "zod";
 // Example ZIP code validation functions
 const zipCodeFormats: Record<string, RegExp> = {
-  "Afghanistan": /^\d{6}$/, // Afghanistan postal code
+  Afghanistan: /^\d{6}$/, // Afghanistan postal code
   "United States": /^\d{5}(-\d{4})?$/, // US ZIP code
   Canada: /^[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d$/, // Canadian postal code
   "United Kingdom": /^[A-Za-z]{1,2}\d[A-Za-z\d]? \d[A-Za-z]{2}$/, // UK postcode
@@ -134,7 +134,7 @@ const zipCodeFormats: Record<string, RegExp> = {
   "Marshall Islands": /^\d{5}$/, // Marshall Islands postal code
   "Federated States of Micronesia": /^\d{5}$/, // Federated States of Micronesia postal code
   "Northern Mariana Islands": /^\d{5}$/, // Northern Mariana Islands postal code
- 
+
   Guam: /^\d{5}$/, // Guam postal code
   "Virgin Islands (US)": /^\d{5}$/, // U.S. Virgin Islands postal code
 };
@@ -164,7 +164,8 @@ const SignupSchema = z
     phone_number: z
       .string()
       .min(1, "Phone Number is required")
-      // .regex(/^\(0[4]\) \d{4} \d{4}$/, "Invalid mobile number "),
+      .regex(/^\d+$/, "Invalid mobile number "),
+    // .regex(/^\(0[4]\) \d{4} \d{4}$/, "Invalid mobile number "),
   })
   .superRefine((data, ctx) => {
     const { postal_code, country } = data;

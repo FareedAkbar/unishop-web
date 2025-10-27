@@ -533,7 +533,7 @@ const Header = () => {
     return (
       <div className="hidden lg:block">
         <div className="flex w-full items-center justify-center pt-4">
-          <nav className="flex gap-8 whitespace-nowrap px-2">
+          <nav className="flex gap-5 whitespace-nowrap px-2">
             {/* <div className="relative flex items-center px-2 py-1">
               <div className="group relative cursor-pointer">
                 <span className="flex items-center text-base font-medium text-gray-700 hover:text-red-500 dark:text-gray-200">
@@ -573,7 +573,7 @@ const Header = () => {
                   </div>
 
                   {hoveredCategory === item.type && hasChildren ? (
-                    <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
+                    <div className="absolute left-0 top-full z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
                       {renderSubcategories(item.children!, 1, item.type)}
                     </div>
                   ) : hoveredCategory === item.type && item.type == "Gifts" ? (
@@ -615,7 +615,7 @@ const Header = () => {
                   </div>
 
                   {hoveredCategory === item.label && hasChildren && (
-                    <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
+                    <div className="absolute left-0 top-full z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
                       {item.subItems!.map((sub, subIdx) => (
                         <Link
                           key={subIdx}

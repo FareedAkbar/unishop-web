@@ -325,7 +325,7 @@ const DataTable: React.FC<DataTableProps> = ({
         </table>
         <div className="mt-4 flex justify-between">
           <button
-            className={`rounded-full p-2 ${currentPage === 1 ? "bg-gray-200 text-black" : "bg-red-500 text-white"}`}
+            className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black" : "bg-red-500 text-white"}`}
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
           >
@@ -335,7 +335,7 @@ const DataTable: React.FC<DataTableProps> = ({
             Page {currentPage} of {totalPages}
           </span>
           <button
-            className={`rounded-full p-2 ${currentPage === totalPages ? "bg-gray-200 text-black" : "bg-red-500 text-white"}`}
+            className={`rounded-full p-2 ${currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black" : "bg-red-500 text-white"}`}
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
