@@ -96,6 +96,8 @@ const MyComponent = () => {
       // Check if result has the expected structure
       if (result?.status) {
         setTransactionData(result.data);
+        console.log("result.data.link", result.data.link);
+
         setIsOpenPaymentAlert(true);
         setLoading(true);
         // window.open(result.data.link);
@@ -449,6 +451,7 @@ const MyComponent = () => {
                     loading="lazy"
                     onLoad={() => setLoading(false)}
                     sandbox="allow-scripts allow-same-origin"
+                    allow="payment"
                   />
                 </div>
                 <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">

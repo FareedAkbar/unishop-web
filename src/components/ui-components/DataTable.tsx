@@ -435,7 +435,7 @@ const DataTable: React.FC<DataTableProps> = ({
                     Special Order:
                   </p>
                   <p className="text-lg font-medium">
-                    {selectedItem?.special ? "Yes" : "No"}
+                    {selectedItem?.back_order_id ? "Yes" : "No"}
                   </p>
                 </div>
               </div>

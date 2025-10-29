@@ -254,7 +254,7 @@ const MyComponent = () => {
         setLoading(true);
 
         // window.open(result.data.link);
-        console.log(result);
+        console.log(result, "result");
       } else {
         console.error("Unexpected result structure getLinkForPayment:", result);
       }
@@ -1200,6 +1200,7 @@ const MyComponent = () => {
                   className="h-full w-full border-none"
                   loading="lazy"
                   onLoad={() => setLoading(false)}
+                  allow="payment"
                 />
               </div>
 

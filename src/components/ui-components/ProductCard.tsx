@@ -183,7 +183,7 @@ const ProductCard = ({
         className="mb-1 mt-2 font-serif font-semibold sm:mt-4"
         title={product?.item_name}
       >
-        {product?.item_name}
+        {product?.item_name.split("¥").join(" ")}
       </span>
       {product?.SKU ? (
         <span className="truncate font-serif text-xs">

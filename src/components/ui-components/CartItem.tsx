@@ -61,7 +61,9 @@ const CartItem: React.FC<CartItemProps> = ({
           height={800}
         />
         <div className="flex-1">
-          <h3 className="text-sm font-semibold capitalize">{title}</h3>
+          <h3 className="text-sm font-semibold capitalize">
+            {title.split("¥").join(" ")}
+          </h3>
           {item?.selectedValues && (
             <div>
               <span className="text-xs font-semibold">Selected Variations</span>

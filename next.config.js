@@ -52,6 +52,11 @@ const nextConfig = {
             value:
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.mastercard.com https://*.aexp-static.com https://*.americanexpress.com https://*.visa.com https://*.staticv.me https://*.discover.com https://*.discovercard.com https://*.ewaylabs.cloud https://*.ewaypayments.com https://*.google.com https://*.googleapis.com https://*.aexp-static.com https://*.cardinalcommerce.com https://*.eway.io https://*.newrelic.com https://*.nr-data.net https://*.ccdc02.com https://www.gstatic.com https://www.googletagmanager.com;",
           },
+          {
+            key: "Permissions-Policy",
+            value:
+              'camera=(), microphone=(), geolocation=() self=("https://ipos-dev.iconsole.com.au" "https://booknet-dev.iconsole.com.au" )',
+          },
         ],
       },
     ];
