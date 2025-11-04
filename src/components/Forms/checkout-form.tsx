@@ -195,7 +195,7 @@ export default function CheckoutForm({
         toast({
           title: "Shipping Address Added",
           variant: "success",
-          description: "New Shipping Address was Added",
+          description: "New Shipping Address is Added",
         });
       } else {
         console.error(
