@@ -31,6 +31,7 @@ interface CheckoutForm {
   password?: string | null,
   duplicate?: number | null
   account_type?: string | null,
+  customer_type?: number | null
 }
 
 interface booknet_customer_id {

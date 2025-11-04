@@ -101,6 +101,7 @@ export interface category_detail {
   parent: number,
   till_visibility: number,
   web_visibility: number,
+  discountable_cat: number | null
 }
 
 export default interface DataCart {
@@ -173,6 +174,7 @@ export default interface DataCart {
   shelf_location: string | null,
   allow_special_order: number | null,
   web_visibility: number | null,
+  discountable_item?: number | null,
 }
 
 interface book_usages {

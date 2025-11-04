@@ -126,7 +126,7 @@ const MyComponent = () => {
     const x = mergedArray;
     setNewItems(x);
   }, [totalAfterCalculation]);
-
+  console.log(newItems, "newItems");
   const createItemsPayload = (
     dataArray1: DataCart[],
   ): CreatePayloadBooksForTax[] => {
@@ -144,6 +144,9 @@ const MyComponent = () => {
       premium_upgrades_CPM: [],
       is_deal: 0,
       deal_id: null,
+      apply_zero_discount: 0,
+      discountable_cat: book.category_detail?.discountable_cat ?? 0,
+      discountable_item: book.discountable_item ?? 0,
     }));
   };
 
@@ -166,6 +169,7 @@ const MyComponent = () => {
           body: JSON.stringify({
             items: requestOptions,
             member_id: checkoutData?.customer_id ?? null,
+            customer_type_id: checkoutData?.customer_type ?? null,
           }),
         },
       );
@@ -282,7 +286,7 @@ const MyComponent = () => {
     const x = {
       customer_id: checkoutData?.customer_id,
       guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
-      amount: 0.01,
+      amount: total,
     };
 
     try {
@@ -381,9 +385,10 @@ const MyComponent = () => {
         item_price: item.selected_variation?.items_variable_items_id
           ? item.selected_variation?.items_variable_items_sale_price
           : item.item_sale_price,
-        discounted_price: null,
+        discounted_price: item.final_price_including_tax ?? null,
         deal_items: [],
         premium_upgrades: [],
+        type: "Normal"
       };
     });
 
@@ -809,11 +814,10 @@ const MyComponent = () => {
                       {shippingOptions.map((option) => (
                         <div
                           key={option.value}
-                          className={`rounded-3xl border ${
-                            shipping?.value === option.value
+                          className={`rounded-3xl border ${shipping?.value === option.value
                               ? "bg-[#F2FFE4] dark:bg-green-500/20"
                               : "dark:border-white/30"
-                          } p-4`}
+                            } p-4`}
                         >
                           <label className="cursor-pointer">
                             <input
@@ -835,9 +839,8 @@ const MyComponent = () => {
                             </div>
 
                             <div
-                              className={`flex flex-col items-start ${
-                                option.amount === 0 ? "gap-4" : "gap-1"
-                              }`}
+                              className={`flex flex-col items-start ${option.amount === 0 ? "gap-4" : "gap-1"
+                                }`}
                             >
                               {option.label && (
                                 <div className="mt-2 text-left text-lg">
@@ -878,11 +881,10 @@ const MyComponent = () => {
                     <p className="mb-2 font-bold">Shipping Method</p>
                     <div className="grid-col-1 grid gap-4 lg:grid-cols-2 lg:gap-10 lg:px-10">
                       <div
-                        className={`rounded-3xl border ${
-                          shipping?.value === "free"
+                        className={`rounded-3xl border ${shipping?.value === "free"
                             ? "bg-[#F2FFE4] dark:bg-green-500/20"
                             : "dark:border-white/30"
-                        } p-4`}
+                          } p-4`}
                       >
                         <label className="cursor-pointer">
                           <input
@@ -928,11 +930,10 @@ const MyComponent = () => {
                         TableRates,
                       ) ? (
                         <div
-                          className={`rounded-3xl border p-4 ${
-                            shipping?.value === "Delivery"
+                          className={`rounded-3xl border p-4 ${shipping?.value === "Delivery"
                               ? "bg-[#F2FFE4]"
                               : "dark:border-white/30"
-                          }`}
+                            }`}
                         >
                           <label className="cursor-pointer">
                             <input
@@ -1001,9 +1002,8 @@ const MyComponent = () => {
               </h2>
 
               <ScrollArea
-                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 shadow transition-all duration-300 dark:bg-slate-800 ${
-                  isExpanded ? "max-h-[28rem]" : "max-h-[17rem]"
-                }`}
+                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 shadow transition-all duration-300 dark:bg-slate-800 ${isExpanded ? "max-h-[28rem]" : "max-h-[17rem]"
+                  }`}
               >
                 {items?.[0] ? (
                   items.map((item, index) => (
@@ -1096,8 +1096,8 @@ const MyComponent = () => {
                         $
                         {items?.[0]
                           ? totalAfterCalculation?.final_price_including_tax.toFixed(
-                              2,
-                            )
+                            2,
+                          )
                           : 0}
                       </span>
                     </div>
