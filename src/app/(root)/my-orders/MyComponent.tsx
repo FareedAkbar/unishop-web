@@ -112,7 +112,6 @@ const MyComponent = () => {
       // setCalculateLoader(false);
     }
   };
-  console.log("dataOrders", dataOrders);
 
   const fetchOrderStatus = async () => {
     setLoader(true);
