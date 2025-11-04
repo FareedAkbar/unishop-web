@@ -1,18 +1,18 @@
 interface address {
-  address: string,
-  second_address?: string,
-  country?: string,
-  city?: string,
-  state?: string,
-  postal_code?: string,
-  country_code?: string,
-  phone_number?: string,
-  default_status?: number,
-  address_id?: number,
+  address: string;
+  second_address?: string;
+  country?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  country_code?: string;
+  phone_number?: string;
+  default_status?: number;
+  address_id?: number;
+  address_type?: number;
 }
 
 interface CheckoutForm {
-
   email: string | null; // Required, must be a valid email
   company?: string | null; // Optional
   address?: address[] | null; // Optional
@@ -23,43 +23,47 @@ interface CheckoutForm {
   country?: string | null; // Optional
   stateCode?: string | null; // Optional
   phone_number?: string | null; // Optional
-  customer_id?: number | null,
-  uuid?: string | null,
-  customer_type_id?: number,
-  booknet_customer_id?: number | null,
-  user_name?: string | null
-  password?: string | null,
-  duplicate?: number | null
-  account_type?: string | null,
-  customer_type?: number | null
+  customer_id?: number | null;
+  uuid?: string | null;
+  customer_type_id?: number;
+  booknet_customer_id?: number | null;
+  user_name?: string | null;
+  password?: string | null;
+  duplicate?: number | null;
+  account_type?: string | null;
+  customer_type?: number | null;
 }
 
 interface booknet_customer_id {
-  booknet_customer_id: number | null
+  booknet_customer_id: number | null;
 }
-
-
 
 interface checkoutBooknetResponse {
   status: boolean;
-  data: CheckoutForm
+  data: CheckoutForm;
 }
 
 interface Booknet_customer_checkout {
   username: string;
-  password: string
-
+  password: string;
 }
 
 interface get_address_from_email {
-  status: boolean,
-  data?: address[]
+  status: boolean;
+  data?: address[];
 }
 
 interface add_address_from_customer_id {
-  status: boolean,
-  data?: address
+  status: boolean;
+  data?: address;
 }
 
-
-export type { CheckoutForm, booknet_customer_id, Booknet_customer_checkout, checkoutBooknetResponse,get_address_from_email,address ,add_address_from_customer_id}
+export type {
+  CheckoutForm,
+  booknet_customer_id,
+  Booknet_customer_checkout,
+  checkoutBooknetResponse,
+  get_address_from_email,
+  address,
+  add_address_from_customer_id,
+};

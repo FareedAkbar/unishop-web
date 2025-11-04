@@ -162,6 +162,7 @@ export default function CheckoutForm({
     const payload = {
       ...address,
       customer_id: data.customer_id,
+      address_type: "Shipping Address",
     };
     try {
       const response = await fetch(

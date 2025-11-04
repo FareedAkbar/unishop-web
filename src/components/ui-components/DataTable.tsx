@@ -198,7 +198,6 @@ const DataTable: React.FC<DataTableProps> = ({
   );
 
   if (!isClient) return null;
-  console.log(selectedItem);
   return (
     <>
       <div

@@ -104,6 +104,14 @@ const ProductCard = ({
         </div>
       )}
 
+      {product?.items_type == 0 && !product.stock.stock_id && (
+        <div className="absolute inset-0 z-[1] flex items-center justify-center rounded bg-black/30 dark:bg-white/30">
+          <span className="-rotate-45 font-semibold text-white dark:text-black">
+            Currently no stock is available
+          </span>
+        </div>
+      )}
+
       <div className="relative my-4 flex h-40 grow-0 flex-col items-center justify-center rounded-sm bg-white dark:bg-slate-900 sm:h-48 md:h-72">
         {tagNames.length > 0 ? (
           <div className="absolute left-2 top-0 flex flex-col">
@@ -180,7 +188,7 @@ const ProductCard = ({
         ""
       )}
       <span
-        className="mb-1 mt-2 font-serif font-semibold sm:mt-4"
+        className="mb-1 mt-2 font-serif font-semibold capitalize sm:mt-4"
         title={product?.item_name}
       >
         {product?.item_name.split("¥").join(" ")}
