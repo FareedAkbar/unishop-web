@@ -112,7 +112,6 @@ const MyComponent = () => {
       // setCalculateLoader(false);
     }
   };
-  console.log("dataOrders", dataOrders);
 
   const fetchOrderStatus = async () => {
     setLoader(true);
@@ -181,7 +180,6 @@ const MyComponent = () => {
         setLoader(true);
         await fetchOrderStatus();
         await fetchDataOrders();
-
         setLoader(false);
         // setData(result);
         // setTotalPages(result.totalPages);
@@ -196,7 +194,7 @@ const MyComponent = () => {
     });
 
     // void fetchDataSpecialOrders();
-  }, [booknetCustomerId]);
+  }, [booknetCustomerId,checkoutData?.customer_id]);
 
   function getOrderStatusById(orderStatusId: number) {
     return orderStatus.find((status) => status.status_id === orderStatusId);

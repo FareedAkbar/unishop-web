@@ -21,6 +21,20 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
     return orderStatus.find((status) => status.status_id === orderStatusId);
   }
 
+ function formatToSydneyDateOnly(
+  date: string | Date | number | null | undefined,
+  format = "MM/DD/YYYY"
+): string {
+  if (!date) return "";
+
+  // Parse date WITHOUT applying UTC or timezone shift
+ 
+   const safe = typeof date === "string" ? date.replace(/Z$/, "") : String(date);
+
+  return moment(safe).format(format);
+  //  return moment.parseZone(date).local().format(format);
+}
+
   const columns = [
     { key: "order_id", header: "Order ID", isSortable: false },
     { key: "tracking_id", header: "Tracking ID", isSortable: false },
@@ -47,7 +61,8 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
       isSortable: true,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: (info: any) => {
-        const date = moment(info.started).format("MM/DD/YYYY");
+
+        const date = formatToSydneyDateOnly(info.started, "MM/DD/YYYY");
         return <span>{date}</span>;
       },
     },

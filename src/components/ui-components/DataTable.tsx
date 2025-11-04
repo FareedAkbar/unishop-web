@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import moment from "moment";
 import React, { useState, useEffect } from "react";
 import {
   FaAngleDown,
@@ -197,7 +198,20 @@ const DataTable: React.FC<DataTableProps> = ({
     currentPage * pageSize,
   );
 
-  if (!isClient) return null;
+ 
+  function formatToSydneyDateOnly(
+  date: string | Date | number | null | undefined,
+  format = "MM/DD/YYYY"
+): string {
+  if (!date) return "";
+
+  // Parse date WITHOUT applying UTC or timezone shift
+ 
+   const safe = typeof date === "string" ? date.replace(/Z$/, "") : String(date);
+
+  return moment(safe).format(format);
+  //  return moment.parseZone(date).local().format(format);
+}
   return (
     <>
       <div
@@ -288,8 +302,8 @@ const DataTable: React.FC<DataTableProps> = ({
                       ?.mode === "asc" && <FaAngleUp className="ml-1 inline" />}
                     {sortOptions.find((sort) => sort.key === column.key)
                       ?.mode === "desc" && (
-                      <FaAngleDown className="ml-1 inline" />
-                    )}
+                        <FaAngleDown className="ml-1 inline" />
+                      )}
                   </th>
                 ) : null,
               )}
@@ -384,7 +398,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 <div className="mt-2 flex items-center">
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
                     {selectedItem?.total_order_price ==
-                    selectedItem?.total_discounted_price
+                      selectedItem?.total_discounted_price
                       ? "Price: "
                       : "Actual Price: "}
                   </p>
@@ -393,7 +407,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   </p>
                 </div>
                 {selectedItem?.total_order_price ==
-                selectedItem?.total_discounted_price ? (
+                  selectedItem?.total_discounted_price ? (
                   ""
                 ) : (
                   <div className="mt-2 flex items-center">
@@ -465,7 +479,7 @@ const DataTable: React.FC<DataTableProps> = ({
               <p className="text-center text-sm text-gray-500 dark:text-gray-300">
                 <span className="font-medium">Order Started:</span>{" "}
                 {selectedItem?.started
-                  ? new Date(selectedItem?.started).toLocaleString()
+                  ? formatToSydneyDateOnly(selectedItem.started, "MM/DD/YYYY h:mm A")
                   : ""}
               </p>
             </div>
