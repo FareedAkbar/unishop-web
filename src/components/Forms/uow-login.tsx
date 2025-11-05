@@ -15,6 +15,7 @@ import { LoginResponse } from "~/types/loginResponse";
 // import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import Button from "../ui-components/Button";
 import GoogleLoginButton from "~/app/(auth)/login/googleLogin";
+import { useRouter } from "next/navigation";
 
 type FormValues = z.infer<typeof LoginSchema>;
 interface LoginFormProps {
@@ -27,7 +28,7 @@ export default function SignupFormDemo({
   setView,
   setLoginResponse,
 }: LoginFormProps) {
-  const { login, sendOTP } = useAuthContext();
+  const { login, sendOTP, loginWeb } = useAuthContext();
   const [loader, setLoader] = useState(false);
   const { toast } = useToast();
   const {
@@ -43,20 +44,23 @@ export default function SignupFormDemo({
       element.focus(); // Auto-focus
     }
   }, []);
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
       setLoader(true);
-      const res = await login(data);
+      // const res = await login(data);
+      const res = await loginWeb(data);
       if (typeof res !== "boolean" && res.status) {
-        const response = await sendOTP({
-          customer_id: res?.data.customer_id,
-          email: res?.data.email,
-        });
-        if (typeof response !== "boolean" && response.status) {
-          console.log(res);
-          setView("Verify-Otp");
-        }
+        // const response = await sendOTP({
+        //   customer_id: res?.data.customer_id,
+        //   email: res?.data.email,
+        // });
+        // if (typeof response !== "boolean" && response.status) {
+        //   console.log(res);
+        //   setView("Verify-Otp");
+        // }
+        router.push("/");
         setLoginResponse(res);
         setLoader(false);
       }

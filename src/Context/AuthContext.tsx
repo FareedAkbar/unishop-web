@@ -63,6 +63,7 @@ interface AuthContextProps {
   isLoggedIn: boolean;
   userInfo?: UserType;
   login: (payload: Login) => Promise<LoginResponse | boolean>;
+  loginWeb: (payload: Login) => Promise<VerifyOTPResponse | boolean>;
   sendOTP: (payload: SendOTP) => Promise<SendOTPResponse | boolean>;
   verifyOTP: (payload: VerifyOTP) => Promise<VerifyOTPResponse | boolean>;
   CheckoutApi: (payload: CheckoutForm) => Promise<checkoutBooknetResponse>;
@@ -177,6 +178,37 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } = (await response.json()) as LoginResponse;
     if (responsePayload.status) {
       lsClient.setItem("IS_LOGGED_IN", true);
+      return responsePayload;
+    } else {
+      throw new Error(responsePayload.message); // Throw an error with the message
+    }
+
+    // lsClient.setItem("TOKEN", responsePayload.token);
+  };
+  const loginWeb = async (
+    payload: Login,
+  ): Promise<VerifyOTPResponse | boolean> => {
+    const response = await apiRouter(
+      "LOGIN_WEB",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+      { skipAuthorization: true },
+    );
+
+    const responsePayload: VerifyOTPResponse =
+      (await response.json()) as VerifyOTPResponse;
+    if (responsePayload.status) {
+      lsClient.setItem("IS_LOGGED_IN", true);
+      setIsLoggedIn(true);
+      // console.log(responsePayload);
+      setToken(responsePayload.token);
+      setUserInfo(responsePayload.data);
+      lsClient.setItem("USER_INFO", responsePayload.data);
+      lsClient.setItem("TOKEN", responsePayload.token);
+      lsClient.setItem("IS_LOGGED_IN", true);
+
       return responsePayload;
     } else {
       throw new Error(responsePayload.message); // Throw an error with the message
@@ -747,6 +779,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         isLoggedIn,
         login,
+        loginWeb,
         register,
         logout,
         userInfo,

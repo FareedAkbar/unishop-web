@@ -1,5 +1,7 @@
-export const BACKEND_BASE_URL_IPOS = process.env.NEXT_PUBLIC_PASSKEY_IPOS ?? "http://localhost:3000";
-export const BACKEND_BASE_URL_BOOKNET = process.env.NEXT_PUBLIC_PASSKEY_BOOKNET ?? "http://localhost:3000";
+export const BACKEND_BASE_URL_IPOS =
+  process.env.NEXT_PUBLIC_PASSKEY_IPOS ?? "http://localhost:3000";
+export const BACKEND_BASE_URL_BOOKNET =
+  process.env.NEXT_PUBLIC_PASSKEY_BOOKNET ?? "http://localhost:3000";
 
 export enum PAGE_ROUTES {
   HOME = "/",
@@ -21,14 +23,15 @@ export enum PAGE_ROUTES {
   MY_ORDERS = "/my-orders",
   ORDER_CONFIRMED = "/order-confirmed",
   PRIVACY_POLICY = "/privacy-policy",
-  FAVORITES="/favorites",
-  PRODUCTS="/products",
-  PRODUCT_DETAILS="/product-details",
-  RESULT="/result"
+  FAVORITES = "/favorites",
+  PRODUCTS = "/products",
+  PRODUCT_DETAILS = "/product-details",
+  RESULT = "/result",
 }
 
 export const API_ROUTES = {
   LOGIN: `${BACKEND_BASE_URL_IPOS}api/v1/student/auth/login`,
+  LOGIN_WEB: `${BACKEND_BASE_URL_IPOS}api/v1/student/auth/login-web`,
   SENDOTP: `${BACKEND_BASE_URL_IPOS}api/v1/student/auth/send-otp`,
   VERIFYOTP: `${BACKEND_BASE_URL_IPOS}api/v1/student/auth/verify-login-otp`,
   GENRE: `${BACKEND_BASE_URL_BOOKNET}api/genre`,
@@ -38,4 +41,4 @@ export const API_ROUTES = {
   // CHECKOUT_WITH_USERNAME = "https://booknet-dev.iconsole.com.au/api/customer",
   REGISTER: "/api/auth/register",
   SIGN_OUT: "/api/auth/sign-out",
-}
+};

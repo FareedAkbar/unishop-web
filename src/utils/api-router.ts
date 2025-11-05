@@ -3,7 +3,7 @@
 import { localStorageClient } from "~/clients/localstorage-client";
 import { API_ROUTES } from "~/constants/api-routes";
 import type { Booknet_customer_checkout } from "~/types/checkoutForm";
-import type {Login, SendOTP, VerifyOTP} from "~/types/login";
+import type { Login, SendOTP, VerifyOTP } from "~/types/login";
 import type Register from "~/types/register";
 
 export const apiRouter = async <T extends keyof typeof API_TYPE_MAPPER>(
@@ -25,7 +25,7 @@ export const apiRouter = async <T extends keyof typeof API_TYPE_MAPPER>(
   // const token = localStorageClient().getItem("TOKEN") ? localStorageClient().getItem("TOKEN") : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZV9pZCI6MzU0LCJwcm9maWxlX2lkIjoyMDMsIm91dGxldF9pZCI6MjIzLCJmaXJzdF9uYW1lIjoiU2hpbnphIiwibGFzdF9uYW1lIjoiR3VsIiwidGVtcGxhdGVfaWQiOjUsInBhc3Nwb3J0X25vIjpudWxsLCJkYXRlX29mX2JpcnRoIjpudWxsLCJnZW5kZXIiOm51bGwsImRlc2lnbmF0aW9uX2lkIjpbOCwxXSwiZW1haWwiOiJzaGluemEuZ3VsNDFAZ21haWwuY29tIiwicGhvbmVfbnVtYmVyIjoiMzQ1Njc4OTA0NTY3Iiwic2lnbl91cCI6IjIwMjQtMDEtMjJUMDg6MTk6NDEuMDAwWiIsImNyZWF0ZWRfYXQiOiIyMDI0LTAxLTIyVDA4OjE5OjQxLjAwMFoiLCJzZXNzaW9uX2lkIjoxMDk1NCwic2FsdCI6bnVsbCwiaWF0IjoxNzI4MzEwMzk3fQ.LJUiDLcMcXSDXWPvFi-qqx-lQJ_wVE9gdoG7iW5krkM';
 
   if (!options?.skipAuthorization && token) {
-    headers.set("Authorization",`Bearer ${token}`);
+    headers.set("Authorization", `Bearer ${token}`);
   }
   if (!options?.skipContentType) {
     headers.set("Content-Type", "application/json");
@@ -33,7 +33,6 @@ export const apiRouter = async <T extends keyof typeof API_TYPE_MAPPER>(
   if (!options?.skipCredentials) {
     headers.set("credentials", "include");
   }
-
 
   let apiRouter: string = API_ROUTES[input];
   if (init?.routeParam) {
@@ -73,4 +72,5 @@ const API_TYPE_MAPPER: Record<keyof typeof API_ROUTES, any> = {
   GENRE: {} as unknown,
   CATEGORY: {} as unknown,
   SIGN_OUT: {} as unknown,
+  LOGIN_WEB: {} as Login,
 };
