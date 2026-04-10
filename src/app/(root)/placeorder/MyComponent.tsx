@@ -179,6 +179,9 @@ const MyComponent = () => {
       // Check if result has the expected structure
       if (result?.status) {
         setTotalAfterCalculation(result?.data);
+
+        console.log("result?.data",result?.data);
+
       } else {
         console.error("Unexpected result structure fetchData:", result);
       }
@@ -311,7 +314,7 @@ const MyComponent = () => {
   }
 
   const placeOrderApiCall = async (requestOptions: placeOrderPayload) => {
-    console.log(requestOptions);
+    console.log("requestOptions", requestOptions);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/orders/web`,
@@ -388,7 +391,8 @@ const MyComponent = () => {
         discounted_price: item.final_price_including_tax ?? null,
         deal_items: [],
         premium_upgrades: [],
-        type: "Normal"
+        type: "Normal",
+        stock_id: item.stock.stock_id
       };
     });
 
