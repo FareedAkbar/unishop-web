@@ -14,7 +14,7 @@ interface OrderDiscountInfo {
   outlet_id: number;
 }
 
-interface DiscountInfo {
+export interface DiscountInfo {
   discount_type: string;
   disc_item_id?: number;
   disc_cat_id?: number;

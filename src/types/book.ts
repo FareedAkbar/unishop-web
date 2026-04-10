@@ -1,3 +1,4 @@
+import { DiscountInfo } from "./taxCalculationApiResponse";
 
 interface Tag {
   item_id: number;
@@ -175,6 +176,7 @@ export default interface DataCart {
   allow_special_order: number | null,
   web_visibility: number | null,
   discountable_item?: number | null,
+  discounts?: DiscountInfo | null;
 }
 
 interface book_usages {

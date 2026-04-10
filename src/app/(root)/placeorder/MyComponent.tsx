@@ -113,6 +113,7 @@ const MyComponent = () => {
       return {
         ...item1,
         final_price_including_tax: matchingItem.final_price_including_tax,
+        discounts: matchingItem.discounts ?? {},
       };
     }
     return item1;
@@ -126,7 +127,7 @@ const MyComponent = () => {
     const x = mergedArray;
     setNewItems(x);
   }, [totalAfterCalculation]);
-  console.log(newItems, "newItems");
+  
   const createItemsPayload = (
     dataArray1: DataCart[],
   ): CreatePayloadBooksForTax[] => {
@@ -147,6 +148,7 @@ const MyComponent = () => {
       apply_zero_discount: 0,
       discountable_cat: book.category_detail?.discountable_cat ?? 0,
       discountable_item: book.discountable_item ?? 0,
+      discounts: book.discounts ?? null,
     }));
   };
 
@@ -392,7 +394,8 @@ const MyComponent = () => {
         deal_items: [],
         premium_upgrades: [],
         type: "Normal",
-        stock_id: item.stock.stock_id
+        stock_id: item.stock.stock_id,
+        discounts: item.discounts
       };
     });
 
