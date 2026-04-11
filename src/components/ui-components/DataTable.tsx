@@ -539,16 +539,16 @@ const DataTable: React.FC<DataTableProps> = ({
                     </thead>
 
                     <tbody>
-                      {items.map((item: any, index: number) => (
+                      {Array.isArray(items) && items.map((item: any, index: number) => (
                         <tr key={index} className="text-center">
                           <td className="border border-gray-500 p-2">
                             {item.item_id}
                           </td>
 
                           <td className="border border-gray-500 p-2">
-                            {item.item_name ||
-                              item.food_name ||
-                              item.book_title ||
+                            {item.item_name ??
+                              item.food_name ??
+                              item.book_title ??
                               "-"}
                           </td>
 
@@ -557,10 +557,10 @@ const DataTable: React.FC<DataTableProps> = ({
                           </td>
 
                           <td className="border border-gray-500 p-2">
-                            ${(item.item_price ?? 0).toFixed(2)}
+                            ${(Number(item?.item_price) ?? 0).toFixed(2)}
                           </td>
                           <td className="border border-gray-500 p-2">
-                            ${(item.discounted_price ?? 0).toFixed(2)}
+                            ${(Number(item?.discounted_price) ?? 0).toFixed(2)}
                           </td>
                         </tr>
                       ))}
@@ -572,7 +572,14 @@ const DataTable: React.FC<DataTableProps> = ({
                 <div className="mt-4 flex justify-end">
                   <div className="w-full max-w-xs space-y-1 border-t pt-3 text-right">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Total:</span>
+                      <span className="text-gray-500">
+                        Subtotal
+                        {selectedItem?.delivery_charges! >> 0 &&
+                          " (Delivery charges: $" +
+                            selectedItem?.delivery_charges +
+                            ")"}
+                        :
+                      </span>
                       <span>
                         ${selectedItem?.total_order_price?.toFixed(2) ?? "0.00"}
                       </span>
@@ -593,7 +600,7 @@ const DataTable: React.FC<DataTableProps> = ({
                     )}
 
                     <div className="flex justify-between text-base font-bold">
-                      <span>Final Total:</span>
+                      <span>Total:</span>
                       <span>
                         $
                         {selectedItem?.total_discounted_price?.toFixed(2) ??
