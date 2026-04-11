@@ -49,6 +49,7 @@ const MyComponent = () => {
     shippingOptions[0] ?? null,
   );
   const [total, setTotal] = useState<number>(0);
+  const [totalOriginal, setTotalOriginal] = useState<number>(0);
   const [discountLoader, setDiscountLoader] = useState(false);
   const { toast } = useToast();
   const [calculateLoader, setCalculateLoader] = useState<boolean>(false);
@@ -124,6 +125,7 @@ const MyComponent = () => {
 
     const amount = shipping?.amount ?? 0;
     setTotal(amount + totalAfterCalculation?.final_price_including_tax);
+    setTotalOriginal(amount + totalAfterCalculation?.original_price);
     const x = mergedArray;
     setNewItems(x);
   }, [totalAfterCalculation]);
@@ -286,19 +288,19 @@ const MyComponent = () => {
   }, [isOpenPaymentAlert]);
   const handlePlaceOrder = async () => {
     setPlaceOrderLoader(true);
-    // await placeOrderApi(797498821);
-    const x = {
-      customer_id: checkoutData?.customer_id,
-      guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
-      amount: total,
-    };
+    await placeOrderApi(797498821);
+    // const x = {
+    //   customer_id: checkoutData?.customer_id,
+    //   guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
+    //   amount: total,
+    // };
 
-    try {
-      await getLinkForPayment(x);
-      console.log(x);
-    } catch (error) {
-      console.error("Failed to load data:", error);
-    }
+    // try {
+    //   await getLinkForPayment(x);
+    //   console.log(x);
+    // } catch (error) {
+    //   console.error("Failed to load data:", error);
+    // }
     setPlaceOrderLoader(false);
   };
 
@@ -416,7 +418,7 @@ const MyComponent = () => {
       kitchen_comments: "",
       waiter_id: null,
       table_served: null,
-      total_order_price: total,
+      total_order_price: totalOriginal,
       tab_limit: 0.0,
       final_price_including_tax: total,
       eft_pos_details: {
@@ -430,6 +432,7 @@ const MyComponent = () => {
       // guest: checkoutData?.uuid ? checkoutData?.uuid : null,
       order_items: await convertPayload(),
       address_id: checkoutData?.address?.[0]?.address_id ?? null,
+      delivery_charges: shipping?.amount ?? 0,
     };
     try {
       console.log(x);
@@ -536,8 +539,10 @@ const MyComponent = () => {
     setShipping(val);
     if (val.amount > 0) {
       setTotal(val.amount + total);
+      setTotalOriginal(val.amount + totalOriginal);
     } else {
-      setTotal(total - 10);
+      setTotal(totalAfterCalculation?.final_price_including_tax ?? total - 10);
+      setTotalOriginal(totalAfterCalculation?.original_price ?? totalOriginal - 10);
     }
   };
 
