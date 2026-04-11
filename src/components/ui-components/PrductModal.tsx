@@ -543,7 +543,7 @@ const ProductModal = ({
                     <h3 className="font-medium capitalize">Select {tagName}</h3>
 
                     {tagName.toLowerCase().includes("size") ? (
-                      <div className="scrollbar-hidden flex justify-center gap-2 overflow-x-auto px-1 pl-3 lg:max-w-full">
+                      <div className="scrollbar-hidden flex flex-wrap justify-start gap-2 px-1 pl-3">
                         {options.map((option) => (
                           <button
                             key={option.value}
