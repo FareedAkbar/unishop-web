@@ -6,10 +6,8 @@
 import moment from "moment";
 import React from "react";
 import DataTable from "~/components/ui-components/DataTable";
-import type {
-  GetSpecialOrder,
-} from "~/types/getSpecialBackOrders";
-import  OrderStatus from './OrderStatus';
+import type { GetSpecialOrder } from "~/types/getSpecialBackOrders";
+import OrderStatus from "./OrderStatus";
 
 interface dataTable {
   data: GetSpecialOrder[];
@@ -17,21 +15,20 @@ interface dataTable {
 }
 
 const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
-  
+  function formatToSydneyDateOnly(
+    date: string | Date | number | null | undefined,
+    format = "MM/DD/YYYY",
+  ): string {
+    if (!date) return "";
 
- function formatToSydneyDateOnly(
-  date: string | Date | number | null | undefined,
-  format = "MM/DD/YYYY"
-): string {
-  if (!date) return "";
+    // Parse date WITHOUT applying UTC or timezone shift
 
-  // Parse date WITHOUT applying UTC or timezone shift
- 
-   const safe = typeof date === "string" ? date.replace(/Z$/, "") : String(date);
+    const safe =
+      typeof date === "string" ? date.replace(/Z$/, "") : String(date);
 
-  return moment(safe).format(format);
-  //  return moment.parseZone(date).local().format(format);
-}
+    return moment(safe).format(format);
+    //  return moment.parseZone(date).local().format(format);
+  }
 
   const columns = [
     { key: "order_id", header: "Order ID", isSortable: false },
@@ -59,8 +56,7 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
       isSortable: true,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: (info: any) => {
-
-        const date = formatToSydneyDateOnly(info.started, "MM/DD/YYYY");
+        const date = formatToSydneyDateOnly(info.started, "DD/MM/YYYY");
         return <span>{date}</span>;
       },
     },
@@ -69,9 +65,9 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
       header: "Price",
       isSortable: true,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      cell: (info: any) => <span>{`$${info.total_discounted_price.toFixed(
-        2,
-      )}`}</span>, // Changed to JSX element
+      cell: (info: any) => (
+        <span>{`$${info.total_discounted_price.toFixed(2)}`}</span>
+      ), // Changed to JSX element
     },
   ];
 

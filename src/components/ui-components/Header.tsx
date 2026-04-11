@@ -7,6 +7,7 @@ import {
   FaHome,
   FaPhoneAlt,
   FaRegTimesCircle,
+  FaShoppingBag,
 } from "react-icons/fa";
 import Input from "./Input";
 import Image from "next/image";
@@ -829,12 +830,24 @@ const Header = () => {
                 </Link>
 
                 <Link
+                  href="/my-orders"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setOpenDropdown(null);
+                  }}
+                  className="flex w-1/3 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
+                >
+                  <FaShoppingBag size={16} />
+                  <span className="text-xs">My Orders</span>
+                </Link>
+                {/* 
+                <Link
                   href="/contact-us"
                   className="flex w-1/3 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
                 >
                   <FaPhoneAlt size={16} />
                   <span className="text-xs">Contact Us</span>
-                </Link>
+                </Link> */}
               </div>
               <nav className="custom-scrollbar overflow-auto">
                 {headerCategory?.map((item) => (

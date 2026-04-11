@@ -204,7 +204,7 @@ const DataTable: React.FC<DataTableProps> = ({
 
   function formatToSydneyDateOnly(
     date: string | Date | number | null | undefined,
-    format = "MM/DD/YYYY",
+    format = "DD/MM/YYYY",
   ): string {
     if (!date) return "";
 
@@ -526,7 +526,6 @@ const DataTable: React.FC<DataTableProps> = ({
                   <table className="w-full border border-gray-500 text-sm">
                     <thead className="bg-gray-100 dark:bg-gray-700">
                       <tr>
-                        <th className="border border-gray-500 p-2">Item ID</th>
                         <th className="border border-gray-500 p-2">
                           Name/Title
                         </th>
@@ -539,31 +538,29 @@ const DataTable: React.FC<DataTableProps> = ({
                     </thead>
 
                     <tbody>
-                      {Array.isArray(items) && items.map((item: any, index: number) => (
-                        <tr key={index} className="text-center">
-                          <td className="border border-gray-500 p-2">
-                            {item.item_id}
-                          </td>
+                      {Array.isArray(items) &&
+                        items.map((item: any, index: number) => (
+                          <tr key={index} className="text-center">
+                            <td className="border border-gray-500 p-2">
+                              {item.item_name ??
+                                item.food_name ??
+                                item.book_title ??
+                                "-"}
+                            </td>
 
-                          <td className="border border-gray-500 p-2">
-                            {item.item_name ??
-                              item.food_name ??
-                              item.book_title ??
-                              "-"}
-                          </td>
+                            <td className="border border-gray-500 p-2">
+                              {item.quantity}
+                            </td>
 
-                          <td className="border border-gray-500 p-2">
-                            {item.quantity}
-                          </td>
-
-                          <td className="border border-gray-500 p-2">
-                            ${(Number(item?.item_price) ?? 0).toFixed(2)}
-                          </td>
-                          <td className="border border-gray-500 p-2">
-                            ${(Number(item?.discounted_price) ?? 0).toFixed(2)}
-                          </td>
-                        </tr>
-                      ))}
+                            <td className="border border-gray-500 p-2">
+                              ${(Number(item?.item_price) ?? 0).toFixed(2)}
+                            </td>
+                            <td className="border border-gray-500 p-2">
+                              $
+                              {(Number(item?.discounted_price) ?? 0).toFixed(2)}
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>
@@ -622,7 +619,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 {selectedItem?.started
                   ? formatToSydneyDateOnly(
                       selectedItem.started,
-                      "MM/DD/YYYY h:mm A",
+                      "DD/MM/YYYY h:mm A",
                     )
                   : ""}
               </p>

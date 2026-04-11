@@ -57,6 +57,8 @@ type transactionData = {
   transaction_id?: string | null;
   order_id?: number | null;
   tracking_id?: number | null;
+  total_order_price?: number | null;
+  discounted_price?: number | null;
 };
 
 interface AuthContextProps {

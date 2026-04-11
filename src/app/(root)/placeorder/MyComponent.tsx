@@ -347,6 +347,8 @@ const MyComponent = () => {
             transaction_id: requestOptions.transaction_id,
             order_id: result?.data?.order_id,
             tracking_id: result.data?.tracking_id,
+            total_order_price: totalOriginal,
+            discounted_price: total,
           };
           await setTransactionData(x);
         } catch (error) {
@@ -542,7 +544,9 @@ const MyComponent = () => {
       setTotalOriginal(val.amount + totalOriginal);
     } else {
       setTotal(totalAfterCalculation?.final_price_including_tax ?? total - 10);
-      setTotalOriginal(totalAfterCalculation?.original_price ?? totalOriginal - 10);
+      setTotalOriginal(
+        totalAfterCalculation?.original_price ?? totalOriginal - 10,
+      );
     }
   };
 

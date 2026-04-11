@@ -104,11 +104,20 @@ const ProductCard = ({
         </div>
       )}
 
-      {product?.items_type == 0 && !product.stock.stock_id && (
-        <div className="absolute inset-0 z-[1] flex items-center justify-center rounded bg-black/30 dark:bg-white/30">
-          <span className="-rotate-45 font-semibold text-white dark:text-black">
-            Currently no stock is available
-          </span>
+      {(!product?.available ||
+        (product?.items_type == 0 && !product?.stock?.stock_id)) && (
+        <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center gap-2 rounded bg-black/30 dark:bg-white/30">
+          {!product?.available && (
+            <span className="-rotate-45 px-2 text-center font-semibold text-white dark:text-black">
+              Unavailable
+            </span>
+          )}
+
+          {product?.items_type == 0 && !product?.stock?.stock_id && (
+            <span className="-rotate-45 px-2 text-center font-semibold text-white dark:text-black">
+              Currently no stock is available
+            </span>
+          )}
         </div>
       )}
 
@@ -191,7 +200,7 @@ const ProductCard = ({
         className="mb-1 mt-2 font-serif font-semibold capitalize sm:mt-4"
         title={product?.item_name}
       >
-        {product?.item_name.split("¥").join(" ")}
+        {product?.item_name.split("¥")[0]}
       </span>
       {product?.SKU ? (
         <span className="truncate font-serif text-xs">
