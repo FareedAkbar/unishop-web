@@ -8,8 +8,8 @@ import React from "react";
 import DataTable from "~/components/ui-components/DataTable";
 import type {
   GetSpecialOrder,
-  OrderStatus,
 } from "~/types/getSpecialBackOrders";
+import  OrderStatus from './OrderStatus';
 
 interface dataTable {
   data: GetSpecialOrder[];
@@ -17,9 +17,7 @@ interface dataTable {
 }
 
 const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
-  function getOrderStatusById(orderStatusId: number | null) {
-    return orderStatus.find((status) => status.status_id === orderStatusId);
-  }
+  
 
  function formatToSydneyDateOnly(
   date: string | Date | number | null | undefined,
@@ -50,7 +48,7 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
           <span
             className={`inline-block rounded px-2 py-1 text-white ${badgeColor}`}
           >
-            {getOrderStatusById(status)?.status_detail}
+            {OrderStatus.getDisplayStatus(status)?.toUpperCase() || "Status"}
           </span>
         );
       },

@@ -539,16 +539,16 @@ const DataTable: React.FC<DataTableProps> = ({
                     </thead>
 
                     <tbody>
-                      {items.map((item: any, index: number) => (
+                      {Array.isArray(items) && items.map((item: any, index: number) => (
                         <tr key={index} className="text-center">
                           <td className="border border-gray-500 p-2">
                             {item.item_id}
                           </td>
 
                           <td className="border border-gray-500 p-2">
-                            {item.item_name ||
-                              item.food_name ||
-                              item.book_title ||
+                            {item.item_name ??
+                              item.food_name ??
+                              item.book_title ??
                               "-"}
                           </td>
 
@@ -557,10 +557,10 @@ const DataTable: React.FC<DataTableProps> = ({
                           </td>
 
                           <td className="border border-gray-500 p-2">
-                            ${(item.item_price ?? 0).toFixed(2)}
+                            ${(Number(item?.item_price) ?? 0).toFixed(2)}
                           </td>
                           <td className="border border-gray-500 p-2">
-                            ${(item.discounted_price ?? 0).toFixed(2)}
+                            ${(Number(item?.discounted_price) ?? 0).toFixed(2)}
                           </td>
                         </tr>
                       ))}

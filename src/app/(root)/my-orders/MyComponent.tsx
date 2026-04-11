@@ -185,7 +185,7 @@ const MyComponent = () => {
     const loadData = async () => {
       try {
         setLoader(true);
-        await fetchOrderStatus();
+        // await fetchOrderStatus();
         await fetchDataOrders();
         setLoader(false);
         // setData(result);
