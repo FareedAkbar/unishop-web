@@ -288,19 +288,19 @@ const MyComponent = () => {
   }, [isOpenPaymentAlert]);
   const handlePlaceOrder = async () => {
     setPlaceOrderLoader(true);
-    // await placeOrderApi(797498821);
-    const x = {
-      customer_id: checkoutData?.customer_id,
-      guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
-      amount: total,
-    };
+    await placeOrderApi(797498821);
+    // const x = {
+    //   customer_id: checkoutData?.customer_id,
+    //   guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
+    //   amount: total,
+    // };
 
-    try {
-      await getLinkForPayment(x);
-      console.log(x);
-    } catch (error) {
-      console.error("Failed to load data:", error);
-    }
+    // try {
+    //   await getLinkForPayment(x);
+    //   console.log(x);
+    // } catch (error) {
+    //   console.error("Failed to load data:", error);
+    // }
     setPlaceOrderLoader(false);
   };
 
