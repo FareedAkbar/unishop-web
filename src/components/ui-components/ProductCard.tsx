@@ -196,7 +196,7 @@ const ProductCard = ({
       {product?.SKU ? (
         <span className="truncate font-serif text-xs">
           {product?.book_id && product?.food_id == null ? "ISBN: " : "SKU: "}{" "}
-          {product?.SKU}
+          {product?.book_ISBN ? product?.book_ISBN : product?.SKU}
         </span>
       ) : (
         ""
