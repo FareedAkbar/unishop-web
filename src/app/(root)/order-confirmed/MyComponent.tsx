@@ -37,10 +37,10 @@ const OrderConfirmed = () => {
         <h3 className="mb-4 text-center text-2xl font-bold text-gray-800 dark:text-white">
           ORDER CONFIRMATION
         </h3>
-        <p className="text-md text-center text-gray-600 dark:text-gray-300">
+        {/* <p className="text-md text-center text-gray-600 dark:text-gray-300">
           Your order has been placed successfully. We are currently processing
           it and will notify you when your items are on the way.
-        </p>
+        </p> */}
       </motion.div>
       <motion.div
         className="flex flex-col items-center gap-3 py-5 lg:flex-row"
@@ -80,6 +80,14 @@ const OrderConfirmed = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
+          <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
+            <strong>Order Price:</strong> ${" "}
+            {orderTransactionData?.total_order_price ?? 0}
+          </p>
+          <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
+            <strong>Discounted Price:</strong> ${" "}
+            {orderTransactionData?.discounted_price ?? 0}
+          </p>
           <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
             <strong>Order ID:</strong> {orderTransactionData?.order_id ?? 0}
           </p>
