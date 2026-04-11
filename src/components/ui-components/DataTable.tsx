@@ -135,7 +135,11 @@ const DataTable: React.FC<DataTableProps> = ({
     setFilteredData(filtered);
     setCurrentPage(1);
   };
-
+  const items =
+    selectedItem?.order_items ??
+    selectedItem?.back_order_items ??
+    selectedItem?.special_order_items ??
+    [];
   const handleSearch = () => {
     filterResult();
   };
@@ -198,20 +202,20 @@ const DataTable: React.FC<DataTableProps> = ({
     currentPage * pageSize,
   );
 
- 
   function formatToSydneyDateOnly(
-  date: string | Date | number | null | undefined,
-  format = "MM/DD/YYYY"
-): string {
-  if (!date) return "";
+    date: string | Date | number | null | undefined,
+    format = "MM/DD/YYYY",
+  ): string {
+    if (!date) return "";
 
-  // Parse date WITHOUT applying UTC or timezone shift
- 
-   const safe = typeof date === "string" ? date.replace(/Z$/, "") : String(date);
+    // Parse date WITHOUT applying UTC or timezone shift
 
-  return moment(safe).format(format);
-  //  return moment.parseZone(date).local().format(format);
-}
+    const safe =
+      typeof date === "string" ? date.replace(/Z$/, "") : String(date);
+
+    return moment(safe).format(format);
+    //  return moment.parseZone(date).local().format(format);
+  }
   return (
     <>
       <div
@@ -302,8 +306,8 @@ const DataTable: React.FC<DataTableProps> = ({
                       ?.mode === "asc" && <FaAngleUp className="ml-1 inline" />}
                     {sortOptions.find((sort) => sort.key === column.key)
                       ?.mode === "desc" && (
-                        <FaAngleDown className="ml-1 inline" />
-                      )}
+                      <FaAngleDown className="ml-1 inline" />
+                    )}
                   </th>
                 ) : null,
               )}
@@ -398,7 +402,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 <div className="mt-2 flex items-center">
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
                     {selectedItem?.total_order_price ==
-                      selectedItem?.total_discounted_price
+                    selectedItem?.total_discounted_price
                       ? "Price: "
                       : "Actual Price: "}
                   </p>
@@ -407,7 +411,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   </p>
                 </div>
                 {selectedItem?.total_order_price ==
-                  selectedItem?.total_discounted_price ? (
+                selectedItem?.total_discounted_price ? (
                   ""
                 ) : (
                   <div className="mt-2 flex items-center">
@@ -454,8 +458,7 @@ const DataTable: React.FC<DataTableProps> = ({
               </div>
             </div>
 
-            {/* Special Order Items */}
-            {selectedItem?.special_order_items && (
+            {/* {selectedItem?.special_order_items && (
               <div className="mt-8">
                 <h3 className="text-center text-xl font-extrabold uppercase tracking-wider">
                   Order Items
@@ -474,12 +477,153 @@ const DataTable: React.FC<DataTableProps> = ({
                 )}
               </div>
             )}
+
+            {selectedItem?.back_order_items && (
+              <div className="mt-8">
+                <h3 className="text-center text-xl font-extrabold uppercase tracking-wider">
+                  Order Items
+                </h3>
+                {selectedItem.back_order_items?.length > 0 ? (
+                  <ul className="mt-2 list-inside list-disc text-gray-700 dark:text-gray-300">
+                    {selectedItem.back_order_items.map((item, index) => (
+                      <li key={index}>
+                        <span className="">Item ID:</span> {item.item_id},{" "}
+                        <span className="">Quantity:</span> {item.quantity}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-2 text-gray-700">No items in this order.</p>
+                )}
+              </div>
+            )}
+            {selectedItem?.order_items && (
+              <div className="mt-8">
+                <h3 className="text-center text-xl font-extrabold uppercase tracking-wider">
+                  Order Items
+                </h3>
+                {selectedItem.order_items?.length > 0 ? (
+                  <ul className="mt-2 list-inside list-disc text-gray-700 dark:text-gray-300">
+                    {selectedItem.order_items.map((item, index) => (
+                      <li key={index}>
+                        <span className="">Item ID:</span> {item.item_id},{" "}
+                        <span className="">Quantity:</span> {item.quantity}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-2 text-gray-700">No items in this order.</p>
+                )}
+              </div>
+            )} */}
+            {items.length > 0 ? (
+              <div className="mt-8">
+                <h3 className="mb-4 text-center text-xl font-extrabold uppercase tracking-wider">
+                  Order Items
+                </h3>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full border border-gray-500 text-sm">
+                    <thead className="bg-gray-100 dark:bg-gray-700">
+                      <tr>
+                        <th className="border border-gray-500 p-2">Item ID</th>
+                        <th className="border border-gray-500 p-2">
+                          Name/Title
+                        </th>
+                        <th className="border border-gray-500 p-2">Qty</th>
+                        <th className="border border-gray-500 p-2">
+                          Unit Price
+                        </th>
+                        <th className="border border-gray-500 p-2">Total</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {Array.isArray(items) && items.map((item: any, index: number) => (
+                        <tr key={index} className="text-center">
+                          <td className="border border-gray-500 p-2">
+                            {item.item_id}
+                          </td>
+
+                          <td className="border border-gray-500 p-2">
+                            {item.item_name ??
+                              item.food_name ??
+                              item.book_title ??
+                              "-"}
+                          </td>
+
+                          <td className="border border-gray-500 p-2">
+                            {item.quantity}
+                          </td>
+
+                          <td className="border border-gray-500 p-2">
+                            ${(Number(item?.item_price) ?? 0).toFixed(2)}
+                          </td>
+                          <td className="border border-gray-500 p-2">
+                            ${(Number(item?.discounted_price) ?? 0).toFixed(2)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* 🔥 TOTAL SECTION (RIGHT BOTTOM) */}
+                <div className="mt-4 flex justify-end">
+                  <div className="w-full max-w-xs space-y-1 border-t pt-3 text-right">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">
+                        Subtotal
+                        {selectedItem?.delivery_charges! >> 0 &&
+                          " (Delivery charges: $" +
+                            selectedItem?.delivery_charges +
+                            ")"}
+                        :
+                      </span>
+                      <span>
+                        ${selectedItem?.total_order_price?.toFixed(2) ?? "0.00"}
+                      </span>
+                    </div>
+
+                    {selectedItem?.total_order_price !==
+                      selectedItem?.total_discounted_price && (
+                      <div className="flex justify-between text-sm text-red-500">
+                        <span>Discount:</span>
+                        <span>
+                          -$
+                          {(
+                            (selectedItem?.total_order_price ?? 0) -
+                            (selectedItem?.total_discounted_price ?? 0)
+                          ).toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="flex justify-between text-base font-bold">
+                      <span>Total:</span>
+                      <span>
+                        $
+                        {selectedItem?.total_discounted_price?.toFixed(2) ??
+                          "0.00"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-8 text-center text-gray-500">
+                No items in this order.
+              </p>
+            )}
             {/* Order Started */}
             <div className="mt-">
               <p className="text-center text-sm text-gray-500 dark:text-gray-300">
                 <span className="font-medium">Order Started:</span>{" "}
                 {selectedItem?.started
-                  ? formatToSydneyDateOnly(selectedItem.started, "MM/DD/YYYY h:mm A")
+                  ? formatToSydneyDateOnly(
+                      selectedItem.started,
+                      "MM/DD/YYYY h:mm A",
+                    )
                   : ""}
               </p>
             </div>

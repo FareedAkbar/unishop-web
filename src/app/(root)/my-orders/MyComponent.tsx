@@ -45,7 +45,7 @@ const requestOptions: RequestInit = {
 };
 
 const MyComponent = () => {
-  const { booknetCustomerId, checkoutData } = useAuthContext();
+  const { booknetCustomerId, checkoutData, userInfo } = useAuthContext();
   const router = useRouter();
   const [loader, setLoader] = useState(false);
   // const [dataSpecialOrders, setDataSpecialOrders] = useState<GetSpecialOrder[]>(
@@ -156,11 +156,17 @@ const MyComponent = () => {
   };
 
   const fetchDataOrders = async () => {
-    if (!checkoutData?.customer_id) return;
+    console.log(
+      "fetchDataOrders called with customer_id:",
+      checkoutData?.customer_id,
+    );
+
+    const customerId = checkoutData?.customer_id ?? userInfo?.customer_id;
+    if (!customerId) return;
 
     setLoader(true);
     try {
-      const x = await getMyOrders(checkoutData?.customer_id);
+      const x = await getMyOrders(customerId);
       if (typeof x !== "boolean" && x.status) {
         console.log(x.data);
         setDataOrders(x.data);
@@ -173,12 +179,13 @@ const MyComponent = () => {
   };
 
   useEffect(() => {
-    if (!checkoutData?.customer_id) return;
-    console.log(checkoutData?.customer_id);
+    console.log(checkoutData?.customer_id, "gggggggggg", userInfo?.customer_id);
+    if (!checkoutData?.customer_id && !userInfo?.customer_id) return;
+    console.log(checkoutData?.customer_id, userInfo?.customer_id);
     const loadData = async () => {
       try {
         setLoader(true);
-        await fetchOrderStatus();
+        // await fetchOrderStatus();
         await fetchDataOrders();
         setLoader(false);
         // setData(result);
@@ -194,7 +201,7 @@ const MyComponent = () => {
     });
 
     // void fetchDataSpecialOrders();
-  }, [booknetCustomerId,checkoutData?.customer_id]);
+  }, [booknetCustomerId, checkoutData?.customer_id]);
 
   function getOrderStatusById(orderStatusId: number) {
     return orderStatus.find((status) => status.status_id === orderStatusId);
