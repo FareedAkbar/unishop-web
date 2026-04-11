@@ -574,7 +574,7 @@ const DataTable: React.FC<DataTableProps> = ({
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">
                         Subtotal
-                        {selectedItem?.delivery_charges! >> 0 &&
+                        {Number(selectedItem?.delivery_charges ?? 0) > 0 &&
                           " (Delivery charges: $" +
                             selectedItem?.delivery_charges +
                             ")"}
