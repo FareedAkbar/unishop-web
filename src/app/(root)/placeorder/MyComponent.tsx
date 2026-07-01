@@ -25,6 +25,7 @@ import CartItem from "~/components/ui-components/CartItem";
 import AlertBox from "~/components/alertBox/alert";
 import moment from "moment";
 import TableRates from "~/components/constants/tablerates";
+import { ShippingRate } from "~/types/taxCalculationApiResponse";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -66,6 +67,7 @@ const MyComponent = () => {
   // const [socketStatus, setSocketStatus] = useState(true);
   const [totalAfterCalculation, setTotalAfterCalculation] =
     useState<TaxCalculationApiResponse>();
+    const [shippingRates, setShippingRates] = useState<ShippingRate[]>([]);
   const router = useRouter();
   // const NAMESPACE = uuidv5('uniShop', uuidv5.URL);
   // const myuuid = uuidv4();
@@ -184,7 +186,41 @@ const MyComponent = () => {
       if (result?.status) {
         setTotalAfterCalculation(result?.data);
 
-        console.log("result?.data", result?.data);
+      } else {
+        console.error("Unexpected result structure fetchData:", result);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setCalculateLoader(false);
+    }
+  };
+
+    interface ApiResponseShippingRates {
+    status: boolean;
+    data: ShippingRate[];
+    message: string;
+  }
+
+   const fetchShippingRates = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/shipping_rates`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
+          },
+         
+        },
+      );
+
+      const result: ApiResponseShippingRates = (await response.json()) as ApiResponseShippingRates;
+
+      // Check if result has the expected structure
+      if (result?.status) {
+        setShippingRates(result?.data);
+
       } else {
         console.error("Unexpected result structure fetchData:", result);
       }
@@ -212,6 +248,7 @@ const MyComponent = () => {
         setCalculateLoader(true);
 
         await fetchData(itemsPayload);
+        await fetchShippingRates();
       } catch (error) {
         console.error("Failed to load data:", error);
         setCalculateLoader(false);
@@ -316,7 +353,6 @@ const MyComponent = () => {
   }
 
   const placeOrderApiCall = async (requestOptions: placeOrderPayload) => {
-    console.log("requestOptions", requestOptions);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/orders/web`,
@@ -373,7 +409,7 @@ const MyComponent = () => {
 
   async function convertPayload() {
     // Check if inputArray is empty
-    console.log(newItems);
+    
     if (!Array.isArray(newItems) || newItems.length === 0) {
       console.warn("Input array is empty or not an array:", newItems);
       return [];
@@ -538,10 +574,11 @@ const MyComponent = () => {
   };
 
   const onChange = (val: ShippingType) => {
+    
     setShipping(val);
-    if (val.amount > 0) {
-      setTotal(val.amount + total);
-      setTotalOriginal(val.amount + totalOriginal);
+    if (Number(val.amount) > 0) {
+      setTotal(Number(val.amount) + total);
+      setTotalOriginal(Number(val.amount) + totalOriginal);
     } else {
       setTotal(totalAfterCalculation?.final_price_including_tax ?? total - 10);
       setTotalOriginal(
@@ -705,20 +742,14 @@ const MyComponent = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = () => setIsExpanded((prev) => !prev);
-  type ShippingRate = {
-    Country: string;
-    "Region/State": string;
-    "Zip/Postal Code": string;
-    weight_and_above: number;
-    shipping_price: number;
-  };
+  
   function getShippingPrice(
+    
     countryCode: string,
-    packageWeight: number,
-    rates: ShippingRate[],
+    packageWeight: number
   ): number | null {
-    const countryRates = rates
-      .filter((rate) => rate.Country === countryCode)
+    
+    const countryRates = shippingRates?.filter((rate) => rate.country === countryCode)
       .sort((a, b) => a.weight_and_above - b.weight_and_above);
 
     for (let i = countryRates.length - 1; i >= 0; i--) {
@@ -943,8 +974,7 @@ const MyComponent = () => {
 
                       {getShippingPrice(
                         checkoutData?.address?.[0]?.country_code ?? "",
-                        calculateWeight(),
-                        TableRates,
+                        calculateWeight()
                       ) ? (
                         <div
                           className={`rounded-3xl border p-4 ${
@@ -965,9 +995,7 @@ const MyComponent = () => {
                                     getShippingPrice(
                                       checkoutData?.address?.[0]
                                         ?.country_code ?? "",
-                                      calculateWeight(),
-                                      TableRates,
-                                    ) ?? 0,
+                                      calculateWeight()) ?? 0,
                                   type: "Delivery",
                                   label:
                                     "Shipping cost is calculated based on the total weight of your order.",
@@ -980,9 +1008,7 @@ const MyComponent = () => {
                               $
                               {getShippingPrice(
                                 checkoutData?.address?.[0]?.country_code ?? "",
-                                calculateWeight(),
-                                TableRates,
-                              ) ?? 0}
+                                calculateWeight()) ?? 0}
                             </div>
                             <div className="my-4 text-left text-xl font-medium capitalize">
                               Delivery
@@ -1147,7 +1173,7 @@ const MyComponent = () => {
                       </div>
 
                       <span className="col-span-1 flex justify-end text-sm">
-                        ${shipping?.amount.toFixed(2)}
+                        ${shipping?.amount ?? Number(shipping?.amount.toFixed(2))}
                       </span>
                     </div>
                     {calculateWeight() > 0 && (

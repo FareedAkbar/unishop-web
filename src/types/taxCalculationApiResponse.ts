@@ -63,4 +63,15 @@ interface TaxCalculationApiResponse {
   items: DiscountItem[];
 }
 
+export interface ShippingRate {
+  shipping_rate_id: number;
+  country: string;
+  region_state: string | null;
+  postal_code: string | null;
+  weight_and_above: number;
+  shipping_price: number;
+  country_code: string | null;
+  country_name: string | null;
+  is_deleted: number;
+}
 export default TaxCalculationApiResponse;
