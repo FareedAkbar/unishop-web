@@ -496,6 +496,7 @@ const MyComponent = () => {
   // }, [uuidLocal]);
 
   useEffect(() => {
+    console.log(checkoutData, "checkoutData");
     if (!checkoutData?.uuid && !checkoutData?.customer_id) return;
     socket.disconnect();
     socket.connect();
