@@ -1244,6 +1244,7 @@ const MyComponent = () => {
                   src={transactionData?.link}
                   className="h-full w-full border-none"
                   loading="lazy"
+                  data-publicapikey={process.env.NEXT_PUBLIC_EWAY_PUBLIC_KEY}
                   onLoad={() => setLoading(false)}
                   allow="payment"
                 />
