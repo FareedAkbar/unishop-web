@@ -562,8 +562,7 @@ const MyComponent = () => {
   }, [checkoutData, transactionData]);
 
   useEffect(() => {
-    if (!checkoutData?.uuid) return;
-
+    if (!checkoutData?.uuid && !checkoutData?.customer_id) return;
     console.log("Payment socket initiated");
     const cleanupPaymentStatus = PaymentStatus();
 
