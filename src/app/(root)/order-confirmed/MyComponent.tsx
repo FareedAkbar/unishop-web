@@ -82,11 +82,11 @@ const OrderConfirmed = () => {
         >
           <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
             <strong>Order Price:</strong> ${" "}
-            {orderTransactionData?.total_order_price ?? 0}
+            {orderTransactionData?.total_order_price?.toFixed(2) ?? 0}
           </p>
           <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
             <strong>Discounted Price:</strong> ${" "}
-            {orderTransactionData?.discounted_price ?? 0}
+            {orderTransactionData?.discounted_price?.toFixed(2) ?? 0}
           </p>
           <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
             <strong>Order ID:</strong> {orderTransactionData?.order_id ?? 0}
