@@ -34,7 +34,7 @@ import { BsPlusCircle } from "react-icons/bs";
 import { error } from "console";
 import Link from "next/link";
 import { Countries_States } from "../constants/countries_states";
-import _ from "lodash";
+import _, { get } from "lodash";
 type CheckoutFormValues = z.infer<typeof SignupSchema>;
 
 interface checkout {
@@ -72,7 +72,7 @@ export default function CheckoutForm({
   const [loader, setLoader] = useState(false);
   const [addressIndex, setAddressIndex] = useState(0);
   const [showFormFields, setShowFormFields] = useState(true);
-  console.log(userInfo);
+
   const defaultValues = billing_address
     ? {
         ...checkoutData,
@@ -177,6 +177,8 @@ export default function CheckoutForm({
         },
       );
 
+      console.log("payload", JSON.stringify(payload));
+
       const result: add_address_from_customer_id =
         (await response.json()) as add_address_from_customer_id;
 
@@ -249,13 +251,13 @@ export default function CheckoutForm({
         .find((state) => state?.value === Number(data?.state))
         ?.label.toString(),
       postal_code: data.postal_code,
-      country_code:
-        Countries_States.find((country) => country.name === selectedCountry)
-          ?.iso3 ?? selectedCountry,
+      country_code: '+'+Countries_States.find((country) => country.name === selectedCountry)?.phone_code,
+        // Countries_States.find((country) => country.name === selectedCountry)
+        //   ?.iso3 ?? selectedCountry,
       phone_number: data.phone_number,
-      phone_code:
-        Countries_States.find((country) => country.name === selectedCountry)
-          ?.phone_code ?? "",
+      // phone_code:
+      //   Countries_States.find((country) => country.name === selectedCountry)
+      //     ?.phone_code ?? "",
       default_status: 1,
     };
     // compare address from the form and previous billing address and if yes then pick address from previous billing address
@@ -279,9 +281,9 @@ export default function CheckoutForm({
         ?.label.toString(),
       city: data.city,
       customer_id: userInfo?.customer_id ?? null,
-      country_code:
-        Countries_States.find((country) => country.name === selectedCountry)
-          ?.iso3 ?? selectedCountry,
+      country_code: '+'+Countries_States.find((country) => country.name === selectedCountry)?.phone_code,
+        // Countries_States.find((country) => country.name === selectedCountry)
+        //   ?.iso3 ?? selectedCountry,
       address: xx,
       customer_type_id: 6,
       uuid: userInfo?.uuid ?? uuid,
@@ -369,7 +371,7 @@ export default function CheckoutForm({
 
       const state = Countries_States.find(
         (country) =>
-          country.iso3 === billing_address[addressIndex]?.country_code,
+          country.name === billing_address[addressIndex]?.country,
       )?.states?.find(
         (state) =>
           state.name.toString() === billing_address[addressIndex]?.state,
@@ -380,7 +382,7 @@ export default function CheckoutForm({
         "country",
         Countries_States.find(
           (country) =>
-            country.iso3 === billing_address[addressIndex]?.country_code,
+            country.name === billing_address[addressIndex]?.country,
         )?.name ?? "",
       );
     }
@@ -396,6 +398,7 @@ export default function CheckoutForm({
   }, [billing_address]);
 
   useEffect(() => {
+    console.log("errors", errors);
     if (errors && !_.isEmpty(errors) && !showFormFields) {
       toast({
         title: "Address Error",
