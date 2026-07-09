@@ -26,6 +26,7 @@ import AlertBox from "~/components/alertBox/alert";
 import moment from "moment";
 import TableRates from "~/components/constants/tablerates";
 import { ShippingRate } from "~/types/taxCalculationApiResponse";
+import { Countries_States } from "~/components/constants/countries_states";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -745,13 +746,13 @@ const MyComponent = () => {
   
   function getShippingPrice(
     
-    countryCode: string,
+    country_name: string,
     packageWeight: number
   ): number | null {
-    
-    const countryRates = shippingRates?.filter((rate) => rate.country === countryCode)
-      .sort((a, b) => a.weight_and_above - b.weight_and_above);
 
+    const code = Countries_States.find((country) => country?.name == country_name);
+    const countryRates = shippingRates?.filter((rate) => rate.country == code?.iso3)
+      .sort((a, b) => a.weight_and_above - b.weight_and_above);
     for (let i = countryRates.length - 1; i >= 0; i--) {
       const rate = countryRates[i];
       if (rate && packageWeight >= rate.weight_and_above) {
@@ -973,7 +974,7 @@ const MyComponent = () => {
                       </div>
 
                       {getShippingPrice(
-                        checkoutData?.address?.[0]?.country_code ?? "",
+                        checkoutData?.address?.[0]?.country ?? "",
                         calculateWeight()
                       ) ? (
                         <div
@@ -994,7 +995,7 @@ const MyComponent = () => {
                                   amount:
                                     getShippingPrice(
                                       checkoutData?.address?.[0]
-                                        ?.country_code ?? "",
+                                        ?.country ?? "",
                                       calculateWeight()) ?? 0,
                                   type: "Delivery",
                                   label:
@@ -1007,7 +1008,7 @@ const MyComponent = () => {
                             <div className="text-center text-3xl font-medium">
                               $
                               {getShippingPrice(
-                                checkoutData?.address?.[0]?.country_code ?? "",
+                                checkoutData?.address?.[0]?.country ?? "",
                                 calculateWeight()) ?? 0}
                             </div>
                             <div className="my-4 text-left text-xl font-medium capitalize">

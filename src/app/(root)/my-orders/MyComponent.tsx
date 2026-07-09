@@ -161,7 +161,7 @@ const MyComponent = () => {
       checkoutData?.customer_id,
     );
 
-    const customerId = checkoutData?.customer_id ?? userInfo?.customer_id;
+    const customerId = userInfo?.customer_id ?? checkoutData?.customer_id;
     if (!customerId) return;
 
     setLoader(true);
