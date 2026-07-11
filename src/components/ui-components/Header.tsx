@@ -235,7 +235,9 @@ const Header = () => {
     loadData().catch((error) => {
       console.error("Failed to load data in useEffect:", error);
     });
+    // console.log("textBookType in Header:", textBookType);
   }, [checkoutData]);
+
 
   const toggleSidebar = () => {
     if (path.includes("/checkout") || path.includes("/placeorder")) return;
@@ -345,7 +347,7 @@ const Header = () => {
               </button>
             </div>
           ))}
-        {item == "Books" &&
+        {/* {item == "Books" &&
           genre?.map((subItem) => (
             <div key={subItem.genre} className="relative pl-2">
               <button
@@ -363,7 +365,7 @@ const Header = () => {
                 </span>
               </button>
             </div>
-          ))}
+          ))} */}
       </div>
     );
   };
@@ -509,7 +511,7 @@ const Header = () => {
                 </button>
               </div>
             ))}
-          {type == "Books" &&
+          {/* {type == "Books" &&
             genre?.map((subItem) => (
               <div key={subItem.genre} className="relative py-1">
                 <button
@@ -527,7 +529,7 @@ const Header = () => {
                   </span>
                 </button>
               </div>
-            ))}
+            ))} */}
         </div>
       );
     };
