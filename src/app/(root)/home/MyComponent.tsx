@@ -51,20 +51,24 @@ const HomePage: React.FC = () => {
             </span>
           </div>
         </div>
-        <div className="mx-auto flex flex-wrap justify-between px-4 py-5">
+
+        <div className="mx-auto grid grid-cols-1 gap-6 px-4 py-5 lg:grid-cols-2 lg:gap-9">
           {featuredImages.length > 0 ? (
             featuredImages.map((image, index) => {
               const src =
                 resolveMediaUrl(image.media_url ?? image.object_path) ||
                 `/assets/images/home/hom${index + 1}.png`;
+
               const imageEl = (
-                <Image
-                  src={src}
-                  alt={`Featured ${index + 1}`}
-                  width={1000}
-                  height={1000}
-                  className={`h-fit w-full md:w-2/5 ${index === 0 ? "md:pr-9 lg:w-1/2" : "md:pl-9 lg:w-1/2"}`}
-                />
+                <div className="relative h-64 w-full overflow-hidden rounded-lg sm:h-80 lg:h-96">
+                  <Image
+                    src={src}
+                    alt={`Featured ${index + 1}`}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </div>
               );
 
               if (image.link_url) {
@@ -75,7 +79,6 @@ const HomePage: React.FC = () => {
                     href={image.link_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full md:w-2/5 lg:w-1/2"
                   >
                     {imageEl}
                   </a>
@@ -83,7 +86,6 @@ const HomePage: React.FC = () => {
                   <Link
                     key={image.unishop_featured_image_id}
                     href={image.link_url}
-                    className="w-full md:w-2/5 lg:w-1/2"
                   >
                     {imageEl}
                   </Link>
@@ -91,33 +93,33 @@ const HomePage: React.FC = () => {
               }
 
               return (
-                <div
-                  key={image.unishop_featured_image_id}
-                  className="w-full md:w-2/5 lg:w-1/2"
-                >
-                  {imageEl}
-                </div>
+                <div key={image.unishop_featured_image_id}>{imageEl}</div>
               );
             })
           ) : (
             <>
-              <Image
-                src="/assets/images/home/hom1.png"
-                alt="hero"
-                width={1000}
-                height={1000}
-                className="h-fit w-full md:w-2/5 md:pr-9 lg:w-1/2"
-              />
-              <Image
-                src="/assets/images/home/hom2.png"
-                alt="hero"
-                width={1000}
-                height={1000}
-                className="h-fit w-full md:w-2/5 md:pl-9 lg:w-1/2"
-              />
+              <div className="relative h-64 w-full overflow-hidden rounded-lg sm:h-80 lg:h-96">
+                <Image
+                  src="/assets/images/home/hom1.png"
+                  alt="hero"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="relative h-64 w-full overflow-hidden rounded-lg sm:h-80 lg:h-96">
+                <Image
+                  src="/assets/images/home/hom2.png"
+                  alt="hero"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
+              </div>
             </>
           )}
         </div>
+
         <CategoriesSection categories={category!} />
         <AboutSection about={about} />
         <ContactSection contact={contact} />
