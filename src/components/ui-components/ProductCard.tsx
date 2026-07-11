@@ -92,6 +92,7 @@ const ProductCard = ({
       return true;
     }
   };
+  console.log("product", product)
 
   return (
     <div className="group relative flex w-full flex-shrink-0 grow-0 flex-col rounded-md border border-gray-400 p-2 shadow dark:border-gray-600 dark:bg-slate-900 xs:w-56 sm:w-64 lg:w-72">
