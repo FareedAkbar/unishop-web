@@ -2,12 +2,28 @@ import React from "react";
 import Image from "next/image";
 import Button from "~/components/ui-components/Button";
 import { useRouter } from "next/navigation";
+import type { AboutUs } from "~/types/content";
+import { resolveMediaUrl } from "~/utils/content";
 
-const AboutSection: React.FC = () => {
+interface AboutSectionProps {
+  about?: AboutUs | null;
+}
+
+const AboutSection: React.FC<AboutSectionProps> = ({ about }) => {
   const router = useRouter();
   const handleAboutUsClick = () => {
     router.push("/about");
   };
+
+  const paragraph1 =
+    about?.paragraph_1 ??
+    "Welcome to UniShop, your one-stop shop for all your official UOW Merchandise, study essentials, textbooks, course notes, and graduation memorabilia and gowns.";
+  const paragraph2 =
+    about?.paragraph_2 ??
+    "UniShop is a UOW Pulse business, with all proceeds from everything you buy going straight back to enhancing the student experience on campus. Whether through events, festivals, competitions, or through clubs and societies. Thank you for supporting the UOW campus experience.";
+  const imageSrc =
+    resolveMediaUrl(about?.object_path) ||
+    "/assets/images/home/about_unishop.jpg";
 
   return (
     <div className="relative flex flex-col-reverse items-start gap-8 pb-16 pt-5 lg:flex-row lg:px-8">
@@ -16,15 +32,10 @@ const AboutSection: React.FC = () => {
           ABOUT UNISHOP
         </h2>
         <p className="text-md text-justify leading-relaxed text-zinc-600 dark:text-zinc-300">
-          Welcome to UniShop, your one-stop shop for all your official UOW
-          Merchandise, study essentials, textbooks, course notes, and graduation
-          memorabilia and gowns.
+          {paragraph1}
         </p>
         <p className="text-md text-justify leading-relaxed text-zinc-600 dark:text-zinc-300">
-          UniShop is a UOW Pulse business, with all proceeds from everything you
-          buy going straight back to enhancing the student experience on campus.
-          Whether through events, festivals, competitions, or through clubs and
-          societies. Thank you for supporting the UOW campus experience.
+          {paragraph2}
         </p>
         <Button
           title="About Us"
@@ -34,10 +45,9 @@ const AboutSection: React.FC = () => {
         />
       </div>
 
-      {/* Image Section */}
       <div className="lg:w-1/2">
         <Image
-          src="/assets/images/home/about_unishop.jpg"
+          src={imageSrc}
           alt="About UniShop"
           width={1000}
           height={1000}
