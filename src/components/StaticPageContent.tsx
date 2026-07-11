@@ -37,17 +37,15 @@ let pagesPromise: Promise<StaticPage[]> | null = null;
 
 function loadStaticPages() {
   if (pagesCache) return Promise.resolve(pagesCache);
-  if (!pagesPromise) {
-    pagesPromise = getStaticPages()
-      .then((pages) => {
-        pagesCache = pages;
-        return pages;
-      })
-      .catch((error) => {
-        pagesPromise = null;
-        throw error;
-      });
-  }
+  pagesPromise ??= getStaticPages()
+    .then((pages) => {
+      pagesCache = pages;
+      return pages;
+    })
+    .catch((error) => {
+      pagesPromise = null;
+      throw error;
+    });
   return pagesPromise;
 }
 

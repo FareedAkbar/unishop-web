@@ -33,7 +33,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ banners = [] }) => {
       .sort((a, b) => Number(a.number) - Number(b.number))
       .map((banner) => ({
         image: resolveBannerImage(banner),
-        route: banner.link_url || undefined,
+        route: banner.link_url ?? undefined,
       }));
 
     return activeBanners.length > 0 ? activeBanners : fallbackSlides;

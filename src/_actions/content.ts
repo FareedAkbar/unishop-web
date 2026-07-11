@@ -30,8 +30,7 @@ async function fetchContent<T>(path: string): Promise<T | null> {
     }
 
 
-    const jsonResponse = await response.json();
-    console.log("pointsssssss", jsonResponse);
+    const jsonResponse :unknown= await response.json();
     return jsonResponse as T;
   } catch (error) {
     console.error(`Content API fetch failed (${path}):`, error);
