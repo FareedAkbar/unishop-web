@@ -1272,8 +1272,8 @@ const MyComponent = () => {
           ) : itemDetail &&
             itemDetail?.items_type != 1 &&
             !isItemInCart(itemDetail.item_id) ? (
-            itemDetail?.allow_special_order == 1 ||
-            (itemDetail?.stock?.quantity ?? 0) > 0 ? (
+           (itemDetail?.item_sale_price && (itemDetail?.allow_special_order == 1 ||
+            (itemDetail?.stock?.quantity ?? 0) > 0)) ? (
               <Button
                 icon={<BsFillCartCheckFill className="text-lg" />}
                 title="Add to Cart"
