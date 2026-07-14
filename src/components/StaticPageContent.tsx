@@ -120,9 +120,9 @@ export function StaticPageIntro({
             )}
             {pagePoints.length > 0 && (
               <ul className="list-none space-y-2 text-left">
-                {pagePoints.map((point,idx) => (
+                {pagePoints.map((point, idx) => (
                   <li
-                    key={point.unishop_static_pages_point_id??`point-${idx}`}
+                    key={point.unishop_static_pages_point_id ?? `point-${idx}`}
                     className="flex items-start"
                   >
                     <FaCheck className="mr-2 mt-2 h-4 w-4 flex-shrink-0 text-red-500" />
@@ -149,7 +149,7 @@ export function StaticPageCards({ page }: { page: StaticPage }) {
         return (
           <div
             key={heading.unishop_static_pages_heading_id}
-            className="w-full rounded-lg bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 sm:w-1/2 lg:w-1/3"
+            className="w-full rounded-lg bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 "
           >
             <h2 className="mb-4 text-xl font-semibold text-red-600">
               {heading.title}
@@ -219,9 +219,8 @@ export function StaticPageCollapsibleSections({ page }: { page: StaticPage }) {
             </div>
 
             <div
-              className={`mt-2 overflow-hidden rounded bg-white transition-all duration-300 ease-in-out dark:bg-slate-700 ${
-                openSections[index] ? "max-h-[2000px]" : "max-h-0"
-              }`}
+              className={`mt-2 overflow-hidden rounded bg-white transition-all duration-300 ease-in-out dark:bg-slate-700 ${openSections[index] ? "max-h-[2000px]" : "max-h-0"
+                }`}
             >
               <div className="mt-3 px-4 pb-4 pt-1 text-gray-800 dark:text-gray-100">
                 {heading.description && (

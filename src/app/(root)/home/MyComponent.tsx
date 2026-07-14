@@ -18,8 +18,32 @@ const HomePage: React.FC = () => {
   const [homeContent, setHomeContent] = useState<HomeContent | null>(null);
 
   useEffect(() => {
+    // 1. Try to load cached data from localStorage for instant initial render
+    const cachedKey = "unishop_home_content";
+    const cachedData = localStorage.getItem(cachedKey);
+    let initialCached: HomeContent | null = null;
+
+    if (cachedData) {
+      try {
+        initialCached = JSON.parse(cachedData) as HomeContent;
+        setHomeContent(initialCached);
+      } catch (e) {
+        console.error("Failed to parse cached home content", e);
+      }
+    }
+
+    // 2. Fetch fresh content from the Server Action / API
     getHomeContent()
-      .then(setHomeContent)
+      .then((data) => {
+        if (data) {
+          const freshDataStr = JSON.stringify(data);
+          // Only update state and write to localStorage if content has changed
+          if (cachedData !== freshDataStr) {
+            setHomeContent(data);
+            localStorage.setItem(cachedKey, freshDataStr);
+          }
+        }
+      })
       .catch((error) => console.error("Failed to load home content:", error));
   }, []);
 

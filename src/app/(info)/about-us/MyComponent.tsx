@@ -8,11 +8,11 @@ import {
 } from "~/components/StaticPageContent";
 
 const MyComponent = () => {
-  const { page, loading } = useStaticPage("/about");
+  const { page, loading } = useStaticPage("/about-us");
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="w-full max-w-screen-xl overflow-hidden rounded-xl p-5">
+      {/* <div className="w-full max-w-screen-xl overflow-hidden rounded-xl p-5">
         <Image
           src="/assets/images/About_us.jpg"
           alt="thumbnail"
@@ -20,7 +20,7 @@ const MyComponent = () => {
           width={1000}
           height={1000}
         />
-      </div>
+      </div> */}
 
       {!loading && page && (
         <>
