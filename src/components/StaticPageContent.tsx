@@ -362,7 +362,7 @@ export function StaticPageContent({
   }
 
   return (
-    <div className="relative min-h-screen p-8">
+    <div className="relative min-h-fit p-8">
       <StaticPageIntro page={page} lottieSrc={lottieSrc} />
       <StaticPageCollapsibleSections page={page} />
       <StaticPageImages page={page} />
