@@ -68,7 +68,7 @@ const MyComponent = () => {
   // const [socketStatus, setSocketStatus] = useState(true);
   const [totalAfterCalculation, setTotalAfterCalculation] =
     useState<TaxCalculationApiResponse>();
-    const [shippingRates, setShippingRates] = useState<ShippingRate[]>([]);
+  const [shippingRates, setShippingRates] = useState<ShippingRate[]>([]);
   const router = useRouter();
   // const NAMESPACE = uuidv5('uniShop', uuidv5.URL);
   // const myuuid = uuidv4();
@@ -197,13 +197,13 @@ const MyComponent = () => {
     }
   };
 
-    interface ApiResponseShippingRates {
+  interface ApiResponseShippingRates {
     status: boolean;
     data: ShippingRate[];
     message: string;
   }
 
-   const fetchShippingRates = async () => {
+  const fetchShippingRates = async () => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/shipping_rates`,
@@ -212,7 +212,7 @@ const MyComponent = () => {
           headers: {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
-         
+
         },
       );
 
@@ -410,7 +410,7 @@ const MyComponent = () => {
 
   async function convertPayload() {
     // Check if inputArray is empty
-    
+
     if (!Array.isArray(newItems) || newItems.length === 0) {
       console.warn("Input array is empty or not an array:", newItems);
       return [];
@@ -575,7 +575,7 @@ const MyComponent = () => {
   };
 
   const onChange = (val: ShippingType) => {
-    
+
     setShipping(val);
     if (Number(val.amount) > 0) {
       setTotal(Number(val.amount) + total);
@@ -743,9 +743,9 @@ const MyComponent = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = () => setIsExpanded((prev) => !prev);
-  
+
   function getShippingPrice(
-    
+
     country_name: string,
     packageWeight: number
   ): number | null {
@@ -756,13 +756,14 @@ const MyComponent = () => {
     for (let i = countryRates.length - 1; i >= 0; i--) {
       const rate = countryRates[i];
       if (rate && packageWeight >= rate.weight_and_above) {
-        return rate.shipping_price;
+        const num = Number(rate.shipping_price); // convert to number first
+        if (isNaN(num)) return null; // guard against bad data
+        return parseInt(num.toFixed(2));
       }
     }
 
     return null; // No rate found
   }
-
   const calculateWeight = () => {
     let totalWeight = 0;
     items.forEach((item) => {
@@ -860,11 +861,10 @@ const MyComponent = () => {
                       {shippingOptions.map((option) => (
                         <div
                           key={option.value}
-                          className={`rounded-3xl border ${
-                            shipping?.value === option.value
-                              ? "bg-[#F2FFE4] dark:bg-green-500/20"
-                              : "dark:border-white/30"
-                          } p-4`}
+                          className={`rounded-3xl border ${shipping?.value === option.value
+                            ? "bg-[#F2FFE4] dark:bg-green-500/20"
+                            : "dark:border-white/30"
+                            } p-4`}
                         >
                           <label className="cursor-pointer">
                             <input
@@ -886,9 +886,8 @@ const MyComponent = () => {
                             </div>
 
                             <div
-                              className={`flex flex-col items-start ${
-                                option.amount === 0 ? "gap-4" : "gap-1"
-                              }`}
+                              className={`flex flex-col items-start ${option.amount === 0 ? "gap-4" : "gap-1"
+                                }`}
                             >
                               {option.label && (
                                 <div className="mt-2 text-left text-lg">
@@ -929,11 +928,10 @@ const MyComponent = () => {
                     <p className="mb-2 font-bold">Shipping Method</p>
                     <div className="grid-col-1 grid gap-4 lg:grid-cols-2 lg:gap-10 lg:px-10">
                       <div
-                        className={`rounded-3xl border ${
-                          shipping?.value === "free"
-                            ? "bg-[#F2FFE4] dark:bg-green-500/20"
-                            : "dark:border-white/30"
-                        } p-4`}
+                        className={`rounded-3xl border ${shipping?.value === "free"
+                          ? "bg-[#F2FFE4] dark:bg-green-500/20"
+                          : "dark:border-white/30"
+                          } p-4`}
                       >
                         <label className="cursor-pointer">
                           <input
@@ -978,11 +976,10 @@ const MyComponent = () => {
                         calculateWeight()
                       ) ? (
                         <div
-                          className={`rounded-3xl border p-4 ${
-                            shipping?.value === "Delivery"
-                              ? "bg-[#F2FFE4]"
-                              : "dark:border-white/30"
-                          }`}
+                          className={`rounded-3xl border p-4 ${shipping?.value === "Delivery"
+                            ? "bg-[#F2FFE4] dark:bg-green-500/20"
+                            : "dark:border-white/30"
+                            }`}
                         >
                           <label className="cursor-pointer">
                             <input
@@ -1047,9 +1044,8 @@ const MyComponent = () => {
               </h2>
 
               <ScrollArea
-                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 shadow transition-all duration-300 dark:bg-slate-800 ${
-                  isExpanded ? "max-h-[28rem]" : "max-h-[17rem]"
-                }`}
+                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 shadow transition-all duration-300 dark:bg-slate-800 ${isExpanded ? "max-h-[28rem]" : "max-h-[17rem]"
+                  }`}
               >
                 {items?.[0] ? (
                   items.map((item, index) => (
@@ -1142,8 +1138,8 @@ const MyComponent = () => {
                         $
                         {items?.[0]
                           ? totalAfterCalculation?.final_price_including_tax.toFixed(
-                              2,
-                            )
+                            2,
+                          )
                           : 0}
                       </span>
                     </div>
