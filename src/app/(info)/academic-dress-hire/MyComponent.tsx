@@ -8,6 +8,7 @@ import {
   StaticPageImages,
   useStaticPage,
 } from "~/components/StaticPageContent";
+import { FaEnvelope, FaPhone } from "react-icons/fa";
 
 const Spinner = dynamic(() => import("~/components/spinner"), { ssr: false });
 const Player = dynamic(
@@ -23,6 +24,26 @@ const MyComponent = () => {
       <div className="flex flex-wrap items-center justify-between bg-white p-8 pb-14 shadow-md dark:bg-slate-600 lg:px-32">
         <div className="max-w-md flex-1 text-lg">
           {!loading && page && <StaticPageHeader page={page} />}
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold">
+              ENQUIRE ABOUT HIRING YOUR GRADUATION ATTIRE
+            </h2>
+            <p className="flex items-center justify-start text-lg text-gray-500 dark:text-gray-300">
+              <FaPhone className="mr-2 text-red-500" />
+              <a href="tel:42218050" className="hover:text-red-500">
+                4221 8050
+              </a>
+            </p>
+            <p className="flex items-center justify-start text-lg text-gray-500 dark:text-gray-300">
+              <FaEnvelope className="mr-2 text-red-500" />
+              <a
+                href="mailto:uow-bookshop@uow.edu.au"
+                className="hover:text-red-500"
+              >
+                uow-bookshop@uow.edu.au
+              </a>
+            </p>
+          </div>
         </div>
         <div className="mt-8 flex w-full justify-center sm:mt-0 sm:w-auto sm:flex-shrink-0">
           <Player
@@ -37,7 +58,7 @@ const MyComponent = () => {
       {!loading && page && (
         <>
           <div className="relative z-[5] -mt-14 flex flex-wrap justify-center gap-14 px-8 text-center lg:px-12">
-            <div className="grid w-full max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="flex w-full max-w-screen-xl flex-wrap justify-center gap-6">
               <StaticPageCards page={page} />
             </div>
           </div>
@@ -45,7 +66,7 @@ const MyComponent = () => {
         </>
       )}
 
-      <div className="mx-auto max-w-5xl space-y-20 px-4 py-14">
+      {/* <div className="mx-auto max-w-5xl space-y-20 px-4 py-14">
         <section className="rounded-2xl bg-white p-8 shadow-xl dark:bg-slate-800">
           <div className="flex flex-col items-center justify-between md:flex-row md:gap-10">
             <div className="w-full md:w-1/2">
@@ -163,7 +184,7 @@ const MyComponent = () => {
             </div>
           </div>
         </section>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -41,7 +41,7 @@ const PrivacyPolicy: React.FC = () => {
   return (<>
 
     <StaticPageContent route="/privacy-policy" />
-    <div className="mx-auto my-6 max-w-5xl overflow-x-auto px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto mb-6 max-w-5xl overflow-x-auto px-4 sm:px-6 lg:px-8">
       <h3>List of cookies we used:</h3>
       <table className="w-full table-fixed border border-gray-300 py-2 text-sm dark:border-gray-600">
         <thead className="bg-red-500 text-white dark:bg-red-600">

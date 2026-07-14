@@ -39,7 +39,7 @@ const MyComponent = () => {
       <div className="container mx-auto space-y-12 px-4 py-8">
         {!loading && page && (
           <>
-            <div className="-mt-16 flex flex-wrap justify-center gap-8">
+            <div className="-mt-16 flex flex-wrap justify-center gap-6">
               <StaticPageCards page={page} />
             </div>
             <StaticPageImages page={page} />
