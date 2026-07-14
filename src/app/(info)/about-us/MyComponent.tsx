@@ -24,7 +24,7 @@ const MyComponent = () => {
 
       {!loading && page && (
         <>
-          <div className="grid w-full max-w-screen-xl grid-cols-1 gap-6 px-6 py-12 md:grid-cols-2 lg:grid-cols-3">
+          <div className="flex w-full max-w-screen-xl flex-wrap justify-center gap-6 px-6 py-12">
             <StaticPageCards page={page} />
           </div>
           <StaticPageImages page={page} />

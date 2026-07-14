@@ -149,7 +149,7 @@ export function StaticPageCards({ page }: { page: StaticPage }) {
         return (
           <div
             key={heading.unishop_static_pages_heading_id}
-            className="w-full rounded-lg bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700 "
+            className="w-full max-w-sm rounded-lg bg-red-100 p-6 shadow-md transition-all duration-300 hover:scale-105 dark:bg-slate-700"
           >
             <h2 className="mb-4 text-xl font-semibold text-red-600">
               {heading.title}
@@ -255,35 +255,38 @@ export function StaticPageImages({ page }: { page: StaticPage }) {
   if (images.length === 0) return null;
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12">
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 gap-8">
+
         {images.map((img) => {
           const src = resolveMediaUrl(img.media_url ?? img.object_path ?? "");
 
           const cardContent = (
-            <div className="group h-full overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:border-slate-700 dark:bg-slate-800">
+            <div className="group flex flex-col items-center justify-center transition-all duration-300">
               {src && (
-                <div className="relative aspect-video w-full overflow-hidden bg-gray-50 dark:bg-slate-900">
+                <div className="relative flex w-full justify-center bg-transparent">
                   <img
                     src={src}
                     alt={img.title || "Static Page Image"}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="max-w-full h-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]"
                     loading="lazy"
                   />
                 </div>
               )}
-              <div className="p-5">
-                {img.title && (
-                  <h3 className="mb-2 text-lg font-bold text-gray-900 transition-colors group-hover:text-red-500 dark:text-white">
-                    {img.title}
-                  </h3>
-                )}
-                {img.description && (
-                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                    {img.description}
-                  </p>
-                )}
-              </div>
+              {(img.title || img.description) && (
+                <div className="p-5 text-center max-w-2xl">
+                  {img.title && (
+                    <h3 className="mb-2 text-xl font-bold text-gray-900 transition-colors group-hover:text-red-500 dark:text-white">
+                      {img.title}
+                    </h3>
+                  )}
+                  {img.description && (
+                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                      {img.description}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           );
 
