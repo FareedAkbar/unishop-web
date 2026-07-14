@@ -12,7 +12,7 @@ interface AboutSectionProps {
 const AboutSection: React.FC<AboutSectionProps> = ({ about }) => {
   const router = useRouter();
   const handleAboutUsClick = () => {
-    router.push("/about");
+    router.push("/about-us");
   };
 
   const paragraph1 =

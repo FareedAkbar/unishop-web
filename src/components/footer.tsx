@@ -27,14 +27,14 @@ function Footer() {
 
   const footer = footerContent?.footer;
   const links = [
-  { title: "Contact Us", href: "/contact-us" },
-  { title: "Postage & Handling", href: "/postage-and-handling" },
-  { title: "Refunds & Returns", href: "/refunds-and-returns" },
-  { title: "Terms & Conditions", href: "/terms-and-conditions" },
-  { title: "Privacy Policy", href: "/privacy-policy" },
-  { title: "About Us", href: "/about" },
-  { title: "Academic Dress Hire", href: "/academic-dress-hire" },
-];
+    { title: "Contact Us", href: "/contact-us" },
+    { title: "Postage & Handling", href: "/postage-and-handling" },
+    { title: "Refunds & Returns", href: "/refunds-and-returns" },
+    { title: "Terms & Conditions", href: "/terms-and-conditions" },
+    { title: "Privacy Policy", href: "/privacy-policy" },
+    { title: "About Us", href: "/about-us" },
+    { title: "Academic Dress Hire", href: "/academic-dress-hire" },
+  ];
   const iconsTab = [
     footer?.instagram_link && {
       icon: <AiOutlineInstagram />,
@@ -58,25 +58,24 @@ function Footer() {
     <footer className="border-t bg-white dark:bg-slate-900">
       <div className="container mx-auto pb-2 pt-8">
         <div className="grid grid-cols-1 gap-8 px-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            <div
-              className="flex flex-col items-center gap-3 md:col-span-1 md:items-start"
-            >
-              <p className="font-serif text-lg font-bold">Customer Service</p>
-              <span className="mb-2 block h-[4px] w-20 bg-red-500" />
-               {links.map((link, index) => (
+          <div
+            className="flex flex-col items-center gap-3 md:col-span-1 md:items-start"
+          >
+            <p className="font-serif text-lg font-bold">Customer Service</p>
+            <span className="mb-2 block h-[4px] w-20 bg-red-500" />
+            {links.map((link, index) => (
               <Link
                 key={index}
                 href={link.href}
-                className={`text-sm font-medium ${
-                  pathname === link.href
+                className={`text-sm font-medium ${pathname === link.href
                     ? "text-red-500"
                     : "text-[#646464] hover:text-red-500"
-                } dark:text-gray-300 dark:hover:text-red-500`}
+                  } dark:text-gray-300 dark:hover:text-red-500`}
               >
                 {link.title}
               </Link>
             ))}
-            </div>
+          </div>
 
           <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
             <p className="font-serif text-lg font-bold">Shop Online</p>

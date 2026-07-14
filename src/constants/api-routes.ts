@@ -16,7 +16,7 @@ export enum PAGE_ROUTES {
   POSTAGE_AND_HANDLING = "/postage-and-handling",
   REFUND_AND_RETURNS = "/refunds-and-returns",
   TERMS_AND_CONDITION = "/terms-and-conditions",
-  ABOUT = "/about",
+  ABOUT = "/about-us",
   CONTACT_US = "/contact-us",
   ACADEMIC_DRESS_HIRE = "/academic-dress-hire",
   SPECIAL_ORDER = "/special-order",
