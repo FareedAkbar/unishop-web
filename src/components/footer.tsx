@@ -9,13 +9,13 @@ import { usePathname } from "next/navigation";
 import { FiGlobe } from "react-icons/fi";
 import { useEffect, useMemo, useState } from "react";
 import { getFooterContent } from "~/_actions/content";
-import type { FooterContent, FooterHeading, FooterLink } from "~/types/content";
+import type { FooterContent, FooterHeading, FooterLink, FooterRecord } from "~/types/content";
 import { isActive } from "~/utils/content";
 
 function Footer() {
   const { category } = useAuthContext();
   const pathname = usePathname();
-  const [footerContent, setFooterContent] = useState<FooterContent | null>(
+  const [footerContent, setFooterContent] = useState<FooterRecord | null>(
     null,
   );
 
@@ -25,7 +25,11 @@ function Footer() {
       .catch((error) => console.error("Failed to load footer content:", error));
   }, []);
 
-  const footer = footerContent?.footer;
+  const footer = footerContent;
+
+  console.log("ffff", footer);
+
+
   const links = [
     { title: "Contact Us", href: "/contact-us" },
     { title: "Postage & Handling", href: "/postage-and-handling" },
@@ -68,8 +72,8 @@ function Footer() {
                 key={index}
                 href={link.href}
                 className={`text-sm font-medium ${pathname === link.href
-                    ? "text-red-500"
-                    : "text-[#646464] hover:text-red-500"
+                  ? "text-red-500"
+                  : "text-[#646464] hover:text-red-500"
                   } dark:text-gray-300 dark:hover:text-red-500`}
               >
                 {link.title}

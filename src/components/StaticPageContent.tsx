@@ -91,9 +91,11 @@ export function StaticPageHeader({ page }: { page: StaticPage }) {
 export function StaticPageIntro({
   page,
   lottieSrc,
+  children,
 }: {
   page: StaticPage;
   lottieSrc?: string;
+  children?: React.ReactNode;
 }) {
   const pagePoints = getPagePoints(page);
 
@@ -102,7 +104,7 @@ export function StaticPageIntro({
       <h1 className="mb-6 text-center text-3xl font-extrabold text-red-600">
         {page.title}
       </h1>
-      {(page.description || pagePoints.length > 0 || lottieSrc) && (
+      {(!!page.description || pagePoints.length > 0 || !!lottieSrc || !!children) && (
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-2 pb-7 lg:flex-row">
           {lottieSrc && (
             <div className="flex w-full justify-center lg:w-1/3 lg:justify-start">
@@ -119,7 +121,7 @@ export function StaticPageIntro({
               <p className="mb-4 whitespace-pre-line">{page.description}</p>
             )}
             {pagePoints.length > 0 && (
-              <ul className="list-none space-y-2 text-left">
+              <ul className="list-none space-y-2 text-left mb-4">
                 {pagePoints.map((point, idx) => (
                   <li
                     key={point.unishop_static_pages_point_id ?? `point-${idx}`}
@@ -131,6 +133,7 @@ export function StaticPageIntro({
                 ))}
               </ul>
             )}
+            {children}
           </article>
         </div>
       )}
@@ -334,6 +337,8 @@ interface StaticPageContentProps {
   route: string;
   lottieSrc?: string;
   variant?: "default" | "cards" | "header-only";
+  headingsVariant?: "cards" | "collapsible";
+  introChildren?: React.ReactNode;
   children?: React.ReactNode;
 }
 
@@ -341,6 +346,8 @@ export function StaticPageContent({
   route,
   lottieSrc,
   variant = "default",
+  headingsVariant,
+  introChildren,
   children,
 }: StaticPageContentProps) {
   const { page, loading } = useStaticPage(route);
@@ -362,10 +369,27 @@ export function StaticPageContent({
   }
 
   return (
-    <div className="relative min-h-fit p-8">
-      <StaticPageIntro page={page} lottieSrc={lottieSrc} />
-      <StaticPageCollapsibleSections page={page} />
+    <div className="relative min-h-fit p-8 ">
+      {/* Intro section: Title, description, points, lottie, and custom intro children */}
+      <StaticPageIntro page={page} lottieSrc={lottieSrc}>
+        {introChildren}
+      </StaticPageIntro>
+
+      {/* Headings section */}
+      {headingsVariant === "collapsible" ? (
+        <div className="py-8">
+          <StaticPageCollapsibleSections page={page} />
+        </div>
+      ) : (
+        <div className="mx-auto flex w-full max-w-screen-xl flex-wrap justify-center gap-6 px-6 py-12">
+          <StaticPageCards page={page} />
+        </div>
+      )}
+
+      {/* Images section */}
       <StaticPageImages page={page} />
+
+      {/* Page-specific children content */}
       {children}
     </div>
   );

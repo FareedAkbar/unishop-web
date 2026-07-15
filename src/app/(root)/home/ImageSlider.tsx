@@ -7,11 +7,11 @@ import { isActive, resolveBannerImage } from "~/utils/content";
 
 const fallbackSlides = [
   { image: "/assets/images/home/banner1.png", route: "/books" },
-  { image: "/assets/images/home/banner2.jpg", route: "/academic-dress-hire" },
-  { image: "/assets/images/home/banner3.jpg", route: "/books" },
-  { image: "/assets/images/home/banner4.jpg", route: "/books" },
-  { image: "/assets/images/home/banner5.jpg", route: "/gifts" },
-  { image: "/assets/images/home/banner6.jpg", route: "/books" },
+  // { image: "/assets/images/home/banner2.jpg", route: "/academic-dress-hire" },
+  // { image: "/assets/images/home/banner3.jpg", route: "/books" },
+  // { image: "/assets/images/home/banner4.jpg", route: "/books" },
+  // { image: "/assets/images/home/banner5.jpg", route: "/gifts" },
+  // { image: "/assets/images/home/banner6.jpg", route: "/books" },
 ];
 
 type Slide = { image: string; route?: string };
@@ -99,9 +99,8 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ banners = [] }) => {
           alt={`Slide ${currentIndex + 1}`}
           fill
           onClick={() => handleSlideClick(slides[currentIndex]!)}
-          className={`absolute inset-0 h-full w-full rounded-lg object-cover transition-opacity duration-700 ease-in-out ${
-            isAnimating ? "opacity-0" : "opacity-100"
-          } ${slides[currentIndex]?.route ? "cursor-pointer" : ""}`}
+          className={`absolute inset-0 h-full w-full rounded-lg object-cover transition-opacity duration-700 ease-in-out ${isAnimating ? "opacity-0" : "opacity-100"
+            } ${slides[currentIndex]?.route ? "cursor-pointer" : ""}`}
           style={{ zIndex: 20 }}
         />
         {slides.length > 1 && (
@@ -128,11 +127,10 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ banners = [] }) => {
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`rounded-full transition-all duration-300 ${
-                currentIndex === index
+              className={`rounded-full transition-all duration-300 ${currentIndex === index
                   ? "h-3.5 w-3.5 border-2 border-black bg-red-500"
                   : "h-3 w-3 bg-gray-400"
-              }`}
+                }`}
             />
           ))}
         </div>
