@@ -38,43 +38,45 @@ const PrivacyPolicy: React.FC = () => {
       "Facilitates translation of content to other languages.",
     ],
   ];
-  return (<>
-
-    <StaticPageContent route="/privacy-policy" />
-    <div className="mx-auto mb-6 max-w-5xl overflow-x-auto px-4 sm:px-6 lg:px-8">
-      <h3>List of cookies we used:</h3>
-      <table className="w-full table-fixed border border-gray-300 py-2 text-sm dark:border-gray-600">
-        <thead className="bg-red-500 text-white dark:bg-red-600">
-          <tr>
-            <th className="border px-2 py-1 text-left md:px-4 md:py-2">
-              Cookie Name
-            </th>
-            <th className="border px-2 py-1 text-left md:px-4 md:py-2">
-              Cookie Description
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white dark:bg-slate-800">
-          {cookieData.map(([name, description], idx) => (
-            <tr
-              key={idx}
-              className={`border-t border-gray-200 dark:border-gray-700 ${idx % 2 === 0
-                ? "bg-gray-50 dark:bg-slate-700"
-                : ""
-                }`}
-            >
-              <td className="break-words px-2 py-1 font-medium text-gray-800 dark:text-white md:px-4 md:py-2">
-                {name}
-              </td>
-              <td className="px-2 py-1 text-gray-700 dark:text-gray-300 md:px-4 md:py-2">
-                {description}
-              </td>
+  return (
+    <StaticPageContent
+      route="/privacy-policy"
+      headingsVariant="collapsible"
+    >
+      <div className="mx-auto mb-6 max-w-5xl overflow-x-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <h3 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">List of cookies we use:</h3>
+        <table className="w-full table-fixed border border-gray-300 py-2 text-sm dark:border-gray-600">
+          <thead className="bg-red-500 text-white dark:bg-red-600">
+            <tr>
+              <th className="border px-2 py-1 text-left md:px-4 md:py-2">
+                Cookie Name
+              </th>
+              <th className="border px-2 py-1 text-left md:px-4 md:py-2">
+                Cookie Description
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </>);
+          </thead>
+          <tbody className="bg-white dark:bg-slate-800">
+            {cookieData.map(([name, description], idx) => (
+              <tr
+                key={idx}
+                className={`border-t border-gray-200 dark:border-gray-700 ${
+                  idx % 2 === 0 ? "bg-gray-50 dark:bg-slate-700" : ""
+                }`}
+              >
+                <td className="break-words px-2 py-1 font-medium text-gray-800 dark:text-white md:px-4 md:py-2">
+                  {name}
+                </td>
+                <td className="px-2 py-1 text-gray-700 dark:text-gray-300 md:px-4 md:py-2">
+                  {description}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </StaticPageContent>
+  );
 };
 
 export default PrivacyPolicy;

@@ -9,6 +9,7 @@ const TermsAndConditions = () => {
   return (
     <StaticPageContent
       route="/terms-and-conditions"
+      headingsVariant="collapsible"
       lottieSrc="/assets/gifs/terms.json"
     />
   );

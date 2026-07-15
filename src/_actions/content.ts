@@ -1,7 +1,6 @@
 "use server";
 
 import type {
-  FooterContent,
   FooterRecord,
   HomeContent,
   StaticPage,
@@ -30,7 +29,7 @@ async function fetchContent<T>(path: string): Promise<T | null> {
     }
 
 
-    const jsonResponse :unknown= await response.json();
+    const jsonResponse: unknown = await response.json();
     return jsonResponse as T;
   } catch (error) {
     console.error(`Content API fetch failed (${path}):`, error);
@@ -56,27 +55,24 @@ export async function getHomeContent(): Promise<HomeContent | null> {
   };
 }
 
-export async function getFooterContent(): Promise<FooterContent | null> {
-  const [footer, headings, links] = await Promise.all([
-    fetchContent<unknown>("/footer"),
-    fetchContent<unknown>("/footer-headings"),
-    fetchContent<unknown>("/footer-headings-links"),
-  ]);
-
-  if (!footer && !headings && !links) return null;
-
-  return {
-    footer: (asArray(footer)[0] as FooterRecord | undefined) ?? null,
-    headings: asArray(headings),
-    links: asArray(links),
+interface FooterResponse {
+  data?: {
+    footer?: unknown;
   };
+}
+
+export async function getFooterContent(): Promise<FooterRecord | null> {
+  const response = await fetchContent<FooterResponse>("/footer");
+
+  if (!response?.data) return null;
+
+  const footerData = response.data.footer;
+  return (asArray<FooterRecord>(footerData)[0]) ?? null;
 }
 
 export async function getStaticPages(): Promise<StaticPage[]> {
   const response = await fetchContent<unknown>("/static-pages");
   if (!response) return [];
 
-  console.log("resp static data",response);
-  
   return asArray<StaticPage>(response);
 }
