@@ -439,6 +439,7 @@ const Header = () => {
       new Set(),
     );
     const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+    const [hoveredRect, setHoveredRect] = useState<DOMRect | null>(null);
 
     const toggleCategory = (id: string | number) => {
       const newSet = new Set(expandedCategories);
@@ -534,8 +535,15 @@ const Header = () => {
       );
     };
     return (
-      <div className="hidden lg:block">
-        <div className="flex w-full items-center justify-center pt-4">
+      <div className="hidden lg:block w-full">
+        <div 
+          className="flex w-full items-center justify-start lg:justify-center overflow-x-auto custom-scrollbar-hover pt-4 pb-2"
+          style={{ justifyContent: "safe center" }}
+          onScroll={() => {
+            setHoveredCategory(null);
+            setHoveredRect(null);
+          }}
+        >
           <nav className="flex gap-5 whitespace-nowrap px-2">
             {/* <div className="relative flex items-center px-2 py-1">
               <div className="group relative cursor-pointer">
@@ -557,8 +565,17 @@ const Header = () => {
                 <div
                   key={idx}
                   className="relative inline-block"
-                  onMouseEnter={() => setHoveredCategory(item.type)}
-                  onMouseLeave={() => setHoveredCategory(null)}
+                  onMouseEnter={(e) => {
+                    setHoveredCategory(item.type);
+                    setHoveredRect(e.currentTarget.getBoundingClientRect());
+                  }}
+                  onMouseMove={(e) => {
+                    setHoveredRect(e.currentTarget.getBoundingClientRect());
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredCategory(null);
+                    setHoveredRect(null);
+                  }}
                 >
                   <div className="group flex cursor-pointer items-center px-2 py-1">
                     <Link
@@ -575,12 +592,26 @@ const Header = () => {
                     ) : null}
                   </div>
 
-                  {hoveredCategory === item.type && hasChildren ? (
-                    <div className="absolute left-0 top-full z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
+                  {hoveredCategory === item.type && hasChildren && hoveredRect ? (
+                    <div
+                      style={{
+                        position: "fixed",
+                        top: `${hoveredRect.bottom}px`,
+                        left: `${hoveredRect.left}px`,
+                      }}
+                      className="z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
+                    >
                       {renderSubcategories(item.children!, 1, item.type)}
                     </div>
-                  ) : hoveredCategory === item.type && item.type == "Gifts" ? (
-                    <div className="absolute left-0 top-full z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
+                  ) : hoveredCategory === item.type && item.type == "Gifts" && hoveredRect ? (
+                    <div
+                      style={{
+                        position: "fixed",
+                        top: `${hoveredRect.bottom}px`,
+                        left: `${hoveredRect.left}px`,
+                      }}
+                      className="z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
+                    >
                       {renderSubcategories([], 1, "Gifts")}
                     </div>
                   ) : null}
@@ -594,8 +625,17 @@ const Header = () => {
                 <div
                   key={`custom-${idx}`}
                   className="relative inline-block"
-                  onMouseEnter={() => setHoveredCategory(item.label)}
-                  onMouseLeave={() => setHoveredCategory(null)}
+                  onMouseEnter={(e) => {
+                    setHoveredCategory(item.label);
+                    setHoveredRect(e.currentTarget.getBoundingClientRect());
+                  }}
+                  onMouseMove={(e) => {
+                    setHoveredRect(e.currentTarget.getBoundingClientRect());
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredCategory(null);
+                    setHoveredRect(null);
+                  }}
                 >
                   <div className="group flex cursor-pointer items-center px-2 py-1">
                     {item.href ? (
@@ -617,8 +657,15 @@ const Header = () => {
                     ) : null}
                   </div>
 
-                  {hoveredCategory === item.label && hasChildren && (
-                    <div className="absolute left-0 top-full z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800">
+                  {hoveredCategory === item.label && hasChildren && hoveredRect && (
+                    <div
+                      style={{
+                        position: "fixed",
+                        top: `${hoveredRect.bottom}px`,
+                        left: `${hoveredRect.left}px`,
+                      }}
+                      className="z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
+                    >
                       {item.subItems!.map((sub, subIdx) => (
                         <Link
                           key={subIdx}

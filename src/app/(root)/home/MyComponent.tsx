@@ -84,7 +84,7 @@ const HomePage: React.FC = () => {
                 `/assets/images/home/hom${index + 1}.png`;
 
               const imageEl = (
-                <div className="relative h-64 w-full overflow-hidden rounded-lg sm:h-80 lg:h-96">
+                <div className="relative aspect-[5/2] w-full overflow-hidden rounded-lg object-contain">
                   <Image
                     src={src}
                     alt={`Featured ${index + 1}`}
@@ -122,7 +122,7 @@ const HomePage: React.FC = () => {
             })
           ) : (
             <>
-              <div className="relative h-64 w-full overflow-hidden rounded-lg sm:h-80 lg:h-96">
+              <div className="relative aspect-[5/2] w-full overflow-hidden rounded-lg">
                 <Image
                   src="/assets/images/home/hom1.png"
                   alt="hero"
@@ -131,7 +131,7 @@ const HomePage: React.FC = () => {
                   className="object-cover"
                 />
               </div>
-              <div className="relative h-64 w-full overflow-hidden rounded-lg sm:h-80 lg:h-96">
+              <div className="relative aspect-[5/2] w-full overflow-hidden rounded-lg">
                 <Image
                   src="/assets/images/home/hom2.png"
                   alt="hero"
