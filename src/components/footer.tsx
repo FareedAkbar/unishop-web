@@ -21,13 +21,12 @@ function Footer() {
 
   useEffect(() => {
     getFooterContent()
-      .then(setFooterContent)
+      .then((data) => setFooterContent(data ?? null))
       .catch((error) => console.error("Failed to load footer content:", error));
   }, []);
 
   const footer = footerContent;
 
-  console.log("ffff", footer);
 
 
   const links = [

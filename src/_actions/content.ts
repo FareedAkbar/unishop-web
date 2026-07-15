@@ -1,7 +1,6 @@
 "use server";
 
 import type {
-  FooterContent,
   FooterRecord,
   HomeContent,
   StaticPage,
@@ -56,13 +55,19 @@ export async function getHomeContent(): Promise<HomeContent | null> {
   };
 }
 
+interface FooterResponse {
+  data?: {
+    footer?: unknown;
+  };
+}
+
 export async function getFooterContent(): Promise<FooterRecord | null> {
-  const footer = await fetchContent<unknown>("/footer");
-  console.log("foooo", footer);
+  const response = await fetchContent<FooterResponse>("/footer");
 
-  if (!footer) return null;
+  if (!response?.data) return null;
 
-  return (asArray(footer)[0] as FooterRecord | undefined) ?? null;
+  const footerData = response.data.footer;
+  return (asArray<FooterRecord>(footerData)[0]) ?? null;
 }
 
 export async function getStaticPages(): Promise<StaticPage[]> {
