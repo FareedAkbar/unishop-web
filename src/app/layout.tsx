@@ -1,11 +1,17 @@
 import "~/styles/globals.css";
 // import { Suspense } from "react";
 import { GeistSans } from "geist/font/sans";
+import localFont from "next/font/local";
 import { type Metadata } from "next";
 import { AuthProvider } from "~/Context/AuthContext";
 import { Toaster } from "~/components/ui/toaster";
 import { Suspense } from "react";
 import { ThemeInitializer } from "~/components/ThemeInitializer";
+
+const ramaslab = localFont({
+  src: "../fonts/ramaslab.otf",
+  variable: "--font-ramaslab",
+});
 
 // import Loading from "./loading";
 
@@ -19,7 +25,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} ${ramaslab.variable}`}>
       <head>
         {/* Google One Tap Login */}
         <script

@@ -41,12 +41,9 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        // sans:['Montserrat',...fontFamily.sans],
-        sans: ["Lato", ...fontFamily.sans],
-        // sans: ['Poppins', ...fontFamily.sans],
-        serif: ["Libre Baskerville", ...fontFamily.serif],
+        sans: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        serif: ["var(--font-ramaslab)", ...fontFamily.serif],
         poppins: ["Poppins", "sans-serif"],
-        // montserrat:['Montserrat','sans-serif']
       },
       screens: {
         xs: "475px", // Small screen
@@ -58,6 +55,19 @@ const config: Config = {
         card: "`0px 2px 4px rgba(0,0,0,0.1), 0px 1px 2px rgba(0,0,0,0.2)`",
       },
       colors: {
+        red: {
+          50: "#FFF5F5",
+          100: "#FFE3E3",
+          200: "#FFC9C9",
+          300: "#FFA3A3",
+          400: "#FF6B6B",
+          500: "#E10600",
+          600: "#C70500",
+          700: "#A30400",
+          800: "#800300",
+          900: "#5C0200",
+          950: "#3D0100",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -149,7 +159,7 @@ const config: Config = {
       },
     },
     fontFamily: {
-      DEFAULT: ["Poppins", "sans-serif"],
+      DEFAULT: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
     },
   },
   // eslint-disable-next-line @typescript-eslint/no-require-imports
