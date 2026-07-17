@@ -4,6 +4,7 @@ import {
   FaChevronDown,
   FaBars,
   FaChevronRight,
+  FaChevronLeft,
   FaHome,
   FaPhoneAlt,
   FaRegTimesCircle,
@@ -433,6 +434,13 @@ const Header = () => {
 
   const newCat = [{ label: "All Categories", value: "0" }, ...(category ?? [])];
 
+  interface SliderCategoryChild {
+    id: number;
+    category_name: string;
+    category_type_id: number;
+    children?: SliderCategoryChild[] | null;
+  }
+
   // Modified USBCategoryList1 component
   const USBCategoryList1 = () => {
     const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
@@ -440,6 +448,97 @@ const Header = () => {
     );
     const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
     const [hoveredRect, setHoveredRect] = useState<DOMRect | null>(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const handleMouseEnter = (label: string, rect: DOMRect) => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = null;
+      }
+      setHoveredCategory(label);
+      setHoveredRect(rect);
+    };
+
+    const handleMouseLeave = () => {
+      closeTimeoutRef.current = setTimeout(() => {
+        setHoveredCategory(null);
+        setHoveredRect(null);
+      }, 150);
+    };
+
+    useEffect(() => {
+      return () => {
+        if (closeTimeoutRef.current) {
+          clearTimeout(closeTimeoutRef.current);
+        }
+      };
+    }, []);
+
+    const combinedCategories = React.useMemo(() => {
+      const list: Array<{
+        id: string;
+        label: string;
+        isDynamic: boolean;
+        category_type_id?: number;
+        type?: string;
+        children?: SliderCategoryChild[] | null;
+        href?: string;
+        subItems?: { label: string; href: string }[];
+      }> = [];
+
+      headerCategory?.forEach((item) => {
+        list.push({
+          id: `dynamic-${item.category_type_id}`,
+          label: item.type,
+          isDynamic: true,
+          category_type_id: item.category_type_id,
+          type: item.type,
+          children: (item.children as SliderCategoryChild[] | null) ?? undefined,
+        });
+      });
+
+      categories.forEach((item, idx) => {
+        list.push({
+          id: `custom-${idx}`,
+          label: item.label,
+          isDynamic: false,
+          href: item.href,
+          subItems: item.subItems,
+        });
+      });
+
+      return list;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [headerCategory]);
+
+    const maxIndex = Math.max(0, combinedCategories.length - 5);
+
+    useEffect(() => {
+      if (currentIndex > maxIndex) {
+        setCurrentIndex(maxIndex);
+      }
+    }, [maxIndex, currentIndex]);
+
+    const handlePrev = () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = null;
+      }
+      setHoveredCategory(null);
+      setHoveredRect(null);
+      setCurrentIndex((prev) => Math.max(0, prev - 1));
+    };
+
+    const handleNext = () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = null;
+      }
+      setHoveredCategory(null);
+      setHoveredRect(null);
+      setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
+    };
 
     const toggleCategory = (id: string | number) => {
       const newSet = new Set(expandedCategories);
@@ -453,16 +552,17 @@ const Header = () => {
     };
 
     const renderSubcategories = (
-      subItems: CategoryTreeNode[],
+      subItems: SliderCategoryChild[] | null | undefined,
       level = 1,
       type?: string,
     ) => {
+      if (!subItems) return null;
       return (
         <div
           className={`ml-${level * 2} mt-1`}
           style={{ marginLeft: `${level / 2}rem` }}
         >
-          {subItems?.map((subItem) => {
+          {subItems.map((subItem) => {
             const hasChildren = subItem.children && subItem.children.length > 0;
             const isExpanded = expandedCategories.has(String(subItem.id));
             return (
@@ -479,11 +579,7 @@ const Header = () => {
                       className={`mr-1 ${isExpanded ? "rotate-180" : ""}`}
                       onClick={() => toggleCategory(subItem.id)}
                     >
-                      {/* {isExpanded ? ( */}
                       <FaChevronDown className="text-xs" />
-                      {/* ) : (
-                        <FaChevronRight className="text-xs" />
-                      )} */}
                     </span>
                   )}
                 </div>
@@ -512,186 +608,345 @@ const Header = () => {
                 </button>
               </div>
             ))}
-          {/* {type == "Books" &&
-            genre?.map((subItem) => (
-              <div key={subItem.genre} className="relative py-1">
-                <button
-                  onClick={() => {
-                    router.push(`books?detail=${subItem.genre}`);
-                    toggleCategory(`books?detail=${subItem.genre}`);
-                  }}
-                  className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
-                >
-                  <span
-                    className="mr-2 truncate text-left capitalize"
-                    title={subItem.genre}
-                  >
-                    {subItem.genre}
-                  </span>
-                </button>
-              </div>
-            ))} */}
         </div>
       );
     };
-    return (
-      <div className="hidden lg:block w-full">
-        <div 
-          className="flex w-full items-center justify-start lg:justify-center overflow-x-auto custom-scrollbar-hover pt-4 pb-2"
-          style={{ justifyContent: "safe center" }}
-          onScroll={() => {
-            setHoveredCategory(null);
-            setHoveredRect(null);
-          }}
-        >
-          <nav className="flex gap-5 whitespace-nowrap px-2">
-            {/* <div className="relative flex items-center px-2 py-1">
-              <div className="group relative cursor-pointer">
-                <span className="flex items-center text-base font-medium text-gray-700 hover:text-red-500 dark:text-gray-200">
-                  All Categories
-                  <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
-                </span>
 
-                <div className="pointer-events-none absolute left-0 top-full z-50 min-w-[200px] -translate-y-2 scale-95 opacity-0 transition-all duration-200 ease-in-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100">
-                  <CategoriesSidebar />
-                </div>
-              </div>
-            </div> */}
+    const hoveredItem = combinedCategories.find((item) => item.label === hoveredCategory);
 
-            {headerCategory?.map((item, idx) => {
-              const hasChildren = item.children && item.children.length > 0;
+    if (combinedCategories.length <= 5) {
+      return (
+        <div className="hidden lg:block w-full">
+          <div className="flex w-full items-center justify-between pt-4 pb-2 px-4 max-w-6xl mx-auto">
+            {/* Left Spacer to align center */}
+            <div className="w-28 flex-shrink-0"></div>
 
-              return (
-                <div
-                  key={idx}
-                  className="relative inline-block"
-                  onMouseEnter={(e) => {
-                    setHoveredCategory(item.type);
-                    setHoveredRect(e.currentTarget.getBoundingClientRect());
-                  }}
-                  onMouseMove={(e) => {
-                    setHoveredRect(e.currentTarget.getBoundingClientRect());
-                  }}
-                  onMouseLeave={() => {
-                    setHoveredCategory(null);
-                    setHoveredRect(null);
-                  }}
-                >
-                  <div className="group flex cursor-pointer items-center px-2 py-1">
-                    <Link
-                      href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
-                      className="flex items-center text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200"
-                    >
-                      {item.type}
-                    </Link>
-
-                    {hasChildren ? (
-                      <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
-                    ) : item.type == "Gifts" ? (
-                      <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
-                    ) : null}
-                  </div>
-
-                  {hoveredCategory === item.type && hasChildren && hoveredRect ? (
+            {/* Centered list of categories */}
+            <nav className="flex gap-8 whitespace-nowrap justify-center items-center flex-grow">
+              {combinedCategories.map((item) => {
+                if (item.isDynamic) {
+                  const hasChildren = item.children && item.children.length > 0;
+                  return (
                     <div
-                      style={{
-                        position: "fixed",
-                        top: `${hoveredRect.bottom}px`,
-                        left: `${hoveredRect.left}px`,
-                      }}
-                      className="z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
+                      key={item.id}
+                      className="relative inline-block px-1 min-w-0"
+                      onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
+                      onMouseLeave={handleMouseLeave}
                     >
-                      {renderSubcategories(item.children!, 1, item.type)}
-                    </div>
-                  ) : hoveredCategory === item.type && item.type == "Gifts" && hoveredRect ? (
-                    <div
-                      style={{
-                        position: "fixed",
-                        top: `${hoveredRect.bottom}px`,
-                        left: `${hoveredRect.left}px`,
-                      }}
-                      className="z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
-                    >
-                      {renderSubcategories([], 1, "Gifts")}
-                    </div>
-                  ) : null}
-                </div>
-              );
-            })}
-            {categories.map((item, idx) => {
-              const hasChildren = item.subItems && item.subItems.length > 0;
-
-              return (
-                <div
-                  key={`custom-${idx}`}
-                  className="relative inline-block"
-                  onMouseEnter={(e) => {
-                    setHoveredCategory(item.label);
-                    setHoveredRect(e.currentTarget.getBoundingClientRect());
-                  }}
-                  onMouseMove={(e) => {
-                    setHoveredRect(e.currentTarget.getBoundingClientRect());
-                  }}
-                  onMouseLeave={() => {
-                    setHoveredCategory(null);
-                    setHoveredRect(null);
-                  }}
-                >
-                  <div className="group flex cursor-pointer items-center px-2 py-1">
-                    {item.href ? (
-                      <Link
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center text-base font-medium capitalize text-gray-700 group-hover:text-red-500 dark:text-gray-200"
-                      >
-                        {item.label}
-                      </Link>
-                    ) : (
-                      <span className="text-base font-medium capitalize text-gray-700 group-hover:text-red-500 dark:text-gray-200">
-                        {item.label}
-                      </span>
-                    )}
-                    {hasChildren ? (
-                      <FaChevronDown className="ml-1 text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180" />
-                    ) : null}
-                  </div>
-
-                  {hoveredCategory === item.label && hasChildren && hoveredRect && (
-                    <div
-                      style={{
-                        position: "fixed",
-                        top: `${hoveredRect.bottom}px`,
-                        left: `${hoveredRect.left}px`,
-                      }}
-                      className="z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
-                    >
-                      {item.subItems!.map((sub, subIdx) => (
+                      <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center gap-1">
                         <Link
-                          key={subIdx}
-                          href={sub.href}
-                          className="block px-3 py-1 text-sm text-gray-700 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500"
+                          href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
+                          className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
                         >
-                          {sub.label}
+                          {item.type}
                         </Link>
-                      ))}
+
+                        {hasChildren ? (
+                          <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
+                        ) : item.type == "Gifts" ? (
+                          <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
+                        ) : null}
+                      </div>
                     </div>
-                  )}
-                </div>
-              );
-            })}
-            <div className="flex items-center justify-end">
+                  );
+                } else {
+                  const hasChildren = item.subItems && item.subItems.length > 0;
+                  return (
+                    <div
+                      key={item.id}
+                      className="relative inline-block px-1 min-w-0"
+                      onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center gap-1">
+                        {item.href ? (
+                          <Link
+                            href={item.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
+                          >
+                            {item.label}
+                          </Link>
+                        ) : (
+                          <span className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]">
+                            {item.label}
+                          </span>
+                        )}
+                        {hasChildren ? (
+                          <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
+                        ) : null}
+                      </div>
+                    </div>
+                  );
+                }
+              })}
+            </nav>
+
+            {/* Right Orders Button */}
+            <div className="w-28 flex-shrink-0 flex justify-end">
               {userInfo?.customer_id ? (
                 <Button
                   onClick={() => router.push("/my-orders")}
                   title="My Orders"
+                  className="whitespace-nowrap"
                 />
-              ) : (
-                ""
-              )}
+              ) : null}
             </div>
-          </nav>
+          </div>
+
+          {/* Floating Category Dropdown */}
+          {hoveredItem && hoveredRect && (
+            hoveredItem.isDynamic && hoveredItem.children && hoveredItem.children.length > 0 ? (
+              <div
+                style={{
+                  position: "fixed",
+                  top: `${hoveredRect.bottom}px`,
+                  left: `${hoveredRect.left}px`,
+                }}
+                className="z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
+                onMouseEnter={() => {
+                  if (closeTimeoutRef.current) {
+                    clearTimeout(closeTimeoutRef.current);
+                    closeTimeoutRef.current = null;
+                  }
+                }}
+                onMouseLeave={handleMouseLeave}
+              >
+                {renderSubcategories(hoveredItem.children, 1, hoveredItem.type)}
+              </div>
+            ) : hoveredItem.isDynamic && hoveredItem.type === "Gifts" ? (
+              <div
+                style={{
+                  position: "fixed",
+                  top: `${hoveredRect.bottom}px`,
+                  left: `${hoveredRect.left}px`,
+                }}
+                className="z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
+                onMouseEnter={() => {
+                  if (closeTimeoutRef.current) {
+                    clearTimeout(closeTimeoutRef.current);
+                    closeTimeoutRef.current = null;
+                  }
+                }}
+                onMouseLeave={handleMouseLeave}
+              >
+                {renderSubcategories([], 1, "Gifts")}
+              </div>
+            ) : !hoveredItem.isDynamic && hoveredItem.subItems && hoveredItem.subItems.length > 0 ? (
+              <div
+                style={{
+                  position: "fixed",
+                  top: `${hoveredRect.bottom}px`,
+                  left: `${hoveredRect.left}px`,
+                }}
+                className="z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
+                onMouseEnter={() => {
+                  if (closeTimeoutRef.current) {
+                    clearTimeout(closeTimeoutRef.current);
+                    closeTimeoutRef.current = null;
+                  }
+                }}
+                onMouseLeave={handleMouseLeave}
+              >
+                {hoveredItem.subItems.map((sub, subIdx) => (
+                  <Link
+                    key={subIdx}
+                    href={sub.href}
+                    className="block px-3 py-1 text-sm text-gray-700 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500"
+                  >
+                    {sub.label}
+                  </Link>
+                ))}
+              </div>
+            ) : null
+          )}
         </div>
+      );
+    }
+
+    return (
+      <div className="hidden lg:block w-full">
+        <div className="flex w-full items-center justify-between pt-4 pb-2 px-4 max-w-6xl mx-auto">
+          {/* Left Spacer to align center */}
+          <div className="w-28 flex-shrink-0"></div>
+
+          {/* Slider Container with controls */}
+          <div className="flex items-center gap-4 flex-grow justify-center max-w-[900px]">
+            {/* Prev button */}
+            <button
+              onClick={handlePrev}
+              className={`p-2 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center flex-shrink-0 ${
+                currentIndex === 0
+                  ? "opacity-0 pointer-events-none cursor-default"
+                  : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500"
+              }`}
+              aria-label="Previous categories"
+            >
+              <FaChevronLeft className="text-xs" />
+            </button>
+
+            {/* Mask window */}
+            <div className="overflow-hidden flex-grow max-w-[800px]">
+              <div
+                className="flex transition-transform duration-300 ease-in-out w-full"
+                style={{
+                  transform: `translateX(-${currentIndex * 20}%)`,
+                }}
+              >
+                {combinedCategories.map((item) => {
+                  if (item.isDynamic) {
+                    const hasChildren = item.children && item.children.length > 0;
+                    return (
+                      <div
+                        key={item.id}
+                        className="relative flex-shrink-0 w-1/5 flex justify-center items-center px-2 min-w-0"
+                        onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
+                        onMouseLeave={handleMouseLeave}
+                      >
+                        <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center w-full gap-1">
+                          <Link
+                            href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
+                            className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
+                          >
+                            {item.type}
+                          </Link>
+
+                          {hasChildren ? (
+                            <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
+                          ) : item.type == "Gifts" ? (
+                            <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
+                          ) : null}
+                        </div>
+                      </div>
+                    );
+                  } else {
+                    const hasChildren = item.subItems && item.subItems.length > 0;
+                    return (
+                      <div
+                        key={item.id}
+                        className="relative flex-shrink-0 w-1/5 flex justify-center items-center px-2 min-w-0"
+                        onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
+                        onMouseLeave={handleMouseLeave}
+                      >
+                        <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center w-full gap-1">
+                          {item.href ? (
+                            <Link
+                              href={item.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
+                            >
+                              {item.label}
+                            </Link>
+                          ) : (
+                            <span className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]">
+                              {item.label}
+                            </span>
+                          )}
+                          {hasChildren ? (
+                            <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
+                          ) : null}
+                        </div>
+                      </div>
+                    );
+                  }
+                })}
+              </div>
+            </div>
+
+            {/* Next button */}
+            <button
+              onClick={handleNext}
+              className={`p-2 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center flex-shrink-0 ${
+                currentIndex >= maxIndex
+                  ? "opacity-0 pointer-events-none cursor-default"
+                  : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500"
+              }`}
+              aria-label="Next categories"
+            >
+              <FaChevronRight className="text-xs" />
+            </button>
+          </div>
+
+          {/* Right Orders Button */}
+          <div className="w-28 flex-shrink-0 flex justify-end">
+            {userInfo?.customer_id ? (
+              <Button
+                onClick={() => router.push("/my-orders")}
+                title="My Orders"
+                className="whitespace-nowrap"
+              />
+            ) : null}
+          </div>
+        </div>
+
+        {/* Floating Category Dropdown */}
+        {hoveredItem && hoveredRect && (
+          hoveredItem.isDynamic && hoveredItem.children && hoveredItem.children.length > 0 ? (
+            <div
+              style={{
+                position: "fixed",
+                top: `${hoveredRect.bottom}px`,
+                left: `${hoveredRect.left}px`,
+              }}
+              className="z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
+              onMouseEnter={() => {
+                if (closeTimeoutRef.current) {
+                  clearTimeout(closeTimeoutRef.current);
+                  closeTimeoutRef.current = null;
+                }
+              }}
+              onMouseLeave={handleMouseLeave}
+            >
+              {renderSubcategories(hoveredItem.children, 1, hoveredItem.type)}
+            </div>
+          ) : hoveredItem.isDynamic && hoveredItem.type === "Gifts" ? (
+            <div
+              style={{
+                position: "fixed",
+                top: `${hoveredRect.bottom}px`,
+                left: `${hoveredRect.left}px`,
+              }}
+              className="z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
+              onMouseEnter={() => {
+                if (closeTimeoutRef.current) {
+                  clearTimeout(closeTimeoutRef.current);
+                  closeTimeoutRef.current = null;
+                }
+              }}
+              onMouseLeave={handleMouseLeave}
+            >
+              {renderSubcategories([], 1, "Gifts")}
+            </div>
+          ) : !hoveredItem.isDynamic && hoveredItem.subItems && hoveredItem.subItems.length > 0 ? (
+            <div
+              style={{
+                position: "fixed",
+                top: `${hoveredRect.bottom}px`,
+                left: `${hoveredRect.left}px`,
+              }}
+              className="z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
+              onMouseEnter={() => {
+                if (closeTimeoutRef.current) {
+                  clearTimeout(closeTimeoutRef.current);
+                  closeTimeoutRef.current = null;
+                }
+              }}
+              onMouseLeave={handleMouseLeave}
+            >
+              {hoveredItem.subItems.map((sub, subIdx) => (
+                <Link
+                  key={subIdx}
+                  href={sub.href}
+                  className="block px-3 py-1 text-sm text-gray-700 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500"
+                >
+                  {sub.label}
+                </Link>
+              ))}
+            </div>
+          ) : null
+        )}
       </div>
     );
   };
