@@ -87,6 +87,10 @@ export const PAGE_MAPPER: Record<Exclude<PAGE_ROUTES, PAGE_ROUTES.UNKNOWN>, { PU
     PUBLIC: true,
     PROTECTED: true,
   },
+  [PAGE_ROUTES.COMPARE_PRODUCTS]: {
+    PUBLIC: true,
+    PROTECTED: true,
+  },
   [PAGE_ROUTES.RESULT]: {
     PUBLIC: true,
     PROTECTED: true,

@@ -4,7 +4,6 @@ import {
   FaChevronDown,
   FaBars,
   FaChevronRight,
-  FaChevronLeft,
   FaHome,
   FaPhoneAlt,
   FaRegTimesCircle,
@@ -31,7 +30,13 @@ import type {
 } from "~/types/category";
 import { FaGift } from "react-icons/fa";
 
-import Select from "../Fields/select";
+import {
+  Select as RadixSelect,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "~/components/ui/select";
 import { BsTelephone } from "react-icons/bs";
 import Button from "./Button";
 
@@ -448,7 +453,6 @@ const Header = () => {
     );
     const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
     const [hoveredRect, setHoveredRect] = useState<DOMRect | null>(null);
-    const [currentIndex, setCurrentIndex] = useState(0);
     const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const handleMouseEnter = (label: string, rect: DOMRect) => {
@@ -512,33 +516,7 @@ const Header = () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [headerCategory]);
 
-    const maxIndex = Math.max(0, combinedCategories.length - 5);
 
-    useEffect(() => {
-      if (currentIndex > maxIndex) {
-        setCurrentIndex(maxIndex);
-      }
-    }, [maxIndex, currentIndex]);
-
-    const handlePrev = () => {
-      if (closeTimeoutRef.current) {
-        clearTimeout(closeTimeoutRef.current);
-        closeTimeoutRef.current = null;
-      }
-      setHoveredCategory(null);
-      setHoveredRect(null);
-      setCurrentIndex((prev) => Math.max(0, prev - 1));
-    };
-
-    const handleNext = () => {
-      if (closeTimeoutRef.current) {
-        clearTimeout(closeTimeoutRef.current);
-        closeTimeoutRef.current = null;
-      }
-      setHoveredCategory(null);
-      setHoveredRect(null);
-      setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
-    };
 
     const toggleCategory = (id: string | number) => {
       const newSet = new Set(expandedCategories);
@@ -767,106 +745,70 @@ const Header = () => {
 
     return (
       <div className="hidden lg:block w-full">
-        <div className="flex w-full items-center justify-between pt-4 pb-2 px-4 max-w-6xl mx-auto">
+        <div className="flex w-full items-start justify-between  pb-2 px-4 max-w-6xl mx-auto">
           {/* Left Spacer to align center */}
           <div className="w-28 flex-shrink-0"></div>
 
-          {/* Slider Container with controls */}
-          <div className="flex items-center gap-4 flex-grow justify-center max-w-[900px]">
-            {/* Prev button */}
-            <button
-              onClick={handlePrev}
-              className={`p-2 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center flex-shrink-0 ${
-                currentIndex === 0
-                  ? "opacity-0 pointer-events-none cursor-default"
-                  : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500"
-              }`}
-              aria-label="Previous categories"
-            >
-              <FaChevronLeft className="text-xs" />
-            </button>
-
-            {/* Mask window */}
-            <div className="overflow-hidden flex-grow max-w-[800px]">
-              <div
-                className="flex transition-transform duration-300 ease-in-out w-full"
-                style={{
-                  transform: `translateX(-${currentIndex * 20}%)`,
-                }}
-              >
-                {combinedCategories.map((item) => {
-                  if (item.isDynamic) {
-                    const hasChildren = item.children && item.children.length > 0;
-                    return (
-                      <div
-                        key={item.id}
-                        className="relative flex-shrink-0 w-1/5 flex justify-center items-center px-2 min-w-0"
-                        onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
-                        onMouseLeave={handleMouseLeave}
+          {/* Categories Grid (replaces slider) */}
+          <div className="grid grid-cols-6 gap-y-2 gap-x-2 flex-grow justify-center max-w-[900px] px-6">
+            {combinedCategories.map((item) => {
+              if (item.isDynamic) {
+                const hasChildren = item.children && item.children.length > 0;
+                return (
+                  <div
+                    key={item.id}
+                    className="relative flex justify-center items-center px-2 min-w-0"
+                    onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center w-full gap-1">
+                      <Link
+                        href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
+                        className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
                       >
-                        <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center w-full gap-1">
-                          <Link
-                            href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
-                            className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
-                          >
-                            {item.type}
-                          </Link>
+                        {item.type}
+                      </Link>
 
-                          {hasChildren ? (
-                            <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
-                          ) : item.type == "Gifts" ? (
-                            <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
-                          ) : null}
-                        </div>
-                      </div>
-                    );
-                  } else {
-                    const hasChildren = item.subItems && item.subItems.length > 0;
-                    return (
-                      <div
-                        key={item.id}
-                        className="relative flex-shrink-0 w-1/5 flex justify-center items-center px-2 min-w-0"
-                        onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
-                        onMouseLeave={handleMouseLeave}
-                      >
-                        <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center w-full gap-1">
-                          {item.href ? (
-                            <Link
-                              href={item.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
-                            >
-                              {item.label}
-                            </Link>
-                          ) : (
-                            <span className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]">
-                              {item.label}
-                            </span>
-                          )}
-                          {hasChildren ? (
-                            <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
-                          ) : null}
-                        </div>
-                      </div>
-                    );
-                  }
-                })}
-              </div>
-            </div>
-
-            {/* Next button */}
-            <button
-              onClick={handleNext}
-              className={`p-2 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center flex-shrink-0 ${
-                currentIndex >= maxIndex
-                  ? "opacity-0 pointer-events-none cursor-default"
-                  : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500"
-              }`}
-              aria-label="Next categories"
-            >
-              <FaChevronRight className="text-xs" />
-            </button>
+                      {hasChildren ? (
+                        <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
+                      ) : item.type == "Gifts" ? (
+                        <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              } else {
+                const hasChildren = item.subItems && item.subItems.length > 0;
+                return (
+                  <div
+                    key={item.id}
+                    className="relative flex justify-center items-center px-2 min-w-0"
+                    onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center w-full gap-1">
+                      {item.href ? (
+                        <Link
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
+                        >
+                          {item.label}
+                        </Link>
+                      ) : (
+                        <span className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]">
+                          {item.label}
+                        </span>
+                      )}
+                      {hasChildren ? (
+                        <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              }
+            })}
           </div>
 
           {/* Right Orders Button */}
@@ -1070,25 +1012,39 @@ const Header = () => {
         {/* Search Bar (Visible on Small Screens) */}
         {!path.includes("/products") && (
           <div className="mt-2 w-full lg:hidden">
-            <Select
-              id="category"
-              name="category"
-              options={
-                newCat?.map((cat) => ({
+            <RadixSelect
+              value={selectedCategory?.value ?? ""}
+              onValueChange={(val) => {
+                const options = newCat?.map((cat) => ({
                   value:
                     "category_type_id" in cat
                       ? cat.category_type_id.toString()
                       : cat.value,
                   label: "type" in cat ? cat.type.toString() : cat.label,
-                })) ?? []
-              }
-              value={selectedCategory?.value ?? ""}
-              onChange={(val) => {
-                setSelectedCategory(val);
-                setSearchTerm("");
-                setTimeout(() => searchInputRef.current?.focus(), 0);
+                })) ?? [];
+                const selectedOption = options.find((opt) => opt.value === val);
+                if (selectedOption) {
+                  setSelectedCategory(selectedOption);
+                  setSearchTerm("");
+                  setTimeout(() => searchInputRef.current?.focus(), 0);
+                }
               }}
-            />
+            >
+              <SelectTrigger className="w-full h-10 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700 capitalize rounded-md text-sm">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                {newCat?.map((cat) => {
+                  const val = "category_type_id" in cat ? cat.category_type_id.toString() : cat.value;
+                  const label = "type" in cat ? cat.type.toString() : cat.label;
+                  return (
+                    <SelectItem key={val} value={val}>
+                      {label}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </RadixSelect>
             <div className="mt-2">
               <Input
                 ref={searchInputRef}
@@ -1276,7 +1232,7 @@ const Header = () => {
         )}
 
         {/* Desktop Layout */}
-        <div className="mt-4 hidden w-full flex-col border-b pb-4 lg:flex lg:items-center lg:justify-between">
+        <div className="hidden w-full flex-col border-b pb-4 lg:flex lg:items-center lg:justify-between">
           <div className="flex w-full items-center">
             <div
               className="flex-grow cursor-pointer text-left"
@@ -1296,25 +1252,39 @@ const Header = () => {
             {/* Right Section: Search Bar and Icons */}
             <div className="flex items-center space-x-2">
               <div className="hidden lg:block">
-                <Select
-                  id="category"
-                  name="category"
-                  options={
-                    newCat?.map((cat) => ({
+                <RadixSelect
+                  value={selectedCategory?.value ?? ""}
+                  onValueChange={(val) => {
+                    const options = newCat?.map((cat) => ({
                       value:
                         "category_type_id" in cat
                           ? cat.category_type_id.toString()
                           : cat.value,
                       label: "type" in cat ? cat.type.toString() : cat.label,
-                    })) ?? []
-                  }
-                  value={selectedCategory?.value ?? ""}
-                  onChange={(val) => {
-                    setSelectedCategory(val);
-                    setSearchTerm("");
-                    searchInputRef.current?.focus();
+                    })) ?? [];
+                    const selectedOption = options.find((opt) => opt.value === val);
+                    if (selectedOption) {
+                      setSelectedCategory(selectedOption);
+                      setSearchTerm("");
+                      searchInputRef.current?.focus();
+                    }
                   }}
-                />
+                >
+                  <SelectTrigger className="w-[180px] h-10 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700 capitalize rounded-md text-sm">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {newCat?.map((cat) => {
+                      const val = "category_type_id" in cat ? cat.category_type_id.toString() : cat.value;
+                      const label = "type" in cat ? cat.type.toString() : cat.label;
+                      return (
+                        <SelectItem key={val} value={val}>
+                          {label}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </RadixSelect>
               </div>
               <Input
                 ref={searchInputRef}

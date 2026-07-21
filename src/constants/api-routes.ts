@@ -26,6 +26,7 @@ export enum PAGE_ROUTES {
   FAVORITES = "/favorites",
   PRODUCTS = "/products",
   PRODUCT_DETAILS = "/product-details",
+  COMPARE_PRODUCTS = "/compare-products",
   RESULT = "/result",
 }
 

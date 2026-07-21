@@ -97,29 +97,29 @@ const ProductCard = ({
     <div className="group relative flex w-full flex-shrink-0 grow-0 flex-col rounded-md border border-gray-400 p-2 shadow dark:border-gray-600 dark:bg-slate-900 xs:w-56 sm:w-64 lg:w-72">
       {((product?.items_type === 1 && !product?.variations?.[0]) ??
         product?.item_sale_price) && (
-        <div className="absolute inset-0 z-[1] flex items-center justify-center rounded bg-black/30 dark:bg-white/30">
-          <span className="-rotate-45 font-semibold text-white dark:text-black">
-            Currently no variation is available
-          </span>
-        </div>
-      )}
+          <div className="absolute inset-0 z-[1] flex items-center justify-center rounded bg-black/30 dark:bg-white/30">
+            <span className="-rotate-45 font-semibold text-white dark:text-black">
+              Currently no variation is available
+            </span>
+          </div>
+        )}
 
       {(!product?.available ||
         (product?.items_type == 0 && !product?.stock?.stock_id)) && (
-        <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center gap-2 rounded bg-black/30 dark:bg-white/30">
-          {!product?.available && (
-            <span className="-rotate-45 px-2 text-center font-semibold text-white dark:text-black">
-              Unavailable
-            </span>
-          )}
+          <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center gap-2 rounded bg-black/30 dark:bg-white/30">
+            {!product?.available && (
+              <span className="-rotate-45 px-2 text-center font-semibold text-white dark:text-black">
+                Unavailable
+              </span>
+            )}
 
-          {product?.items_type == 0 && !product?.stock?.stock_id && (
-            <span className="-rotate-45 px-2 text-center font-semibold text-white dark:text-black">
-              Currently no stock is available
-            </span>
-          )}
-        </div>
-      )}
+            {product?.items_type == 0 && !product?.stock?.stock_id && (
+              <span className="-rotate-45 px-2 text-center font-semibold text-white dark:text-black">
+                Currently no stock is available
+              </span>
+            )}
+          </div>
+        )}
 
       <div className="relative my-4 flex h-40 grow-0 flex-col items-center justify-center rounded-sm bg-white dark:bg-slate-900 sm:h-48 md:h-72">
         {tagNames.length > 0 ? (
@@ -168,7 +168,7 @@ const ProductCard = ({
             className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
           >
             {product?.item_id &&
-            favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
+              favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
               <AiFillHeart color="red" />
             ) : (
               <AiOutlineHeart />
@@ -183,10 +183,10 @@ const ProductCard = ({
         </div>
       </div>
       {showButton &&
-      (product?.variations?.[0]?.items_variable_items_sale_price ??
-        (product?.item_sale_price &&
-          ((product?.stock?.quantity && product?.stock?.quantity > 0) ||
-            product?.allow_special_order == 1))) ? (
+        (product?.variations?.[0]?.items_variable_items_sale_price ??
+          (product?.item_sale_price &&
+            ((product?.stock?.quantity && product?.stock?.quantity > 0) ||
+              product?.allow_special_order == 1))) ? (
         <Button
           width="w-full"
           onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
@@ -197,7 +197,7 @@ const ProductCard = ({
         ""
       )}
       <span
-        className="mb-1 mt-2 font-serif font-semibold capitalize sm:mt-4"
+        className="mb-1 mt-2 font-serif font-semibold capitalize sm:mt-4 tracking-wider"
         title={product?.item_name}
       >
         {product?.item_name.split("¥")[0]}
@@ -223,26 +223,26 @@ const ProductCard = ({
           {
             manageUsage().length > 0
               ? manageUsage().map((item, index) => {
-                  const matchedType = textbookType?.find(
-                    (t) => t.item_book_type_id === item.type_id,
-                  );
-                  return (
-                    <div
-                      key={`usage-${item.subject_code}-${index}-pair`}
-                      className="flex flex-col items-start gap-1 sm:flex-row"
+                const matchedType = textbookType?.find(
+                  (t) => t.item_book_type_id === item.type_id,
+                );
+                return (
+                  <div
+                    key={`usage-${item.subject_code}-${index}-pair`}
+                    className="flex flex-col items-start gap-1 sm:flex-row"
+                  >
+                    <span
+                      className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "text-red-500" : "text-yellow-600 dark:text-yellow-500"} py-1 text-sm`}
                     >
-                      <span
-                        className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "text-red-500" : "text-yellow-600 dark:text-yellow-500"} py-1 text-sm`}
-                      >
-                        {matchedType?.type_name ?? ""}: {item.subject_name}{" "}
-                        {item.subject_code}
-                      </span>
-                      {/* <span className="inline-block w-fit rounded bg-yellow-200 px-2 py-1 text-xs text-black dark:bg-yellow-500">
+                      {matchedType?.type_name ?? ""}: {item.subject_name}{" "}
+                      {item.subject_code}
+                    </span>
+                    {/* <span className="inline-block w-fit rounded bg-yellow-200 px-2 py-1 text-xs text-black dark:bg-yellow-500">
                     
                   </span> */}
-                    </div>
-                  );
-                })
+                  </div>
+                );
+              })
               : ""
             // <p className="font-serif text-xs">
             //   Textbook is not used in this session

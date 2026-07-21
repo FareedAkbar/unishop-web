@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { X } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +34,13 @@ const AlertBox: React.FC<AlertBoxProps> = ({
   return (
     <AlertDialog open={open}>
       <AlertDialogContent>
+        <button
+          onClick={() => onClose()}
+          className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+          aria-label="Close"
+        >
+          <X className="h-4 w-4" />
+        </button>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
@@ -44,7 +52,7 @@ const AlertBox: React.FC<AlertBoxProps> = ({
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={() => onContinue()}
-            className="bg-red-500 hover:bg-red-400"
+            className="bg-red-500 hover:bg-red-400 dark:text-white"
           >
             {continueButtonText}
           </AlertDialogAction>

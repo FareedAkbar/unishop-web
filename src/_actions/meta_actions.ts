@@ -14,9 +14,9 @@ const requestOptions: RequestInit = {
     method: "GET",
     headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
     },
-    redirect: "follow", 
+    redirect: "follow",
 };
 
 export async function getMetaData(genre_id: number): Promise<ApiResponse | boolean> {
@@ -29,7 +29,6 @@ export async function getMetaData(genre_id: number): Promise<ApiResponse | boole
 
         if (result?.status) {
             // setMeta(result.meta);
-            console.log("Result MetaData:", result)
             return result
         } else {
             console.error("Unexpected resulttt getMetaData:", result);
@@ -51,7 +50,6 @@ export async function getTextBookTypeData(): Promise<TextBookApiResponse | boole
 
         if (result?.status) {
             // setMeta(result.meta);
-            console.log("Result MetaData:", result)
             return result
         } else {
             console.error("Unexpected result books/types:", result);
