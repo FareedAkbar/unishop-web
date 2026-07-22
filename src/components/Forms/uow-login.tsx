@@ -125,6 +125,14 @@ export default function SignupFormDemo({
               </p>
             )}
           </LabelInputContainer>
+          <div className="mb-4 flex justify-end">
+            <Link
+              href="/forgot-password"
+              className="text-xs text-red-500 hover:underline"
+            >
+              Forgot Password?
+            </Link>
+          </div>
 
           <div className="mx-auto flex max-w-sm flex-col justify-center">
             <Button

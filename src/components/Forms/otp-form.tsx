@@ -8,7 +8,7 @@ import { toast } from "~/hooks/use-toast";
 
 interface Props {
   loginResponse?: LoginResponse | null;
-  onSuccess?: () => void;
+  onSuccess?: (res?: unknown) => void;
   isSignup?: boolean;
 }
 
@@ -89,7 +89,7 @@ const OTPVerificationForm = ({ loginResponse, onSuccess, isSignup }: Props) => {
 
         if (res && typeof res !== "boolean" && res.status) {
           if (onSuccess) {
-            onSuccess();
+            onSuccess(res);
           } else {
             router.push("/");
           }

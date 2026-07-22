@@ -75,4 +75,6 @@ const API_TYPE_MAPPER: Record<keyof typeof API_ROUTES, any> = {
   LOGIN_WEB: {} as Login,
   CHECK_EMAIL: {} as unknown,
   VERIFY_SIGNUP_OTP: {} as unknown,
+  RESET_PASSWORD_OTP: {} as unknown,
+  UPDATE_PASSWORD: {} as unknown,
 };

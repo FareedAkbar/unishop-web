@@ -124,34 +124,34 @@ const Header = () => {
   }
 
   const buildCategoryTree = (categories: CAT[]): CategoryTreeNode2[] => {
-    const categoriesMap: Record<number, CategoryTreeNode2> = {};
+    // Purana: categoriesMap[cat.id] — isse same id ki multiple type-rows overwrite ho jaati hen
+    // Naya: composite key `${cat.id}-${cat.category_type_id}` use karen taake har type-row alag rahe
+    const categoriesMap: Record<string, CategoryTreeNode2> = {};
 
-    // Step 1: Organize categories by ID
     categories.forEach((cat) => {
-      categoriesMap[cat.id] = { ...cat, children: [] };
+      const key = `${cat.id}-${cat.category_type_id}`;
+      categoriesMap[key] = { ...cat, children: [] };
     });
 
     const categoryTree: CategoryTreeNode2[] = [];
 
-    // Step 2: Build the tree structure
     categories.forEach((cat) => {
+      const key = `${cat.id}-${cat.category_type_id}`;
       if (cat.parent === 0) {
-        // Root category
-        const rootCategory = categoriesMap[cat.id];
-        if (rootCategory) {
-          categoryTree.push(rootCategory);
-        }
+        const rootCategory = categoriesMap[key];
+        if (rootCategory) categoryTree.push(rootCategory);
       } else {
-        const parentCategory = categoriesMap[cat.parent];
+        // Parent ka bhi correct composite key dhoondna hoga - parent ki apni category_type_id
+        // is liye hume ek dusra map chahiye jo sirf category id se parent lookup kare
+        const parentEntry = categories.find((c) => c.id === cat.parent);
+        const parentKey = parentEntry ? `${parentEntry.id}-${parentEntry.category_type_id}` : null;
+        const parentCategory = parentKey ? categoriesMap[parentKey] : null;
+
         if (parentCategory) {
-          const categoryToAdd = categoriesMap[cat.id];
+          const categoryToAdd = categoriesMap[key];
           if (categoryToAdd) {
             parentCategory.children.push(categoryToAdd);
-          } else {
-            console.error(`Category ID ${cat.id} not found in map.`);
           }
-        } else {
-          console.error(`Parent Category ID ${cat.parent} not found in map.`);
         }
       }
     });
@@ -745,26 +745,26 @@ const Header = () => {
 
     return (
       <div className="hidden lg:block w-full">
-        <div className="flex w-full items-start justify-between  pb-2 px-4 max-w-6xl mx-auto">
+        <div className="flex w-full items-start justify-between  pb-2 px-4 max-w-10xl mx-auto">
           {/* Left Spacer to align center */}
           <div className="w-28 flex-shrink-0"></div>
 
           {/* Categories Grid (replaces slider) */}
-          <div className="grid grid-cols-6 gap-y-2 gap-x-2 flex-grow justify-center max-w-[900px] px-6">
+          <div className="flex flex-wrap justify-center items-center gap-y-2 gap-x-4  flex-grow max-w-[95vw] sm:max-w-[90vw] px-4 sm:px-6 mx-auto">
             {combinedCategories.map((item) => {
               if (item.isDynamic) {
                 const hasChildren = item.children && item.children.length > 0;
                 return (
                   <div
                     key={item.id}
-                    className="relative flex justify-center items-center px-2 min-w-0"
+                    className="relative flex justify-center items-center px-1"
                     onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center w-full gap-1">
+                    <div className="group flex cursor-pointer items-center py-1 gap-1 whitespace-nowrap">
                       <Link
                         href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
-                        className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
+                        className="text-sm sm:text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200"
                       >
                         {item.type}
                       </Link>
@@ -782,22 +782,22 @@ const Header = () => {
                 return (
                   <div
                     key={item.id}
-                    className="relative flex justify-center items-center px-2 min-w-0"
+                    className="relative flex justify-center items-center px-1"
                     onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center w-full gap-1">
+                    <div className="group flex cursor-pointer items-center py-1 gap-1 whitespace-nowrap">
                       {item.href ? (
                         <Link
                           href={item.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
+                          className="text-sm sm:text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200"
                         >
                           {item.label}
                         </Link>
                       ) : (
-                        <span className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]">
+                        <span className="text-sm sm:text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200">
                           {item.label}
                         </span>
                       )}

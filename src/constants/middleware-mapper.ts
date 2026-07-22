@@ -10,6 +10,10 @@ export const PAGE_MAPPER: Record<Exclude<PAGE_ROUTES, PAGE_ROUTES.UNKNOWN>, { PU
     PUBLIC: true,
     PROTECTED: false,
   },
+  [PAGE_ROUTES.FORGOT_PASSWORD]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
   [PAGE_ROUTES.REGISTER]: {
     PUBLIC: true,
     PROTECTED: false,

@@ -28,6 +28,7 @@ export enum PAGE_ROUTES {
   PRODUCT_DETAILS = "/product-details",
   COMPARE_PRODUCTS = "/compare-products",
   RESULT = "/result",
+  FORGOT_PASSWORD = "/forgot-password"
 }
 
 export const API_ROUTES = {
@@ -37,6 +38,8 @@ export const API_ROUTES = {
   VERIFYOTP: `${BACKEND_BASE_URL_IPOS}api/v1/student/auth/verify-login-otp`,
   CHECK_EMAIL: `${BACKEND_BASE_URL_BOOKNET}api/customer/check-customer-email`,
   VERIFY_SIGNUP_OTP: `${BACKEND_BASE_URL_BOOKNET}api/customer/varify-customer-otp`,
+  RESET_PASSWORD_OTP: `${BACKEND_BASE_URL_BOOKNET}api/customer/reset-customer-password-otp`,
+  UPDATE_PASSWORD: `${BACKEND_BASE_URL_BOOKNET}api/customer/update-customer-password`,
   GENRE: `${BACKEND_BASE_URL_BOOKNET}api/genre`,
   CATEGORY: `${BACKEND_BASE_URL_BOOKNET}api/category/type`,
   SUB_CATEGORY: `${BACKEND_BASE_URL_BOOKNET}api/category`,
