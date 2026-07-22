@@ -965,14 +965,24 @@ const Header = () => {
                       </button> */}
                     </>
                   ) : (
-                    <Button
-                      title="Login"
-                      onClick={() => {
-                        setUserDropdownOpen(false);
-                        router.push("/login");
-                      }}
-                      className="w-full"
-                    />
+                    <div className="space-y-2">
+                      <Button
+                        title="Login"
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          router.push("/login");
+                        }}
+                        className="w-full"
+                      />
+                      <Button
+                        title="Sign Up"
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          router.push("/signup");
+                        }}
+                        className="w-full"
+                      />
+                    </div>
                     // <button
                     //   onClick={() => {
                     //     setUserDropdownOpen(false);
@@ -1381,14 +1391,24 @@ const Header = () => {
                         </button> */}
                       </>
                     ) : (
-                      <Button
-                        title="Login"
-                        onClick={() => {
-                          setUserDropdownOpen(false);
-                          router.push("/login");
-                        }}
-                        className="w-full"
-                      />
+                      <div className="space-y-2">
+                        <Button
+                          title="Login"
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            router.push("/login");
+                          }}
+                          className="w-full"
+                        />
+                        <Button
+                          title="Sign Up"
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            router.push("/signup");
+                          }}
+                          className="w-full"
+                        />
+                      </div>
                       // <button
                       //   onClick={() => {
                       //     setUserDropdownOpen(false);

@@ -8,12 +8,14 @@ import { toast } from "~/hooks/use-toast";
 
 interface Props {
   loginResponse?: LoginResponse | null;
+  onSuccess?: () => void;
+  isSignup?: boolean;
 }
 
-const OTPVerificationForm = ({ loginResponse }: Props) => {
+const OTPVerificationForm = ({ loginResponse, onSuccess, isSignup }: Props) => {
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
   const [loader, setLoader] = useState(false);
-  const { verifyOTP, sendOTP } = useAuthContext();
+  const { verifyOTP, sendOTP, verifySignupOTP } = useAuthContext();
   const router = useRouter();
   const firstInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,7 +38,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
       const allFilled = newOtp.every((digit) => digit !== "");
 
       if (isLast && allFilled) {
-       void handleVerify(newOtp); // use updated OTP array
+        void handleVerify(newOtp); // use updated OTP array
       }
     }
   };
@@ -57,32 +59,47 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
     }
   };
 
-  const handleVerify = async (newOtp?: string[]) => {
-    const currentOtp = newOtp ?? otp;
+  const handleVerify = async (newOtp?: string[] | React.MouseEvent<HTMLButtonElement>) => {
+    const currentOtp = Array.isArray(newOtp) ? newOtp : otp;
     const joinedOtp = currentOtp.join("");
 
-    console.log("Verifying OTP:", joinedOtp);
 
     if (joinedOtp.length === 4) {
       try {
-        const data = {
-          customer_id: loginResponse?.data.customer_id,
-          email: loginResponse?.data.email,
-          otp: joinedOtp,
-        };
         setLoader(true);
-        const res = await verifyOTP(data);
+        let res;
+        if (isSignup) {
+          const payload = {
+            customer_id: Number(loginResponse?.data.customer_id),
+            otp: parseInt(joinedOtp, 10),
+          };
+          res = await verifySignupOTP(payload);
+
+
+        } else {
+          const data = {
+            customer_id: loginResponse?.data.customer_id,
+            email: loginResponse?.data.email,
+            otp: joinedOtp,
+          };
+          res = await verifyOTP(data);
+
+        }
         setLoader(false);
 
-        if (typeof res !== "boolean" && res.status) {
-          router.push("/");
+        if (res && typeof res !== "boolean" && res.status) {
+          if (onSuccess) {
+            onSuccess();
+          } else {
+            router.push("/");
+          }
         }
       } catch (err) {
         const errorMessage =
           (err as Error).message || "An unknown error occurred";
         setLoader(false);
         toast({
-          title: "Login Failed",
+          title: isSignup ? "Verification Failed" : "Login Failed",
           variant: "destructive",
           description: errorMessage,
         });
@@ -166,7 +183,7 @@ const OTPVerificationForm = ({ loginResponse }: Props) => {
 
         <Button
           title="Verify"
-          onClick={handleVerify}
+          onClick={() => handleVerify()}
           className="h-12 w-full"
           loading={loader}
         />

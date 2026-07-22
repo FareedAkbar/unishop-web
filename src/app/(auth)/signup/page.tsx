@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
 import Spinner from "~/components/spinner";
 import CehckoutForm from "~/components/Forms/checkout-form";
+import SignupFormDemo from "~/components/Forms/signup-form";
 
 const MyComponent = () => {
   const router = useRouter();
@@ -39,11 +40,9 @@ const MyComponent = () => {
           >
             <FaArrowLeft className="text-black dark:text-white" />
           </button>
-          <CehckoutForm
-            title="Welcome to Unishop"
-            pushPath="/login"
-            push
-            // subTitle="Create New Booknet Account"
+          <SignupFormDemo
+
+          // subTitle="Create New Booknet Account"
           />
         </div>
       </main>

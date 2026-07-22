@@ -35,6 +35,8 @@ export const API_ROUTES = {
   LOGIN_WEB: `${BACKEND_BASE_URL_IPOS}api/v1/student/auth/login-web`,
   SENDOTP: `${BACKEND_BASE_URL_IPOS}api/v1/student/auth/send-otp`,
   VERIFYOTP: `${BACKEND_BASE_URL_IPOS}api/v1/student/auth/verify-login-otp`,
+  CHECK_EMAIL: `${BACKEND_BASE_URL_BOOKNET}api/customer/check-customer-email`,
+  VERIFY_SIGNUP_OTP: `${BACKEND_BASE_URL_BOOKNET}api/customer/varify-customer-otp`,
   GENRE: `${BACKEND_BASE_URL_BOOKNET}api/genre`,
   CATEGORY: `${BACKEND_BASE_URL_BOOKNET}api/category/type`,
   SUB_CATEGORY: `${BACKEND_BASE_URL_BOOKNET}api/category`,

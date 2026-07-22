@@ -122,6 +122,8 @@ interface AuthContextProps {
   searchItems: DataCart[];
   textbookType: TextbookType[] | null;
   getTextBookType: () => Promise<boolean | void>;
+  checkEmail: (email: string) => Promise<{ status: boolean; message: string }>;
+  verifySignupOTP: (payload: { customer_id: number; otp: number }) => Promise<{ status: boolean; message: string }>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -741,6 +743,46 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const checkEmail = async (
+    email: string,
+  ): Promise<{ status: boolean; message: string }> => {
+    const response = await apiRouter(
+      "CHECK_EMAIL",
+      {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      },
+      { skipAuthorization: true },
+    );
+    const responsePayload = (await response.json()) as {
+      status: boolean;
+      message: string;
+    };
+    return responsePayload;
+  };
+
+  const verifySignupOTP = async (
+    payload: { customer_id: number; otp: number },
+  ): Promise<{ status: boolean; message: string }> => {
+    const response = await apiRouter(
+      "VERIFY_SIGNUP_OTP",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+      { skipAuthorization: true },
+    );
+    const responsePayload = (await response.json()) as {
+      status: boolean;
+      message: string;
+    };
+    if (responsePayload.status) {
+      return responsePayload;
+    } else {
+      throw new Error(responsePayload.message || "OTP verification failed");
+    }
+  };
+
   const CheckoutApiWithUserName = async (
     payload: Booknet_customer_checkout,
   ): Promise<checkoutBooknetResponse> => {
@@ -805,6 +847,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         sendOTP,
         verifyOTP,
         CheckoutApi,
+        checkEmail,
+        verifySignupOTP,
         setCheckoutData,
         booknetCustomerId,
         CheckoutApiWithUserName,

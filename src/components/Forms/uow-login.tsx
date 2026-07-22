@@ -140,8 +140,9 @@ export default function SignupFormDemo({
             <div className="mt-2 flex flex-col items-center justify-center sm:flex-row">
               <p>{`I don't have an account, `}</p>
               <Link
-                href="https://pulse.uow.edu.au/pulseperks/"
-                target="_blank"
+                href="/signup"
+                // href="https://pulse.uow.edu.au/pulseperks/"
+                // target="_blank"
                 className="ml-1 text-red-500"
               >
                 SignUp
