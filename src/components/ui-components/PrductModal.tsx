@@ -10,7 +10,8 @@ import { FaArrowCircleLeft, FaCheckCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 import { IoIosArrowRoundForward, IoIosCloseCircle } from "react-icons/io";
-import DataCart, { Variation } from "~/types/book";
+import {type Variation} from "~/types/book";
+import type DataCart from "~/types/book";
 import moment from "moment";
 import { BsFillCartCheckFill } from "react-icons/bs";
 import Button from "./Button";

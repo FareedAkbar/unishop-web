@@ -2,7 +2,7 @@
 import { useParams, useRouter } from "next/navigation";
 import React, {
   createContext,
-  SetStateAction,
+  type SetStateAction,
   useContext,
   useEffect,
   useState,
@@ -28,8 +28,8 @@ import type {
   VerifyOTPResponse,
 } from "~/types/loginResponse";
 import {
-  SubCategoryResponse,
-  SuperCategory,
+  type SubCategoryResponse,
+  type SuperCategory,
   type Category,
   type CategoryResponse,
 } from "~/types/category";
@@ -51,7 +51,7 @@ import { getProductTags } from "~/_actions/product_tags";
 import type { ApiResponseStatus, ItemSpecialTag } from "~/types/productTags";
 import { getItemsBySearch } from "~/_actions/getitemsbycategory";
 import { getTextBookTypeData } from "~/_actions/meta_actions";
-import { TextBookApiResponse, TextbookType } from "~/types/textbookType";
+import { type TextBookApiResponse, type TextbookType } from "~/types/textbookType";
 
 type transactionData = {
   transaction_id?: string | null;

@@ -1,4 +1,4 @@
-import DataCart from "./book";
+import type DataCart from "./book";
 
 interface addFavResponse {
     // meta: PaginationData; // Adjust based on your actual structure

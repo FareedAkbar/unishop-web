@@ -17,7 +17,7 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ModalBody, ModalContent, useModal } from "../ui/animated-modal";
-import { GetSpecialOrder } from "~/types/getSpecialBackOrders";
+import { type GetSpecialOrder } from "~/types/getSpecialBackOrders";
 import { FiSearch } from "react-icons/fi";
 
 interface DataTableProps {

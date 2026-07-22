@@ -5,7 +5,7 @@ import ProductCard from "~/components/ui-components/ProductCard";
 import { HiArrowSmallRight, HiArrowSmallLeft } from "react-icons/hi2";
 import CountdownTimer from "~/components/countdownTimer";
 import Button from "~/components/ui-components/Button";
-import DataCart from "~/types/book";
+import type DataCart from "~/types/book";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter } from "next/navigation";

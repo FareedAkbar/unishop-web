@@ -2,8 +2,8 @@ import React, {
   useState,
   useRef,
   useEffect,
-  FocusEvent,
-  ForwardRefRenderFunction,
+  type FocusEvent,
+  type ForwardRefRenderFunction,
   forwardRef,
 } from "react";
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/await-thenable */
 import { cookieClient } from "~/clients/cookie-client";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { API_ROUTES, PAGE_ROUTES } from "~/constants/api-routes";
 import { PAGE_MAPPER, RESPONSE_MAPPER } from "~/constants/middleware-mapper";
 import { cookies } from 'next/headers'

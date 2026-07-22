@@ -1,7 +1,7 @@
 // components/CategoriesSection.tsx
 "use client";
 
-import { FC } from "react";
+import { type FC } from "react";
 import Image from "next/image";
 import type { SuperCategory } from "~/types/category";
 import Link from "next/link";

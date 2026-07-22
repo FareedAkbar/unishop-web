@@ -26,7 +26,7 @@ import { getReviewsApi, submitReviewsApi } from "~/_actions/reviews";
 import AlertBox from "~/components/alertBox/alert";
 import { BsFillCartCheckFill } from "react-icons/bs";
 import { getBooks } from "~/_actions/getbooks";
-import { ItemSpecialTag } from "~/types/productTags";
+import { type ItemSpecialTag } from "~/types/productTags";
 
 import Spinner from "~/components/spinner";
 import { Tabs } from "~/components/ui/tabs";

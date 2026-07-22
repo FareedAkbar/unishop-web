@@ -1,4 +1,4 @@
-import { io, Socket } from "socket.io-client";
+import { io, type Socket } from "socket.io-client";
 // https://ipos-dev.iconsole.com.au
 // https://ipi.iconsole.com.au
 // https://ipos-dev.iconsole.com.au

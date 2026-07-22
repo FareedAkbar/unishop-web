@@ -1,4 +1,4 @@
-import UserType from "./userType";
+import type UserType from "./userType";
 
 type LoginData = {
   customer_id?: number;

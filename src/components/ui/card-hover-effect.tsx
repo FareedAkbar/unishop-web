@@ -3,7 +3,7 @@ import { cn } from "~/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
-import Image, { StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "next/image";
 
 type itemsType = {
   title: string;
