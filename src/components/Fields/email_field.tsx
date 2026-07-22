@@ -2,7 +2,7 @@
 import * as React from "react";
 import { cn } from "~/lib/utils";
 import { useMotionTemplate, useMotionValue, motion } from "framer-motion";
-import { get_address_from_email } from "~/types/checkoutForm";
+import { type get_address_from_email } from "~/types/checkoutForm";
 import { useAuthContext } from "~/Context/AuthContext";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

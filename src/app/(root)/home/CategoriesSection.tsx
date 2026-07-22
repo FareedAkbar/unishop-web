@@ -1,7 +1,7 @@
 // components/CategoriesSection.tsx
 "use client";
 
-import { FC } from "react";
+import { type FC } from "react";
 import Image from "next/image";
 import type { SuperCategory } from "~/types/category";
 import Link from "next/link";
@@ -26,12 +26,12 @@ const CategoriesSection: FC<CategoriesSectionProps> = ({ categories }) => {
       </h2>
       <p className="text-gray-500">Browse one of our popular categories.</p>
       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {categories?.map((item, idx) => (
+        {categories.slice(0, 6)?.map((item, idx) => (
           <Link
             key={item.category_type_id}
             href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
             className="flex cursor-pointer gap-5 rounded-lg border border-gray-300 bg-white p-4 shadow-sm transition hover:shadow-lg dark:border-gray-700 dark:bg-gray-900 dark:shadow-gray-600"
-            // onClick={() => handleClick(item)}
+          // onClick={() => handleClick(item)}
           >
             <div className="relative h-24 w-24 overflow-hidden rounded-md">
               <Image

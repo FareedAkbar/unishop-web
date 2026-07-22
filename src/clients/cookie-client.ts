@@ -1,7 +1,7 @@
 // import { postLoginProfilerResType } from "@/app/api/auth/login/validators";
 import { isStringified } from "~/utils";
 // import isEmpty from "lodash/isEmpty";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, type NextResponse } from "next/server";
 import { PAGE_ROUTES } from "~/constants/api-routes";
 import type UserType from "~/types/userType";
 

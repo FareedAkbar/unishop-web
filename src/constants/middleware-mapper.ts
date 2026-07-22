@@ -10,6 +10,10 @@ export const PAGE_MAPPER: Record<Exclude<PAGE_ROUTES, PAGE_ROUTES.UNKNOWN>, { PU
     PUBLIC: true,
     PROTECTED: false,
   },
+  [PAGE_ROUTES.FORGOT_PASSWORD]: {
+    PUBLIC: true,
+    PROTECTED: false,
+  },
   [PAGE_ROUTES.REGISTER]: {
     PUBLIC: true,
     PROTECTED: false,
@@ -84,6 +88,10 @@ export const PAGE_MAPPER: Record<Exclude<PAGE_ROUTES, PAGE_ROUTES.UNKNOWN>, { PU
     PROTECTED: true,
   },
   [PAGE_ROUTES.PRODUCT_DETAILS]: {
+    PUBLIC: true,
+    PROTECTED: true,
+  },
+  [PAGE_ROUTES.COMPARE_PRODUCTS]: {
     PUBLIC: true,
     PROTECTED: true,
   },

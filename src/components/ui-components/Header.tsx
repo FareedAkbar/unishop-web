@@ -4,7 +4,6 @@ import {
   FaChevronDown,
   FaBars,
   FaChevronRight,
-  FaChevronLeft,
   FaHome,
   FaPhoneAlt,
   FaRegTimesCircle,
@@ -31,7 +30,13 @@ import type {
 } from "~/types/category";
 import { FaGift } from "react-icons/fa";
 
-import Select from "../Fields/select";
+import {
+  Select as RadixSelect,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "~/components/ui/select";
 import { BsTelephone } from "react-icons/bs";
 import Button from "./Button";
 
@@ -119,34 +124,34 @@ const Header = () => {
   }
 
   const buildCategoryTree = (categories: CAT[]): CategoryTreeNode2[] => {
-    const categoriesMap: Record<number, CategoryTreeNode2> = {};
+    // Purana: categoriesMap[cat.id] — isse same id ki multiple type-rows overwrite ho jaati hen
+    // Naya: composite key `${cat.id}-${cat.category_type_id}` use karen taake har type-row alag rahe
+    const categoriesMap: Record<string, CategoryTreeNode2> = {};
 
-    // Step 1: Organize categories by ID
     categories.forEach((cat) => {
-      categoriesMap[cat.id] = { ...cat, children: [] };
+      const key = `${cat.id}-${cat.category_type_id}`;
+      categoriesMap[key] = { ...cat, children: [] };
     });
 
     const categoryTree: CategoryTreeNode2[] = [];
 
-    // Step 2: Build the tree structure
     categories.forEach((cat) => {
+      const key = `${cat.id}-${cat.category_type_id}`;
       if (cat.parent === 0) {
-        // Root category
-        const rootCategory = categoriesMap[cat.id];
-        if (rootCategory) {
-          categoryTree.push(rootCategory);
-        }
+        const rootCategory = categoriesMap[key];
+        if (rootCategory) categoryTree.push(rootCategory);
       } else {
-        const parentCategory = categoriesMap[cat.parent];
+        // Parent ka bhi correct composite key dhoondna hoga - parent ki apni category_type_id
+        // is liye hume ek dusra map chahiye jo sirf category id se parent lookup kare
+        const parentEntry = categories.find((c) => c.id === cat.parent);
+        const parentKey = parentEntry ? `${parentEntry.id}-${parentEntry.category_type_id}` : null;
+        const parentCategory = parentKey ? categoriesMap[parentKey] : null;
+
         if (parentCategory) {
-          const categoryToAdd = categoriesMap[cat.id];
+          const categoryToAdd = categoriesMap[key];
           if (categoryToAdd) {
             parentCategory.children.push(categoryToAdd);
-          } else {
-            console.error(`Category ID ${cat.id} not found in map.`);
           }
-        } else {
-          console.error(`Parent Category ID ${cat.parent} not found in map.`);
         }
       }
     });
@@ -448,7 +453,6 @@ const Header = () => {
     );
     const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
     const [hoveredRect, setHoveredRect] = useState<DOMRect | null>(null);
-    const [currentIndex, setCurrentIndex] = useState(0);
     const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const handleMouseEnter = (label: string, rect: DOMRect) => {
@@ -512,33 +516,7 @@ const Header = () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [headerCategory]);
 
-    const maxIndex = Math.max(0, combinedCategories.length - 5);
 
-    useEffect(() => {
-      if (currentIndex > maxIndex) {
-        setCurrentIndex(maxIndex);
-      }
-    }, [maxIndex, currentIndex]);
-
-    const handlePrev = () => {
-      if (closeTimeoutRef.current) {
-        clearTimeout(closeTimeoutRef.current);
-        closeTimeoutRef.current = null;
-      }
-      setHoveredCategory(null);
-      setHoveredRect(null);
-      setCurrentIndex((prev) => Math.max(0, prev - 1));
-    };
-
-    const handleNext = () => {
-      if (closeTimeoutRef.current) {
-        clearTimeout(closeTimeoutRef.current);
-        closeTimeoutRef.current = null;
-      }
-      setHoveredCategory(null);
-      setHoveredRect(null);
-      setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
-    };
 
     const toggleCategory = (id: string | number) => {
       const newSet = new Set(expandedCategories);
@@ -767,106 +745,70 @@ const Header = () => {
 
     return (
       <div className="hidden lg:block w-full">
-        <div className="flex w-full items-center justify-between pt-4 pb-2 px-4 max-w-6xl mx-auto">
+        <div className="flex w-full items-start justify-between  pb-2 px-4 max-w-10xl mx-auto">
           {/* Left Spacer to align center */}
           <div className="w-28 flex-shrink-0"></div>
 
-          {/* Slider Container with controls */}
-          <div className="flex items-center gap-4 flex-grow justify-center max-w-[900px]">
-            {/* Prev button */}
-            <button
-              onClick={handlePrev}
-              className={`p-2 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center flex-shrink-0 ${
-                currentIndex === 0
-                  ? "opacity-0 pointer-events-none cursor-default"
-                  : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500"
-              }`}
-              aria-label="Previous categories"
-            >
-              <FaChevronLeft className="text-xs" />
-            </button>
-
-            {/* Mask window */}
-            <div className="overflow-hidden flex-grow max-w-[800px]">
-              <div
-                className="flex transition-transform duration-300 ease-in-out w-full"
-                style={{
-                  transform: `translateX(-${currentIndex * 20}%)`,
-                }}
-              >
-                {combinedCategories.map((item) => {
-                  if (item.isDynamic) {
-                    const hasChildren = item.children && item.children.length > 0;
-                    return (
-                      <div
-                        key={item.id}
-                        className="relative flex-shrink-0 w-1/5 flex justify-center items-center px-2 min-w-0"
-                        onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
-                        onMouseLeave={handleMouseLeave}
+          {/* Categories Grid (replaces slider) */}
+          <div className="flex flex-wrap justify-center items-center gap-y-2 gap-x-4  flex-grow max-w-[95vw] sm:max-w-[90vw] px-4 sm:px-6 mx-auto">
+            {combinedCategories.map((item) => {
+              if (item.isDynamic) {
+                const hasChildren = item.children && item.children.length > 0;
+                return (
+                  <div
+                    key={item.id}
+                    className="relative flex justify-center items-center px-1"
+                    onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <div className="group flex cursor-pointer items-center py-1 gap-1 whitespace-nowrap">
+                      <Link
+                        href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
+                        className="text-sm sm:text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200"
                       >
-                        <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center w-full gap-1">
-                          <Link
-                            href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
-                            className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
-                          >
-                            {item.type}
-                          </Link>
+                        {item.type}
+                      </Link>
 
-                          {hasChildren ? (
-                            <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
-                          ) : item.type == "Gifts" ? (
-                            <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
-                          ) : null}
-                        </div>
-                      </div>
-                    );
-                  } else {
-                    const hasChildren = item.subItems && item.subItems.length > 0;
-                    return (
-                      <div
-                        key={item.id}
-                        className="relative flex-shrink-0 w-1/5 flex justify-center items-center px-2 min-w-0"
-                        onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
-                        onMouseLeave={handleMouseLeave}
-                      >
-                        <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center w-full gap-1">
-                          {item.href ? (
-                            <Link
-                              href={item.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
-                            >
-                              {item.label}
-                            </Link>
-                          ) : (
-                            <span className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]">
-                              {item.label}
-                            </span>
-                          )}
-                          {hasChildren ? (
-                            <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
-                          ) : null}
-                        </div>
-                      </div>
-                    );
-                  }
-                })}
-              </div>
-            </div>
-
-            {/* Next button */}
-            <button
-              onClick={handleNext}
-              className={`p-2 rounded-full border transition-all duration-200 bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center flex-shrink-0 ${
-                currentIndex >= maxIndex
-                  ? "opacity-0 pointer-events-none cursor-default"
-                  : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500"
-              }`}
-              aria-label="Next categories"
-            >
-              <FaChevronRight className="text-xs" />
-            </button>
+                      {hasChildren ? (
+                        <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
+                      ) : item.type == "Gifts" ? (
+                        <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              } else {
+                const hasChildren = item.subItems && item.subItems.length > 0;
+                return (
+                  <div
+                    key={item.id}
+                    className="relative flex justify-center items-center px-1"
+                    onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <div className="group flex cursor-pointer items-center py-1 gap-1 whitespace-nowrap">
+                      {item.href ? (
+                        <Link
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm sm:text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200"
+                        >
+                          {item.label}
+                        </Link>
+                      ) : (
+                        <span className="text-sm sm:text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200">
+                          {item.label}
+                        </span>
+                      )}
+                      {hasChildren ? (
+                        <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              }
+            })}
           </div>
 
           {/* Right Orders Button */}
@@ -952,7 +894,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="sticky left-0 top-0 z-10 h-fit w-full">
+    <nav className=" left-0 top-0 z-10 h-fit w-full">
       <header className="flex flex-col bg-white px-4 pb-2 pt-4 backdrop-blur dark:bg-slate-900 lg:flex-row lg:items-center lg:pb-0">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
         <div className="flex items-center justify-between border-b pb-4 lg:hidden">
@@ -1004,7 +946,7 @@ const Header = () => {
                 <div className="absolute right-0 top-10 z-50 w-40 rounded-lg border bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-900">
                   {userInfo ? (
                     <>
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white capitalize">
                         {userInfo.first_name} {userInfo.last_name}
                       </p>
                       <p className="mb-3 text-xs text-gray-600 dark:text-gray-400">
@@ -1023,14 +965,24 @@ const Header = () => {
                       </button> */}
                     </>
                   ) : (
-                    <Button
-                      title="Login"
-                      onClick={() => {
-                        setUserDropdownOpen(false);
-                        router.push("/login");
-                      }}
-                      className="w-full"
-                    />
+                    <div className="space-y-2">
+                      <Button
+                        title="Login"
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          router.push("/login");
+                        }}
+                        className="w-full"
+                      />
+                      <Button
+                        title="Sign Up"
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          router.push("/signup");
+                        }}
+                        className="w-full"
+                      />
+                    </div>
                     // <button
                     //   onClick={() => {
                     //     setUserDropdownOpen(false);
@@ -1070,25 +1022,39 @@ const Header = () => {
         {/* Search Bar (Visible on Small Screens) */}
         {!path.includes("/products") && (
           <div className="mt-2 w-full lg:hidden">
-            <Select
-              id="category"
-              name="category"
-              options={
-                newCat?.map((cat) => ({
+            <RadixSelect
+              value={selectedCategory?.value ?? ""}
+              onValueChange={(val) => {
+                const options = newCat?.map((cat) => ({
                   value:
                     "category_type_id" in cat
                       ? cat.category_type_id.toString()
                       : cat.value,
                   label: "type" in cat ? cat.type.toString() : cat.label,
-                })) ?? []
-              }
-              value={selectedCategory?.value ?? ""}
-              onChange={(val) => {
-                setSelectedCategory(val);
-                setSearchTerm("");
-                setTimeout(() => searchInputRef.current?.focus(), 0);
+                })) ?? [];
+                const selectedOption = options.find((opt) => opt.value === val);
+                if (selectedOption) {
+                  setSelectedCategory(selectedOption);
+                  setSearchTerm("");
+                  setTimeout(() => searchInputRef.current?.focus(), 0);
+                }
               }}
-            />
+            >
+              <SelectTrigger className="w-full h-10 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700 capitalize rounded-md text-sm">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                {newCat?.map((cat) => {
+                  const val = "category_type_id" in cat ? cat.category_type_id.toString() : cat.value;
+                  const label = "type" in cat ? cat.type.toString() : cat.label;
+                  return (
+                    <SelectItem key={val} value={val}>
+                      {label}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </RadixSelect>
             <div className="mt-2">
               <Input
                 ref={searchInputRef}
@@ -1276,7 +1242,7 @@ const Header = () => {
         )}
 
         {/* Desktop Layout */}
-        <div className="mt-4 hidden w-full flex-col border-b pb-4 lg:flex lg:items-center lg:justify-between">
+        <div className="hidden w-full flex-col border-b pb-4 lg:flex lg:items-center lg:justify-between">
           <div className="flex w-full items-center">
             <div
               className="flex-grow cursor-pointer text-left"
@@ -1296,25 +1262,39 @@ const Header = () => {
             {/* Right Section: Search Bar and Icons */}
             <div className="flex items-center space-x-2">
               <div className="hidden lg:block">
-                <Select
-                  id="category"
-                  name="category"
-                  options={
-                    newCat?.map((cat) => ({
+                <RadixSelect
+                  value={selectedCategory?.value ?? ""}
+                  onValueChange={(val) => {
+                    const options = newCat?.map((cat) => ({
                       value:
                         "category_type_id" in cat
                           ? cat.category_type_id.toString()
                           : cat.value,
                       label: "type" in cat ? cat.type.toString() : cat.label,
-                    })) ?? []
-                  }
-                  value={selectedCategory?.value ?? ""}
-                  onChange={(val) => {
-                    setSelectedCategory(val);
-                    setSearchTerm("");
-                    searchInputRef.current?.focus();
+                    })) ?? [];
+                    const selectedOption = options.find((opt) => opt.value === val);
+                    if (selectedOption) {
+                      setSelectedCategory(selectedOption);
+                      setSearchTerm("");
+                      searchInputRef.current?.focus();
+                    }
                   }}
-                />
+                >
+                  <SelectTrigger className="w-[180px] h-10 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700 capitalize rounded-md text-sm">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {newCat?.map((cat) => {
+                      const val = "category_type_id" in cat ? cat.category_type_id.toString() : cat.value;
+                      const label = "type" in cat ? cat.type.toString() : cat.label;
+                      return (
+                        <SelectItem key={val} value={val}>
+                          {label}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </RadixSelect>
               </div>
               <Input
                 ref={searchInputRef}
@@ -1392,7 +1372,7 @@ const Header = () => {
                   <div className="absolute right-0 top-12 z-50 w-48 rounded-lg border bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-900">
                     {userInfo ? (
                       <>
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white capitalize">
                           {userInfo.first_name} {userInfo.last_name}
                         </p>
                         <p className="mb-3 text-xs text-gray-600 dark:text-gray-400">
@@ -1411,14 +1391,24 @@ const Header = () => {
                         </button> */}
                       </>
                     ) : (
-                      <Button
-                        title="Login"
-                        onClick={() => {
-                          setUserDropdownOpen(false);
-                          router.push("/login");
-                        }}
-                        className="w-full"
-                      />
+                      <div className="space-y-2">
+                        <Button
+                          title="Login"
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            router.push("/login");
+                          }}
+                          className="w-full"
+                        />
+                        <Button
+                          title="Sign Up"
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            router.push("/signup");
+                          }}
+                          className="w-full"
+                        />
+                      </div>
                       // <button
                       //   onClick={() => {
                       //     setUserDropdownOpen(false);

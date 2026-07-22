@@ -19,13 +19,13 @@ import Button from "~/components/ui-components/Button";
 import { Tabs } from "~/components/ui/tabs";
 import Input from "~/components/ui-components/Input";
 import Spinner from "~/components/spinner";
-import PayloadForTransactionLink from "~/types/payloadForTransactionLink";
+import type PayloadForTransactionLink from "~/types/payloadForTransactionLink";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import CartItem from "~/components/ui-components/CartItem";
 import AlertBox from "~/components/alertBox/alert";
 import moment from "moment";
 import TableRates from "~/components/constants/tablerates";
-import { ShippingRate } from "~/types/taxCalculationApiResponse";
+import { type ShippingRate } from "~/types/taxCalculationApiResponse";
 import { Countries_States } from "~/components/constants/countries_states";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 

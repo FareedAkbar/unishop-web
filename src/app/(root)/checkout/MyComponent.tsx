@@ -12,7 +12,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import AlertBox from "~/components/alertBox/alert";
 import Button from "~/components/ui-components/Button";
 import { useRouter } from "next/navigation";
-import { get_address_from_email } from "~/types/checkoutForm";
+import { type get_address_from_email } from "~/types/checkoutForm";
 
 const MyComponent = () => {
   const {

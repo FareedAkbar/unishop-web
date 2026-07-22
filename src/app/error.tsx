@@ -1,6 +1,6 @@
 "use client";
 import { FaExclamationTriangle } from "react-icons/fa";
-import { NextPageContext } from "next";
+import { type NextPageContext } from "next";
 
 interface ErrorProps {
   statusCode: number;

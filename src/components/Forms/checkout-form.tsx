@@ -8,7 +8,13 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "~/lib/utils";
 import { SignupSchema } from "./schema";
-import Select from "../Fields/select";
+import {
+  Select as RadixSelect,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "~/components/ui/select";
 // import isEmpty from "lodash/isEmpty";
 
 // import { getCachedCountriesList } from "~/_actions/country";
@@ -555,22 +561,27 @@ export default function CheckoutForm({
                     control={control}
                     render={({ field }) => (
                       <div>
-                        <Select
-                          id="country"
-                          name="country"
-                          options={Countries_States.map((country) => ({
-                            value: country.name.toString(), // Ensure value is a string
-                            label: country.name,
-                          }))}
-                          // loader={loader}
+                        <RadixSelect
                           value={field.value ? field.value : ""}
-                          placeholder="Select Country"
-                          onChange={(option) => {
-                            handleCountryChange(option.value); // Call your existing state change handler
-                            field.onChange(option.value); // Update form state with the selected value
+                          onValueChange={(val) => {
+                            handleCountryChange(val); // Call your existing state change handler
+                            field.onChange(val); // Update form state with the selected value
                           }}
-                          error={errors.country?.message}
-                        />
+                        >
+                          <SelectTrigger className="w-full h-10 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-md text-sm capitalize">
+                            <SelectValue placeholder="Select Country" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Countries_States.map((country) => (
+                              <SelectItem key={country.name} value={country.name}>
+                                {country.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </RadixSelect>
+                        {errors.country && (
+                          <p className="mt-1 text-sm text-red-500">{errors.country.message}</p>
+                        )}
                       </div>
                     )}
                   />
@@ -606,22 +617,28 @@ export default function CheckoutForm({
                   control={control}
                   render={({ field }) => (
                     <div>
-                      <Select
-                        id="state"
-                        name="state"
-                        options={stateOptions.map((state) => ({
-                          value: state.value.toString(), // Ensure value is a string
-                          label: state.label,
-                        }))}
-                        // loader={loader}
+                      <RadixSelect
                         value={field.value ? field.value : ""}
-                        placeholder="Select your state/province"
-                        onChange={(option) => {
-                          handleStateChange(option.value); // Call your existing state change handler
-                          field.onChange(option.value); // Update form state with the selected value
+                        onValueChange={(val) => {
+                          handleStateChange(val); // Call your existing state change handler
+                          field.onChange(val); // Update form state with the selected value
                         }}
-                        error={errors.state?.message}
-                      />
+                        disabled={stateOptions.length === 0}
+                      >
+                        <SelectTrigger className="w-full h-10 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-md text-sm capitalize">
+                          <SelectValue placeholder="Select your state/province" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {stateOptions.map((state) => (
+                            <SelectItem key={state.value} value={state.value.toString()}>
+                              {state.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </RadixSelect>
+                      {errors.state && (
+                        <p className="mt-1 text-sm text-red-500">{errors.state.message}</p>
+                      )}
                     </div>
                   )}
                 />

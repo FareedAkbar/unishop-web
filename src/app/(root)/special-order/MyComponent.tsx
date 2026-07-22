@@ -7,9 +7,9 @@ import SearchInput from "~/components/Fields/search";
 import { FiSearch } from "react-icons/fi";
 // import SpecialOrderCard from "~/components/specialOrderCard";
 import {
-  BookDetailType,
-  SpecialBookType,
-  SpecialOrderPayload,
+  type BookDetailType,
+  type SpecialBookType,
+  type SpecialOrderPayload,
 } from "~/types/specialOrderBook";
 import Spinner from "~/components/spinner";
 import moment from "moment";

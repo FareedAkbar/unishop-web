@@ -25,7 +25,7 @@ import { getBooks } from "~/_actions/getbooks";
 import { useToast } from "~/hooks/use-toast";
 import AlertBox from "~/components/alertBox/alert";
 import Select from "~/components/Fields/select";
-import { Variation } from "~/types/book";
+import { type Variation } from "~/types/book";
 import { IoIosArrowRoundForward, IoIosCloseCircle } from "react-icons/io";
 import { BsFillCartCheckFill } from "react-icons/bs";
 import { FiSearch } from "react-icons/fi";

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form"; // Use import type
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { type z } from "zod";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "~/lib/utils";
@@ -10,7 +10,7 @@ import Link from "next/link";
 import { LoginSchema } from "./schema";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useToast } from "~/hooks/use-toast";
-import { LoginResponse } from "~/types/loginResponse";
+import { type LoginResponse } from "~/types/loginResponse";
 // import Spinner from "../spinner";
 // import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import Button from "../ui-components/Button";
@@ -125,6 +125,14 @@ export default function SignupFormDemo({
               </p>
             )}
           </LabelInputContainer>
+          <div className="mb-4 flex justify-end">
+            <Link
+              href="/forgot-password"
+              className="text-xs text-red-500 hover:underline"
+            >
+              Forgot Password?
+            </Link>
+          </div>
 
           <div className="mx-auto flex max-w-sm flex-col justify-center">
             <Button
@@ -140,8 +148,9 @@ export default function SignupFormDemo({
             <div className="mt-2 flex flex-col items-center justify-center sm:flex-row">
               <p>{`I don't have an account, `}</p>
               <Link
-                href="https://pulse.uow.edu.au/pulseperks/"
-                target="_blank"
+                href="/signup"
+                // href="https://pulse.uow.edu.au/pulseperks/"
+                // target="_blank"
                 className="ml-1 text-red-500"
               >
                 SignUp

@@ -26,7 +26,7 @@ import { getReviewsApi, submitReviewsApi } from "~/_actions/reviews";
 import AlertBox from "~/components/alertBox/alert";
 import { BsFillCartCheckFill } from "react-icons/bs";
 import { getBooks } from "~/_actions/getbooks";
-import { ItemSpecialTag } from "~/types/productTags";
+import { type ItemSpecialTag } from "~/types/productTags";
 
 import Spinner from "~/components/spinner";
 import { Tabs } from "~/components/ui/tabs";
@@ -68,9 +68,59 @@ const MyComponent = () => {
     null,
   );
   const [currentImage, setCurrentImage] = useState<string>(
-    itemDetail?.object_path ?? "",
+    itemDetail?.object_path ?? (itemDetail?.media?.[0]?.object_path ?? ""),
   );
   const [wishListLoader, setWishListLoader] = useState<boolean>(false);
+  const [compareProducts, setCompareProducts] = useState<DataCart[]>([]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("compare-products");
+    if (stored) {
+      try {
+        setCompareProducts(JSON.parse(stored) as DataCart[]);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
+
+  const addToCompare = (product: DataCart) => {
+    if (compareProducts.some((p) => p.item_id === product.item_id)) {
+      toast({
+        variant: "destructive",
+        title: "Already Added",
+        description: "This product is already in the comparison list.",
+      });
+      return;
+    }
+    if (compareProducts.length >= 5) {
+      toast({
+        variant: "destructive",
+        title: "Limit Reached",
+        description: "You can compare up to 5 products only.",
+      });
+      return;
+    }
+    const updated = [...compareProducts, product];
+    setCompareProducts(updated);
+    localStorage.setItem("compare-products", JSON.stringify(updated));
+    toast({
+      variant: "success",
+      title: "Success",
+      description: "Product added to comparison list.",
+    });
+  };
+
+  const removeFromCompare = (itemId: number) => {
+    const updated = compareProducts.filter((p) => p.item_id !== itemId);
+    setCompareProducts(updated);
+    localStorage.setItem("compare-products", JSON.stringify(updated));
+    toast({
+      variant: "success",
+      title: "Success",
+      description: "Product removed from comparison list.",
+    });
+  };
 
   const { toast } = useToast();
   const params = useSearchParams();
@@ -217,7 +267,9 @@ const MyComponent = () => {
     if (typeof window === "undefined") return;
     const loadData = async () => {
       await getReviews(itemDetail?.item_id);
-      setCurrentImage(itemDetail?.object_path ?? "");
+      setCurrentImage(
+        itemDetail?.object_path ?? (itemDetail?.media?.[0]?.object_path ?? ""),
+      );
       setSelectedValues({});
       setSelectedVariation(null);
     };
@@ -265,11 +317,15 @@ const MyComponent = () => {
 
         setSelectedVariation(matchedVariation ?? null); // Wrap in array if found, otherwise set to null
 
-        setCurrentImage(itemDetail?.object_path ?? "");
+        setCurrentImage(
+          itemDetail?.object_path ?? (itemDetail?.media?.[0]?.object_path ?? ""),
+        );
       } else {
         setSelectedVariation(null); // Reset if not all tags are selected
 
-        setCurrentImage(itemDetail?.object_path ?? "");
+        setCurrentImage(
+          itemDetail?.object_path ?? (itemDetail?.media?.[0]?.object_path ?? ""),
+        );
       }
 
       return newValues;
@@ -290,7 +346,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -589,9 +645,8 @@ const MyComponent = () => {
             backgroundRepeat: "no-repeat",
 
             //calculate zoomed image size
-            backgroundSize: `${imgWidth * zoomLevel + 100}px ${
-              imgHeight * zoomLevel
-            }px`,
+            backgroundSize: `${imgWidth * zoomLevel + 100}px ${imgHeight * zoomLevel
+              }px`,
 
             //calculate position of zoomed image.
             backgroundPositionX: `${-x * zoomLevel + magnifieWidth / 2}px`,
@@ -645,7 +700,7 @@ const MyComponent = () => {
         {itemDetail?.category_detail?.category_name && (
           <div>
             Category
-            <h4 className="text-md pb-2 font-semibold capitalize text-red-500 md:text-xl">
+            <h4 className="text-md pb-2 font-semibold capitalize text-red-500 md:text-xl tracking-wide">
               {itemDetail?.category_detail?.category_name}
             </h4>
           </div>
@@ -659,34 +714,34 @@ const MyComponent = () => {
         {itemDetail?.additional_notes}
       </h6> */}
 
-      <div className="relative flex flex-wrap justify-start gap-3">
-        <div className="relative mx-auto flex flex-col items-center justify-center">
+      <div className="relative flex flex-col lg:flex-row justify-start gap-8 lg:px-10">
+        <div className="relative w-full lg:w-[45%] flex flex-col items-center justify-start">
           {/* Navigation Arrows */}
           <div className="flex w-full items-center justify-between px-4 md:px-10">
             {selectedVariation?.media?.length &&
-            selectedVariation?.media?.length > 1 ? (
+              selectedVariation?.media?.length > 1 ? (
               <button
                 className="rounded-full bg-white/70 p-2 text-gray-700 shadow-md transition hover:bg-white dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
                 onClick={() => {
                   const images =
                     selectedVariation?.media?.length &&
-                    selectedVariation.media.length > 1
+                      selectedVariation.media.length > 1
                       ? [
+                        {
+                          object_id: "001",
+                          object_path: itemDetail?.object_path ?? "",
+                        },
+                        ...selectedVariation.media,
+                      ]
+                      : itemDetail?.media?.length &&
+                        itemDetail?.media.length > 0
+                        ? [
                           {
                             object_id: "001",
                             object_path: itemDetail?.object_path ?? "",
                           },
-                          ...selectedVariation.media,
+                          ...itemDetail.media,
                         ]
-                      : itemDetail?.media?.length &&
-                          itemDetail?.media.length > 0
-                        ? [
-                            {
-                              object_id: "001",
-                              object_path: itemDetail?.object_path ?? "",
-                            },
-                            ...itemDetail.media,
-                          ]
                         : [];
 
                   const currentIndex = images.findIndex(
@@ -719,28 +774,28 @@ const MyComponent = () => {
               })}
             </div>
             {selectedVariation?.media?.length &&
-            selectedVariation?.media?.length > 1 ? (
+              selectedVariation?.media?.length > 1 ? (
               <button
                 className="rounded-full bg-white/70 p-2 text-gray-700 shadow-md transition hover:bg-white dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
                 onClick={() => {
                   const images =
                     selectedVariation?.media?.length &&
-                    selectedVariation.media.length > 1
+                      selectedVariation.media.length > 1
                       ? [
+                        {
+                          object_id: "001",
+                          object_path: itemDetail?.object_path ?? "",
+                        },
+                        ...selectedVariation.media,
+                      ]
+                      : itemDetail?.media?.length && itemDetail.media.length > 0
+                        ? [
                           {
                             object_id: "001",
                             object_path: itemDetail?.object_path ?? "",
                           },
-                          ...selectedVariation.media,
+                          ...itemDetail.media,
                         ]
-                      : itemDetail?.media?.length && itemDetail.media.length > 0
-                        ? [
-                            {
-                              object_id: "001",
-                              object_path: itemDetail?.object_path ?? "",
-                            },
-                            ...itemDetail.media,
-                          ]
                         : [];
 
                   const currentIndex = images.findIndex(
@@ -762,7 +817,7 @@ const MyComponent = () => {
 
           {/* Thumbnails Section (same as before) */}
           {selectedVariation?.media?.length &&
-          selectedVariation?.media?.length > 1 ? (
+            selectedVariation?.media?.length > 1 ? (
             <div className="mt-4 flex h-fit w-full justify-center gap-2 overflow-x-auto px-2">
               {[
                 {
@@ -774,11 +829,10 @@ const MyComponent = () => {
                 <button
                   key={`thumbnail-${index}`}
                   onClick={() => setCurrentImage(media.object_path)}
-                  className={`h-24 w-20 rounded-md border ${
-                    currentImage === media.object_path
-                      ? "border-red-500 shadow-md"
-                      : "border-gray-300"
-                  }`}
+                  className={`h-24 w-20 rounded-md border ${currentImage === media.object_path
+                    ? "border-red-500 shadow-md"
+                    : "border-gray-300"
+                    }`}
                 >
                   <Image
                     src={`https://ipos-storage.s3.amazonaws.com/${media.object_path}`}
@@ -795,11 +849,11 @@ const MyComponent = () => {
           )}
         </div>
 
-        <div className="mx-auto flex flex-col items-start justify-start gap-x-4 gap-y-2">
+        <div className="w-full lg:w-[50%] flex flex-col items-start justify-start gap-x-4 gap-y-2">
           <div className="flex flex-col pb-2 text-left">
             <div className="mb-2 border-b border-dashed border-gray-400 pb-2 dark:border-gray-600">
               <div className="flex flex-row items-center justify-between gap-2">
-                <h6 className="flex-1 font-serif text-xl font-bold capitalize text-red-500 md:text-2xl">
+                <h6 className="flex-1 font-serif text-xl font-bold capitalize text-red-500 md:text-2xl tracking-wider">
                   {(itemDetail?.book_title ?? itemDetail?.item_name)
                     ?.split("¥")
                     .join(" ")}
@@ -817,9 +871,9 @@ const MyComponent = () => {
                   className="rounded-full border border-red-500 bg-transparent p-1 text-sm text-red-500 hover:bg-red-500 hover:text-white sm:p-1.5 sm:text-xl"
                 >
                   {itemDetail?.item_id &&
-                  favItems?.some(
-                    (favItem) => favItem.item_id === itemDetail.item_id,
-                  ) ? (
+                    favItems?.some(
+                      (favItem) => favItem.item_id === itemDetail.item_id,
+                    ) ? (
                     <AiFillHeart />
                   ) : (
                     <AiOutlineHeart />
@@ -840,14 +894,14 @@ const MyComponent = () => {
               <span className="font-sans text-lg font-semibold text-red-500 dark:text-neutral-300 md:text-xl">
                 ${" "}
                 {itemDetail?.variations?.[0] &&
-                filteredVariations?.[0]?.items_variable_items_sale_price
+                  filteredVariations?.[0]?.items_variable_items_sale_price
                   ? filteredVariations?.[0]?.items_variable_items_sale_price.toFixed(
-                      2,
-                    )
+                    2,
+                  )
                   : itemDetail?.variations?.[0]
                     ? itemDetail?.variations?.[0].items_variable_items_sale_price.toFixed(
-                        2,
-                      )
+                      2,
+                    )
                     : itemDetail?.item_sale_price.toFixed(2)}
               </span>
             ) : (
@@ -902,29 +956,29 @@ const MyComponent = () => {
             )}
             {filteredVariations?.[0]
               ? filteredVariations?.[0].items_variable_items_sku_number && (
-                  <div className="flex items-center justify-center">
-                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                      {itemDetail?.book_id && itemDetail?.food_id == null
-                        ? "ISBN:"
-                        : "SKU:"}
-                    </span>
-                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                      {filteredVariations?.[0].items_variable_items_sku_number}
-                    </span>
-                  </div>
-                )
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    {itemDetail?.book_id && itemDetail?.food_id == null
+                      ? "ISBN:"
+                      : "SKU:"}
+                  </span>
+                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                    {filteredVariations?.[0].items_variable_items_sku_number}
+                  </span>
+                </div>
+              )
               : itemDetail?.SKU && (
-                  <div className="flex items-center justify-center">
-                    <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                      {itemDetail?.book_id && itemDetail?.food_id == null
-                        ? "ISBN:"
-                        : "SKU:"}
-                    </span>
-                    <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                      {itemDetail.SKU}
-                    </span>
-                  </div>
-                )}
+                <div className="flex items-center justify-center">
+                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                    {itemDetail?.book_id && itemDetail?.food_id == null
+                      ? "ISBN:"
+                      : "SKU:"}
+                  </span>
+                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                    {itemDetail.SKU}
+                  </span>
+                </div>
+              )}
           </div>
           {itemDetail?.book_id && itemDetail?.subtitle && (
             <div className="flex items-center justify-center">
@@ -939,27 +993,27 @@ const MyComponent = () => {
 
           {
             itemDetail?.book_id &&
-              itemDetail?.food_id == null &&
-              (manageUsage().length > 0 ? (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                    {manageUsage().map((item, index) => {
-                      const matchedType = textbookType?.find(
-                        (t) => t.item_book_type_id === Number(item.type_id),
-                      ); // Find the matching type
-                      return (
-                        <span
-                          key={`usage-${item.subject_code}-${index}-pair`}
-                          className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "text-red-500" : "text-yellow-600 dark:text-yellow-500"} py-1 text-sm`}
-                        >
-                          {matchedType?.type_name ?? ""}: {item.subject_name}{" "}
-                          {item.subject_code}
-                        </span>
-                      );
-                    })}
-                  </span>
-                </div>
-              ) : null)
+            itemDetail?.food_id == null &&
+            (manageUsage().length > 0 ? (
+              <div className="flex items-center justify-center">
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                  {manageUsage().map((item, index) => {
+                    const matchedType = textbookType?.find(
+                      (t) => t.item_book_type_id === Number(item.type_id),
+                    ); // Find the matching type
+                    return (
+                      <span
+                        key={`usage-${item.subject_code}-${index}-pair`}
+                        className={`inline-block w-fit rounded ${matchedType?.type_name === "Textbook" ? "text-red-500" : "text-yellow-600 dark:text-yellow-500"} py-1 text-sm`}
+                      >
+                        {matchedType?.type_name ?? ""}: {item.subject_name}{" "}
+                        {item.subject_code}
+                      </span>
+                    );
+                  })}
+                </span>
+              </div>
+            ) : null)
             // <>
             //   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
             //     Textbook:
@@ -1013,8 +1067,8 @@ const MyComponent = () => {
                 </div>
               )}
               {itemDetail?.pages !== undefined &&
-              itemDetail.pages !== null &&
-              itemDetail.pages ? (
+                itemDetail.pages !== null &&
+                itemDetail.pages ? (
                 <div className="flex items-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                     Number of Pages:
@@ -1080,27 +1134,27 @@ const MyComponent = () => {
           )}
           {filteredVariations?.[0]
             ? filteredVariations?.[0].weight &&
-              itemDetail?.weighable && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Weight:
-                  </span>
-                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                    {parseFloat(filteredVariations?.[0].weight).toFixed(2)} kg
-                  </span>
-                </div>
-              )
+            itemDetail?.weighable && (
+              <div className="flex items-center justify-center">
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                  Weight:
+                </span>
+                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                  {parseFloat(filteredVariations?.[0].weight).toFixed(2)} kg
+                </span>
+              </div>
+            )
             : itemDetail?.weight &&
-              itemDetail?.weighable && (
-                <div className="flex items-center justify-center">
-                  <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    Weight:
-                  </span>
-                  <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                    {parseFloat(itemDetail.weight).toFixed(2)} kg
-                  </span>
-                </div>
-              )}
+            itemDetail?.weighable && (
+              <div className="flex items-center justify-center">
+                <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
+                  Weight:
+                </span>
+                <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
+                  {parseFloat(itemDetail.weight).toFixed(2)} kg
+                </span>
+              </div>
+            )}
 
           {itemDetail?.variations?.[0]?.variation_tags && (
             <div>
@@ -1199,11 +1253,10 @@ const MyComponent = () => {
                         {options.map((option, optionIndex) => (
                           <button
                             key={`${option.value}-${optionIndex}`}
-                            className={`min-w-10 rounded border p-1 text-center text-sm capitalize ${
-                              selectedValues[tagName] === option.value
-                                ? "bg-red-500 text-white"
-                                : "border-red-500 bg-white dark:bg-slate-700"
-                            } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            className={`min-w-10 rounded border p-1 text-center text-sm capitalize ${selectedValues[tagName] === option.value
+                              ? "bg-red-500 text-white"
+                              : "border-red-500 bg-white dark:bg-slate-700"
+                              } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >
                             {option.label}
@@ -1229,12 +1282,12 @@ const MyComponent = () => {
             </div>
           )}
           {itemDetail?.variations?.[0] &&
-          filteredVariations?.[0]?.items_variable_items_id &&
-          Object.values(selectedValues).length ==
+            filteredVariations?.[0]?.items_variable_items_id &&
+            Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-          isVariableItemInCart(
-            filteredVariations?.[0]?.items_variable_items_id,
-          ) ? (
+            isVariableItemInCart(
+              filteredVariations?.[0]?.items_variable_items_id,
+            ) ? (
             <Button
               variant={"secondary"}
               title="Remove from Cart"
@@ -1250,16 +1303,16 @@ const MyComponent = () => {
             ""
           )}
           {itemDetail?.variations?.[0] &&
-          !isVariableItemInCart(
-            filteredVariations?.[0]?.items_variable_items_id ?? -1,
-          ) &&
-          !Object.values(selectedValues).some((value) => value === undefined) &&
-          Object.values(selectedValues).length ==
+            !isVariableItemInCart(
+              filteredVariations?.[0]?.items_variable_items_id ?? -1,
+            ) &&
+            !Object.values(selectedValues).some((value) => value === undefined) &&
+            Object.values(selectedValues).length ==
             itemDetail?.tag_links?.length &&
-          (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
-            itemDetail?.item_sale_price) ? (
+            (itemDetail?.variations?.[0]?.items_variable_items_sale_price ??
+              itemDetail?.item_sale_price) ? (
             (itemDetail?.variations?.[0]?.stock?.quantity ?? 0) > 0 ||
-            itemDetail?.allow_special_order == 1 ? (
+              itemDetail?.allow_special_order == 1 ? (
               <Button
                 icon={<BsFillCartCheckFill className="text-lg" />}
                 title="Add to Cart"
@@ -1287,8 +1340,8 @@ const MyComponent = () => {
             ""
           )}
           {itemDetail &&
-          itemDetail?.items_type != 1 &&
-          isItemInCart(itemDetail.item_id) ? (
+            itemDetail?.items_type != 1 &&
+            isItemInCart(itemDetail.item_id) ? (
             <Button
               variant={"secondary"}
               title="Remove from Cart"
@@ -1297,6 +1350,50 @@ const MyComponent = () => {
             />
           ) : (
             ""
+          )}
+          {itemDetail && (
+            <div className="mt-4 flex flex-col gap-4 w-full max-w-sm">
+              <Button
+                variant={compareProducts.some((p) => p.item_id === itemDetail.item_id) ? "secondary" : "primary"}
+                title={compareProducts.some((p) => p.item_id === itemDetail.item_id) ? "Remove from Compare" : "Add to Compare Products"}
+                onClick={() => {
+                  if (compareProducts.some((p) => p.item_id === itemDetail.item_id)) {
+                    removeFromCompare(itemDetail.item_id);
+                  } else {
+                    addToCompare(itemDetail);
+                  }
+                }}
+              />
+
+              {compareProducts.length > 0 && (
+                <div className="mt-2 p-4 border border-gray-200 dark:border-slate-700 rounded-lg bg-gray-50 dark:bg-slate-800/50 w-full">
+                  <h4 className="text-sm font-bold mb-3 text-neutral-800 dark:text-neutral-200">
+                    Compare Products ({compareProducts.length}/5)
+                  </h4>
+                  <div className="space-y-2 mb-4">
+                    {compareProducts.map((prod) => (
+                      <div key={prod.item_id} className="flex items-center justify-between bg-white dark:bg-slate-700 p-2 rounded shadow-sm border border-gray-100 dark:border-slate-600">
+                        <span className="text-xs text-neutral-700 dark:text-neutral-300 truncate pr-2 max-w-[200px]" title={prod.book_title ?? prod.item_name}>
+                          {prod.book_title ?? prod.item_name}
+                        </span>
+                        <button
+                          onClick={() => removeFromCompare(prod.item_id)}
+                          className="text-red-500 hover:text-red-700 p-1 transition-all"
+                          aria-label={`Remove ${prod.book_title ?? prod.item_name} from comparison`}
+                        >
+                          <RxCrossCircled className="text-lg" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <Button
+                    title="Compare Now"
+                    onClick={() => router.push("/compare-products")}
+                    className="w-full text-xs py-1.5"
+                  />
+                </div>
+              )}
+            </div>
           )}
           {/* {isHovering && (
             <div
@@ -1358,9 +1455,9 @@ const MyComponent = () => {
         )} */}
 
         {itemDetail?.detail &&
-        itemDetail?.detail.trim().length > 0 &&
-        reviews &&
-        reviews?.length > 0 ? (
+          itemDetail?.detail.trim().length > 0 &&
+          reviews &&
+          reviews?.length > 0 ? (
           <div className="flex h-[500px] w-full flex-col items-center justify-center">
             <Tabs
               key={`tabs-${itemDetail?.item_id}`}
@@ -1448,8 +1545,8 @@ const MyComponent = () => {
                               <p className="text-xs text-gray-500">
                                 {review?.created_at
                                   ? moment(review?.created_at).format(
-                                      "Do MMMM, YYYY",
-                                    )
+                                    "Do MMMM, YYYY",
+                                  )
                                   : ""}
                               </p>
                             </div>

@@ -32,6 +32,11 @@ interface CheckoutForm {
   duplicate?: number | null;
   account_type?: string | null;
   customer_type?: number | null;
+  first_name?: string | null;
+  last_name?: string | null;
+  remote_assistance?: boolean | null;
+  phone_code?: string | null;
+  web_signup?: boolean | null;
 }
 
 interface booknet_customer_id {

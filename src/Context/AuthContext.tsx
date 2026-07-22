@@ -2,7 +2,7 @@
 import { useParams, useRouter } from "next/navigation";
 import React, {
   createContext,
-  SetStateAction,
+  type SetStateAction,
   useContext,
   useEffect,
   useState,
@@ -28,8 +28,8 @@ import type {
   VerifyOTPResponse,
 } from "~/types/loginResponse";
 import {
-  SubCategoryResponse,
-  SuperCategory,
+  type SubCategoryResponse,
+  type SuperCategory,
   type Category,
   type CategoryResponse,
 } from "~/types/category";
@@ -51,7 +51,7 @@ import { getProductTags } from "~/_actions/product_tags";
 import type { ApiResponseStatus, ItemSpecialTag } from "~/types/productTags";
 import { getItemsBySearch } from "~/_actions/getitemsbycategory";
 import { getTextBookTypeData } from "~/_actions/meta_actions";
-import { TextBookApiResponse, TextbookType } from "~/types/textbookType";
+import { type TextBookApiResponse, type TextbookType } from "~/types/textbookType";
 
 type transactionData = {
   transaction_id?: string | null;
@@ -122,6 +122,10 @@ interface AuthContextProps {
   searchItems: DataCart[];
   textbookType: TextbookType[] | null;
   getTextBookType: () => Promise<boolean | void>;
+  checkEmail: (email: string) => Promise<{ status: boolean; message: string }>;
+  verifySignupOTP: (payload: { customer_id: number; otp: number }) => Promise<{ status: boolean; message: string }>;
+  resetPasswordOTP: (email: string) => Promise<{ status: boolean; message: string; customer_id?: number }>;
+  updatePassword: (payload: { email: string; token: string; user_password?: string; password?: string }) => Promise<{ status: boolean; message: string }>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -513,7 +517,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           (item) =>
             item.item_id === payload.item_id &&
             item?.selected_variation?.items_variable_items_id ==
-              payload?.selected_variation?.items_variable_items_id,
+            payload?.selected_variation?.items_variable_items_id,
         );
       } else {
         existingItemIndex = prev.findIndex(
@@ -741,6 +745,100 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const checkEmail = async (
+    email: string,
+  ): Promise<{ status: boolean; message: string }> => {
+    const response = await apiRouter(
+      "CHECK_EMAIL",
+      {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      },
+      { skipAuthorization: true },
+    );
+    const responsePayload = (await response.json()) as {
+      status: boolean;
+      message: string;
+    };
+    return responsePayload;
+  };
+
+  const verifySignupOTP = async (
+    payload: { customer_id: number; otp: number },
+  ): Promise<{ status: boolean; message: string }> => {
+    const response = await apiRouter(
+      "VERIFY_SIGNUP_OTP",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+      { skipAuthorization: true },
+    );
+    const responsePayload = (await response.json()) as {
+      status: boolean;
+      message: string;
+    };
+    if (responsePayload.status) {
+      return responsePayload;
+    } else {
+      throw new Error(responsePayload.message || "OTP verification failed");
+    }
+  };
+
+  const resetPasswordOTP = async (
+    email: string,
+  ): Promise<{ status: boolean; message: string; customer_id?: number }> => {
+    const response = await apiRouter(
+      "RESET_PASSWORD_OTP",
+      {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      },
+      { skipAuthorization: true },
+    );
+    const responsePayload = (await response.json()) as {
+      status: boolean;
+      message: string;
+      customer_id?: number;
+      data?: { customer_id?: number };
+    };
+    if (responsePayload.status) {
+      return {
+        status: true,
+        message: responsePayload.message,
+        customer_id: responsePayload.customer_id ?? responsePayload.data?.customer_id,
+      };
+    } else {
+      throw new Error(responsePayload.message || "Email verification failed");
+    }
+  };
+
+  const updatePassword = async (
+    payload: { email: string; token: string; user_password?: string; password?: string },
+  ): Promise<{ status: boolean; message: string }> => {
+    const { token: userToken, ...restPayload } = payload;
+    const response = await apiRouter(
+      "UPDATE_PASSWORD",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${userToken}`,
+        },
+        body: JSON.stringify(restPayload),
+      },
+      { skipAuthorization: true },
+    );
+    const responsePayload = (await response.json()) as {
+      status: boolean;
+      message: string;
+    };
+    if (responsePayload.status) {
+      return responsePayload;
+    } else {
+      throw new Error(responsePayload.message || "Failed to update password");
+    }
+  };
+
   const CheckoutApiWithUserName = async (
     payload: Booknet_customer_checkout,
   ): Promise<checkoutBooknetResponse> => {
@@ -805,6 +903,10 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         sendOTP,
         verifyOTP,
         CheckoutApi,
+        checkEmail,
+        verifySignupOTP,
+        resetPasswordOTP,
+        updatePassword,
         setCheckoutData,
         booknetCustomerId,
         CheckoutApiWithUserName,

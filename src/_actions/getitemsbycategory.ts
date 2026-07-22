@@ -2,7 +2,7 @@
 
 import type DataCart from '~/types/book';
 import type { Pagination } from '~/types/pagination';
-import { SpecialItemsApiResponse } from '~/types/specialItems';
+import { type SpecialItemsApiResponse } from '~/types/specialItems';
 
 interface ApiResponse {
     // meta: PaginationData; 

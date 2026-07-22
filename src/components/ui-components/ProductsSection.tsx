@@ -5,7 +5,7 @@ import ProductCard from "~/components/ui-components/ProductCard";
 import { HiArrowSmallRight, HiArrowSmallLeft } from "react-icons/hi2";
 import CountdownTimer from "~/components/countdownTimer";
 import Button from "~/components/ui-components/Button";
-import DataCart from "~/types/book";
+import type DataCart from "~/types/book";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -143,7 +143,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
   };
 
   return (
-    <div className="max-w-screen h-fit overflow-hidden bg-transparent pl-2">
+    <div className="w-full h-fit overflow-hidden bg-transparent px-4 sm:px-6 lg:px-8">
       <div className="py-8 sm:px-6 sm:py-16 lg:py-24">
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-end justify-between gap-5 md:gap-10">
@@ -178,9 +178,9 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
           </div>
         </div>
 
-        <div className="w-full lg:w-[92vw]">
+        <div className="w-full">
           <div
-            className="scrollbar-hidden mt-6 flex flex-wrap justify-center gap-4 py-6 lg:flex-nowrap lg:overflow-x-auto lg:pl-28 lg:pr-5 xl:flex-nowrap xl:overflow-x-auto"
+            className="scrollbar-hidden mt-6 flex flex-wrap justify-center gap-4 py-6 lg:flex-nowrap lg:overflow-x-auto justify-start px-2 lg:px-4 xl:flex-nowrap xl:overflow-x-auto"
             ref={productContainerRef}
           >
             {loader

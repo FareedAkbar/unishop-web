@@ -1,5 +1,5 @@
 import * as React from "react";
-import MaskedInput, { MaskedInputProps } from "react-text-mask";
+import MaskedInput, { type MaskedInputProps } from "react-text-mask";
 import { cn } from "~/lib/utils";
 import { useMotionTemplate, useMotionValue, motion } from "framer-motion";
 

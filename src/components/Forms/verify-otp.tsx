@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form"; // Use import type
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { type z } from "zod";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "~/lib/utils";
@@ -11,7 +11,7 @@ import { verifyOtpSchema } from './schema';
 import { useAuthContext } from "~/Context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useToast } from "~/hooks/use-toast";
-import { LoginResponse } from "~/types/loginResponse";
+import { type LoginResponse } from "~/types/loginResponse";
 import Spinner from "../spinner";
 
 // Define the type of form inputs

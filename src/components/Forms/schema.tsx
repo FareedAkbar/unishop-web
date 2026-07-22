@@ -218,10 +218,33 @@ const booknetFormSchema = z.object({
     .min(5, { message: "Password must be at least 5 characters long" }),
 });
 
+const ActualSignupSchema = z
+  .object({
+    first_name: z.string().min(1, "First name is required"),
+    last_name: z.string().min(1, "Last name is required"),
+    remote_assistance: z.boolean().optional(),
+    country: z.string().min(1, "Country is required"),
+    phone_number: z
+      .string()
+      .min(1, "Phone number is required")
+      .regex(/^\d+$/, "Invalid phone number (digits only)"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(5, "Password must be at least 5 characters long"),
+    confirm_password: z.string().min(1, "Confirm password is required"),
+    // captcha_verified: z.boolean().refine((val) => val === true, {
+    //   message: "Please verify that you are not a robot",
+    // }),
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    message: "Passwords do not match",
+    path: ["confirm_password"],
+  });
+
 export {
   LoginSchema,
   SignupSchema,
   CehckoutFormSchema,
   verifyOtpSchema,
   booknetFormSchema,
+  ActualSignupSchema,
 };

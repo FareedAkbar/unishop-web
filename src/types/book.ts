@@ -1,4 +1,4 @@
-import { DiscountInfo } from "./taxCalculationApiResponse";
+import { type DiscountInfo } from "./taxCalculationApiResponse";
 
 interface Tag {
   item_id: number;
