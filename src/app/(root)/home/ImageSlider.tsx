@@ -82,27 +82,31 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ banners = [] }) => {
   return (
     <div className="relative w-full overflow-hidden pb-4 pt-2 sm:px-4">
       <div className="relative aspect-[3/1] w-full">
-        {prevIndex !== null && isAnimating && (
-          <Image
-            key={`prev-${prevIndex}`}
-            src={slides[prevIndex]!.image}
-            alt={`Slide ${prevIndex + 1}`}
-            fill
-            onClick={() => handleSlideClick(slides[prevIndex]!)}
-            className={`absolute inset-0 h-full w-full rounded-lg object-cover opacity-100 transition-opacity duration-700 ease-in-out ${slides[prevIndex]?.route ? "cursor-pointer" : ""}`}
-            style={{ zIndex: 10 }}
-          />
-        )}
-        <Image
-          key={`current-${currentIndex}`}
-          src={slides[currentIndex]!.image}
-          alt={`Slide ${currentIndex + 1}`}
-          fill
-          onClick={() => handleSlideClick(slides[currentIndex]!)}
-          className={`absolute inset-0 h-full w-full rounded-lg object-cover transition-opacity duration-700 ease-in-out ${isAnimating ? "opacity-0" : "opacity-100"
-            } ${slides[currentIndex]?.route ? "cursor-pointer" : ""}`}
-          style={{ zIndex: 20 }}
-        />
+        {slides.map((slide, index) => {
+          const isCurrent = index === currentIndex;
+          const isPrev = index === prevIndex;
+
+          return (
+            <Image
+              key={index}
+              src={slide.image}
+              alt={`Slide ${index + 1}`}
+              fill
+              priority={index === 0}
+              onClick={() => handleSlideClick(slide)}
+              className={`absolute inset-0 h-full w-full rounded-lg object-cover transition-opacity duration-700 ease-in-out ${
+                isCurrent ? "opacity-100" : "opacity-0 pointer-events-none"
+              } ${slide.route ? "cursor-pointer" : ""}`}
+              style={{
+                zIndex: isCurrent ? 20 : isPrev ? 10 : 0,
+                transform: "translate3d(0, 0, 0)",
+                WebkitTransform: "translate3d(0, 0, 0)",
+                backfaceVisibility: "hidden",
+                WebkitBackfaceVisibility: "hidden",
+              }}
+            />
+          );
+        })}
         {slides.length > 1 && (
           <>
             <button
