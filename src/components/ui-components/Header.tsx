@@ -894,7 +894,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="sticky left-0 top-0 z-10 h-fit w-full">
+    <nav className=" left-0 top-0 z-10 h-fit w-full">
       <header className="flex flex-col bg-white px-4 pb-2 pt-4 backdrop-blur dark:bg-slate-900 lg:flex-row lg:items-center lg:pb-0">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
         <div className="flex items-center justify-between border-b pb-4 lg:hidden">
@@ -946,7 +946,7 @@ const Header = () => {
                 <div className="absolute right-0 top-10 z-50 w-40 rounded-lg border bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-900">
                   {userInfo ? (
                     <>
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white capitalize">
                         {userInfo.first_name} {userInfo.last_name}
                       </p>
                       <p className="mb-3 text-xs text-gray-600 dark:text-gray-400">
@@ -1372,7 +1372,7 @@ const Header = () => {
                   <div className="absolute right-0 top-12 z-50 w-48 rounded-lg border bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-900">
                     {userInfo ? (
                       <>
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white capitalize">
                           {userInfo.first_name} {userInfo.last_name}
                         </p>
                         <p className="mb-3 text-xs text-gray-600 dark:text-gray-400">
