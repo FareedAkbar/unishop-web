@@ -41,9 +41,9 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        sans: ["var(--font-weissenhof)", ...fontFamily.sans],
         serif: ["var(--font-ramaslab)", ...fontFamily.serif],
-        poppins: ["Poppins", "sans-serif"],
+        poppins: ["var(--font-weissenhof)", "sans-serif"],
       },
       screens: {
         xs: "475px", // Small screen
@@ -159,7 +159,7 @@ const config: Config = {
       },
     },
     fontFamily: {
-      DEFAULT: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+      DEFAULT: ["var(--font-weissenhof)", "sans-serif"],
     },
   },
   // eslint-disable-next-line @typescript-eslint/no-require-imports

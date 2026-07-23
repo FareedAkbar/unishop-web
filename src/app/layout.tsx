@@ -13,6 +13,32 @@ const ramaslab = localFont({
   variable: "--font-ramaslab",
 });
 
+const weissenhof = localFont({
+  src: [
+    {
+      path: "../fonts/Weissenhof Grotesk Font Family/Weissenhof Grotesk Font Family/Weissenhof Grotesk Complete/Indian Type Foundry - WeissenhofGrotesk-Light.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../fonts/Weissenhof Grotesk Font Family/Weissenhof Grotesk Font Family/Weissenhof Grotesk Complete/Indian Type Foundry - WeissenhofGrotesk-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/Weissenhof Grotesk Font Family/Weissenhof Grotesk Font Family/Weissenhof Grotesk Complete/Indian Type Foundry - WeissenhofGrotesk-Medium.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../fonts/Weissenhof Grotesk Font Family/Weissenhof Grotesk Font Family/Weissenhof Grotesk Complete/Indian Type Foundry - WeissenhofGrotesk-Bold.otf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-weissenhof",
+});
+
 // import Loading from "./loading";
 
 export const metadata: Metadata = {
@@ -25,7 +51,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${ramaslab.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} ${ramaslab.variable} ${weissenhof.variable}`}>
       <head>
         {/* Google One Tap Login */}
         <script
