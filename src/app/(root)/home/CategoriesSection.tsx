@@ -45,7 +45,7 @@ const CategoriesSection: FC<CategoriesSectionProps> = ({ categories }) => {
                 className="object-cover"
               />
             </div>
-            <p className="font-medium capitalize text-gray-700 dark:text-gray-200 md:text-lg">
+            <p className="font-medium uppercase text-gray-700 dark:text-gray-200 md:text-lg">
               {item.type}
             </p>
           </Link>

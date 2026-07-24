@@ -22,11 +22,11 @@ const ContactSection: React.FC<ContactSectionProps> = ({ contact }) => {
   const { paragraph_1, paragraph_2 } = contact?.contact_text
     ? parseContact(contact.contact_text)
     : {
-        paragraph_1:
-          "The UniShop team are here to help! Providing friendly, personalised service to make sure you're fully satisfied with your shopping experience from start to finish.",
-        paragraph_2:
-          "Give us a call or send us an email if you have an enquiry.",
-      };
+      paragraph_1:
+        "The UniShop team are here to help! Providing friendly, personalised service to make sure you're fully satisfied with your shopping experience from start to finish.",
+      paragraph_2:
+        "Give us a call or send us an email if you have an enquiry.",
+    };
 
   return (
     <div className="relative flex flex-col-reverse items-start gap-8 pb-16 pt-5 lg:flex-row-reverse lg:px-8">
@@ -43,9 +43,9 @@ const ContactSection: React.FC<ContactSectionProps> = ({ contact }) => {
           </p>
         )}
         <Button
-          title="Contact details"
+          title="Contact us"
           onClick={handleContactUsClick}
-          className="mt-4"
+          className="mt-4 uppercase"
           width="w-1/2 lg:w-1/3"
         />
       </div>

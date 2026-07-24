@@ -41,7 +41,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ about }) => {
           title="About Us"
           onClick={handleAboutUsClick}
           className="mt-4"
-          width="w-1/2 lg:w-1/3"
+          width="w-1/2 lg:w-1/3 uppercase"
         />
       </div>
 
