@@ -84,7 +84,7 @@ const HomePage: React.FC = () => {
                 `/assets/images/home/hom${index + 1}.png`;
 
               const imageEl = (
-                <div className="relative aspect-[5/2] w-full overflow-hidden rounded-lg object-contain">
+                <div className="relative aspect-[570/350] w-full max-w-[570px] mx-auto overflow-hidden rounded-lg">
                   <Image
                     src={src}
                     alt={`Featured ${index + 1}`}
@@ -103,6 +103,7 @@ const HomePage: React.FC = () => {
                     href={image.link_url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="block w-full"
                   >
                     {imageEl}
                   </a>
@@ -110,6 +111,7 @@ const HomePage: React.FC = () => {
                   <Link
                     key={image.unishop_featured_image_id}
                     href={image.link_url}
+                    className="block w-full"
                   >
                     {imageEl}
                   </Link>
@@ -117,12 +119,14 @@ const HomePage: React.FC = () => {
               }
 
               return (
-                <div key={image.unishop_featured_image_id}>{imageEl}</div>
+                <div key={image.unishop_featured_image_id} className="block w-full">
+                  {imageEl}
+                </div>
               );
             })
           ) : (
             <>
-              <div className="relative aspect-[5/2] w-full overflow-hidden rounded-lg">
+              <div className="relative aspect-[570/350] w-full max-w-[570px] mx-auto overflow-hidden rounded-lg">
                 <Image
                   src="/assets/images/home/hom1.png"
                   alt="hero"
@@ -131,7 +135,7 @@ const HomePage: React.FC = () => {
                   className="object-cover"
                 />
               </div>
-              <div className="relative aspect-[5/2] w-full overflow-hidden rounded-lg">
+              <div className="relative aspect-[570/350] w-full max-w-[570px] mx-auto overflow-hidden rounded-lg">
                 <Image
                   src="/assets/images/home/hom2.png"
                   alt="hero"
