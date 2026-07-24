@@ -545,7 +545,7 @@ const Header = () => {
             const isExpanded = expandedCategories.has(String(subItem.id));
             return (
               <div key={subItem.id} className="group py-1">
-                <div className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 group-hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500">
+                <div className="flex cursor-pointer items-center justify-between gap-2 text-sm uppercase text-gray-700 group-hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500">
                   <Link
                     href={`/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`}
                     className="block"
@@ -764,7 +764,7 @@ const Header = () => {
                     <div className="group flex cursor-pointer items-center py-1 gap-1 whitespace-nowrap">
                       <Link
                         href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
-                        className="text-sm sm:text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200"
+                        className="text-sm sm:text-base font-medium  text-gray-700 hover:text-red-500 dark:text-gray-200 uppercase"
                       >
                         {item.type}
                       </Link>
@@ -792,12 +792,12 @@ const Header = () => {
                           href={item.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm sm:text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200"
+                          className="text-sm sm:text-base font-medium uppercase text-gray-700 hover:text-red-500 dark:text-gray-200"
                         >
                           {item.label}
                         </Link>
                       ) : (
-                        <span className="text-sm sm:text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200">
+                        <span className="text-sm sm:text-base font-medium uppercase text-gray-700 hover:text-red-500 dark:text-gray-200">
                           {item.label}
                         </span>
                       )}
