@@ -26,7 +26,7 @@ const CategoriesSection: FC<CategoriesSectionProps> = ({ categories }) => {
       </h2>
       <p className="text-gray-500">Browse one of our popular categories.</p>
       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {categories.slice(0, 6)?.map((item, idx) => (
+        {categories?.slice(0, 6)?.map((item, idx) => (
           <Link
             key={item.category_type_id}
             href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
