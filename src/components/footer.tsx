@@ -98,16 +98,22 @@ function Footer() {
           </div>
 
           <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
-            <p className="font-serif text-lg font-bold">Working Hours</p>
+            <p className="font-serif text-lg font-bold">Opening Hours</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
-            <p className="text-sm font-bold text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
-              Monday - Friday
+            <p className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
+              Delivery and Click & Collect available
             </p>
             <p className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
               8:00am - 5:00pm
             </p>
             <p className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
-              Delivery and Click & Collect available
+              Monday - Friday
+            </p>
+            <p className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
+              Weekends - CLOSED
+            </p>
+            <p className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
+              Public Holidays - CLOSED
             </p>
           </div>
 

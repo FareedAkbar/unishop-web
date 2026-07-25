@@ -49,11 +49,11 @@ const CartItem: React.FC<CartItemProps> = ({
         <Image
           src={
             item?.selected_variation?.media?.length &&
-            item?.selected_variation?.media[0]?.object_path
+              item?.selected_variation?.media[0]?.object_path
               ? `https://ipos-storage.s3.amazonaws.com/${item?.selected_variation?.media[0]?.object_path}`
               : imageSrc
                 ? `https://ipos-storage.s3.amazonaws.com/${imageSrc}`
-                : "/assets/images/products/product.png"
+                : "/assets/images/products/product.jpg"
           }
           alt={title || "Product"}
           className="mb-4 h-20 w-20 rounded bg-white object-contain dark:bg-slate-800 md:mb-0"
@@ -136,22 +136,22 @@ const CartItem: React.FC<CartItemProps> = ({
       </div>
       {quantity && quantity > -1
         ? quantity == itemQuantity &&
-          item?.allow_special_order != 1 && (
-            <p className="mb-2 rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-700">
-              {/* <MdWarning size={23} /> */}
-              {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`} */}
-              {`You’ve reached the limit — only ${quantity} items can be added to your cart.`}
-            </p>
-          )
+        item?.allow_special_order != 1 && (
+          <p className="mb-2 rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-700">
+            {/* <MdWarning size={23} /> */}
+            {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`} */}
+            {`You’ve reached the limit — only ${quantity} items can be added to your cart.`}
+          </p>
+        )
         : ""}
       {quantity && quantity > -1
         ? quantity < itemQuantity && (
-            <p className="mb-2 rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-700">
-              {/* <MdWarning size={23} /> */}
-              {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`} */}
-              {`This item is currently on backorder. It may take longer than usual to be ready for shipping/collection.`}
-            </p>
-          )
+          <p className="mb-2 rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-700">
+            {/* <MdWarning size={23} /> */}
+            {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`} */}
+            {`This item is currently on backorder. It may take longer than usual to be ready for shipping/collection.`}
+          </p>
+        )
         : ""}
       {(quantity == 0 || quantity == null) && (
         <p className="mb-2 rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-700">

@@ -765,7 +765,7 @@ const MyComponent = () => {
               {ImageMagnifier({
                 src: currentImage
                   ? `https://ipos-storage.s3.amazonaws.com/${currentImage}`
-                  : "/assets/images/products/product.png",
+                  : "/assets/images/products/product.jpg",
                 width: "100%",
                 height: "100%",
                 magnifierHeight: 200,
@@ -1325,8 +1325,8 @@ const MyComponent = () => {
           ) : itemDetail &&
             itemDetail?.items_type != 1 &&
             !isItemInCart(itemDetail.item_id) ? (
-           (itemDetail?.item_sale_price && (itemDetail?.allow_special_order == 1 ||
-            (itemDetail?.stock?.quantity ?? 0) > 0)) ? (
+            (itemDetail?.item_sale_price && (itemDetail?.allow_special_order == 1 ||
+              (itemDetail?.stock?.quantity ?? 0) > 0)) ? (
               <Button
                 icon={<BsFillCartCheckFill className="text-lg" />}
                 title="Add to Cart"
@@ -1409,7 +1409,7 @@ const MyComponent = () => {
                   //   ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
                   //   : itemDetail?.object_path
                   //     ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                  //     : "/assets/images/products/product.png"
+                  //     : "/assets/images/products/product.jpg"
                 }
                 style={{
                   position: "absolute",

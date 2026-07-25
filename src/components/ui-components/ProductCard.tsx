@@ -148,7 +148,7 @@ const ProductCard = ({
               ? `https://ipos-storage.s3.amazonaws.com/${product.object_path}`
               : product?.media && product?.media.length > 0
                 ? `https://ipos-storage.s3.amazonaws.com/${product.media[0]?.object_path}`
-                : "/assets/images/products/product.png"
+                : "/assets/images/products/product.jpg"
           }
           alt={product?.SKU_title ?? ""}
           width={1000}
