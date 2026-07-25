@@ -149,7 +149,7 @@ const CompareProductsPage = () => {
                               src={
                                 prod.object_path
                                   ? `https://ipos-storage.s3.amazonaws.com/${prod.object_path}`
-                                  : "/assets/images/products/product.png"
+                                  : "/assets/images/products/product.jpg"
                               }
                               alt={productTitle}
                               fill

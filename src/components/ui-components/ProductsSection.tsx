@@ -144,7 +144,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
 
   return (
     <div className="w-full h-fit overflow-hidden bg-transparent px-4 sm:px-6 lg:px-8">
-      <div className="py-8 sm:px-6 sm:py-16 lg:py-24">
+      <div className="py-8 sm:px-6 sm:py-16 lg:py-24 ">
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-end justify-between gap-5 md:gap-10">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-4xl">
@@ -178,37 +178,37 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
           </div>
         </div>
 
-        <div className="w-full">
+        <div className="w-full ">
           <div
-            className="scrollbar-hidden mt-6 flex flex-wrap justify-center gap-4 py-6 lg:flex-nowrap lg:overflow-x-auto justify-start px-2 lg:px-4 xl:flex-nowrap xl:overflow-x-auto"
+            className="scrollbar-hidden mt-6 flex flex-wrap justify-center gap-4 py-6 px-2 lg:flex-nowrap lg:justify-start lg:overflow-x-auto lg:px-4 xl:flex-nowrap xl:justify-start xl:overflow-x-auto"
             ref={productContainerRef}
           >
             {loader
               ? Array.from({ length: 6 }, (_, index) => (
-                  <div key={index} className="p-2">
-                    <ProductCardSkeleton />
-                  </div>
-                ))
+                <div key={index} className="p-2">
+                  <ProductCardSkeleton />
+                </div>
+              ))
               : products.map((item, index) => (
-                  <ProductCard
-                    key={`item.book_id-${item.book_id ?? index}-${index}`}
-                    product={item}
-                    showAddToCart={false}
-                    showButton={false}
-                    //  onAddToCart={async () => {
-                    //    if (item?.variations?.[0]) {
-                    //      await openDetail(item);
-                    //    } else {
-                    //      await handleAddToCart(item);
-                    //    }
-                    //  }}
-                    //  onRemoveFromCart={() => handleRemoveFromCart(item)}
-                    goToDetail={() => goToDetail(item)}
-                    openDetail={() => goToDetail(item)}
-                    handleFavourite={() => handleFavourite(item)}
-                    //  wishListLoader={wishListLoader}
-                  />
-                ))}
+                <ProductCard
+                  key={`item.book_id-${item.book_id ?? index}-${index}`}
+                  product={item}
+                  showAddToCart={false}
+                  showButton={false}
+                  //  onAddToCart={async () => {
+                  //    if (item?.variations?.[0]) {
+                  //      await openDetail(item);
+                  //    } else {
+                  //      await handleAddToCart(item);
+                  //    }
+                  //  }}
+                  //  onRemoveFromCart={() => handleRemoveFromCart(item)}
+                  goToDetail={() => goToDetail(item)}
+                  openDetail={() => goToDetail(item)}
+                  handleFavourite={() => handleFavourite(item)}
+                //  wishListLoader={wishListLoader}
+                />
+              ))}
           </div>
         </div>
 
