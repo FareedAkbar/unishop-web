@@ -81,14 +81,14 @@ export default function CheckoutForm({
 
   const defaultValues = billing_address
     ? {
-        ...checkoutData,
-        address: billing_address[addressIndex]?.address,
-        postal_code: billing_address[addressIndex]?.postal_code,
-        phone_number: billing_address[addressIndex]?.phone_number,
-        country: billing_address[addressIndex]?.country,
-        city: billing_address[addressIndex]?.city ?? "",
-        state: billing_address[addressIndex]?.state ?? "",
-      }
+      ...checkoutData,
+      address: billing_address[addressIndex]?.address,
+      postal_code: billing_address[addressIndex]?.postal_code,
+      phone_number: billing_address[addressIndex]?.phone_number,
+      country: billing_address[addressIndex]?.country,
+      city: billing_address[addressIndex]?.city ?? "",
+      state: billing_address[addressIndex]?.state ?? "",
+    }
     : {};
 
   const {
@@ -151,16 +151,16 @@ export default function CheckoutForm({
   const getObjectFromArray = (obj: address): address | null => {
     return billing_address
       ? (billing_address.find(
-          (item) =>
-            item.address === obj.address &&
-            item.second_address === obj.second_address &&
-            item.country === obj.country &&
-            item.city === obj.city &&
-            item.state === obj.state &&
-            item.postal_code === obj.postal_code &&
-            item.country_code === obj.country_code &&
-            item.phone_number === obj.phone_number,
-        ) ?? null) // Return null if no match is found
+        (item) =>
+          item.address === obj.address &&
+          item.second_address === obj.second_address &&
+          item.country === obj.country &&
+          item.city === obj.city &&
+          item.state === obj.state &&
+          item.postal_code === obj.postal_code &&
+          item.country_code === obj.country_code &&
+          item.phone_number === obj.phone_number,
+      ) ?? null) // Return null if no match is found
       : null;
   };
 
@@ -183,7 +183,6 @@ export default function CheckoutForm({
         },
       );
 
-      console.log("payload", JSON.stringify(payload));
 
       const result: add_address_from_customer_id =
         (await response.json()) as add_address_from_customer_id;
@@ -217,12 +216,11 @@ export default function CheckoutForm({
   };
 
   const onSubmit: SubmitHandler<CheckoutFormValues> = async (data) => {
-    console.log("data", data);
 
     // Get the human-readable state name based on the selected state ID
     const selectedStateName = data.state
       ? (stateOptions.find((state) => state.value.toString() === data.state)
-          ?.label ?? "")
+        ?.label ?? "")
       : "";
     const newCountry =
       Countries_States.find((country) => country.name === selectedCountry)
@@ -257,9 +255,9 @@ export default function CheckoutForm({
         .find((state) => state?.value === Number(data?.state))
         ?.label.toString(),
       postal_code: data.postal_code,
-      country_code: '+'+Countries_States.find((country) => country.name === selectedCountry)?.phone_code,
-        // Countries_States.find((country) => country.name === selectedCountry)
-        //   ?.iso3 ?? selectedCountry,
+      country_code: '+' + Countries_States.find((country) => country.name === selectedCountry)?.phone_code,
+      // Countries_States.find((country) => country.name === selectedCountry)
+      //   ?.iso3 ?? selectedCountry,
       phone_number: data.phone_number,
       // phone_code:
       //   Countries_States.find((country) => country.name === selectedCountry)
@@ -287,9 +285,9 @@ export default function CheckoutForm({
         ?.label.toString(),
       city: data.city,
       customer_id: userInfo?.customer_id ?? null,
-      country_code: '+'+Countries_States.find((country) => country.name === selectedCountry)?.phone_code,
-        // Countries_States.find((country) => country.name === selectedCountry)
-        //   ?.iso3 ?? selectedCountry,
+      country_code: '+' + Countries_States.find((country) => country.name === selectedCountry)?.phone_code,
+      // Countries_States.find((country) => country.name === selectedCountry)
+      //   ?.iso3 ?? selectedCountry,
       address: xx,
       customer_type_id: 6,
       uuid: userInfo?.uuid ?? uuid,
@@ -402,14 +400,15 @@ export default function CheckoutForm({
     if (!billing_address?.[0]) return;
     setShowFormFields(false);
   }, [billing_address]);
-
   useEffect(() => {
     console.log("errors", errors);
     if (errors && !_.isEmpty(errors) && !showFormFields) {
+      const firstError = Object.values(errors)[0];
+      const errorMessage = firstError?.message?.toString() || "Something went wrong. Please try with different address.";
       toast({
         title: "Address Error",
         variant: "destructive",
-        description: "Something went wrong. Please try with different address.",
+        description: errorMessage,
       });
     }
   }, [errors]);
