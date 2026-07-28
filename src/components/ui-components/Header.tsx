@@ -578,7 +578,7 @@ const Header = () => {
                   className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
                 >
                   <span
-                    className="mr-2 truncate text-left capitalize"
+                    className="mr-2 truncate text-left uppercase"
                     title={subItem.label}
                   >
                     {subItem.label}
