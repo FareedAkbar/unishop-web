@@ -758,7 +758,7 @@ const MyComponent = () => {
       if (rate && packageWeight >= rate.weight_and_above) {
         const num = Number(rate.shipping_price); // convert to number first
         if (isNaN(num)) return null; // guard against bad data
-        return parseInt(num.toFixed(2));
+        return Number(num.toFixed(2));
       }
     }
 
@@ -1004,9 +1004,10 @@ const MyComponent = () => {
                             />
                             <div className="text-center text-3xl font-medium">
                               $
-                              {getShippingPrice(
+                              {(getShippingPrice(
                                 checkoutData?.address?.[0]?.country ?? "",
-                                calculateWeight()) ?? 0}
+                                calculateWeight()
+                              ) ?? 0).toFixed(2)}
                             </div>
                             <div className="my-4 text-left text-xl font-medium capitalize">
                               Delivery
@@ -1170,7 +1171,7 @@ const MyComponent = () => {
                       </div>
 
                       <span className="col-span-1 flex justify-end text-sm">
-                        ${shipping?.amount ?? Number(shipping?.amount.toFixed(2))}
+                        ${(shipping?.amount ?? 0).toFixed(2)}
                       </span>
                     </div>
                     {calculateWeight() > 0 && (
