@@ -404,7 +404,7 @@ export default function CheckoutForm({
     console.log("errors", errors);
     if (errors && !_.isEmpty(errors) && !showFormFields) {
       const firstError = Object.values(errors)[0];
-      const errorMessage = firstError?.message?.toString() || "Something went wrong. Please try with different address.";
+      const errorMessage = firstError?.message?.toString() ?? "Something went wrong. Please try with different address.";
       toast({
         title: "Address Error",
         variant: "destructive",
