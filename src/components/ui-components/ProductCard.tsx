@@ -204,7 +204,7 @@ const ProductCard = ({
         {product?.item_name.split("¥")[0]}
       </span>
       {product?.SKU ? (
-        <span className="truncate font-serif text-xs">
+        <span className="truncate text-xs">
           {product?.book_id && product?.food_id == null ? "ISBN: " : "SKU: "}{" "}
           {product?.book_ISBN ? product?.book_ISBN : product?.SKU}
         </span>
@@ -254,7 +254,7 @@ const ProductCard = ({
         ""
       )}
       {product?.shelf_location && (
-        <span className="flex flex-row items-center gap-1 font-serif text-xs">
+        <span className="flex flex-row items-center gap-1 text-xs">
           Shelf location: {product?.shelf_location}
         </span>
       )}
