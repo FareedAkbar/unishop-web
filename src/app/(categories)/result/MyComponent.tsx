@@ -46,7 +46,7 @@ const Player = dynamic(
   { ssr: false },
 );
 const MyComponent = () => {
-  const [loader, setLoader] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(true);
   const [data, setData] = useState<DataCart[]>([]);
   // const isFirstRender = useRef(true);
   const [searchText, setSearchText] = useState("");
@@ -102,6 +102,8 @@ const MyComponent = () => {
           setName(parentCat);
           setLoader(true);
           await searchInCategory(parentCat, id!);
+          setLoader(false);
+        } else {
           setLoader(false);
         }
       } catch (error) {

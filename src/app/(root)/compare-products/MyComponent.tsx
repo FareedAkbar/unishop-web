@@ -20,6 +20,7 @@ const Player = dynamic(
 );
 
 const CompareProductsPage = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
   const [compareProducts, setCompareProducts] = useState<DataCart[]>([]);
   const router = useRouter();
   const { setProductForDetail } = useAuthContext();
@@ -34,6 +35,7 @@ const CompareProductsPage = () => {
         console.error(e);
       }
     }
+    setIsLoaded(true);
   }, []);
 
   const removeFromCompare = (itemId: number, title: string) => {
@@ -66,6 +68,14 @@ const CompareProductsPage = () => {
     { label: "Stock Status", key: "stock" },
     { label: "Description", key: "description" },
   ];
+
+  if (!isLoaded) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center p-4">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500"></div>
+      </div>
+    );
+  }
 
   if (compareProducts.length === 0) {
     return (

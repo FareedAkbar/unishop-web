@@ -42,7 +42,7 @@ const Player = dynamic(
 );
 const MyComponent = () => {
   const router = useRouter();
-  const [loader, setLoader] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(true);
   const [data, setData] = useState<DataCart[]>([]);
   const isFirstRender = useRef(true);
   const [searchText, setSearchText] = useState("");
@@ -94,7 +94,10 @@ const MyComponent = () => {
   useEffect(() => {
     if (!genre) return;
     const genId = genre?.find((item) => item.genre == detail);
-    if (!genId) return;
+    if (!genId) {
+      setLoader(false);
+      return;
+    }
     const loadData = async () => {
       try {
         setLoader(true);
@@ -114,6 +117,7 @@ const MyComponent = () => {
 
     loadData().catch((error) => {
       console.error("Failed to load data in useEffect:", error);
+      setLoader(false);
     });
   }, [genre, detail]);
 

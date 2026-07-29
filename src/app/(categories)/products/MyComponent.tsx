@@ -54,7 +54,7 @@ const Player = dynamic(
   { ssr: false },
 );
 const MyComponent = () => {
-  const [loader, setLoader] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(true);
   const [data, setData] = useState<DataCart[]>([]);
   // const isFirstRender = useRef(true);
   const [searchText, setSearchText] = useState("");
@@ -176,11 +176,14 @@ const MyComponent = () => {
         await getProducts(currentPage, detail, 0);
       } else if (detail === -1 && parent) {
         await getProducts(currentPage, 0, parent);
+      } else {
+        setLoader(false);
       }
     };
 
     loadData().catch((error) => {
       console.error("Failed to load data in useEffect:", error);
+      setLoader(false);
     });
   }, [subCategory, detail, name, currentPage]);
 
