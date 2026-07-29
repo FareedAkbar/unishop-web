@@ -38,7 +38,7 @@ const Player = dynamic(
 const PRODUCTS_PER_PAGE = 10;
 
 const MyComponent = () => {
-  const [loader, setLoader] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(true);
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState<DataCart[] | null>(null);
   const params = useSearchParams();
@@ -64,40 +64,33 @@ const MyComponent = () => {
     setProductForDetail,
     textbookType,
     userInfo,
+    getFavourite,
   } = useAuthContext();
   const { toast } = useToast();
   const router = useRouter();
 
-  // async function getFav (){
-  //   try {
-
-  //   const x =  await getFavouriteItems(checkoutData?.booknet_customer_id);
-  //         if (typeof x !== "boolean" && x.status) {
-  //           setData(x.data);
-  //           setFilteredData(x.data);
-  //         }
-  //         setLoader(false);
-  //         // setData(result);
-  //         // setTotalPages(result.totalPages);
-  //       } catch (error) {
-  //         console.error("Failed to load data:", error);
-  //         setLoader(false);
-  //         // Optionally set an error state here
-  //       }
-  // }
-  // useEffect(() => {
-  //   if (checkoutData?.booknet_customer_id){
-  //     const loadData = async () => {
-  //       setLoader(true);
-  //      await getFav()
-  //     };
-  //       loadData().catch((error) => {
-  //         console.error("Failed to load data in useEffect:", error);
-  //       });
-  //   };
-  //   // const genId = genre?.find((item) => item.genre == detail);
-
-  // }, [checkoutData]);
+  useEffect(() => {
+    const checkWishlist = async () => {
+      const loggedIn = localStorage.getItem("IS_LOGGED_IN");
+      const storedCheckout = localStorage.getItem("CHECKOUT_DATA");
+      if (loggedIn && storedCheckout) {
+        try {
+          const parsed = JSON.parse(storedCheckout) as { customer_id?: number } | null;
+          if (parsed?.customer_id) {
+            setLoader(true);
+            await getFavourite(parsed.customer_id);
+          }
+        } catch (e) {
+          console.error("Failed to parse CHECKOUT_DATA:", e);
+        } finally {
+          setLoader(false);
+        }
+      } else {
+        setLoader(false);
+      }
+    };
+    void checkWishlist();
+  }, []);
 
   // Handle add to cart
   const handleAddToCart = async (item: DataCart) => {

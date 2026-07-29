@@ -94,9 +94,8 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ banners = [] }) => {
               fill
               priority={index === 0}
               onClick={() => handleSlideClick(slide)}
-              className={`absolute inset-0 h-full w-full rounded-lg object-cover transition-opacity duration-700 ease-in-out ${
-                isCurrent ? "opacity-100" : "opacity-0 pointer-events-none"
-              } ${slide.route ? "cursor-pointer" : ""}`}
+              className={`absolute inset-0 h-full w-full rounded-lg object-cover transition-opacity duration-700 ease-in-out ${isCurrent ? "opacity-100" : "opacity-0 pointer-events-none"
+                } ${slide.route ? "cursor-pointer" : ""}`}
               style={{
                 zIndex: isCurrent ? 20 : isPrev ? 10 : 0,
                 transform: "translate3d(0, 0, 0)",
@@ -132,8 +131,8 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ banners = [] }) => {
               key={index}
               onClick={() => goToSlide(index)}
               className={`rounded-full transition-all duration-300 ${currentIndex === index
-                  ? "h-3.5 w-3.5 border-2 border-black bg-red-500"
-                  : "h-3 w-3 bg-gray-400"
+                ? "h-3.5 w-3.5  bg-red-500"
+                : "h-3 w-3 bg-gray-400"
                 }`}
             />
           ))}
