@@ -450,7 +450,7 @@ const MyComponent = () => {
       online_order_type: 1,
       outlet_id: parseInt(outlet),
       tracking_id: generateOTP(12).toString(),
-      order_status: 1,
+      order_status: 3,
       completed_date: formatDateTime(date),
       started: formatDateTime(date),
       details: "Order Detail| UniShop",
