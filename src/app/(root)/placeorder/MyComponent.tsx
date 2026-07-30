@@ -416,6 +416,8 @@ const MyComponent = () => {
       return [];
     }
     const x = newItems.map((item) => {
+      console.log("x", x)
+      console.log("item", item)
       return {
         item_id: item.item_id,
         deal_id: null,
@@ -433,10 +435,12 @@ const MyComponent = () => {
         deal_items: [],
         premium_upgrades: [],
         type: "Normal",
-        stock_id: item.stock.stock_id,
+        stock_id: item?.stock?.stock_id ?? 0,
         discounts: item.discounts,
       };
     });
+
+    
 
     return x;
   }
@@ -534,6 +538,7 @@ const MyComponent = () => {
     const handlePaymentStatus = async (dat: dataresponse) => {
       const { data } = dat;
       console.log("PaymentStatus", data);
+      console.log("PaymentStatus status", data?.status);
 
       if (data.status) {
         setIsOpenPaymentAlert(false);
@@ -542,6 +547,7 @@ const MyComponent = () => {
           await placeOrderApi(data.transaction_id);
         } catch (error) {
           console.error("Failed to load data:", error);
+          console.error("Failed to place order");
         }
       } else {
         toast({
