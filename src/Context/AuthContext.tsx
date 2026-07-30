@@ -528,7 +528,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // Prepare new or updated item
       const newItem = {
         ...payload,
-        quantity: payload.quantity || 1, // Default to 1 if no quantity specified
+        quantity: payload?.quantity || 1, // Default to 1 if no quantity specified
       };
 
       if (existingItemIndex > -1) {
@@ -537,7 +537,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           if (index === existingItemIndex) {
             return {
               ...item,
-              quantity: item.quantity + newItem.quantity, // Increase the quantity
+              quantity: (item?.quantity ?? 0) + newItem.quantity, // Increase the quantity
             };
           }
           return item;
