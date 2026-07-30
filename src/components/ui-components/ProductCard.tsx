@@ -12,7 +12,7 @@ import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
 import type { ItemSpecialTag } from "~/types/productTags";
 import type { SpecialTag } from "~/types/book";
-import { FaArrowCircleLeft, FaCheckCircle } from "react-icons/fa";
+import { FaArrowCircleLeft, FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
 import { RxCrossCircled } from "react-icons/rx";
 import { IoIosCloseCircle } from "react-icons/io";
 import Button from "./Button";
@@ -92,6 +92,7 @@ const ProductCard = ({
       return true;
     }
   };
+  console.log("prrrr", product);
 
   return (
     <div className="group relative flex w-full flex-shrink-0 grow-0 flex-col rounded-md border border-gray-400 p-2 shadow dark:border-gray-600 dark:bg-slate-900 xs:w-56 sm:w-64 lg:w-72">
@@ -276,9 +277,13 @@ const ProductCard = ({
       </div>
       {product?.items_type != 1 &&
         (product?.stock?.quantity ? (
-          <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
-            <FaCheckCircle /> In stock
-          </span>
+          product?.stock?.quantity > parseInt(product?.stock?.lowest_level) ?
+            (<span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
+              <FaCheckCircle /> In stock
+            </span>) :
+            (<span className="flex w-fit flex-row items-center gap-1 rounded border border-orange-500 p-1 font-serif text-xs text-orange-500">
+              <FaExclamationTriangle /> Low Stock
+            </span>)
         ) : product?.allow_special_order == 1 ? (
           <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
             <FaArrowCircleLeft /> Backorder
