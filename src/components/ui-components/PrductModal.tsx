@@ -61,6 +61,8 @@ const ProductModal = ({
     return [];
   };
 
+  console.log("itemDetail", itemDetail)
+
   const isVariableItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
       typeof cartItems === "string"
@@ -247,7 +249,7 @@ const ProductModal = ({
                     <IoIosCloseCircle /> Out of stock
                   </span>
                 )
-              ) : itemDetail?.stock.quantity ? (
+              ) : itemDetail?.stock?.quantity ? (
                 <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-sm text-green-500">
                   <FaCheckCircle /> In stock
                 </span>

@@ -275,7 +275,7 @@ const ProductCard = ({
         )}
       </div>
       {product?.items_type != 1 &&
-        (product?.stock.quantity ? (
+        (product?.stock?.quantity ? (
           <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
             <FaCheckCircle /> In stock
           </span>
