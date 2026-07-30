@@ -462,17 +462,17 @@ export default function CheckoutForm({
           </div>
         )}
         {!showFormFields && billing_address?.[0] && (
-          <ScrollArea className="mb-2 mt-2 h-[15rem] flex-1 rounded-lg border p-4 dark:bg-slate-800">
+          <ScrollArea className="mb-2 mt-2 h-[15rem] flex-1 rounded-lg border border-gray-500 p-4 dark:bg-slate-800">
             {billing_address?.map((item, index) => (
               <React.Fragment key={index}>
-                <div className="m-2 rounded-lg border bg-white p-2 shadow-input dark:bg-slate-900 md:rounded-2xl">
-                  <label className="flex items-center gap-4">
+                <div className="m-2 rounded-lg border bg-white p-2 shadow-input dark:bg-slate-900 md:rounded-2xl cursor-pointer" onClick={() => onChange(index)}>
+                  <label className="flex items-center gap-4 cursor-pointer">
                     <input
                       type="radio"
                       value={index}
                       checked={addressIndex === index}
                       onChange={() => onChange(index)}
-                      className="form-radio"
+                      className="form-radio accent-red-500"
                     />
                     <div>
                       <div className="font-medium">

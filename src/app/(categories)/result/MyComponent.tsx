@@ -184,7 +184,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -475,14 +475,14 @@ const MyComponent = () => {
                       at
                       <a
                         href="tel:0242218050"
-                        className="mx-1 text-red-500 underline hover:text-red-600"
+                        className="mx-1  underline "
                       >
                         02 4221 8050
                       </a>
                       or
                       <a
                         href="mailto:uow-bookshop@uow.edu.au"
-                        className="mx-1 text-red-500 underline hover:text-red-600"
+                        className="mx-1  underline "
                       >
                         uow-bookshop@uow.edu.au
                       </a>
