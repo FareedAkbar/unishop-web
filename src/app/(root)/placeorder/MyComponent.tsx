@@ -415,8 +415,8 @@ const MyComponent = () => {
       console.warn("Input array is empty or not an array:", newItems);
       return [];
     }
-    const x = newItems.map((item) => {
-      console.log("x", x)
+    const x = newItems?.map((item) => {
+      
       console.log("item", item)
       return {
         item_id: item.item_id,
@@ -440,7 +440,7 @@ const MyComponent = () => {
       };
     });
 
-    
+    console.log("x", x)
 
     return x;
   }
