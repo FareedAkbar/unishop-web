@@ -212,10 +212,11 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
           </div>
         </div>
 
-        <div className="mt-8 flex justify-center sm:mt-12">
+        <div className="mt-4 flex justify-end ">
           <Button
             title="View all"
             onClick={() => (viewAllButton ? viewAllButton() : "")}
+            className="px-5"
           />
         </div>
       </div>

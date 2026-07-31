@@ -6,6 +6,7 @@ import {
   FaCheckCircle,
   FaChevronLeft,
   FaChevronRight,
+  FaExclamationTriangle,
   FaRegStar,
   FaStar,
 } from "react-icons/fa";
@@ -35,6 +36,79 @@ import { RxCrossCircled } from "react-icons/rx";
 import { IoIosCloseCircle } from "react-icons/io";
 import Button from "~/components/ui-components/Button";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+
+function ImageMagnifier({
+  src,
+  width,
+  height,
+  magnifierHeight = 100,
+  magnifieWidth = 100,
+  zoomLevel = 1.5,
+}: {
+  src: string;
+  width?: string;
+  height?: string;
+  magnifierHeight?: number;
+  magnifieWidth?: number;
+  zoomLevel?: number;
+}) {
+  const [[x, y], setXY] = useState([0, 0]);
+  const [[imgWidth, imgHeight], setSize] = useState([0, 0]);
+  const [showMagnifier, setShowMagnifier] = useState(false);
+  return (
+    <div
+      style={{
+        position: "relative",
+        height: height,
+        width: width,
+      }}
+    >
+      <Image
+        src={src}
+        onMouseEnter={(e) => {
+          const elem = e.currentTarget;
+          const { width, height } = elem.getBoundingClientRect();
+          setSize([width, height]);
+          setShowMagnifier(true);
+        }}
+        onMouseMove={(e) => {
+          const elem = e.currentTarget;
+          const { top, left } = elem.getBoundingClientRect();
+          const x = e.pageX - left - window.pageXOffset;
+          const y = e.pageY - top - window.pageYOffset;
+          setXY([x, y]);
+        }}
+        onMouseLeave={() => {
+          setShowMagnifier(false);
+        }}
+        width={2000}
+        height={2000}
+        className="h-64 w-56 cursor-zoom-in rounded-lg object-contain lg:h-96 lg:w-80"
+        alt={"img"}
+      />
+
+      <div
+        style={{
+          display: showMagnifier ? "" : "none",
+          position: "absolute",
+          pointerEvents: "none",
+          height: `${magnifierHeight}px`,
+          width: `${magnifieWidth}px`,
+          top: `${y - magnifierHeight / 2}px`,
+          left: `${x - magnifieWidth / 2}px`,
+          opacity: "1",
+          border: "1px solid lightgray",
+          backgroundImage: `url('${src}')`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: `${imgWidth * zoomLevel + 100}px ${imgHeight * zoomLevel}px`,
+          backgroundPositionX: `${-x * zoomLevel + magnifieWidth / 2}px`,
+          backgroundPositionY: `${-y * zoomLevel + magnifierHeight / 2}px`,
+        }}
+        className="bg-white dark:bg-slate-900"
+      ></div>
+    </div>
+  );
+}
 
 const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
@@ -72,6 +146,8 @@ const MyComponent = () => {
   );
   const [wishListLoader, setWishListLoader] = useState<boolean>(false);
   const [compareProducts, setCompareProducts] = useState<DataCart[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const stored = localStorage.getItem("compare-products");
@@ -83,6 +159,16 @@ const MyComponent = () => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded && !itemDetail) {
+      router.push("/");
+    }
+  }, [isLoaded, itemDetail, router]);
 
   const addToCompare = (product: DataCart) => {
     if (compareProducts.some((p) => p.item_id === product.item_id)) {
@@ -174,7 +260,6 @@ const MyComponent = () => {
       setGenre(gen);
     }
   }, [params]);
-  const router = useRouter();
 
   const isItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
@@ -569,94 +654,6 @@ const MyComponent = () => {
   ];
 
   // console.log(itemDetail, "itemDetail");
-  function ImageMagnifier({
-    src,
-    width,
-    height,
-    magnifierHeight = 100,
-    magnifieWidth = 100,
-    zoomLevel = 1.5,
-  }: {
-    src: string;
-    width?: string;
-    height?: string;
-    magnifierHeight?: number;
-    magnifieWidth?: number;
-    zoomLevel?: number;
-  }) {
-    const [[x, y], setXY] = useState([0, 0]);
-    const [[imgWidth, imgHeight], setSize] = useState([0, 0]);
-    const [showMagnifier, setShowMagnifier] = useState(false);
-    return (
-      <div
-        style={{
-          position: "relative",
-          height: height,
-          width: width,
-        }}
-      >
-        <Image
-          src={src}
-          // style={{ height: height, width: width }}
-          onMouseEnter={(e) => {
-            // update image size and turn-on magnifier
-            const elem = e.currentTarget;
-            const { width, height } = elem.getBoundingClientRect();
-            setSize([width, height]);
-            setShowMagnifier(true);
-          }}
-          onMouseMove={(e) => {
-            // update cursor position
-            const elem = e.currentTarget;
-            const { top, left } = elem.getBoundingClientRect();
-
-            // calculate cursor position on the image
-            const x = e.pageX - left - window.pageXOffset;
-            const y = e.pageY - top - window.pageYOffset;
-            setXY([x, y]);
-          }}
-          onMouseLeave={() => {
-            // close magnifier
-            setShowMagnifier(false);
-          }}
-          width={2000}
-          height={2000}
-          className="h-64 w-56 cursor-zoom-in rounded-lg object-contain lg:h-96 lg:w-80"
-          alt={"img"}
-        />
-
-        <div
-          style={{
-            display: showMagnifier ? "" : "none",
-            position: "absolute",
-
-            // prevent magnifier blocks the mousemove event of img
-            pointerEvents: "none",
-            // set size of magnifier
-            height: `${magnifierHeight}px`,
-            width: `${magnifieWidth}px`,
-            // move element center to cursor pos
-            top: `${y - magnifierHeight / 2}px`,
-            left: `${x - magnifieWidth / 2}px`,
-            opacity: "1", // reduce opacity so you can verify position
-            border: "1px solid lightgray",
-            // backgroundColor: "white",
-            backgroundImage: `url('${src}')`,
-            backgroundRepeat: "no-repeat",
-
-            //calculate zoomed image size
-            backgroundSize: `${imgWidth * zoomLevel + 100}px ${imgHeight * zoomLevel
-              }px`,
-
-            //calculate position of zoomed image.
-            backgroundPositionX: `${-x * zoomLevel + magnifieWidth / 2}px`,
-            backgroundPositionY: `${-y * zoomLevel + magnifierHeight / 2}px`,
-          }}
-          className="bg-white dark:bg-slate-900"
-        ></div>
-      </div>
-    );
-  }
 
   interface TagJson {
     forFrontDesk?: boolean;
@@ -682,6 +679,11 @@ const MyComponent = () => {
       return true;
     }
   };
+
+
+  if (!isLoaded || !itemDetail) {
+    return <Spinner />;
+  }
 
   return (
     <div className="container mx-auto p-6 md:mt-0">
@@ -762,16 +764,16 @@ const MyComponent = () => {
 
             {/* Main Image Magnifier */}
             <div className="relative w-full max-w-md">
-              {ImageMagnifier({
-                src: currentImage
+              <ImageMagnifier
+                src={currentImage
                   ? `https://ipos-storage.s3.amazonaws.com/${currentImage}`
-                  : "/assets/images/products/product.jpg",
-                width: "100%",
-                height: "100%",
-                magnifierHeight: 200,
-                magnifieWidth: 200,
-                zoomLevel: 1.5,
-              })}
+                  : "/assets/images/products/product.jpg"}
+                width="100%"
+                height="100%"
+                magnifierHeight={200}
+                magnifieWidth={200}
+                zoomLevel={1.5}
+              />
             </div>
             {selectedVariation?.media?.length &&
               selectedVariation?.media?.length > 1 ? (
@@ -860,7 +862,7 @@ const MyComponent = () => {
                 </h6>
                 <button
                   disabled={wishListLoader}
-                  onClick={() => handleFavourite(itemDetail!)}
+                  onClick={() => handleFavourite(itemDetail)}
                   title={
                     favItems?.some(
                       (favItem) => favItem.item_id === itemDetail?.item_id,
@@ -928,10 +930,14 @@ const MyComponent = () => {
           )}
           <div className="flex w-full gap-10 border-b border-dashed border-gray-400 pb-4 dark:border-gray-600">
             {filteredVariations?.[0] ? (
-              filteredVariations?.[0]?.stock?.quantity ? (
-                <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-sm text-green-500">
-                  <FaCheckCircle /> In stock
-                </span>
+              filteredVariations?.[0]?.stock?.quantity && filteredVariations?.[0]?.stock?.quantity > 0 ? (
+                filteredVariations?.[0]?.stock?.quantity > parseInt(filteredVariations?.[0]?.stock?.lowest_level) ?
+                  (<span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
+                    <FaCheckCircle /> In stock
+                  </span>) :
+                  (<span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
+                    <FaExclamationTriangle /> Low Stock
+                  </span>)
               ) : itemDetail?.allow_special_order == 1 ? (
                 <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
                   <FaArrowCircleLeft /> Backorder
@@ -941,10 +947,14 @@ const MyComponent = () => {
                   <IoIosCloseCircle /> Out of stock
                 </span>
               )
-            ) : itemDetail?.stock?.quantity ? (
-              <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-sm text-green-500">
-                <FaCheckCircle /> In stock
-              </span>
+            ) : itemDetail?.stock?.quantity && itemDetail?.stock?.quantity > 0 ? (
+              itemDetail?.stock?.quantity > parseInt(itemDetail?.stock?.lowest_level) ?
+                (<span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
+                  <FaCheckCircle /> In stock
+                </span>) :
+                (<span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
+                  <FaExclamationTriangle /> Low Stock
+                </span>)
             ) : itemDetail?.allow_special_order == 1 ? (
               <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
                 <FaArrowCircleLeft /> Backorder
