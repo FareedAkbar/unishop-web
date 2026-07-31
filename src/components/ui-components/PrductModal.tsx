@@ -236,7 +236,7 @@ const ProductModal = ({
             </div>
             <div className="flex w-full flex-col border-b border-dashed border-gray-400 pb-4 dark:border-gray-600 sm:flex-row sm:gap-10">
               {filteredVariations?.[0] ? (
-                filteredVariations?.[0]?.stock?.quantity ? (
+                filteredVariations?.[0]?.stock?.quantity && filteredVariations?.[0]?.stock?.quantity > 0 ? (
                   <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-sm text-green-500">
                     <FaCheckCircle /> In stock
                   </span>
@@ -249,7 +249,7 @@ const ProductModal = ({
                     <IoIosCloseCircle /> Out of stock
                   </span>
                 )
-              ) : itemDetail?.stock?.quantity ? (
+              ) : itemDetail?.stock?.quantity && itemDetail?.stock?.quantity > 0 ? (
                 <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-sm text-green-500">
                   <FaCheckCircle /> In stock
                 </span>

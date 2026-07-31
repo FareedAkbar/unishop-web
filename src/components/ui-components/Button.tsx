@@ -31,7 +31,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       type={type}
       onClick={onClick}
-      className={`${width} ${height} ${color} ${variant === "primary" ? "bg-red-500 text-white" : "border border-red-500 bg-white text-red-500 dark:bg-gray-800"} flex items-center justify-center rounded-md px-2 py-2 font-sans text-sm font-medium shadow transition-opacity duration-300 hover:shadow-md focus:outline-none disabled:cursor-not-allowed disabled:opacity-70 ${className}`}
+      className={`${width} ${height} ${color} ${variant === "primary" ? "bg-red-500 text-white" : " bg-white text-red-500 shadow-sm shadow-red-500 dark:bg-red-900/20"} flex items-center justify-center rounded-md px-5 py-2 font-sans text-sm font-medium shadow transition-opacity duration-300  focus:outline-none disabled:cursor-not-allowed disabled:opacity-70 ${className}`}
       disabled={(disabled ?? loading) ? true : false}
       style={{ minWidth: loading ? `${title.length * 11}px` : "auto" }}
     >

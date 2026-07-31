@@ -131,14 +131,13 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
       )}
 
       <div
-        className={`fixed right-0 top-0 z-30 w-full transform border-l-2 bg-white shadow-lg transition-transform dark:bg-slate-800 lg:w-2/5 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed right-0 top-0 z-30 w-full transform border-l-2 bg-white shadow-lg transition-transform dark:bg-slate-800 lg:w-2/5 ${isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         {/* Cart Inner Layout */}
         <div className="flex h-screen flex-col">
           {/* Cart Header */}
-          <div className="flex-shrink-0 border-b bg-gray-100 p-4 dark:bg-slate-700">
+          <div className="flex-shrink-0 border-b border-gray-500 bg-gray-100 p-4 dark:bg-slate-700">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold text-red-500">Cart Items</h2>
               <button
@@ -218,7 +217,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Cart Footer (Fixed at bottom) */}
-          <div className="h-fit flex-shrink-0 border-t bg-white p-3 dark:bg-slate-800">
+          <div className="h-fit flex-shrink-0 border-t border-gray-500 bg-white p-3 dark:bg-slate-800">
             <div className="mb-2 flex justify-between">
               <span className="text-sm text-gray-500 dark:text-gray-200">
                 Subtotal

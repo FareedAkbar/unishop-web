@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import Image from "next/image";
 import React from "react";
-import { FaArrowCircleLeft, FaCheckCircle, FaTrashAlt } from "react-icons/fa";
+import { FaArrowCircleLeft, FaCheckCircle, FaExclamationTriangle, FaTrashAlt } from "react-icons/fa";
 import { HiOutlineMinus, HiOutlinePlus } from "react-icons/hi";
 import type { Stock } from "~/types/book";
 import type DataCart from "~/types/book";
@@ -39,9 +39,9 @@ const CartItem: React.FC<CartItemProps> = ({
   stock,
   item,
 }) => {
-  const quantity = item?.selected_variation?.stock
-    ? item?.selected_variation?.stock.quantity
-    : (stock?.quantity ?? 0);
+  const currentStock = item?.selected_variation?.stock ?? stock;
+  const quantity = currentStock?.quantity ?? 0;
+
 
   return (
     <div className="border-b border-gray-700 pr-3 dark:border-b dark:border-gray-400">
@@ -88,9 +88,15 @@ const CartItem: React.FC<CartItemProps> = ({
           )}
 
           {quantity && quantity > 0 && quantity >= itemQuantity ? (
-            <span className="my-1 flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
-              <FaCheckCircle /> In stock
-            </span>
+            quantity > parseInt(currentStock?.lowest_level ?? "0") ? (
+              <span className="my-1 flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
+                <FaCheckCircle /> In stock
+              </span>
+            ) : (
+              <span className="my-1 flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
+                <FaExclamationTriangle /> Low Stock
+              </span>
+            )
           ) : (
             <span className="my-1 flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
               <FaArrowCircleLeft /> Backorder
