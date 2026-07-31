@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { RxCrossCircled } from "react-icons/rx";
 import { HiArrowNarrowLeft } from "react-icons/hi";
-import { FaCheckCircle, FaArrowCircleLeft } from "react-icons/fa";
+import { FaCheckCircle, FaArrowCircleLeft, FaExclamationTriangle } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
 import type DataCart from "~/types/book";
 import Button from "~/components/ui-components/Button";
@@ -231,10 +231,16 @@ const CompareProductsPage = () => {
                       {attr.key === "stock" && (
                         <div className="flex items-center gap-1.5">
                           {prod.variations?.[0] ? (
-                            prod.variations[0].stock?.quantity ? (
-                              <span className="flex items-center gap-1 rounded border border-green-500 px-2 py-0.5 text-xs text-green-500 font-medium">
-                                <FaCheckCircle /> In stock
-                              </span>
+                            prod.variations[0].stock?.quantity && prod.variations[0].stock.quantity > 0 ? (
+                              prod.variations[0].stock.quantity > parseInt(prod.variations[0].stock.lowest_level ?? "0") ? (
+                                <span className="flex items-center gap-1 rounded border border-green-500 px-2 py-0.5 text-xs text-green-500 font-medium">
+                                  <FaCheckCircle /> In stock
+                                </span>
+                              ) : (
+                                <span className="flex items-center gap-1 rounded border border-yellow-500 px-2 py-0.5 text-xs text-yellow-500 font-medium">
+                                  <FaExclamationTriangle /> Low Stock
+                                </span>
+                              )
                             ) : prod.allow_special_order === 1 ? (
                               <span className="flex items-center gap-1 rounded border border-yellow-500 px-2 py-0.5 text-xs text-yellow-500 font-medium">
                                 <FaArrowCircleLeft /> Backorder
@@ -244,10 +250,16 @@ const CompareProductsPage = () => {
                                 <IoIosCloseCircle /> Out of stock
                               </span>
                             )
-                          ) : prod.stock?.quantity ? (
-                            <span className="flex items-center gap-1 rounded border border-green-500 px-2 py-0.5 text-xs text-green-500 font-medium">
-                              <FaCheckCircle /> In stock
-                            </span>
+                          ) : prod.stock?.quantity && prod.stock.quantity > 0 ? (
+                            prod.stock.quantity > parseInt(prod.stock.lowest_level ?? "0") ? (
+                              <span className="flex items-center gap-1 rounded border border-green-500 px-2 py-0.5 text-xs text-green-500 font-medium">
+                                <FaCheckCircle /> In stock
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-1 rounded border border-yellow-500 px-2 py-0.5 text-xs text-yellow-500 font-medium">
+                                <FaExclamationTriangle /> Low Stock
+                              </span>
+                            )
                           ) : prod.allow_special_order === 1 ? (
                             <span className="flex items-center gap-1 rounded border border-yellow-500 px-2 py-0.5 text-xs text-yellow-500 font-medium">
                               <FaArrowCircleLeft /> Backorder
