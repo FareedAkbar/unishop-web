@@ -289,7 +289,7 @@ export default function CheckoutForm({
       // Countries_States.find((country) => country.name === selectedCountry)
       //   ?.iso3 ?? selectedCountry,
       address: xx,
-      customer_type_id: 6,
+      customer_type_id: 3,
       uuid: userInfo?.uuid ?? uuid,
       first_name: userInfo?.first_name ?? "",
       last_name: userInfo?.last_name ?? "",
