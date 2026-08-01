@@ -124,7 +124,7 @@ export default function SignupFormDemo() {
         country_code: `+${phoneCode}`,
         email: data.email,
         password: data.password,
-        customer_type_id: 6,
+        customer_type_id: 3,
         web_signup: true,
         account_type: "Cash Customer",
       };
