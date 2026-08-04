@@ -124,18 +124,26 @@ const Header = () => {
   }
 
   const buildCategoryTree = (categories: CAT[]): CategoryTreeNode2[] => {
-    // Purana: categoriesMap[cat.id] — isse same id ki multiple type-rows overwrite ho jaati hen
-    // Naya: composite key `${cat.id}-${cat.category_type_id}` use karen taake har type-row alag rahe
+    // Filter to ensure only active categories (web_visibility === 1) are built in the tree
+    const isCategoryActive = (catId: number): boolean => {
+      const cat = categories.find((c) => c.id === catId);
+      if (!cat) return false;
+      if (cat.web_visibility !== 1) return false;
+      if (cat.parent === 0) return true;
+      return isCategoryActive(cat.parent);
+    };
+
+    const activeCategories = categories.filter((cat) => isCategoryActive(cat.id));
     const categoriesMap: Record<string, CategoryTreeNode2> = {};
 
-    categories.forEach((cat) => {
+    activeCategories.forEach((cat) => {
       const key = `${cat.id}-${cat.category_type_id}`;
       categoriesMap[key] = { ...cat, children: [] };
     });
 
     const categoryTree: CategoryTreeNode2[] = [];
 
-    categories.forEach((cat) => {
+    activeCategories.forEach((cat) => {
       const key = `${cat.id}-${cat.category_type_id}`;
       if (cat.parent === 0) {
         const rootCategory = categoriesMap[key];
@@ -143,7 +151,7 @@ const Header = () => {
       } else {
         // Parent ka bhi correct composite key dhoondna hoga - parent ki apni category_type_id
         // is liye hume ek dusra map chahiye jo sirf category id se parent lookup kare
-        const parentEntry = categories.find((c) => c.id === cat.parent);
+        const parentEntry = activeCategories.find((c) => c.id === cat.parent);
         const parentKey = parentEntry ? `${parentEntry.id}-${parentEntry.category_type_id}` : null;
         const parentCategory = parentKey ? categoriesMap[parentKey] : null;
 
@@ -162,7 +170,17 @@ const Header = () => {
   useEffect(() => {
     if (!category || !subCategory) return;
 
-    const x = buildCategoryTree(subCategory);
+    // Safety check: Filter out non-visible categories
+    const isCategoryActive = (catId: number): boolean => {
+      const cat = subCategory.find((c) => c.id === catId);
+      if (!cat) return false;
+      if (cat.web_visibility !== 1) return false;
+      if (cat.parent === 0) return true;
+      return isCategoryActive(cat.parent);
+    };
+    const activeSubCategory = subCategory.filter((cat) => isCategoryActive(cat.id));
+
+    const x = buildCategoryTree(activeSubCategory);
     const categoriesMap: CategoriesMap = (category ?? []).reduce((acc, cat) => {
       if (cat.category_type_id) {
         acc[cat.category_type_id] = { ...cat, children: [] };
@@ -183,7 +201,7 @@ const Header = () => {
       const result = Object.values(categoriesMap);
       setHeaderCategory(result);
     } else {
-      subCategory.forEach((item: CAT) => {
+      activeSubCategory.forEach((item: CAT) => {
         const { category_type_id, outlet } = item;
         const targetCategory = categoriesMap[category_type_id];
         if (targetCategory && targetCategory.outlet_id === outlet) {
