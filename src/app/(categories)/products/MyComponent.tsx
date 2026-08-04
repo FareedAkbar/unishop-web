@@ -153,14 +153,28 @@ const MyComponent = () => {
 
   useEffect(() => {
     if (!subCategory) return;
-    const genId = subCategory.find((item) => item.id == detail);
-    const parentCat = subCategory.filter(
+
+    const isCategoryActive = (catId: number): boolean => {
+      const cat = subCategory.find((c) => c.id === catId);
+      if (!cat) return false;
+      if (cat.web_visibility !== 1) return false;
+      if (cat.parent === 0) return true;
+      return isCategoryActive(cat.parent);
+    };
+
+    const activeSubCategory = subCategory.filter((cat) => isCategoryActive(cat.id));
+
+    const genId = activeSubCategory.find((item) => item.id == detail);
+    const parentCat = activeSubCategory.filter(
       (item) => item.category_type_id == parent,
     );
     const CategoryType = category?.find(
       (item) => item.category_type_id == parent,
     );
     const catId = category?.find((item) => item.category_type_id == detail);
+    const isCatIdActive = catId ? activeSubCategory.some(
+      (item) => item.category_type_id === catId.category_type_id && item.parent === 0 && item.web_visibility === 1
+    ) : false;
 
     if (CategoryType) {
       setCategoryType(CategoryType);
@@ -168,13 +182,19 @@ const MyComponent = () => {
 
     if (parentCat.length > 0) {
       setSubcategoryTypes(parentCat);
+    } else {
+      setSubcategoryTypes([]);
     }
+
+    const parentCategoryActive = activeSubCategory.some(
+      (item) => item.category_type_id == parent && item.parent === 0 && item.web_visibility === 1
+    );
 
     const loadData = async () => {
       // Fetch products based on `detail` or `parent`
-      if (detail !== -1 && (genId || catId)) {
+      if (detail !== -1 && (genId || (catId && isCatIdActive))) {
         await getProducts(currentPage, detail, 0);
-      } else if (detail === -1 && parent) {
+      } else if (detail === -1 && parent && parentCategoryActive) {
         await getProducts(currentPage, 0, parent);
       } else {
         setLoader(false);

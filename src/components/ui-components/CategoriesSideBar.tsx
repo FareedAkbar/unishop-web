@@ -256,17 +256,27 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   }
 
   const buildCategoryTree = (categories: CAT[]): CategoryTreeNode2[] => {
+    // Filter to ensure only active categories (web_visibility === 1) are built in the tree
+    const isCategoryActive = (catId: number): boolean => {
+      const cat = categories.find((c) => c.id === catId);
+      if (!cat) return false;
+      if (cat.web_visibility !== 1) return false;
+      if (cat.parent === 0) return true;
+      return isCategoryActive(cat.parent);
+    };
+
+    const activeCategories = categories.filter((cat) => isCategoryActive(cat.id));
     const categoriesMap: Record<number, CategoryTreeNode2> = {};
 
     // Step 1: Organize categories by ID and initialize children
-    categories.forEach((cat) => {
+    activeCategories.forEach((cat) => {
       categoriesMap[cat.id] = { ...cat, children: [] };
     });
 
     const categoryTree: CategoryTreeNode2[] = [];
 
     // Step 2: Build the tree structure
-    categories.forEach((cat) => {
+    activeCategories.forEach((cat) => {
       if (cat.parent === 0) {
         const rootCategory = categoriesMap[cat.id];
         if (rootCategory) {
@@ -293,12 +303,22 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
   useEffect(() => {
     if (!category || !subCategory) return;
 
-    const modifiedSubCategories = [...subCategory];
+    // Safety check: Filter out non-visible categories
+    const isCategoryActive = (catId: number): boolean => {
+      const cat = subCategory.find((c) => c.id === catId);
+      if (!cat) return false;
+      if (cat.web_visibility !== 1) return false;
+      if (cat.parent === 0) return true;
+      return isCategoryActive(cat.parent);
+    };
+    const activeSubCategory = subCategory.filter((cat) => isCategoryActive(cat.id));
+
+    const modifiedSubCategories = [...activeSubCategory];
     console.log("category", category);
     console.log("subCategory", subCategory);
    
     // Step 1: Find the actual CAT node with type = "Gifts"
-    const giftsParentCat = subCategory.find(
+    const giftsParentCat = activeSubCategory.find(
       (cat) => cat.type?.toLowerCase() === "gifts",
     );
 

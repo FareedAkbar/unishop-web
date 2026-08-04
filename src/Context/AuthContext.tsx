@@ -352,7 +352,17 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       (await response.json()) as SubCategoryResponse;
     if (!responsePayload.status) return false;
 
-    setSubCategory(responsePayload.data);
+    const rawCategories = responsePayload.data;
+    const isCategoryActive = (catId: number): boolean => {
+      const cat = rawCategories.find((c) => c.id === catId);
+      if (!cat) return false;
+      if (cat.web_visibility !== 1) return false;
+      if (cat.parent === 0) return true;
+      return isCategoryActive(cat.parent);
+    };
+
+    const filtered = rawCategories.filter((cat) => isCategoryActive(cat.id));
+    setSubCategory(filtered);
 
     // lsClient.setItem("CATEGORY", responsePayload.data);
 
