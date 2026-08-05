@@ -139,7 +139,7 @@ const MyComponent = () => {
                 (tag) =>
                   tag.items_variations_tags_name === key &&
                   tag.items_variations_tags_links_values_value ===
-                    dependencies[key],
+                  dependencies[key],
               );
             });
           })
@@ -371,7 +371,7 @@ const MyComponent = () => {
 
           {/* Title */}
           <h4 className="flex-1 bg-gradient-to-r from-red-700 via-red-400 to-red-700 bg-clip-text text-center text-4xl font-extrabold text-transparent">
-            Wishlist Wonders
+            Favorites
           </h4>
 
           {/* Invisible Placeholder */}
@@ -383,32 +383,32 @@ const MyComponent = () => {
             <div className="flex flex-wrap justify-center gap-5 overflow-y-auto py-3">
               {loader
                 ? Array.from({ length: 2 }, (_, index) => (
-                    <div key={index} className="p-2">
-                      <ProductCardSkeleton />
-                    </div>
-                  ))
+                  <div key={index} className="p-2">
+                    <ProductCardSkeleton />
+                  </div>
+                ))
                 : displayedData?.map(
-                    (item: DataCart) =>
-                      item.web_visibility === 1 && (
-                        <ProductCard
-                          key={item.book_id}
-                          product={item}
-                          showAddToCart={!isItemInCart(item.item_id)}
-                          onAddToCart={async () => {
-                            if (item?.variations?.[0]) {
-                              await openDetail(item);
-                            } else {
-                              await handleAddToCart(item);
-                            }
-                          }}
-                          onRemoveFromCart={() => handleRemoveFromCart(item)}
-                          openDetail={() => openDetail(item)}
-                          handleFavourite={() => handleFavourite(item)}
-                          wishListLoader={wishListLoader}
-                          goToDetail={() => goToDetail(item)}
-                        />
-                      ),
-                  )}
+                  (item: DataCart) =>
+                    item.web_visibility === 1 && (
+                      <ProductCard
+                        key={item.book_id}
+                        product={item}
+                        showAddToCart={!isItemInCart(item.item_id)}
+                        onAddToCart={async () => {
+                          if (item?.variations?.[0]) {
+                            await openDetail(item);
+                          } else {
+                            await handleAddToCart(item);
+                          }
+                        }}
+                        onRemoveFromCart={() => handleRemoveFromCart(item)}
+                        openDetail={() => openDetail(item)}
+                        handleFavourite={() => handleFavourite(item)}
+                        wishListLoader={wishListLoader}
+                        goToDetail={() => goToDetail(item)}
+                      />
+                    ),
+                )}
               {!loader && !favItems[0] && (
                 <div className="flex h-full w-full flex-col items-center justify-center">
                   <p className="mt-4 text-center text-lg text-gray-600 dark:text-gray-300">
