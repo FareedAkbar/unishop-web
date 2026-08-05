@@ -416,7 +416,7 @@ const MyComponent = () => {
       return [];
     }
     const x = newItems?.map((item) => {
-      
+
       console.log("item", item)
       return {
         item_id: item.item_id,
@@ -792,7 +792,7 @@ const MyComponent = () => {
               <h2 className="mb-2 mt-6 text-xl font-bold text-neutral-800 dark:text-neutral-200">
                 Payment Method
               </h2>
-              <div className="rounded-xl border bg-white p-4 shadow dark:bg-slate-800">
+              <div className="rounded-xl border border-gray-500 bg-white p-4 shadow dark:bg-slate-800">
                 <div className="flex flex-col justify-between lg:flex-row">
                   <div>
                     <span className="text-md mt-2">Credit Card - eWAY</span>
@@ -867,9 +867,9 @@ const MyComponent = () => {
                       {shippingOptions.map((option) => (
                         <div
                           key={option.value}
-                          className={`rounded-3xl border ${shipping?.value === option.value
+                          className={`rounded-3xl border border-gray-500 dark:border-white/30 ${shipping?.value === option.value
                             ? "bg-[#F2FFE4] dark:bg-green-500/20"
-                            : "dark:border-white/30"
+                            : ""
                             } p-4`}
                         >
                           <label className="cursor-pointer">
@@ -934,9 +934,9 @@ const MyComponent = () => {
                     <p className="mb-2 font-bold">Shipping Method</p>
                     <div className="grid-col-1 grid gap-4 lg:grid-cols-2 lg:gap-10 lg:px-10">
                       <div
-                        className={`rounded-3xl border ${shipping?.value === "free"
+                        className={`rounded-3xl border border-gray-500 ${shipping?.value === "free"
                           ? "bg-[#F2FFE4] dark:bg-green-500/20"
-                          : "dark:border-white/30"
+                          : "dark:border-white/30 dark:bg-gray-800"
                           } p-4`}
                       >
                         <label className="cursor-pointer">
@@ -982,9 +982,9 @@ const MyComponent = () => {
                         calculateWeight()
                       ) ? (
                         <div
-                          className={`rounded-3xl border p-4 ${shipping?.value === "Delivery"
+                          className={`rounded-3xl border border-gray-500 p-4 ${shipping?.value === "Delivery"
                             ? "bg-[#F2FFE4] dark:bg-green-500/20"
-                            : "dark:border-white/30"
+                            : "dark:border-white/30 dark:bg-gray-800"
                             }`}
                         >
                           <label className="cursor-pointer">
@@ -1032,7 +1032,7 @@ const MyComponent = () => {
                           </label>
                         </div>
                       ) : (
-                        <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border p-4 text-center dark:border-white/30">
+                        <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-gray-500 p-4 text-center dark:border-white/30 dark:bg-gray-800">
                           <div className="text-center text-3xl font-medium">
                             No shipping available
                           </div>
@@ -1051,7 +1051,7 @@ const MyComponent = () => {
               </h2>
 
               <ScrollArea
-                className={`relative h-full flex-1 overflow-hidden rounded-lg border bg-white p-4 shadow transition-all duration-300 dark:bg-slate-800 ${isExpanded ? "max-h-[28rem]" : "max-h-[17rem]"
+                className={`relative h-full flex-1 overflow-hidden rounded-lg border border-gray-500 bg-white p-4 shadow transition-all duration-300 dark:bg-slate-800 ${isExpanded ? "max-h-[28rem]" : "max-h-[17rem]"
                   }`}
               >
                 {items?.[0] ? (
@@ -1112,11 +1112,11 @@ const MyComponent = () => {
               {/* Expand/Collapse Toggle */}
               <button
                 onClick={toggleExpand}
-                className="relative z-[5] mx-auto -mt-5 flex w-fit items-center justify-center rounded-full border bg-white px-3 py-1.5 text-red-500 shadow-md dark:bg-slate-600"
+                className="relative z-[5] mx-auto -mt-5 flex w-fit items-center justify-center rounded-full border border-gray-500 bg-white px-2.5 py-1.5 text-red-500 shadow-md dark:bg-slate-600"
               >
                 <span>{isExpanded ? "▲" : "▼"}</span>
               </button>
-              <div className="mt-4 rounded-xl border bg-white p-4 shadow dark:bg-slate-800 lg:col-span-2 xl:col-span-2">
+              <div className="mt-4 rounded-xl border border-gray-500 bg-white p-4 shadow dark:bg-slate-800 lg:col-span-2 xl:col-span-2">
                 <h2 className="text-xl font-bold">Order Summary</h2>
                 {calculateLoader && (
                   <div>

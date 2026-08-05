@@ -415,7 +415,7 @@ export default function CheckoutForm({
   }, [errors]);
 
   return (
-    <div className="mx-auto w-full rounded-lg border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
+    <div className="mx-auto w-full rounded-lg border border-gray-500 bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         {title}
       </h2>
