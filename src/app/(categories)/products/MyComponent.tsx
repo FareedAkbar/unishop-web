@@ -121,11 +121,15 @@ const MyComponent = () => {
     } else {
       setDetail(-1);
     }
-    if (parent && parentCat !== null) {
+    if (parentCat !== null) {
       setParent(parseInt(parentCat));
+    } else {
+      setParent(-1);
     }
     if (name) {
       setName(name);
+    } else {
+      setName("");
     }
   }, [params]);
 
@@ -172,9 +176,6 @@ const MyComponent = () => {
       (item) => item.category_type_id == parent,
     );
     const catId = category?.find((item) => item.category_type_id == detail);
-    const isCatIdActive = catId ? activeSubCategory.some(
-      (item) => item.category_type_id === catId.category_type_id && item.parent === 0 && item.web_visibility === 1
-    ) : false;
 
     if (CategoryType) {
       setCategoryType(CategoryType);
@@ -186,15 +187,11 @@ const MyComponent = () => {
       setSubcategoryTypes([]);
     }
 
-    const parentCategoryActive = activeSubCategory.some(
-      (item) => item.category_type_id == parent && item.parent === 0 && item.web_visibility === 1
-    );
-
     const loadData = async () => {
       // Fetch products based on `detail` or `parent`
-      if (detail !== -1 && (genId || (catId && isCatIdActive))) {
+      if (detail !== -1 && (genId || catId)) {
         await getProducts(currentPage, detail, 0);
-      } else if (detail === -1 && parent && parentCategoryActive) {
+      } else if (detail === -1 && parent) {
         await getProducts(currentPage, 0, parent);
       } else {
         setLoader(false);
@@ -205,7 +202,7 @@ const MyComponent = () => {
       console.error("Failed to load data in useEffect:", error);
       setLoader(false);
     });
-  }, [subCategory, detail, name, currentPage]);
+  }, [subCategory, category, detail, name, parent, currentPage]);
 
   const filterVariationsBySelectedValues = (
     variations: Variation[],

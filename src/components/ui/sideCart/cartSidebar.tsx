@@ -131,7 +131,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
       )}
 
       <div
-        className={`fixed right-0 top-0 z-30 w-full transform border-l-2 bg-white shadow-lg transition-transform dark:bg-slate-800 lg:w-2/5 ${isOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed right-0 top-0 z-30 w-full transform border-l-2 border-gray-500 bg-white shadow-lg transition-transform dark:bg-slate-800 lg:w-2/5 ${isOpen ? "translate-x-0" : "translate-x-full"
           }`}
       >
         {/* Cart Inner Layout */}

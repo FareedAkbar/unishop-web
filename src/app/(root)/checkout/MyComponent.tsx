@@ -154,7 +154,7 @@ const MyComponent = () => {
     <div>
       <main className="flex flex-col items-center justify-start dark:bg-slate-900">
         <div className="grid w-full grid-cols-1 gap-2 p-4 lg:grid-cols-2 lg:gap-12">
-          <div className="rounded-lg border p-4 dark:bg-slate-800 lg:order-2 lg:h-full">
+          <div className="rounded-lg border border-gray-500 p-4 dark:bg-slate-800 lg:order-2 lg:h-full">
             <h3 className="pb-5 text-lg font-bold">Cart Items</h3>
             <ScrollArea className="h-full flex-1 lg:h-[24rem]">
               {items?.[0] ? (
