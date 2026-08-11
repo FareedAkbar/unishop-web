@@ -22,6 +22,7 @@ interface CartItemProps {
   stock: Stock;
   item?: DataCart;
   newPrice?: number;
+  disable_shipping?: number | null;
 }
 
 const CartItem: React.FC<CartItemProps> = ({

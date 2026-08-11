@@ -55,8 +55,8 @@ const ProductModal = ({
   const hasVariations = Boolean(itemDetail?.variations && itemDetail.variations.length > 0);
   const allTagsSelected = hasVariations
     ? itemDetail?.variations?.[0]?.variation_tags.every(
-        (tag) => selectedValues[tag.items_variations_tags_name],
-      )
+      (tag) => selectedValues[tag.items_variations_tags_name],
+    )
     : true;
 
   const getActiveImages = () => {
@@ -91,7 +91,6 @@ const ProductModal = ({
     return [];
   };
 
-  console.log("itemDetail", itemDetail)
 
   const isVariableItemInCart = (itemId: number) => {
     const newItems: DataCart[] =
@@ -577,8 +576,8 @@ const ProductModal = ({
                           <button
                             key={option.value}
                             className={`min-w-10 rounded border p-1 text-center text-sm capitalize ${selectedValues[tagName] === option.value
-                                ? "bg-red-500 text-white"
-                                : "border-red-500 bg-white dark:bg-slate-700"
+                              ? "bg-red-500 text-white"
+                              : "border-red-500 bg-white dark:bg-slate-700"
                               } ${isDisabled ? "cursor-not-allowed opacity-50" : ""}`}
                             onClick={() => handleSizeClick(option.value)}
                           >

@@ -65,6 +65,7 @@ const MyComponent = () => {
   const [placeOrderLoader, setPlaceOrderLoader] = useState<boolean>(false);
   const [removeItem, setRemoveItem] = useState<DataCart | null>(null);
   const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState<boolean>(false);
+  const [isOpenShippingAlert, setIsOpenShippingAlert] = useState<boolean>(false);
   // const [socketStatus, setSocketStatus] = useState(true);
   const [totalAfterCalculation, setTotalAfterCalculation] =
     useState<TaxCalculationApiResponse>();
@@ -326,6 +327,13 @@ const MyComponent = () => {
     };
   }, [isOpenPaymentAlert]);
   const handlePlaceOrder = async () => {
+    if (shipping?.value !== "free") {
+      const disabledItems = items?.filter((item) => item.disable_shipping === 1) || [];
+      if (disabledItems.length > 0) {
+        setIsOpenShippingAlert(true);
+        return;
+      }
+    }
     setPlaceOrderLoader(true);
     // await placeOrderApi(797498821);
     const x = {
@@ -582,6 +590,20 @@ const MyComponent = () => {
   };
 
   const onChange = (val: ShippingType) => {
+    if (val.value !== "free") {
+      const disabledItems = items?.filter((item) => item.disable_shipping === 1) || [];
+      if (disabledItems.length > 0) {
+        setIsOpenShippingAlert(true);
+        // Force the shipping back to Click and Collect ("free")
+        setShipping({
+          value: "free",
+          amount: 0,
+          type: "Click and Collect.",
+          label: "Click and Collect at UniShop service desk.",
+        });
+        return;
+      }
+    }
 
     setShipping(val);
     if (Number(val.amount) > 0) {
@@ -1276,6 +1298,19 @@ const MyComponent = () => {
         onClose={() => setIsOpenDeleteAlert(false)}
         onContinue={() => handleRemoveFromCart(removeItem!)}
       />
+      <AlertBox
+        title="Delivery Not Available"
+        description="The following item(s) are not available for delivery or shipping. Please remove them from your cart to place the order, or choose Click and Collect:"
+        open={isOpenShippingAlert}
+        onClose={() => setIsOpenShippingAlert(false)}
+        onContinue={() => setIsOpenShippingAlert(false)}
+        cancelButtonText="Close"
+        continueButtonText="OK"
+      >
+        <div className="mt-2 font-semibold text-red-500 text-left">
+          {items?.filter((item) => item.disable_shipping === 1).map((item) => item.item_name).join(", ")}
+        </div>
+      </AlertBox>
       {/* <AlertBox
         title="Payment"
         description=""
