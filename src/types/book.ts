@@ -97,7 +97,7 @@ export interface category_detail {
   category_description: string,
   category_name: string,
   id: number,
-  media_id: number, 
+  media_id: number,
   outlet: number,
   parent: number,
   till_visibility: number,
@@ -108,8 +108,8 @@ export interface category_detail {
 export default interface DataCart {
   book_id: number | null;
   food_id: number | null;
-  final_price_including_tax?: number; 
-  quantity: number; 
+  final_price_including_tax?: number;
+  quantity: number;
   item_id: number;
   genre_id: number;
   book_title: string;
@@ -177,6 +177,7 @@ export default interface DataCart {
   web_visibility: number | null,
   discountable_item?: number | null,
   discounts?: DiscountInfo | null;
+  disable_shipping?: number | null;
 }
 
 interface book_usages {

@@ -44,7 +44,7 @@ const AlertBox: React.FC<AlertBoxProps> = ({
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
-          <AlertDialogDescription>{children}</AlertDialogDescription>
+          {children}
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={() => onClose()}>

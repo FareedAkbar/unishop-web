@@ -23,6 +23,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
     increaseCartItemQuantity,
     isLoggedIn,
     logout,
+    totalAfterCalculation,
   } = useAuthContext();
   const [items, setItems] = useState<DataCart[]>([]);
   const [subTotal, setSubtotal] = useState<number>(0);
@@ -31,6 +32,28 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
   const [removeItem, setRemoveItem] = useState<DataCart | null>(null);
   const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState<boolean>(false);
   const router = useRouter();
+
+  const checkNewPrice = (id: number) => {
+    const newPrice = totalAfterCalculation?.items.filter(
+      (item) => item.item_id == id,
+    );
+    if (newPrice?.[0]) {
+      return newPrice[0].final_price_including_tax;
+    } else {
+      return 0;
+    }
+  };
+
+  const checkOldPrice = (id: number) => {
+    const newPrice = totalAfterCalculation?.items.filter(
+      (item) => item.item_id == id,
+    );
+    if (newPrice?.[0]) {
+      return newPrice[0].original_value;
+    } else {
+      return 0;
+    }
+  };
 
   const handleRemoveFromCart = async (item: DataCart) => {
     if (item) {
@@ -176,7 +199,16 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
                     imageSrc={
                       item?.object_path ?? item.media?.[0]?.object_path ?? ""
                     }
-                    price={item.item_sale_price}
+                    price={
+                      totalAfterCalculation?.items
+                        ? checkOldPrice(item.item_id)
+                        : item.item_sale_price
+                    }
+                    newPrice={
+                      totalAfterCalculation?.items
+                        ? checkNewPrice(item.item_id)
+                        : 0
+                    }
                     showRemove={true}
                     onChangeQuantity={(id, number) =>
                       onChangeQuantity(id, number)
@@ -218,12 +250,33 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
 
           {/* Cart Footer (Fixed at bottom) */}
           <div className="h-fit flex-shrink-0 border-t border-gray-500 bg-white p-3 dark:bg-slate-800">
-            <div className="mb-2 flex justify-between">
-              <span className="text-sm text-gray-500 dark:text-gray-200">
-                Subtotal
-              </span>
-              <span className="text-sm">${subTotal.toFixed(2)}</span>
-            </div>
+            {totalAfterCalculation ? (
+              <>
+                <div className="mb-2 flex justify-between">
+                  <span className="text-sm text-gray-500 dark:text-gray-200">Subtotal</span>
+                  <span className="text-sm  text-red-500">${totalAfterCalculation.original_price.toFixed(2)}</span>
+                </div>
+                {totalAfterCalculation.original_price - totalAfterCalculation.final_price_including_tax > 0 && (
+                  <div className="mb-2 flex justify-between">
+                    <span className="text-sm text-gray-500 dark:text-gray-200">Discount</span>
+                    <span className="text-sm text-green-600 font-medium">
+                      -${(totalAfterCalculation.original_price - totalAfterCalculation.final_price_including_tax).toFixed(2)}
+                    </span>
+                  </div>
+                )}
+                <div className="mb-2 flex justify-between font-bold border-t border-dashed border-gray-300 pt-2">
+                  <span className="text-sm text-gray-700 dark:text-gray-100">Total</span>
+                  <span className="text-sm text-red-500">${totalAfterCalculation.final_price_including_tax.toFixed(2)}</span>
+                </div>
+              </>
+            ) : (
+              <div className="mb-2 flex justify-between">
+                <span className="text-sm text-gray-500 dark:text-gray-200">
+                  Subtotal
+                </span>
+                <span className="text-sm">${subTotal.toFixed(2)}</span>
+              </div>
+            )}
             <Button
               disabled={items?.[0] ? false : true}
               onClick={() => {

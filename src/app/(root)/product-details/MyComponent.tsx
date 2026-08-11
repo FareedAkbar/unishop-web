@@ -11,7 +11,13 @@ import {
   FaStar,
 } from "react-icons/fa";
 import moment from "moment";
-import Select from "~/components/Fields/select";
+import {
+  Select as RadixSelect,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "~/components/ui/select";
 import type { Media, SpecialTag, Variation, VariationTag } from "~/types/book";
 import type DataCart from "~/types/book";
 import { useAuthContext } from "~/Context/AuthContext";
@@ -62,6 +68,7 @@ function ImageMagnifier({
         height: height,
         width: width,
       }}
+      className="flex items-center justify-center"
     >
       <Image
         src={src}
@@ -83,7 +90,7 @@ function ImageMagnifier({
         }}
         width={2000}
         height={2000}
-        className="h-64 w-56 cursor-zoom-in rounded-lg object-contain lg:h-96 lg:w-80"
+        className="h-64 w-56 cursor-zoom-in rounded-lg object-contain self-center lg:h-96 lg:w-80"
         alt={"img"}
       />
 
@@ -148,6 +155,35 @@ const MyComponent = () => {
   const [compareProducts, setCompareProducts] = useState<DataCart[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const router = useRouter();
+
+  const hasVariations = Boolean(itemDetail?.variations && itemDetail.variations.length > 0);
+  const allTagsSelected = hasVariations
+    ? itemDetail?.variations?.[0]?.variation_tags.every(
+      (tag) => selectedValues[tag.items_variations_tags_name],
+    )
+    : true;
+
+  const getActiveImages = () => {
+    if (selectedVariation?.media && selectedVariation.media.length > 0) {
+      return [
+        {
+          object_id: 1,
+          object_path: itemDetail?.object_path ?? "",
+        },
+        ...selectedVariation.media,
+      ].filter(img => img.object_path);
+    }
+    const list = [...(itemDetail?.media ?? [])];
+    if (itemDetail?.object_path && !list.some(img => img.object_path === itemDetail.object_path)) {
+      list.unshift({
+        object_id: 1,
+        object_path: itemDetail.object_path,
+      });
+    }
+    return list.filter(img => img.object_path);
+  };
+
+  const activeImages = getActiveImages();
 
   useEffect(() => {
     const stored = localStorage.getItem("compare-products");
@@ -402,9 +438,13 @@ const MyComponent = () => {
 
         setSelectedVariation(matchedVariation ?? null); // Wrap in array if found, otherwise set to null
 
-        setCurrentImage(
-          itemDetail?.object_path ?? (itemDetail?.media?.[0]?.object_path ?? ""),
-        );
+        if (matchedVariation?.media && matchedVariation.media.length > 0) {
+          setCurrentImage(matchedVariation.media[0]?.object_path ?? "");
+        } else {
+          setCurrentImage(
+            itemDetail?.object_path ?? (itemDetail?.media?.[0]?.object_path ?? ""),
+          );
+        }
       } else {
         setSelectedVariation(null); // Reset if not all tags are selected
 
@@ -720,40 +760,18 @@ const MyComponent = () => {
         <div className="relative w-full lg:w-[45%] flex flex-col items-center justify-start">
           {/* Navigation Arrows */}
           <div className="flex w-full items-center justify-between px-4 md:px-10">
-            {selectedVariation?.media?.length &&
-              selectedVariation?.media?.length > 1 ? (
+            {activeImages.length > 1 ? (
               <button
                 className="rounded-full bg-white/70 p-2 text-gray-700 shadow-md transition hover:bg-white dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
                 onClick={() => {
-                  const images =
-                    selectedVariation?.media?.length &&
-                      selectedVariation.media.length > 1
-                      ? [
-                        {
-                          object_id: "001",
-                          object_path: itemDetail?.object_path ?? "",
-                        },
-                        ...selectedVariation.media,
-                      ]
-                      : itemDetail?.media?.length &&
-                        itemDetail?.media.length > 0
-                        ? [
-                          {
-                            object_id: "001",
-                            object_path: itemDetail?.object_path ?? "",
-                          },
-                          ...itemDetail.media,
-                        ]
-                        : [];
-
-                  const currentIndex = images.findIndex(
+                  const currentIndex = activeImages.findIndex(
                     (media) => media.object_path === currentImage,
                   );
                   const prevIndex =
-                    currentIndex === -1 || currentIndex === 0
-                      ? images.length - 1
+                    currentIndex <= 0
+                      ? activeImages.length - 1
                       : currentIndex - 1;
-                  setCurrentImage(images?.[prevIndex]?.object_path ?? "");
+                  setCurrentImage(activeImages[prevIndex]?.object_path ?? "");
                 }}
               >
                 <FaChevronLeft />
@@ -763,7 +781,7 @@ const MyComponent = () => {
             )}
 
             {/* Main Image Magnifier */}
-            <div className="relative w-full max-w-md">
+            <div className="relative w-full  max-w-md items-center">
               <ImageMagnifier
                 src={currentImage
                   ? `https://ipos-storage.s3.amazonaws.com/${currentImage}`
@@ -775,39 +793,18 @@ const MyComponent = () => {
                 zoomLevel={1.5}
               />
             </div>
-            {selectedVariation?.media?.length &&
-              selectedVariation?.media?.length > 1 ? (
+            {activeImages.length > 1 ? (
               <button
                 className="rounded-full bg-white/70 p-2 text-gray-700 shadow-md transition hover:bg-white dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
                 onClick={() => {
-                  const images =
-                    selectedVariation?.media?.length &&
-                      selectedVariation.media.length > 1
-                      ? [
-                        {
-                          object_id: "001",
-                          object_path: itemDetail?.object_path ?? "",
-                        },
-                        ...selectedVariation.media,
-                      ]
-                      : itemDetail?.media?.length && itemDetail.media.length > 0
-                        ? [
-                          {
-                            object_id: "001",
-                            object_path: itemDetail?.object_path ?? "",
-                          },
-                          ...itemDetail.media,
-                        ]
-                        : [];
-
-                  const currentIndex = images.findIndex(
+                  const currentIndex = activeImages.findIndex(
                     (media) => media.object_path === currentImage,
                   );
                   const nextIndex =
-                    currentIndex === -1 || currentIndex === images.length - 1
+                    currentIndex === -1 || currentIndex === activeImages.length - 1
                       ? 0
                       : currentIndex + 1;
-                  setCurrentImage(images?.[nextIndex]?.object_path ?? "");
+                  setCurrentImage(activeImages[nextIndex]?.object_path ?? "");
                 }}
               >
                 <FaChevronRight />
@@ -817,17 +814,10 @@ const MyComponent = () => {
             )}
           </div>
 
-          {/* Thumbnails Section (same as before) */}
-          {selectedVariation?.media?.length &&
-            selectedVariation?.media?.length > 1 ? (
+          {/* Thumbnails Section */}
+          {activeImages.length > 1 ? (
             <div className="mt-4 flex h-fit w-full justify-center gap-2 overflow-x-auto px-2">
-              {[
-                {
-                  object_id: "001",
-                  object_path: itemDetail?.object_path ?? "",
-                },
-                ...selectedVariation.media,
-              ].map((media, index) => (
+              {activeImages.map((media, index) => (
                 <button
                   key={`thumbnail-${index}`}
                   onClick={() => setCurrentImage(media.object_path)}
@@ -929,15 +919,39 @@ const MyComponent = () => {
             ""
           )}
           <div className="flex w-full gap-10 border-b border-dashed border-gray-400 pb-4 dark:border-gray-600">
-            {filteredVariations?.[0] ? (
-              filteredVariations?.[0]?.stock?.quantity && filteredVariations?.[0]?.stock?.quantity > 0 ? (
-                filteredVariations?.[0]?.stock?.quantity > parseInt(filteredVariations?.[0]?.stock?.lowest_level) ?
-                  (<span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
+            {hasVariations ? (
+              allTagsSelected && (
+                selectedVariation?.stock?.quantity && selectedVariation?.stock?.quantity > 0 ? (
+                  selectedVariation?.stock?.quantity > parseInt(selectedVariation?.stock?.lowest_level) ? (
+                    <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
+                      <FaCheckCircle /> In stock
+                    </span>
+                  ) : (
+                    <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
+                      <FaExclamationTriangle /> Low Stock
+                    </span>
+                  )
+                ) : itemDetail?.allow_special_order == 1 ? (
+                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
+                    <FaArrowCircleLeft /> Backorder
+                  </span>
+                ) : (
+                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-sm text-red-500">
+                    <IoIosCloseCircle /> Out of stock
+                  </span>
+                )
+              )
+            ) : (
+              itemDetail?.stock?.quantity && itemDetail?.stock?.quantity > 0 ? (
+                itemDetail?.stock?.quantity > parseInt(itemDetail?.stock?.lowest_level) ? (
+                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
                     <FaCheckCircle /> In stock
-                  </span>) :
-                  (<span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
+                  </span>
+                ) : (
+                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
                     <FaExclamationTriangle /> Low Stock
-                  </span>)
+                  </span>
+                )
               ) : itemDetail?.allow_special_order == 1 ? (
                 <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
                   <FaArrowCircleLeft /> Backorder
@@ -947,48 +961,31 @@ const MyComponent = () => {
                   <IoIosCloseCircle /> Out of stock
                 </span>
               )
-            ) : itemDetail?.stock?.quantity && itemDetail?.stock?.quantity > 0 ? (
-              itemDetail?.stock?.quantity > parseInt(itemDetail?.stock?.lowest_level) ?
-                (<span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
-                  <FaCheckCircle /> In stock
-                </span>) :
-                (<span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
-                  <FaExclamationTriangle /> Low Stock
-                </span>)
-            ) : itemDetail?.allow_special_order == 1 ? (
-              <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
-                <FaArrowCircleLeft /> Backorder
-              </span>
-            ) : (
-              <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-sm text-red-500">
-                <IoIosCloseCircle /> Out of stock
-              </span>
             )}
-            {filteredVariations?.[0]
-              ? filteredVariations?.[0].items_variable_items_sku_number && (
+
+            {hasVariations ? (
+              allTagsSelected && selectedVariation?.items_variable_items_sku_number && (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    {itemDetail?.book_id && itemDetail?.food_id == null
-                      ? "ISBN:"
-                      : "SKU:"}
+                    {itemDetail?.book_id && itemDetail?.food_id == null ? "ISBN:" : "SKU:"}
                   </span>
                   <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
-                    {filteredVariations?.[0].items_variable_items_sku_number}
+                    {selectedVariation.items_variable_items_sku_number}
                   </span>
                 </div>
               )
-              : itemDetail?.SKU && (
+            ) : (
+              itemDetail?.SKU && (
                 <div className="flex items-center justify-center">
                   <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
-                    {itemDetail?.book_id && itemDetail?.food_id == null
-                      ? "ISBN:"
-                      : "SKU:"}
+                    {itemDetail?.book_id && itemDetail?.food_id == null ? "ISBN:" : "SKU:"}
                   </span>
                   <span className="pl-1 text-sm text-neutral-700 dark:text-neutral-300">
                     {itemDetail.SKU}
                   </span>
                 </div>
-              )}
+              )
+            )}
           </div>
           {itemDetail?.book_id && itemDetail?.subtitle && (
             <div className="flex items-center justify-center">
@@ -1143,8 +1140,8 @@ const MyComponent = () => {
             </div>
           )}
           {filteredVariations?.[0]
-            ? filteredVariations?.[0].weight &&
-            itemDetail?.weighable && (
+            ? !!filteredVariations?.[0].weight &&
+            !!itemDetail?.weighable && (
               <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Weight:
@@ -1154,8 +1151,8 @@ const MyComponent = () => {
                 </span>
               </div>
             )
-            : itemDetail?.weight &&
-            itemDetail?.weighable && (
+            : !!itemDetail?.weight &&
+            !!itemDetail?.weighable && (
               <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Weight:
@@ -1274,17 +1271,27 @@ const MyComponent = () => {
                         ))}
                       </div>
                     ) : (
-                      <Select
-                        id={tagName}
-                        name={tagName}
-                        options={options}
+                      <RadixSelect
                         value={selectedValues[tagName] ?? ""}
-                        placeholder={`Select ${tagName}`}
-                        onChange={(option: { value: string; label: string }) =>
-                          handleSelectChange(tagName, option)
-                        }
-                        isDisabled={isDisabled}
-                      />
+                        onValueChange={(val) => {
+                          const option = options.find((opt) => opt.value === val);
+                          if (option) {
+                            handleSelectChange(tagName, option);
+                          }
+                        }}
+                        disabled={isDisabled}
+                      >
+                        <SelectTrigger className="w-full h-10 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700 capitalize rounded-md text-sm">
+                          <SelectValue placeholder={`Select ${tagName}`} />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700">
+                          {options.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </RadixSelect>
                     )}
                   </div>
                 );
