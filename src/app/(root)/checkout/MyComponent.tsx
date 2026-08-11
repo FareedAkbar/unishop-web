@@ -238,8 +238,8 @@ const MyComponent = () => {
                 {totalAfterCalculation ? (
                   <>
                     <div className="mb-2 flex justify-between">
-                      <span className="text-sm text-gray-500 dark:text-gray-200">Original Subtotal</span>
-                      <span className="text-sm line-through text-red-500">${totalAfterCalculation.original_price.toFixed(2)}</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-200">Subtotal</span>
+                      <span className="text-sm text-red-500">${totalAfterCalculation.original_price.toFixed(2)}</span>
                     </div>
                     {totalAfterCalculation.original_price - totalAfterCalculation.final_price_including_tax > 0 && (
                       <div className="mb-2 flex justify-between">
