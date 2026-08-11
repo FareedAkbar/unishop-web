@@ -195,6 +195,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       discountable_cat: book.category_detail?.discountable_cat ?? 0,
       discountable_item: book.discountable_item ?? 0,
       discounts: book.discounts ?? null,
+      tax_exempted: book.tax_exempted ?? 0,
     }));
 
     try {
