@@ -51,7 +51,7 @@ const Input = React.forwardRef<
         <input
           type={inputType}
           className={cn(
-            `input duration-400 flex h-10 w-full rounded-md border-none bg-gray-50 px-3 py-2 pr-10 text-sm text-black shadow-input transition file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-300 focus-visible:outline-none focus-visible:ring-[2px] focus-visible:ring-red-400 disabled:cursor-not-allowed disabled:opacity-50 group-hover/input:shadow-none dark:bg-slate-700 dark:text-white dark:shadow-[0px_0px_1px_1px_var(--neutral-700)] dark:placeholder:text-neutral-500 dark:focus-visible:ring-red-600`,
+            `input duration-400 block w-full rounded-md border-none bg-gray-50 px-3 py-2.5 pr-10 text-sm text-black shadow-input transition file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-300 focus-visible:outline-none focus-visible:ring-[2px] focus-visible:ring-red-400 disabled:cursor-not-allowed disabled:opacity-50 group-hover/input:shadow-none dark:bg-slate-700 dark:text-white dark:shadow-[0px_0px_1px_1px_var(--neutral-700)] dark:placeholder:text-neutral-500 dark:focus-visible:ring-red-600`,
             className,
           )}
           ref={ref}
