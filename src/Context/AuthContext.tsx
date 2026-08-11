@@ -52,6 +52,7 @@ import type { ApiResponseStatus, ItemSpecialTag } from "~/types/productTags";
 import { getItemsBySearch } from "~/_actions/getitemsbycategory";
 import { getTextBookTypeData } from "~/_actions/meta_actions";
 import { type TextBookApiResponse, type TextbookType } from "~/types/textbookType";
+import type TaxCalculationApiResponse from "~/types/taxCalculationApiResponse";
 
 type transactionData = {
   transaction_id?: string | null;
@@ -126,6 +127,8 @@ interface AuthContextProps {
   verifySignupOTP: (payload: { customer_id: number; otp: number }) => Promise<{ status: boolean; message: string }>;
   resetPasswordOTP: (email: string) => Promise<{ status: boolean; message: string; customer_id?: number }>;
   updatePassword: (payload: { email: string; token: string; user_password?: string; password?: string }) => Promise<{ status: boolean; message: string }>;
+  totalAfterCalculation: TaxCalculationApiResponse | null;
+  calculateLoader: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -160,6 +163,79 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [productTags, setProductTags] = useState<ItemSpecialTag[] | null>(null);
   const [textbookType, setTextbookType] = useState<TextbookType[] | null>(null);
   const [billing_address, setBillingAddress] = useState<address[] | null>(null);
+
+  const [totalAfterCalculation, setTotalAfterCalculation] =
+    useState<TaxCalculationApiResponse | null>(null);
+  const [calculateLoader, setCalculateLoader] = useState<boolean>(false);
+
+  const calculateCart = async (
+    currentCart: DataCart[] = cartItems,
+    currentCheckout: CheckoutForm | null = checkoutData,
+  ) => {
+    if (!currentCart || currentCart.length === 0) {
+      setTotalAfterCalculation(null);
+      return;
+    }
+
+    const itemsPayload = currentCart.map((book) => ({
+      price:
+        book.selected_variation?.items_variable_items_sale_price ??
+        book.item_sale_price,
+      quantity: book.quantity,
+      item_id: book.item_id,
+      cat_id: book.category,
+      textbook_id: book.book_id ?? null,
+      is_textbook: book.book_id ? 1 : 0,
+      variationId: book.selected_variation?.items_variable_items_id ?? null,
+      variable_item: book.selected_variation?.items_variable_items_id ? 1 : 0,
+      premium_upgrades_CPM: [],
+      is_deal: 0,
+      deal_id: null,
+      apply_zero_discount: 0,
+      discountable_cat: book.category_detail?.discountable_cat ?? 0,
+      discountable_item: book.discountable_item ?? 0,
+      discounts: book.discounts ?? null,
+    }));
+
+    try {
+      setCalculateLoader(true);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/calculate?check_availability=0`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
+          },
+          body: JSON.stringify({
+            items: itemsPayload,
+            member_id: currentCheckout?.customer_id ?? null,
+            customer_type_id: currentCheckout?.customer_type ?? null,
+          }),
+        },
+      );
+
+      const result = (await response.json()) as { status: boolean; data: TaxCalculationApiResponse };
+      if (result?.status) {
+        setTotalAfterCalculation(result?.data);
+      } else {
+        console.error("Unexpected result structure calculateCart:", result);
+      }
+    } catch (error) {
+      console.error("Error calculating cart:", error);
+    } finally {
+      setCalculateLoader(false);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && cartItems && cartItems.length > 0) {
+      calculateCart(cartItems, checkoutData).catch((err) => console.error(err));
+    } else {
+      setTotalAfterCalculation(null);
+    }
+  }, [cartItems, checkoutData]);
+
   const router = useRouter();
 
   const addBillingAddress = (address: address[] | null) => {
@@ -939,6 +1015,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         searchItems,
         getTextBookType,
         textbookType,
+        totalAfterCalculation,
+        calculateLoader,
       }}
     >
       {children}

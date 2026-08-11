@@ -128,6 +128,68 @@ class OrderStatus {
         return "Unknown Status";
     }
   }
+  static getBadgeColor(statusId: number | null | undefined): string {
+    switch (statusId) {
+      // Green - successful/completed
+      case OrderStatus.confirmed:
+      case OrderStatus.processingComplete:
+      case OrderStatus.closed:
+      case OrderStatus.backorderCompleted:
+      case OrderStatus.restockComplete:
+      case OrderStatus.manualCompleted:
+        return "bg-green-500";
+
+      // Blue - accepted/approved/ready
+      case OrderStatus.acknowledged:
+      case OrderStatus.specialOrderApproved:
+      case OrderStatus.backorderApproved:
+      case OrderStatus.readyForPickup:
+      case OrderStatus.backorderReady:
+        return "bg-blue-500";
+
+      // Yellow - pending/in progress
+      case OrderStatus.orderInitiated:
+      case OrderStatus.underProcess:
+      case OrderStatus.outForDelivery:
+      case OrderStatus.inCart:
+      case OrderStatus.underReview:
+      case OrderStatus.checkoutPending:
+      case OrderStatus.tabOpened:
+      case OrderStatus.backorderInitiated:
+      case OrderStatus.backorderPayment:
+      case OrderStatus.backorderPickup:
+      case OrderStatus.restockInitiated:
+        return "bg-yellow-500";
+
+      // Red - cancelled
+      case OrderStatus.orderCancelled:
+      case OrderStatus.specialOrderCancelled:
+      case OrderStatus.backorderCancelled:
+      case OrderStatus.restockCancelled:
+        return "bg-red-500";
+
+      // Orange - refunded/reversed
+      case OrderStatus.orderReversed:
+      case OrderStatus.paymentReversed:
+      case OrderStatus.partiallyReversed:
+        return "bg-orange-500";
+
+      // Purple - special states
+      case OrderStatus.partiallyCompleted:
+      case OrderStatus.creditNoteInitiated:
+      case OrderStatus.restockPartially:
+        return "bg-purple-500";
+
+      // Gray - drafts/deleted/unknown
+      case OrderStatus.restockDrafted:
+      case OrderStatus.restockDeleted:
+      case OrderStatus.manualDrafted:
+        return "bg-gray-500";
+
+      default:
+        return "bg-gray-500";
+    }
+  }
 }
 
 export default OrderStatus;

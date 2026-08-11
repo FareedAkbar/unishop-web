@@ -21,11 +21,34 @@ const MyComponent = () => {
     increaseCartItemQuantity,
     addBillingAddress,
     userInfo,
+    totalAfterCalculation,
   } = useAuthContext();
   const router = useRouter();
   const [items, setItems] = useState<DataCart[]>([]);
   const [removeItem, setRemoveItem] = useState<DataCart | null>(null);
   const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState<boolean>(false);
+
+  const checkNewPrice = (id: number) => {
+    const newPrice = totalAfterCalculation?.items.filter(
+      (item) => item.item_id == id,
+    );
+    if (newPrice?.[0]) {
+      return newPrice[0].final_price_including_tax;
+    } else {
+      return 0;
+    }
+  };
+
+  const checkOldPrice = (id: number) => {
+    const newPrice = totalAfterCalculation?.items.filter(
+      (item) => item.item_id == id,
+    );
+    if (newPrice?.[0]) {
+      return newPrice[0].original_value;
+    } else {
+      return 0;
+    }
+  };
 
   const fetchData = async (email: string) => {
     try {
@@ -165,7 +188,16 @@ const MyComponent = () => {
                     imageSrc={
                       item?.object_path ?? item.media?.[0]?.object_path ?? ""
                     }
-                    price={item.item_sale_price}
+                    price={
+                      totalAfterCalculation?.items
+                        ? checkOldPrice(item.item_id)
+                        : item.item_sale_price
+                    }
+                    newPrice={
+                      totalAfterCalculation?.items
+                        ? checkNewPrice(item.item_id)
+                        : 0
+                    }
                     showRemove={true}
                     onChangeQuantity={(id, number) =>
                       onChangeQuantity(id, number)
@@ -201,6 +233,37 @@ const MyComponent = () => {
                 </div>
               )}
             </ScrollArea>
+            {items?.[0] && (
+              <div className="mt-4 border-t border-gray-500 pt-4">
+                {totalAfterCalculation ? (
+                  <>
+                    <div className="mb-2 flex justify-between">
+                      <span className="text-sm text-gray-500 dark:text-gray-200">Original Subtotal</span>
+                      <span className="text-sm line-through text-red-500">${totalAfterCalculation.original_price.toFixed(2)}</span>
+                    </div>
+                    {totalAfterCalculation.original_price - totalAfterCalculation.final_price_including_tax > 0 && (
+                      <div className="mb-2 flex justify-between">
+                        <span className="text-sm text-gray-500 dark:text-gray-200">Discount</span>
+                        <span className="text-sm text-green-600 font-medium">
+                          -${(totalAfterCalculation.original_price - totalAfterCalculation.final_price_including_tax).toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+                    <div className="mb-2 flex justify-between font-bold border-t border-dashed border-gray-300 pt-2">
+                      <span className="text-sm text-gray-700 dark:text-gray-100">Total</span>
+                      <span className="text-sm text-red-500">${totalAfterCalculation.final_price_including_tax.toFixed(2)}</span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="mb-2 flex justify-between">
+                    <span className="text-sm text-gray-500 dark:text-gray-200">Subtotal</span>
+                    <span className="text-sm">
+                      ${items.reduce((acc, item) => acc + (item.item_sale_price * item.quantity || 0), 0).toFixed(2)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <div className="relative h-full w-full [perspective:1000px]">
             <CheckoutForm

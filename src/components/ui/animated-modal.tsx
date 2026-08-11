@@ -228,6 +228,25 @@ export const useOutsideClick = (
       if (!ref.current || ref.current.contains(event.target as Node)) {
         return;
       }
+      
+      // DO NOTHING if clicking on a Radix Select portal element
+      let el = event.target as Node | null;
+      while (el) {
+        if (el instanceof Element) {
+          const role = el.getAttribute("role");
+          if (role === "option" || role === "listbox") {
+            return;
+          }
+          const attrs = Array.from(el.attributes);
+          for (const attr of attrs) {
+            if (attr.name.startsWith("data-radix-")) {
+              return;
+            }
+          }
+        }
+        el = el.parentNode;
+      }
+
       callback();
     };
     if (typeof window !== "undefined") {

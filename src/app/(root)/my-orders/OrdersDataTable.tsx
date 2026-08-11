@@ -29,7 +29,25 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
     return moment(safe).format(format);
     //  return moment.parseZone(date).local().format(format);
   }
+  const getBadgeColor = (status: string) => {
+    switch (status) {
+      case "COMPLETED":
+      case "CONFIRMED":
+        return "bg-green-500";
 
+      case "ACCEPTED":
+        return "bg-blue-500";
+
+      case "INITIATED":
+        return "bg-yellow-500";
+
+      case "ORDER CANCELLED":
+        return "bg-red-500";
+
+      default:
+        return "bg-gray-500";
+    }
+  };
   const columns = [
     { key: "order_id", header: "Order ID", isSortable: false },
     { key: "tracking_id", header: "Tracking ID", isSortable: false },
@@ -37,15 +55,16 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
       key: "order_status",
       header: "Status",
       isSortable: true,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: (info: GetSpecialOrder) => {
         const status = info.order_status;
-        const badgeColor = "bg-green-500";
+
         return (
           <span
-            className={`inline-block rounded px-2 py-1 text-white ${badgeColor}`}
+            className={`inline-block rounded px-2 py-1 text-white ${OrderStatus.getBadgeColor(
+              status
+            )}`}
           >
-            {OrderStatus.getDisplayStatus(status)?.toUpperCase() || "Status"}
+            {OrderStatus.getDisplayStatus(status)?.toUpperCase() || "STATUS"}
           </span>
         );
       },
