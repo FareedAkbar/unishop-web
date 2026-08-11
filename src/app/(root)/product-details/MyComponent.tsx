@@ -1140,8 +1140,8 @@ const MyComponent = () => {
             </div>
           )}
           {filteredVariations?.[0]
-            ? filteredVariations?.[0].weight &&
-            itemDetail?.weighable && (
+            ? !!filteredVariations?.[0].weight &&
+            !!itemDetail?.weighable && (
               <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Weight:
@@ -1151,8 +1151,8 @@ const MyComponent = () => {
                 </span>
               </div>
             )
-            : itemDetail?.weight &&
-            itemDetail?.weighable && (
+            : !!itemDetail?.weight &&
+            !!itemDetail?.weighable && (
               <div className="flex items-center justify-center">
                 <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                   Weight:
