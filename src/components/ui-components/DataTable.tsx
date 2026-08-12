@@ -76,12 +76,12 @@ const DataTable: React.FC<DataTableProps> = ({
       ...(selectedItem?.order_items ?? []),
       ...(selectedItem?.back_order_items ?? []),
       ...(selectedItem?.special_order_items ?? []),
-    ];
+    ] as { order_items_voucher_coupon_logs?: { dl_used_value?: number | string }[] }[];
 
-    allItems.forEach((item: any) => {
-      if (Array.isArray(item.order_items_voucher_coupon_logs)) {
-        item.order_items_voucher_coupon_logs.forEach((log: any) => {
-          totalVoucherPaid += Number(log.dl_used_value) || 0;
+    allItems.forEach((item) => {
+      if (item && Array.isArray(item.order_items_voucher_coupon_logs)) {
+        item.order_items_voucher_coupon_logs.forEach((log) => {
+          totalVoucherPaid += Number(log?.dl_used_value) || 0;
         });
       }
     });

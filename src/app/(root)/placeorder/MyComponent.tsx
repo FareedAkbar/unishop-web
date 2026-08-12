@@ -810,6 +810,77 @@ const MyComponent = () => {
 
   const toggleExpand = () => setIsExpanded((prev) => !prev);
 
+  // Voucher Integration Interfaces
+  interface VoucherCategory {
+    id?: number;
+    category_id?: number;
+    cat_id?: number;
+  }
+
+  interface VoucherData {
+    voucher_assign_id: number;
+    voucher_id: number;
+    all_members: number;
+    all_non_members: number;
+    all_staff: number;
+    all_guests: number;
+    cus_id: number | null;
+    voucher_code: string;
+    disc_id: number;
+    valid_until: string | null;
+    description: string;
+    media_id: number | null;
+    item_check: number;
+    is_gift: number;
+    payment_method: string;
+    is_exchange: number;
+    title: string;
+    mem_disc_value: number;
+    disc_value: number;
+    guest_disc_value: number;
+    staff_disc_value: number;
+    disc_unit: number;
+    valid_from: string | null;
+    active_status: number;
+    outlet_id: number;
+    is_developer: number;
+    type_id: number | null;
+    receipt_note: string | null;
+    categories: VoucherCategory[];
+  }
+
+  interface VerifyVoucherApiResponse {
+    status: boolean;
+    message: string;
+    data: VoucherData;
+  }
+
+  interface VoucherLog {
+    log_id: number;
+    dl_cus_id: number | null;
+    dl_used: number;
+    dl_value: number;
+    dl_used_value: number;
+    dl_voucher_code: string;
+    order_id: number | null;
+    last_updated: string | null;
+    order_items_id: number | null;
+    back_order_items_id: number | null;
+  }
+
+  interface GetVoucherLogsApiResponse {
+    status: boolean;
+    message: string;
+    data: VoucherLog[];
+  }
+
+  interface MembershipCheckResponse {
+    status: boolean;
+    data?: {
+      membership: number;
+    };
+  }
+
   // Voucher Integration States
   const [voucherCodeInput, setVoucherCodeInput] = useState("");
   const [isOpenVoucherModal, setIsOpenVoucherModal] = useState(false);
@@ -818,7 +889,7 @@ const MyComponent = () => {
     code: string;
     voucherValue: number;
     remainingValue: number;
-    categories: any[];
+    categories: VoucherCategory[];
     discUnit: number;
   } | null>(null);
 
@@ -827,7 +898,7 @@ const MyComponent = () => {
     voucherValue: number;
     remainingValue: number;
     appliedTotal: number;
-    allocation: { [itemId: number]: number };
+    allocation: Record<number, number>;
     discUnit: number;
   } | null>(null);
 
@@ -837,7 +908,14 @@ const MyComponent = () => {
       const saved = sessionStorage.getItem("APPLIED_VOUCHER_INFO");
       if (saved) {
         try {
-          setVoucherInfo(JSON.parse(saved));
+          const parsed = JSON.parse(saved) as {
+            code: string;
+            voucherValue: number;
+            remainingValue: number;
+            categories: VoucherCategory[];
+            discUnit: number;
+          };
+          setVoucherInfo(parsed);
         } catch (e) {
           console.error("Failed to parse saved voucher info:", e);
         }
@@ -856,20 +934,20 @@ const MyComponent = () => {
     }
   }, [voucherInfo]);
 
-  const isCategoryEligible = (item: DataCart, categories: any[]): boolean => {
+  const isCategoryEligible = (item: DataCart, categories: VoucherCategory[]): boolean => {
     if (!categories || categories.length === 0) return true;
     const itemCat = item.category !== undefined && item.category !== null ? Number(item.category) : null;
     const detailCat = item.category_detail?.id !== undefined && item.category_detail?.id !== null ? Number(item.category_detail.id) : null;
 
     return categories.some((cat) => {
       let catId: number | null = null;
-      if (typeof cat === "number" || typeof cat === "string") {
-        catId = Number(cat);
-      } else if (cat && typeof cat === "object") {
+      if (cat && typeof cat === "object") {
         const temp = cat.id ?? cat.category_id ?? cat.cat_id;
         if (temp !== undefined && temp !== null) {
           catId = Number(temp);
         }
+      } else if (typeof cat === "number" || typeof cat === "string") {
+        catId = Number(cat);
       }
 
       if (catId === null || isNaN(catId)) return false;
@@ -882,11 +960,11 @@ const MyComponent = () => {
     voucherCode: string,
     voucherValue: number,
     voucherRemaining: number,
-    categories: any[],
+    categories: VoucherCategory[],
     discUnit: number
   ) => {
     let tempRemaining = voucherRemaining;
-    const allocation: { [itemId: number]: number } = {};
+    const allocation: Record<number, number> = {};
     let appliedTotal = 0;
 
     for (const item of currentItems) {
@@ -968,7 +1046,7 @@ const MyComponent = () => {
               body: JSON.stringify({ customer_id: currentCusId }),
             }
           );
-          const memData = await memRes.json();
+          const memData = (await memRes.json()) as MembershipCheckResponse;
           if (memData?.status && memData?.data?.membership === 1) {
             hasMembership = 1;
           }
@@ -999,7 +1077,7 @@ const MyComponent = () => {
           body: JSON.stringify(verifyPayload),
         }
       );
-      const verifyData = await verifyRes.json();
+      const verifyData = (await verifyRes.json()) as VerifyVoucherApiResponse;
 
       if (!verifyData?.status || !verifyData?.data) {
         toast({
@@ -1107,18 +1185,18 @@ const MyComponent = () => {
           body: JSON.stringify({ code }),
         }
       );
-      const logsData = await logsRes.json();
+      const logsData = (await logsRes.json()) as GetVoucherLogsApiResponse;
       const logsList = (logsData?.status && Array.isArray(logsData?.data)) ? logsData.data : [];
 
       let usedSum = 0;
       if (isGuestCase) {
         // Subtract used values by all customers
-        usedSum = logsList.reduce((acc: number, log: any) => acc + (Number(log.dl_used_value) || 0), 0);
+        usedSum = logsList.reduce((acc: number, log: VoucherLog) => acc + (Number(log.dl_used_value) || 0), 0);
       } else {
         // Subtract used values by this customer
         usedSum = logsList
-          .filter((log: any) => currentCusId !== null && Number(log.dl_cus_id) === Number(currentCusId))
-          .reduce((acc: number, log: any) => acc + (Number(log.dl_used_value) || 0), 0);
+          .filter((log: VoucherLog) => currentCusId !== null && Number(log.dl_cus_id) === Number(currentCusId))
+          .reduce((acc: number, log: VoucherLog) => acc + (Number(log.dl_used_value) || 0), 0);
       }
 
       const remaining = baseValue - usedSum;
