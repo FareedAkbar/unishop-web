@@ -69,6 +69,25 @@ const DataTable: React.FC<DataTableProps> = ({
     setData(tableData);
   }, [tableData]);
 
+  // Sum the used values of vouchers applied to this order
+  const getVoucherPaidAmount = () => {
+    let totalVoucherPaid = 0;
+    const allItems = [
+      ...(selectedItem?.order_items ?? []),
+      ...(selectedItem?.back_order_items ?? []),
+      ...(selectedItem?.special_order_items ?? []),
+    ];
+
+    allItems.forEach((item: any) => {
+      if (Array.isArray(item.order_items_voucher_coupon_logs)) {
+        item.order_items_voucher_coupon_logs.forEach((log: any) => {
+          totalVoucherPaid += Number(log.dl_used_value) || 0;
+        });
+      }
+    });
+    return totalVoucherPaid;
+  };
+
   const toggleFullScreen = () => {
     if (typeof window !== "undefined") {
       const element = document.getElementById("tableContainer");
@@ -306,8 +325,8 @@ const DataTable: React.FC<DataTableProps> = ({
                       ?.mode === "asc" && <FaAngleUp className="ml-1 inline" />}
                     {sortOptions.find((sort) => sort.key === column.key)
                       ?.mode === "desc" && (
-                      <FaAngleDown className="ml-1 inline" />
-                    )}
+                        <FaAngleDown className="ml-1 inline" />
+                      )}
                   </th>
                 ) : null,
               )}
@@ -402,7 +421,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 <div className="mt-2 flex items-center">
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
                     {selectedItem?.total_order_price ==
-                    selectedItem?.total_discounted_price
+                      selectedItem?.total_discounted_price
                       ? "Price: "
                       : "Actual Price: "}
                   </p>
@@ -411,7 +430,7 @@ const DataTable: React.FC<DataTableProps> = ({
                   </p>
                 </div>
                 {selectedItem?.total_order_price ==
-                selectedItem?.total_discounted_price ? (
+                  selectedItem?.total_discounted_price ? (
                   ""
                 ) : (
                   <div className="mt-2 flex items-center">
@@ -569,12 +588,12 @@ const DataTable: React.FC<DataTableProps> = ({
                 <div className="mt-4 flex justify-end">
                   <div className="w-full max-w-xs space-y-1 border-t pt-3 text-right">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">
+                      <span className="text-gray-600 dark:text-gray-400">
                         Subtotal
                         {Number(selectedItem?.delivery_charges ?? 0) > 0 &&
                           " (Delivery charges: $" +
-                            selectedItem?.delivery_charges +
-                            ")"}
+                          selectedItem?.delivery_charges +
+                          ")"}
                         :
                       </span>
                       <span>
@@ -584,15 +603,22 @@ const DataTable: React.FC<DataTableProps> = ({
 
                     {selectedItem?.total_order_price !==
                       selectedItem?.total_discounted_price && (
-                      <div className="flex justify-between text-sm text-red-500">
-                        <span>Discount:</span>
-                        <span>
-                          -$
-                          {(
-                            (selectedItem?.total_order_price ?? 0) -
-                            (selectedItem?.total_discounted_price ?? 0)
-                          ).toFixed(2)}
-                        </span>
+                        <div className="flex justify-between text-sm text-red-500">
+                          <span>Discount:</span>
+                          <span>
+                            -$
+                            {(
+                              (selectedItem?.total_order_price ?? 0) -
+                              (selectedItem?.total_discounted_price ?? 0)
+                            ).toFixed(2)}
+                          </span>
+                        </div>
+                      )}
+
+                    {getVoucherPaidAmount() > 0 && (
+                      <div className="flex justify-between text-sm text-green-600 dark:text-green-400 font-medium">
+                        <span>Paid by Voucher:</span>
+                        <span>-${getVoucherPaidAmount().toFixed(2)}</span>
                       </div>
                     )}
 
@@ -600,8 +626,10 @@ const DataTable: React.FC<DataTableProps> = ({
                       <span>Total:</span>
                       <span>
                         $
-                        {selectedItem?.total_discounted_price?.toFixed(2) ??
-                          "0.00"}
+                        {Math.max(
+                          0,
+                          (selectedItem?.total_discounted_price ?? 0) - getVoucherPaidAmount()
+                        ).toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -618,9 +646,9 @@ const DataTable: React.FC<DataTableProps> = ({
                 <span className="font-medium">Order Started:</span>{" "}
                 {selectedItem?.started
                   ? formatToSydneyDateOnly(
-                      selectedItem.started,
-                      "DD/MM/YYYY h:mm A",
-                    )
+                    selectedItem.started,
+                    "DD/MM/YYYY h:mm A",
+                  )
                   : ""}
               </p>
             </div>

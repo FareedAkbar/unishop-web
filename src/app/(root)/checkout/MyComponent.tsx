@@ -183,7 +183,7 @@ const MyComponent = () => {
               {items?.[0] ? (
                 items.map((item: DataCart, index) => (
                   <CartItem
-                    key={item.item_id + Math.random() + index}
+                    key={`${item.item_id}-${item.selected_variation?.items_variable_items_id ?? 'default'}`}
                     title={item.item_name}
                     imageSrc={
                       item?.object_path ?? item.media?.[0]?.object_path ?? ""

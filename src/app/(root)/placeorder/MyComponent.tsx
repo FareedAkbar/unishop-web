@@ -335,15 +335,29 @@ const MyComponent = () => {
       }
     }
     setPlaceOrderLoader(true);
-    // await placeOrderApi(797498821);
+
+    const payable = appliedVoucher ? Math.max(0, total - appliedVoucher.appliedTotal) : total;
+
+    if (payable === 0) {
+      try {
+        await placeOrderApi(null);
+      } catch (error) {
+        console.error("Failed to place order:", error);
+      } finally {
+        setPlaceOrderLoader(false);
+      }
+      return;
+    }
+
     const x = {
       customer_id: checkoutData?.customer_id,
       guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
-      amount: total,
+      amount: payable,
     };
 
     try {
       await getLinkForPayment(x);
+      // placeOrderApi(null);
       console.log(x);
     } catch (error) {
       console.error("Failed to load data:", error);
@@ -389,12 +403,16 @@ const MyComponent = () => {
 
         try {
           await removeAllCartItems();
+          if (typeof window !== "undefined") {
+            sessionStorage.removeItem("APPLIED_VOUCHER_INFO");
+          }
           const x = {
             transaction_id: requestOptions.transaction_id,
             order_id: result?.data?.order_id,
             tracking_id: result.data?.tracking_id,
             total_order_price: totalOriginal,
             discounted_price: total,
+            paid_by_voucher: appliedVoucher?.appliedTotal ?? 0,
           };
           await setTransactionData(x);
         } catch (error) {
@@ -424,7 +442,25 @@ const MyComponent = () => {
       console.warn("Input array is empty or not an array:", newItems);
       return [];
     }
+    const currentCusId = userInfo?.customer_id ?? checkoutData?.customer_id ?? null;
+
     const x = newItems?.map((item) => {
+      // Find if this item has voucher applied
+      const itemVoucherAmount = appliedVoucher?.allocation[item.item_id];
+      const applied_vouchers = itemVoucherAmount && itemVoucherAmount > 0
+        ? [
+          {
+            cus_id: currentCusId,
+            code: appliedVoucher.code,
+            total_order_price: null,
+            final_order_price: null,
+            voucher_value: appliedVoucher.voucherValue,
+            used_value: itemVoucherAmount,
+            order_id: null,
+            discount_unit: appliedVoucher.discUnit
+          }
+        ]
+        : undefined;
 
       console.log("item", item)
       return {
@@ -446,6 +482,7 @@ const MyComponent = () => {
         type: "Normal",
         stock_id: item?.stock?.stock_id ?? 0,
         discounts: item.discounts,
+        ...(applied_vouchers ? { applied_vouchers } : {})
       };
     });
 
@@ -454,7 +491,7 @@ const MyComponent = () => {
     return x;
   }
 
-  const placeOrderApi = async (id: number) => {
+  const placeOrderApi = async (id: number | null) => {
     setLocalTransactionData(null);
     const date = new Date();
     const outlet = process.env.NEXT_PUBLIC_PASSKEY_OUTLET ?? "";
@@ -479,7 +516,7 @@ const MyComponent = () => {
         ref_no: "N.A.",
       },
       member_id: checkoutData?.customer_id ?? null,
-      transaction_id: id.toString(),
+      transaction_id: id !== null ? id.toString() : null,
       booknet_customer_id: booknetCustomerId,
       // guest: checkoutData?.uuid ? checkoutData?.uuid : null,
       order_items: await convertPayload(),
@@ -773,6 +810,358 @@ const MyComponent = () => {
 
   const toggleExpand = () => setIsExpanded((prev) => !prev);
 
+  // Voucher Integration States
+  const [voucherCodeInput, setVoucherCodeInput] = useState("");
+  const [isOpenVoucherModal, setIsOpenVoucherModal] = useState(false);
+  const [voucherLoading, setVoucherLoading] = useState(false);
+  const [voucherInfo, setVoucherInfo] = useState<{
+    code: string;
+    voucherValue: number;
+    remainingValue: number;
+    categories: any[];
+    discUnit: number;
+  } | null>(null);
+
+  const [appliedVoucher, setAppliedVoucher] = useState<{
+    code: string;
+    voucherValue: number;
+    remainingValue: number;
+    appliedTotal: number;
+    allocation: { [itemId: number]: number };
+    discUnit: number;
+  } | null>(null);
+
+  // Load voucherInfo from sessionStorage on mount (SSR-safe)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = sessionStorage.getItem("APPLIED_VOUCHER_INFO");
+      if (saved) {
+        try {
+          setVoucherInfo(JSON.parse(saved));
+        } catch (e) {
+          console.error("Failed to parse saved voucher info:", e);
+        }
+      }
+    }
+  }, []);
+
+  // Save voucherInfo to sessionStorage whenever it changes (SSR-safe)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (voucherInfo) {
+        sessionStorage.setItem("APPLIED_VOUCHER_INFO", JSON.stringify(voucherInfo));
+      } else {
+        sessionStorage.removeItem("APPLIED_VOUCHER_INFO");
+      }
+    }
+  }, [voucherInfo]);
+
+  const isCategoryEligible = (item: DataCart, categories: any[]): boolean => {
+    if (!categories || categories.length === 0) return true;
+    const itemCat = item.category !== undefined && item.category !== null ? Number(item.category) : null;
+    const detailCat = item.category_detail?.id !== undefined && item.category_detail?.id !== null ? Number(item.category_detail.id) : null;
+
+    return categories.some((cat) => {
+      let catId: number | null = null;
+      if (typeof cat === "number" || typeof cat === "string") {
+        catId = Number(cat);
+      } else if (cat && typeof cat === "object") {
+        const temp = cat.id ?? cat.category_id ?? cat.cat_id;
+        if (temp !== undefined && temp !== null) {
+          catId = Number(temp);
+        }
+      }
+
+      if (catId === null || isNaN(catId)) return false;
+      return (itemCat !== null && itemCat === catId) || (detailCat !== null && detailCat === catId);
+    });
+  };
+
+  const calculateVoucherAllocation = (
+    currentItems: DataCart[],
+    voucherCode: string,
+    voucherValue: number,
+    voucherRemaining: number,
+    categories: any[],
+    discUnit: number
+  ) => {
+    let tempRemaining = voucherRemaining;
+    const allocation: { [itemId: number]: number } = {};
+    let appliedTotal = 0;
+
+    for (const item of currentItems) {
+      if (tempRemaining <= 0) break;
+
+      if (isCategoryEligible(item, categories)) {
+        const itemTotal = Number(item.final_price_including_tax ?? 0) ||
+          (Number(item.selected_variation?.items_variable_items_sale_price ?? item.item_sale_price ?? 0) * item.quantity);
+
+        if (itemTotal > 0) {
+          const appliedToItem = Math.min(tempRemaining, itemTotal);
+          allocation[item.item_id] = appliedToItem;
+          tempRemaining -= appliedToItem;
+          appliedTotal += appliedToItem;
+        }
+      }
+    }
+
+    return {
+      allocation,
+      appliedTotal,
+    };
+  };
+
+  useEffect(() => {
+    if (!voucherInfo || !newItems || newItems.length === 0) {
+      setAppliedVoucher(null);
+      return;
+    }
+
+    const { allocation, appliedTotal } = calculateVoucherAllocation(
+      newItems,
+      voucherInfo.code,
+      voucherInfo.voucherValue,
+      voucherInfo.remainingValue,
+      voucherInfo.categories,
+      voucherInfo.discUnit
+    );
+
+    setAppliedVoucher({
+      code: voucherInfo.code,
+      voucherValue: voucherInfo.voucherValue,
+      remainingValue: voucherInfo.remainingValue,
+      appliedTotal,
+      allocation,
+      discUnit: voucherInfo.discUnit,
+    });
+  }, [newItems, voucherInfo]);
+
+  const handleApplyVoucher = async () => {
+    if (!voucherCodeInput.trim()) {
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Please enter a voucher code",
+      });
+      return;
+    }
+
+    setVoucherLoading(true);
+    const code = voucherCodeInput.trim();
+    const currentCusId = userInfo?.customer_id ?? checkoutData?.customer_id ?? null;
+    const outlet = process.env.NEXT_PUBLIC_PASSKEY_OUTLET ?? "";
+    const outletId = parseInt(outlet);
+
+    try {
+      // Step 1: Check membership
+      let hasMembership = 0;
+      if (currentCusId) {
+        try {
+          const memRes = await fetch(
+            `${process.env.NEXT_PUBLIC_PASSKEY_IPOS}api/v1/ipos/discounts/membershipCheck`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
+              },
+              body: JSON.stringify({ customer_id: currentCusId }),
+            }
+          );
+          const memData = await memRes.json();
+          if (memData?.status && memData?.data?.membership === 1) {
+            hasMembership = 1;
+          }
+        } catch (err) {
+          console.error("Failed to check membership:", err);
+        }
+      }
+
+      // Step 2: Verify Voucher
+      const verifyPayload = {
+        code,
+        total_order_price: total,
+        order_id: null,
+        till: 0,
+        cus_id: currentCusId,
+        membership: hasMembership === 1 ? 1 : null,
+        outlet_id: isNaN(outletId) ? 229 : outletId,
+      };
+
+      const verifyRes = await fetch(
+        `${process.env.NEXT_PUBLIC_PASSKEY_IPOS}api/v1/ipos/discounts/verifyVoucher`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
+          },
+          body: JSON.stringify(verifyPayload),
+        }
+      );
+      const verifyData = await verifyRes.json();
+
+      if (!verifyData?.status || !verifyData?.data) {
+        toast({
+          title: "Voucher Declined",
+          variant: "destructive",
+          description: verifyData?.message ?? "Invalid voucher code.",
+        });
+        setVoucherLoading(false);
+        return;
+      }
+
+      const vData = verifyData.data;
+
+      // Check active status
+      if (vData.active_status !== 1) {
+        toast({
+          title: "Voucher Declined",
+          variant: "destructive",
+          description: "Voucher is inactive.",
+        });
+        setVoucherLoading(false);
+        return;
+      }
+
+      // Check date range
+      const now = new Date();
+      const fromDate = vData.valid_from ? new Date(vData.valid_from) : null;
+      const untilDate = vData.valid_until ? new Date(vData.valid_until) : null;
+
+      if (fromDate && now < fromDate) {
+        toast({
+          title: "Voucher Declined",
+          variant: "destructive",
+          description: "Voucher is not active yet.",
+        });
+        setVoucherLoading(false);
+        return;
+      }
+
+      if (untilDate && now > untilDate) {
+        toast({
+          title: "Voucher Declined",
+          variant: "destructive",
+          description: "Voucher has expired.",
+        });
+        setVoucherLoading(false);
+        return;
+      }
+
+      // Check Customer Assignment & Type eligibility
+      let isEligible = false;
+      let baseValue = 0;
+      let isGuestCase = false;
+
+      if (vData.cus_id !== null) {
+        if (Number(currentCusId) === Number(vData.cus_id)) {
+          isEligible = true;
+          baseValue = hasMembership === 1 ? (vData.mem_disc_value ?? vData.disc_value ?? 0) : (vData.disc_value ?? 0);
+        } else {
+          toast({
+            title: "Voucher Declined",
+            variant: "destructive",
+            description: "This voucher is assigned to another customer.",
+          });
+          setVoucherLoading(false);
+          return;
+        }
+      } else if (vData.all_members === 1 && vData.all_non_members === 1) {
+        isEligible = true;
+        baseValue = hasMembership === 1 ? (vData.mem_disc_value ?? vData.disc_value ?? 0) : (vData.disc_value ?? 0);
+      } else if (vData.all_guests === 1) {
+        isEligible = true;
+        baseValue = vData.guest_disc_value ?? vData.disc_value ?? 0;
+        isGuestCase = true;
+      } else {
+        // Fallback checks for members or non-members
+        if (hasMembership === 1 && vData.all_members === 1) {
+          isEligible = true;
+          baseValue = vData.mem_disc_value ?? vData.disc_value ?? 0;
+        } else if (hasMembership !== 1 && vData.all_non_members === 1) {
+          isEligible = true;
+          baseValue = vData.disc_value ?? 0;
+        }
+      }
+
+      if (!isEligible) {
+        toast({
+          title: "Voucher Declined",
+          variant: "destructive",
+          description: "You are not eligible for this voucher.",
+        });
+        setVoucherLoading(false);
+        return;
+      }
+
+      // Step 3: Get Voucher Logs
+      const logsRes = await fetch(
+        `${process.env.NEXT_PUBLIC_PASSKEY_IPOS}api/v1/ipos/discounts/getVoucherLogs`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
+          },
+          body: JSON.stringify({ code }),
+        }
+      );
+      const logsData = await logsRes.json();
+      const logsList = (logsData?.status && Array.isArray(logsData?.data)) ? logsData.data : [];
+
+      let usedSum = 0;
+      if (isGuestCase) {
+        // Subtract used values by all customers
+        usedSum = logsList.reduce((acc: number, log: any) => acc + (Number(log.dl_used_value) || 0), 0);
+      } else {
+        // Subtract used values by this customer
+        usedSum = logsList
+          .filter((log: any) => currentCusId !== null && Number(log.dl_cus_id) === Number(currentCusId))
+          .reduce((acc: number, log: any) => acc + (Number(log.dl_used_value) || 0), 0);
+      }
+
+      const remaining = baseValue - usedSum;
+
+      if (remaining <= 0) {
+        toast({
+          title: "Voucher Declined",
+          variant: "destructive",
+          description: "This voucher has no remaining value.",
+        });
+        setVoucherLoading(false);
+        return;
+      }
+
+      setVoucherInfo({
+        code,
+        voucherValue: baseValue,
+        remainingValue: remaining,
+        categories: vData.categories ?? [],
+        discUnit: vData.disc_unit ?? 1,
+      });
+
+      toast({
+        title: "Voucher Applied",
+        variant: "success",
+        description: `Successfully applied voucher. Remaining value: $${remaining.toFixed(2)}`,
+      });
+
+      setIsOpenVoucherModal(false);
+      setVoucherCodeInput("");
+
+    } catch (err) {
+      console.error("Voucher application error:", err);
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Failed to verify or apply voucher. Please try again.",
+      });
+    } finally {
+      setVoucherLoading(false);
+    }
+  };
+
   function getShippingPrice(
 
     country_name: string,
@@ -852,36 +1241,42 @@ const MyComponent = () => {
                       </div>
                     </div>
                   </div>
-                  {/* {userInfo?.customer_id && (
-                    <div>
-                      <div className="flex flex-col items-center">
-                        <div className="w-48 py-2">
-                          <Tabs tabs={tabs} changeTabName={setDiscountType} />
-                        </div>
-
-                        <div className="mt-2 flex h-10">
-                          <Input
-                            value={discountValue}
-                            icon
-                            onChange={(e) => {
-                              setDiscountValue(e.target.value);
+                  <div className="mt-4 w-full lg:w-64">
+                    {appliedVoucher ? (
+                      <div className="flex flex-col gap-2 rounded-xl border border-green-500 bg-green-50 p-4 dark:bg-green-950/20 dark:border-green-500/30">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-semibold text-green-700 dark:text-green-400">
+                            Voucher Applied
+                          </span>
+                          <button
+                            onClick={() => {
+                              setVoucherInfo(null);
+                              setAppliedVoucher(null);
+                              toast({
+                                title: "Voucher Removed",
+                                description: "The applied voucher has been removed.",
+                              });
                             }}
-                          />
-                          <div className="ml-2 mt-1">
-                            <Button
-                              height="h-8"
-                              title={"Apply discount"}
-                              className="text-xs"
-                              loading={discountLoader}
-                              onClick={() => {
-                                handleclick();
-                              }}
-                            />
-                          </div>
+                            className="text-xs font-semibold text-red-500 hover:text-red-700 underline"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <div className="text-xs text-neutral-600 dark:text-neutral-300">
+                          <p className="font-mono font-semibold">Code: {appliedVoucher.code}</p>
+                          <p className="mt-1">Applied: ${appliedVoucher.appliedTotal.toFixed(2)}</p>
+                          <p>Remaining: ${(appliedVoucher.remainingValue - appliedVoucher.appliedTotal).toFixed(2)} / ${appliedVoucher.voucherValue.toFixed(2)}</p>
                         </div>
                       </div>
-                    </div>
-                  )} */}
+                    ) : (
+                      <Button
+                        onClick={() => setIsOpenVoucherModal(true)}
+                        className="w-full"
+                        title="Add Voucher"
+                      />
+                    )}
+
+                  </div>
                 </div>
                 {checkoutData?.address?.[0]?.country_code === "AUS" ? (
                   <div className="mb-4 mt-4">
@@ -1078,43 +1473,48 @@ const MyComponent = () => {
                   }`}
               >
                 {items?.[0] ? (
-                  items.map((item, index) => (
-                    <CartItem
-                      key={item.item_id + Math.random() + index}
-                      title={item.item_name}
-                      imageSrc={
-                        item?.object_path ?? item.media?.[0]?.object_path ?? ""
-                      }
-                      price={
-                        totalAfterCalculation?.items
-                          ? checkOldPrice(item.item_id)
-                          : 0
-                      }
-                      newPrice={
-                        totalAfterCalculation?.items
-                          ? checkNewPrice(item.item_id)
-                          : 0
-                      }
-                      showRemove={true}
-                      onChangeQuantity={(id, number) =>
-                        onChangeQuantity(id, number)
-                      }
-                      onIncrease={() =>
-                        handleIncrease(item.item_id, item.quantity + 1)
-                      }
-                      onDecrease={() =>
-                        handleDecrease(item.item_id, item.quantity - 1)
-                      }
-                      itemQuantity={item.quantity}
-                      showQuantityIncrement={true}
-                      stock={item.stock}
-                      onRemove={() => {
-                        setRemoveItem(item);
-                        setIsOpenDeleteAlert(true);
-                      }}
-                      item={item}
-                    />
-                  ))
+                  items.map((item, index) => {
+                    const itemVoucherAmount = appliedVoucher?.allocation[item.item_id];
+                    return (
+                      <CartItem
+                        key={`${item.item_id}-${item.selected_variation?.items_variable_items_id ?? 'default'}`}
+                        title={item.item_name}
+                        imageSrc={
+                          item?.object_path ?? item.media?.[0]?.object_path ?? ""
+                        }
+                        price={
+                          totalAfterCalculation?.items
+                            ? checkOldPrice(item.item_id)
+                            : 0
+                        }
+                        newPrice={
+                          totalAfterCalculation?.items
+                            ? checkNewPrice(item.item_id)
+                            : 0
+                        }
+                        showRemove={true}
+                        onChangeQuantity={(id, number) =>
+                          onChangeQuantity(id, number)
+                        }
+                        onIncrease={() =>
+                          handleIncrease(item.item_id, item.quantity + 1)
+                        }
+                        onDecrease={() =>
+                          handleDecrease(item.item_id, item.quantity - 1)
+                        }
+                        itemQuantity={item.quantity}
+                        showQuantityIncrement={true}
+                        stock={item.stock}
+                        onRemove={() => {
+                          setRemoveItem(item);
+                          setIsOpenDeleteAlert(true);
+                        }}
+                        item={item}
+                        voucherCode={appliedVoucher?.code}
+                        voucherAmount={itemVoucherAmount}
+                      />
+                    );
+                  })
                 ) : (
                   <div>
                     <span className="text-lg font-bold text-red-600 dark:text-white">
@@ -1226,6 +1626,23 @@ const MyComponent = () => {
                         ${items?.[0] ? total.toFixed(2) : 0}
                       </span>
                     </div>
+
+                    {appliedVoucher && (
+                      <>
+                        <div className="mt-2 grid grid-cols-2 justify-between text-green-600 dark:text-green-400 font-medium animate-in fade-in slide-in-from-top-1 duration-200">
+                          <span>Voucher Applied ({appliedVoucher.code})</span>
+                          <span className="flex justify-end">
+                            -${appliedVoucher.appliedTotal.toFixed(2)}
+                          </span>
+                        </div>
+                        <div className="mt-2 grid grid-cols-2 justify-between border-t border-gray-300 dark:border-gray-600 pt-2 text-md font-bold">
+                          <span>Amount to Pay</span>
+                          <span className="flex justify-end">
+                            ${items?.[0] ? Math.max(0, total - appliedVoucher.appliedTotal).toFixed(2) : 0}
+                          </span>
+                        </div>
+                      </>
+                    )}
                     <div className="my-2 border-t border-gray-300" />
                     <div className="mt-3 flex">
                       <Button
@@ -1311,14 +1728,59 @@ const MyComponent = () => {
           {items?.filter((item) => item.disable_shipping === 1).map((item) => item.item_name).join(", ")}
         </div>
       </AlertBox>
-      {/* <AlertBox
-        title="Payment"
-        description=""
-        open={isOpenPaymentAlert}
-        onClose={() => setIsOpenPaymentAlert(false)}
-        onContinue={() => setIsOpenPaymentAlert(false)}
-      >
-      </AlertBox> */}
+
+      {isOpenVoucherModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-800 border border-gray-200 dark:border-slate-700 animate-in fade-in zoom-in duration-200 text-left">
+            <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
+              Add Voucher
+            </h3>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              Enter your voucher code to apply it to your order.
+            </p>
+
+            <div className="mt-4">
+              <Input
+                type="text"
+                placeholder="Voucher Code"
+                value={voucherCodeInput}
+                onChange={(e) => setVoucherCodeInput(e.target.value)}
+              />
+              {/* <input
+                type="text"
+                placeholder="Voucher Code"
+                value={voucherCodeInput}
+                onChange={(e) => setVoucherCodeInput(e.target.value)}
+                disabled={voucherLoading}
+                className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm outline-none focus:border-green-500 focus:bg-white dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:focus:border-green-400"
+              /> */}
+            </div>
+
+            <div className="mt-6 flex justify-end gap-3">
+
+              <Button
+                onClick={() => {
+                  setIsOpenVoucherModal(false);
+                  setVoucherCodeInput("");
+                }}
+                variant="secondary"
+                disabled={voucherLoading}
+                title="Cancel"
+                width="w-auto"
+              />
+
+              <Button
+                onClick={handleApplyVoucher}
+                disabled={voucherLoading || !voucherCodeInput.trim()}
+                title="Apply Voucher"
+                loading={voucherLoading}
+                width="w-auto"
+              />
+
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

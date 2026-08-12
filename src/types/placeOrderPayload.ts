@@ -4,6 +4,17 @@ interface EftPosDetails {
   ref_no: string;
 }
 
+interface AppliedVoucher {
+  cus_id: number | null;
+  code: string;
+  total_order_price: number | null;
+  final_order_price: number | null;
+  voucher_value: number;
+  used_value: number;
+  order_id: number | null;
+  discount_unit: number;
+}
+
 interface OrderItem {
   item_id: number;
   deal_id: number | null;
@@ -23,6 +34,7 @@ interface OrderItem {
     upgrade_name: string;
     upgrade_price: string;
   }>;
+  applied_vouchers?: AppliedVoucher[];
 }
 
 interface placeOrderPayload {

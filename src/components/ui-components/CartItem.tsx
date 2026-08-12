@@ -23,6 +23,8 @@ interface CartItemProps {
   item?: DataCart;
   newPrice?: number;
   disable_shipping?: number | null;
+  voucherCode?: string;
+  voucherAmount?: number;
 }
 
 const CartItem: React.FC<CartItemProps> = ({
@@ -39,6 +41,8 @@ const CartItem: React.FC<CartItemProps> = ({
   showQuantityIncrement,
   stock,
   item,
+  voucherCode,
+  voucherAmount,
 }) => {
   const currentStock = item?.selected_variation?.stock ?? stock;
   const quantity = currentStock?.quantity ?? 0;
@@ -109,12 +113,12 @@ const CartItem: React.FC<CartItemProps> = ({
           )}
 
           {newPrice && price != newPrice && newPrice != 0 && (
-            <>
+            <div className="flex flex-row items-center gap-2">
               <p className="text-sm font-bold text-red-500 line-through">
                 ${price.toFixed(2)}
               </p>
               <p className="text-md font-bold">${newPrice?.toFixed(2)}</p>
-            </>
+            </div>
           )}
         </div>
 
@@ -167,6 +171,12 @@ const CartItem: React.FC<CartItemProps> = ({
           {`This item is currently on backorder. It may take longer than usual to be ready for shipping/collection.`}
         </p>
       )}
+      {voucherCode && voucherAmount && voucherAmount > 0 ? (
+        <div className="mb-2 flex items-center justify-between rounded-lg bg-green-600 px-3 py-2 text-xs font-bold text-white shadow-sm dark:bg-green-700 animate-in fade-in slide-in-from-top-1 duration-200">
+          <span>Voucher: {voucherCode}</span>
+          <span>Applied: ${voucherAmount.toFixed(2)}-</span>
+        </div>
+      ) : null}
     </div>
   );
 };

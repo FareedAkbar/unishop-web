@@ -89,6 +89,10 @@ const OrderConfirmed = () => {
             {orderTransactionData?.discounted_price?.toFixed(2) ?? 0}
           </p>
           <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
+            <strong>Paid By Voucher:</strong> ${" "}
+            {orderTransactionData?.paid_by_voucher?.toFixed(2) ?? 0}
+          </p>
+          <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
             <strong>Order ID:</strong> {orderTransactionData?.order_id ?? 0}
           </p>
           <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
