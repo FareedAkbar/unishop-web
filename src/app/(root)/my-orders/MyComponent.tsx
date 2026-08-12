@@ -414,6 +414,7 @@ const MyComponent = () => {
   const closeModal = () => {
     setIsOpenPaymentAlert(false);
   };
+  console.log("dataOrders", dataOrders);
 
   return (
     <div>

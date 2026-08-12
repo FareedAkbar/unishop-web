@@ -60,6 +60,7 @@ type transactionData = {
   tracking_id?: number | null;
   total_order_price?: number | null;
   discounted_price?: number | null;
+  paid_by_voucher?: number | null;
 };
 
 interface AuthContextProps {
