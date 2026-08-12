@@ -615,23 +615,22 @@ const DataTable: React.FC<DataTableProps> = ({
                         </div>
                       )}
 
+
+
+                    <div className="flex justify-between text-base font-bold">
+                      <span>Total:</span>
+                      <span>
+                        $
+                        {
+                          (selectedItem?.total_discounted_price ?? 0).toFixed(2)}
+                      </span>
+                    </div>
                     {getVoucherPaidAmount() > 0 && (
                       <div className="flex justify-between text-sm text-green-600 dark:text-green-400 font-medium">
                         <span>Paid by Voucher:</span>
                         <span>-${getVoucherPaidAmount().toFixed(2)}</span>
                       </div>
                     )}
-
-                    <div className="flex justify-between text-base font-bold">
-                      <span>Total:</span>
-                      <span>
-                        $
-                        {Math.max(
-                          0,
-                          (selectedItem?.total_discounted_price ?? 0) - getVoucherPaidAmount()
-                        ).toFixed(2)}
-                      </span>
-                    </div>
                   </div>
                 </div>
               </div>
