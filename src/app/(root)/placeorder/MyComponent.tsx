@@ -27,6 +27,13 @@ import moment from "moment";
 import TableRates from "~/components/constants/tablerates";
 import { type ShippingRate } from "~/types/taxCalculationApiResponse";
 import { Countries_States } from "~/components/constants/countries_states";
+import {
+  Select as RadixSelect,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "~/components/ui/select";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -66,6 +73,7 @@ const MyComponent = () => {
   const [removeItem, setRemoveItem] = useState<DataCart | null>(null);
   const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState<boolean>(false);
   const [isOpenShippingAlert, setIsOpenShippingAlert] = useState<boolean>(false);
+  const [collectCampus, setCollectCampus] = useState<string>("");
   // const [socketStatus, setSocketStatus] = useState(true);
   const [totalAfterCalculation, setTotalAfterCalculation] =
     useState<TaxCalculationApiResponse>();
@@ -358,6 +366,15 @@ const MyComponent = () => {
         setIsOpenShippingAlert(true);
         return;
       }
+    } else {
+      if (!collectCampus) {
+        toast({
+          title: "Campus Required",
+          variant: "destructive",
+          description: "Please choose a campus for collection.",
+        });
+        return;
+      }
     }
     setPlaceOrderLoader(true);
 
@@ -552,6 +569,7 @@ const MyComponent = () => {
       order_items: await convertPayload(),
       address_id: checkoutData?.address?.[0]?.address_id ?? null,
       delivery_charges: shipping?.amount ?? 0,
+      collect_campus: shipping?.value === "free" ? collectCampus : "",
     };
     try {
       console.log(x);
@@ -670,6 +688,7 @@ const MyComponent = () => {
         });
         return;
       }
+      setCollectCampus("");
     }
 
     setShipping(val);
@@ -1388,6 +1407,31 @@ const MyComponent = () => {
                 </div>
                 {checkoutData?.address?.[0]?.country_code === "AUS" ? (
                   <div className="mb-4 mt-4">
+                    {shipping?.value === "free" && (
+                      <div className="mb-6 animate-in fade-in slide-in-from-top-1 duration-200 w-full ">
+                        <label className="block text-sm font-bold text-red-500  mb-2">
+                          Select Collection Campus
+                        </label>
+                        <RadixSelect
+                          value={collectCampus}
+                          onValueChange={(val) => setCollectCampus(val)}
+                        >
+                          <SelectTrigger className="w-full border border-gray-500 bg-white p-3 text-sm text-neutral-800 shadow-sm dark:border-white/30 dark:bg-slate-800 dark:text-neutral-200 focus:border-red-500 focus:ring-red-400">
+                            <SelectValue placeholder="-- Choose a Campus --" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white dark:bg-slate-800 border border-gray-500 dark:border-white/30 text-neutral-800 dark:text-neutral-200">
+                            <SelectItem value="wollongong">Wollongong Campus</SelectItem>
+                            <SelectItem value="begaValley">Bega Valley Campus</SelectItem>
+                            <SelectItem value="eurobodalla">Eurobodalla Campus</SelectItem>
+                            <SelectItem value="shoalhaven">Shoalhaven Campus</SelectItem>
+                            <SelectItem value="highlands">Highlands Campus</SelectItem>
+                            <SelectItem value="sutherland">Sutherland Campus</SelectItem>
+                            <SelectItem value="sydneyCBD">Sydney CBD Campus</SelectItem>
+                            <SelectItem value="liverpool">Liverpool Campus</SelectItem>
+                          </SelectContent>
+                        </RadixSelect>
+                      </div>
+                    )}
                     <p className="mb-2 font-bold">Shipping Method</p>
                     <div className="grid-col-1 grid gap-4 lg:grid-cols-2 lg:gap-10 lg:px-10">
                       {shippingOptions.map((option) => (
@@ -1426,7 +1470,7 @@ const MyComponent = () => {
                                   {option.label}
                                 </div>
                               )}
-                              {option.label2 && (
+                              {option.label2 && (option.value !== "free" || collectCampus === "wollongong") && (
                                 <div className="text-left">{option.label2}</div>
                               )}
                               {option.label3 && (
@@ -1456,7 +1500,32 @@ const MyComponent = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="mb-4 mt-10">
+                  <div className="mb-4 mt-4">
+                    {shipping?.value === "free" && (
+                      <div className="mb-6 animate-in fade-in slide-in-from-top-1 duration-200 w-full ">
+                        <label className="block text-sm font-bold text-red-500  mb-2">
+                          Select Collection Campus
+                        </label>
+                        <RadixSelect
+                          value={collectCampus}
+                          onValueChange={(val) => setCollectCampus(val)}
+                        >
+                          <SelectTrigger className="w-full border border-gray-500 bg-white p-3 text-sm text-neutral-800 shadow-sm dark:border-white/30 dark:bg-slate-800 dark:text-neutral-200 focus:border-red-500 focus:ring-red-400">
+                            <SelectValue placeholder="-- Choose a Campus --" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white dark:bg-slate-800 border border-gray-500 dark:border-white/30 text-neutral-800 dark:text-neutral-200">
+                            <SelectItem value="wollongong">Wollongong Campus</SelectItem>
+                            <SelectItem value="begaValley">Bega Valley Campus</SelectItem>
+                            <SelectItem value="eurobodalla">Eurobodalla Campus</SelectItem>
+                            <SelectItem value="shoalhaven">Shoalhaven Campus</SelectItem>
+                            <SelectItem value="highlands">Highlands Campus</SelectItem>
+                            <SelectItem value="sutherland">Sutherland Campus</SelectItem>
+                            <SelectItem value="sydneyCBD">Sydney CBD Campus</SelectItem>
+                            <SelectItem value="liverpool">Liverpool Campus</SelectItem>
+                          </SelectContent>
+                        </RadixSelect>
+                      </div>
+                    )}
                     <p className="mb-2 font-bold">Shipping Method</p>
                     <div className="grid-col-1 grid gap-4 lg:grid-cols-2 lg:gap-10 lg:px-10">
                       <div
@@ -1492,9 +1561,11 @@ const MyComponent = () => {
                             <div className="text-lg">
                               Click and Collect at UniShop service desk.
                             </div>
-                            <div>
-                              Building 11, 2 Northfields Avenue Keiraville
-                            </div>
+                            {collectCampus === "wollongong" && (
+                              <div>
+                                Building 11, 2 Northfields Avenue Keiraville
+                              </div>
+                            )}
                             <div className="text-sm">
                               You will be notified once the order is ready for
                               collection.
