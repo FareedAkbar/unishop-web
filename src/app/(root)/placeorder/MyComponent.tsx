@@ -105,7 +105,7 @@ const MyComponent = () => {
         const storedCart = localStorage.getItem("cart-items");
         if (storedCart) {
           try {
-            const parsed = JSON.parse(storedCart);
+            const parsed = JSON.parse(storedCart) as DataCart[];
             if (Array.isArray(parsed) && parsed.length > 0) {
               // Cart items are still loading from localStorage, do not clear
               return;
