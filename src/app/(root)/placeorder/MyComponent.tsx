@@ -98,6 +98,31 @@ const MyComponent = () => {
     setItems(itemsCart);
   }, [cartItems]);
 
+  // Clear voucher and reset totals when cart becomes empty
+  useEffect(() => {
+    if (items && items.length === 0) {
+      if (typeof window !== "undefined") {
+        const storedCart = localStorage.getItem("cart-items");
+        if (storedCart) {
+          try {
+            const parsed = JSON.parse(storedCart);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              // Cart items are still loading from localStorage, do not clear
+              return;
+            }
+          } catch (e) {
+            console.error("Failed to parse cart items:", e);
+          }
+        }
+      }
+      setNewItems([]);
+      setTotal(0);
+      setTotalOriginal(0);
+      setVoucherInfo(null);
+      setAppliedVoucher(null);
+    }
+  }, [items]);
+
   // get shipping Method
   // useEffect(() => {
   //   if (!checkoutData) return;
@@ -443,6 +468,7 @@ const MyComponent = () => {
       return [];
     }
     const currentCusId = userInfo?.customer_id ?? checkoutData?.customer_id ?? null;
+    let runningVoucherValue = appliedVoucher?.voucherValue ?? 0;
 
     const x = newItems?.map((item) => {
       // Find if this item has voucher applied
@@ -454,13 +480,17 @@ const MyComponent = () => {
             code: appliedVoucher.code,
             total_order_price: null,
             final_order_price: null,
-            voucher_value: appliedVoucher.voucherValue,
+            voucher_value: Number(runningVoucherValue.toFixed(2)),
             used_value: itemVoucherAmount,
             order_id: null,
             discount_unit: appliedVoucher.discUnit
           }
         ]
         : undefined;
+
+      if (itemVoucherAmount && itemVoucherAmount > 0) {
+        runningVoucherValue -= itemVoucherAmount;
+      }
 
       console.log("item", item)
       return {
@@ -1135,7 +1165,7 @@ const MyComponent = () => {
       if (vData.cus_id !== null) {
         if (Number(currentCusId) === Number(vData.cus_id)) {
           isEligible = true;
-          baseValue = hasMembership === 1 ? (vData.mem_disc_value ?? vData.disc_value ?? 0) : (vData.disc_value ?? 0);
+          baseValue = (vData.mem_disc_value ?? vData.disc_value ?? 0);
         } else {
           toast({
             title: "Voucher Declined",
@@ -1343,7 +1373,7 @@ const MyComponent = () => {
                         <div className="text-xs text-neutral-600 dark:text-neutral-300">
                           <p className="font-mono font-semibold">Code: {appliedVoucher.code}</p>
                           <p className="mt-1">Applied: ${appliedVoucher.appliedTotal.toFixed(2)}</p>
-                          <p>Remaining: ${(appliedVoucher.remainingValue - appliedVoucher.appliedTotal).toFixed(2)} / ${appliedVoucher.voucherValue.toFixed(2)}</p>
+                          <p>Remaining: ${(appliedVoucher.remainingValue - appliedVoucher.appliedTotal).toFixed(2)} / ${appliedVoucher.remainingValue.toFixed(2)}</p>
                         </div>
                       </div>
                     ) : (
@@ -1619,7 +1649,7 @@ const MyComponent = () => {
               </button>
               <div className="mt-4 rounded-xl border border-gray-500 bg-white p-4 shadow dark:bg-slate-800 lg:col-span-2 xl:col-span-2">
                 <h2 className="text-xl font-bold">Order Summary</h2>
-                {calculateLoader && (
+                {/* {calculateLoader && (
                   <div>
                     <div className="flex flex-col items-center justify-between">
                       <div className="mb-2 h-8 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-600" />
@@ -1630,37 +1660,37 @@ const MyComponent = () => {
                       </div>
                     </div>
                   </div>
-                )}
-                {!calculateLoader && (
-                  <>
-                    <div className="my-2 border-t border-gray-300" />
-                    {/* <div className="grid grid-cols-2 justify-between">
+                )} */}
+                {/* {!calculateLoader && ( */}
+                <>
+                  <div className="my-2 border-t border-gray-300" />
+                  {/* <div className="grid grid-cols-2 justify-between">
                     <span className="text-sm">Cart Subtotal</span>
                     <span className="flex justify-end text-sm">
                       ${totalAfterCalculation?.original_price.toFixed(2)}
                     </span>
                   </div> */}
-                    <div className="mt-2 grid grid-cols-2 justify-between">
-                      <span className="text-sm">Price</span>
-                      <span className="flex justify-end text-sm">
-                        $
-                        {items?.[0]
-                          ? totalAfterCalculation?.final_price_including_tax.toFixed(
-                            2,
-                          )
-                          : 0}
-                      </span>
-                    </div>
-                    <div className="mt-2 grid grid-cols-2 justify-between">
-                      <span className="text-sm">GST (Included)</span>
-                      <span className="flex justify-end text-sm">
-                        $
-                        {items?.[0]
-                          ? totalAfterCalculation?.item_tax_price.toFixed(2)
-                          : 0}
-                      </span>
-                    </div>
-                    {/* <div className="mt-2 grid grid-cols-2 justify-between">
+                  <div className="mt-2 grid grid-cols-2 justify-between">
+                    <span className="text-sm">Price</span>
+                    <span className="flex justify-end text-sm">
+                      $
+                      {items?.[0]
+                        ? totalAfterCalculation?.final_price_including_tax.toFixed(
+                          2,
+                        )
+                        : 0}
+                    </span>
+                  </div>
+                  <div className="mt-2 grid grid-cols-2 justify-between">
+                    <span className="text-sm">GST (Included)</span>
+                    <span className="flex justify-end text-sm">
+                      $
+                      {items?.[0]
+                        ? totalAfterCalculation?.item_tax_price.toFixed(2)
+                        : 0}
+                    </span>
+                  </div>
+                  {/* <div className="mt-2 grid grid-cols-2 justify-between">
                     <span className="text-sm">Subtotal</span>
                     <span className="flex justify-end text-sm">
                       $
@@ -1669,72 +1699,72 @@ const MyComponent = () => {
                       )}
                     </span>
                   </div> */}
+                  <div className="mt-2 grid grid-cols-3 justify-between">
+                    <div className="col-span-2 flex flex-col">
+                      <span className="text-sm">Shipping</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
+                        {shipping?.label} - {shipping?.type}
+                      </span>
+                    </div>
+
+                    <span className="col-span-1 flex justify-end text-sm">
+                      ${(shipping?.amount ?? 0).toFixed(2)}
+                    </span>
+                  </div>
+                  {calculateWeight() > 0 && (
                     <div className="mt-2 grid grid-cols-3 justify-between">
                       <div className="col-span-2 flex flex-col">
-                        <span className="text-sm">Shipping</span>
-                        <span className="text-sm text-gray-600 dark:text-gray-300">
-                          {shipping?.label} - {shipping?.type}
-                        </span>
+                        <span className="text-sm">Order Weight</span>
                       </div>
 
                       <span className="col-span-1 flex justify-end text-sm">
-                        ${(shipping?.amount ?? 0).toFixed(2)}
+                        {calculateWeight().toFixed(2)} KG
                       </span>
                     </div>
-                    {calculateWeight() > 0 && (
-                      <div className="mt-2 grid grid-cols-3 justify-between">
-                        <div className="col-span-2 flex flex-col">
-                          <span className="text-sm">Order Weight</span>
-                        </div>
+                  )}
 
-                        <span className="col-span-1 flex justify-end text-sm">
-                          {calculateWeight().toFixed(2)} KG
-                        </span>
-                      </div>
-                    )}
-
-                    <div className="mt-2 grid grid-cols-2 justify-between">
-                      <div className="flex flex-col">
-                        <span className="text-md font-semibold">
-                          Order Total
-                        </span>
-                      </div>
-
-                      <span className="text-md flex justify-end font-bold">
-                        ${items?.[0] ? total.toFixed(2) : 0}
+                  <div className="mt-2 grid grid-cols-2 justify-between">
+                    <div className="flex flex-col">
+                      <span className="text-md font-semibold">
+                        Order Total
                       </span>
                     </div>
 
-                    {appliedVoucher && (
-                      <>
-                        <div className="mt-2 grid grid-cols-2 justify-between text-green-600 dark:text-green-400 font-medium animate-in fade-in slide-in-from-top-1 duration-200">
-                          <span>Voucher Applied ({appliedVoucher.code})</span>
-                          <span className="flex justify-end">
-                            -${appliedVoucher.appliedTotal.toFixed(2)}
-                          </span>
-                        </div>
-                        <div className="mt-2 grid grid-cols-2 justify-between border-t border-gray-300 dark:border-gray-600 pt-2 text-md font-bold">
-                          <span>Amount to Pay</span>
-                          <span className="flex justify-end">
-                            ${items?.[0] ? Math.max(0, total - appliedVoucher.appliedTotal).toFixed(2) : 0}
-                          </span>
-                        </div>
-                      </>
-                    )}
-                    <div className="my-2 border-t border-gray-300" />
-                    <div className="mt-3 flex">
-                      <Button
-                        onClick={() => handlePlaceOrder()}
-                        disabled={
-                          totalAfterCalculation && items?.[0] ? false : true
-                        }
-                        width="w-full"
-                        title="Place Order"
-                        loading={placeOrderLoader}
-                      />
-                    </div>
-                  </>
-                )}
+                    <span className="text-md flex justify-end font-bold">
+                      ${items?.[0] ? total.toFixed(2) : 0}
+                    </span>
+                  </div>
+
+                  {appliedVoucher && (
+                    <>
+                      <div className="mt-2 grid grid-cols-2 justify-between text-green-600 dark:text-green-400 font-medium animate-in fade-in slide-in-from-top-1 duration-200">
+                        <span>Voucher Applied ({appliedVoucher.code})</span>
+                        <span className="flex justify-end">
+                          -${appliedVoucher.appliedTotal.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="mt-2 grid grid-cols-2 justify-between border-t border-gray-300 dark:border-gray-600 pt-2 text-md font-bold">
+                        <span>Amount to Pay</span>
+                        <span className="flex justify-end">
+                          ${items?.[0] ? Math.max(0, total - appliedVoucher.appliedTotal).toFixed(2) : 0}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                  <div className="my-2 border-t border-gray-300" />
+                  <div className="mt-3 flex">
+                    <Button
+                      onClick={() => handlePlaceOrder()}
+                      disabled={
+                        totalAfterCalculation && items?.[0] ? false : true || calculateLoader || placeOrderLoader
+                      }
+                      width="w-full"
+                      title="Place Order"
+                      loading={placeOrderLoader}
+                    />
+                  </div>
+                </>
+                {/* // )} */}
               </div>
             </div>
           </div>
@@ -1808,7 +1838,7 @@ const MyComponent = () => {
       </AlertBox>
 
       {isOpenVoucherModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" >
           <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-800 border border-gray-200 dark:border-slate-700 animate-in fade-in zoom-in duration-200 text-left">
             <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
               Add Voucher
