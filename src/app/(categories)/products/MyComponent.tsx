@@ -138,6 +138,7 @@ const MyComponent = () => {
       setLoader(true);
       setDisplayData(null); // Reset display data before fetching new data
       const x = await getItemsByCategory(id ?? 0, page, category_type);
+      console.log("cateeeee", x);
 
       if (typeof x !== "boolean" && x.status) {
         setPagination(x.meta);
@@ -146,9 +147,8 @@ const MyComponent = () => {
         setTotalPages(x.meta.pages);
         setPageSize(x.meta.limit);
       }
-      setTimeout(() => {
-        setLoader(false); // Reset flip state after changing the image
-      }, 2000);
+      setLoader(false); // Reset flip state after changing the image
+
     } catch (error) {
       console.error("Failed to load data:", error);
       setLoader(false);

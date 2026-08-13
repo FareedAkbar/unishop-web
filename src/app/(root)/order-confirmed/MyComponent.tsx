@@ -93,15 +93,15 @@ const OrderConfirmed = () => {
             {orderTransactionData?.paid_by_voucher?.toFixed(2) ?? 0}
           </p>
           <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
-            <strong>Order ID:</strong> {orderTransactionData?.order_id ?? 0}
+            <strong>Order ID:</strong> {orderTransactionData?.order_id ?? "-"}
           </p>
           <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
             <strong>Tracking ID:</strong>{" "}
-            {orderTransactionData?.tracking_id ?? 0}
+            {orderTransactionData?.tracking_id ?? "-"}
           </p>
           <p className="text-md flex justify-between text-zinc-500 dark:text-gray-400">
             <strong>Transaction ID:</strong>{" "}
-            {orderTransactionData?.transaction_id ?? 0}
+            {orderTransactionData?.transaction_id ?? "-"}
           </p>
         </motion.div>
       </div>

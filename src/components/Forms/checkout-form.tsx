@@ -350,10 +350,28 @@ export default function CheckoutForm({
       setValue("email", userInfo?.email ?? "");
     }
   }, [userInfo]);
+  // Load saved address index from localStorage
   useEffect(() => {
-    if (billing_address) {
+    if (typeof window !== "undefined" && billing_address && billing_address.length > 0) {
+      const key = `SELECTED_ADDRESS_INDEX_${userInfo?.customer_id ?? "guest"}`;
+      const savedIndex = localStorage.getItem(key);
+      if (savedIndex !== null) {
+        const parsed = Number(savedIndex);
+        if (parsed < billing_address.length) {
+          setAddressIndex(parsed);
+        } else {
+          setAddressIndex(0);
+        }
+      }
+    }
+  }, [billing_address, userInfo]);
+
+  useEffect(() => {
+    if (billing_address && billing_address.length > 0) {
+      // Ensure we don't access out of bounds
+      const activeIndex = addressIndex < billing_address.length ? addressIndex : 0;
       const selectedCountry = Countries_States.find(
-        (country) => country.name === billing_address[addressIndex]?.country,
+        (country) => country.name === billing_address[activeIndex]?.country,
       );
 
       if (selectedCountry) {
@@ -365,29 +383,29 @@ export default function CheckoutForm({
       } else {
         setStateOptions([]);
       }
-      setValue("address", billing_address[addressIndex]?.address ?? "");
-      setValue("postal_code", billing_address[addressIndex]?.postal_code ?? "");
+      setValue("address", billing_address[activeIndex]?.address ?? "");
+      setValue("postal_code", billing_address[activeIndex]?.postal_code ?? "");
       setValue(
         "phone_number",
-        billing_address[addressIndex]?.phone_number ?? "",
+        billing_address[activeIndex]?.phone_number ?? "",
       );
 
-      setValue("city", billing_address[addressIndex]?.city ?? "");
+      setValue("city", billing_address[activeIndex]?.city ?? "");
 
       const state = Countries_States.find(
         (country) =>
-          country.name === billing_address[addressIndex]?.country,
+          country.name === billing_address[activeIndex]?.country,
       )?.states?.find(
         (state) =>
-          state.name.toString() === billing_address[addressIndex]?.state,
+          state.name.toString() === billing_address[activeIndex]?.state,
       );
       setValue("state", state?.id.toString() ?? "");
-      setSelectedCountry(billing_address[addressIndex]?.country ?? "");
+      setSelectedCountry(billing_address[activeIndex]?.country ?? "");
       setValue(
         "country",
         Countries_States.find(
           (country) =>
-            country.name === billing_address[addressIndex]?.country,
+            country.name === billing_address[activeIndex]?.country,
         )?.name ?? "",
       );
     }
@@ -395,6 +413,10 @@ export default function CheckoutForm({
 
   const onChange = (val: number) => {
     setAddressIndex(val);
+    if (typeof window !== "undefined") {
+      const key = `SELECTED_ADDRESS_INDEX_${userInfo?.customer_id ?? "guest"}`;
+      localStorage.setItem(key, val.toString());
+    }
   };
 
   useEffect(() => {
@@ -466,7 +488,7 @@ export default function CheckoutForm({
           <ScrollArea className="mb-2 mt-2 h-[15rem] flex-1 rounded-lg border border-gray-500 p-4 dark:bg-slate-800">
             {billing_address?.map((item, index) => (
               <React.Fragment key={index}>
-                <div className="m-2 rounded-lg border bg-white p-2 shadow-input dark:bg-slate-900 md:rounded-2xl cursor-pointer" onClick={() => onChange(index)}>
+                <div className="m-2 rounded-lg border border-gray-400 dark:border-gray-600 bg-white p-2 shadow-input dark:bg-slate-900 md:rounded-2xl cursor-pointer" onClick={() => onChange(index)}>
                   <label className="flex items-center gap-4 cursor-pointer">
                     <input
                       type="radio"
