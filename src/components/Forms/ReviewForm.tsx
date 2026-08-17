@@ -56,7 +56,7 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
   };
 
   return (
-    <div className="mx-auto w-full max-w-lg rounded-lg border border-gray-300 bg-white p-6 shadow-md dark:border-gray-800 dark:bg-slate-800">
+    <div className="mx-auto w-full max-w-lg rounded-lg border border-gray-500 bg-white p-6 shadow-md  dark:bg-slate-800">
       <h2 className="text-2xl font-bold text-red-600">Submit a Review</h2>
       <p className="mt-2 text-gray-500">We value your feedback!</p>
 
@@ -83,11 +83,10 @@ export default function ReviewForm({ submitValues, submitLoader }: FormProps) {
               return (
                 <FaStar
                   key={index}
-                  className={`cursor-pointer text-3xl transition-colors ${
-                    (hover ?? rating) >= starValue
-                      ? "text-yellow-500"
-                      : "text-gray-400"
-                  }`}
+                  className={`cursor-pointer text-3xl transition-colors ${(hover ?? rating) >= starValue
+                    ? "text-yellow-500"
+                    : "text-gray-400"
+                    }`}
                   onClick={() => handleRating(starValue)}
                   onMouseEnter={() => setHover(starValue)}
                   onMouseLeave={() => setHover(null)}

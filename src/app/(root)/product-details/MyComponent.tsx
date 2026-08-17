@@ -1599,7 +1599,7 @@ const MyComponent = () => {
           </div>
         ) : itemDetail?.detail && itemDetail?.detail.trim().length > 0 ? (
           <div className="flex h-[500px] w-full flex-col items-center justify-center">
-            <div className="w-full rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
+            <div className="w-full rounded-lg border border-gray-500 bg-white p-6 shadow-md dark:bg-slate-800">
               <h3 className="mb-4 text-2xl font-bold text-red-600">Details</h3>
 
               <ScrollArea className="h-72 overflow-y-auto">
@@ -1626,7 +1626,7 @@ const MyComponent = () => {
           </div>
         ) : reviews && reviews?.length > 0 ? (
           <div className="flex h-[500px] w-full flex-col items-center justify-center">
-            <div className="w-full rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
+            <div className="w-full rounded-lg border border-gray-500 bg-white p-6 shadow-md dark:bg-slate-800">
               <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
 
               <ScrollArea className="h-72 overflow-y-auto">
