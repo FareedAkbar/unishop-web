@@ -94,7 +94,7 @@ const ProductCard = ({
   };
 
   return (
-    <div className="group relative flex w-full flex-shrink-0 grow-0 flex-col rounded-md border border-gray-400 p-2 shadow dark:border-gray-600 dark:bg-slate-900 xs:w-56 sm:w-64 lg:w-72">
+    <div className="group relative flex w-full flex-shrink-0 grow-0 flex-col rounded-md border border-gray-400 p-2 shadow-sm  shadow-gray-500 dark:border-gray-600 dark:bg-slate-900 xs:w-56 sm:w-64 lg:w-72">
       {((product?.items_type === 1 && !product?.variations?.[0]) ??
         product?.item_sale_price) && (
           <div className="absolute inset-0 z-[1] flex items-center justify-center rounded bg-black/30 dark:bg-white/30">

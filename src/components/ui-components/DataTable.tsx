@@ -235,6 +235,38 @@ const DataTable: React.FC<DataTableProps> = ({
     return moment(safe).format(format);
     //  return moment.parseZone(date).local().format(format);
   }
+
+  const getPageNumbers = () => {
+    const pageNumbers: (number | string)[] = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pageNumbers.push(i);
+        }
+        pageNumbers.push("...");
+        pageNumbers.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pageNumbers.push(1);
+        pageNumbers.push("...");
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pageNumbers.push(i);
+        }
+      } else {
+        pageNumbers.push(1);
+        pageNumbers.push("...");
+        pageNumbers.push(currentPage - 1);
+        pageNumbers.push(currentPage);
+        pageNumbers.push(currentPage + 1);
+        pageNumbers.push("...");
+        pageNumbers.push(totalPages);
+      }
+    }
+    return pageNumbers;
+  };
   return (
     <>
       <div
@@ -310,14 +342,14 @@ const DataTable: React.FC<DataTableProps> = ({
             </button>
           </div>
         </div>
-        <table className="min-w-full border">
+        <table className="min-w-full border border-gray-500">
           <thead>
             <tr>
               {columns.map((column) =>
-                column.isVisible ? (
+                column.isVisible && (
                   <th
                     key={column.key}
-                    className="cursor-pointer border-b p-2 text-left"
+                    className="cursor-pointer border-b border-gray-500 p-2 text-left "
                     onClick={() => column.isSortable && handleSort(column.key)}
                   >
                     {column.header}
@@ -328,23 +360,24 @@ const DataTable: React.FC<DataTableProps> = ({
                         <FaAngleDown className="ml-1 inline" />
                       )}
                   </th>
-                ) : null,
+                )
               )}
+              <th className="border-b border-gray-500 p-2"></th>
             </tr>
           </thead>
           <tbody>
             {displayedData?.map((row) => (
-              <tr key={row.id} className="border-b">
+              <tr key={row.id} className="border-b border-gray-500">
                 {columns.map((column) =>
-                  column.isVisible ? (
+                  column.isVisible && (
                     <td key={column.key} className="p-2 text-sm">
                       {column.cell ? column.cell(row) : row[column.key]}
                     </td>
-                  ) : null,
+                  )
                 )}
                 <td className="p-2">
                   <FaEye
-                    className="cursor-pointer text-red-400 hover:text-red-600"
+                    className="cursor-pointer text-red-500 hover:text-red-600"
                     onClick={() => onClickView(row)}
                   />
                 </td>
@@ -359,25 +392,62 @@ const DataTable: React.FC<DataTableProps> = ({
             )}
           </tbody>
         </table>
-        <div className="mt-4 flex justify-between">
-          <button
-            className={`rounded-full p-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-200 text-black" : "bg-red-500 text-white"}`}
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            <FaChevronLeft />
-          </button>
-          <span className="px-2">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            className={`rounded-full p-2 ${currentPage === totalPages ? "cursor-not-allowed bg-gray-200 text-black" : "bg-red-500 text-white"}`}
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            <FaChevronRight />
-          </button>
-        </div>
+        {totalPages > 0 && (
+          <div className="z-5 flex justify-end px-4 py-4 w-full">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <button
+                className={`rounded-md p-2 text-sm border flex items-center justify-center transition-all ${currentPage === 1
+                    ? "cursor-not-allowed bg-gray-100 text-gray-400 border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-gray-600"
+                    : "cursor-pointer bg-white text-gray-700 border-gray-300 hover:border-red-500 hover:text-red-500 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-200 dark:hover:border-red-500"
+                  }`}
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <FaChevronLeft className="text-xs" />
+              </button>
+
+              {getPageNumbers().map((page, index) => {
+                if (page === "...") {
+                  return (
+                    <span
+                      key={`dots-${index}`}
+                      className="px-2 text-gray-400 dark:text-gray-500 select-none text-sm"
+                    >
+                      ...
+                    </span>
+                  );
+                }
+
+                const pageNum = page as number;
+                const isActive = pageNum === currentPage;
+
+                return (
+                  <button
+                    key={`page-${pageNum}`}
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`rounded-md px-3 py-1.5 text-sm font-medium transition-all ${isActive
+                        ? "bg-red-500 text-white"
+                        : "bg-white text-gray-700 border border-gray-300 hover:border-red-500 hover:text-red-500 dark:bg-slate-700 dark:text-gray-200 dark:border-slate-600 dark:hover:border-red-500"
+                      }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+
+              <button
+                className={`rounded-md p-2 text-sm border flex items-center justify-center transition-all ${totalPages === 0 || currentPage === totalPages
+                    ? "cursor-not-allowed bg-gray-100 text-gray-400 border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-gray-600"
+                    : "cursor-pointer bg-white text-gray-700 border-gray-300 hover:border-red-500 hover:text-red-500 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-200 dark:hover:border-red-500"
+                  }`}
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={totalPages === 0 || currentPage === totalPages}
+              >
+                <FaChevronRight className="text-xs" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       <ModalBody>
         <ModalContent>

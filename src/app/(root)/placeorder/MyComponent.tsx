@@ -412,6 +412,9 @@ const MyComponent = () => {
     message: string;
     status: boolean;
     transaction_id: number;
+    card_type?: string;
+    card_pan?: string;
+    ref_no?: string;
   };
 
   interface dataresponse {
@@ -538,10 +541,47 @@ const MyComponent = () => {
     return x;
   }
 
-  const placeOrderApi = async (id: number | null) => {
+  const placeOrderApi = async (
+    id: number | null,
+    cardDetails?: { card_type?: string; card_pan?: string; ref_no?: string }
+  ) => {
     setLocalTransactionData(null);
     const date = new Date();
     const outlet = process.env.NEXT_PUBLIC_PASSKEY_OUTLET ?? "";
+
+    const payable = appliedVoucher ? Math.max(0, total - appliedVoucher.appliedTotal) : total;
+    const voucherPaidAmount = total - payable;
+
+    const splits = [];
+
+    if (payable > 0) {
+      splits.push({
+        payment_type: 2,
+        order_intent: "",
+        rounded_amount: 0,
+        cash_in: 0.0,
+        cash_out: 0.0,
+        card_type: cardDetails?.card_type ?? "N.A.",
+        card_pan: cardDetails?.card_pan ?? "N.A.",
+        ref_no: cardDetails?.ref_no ?? "N.A.",
+        order_amount: Number(payable.toFixed(2)),
+      });
+    }
+
+    if (voucherPaidAmount > 0) {
+      splits.push({
+        payment_type: 12,
+        order_intent: "",
+        rounded_amount: 0,
+        cash_in: 0.0,
+        cash_out: 0.0,
+        card_type: "N.A.",
+        card_pan: "N.A.",
+        ref_no: "N.A.",
+        order_amount: Number(voucherPaidAmount.toFixed(2)),
+      });
+    }
+
     const x = {
       order_type: shipping?.value == "free" ? 1 : 2,
       online_order_type: 1,
@@ -558,9 +598,9 @@ const MyComponent = () => {
       tab_limit: 0.0,
       final_price_including_tax: total,
       eft_pos_details: {
-        card_type: "N.A.",
-        card_pan: "N.A.",
-        ref_no: "N.A.",
+        card_type: cardDetails?.card_type ?? "N.A.",
+        card_pan: cardDetails?.card_pan ?? "N.A.",
+        ref_no: cardDetails?.ref_no ?? "N.A.",
       },
       member_id: checkoutData?.customer_id ?? null,
       transaction_id: id !== null ? id.toString() : null,
@@ -570,6 +610,7 @@ const MyComponent = () => {
       address_id: checkoutData?.address?.[0]?.address_id ?? null,
       delivery_charges: shipping?.amount ?? 0,
       collect_campus: shipping?.value === "free" ? collectCampus : "",
+      splits,
     };
     try {
       console.log(x);
@@ -638,7 +679,11 @@ const MyComponent = () => {
         setIsOpenPaymentAlert(false);
 
         try {
-          await placeOrderApi(data.transaction_id);
+          await placeOrderApi(data.transaction_id, {
+            card_type: data.card_type,
+            card_pan: data.card_pan,
+            ref_no: data.ref_no,
+          });
         } catch (error) {
           console.error("Failed to load data:", error);
           console.error("Failed to place order");

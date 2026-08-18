@@ -37,6 +37,18 @@ interface OrderItem {
   applied_vouchers?: AppliedVoucher[];
 }
 
+interface SplitPayment {
+  payment_type: number;
+  order_intent: string;
+  rounded_amount: number;
+  cash_in: number;
+  cash_out: number;
+  card_type?: string;
+  card_pan?: string;
+  ref_no?: string;
+  order_amount: number;
+}
+
 interface placeOrderPayload {
   order_type: number;
   online_order_type: number;
@@ -52,7 +64,7 @@ interface placeOrderPayload {
   total_order_price: number;
   tab_limit: number;
   final_price_including_tax: number;
-  eft_pos_details: EftPosDetails;
+  eft_pos_details?: EftPosDetails;
   member_id: number | null;
   booknet_customer_id?: number | null;
   transaction_id?: string | null,
@@ -60,6 +72,7 @@ interface placeOrderPayload {
   order_items: OrderItem[];
   address_id: number | null;
   collect_campus?: string;
+  splits?: SplitPayment[];
 }
 
 export type { placeOrderPayload, OrderItem }

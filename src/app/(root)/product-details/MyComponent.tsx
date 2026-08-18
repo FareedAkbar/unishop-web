@@ -1599,7 +1599,7 @@ const MyComponent = () => {
           </div>
         ) : itemDetail?.detail && itemDetail?.detail.trim().length > 0 ? (
           <div className="flex h-[500px] w-full flex-col items-center justify-center">
-            <div className="w-full rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
+            <div className="w-full rounded-lg border border-gray-500 bg-white p-6 shadow-md dark:bg-slate-800">
               <h3 className="mb-4 text-2xl font-bold text-red-600">Details</h3>
 
               <ScrollArea className="h-72 overflow-y-auto">
@@ -1626,7 +1626,7 @@ const MyComponent = () => {
           </div>
         ) : reviews && reviews?.length > 0 ? (
           <div className="flex h-[500px] w-full flex-col items-center justify-center">
-            <div className="w-full rounded-lg border bg-white p-6 shadow-md dark:bg-slate-800">
+            <div className="w-full rounded-lg border border-gray-500 bg-white p-6 shadow-md dark:bg-slate-800">
               <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
 
               <ScrollArea className="h-72 overflow-y-auto">
@@ -1636,7 +1636,7 @@ const MyComponent = () => {
                       key={`review-${index}-${review.item_id ?? `fallback-${index}`}`}
                       className="mb-4 border-b border-gray-200 pb-2 dark:border-gray-600"
                     >
-                      <p className="font-semibold">{review.username}</p>
+                      <p className="font-semibold capitalize">{review.username}</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         {review.review}
                       </p>
