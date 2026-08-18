@@ -1636,7 +1636,7 @@ const MyComponent = () => {
                       key={`review-${index}-${review.item_id ?? `fallback-${index}`}`}
                       className="mb-4 border-b border-gray-200 pb-2 dark:border-gray-600"
                     >
-                      <p className="font-semibold">{review.username}</p>
+                      <p className="font-semibold capitalize">{review.username}</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         {review.review}
                       </p>
