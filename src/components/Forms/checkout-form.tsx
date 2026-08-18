@@ -295,6 +295,7 @@ export default function CheckoutForm({
       last_name: userInfo?.last_name ?? "",
       account_type: "Layby Account",
       web_checkout: true,
+      web_signup: true,
     };
 
     try {
