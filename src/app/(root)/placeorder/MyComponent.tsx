@@ -1367,6 +1367,9 @@ const MyComponent = () => {
     return totalWeight;
   };
 
+  const calcOriginalPrice = totalAfterCalculation?.original_price ?? 0;
+  const calcFinalPrice = totalAfterCalculation?.final_price_including_tax ?? 0;
+
   return (
     <div>
       <main className="min-h-screen justify-center pb-8 dark:from-slate-700 dark:to-slate-700">
@@ -1783,14 +1786,14 @@ const MyComponent = () => {
                   <div className="grid grid-cols-2 justify-between">
                     <span className="text-sm">Cart Subtotal</span>
                     <span className="flex justify-end text-sm">
-                      ${totalAfterCalculation?.original_price.toFixed(2)}
+                      ${calcOriginalPrice.toFixed(2)}
                     </span>
                   </div>
-                  {totalAfterCalculation?.original_price! - totalAfterCalculation?.final_price_including_tax! > 0 && (
+                  {calcOriginalPrice - calcFinalPrice > 0 && (
                     <div className=" flex justify-between">
                       <span className="text-sm text-gray-500 dark:text-gray-200">Discount</span>
                       <span className="text-sm text-green-600 font-medium">
-                        -${(totalAfterCalculation?.original_price! - totalAfterCalculation?.final_price_including_tax!).toFixed(2)}
+                        -${(calcOriginalPrice - calcFinalPrice).toFixed(2)}
                       </span>
                     </div>
                   )}
@@ -1799,9 +1802,7 @@ const MyComponent = () => {
                     <span className="flex justify-end text-sm">
                       $
                       {items?.[0]
-                        ? totalAfterCalculation?.final_price_including_tax.toFixed(
-                          2,
-                        )
+                        ? calcFinalPrice.toFixed(2)
                         : 0}
                     </span>
                   </div>
