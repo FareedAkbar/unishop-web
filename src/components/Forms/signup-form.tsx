@@ -126,6 +126,7 @@ export default function SignupFormDemo() {
         password: data.password,
         customer_type_id: 3,
         web_signup: true,
+        web_checkout: false,
         account_type: "Cash Customer",
       };
 
