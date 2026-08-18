@@ -1780,13 +1780,21 @@ const MyComponent = () => {
                 {/* {!calculateLoader && ( */}
                 <>
                   <div className="my-2 border-t border-gray-300" />
-                  {/* <div className="grid grid-cols-2 justify-between">
+                  <div className="grid grid-cols-2 justify-between">
                     <span className="text-sm">Cart Subtotal</span>
                     <span className="flex justify-end text-sm">
                       ${totalAfterCalculation?.original_price.toFixed(2)}
                     </span>
-                  </div> */}
-                  <div className="mt-2 grid grid-cols-2 justify-between">
+                  </div>
+                  {totalAfterCalculation?.original_price! - totalAfterCalculation?.final_price_including_tax! > 0 && (
+                    <div className=" flex justify-between">
+                      <span className="text-sm text-gray-500 dark:text-gray-200">Discount</span>
+                      <span className="text-sm text-green-600 font-medium">
+                        -${(totalAfterCalculation?.original_price! - totalAfterCalculation?.final_price_including_tax!).toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                  <div className=" grid grid-cols-2 justify-between">
                     <span className="text-sm">Price</span>
                     <span className="flex justify-end text-sm">
                       $
