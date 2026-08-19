@@ -353,7 +353,15 @@ export function StaticPageContent({
   const { page, loading } = useStaticPage(route);
 
   if (loading) return <LoadingSpinner />;
-  if (!page) return null;
+  if (!page) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px] p-6 text-center">
+        <p className="text-lg font-medium text-gray-600 dark:text-gray-300">
+          Failed to load content. Please try again later.
+        </p>
+      </div>
+    );
+  }
 
   if (variant === "header-only") {
     return <StaticPageHeader page={page} />;

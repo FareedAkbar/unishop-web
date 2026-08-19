@@ -19,7 +19,7 @@ export default function RootLayout({
         </aside> */}
 
         {/* Main content area */}
-        <main className="flex-1 overflow-auto p-4">{children}</main>
+        <main className="flex-1 p-4">{children}</main>
       </div>
 
       {/* Footer at bottom */}

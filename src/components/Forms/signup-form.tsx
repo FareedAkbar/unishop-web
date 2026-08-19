@@ -333,7 +333,9 @@ export default function SignupFormDemo() {
               <Input
                 id="password"
                 placeholder="••••••••"
-                type={showPassword ? "text" : "password"}
+                type="password"
+                showPassword={showPassword}
+                onToggleShowPassword={() => setShowPassword(!showPassword)}
                 {...register("password")}
               />
               <div className="flex justify-between items-center mt-1 text-xs">
@@ -354,7 +356,9 @@ export default function SignupFormDemo() {
               <Input
                 id="confirm_password"
                 placeholder="••••••••"
-                type={showPassword ? "text" : "password"}
+                type="password"
+                showPassword={showPassword}
+                onToggleShowPassword={() => setShowPassword(!showPassword)}
                 {...register("confirm_password")}
               />
               {errors.confirm_password && (

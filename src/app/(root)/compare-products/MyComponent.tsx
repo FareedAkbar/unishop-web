@@ -23,7 +23,7 @@ const CompareProductsPage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [compareProducts, setCompareProducts] = useState<DataCart[]>([]);
   const router = useRouter();
-  const { setProductForDetail } = useAuthContext();
+  const { setProductForDetail, cartItems, addCartItems, removeCartItems } = useAuthContext();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -37,6 +37,16 @@ const CompareProductsPage = () => {
     }
     setIsLoaded(true);
   }, []);
+
+  const isItemInCart = (itemId: number) => {
+    const newItems: DataCart[] =
+      typeof cartItems === "string"
+        ? (JSON.parse(cartItems) as DataCart[])
+        : cartItems!;
+    return newItems?.findIndex(
+      (cartItem: DataCart) => cartItem.item_id === itemId,
+    ) > -1;
+  };
 
   const removeFromCompare = (itemId: number, title: string) => {
     const updated = compareProducts.filter((p) => p.item_id !== itemId);
@@ -67,6 +77,7 @@ const CompareProductsPage = () => {
     { label: "Shelf Location", key: "shelf_location" },
     { label: "Stock Status", key: "stock" },
     { label: "Description", key: "description" },
+    { label: "Actions", key: "actions" },
   ];
 
   if (!isLoaded) {
@@ -277,6 +288,51 @@ const CompareProductsPage = () => {
                           {prod.description
                             ? prod.description.replace(/<\/?[^>]+(>|$)/g, "")
                             : "No description available."}
+                        </div>
+                      )}
+
+                      {attr.key === "actions" && (
+                        <div className="flex flex-col gap-2">
+                          {(prod.variations?.[0]?.items_variable_items_sale_price ??
+                            (prod.item_sale_price &&
+                              ((prod.stock?.quantity && prod.stock?.quantity > 0) ||
+                                prod.allow_special_order === 1))) ? (
+                            !isItemInCart(prod.item_id) ? (
+                              <Button
+                                title="Add to Cart"
+                                className="w-full text-xs py-1.5"
+                                onClick={async () => {
+                                  if (prod.variations?.[0]) {
+                                    await setProductForDetail(prod);
+                                    router.push(`/product-details`);
+                                  } else {
+                                    await addCartItems(prod);
+                                    toast({
+                                      variant: "success",
+                                      title: "Added to Cart",
+                                      description: `${prod.book_title ?? prod.item_name} has been added to your cart.`,
+                                    });
+                                  }
+                                }}
+                              />
+                            ) : (
+                              <Button
+                                title="Remove from Cart"
+                                variant="secondary"
+                                className="w-full text-xs py-1.5"
+                                onClick={async () => {
+                                  await removeCartItems(prod);
+                                  toast({
+                                    variant: "destructive",
+                                    title: "Removed from Cart",
+                                    description: `${prod.book_title ?? prod.item_name} has been removed from your cart.`,
+                                  });
+                                }}
+                              />
+                            )
+                          ) : (
+                            <span className="text-xs text-red-500 font-semibold">Out of Stock</span>
+                          )}
                         </div>
                       )}
                     </td>

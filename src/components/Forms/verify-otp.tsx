@@ -64,7 +64,7 @@ export default function VerifyOTPForm({ loginResponse }: LoginFormProps) {
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 border shadow-input bg-white dark:bg-black z-30">
       {loader && (
-        <Spinner />
+        <Spinner fullScreen />
       )}
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
         Please Verify your OTP Code

@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 // import { useSearchParams, usePathname } from "next/navigation";
 import { useAuthContext } from "~/Context/AuthContext";
+import { useToast } from "~/hooks/use-toast";
 import CheckoutForm from "~/components/Forms/checkout-form";
 import type DataCart from "~/types/book";
 import BooknetForm from "~/components/Forms/booknet-form";
@@ -15,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { type get_address_from_email } from "~/types/checkoutForm";
 
 const MyComponent = () => {
+  const { toast } = useToast();
   const {
     cartItems,
     removeCartItems,
@@ -202,9 +204,22 @@ const MyComponent = () => {
                     onChangeQuantity={(id, number) =>
                       onChangeQuantity(id, number)
                     }
-                    onIncrease={() =>
-                      handleIncrease(item.item_id, item.quantity + 1)
-                    }
+                    onIncrease={() => {
+                      const currentStock = item?.selected_variation?.stock ?? item?.stock;
+                      const stockQty = currentStock?.quantity ?? 0;
+                      if (
+                        item.quantity >= stockQty &&
+                        item.allow_special_order == 0
+                      ) {
+                        toast({
+                          title: "Stock Limit Reached",
+                          variant: "destructive",
+                          description: `Only ${stockQty} items are available in stock.`,
+                        });
+                      } else {
+                        void handleIncrease(item.item_id, item.quantity + 1);
+                      }
+                    }}
                     onDecrease={() =>
                       handleDecrease(item.item_id, item.quantity - 1)
                     }

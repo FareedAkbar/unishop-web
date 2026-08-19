@@ -61,16 +61,17 @@ const ProductCard = ({
             usage.default_semester === 1 || usage.default_trimester === 1,
         )
         .map((usage) => ({
-          type_id: usage.type_id, // Assuming `type_id` exists
+          type_id: usage.type_id,
           subject_name: usage.subject_name,
-          subject_code: usage.subject_code, // Assuming `subject_name` exists
+          subject_code: usage.subject_code,
         }));
     }
     return [];
   };
+
   interface TagJson {
     forFrontDesk?: boolean;
-    [key: string]: unknown; // Allow other properties we don't care about
+    [key: string]: unknown;
   }
   const checkTag = (tagName: string): boolean => {
     const yenIndex = tagName.indexOf("¥");
@@ -82,7 +83,6 @@ const ProductCard = ({
       const jsonStr = tagName.slice(yenIndex + 1);
       const jsonObj = JSON.parse(jsonStr) as TagJson;
 
-      // Explicitly check if forFrontDesk exists and is a boolean
       if (typeof jsonObj.forFrontDesk === "boolean") {
         return !jsonObj.forFrontDesk;
       }
@@ -93,8 +93,30 @@ const ProductCard = ({
     }
   };
 
+  // Stop the click from bubbling up to the card's own onClick (goToDetail)
+  const stop = (fn?: () => void) => (e: React.MouseEvent) => {
+    e.stopPropagation();
+    fn?.();
+  };
+
   return (
-    <div className="group relative flex w-full flex-shrink-0 grow-0 flex-col rounded-md border border-gray-400 p-2 shadow-sm  shadow-gray-500 dark:border-gray-600 dark:bg-slate-900 xs:w-56 sm:w-64 lg:w-72">
+    <div
+      onClick={goToDetail}
+      role={goToDetail ? "button" : undefined}
+      tabIndex={goToDetail ? 0 : undefined}
+      onKeyDown={
+        goToDetail
+          ? (e) => {
+            if (e.key === "Enter" || e.key === " ") goToDetail();
+          }
+          : undefined
+      }
+      // `isolate` creates a new stacking context so nothing inside this card
+      // (the hover icons, the "no stock" overlay, etc.) can ever render above
+      // page-level UI like an open cart drawer, regardless of the z-[n]
+      // values used internally.
+      className="group isolate relative flex w-full cursor-pointer flex-shrink-0 grow-0 flex-col rounded-md border border-gray-400 p-2 shadow-sm  shadow-gray-500 dark:border-gray-600 dark:bg-slate-900 xs:w-56 sm:w-64 lg:w-72"
+    >
       {((product?.items_type === 1 && !product?.variations?.[0]) ??
         product?.item_sale_price) && (
           <div className="absolute inset-0 z-[1] flex items-center justify-center rounded bg-black/30 dark:bg-white/30">
@@ -141,7 +163,6 @@ const ProductCard = ({
           ""
         )}
         <Image
-          onClick={goToDetail}
           src={
             product?.object_path
               ? `https://ipos-storage.s3.amazonaws.com/${product.object_path}`
@@ -152,7 +173,7 @@ const ProductCard = ({
           alt={product?.SKU_title ?? ""}
           width={1000}
           height={1000}
-          className="my-2 h-full w-full cursor-pointer object-contain transition-transform duration-300 hover:scale-105" // Scale on hover
+          className="my-2 h-full w-full object-contain transition-transform duration-300 hover:scale-105"
         />
         <div className="absolute right-5 top-2 flex">
           {showButton && !showAddToCart && (
@@ -164,7 +185,7 @@ const ProductCard = ({
         <div className="absolute right-5 top-10 flex translate-x-[100%] transform flex-col gap-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
           <button
             disabled={wishListLoader}
-            onClick={() => (handleFavourite ? handleFavourite() : "")}
+            onClick={stop(handleFavourite)}
             className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
           >
             {product?.item_id &&
@@ -175,7 +196,7 @@ const ProductCard = ({
             )}
           </button>
           <button
-            onClick={() => (openDetail ? openDetail() : "")}
+            onClick={stop(openDetail)}
             className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
           >
             <AiOutlineEye />
@@ -189,7 +210,9 @@ const ProductCard = ({
               product?.allow_special_order == 1))) ? (
         <Button
           width="w-full"
-          onClick={!showAddToCart ? onRemoveFromCart : onAddToCart}
+          onClick={stop(() =>
+            (showAddToCart ? onAddToCart : onRemoveFromCart)?.()
+          )}
           title={!showAddToCart ? "Remove From Cart" : "Add To Cart"}
           variant={showAddToCart ? "primary" : "secondary"}
         />
@@ -210,13 +233,6 @@ const ProductCard = ({
       ) : (
         ""
       )}
-      {/* {product?.stock?.quantity ? (
-        <span className="truncate text-xs">
-          Available Stock: {product?.stock?.quantity}
-        </span>
-      ) : (
-        ""
-      )} */}
 
       {product?.book_id && product?.food_id == null ? (
         <div className="flex flex-wrap gap-2 text-sm">
@@ -237,16 +253,10 @@ const ProductCard = ({
                       {matchedType?.type_name ?? ""}: {item.subject_name}{" "}
                       {item.subject_code}
                     </span>
-                    {/* <span className="inline-block w-fit rounded bg-yellow-200 px-2 py-1 text-xs text-black dark:bg-yellow-500">
-                    
-                  </span> */}
                   </div>
                 );
               })
               : ""
-            // <p className="font-serif text-xs">
-            //   Textbook is not used in this session
-            // </p>
           }
         </div>
       ) : (

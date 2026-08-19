@@ -1,17 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+"use client";
 
-import React from "react";
+import React, { Suspense } from "react";
+import dynamic from "next/dynamic";
+import Spinner from "~/components/spinner";
 
-const LazyMyComponent = React.lazy(() => import("./MyComponent"));
+const LazyMyComponent = dynamic(() => import("./MyComponent"), {
+  ssr: false,
+  loading: () => <Spinner />,
+});
 
 const BooksPage = () => {
   return (
-   
-        <LazyMyComponent />
-     
+    <Suspense fallback={<Spinner />}>
+      <LazyMyComponent />
+    </Suspense>
   );
 };
+
 export default BooksPage;

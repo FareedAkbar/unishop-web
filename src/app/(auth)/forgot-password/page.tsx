@@ -205,7 +205,9 @@ const ForgotPasswordComponent = () => {
         </div>
 
         {/* STEP 1: ENTER EMAIL */}
-        {view === "email" && (
+        {(view === "email" ||
+          (view === "verify-otp" && customerId === null) ||
+          (view === "new-password" && (!token || !email))) && (
           <div className="flex items-center justify-center bg-transparent pt-20 lg:h-screen lg:pt-0">
             <div className="z-30 mx-auto w-full max-w-md rounded-xl border bg-white p-4 shadow-input dark:bg-slate-800 md:rounded-2xl md:p-8">
               <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
@@ -284,22 +286,15 @@ const ForgotPasswordComponent = () => {
                   <Label required htmlFor="password">
                     New Password
                   </Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      placeholder="••••••••"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="new-password"
-                      {...registerPassword("password")}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 focus:outline-none"
-                    >
-                      {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
-                    </button>
-                  </div>
+                  <Input
+                    id="password"
+                    placeholder="••••••••"
+                    type="password"
+                    showPassword={showPassword}
+                    onToggleShowPassword={() => setShowPassword(!showPassword)}
+                    autoComplete="new-password"
+                    {...registerPassword("password")}
+                  />
                   {passwordValue && (
                     <span className={cn("text-xs font-semibold self-start", passwordStrength.color)}>
                       Strength: {passwordStrength.label}
@@ -318,6 +313,8 @@ const ForgotPasswordComponent = () => {
                     id="confirm_password"
                     placeholder="••••••••"
                     type="password"
+                    showPassword={showPassword}
+                    onToggleShowPassword={() => setShowPassword(!showPassword)}
                     autoComplete="new-password"
                     {...registerPassword("confirm_password")}
                   />

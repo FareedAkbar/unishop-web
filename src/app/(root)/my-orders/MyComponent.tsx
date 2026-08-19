@@ -245,11 +245,31 @@ const MyComponent = () => {
         },
       );
 
-      const result: ApiResponseForTransactionLink =
-        (await response.json()) as ApiResponseForTransactionLink;
+      interface BackendErrorDetails {
+        invalidFields?: string[];
+        requiredFields?: string[];
+      }
+
+      interface BackendResponse {
+        status?: boolean;
+        code?: string;
+        message?: string;
+        details?: BackendErrorDetails;
+        data?: {
+          order_id?: number;
+          tracking_id?: string;
+        };
+      }
+
+      let result: BackendResponse | null = null;
+      try {
+        result = (await response.json()) as BackendResponse;
+      } catch (e) {
+        result = null;
+      }
 
       // Check if result has the expected structure
-      if (result?.status) {
+      if (response.ok && result?.status) {
         toast({
           title: "Order Successful",
           description:
@@ -260,16 +280,27 @@ const MyComponent = () => {
 
         router.push("/");
       } else {
+        const errorTitle = result?.code ? result.code.replace(/_/g, " ") : "Order Failed";
+        const baseMessage = result?.message ?? "Unfortunately, your order could not be processed. Please try again.";
+        const invalidFields = result?.details?.invalidFields;
+        const detailsMessage = Array.isArray(invalidFields) && invalidFields.length > 0
+          ? ` Invalid fields: ${invalidFields.map((f: string) => f.replace("body.order_items.", "item ").replace("body.", "")).join(", ")}`
+          : "";
+
         toast({
-          title: "Payment Declined",
+          title: errorTitle.charAt(0).toUpperCase() + errorTitle.slice(1).toLowerCase(),
           variant: "destructive",
-          description:
-            "Unfortunately, your order could not be processed. Please try again.",
+          description: `${baseMessage}${detailsMessage}`,
         });
         console.error("Unexpected result structure placeOrderApiCall:", result);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+      toast({
+        title: "Order Failed",
+        variant: "destructive",
+        description: "An unexpected network error occurred. Please try again.",
+      });
     } finally {
       // setCalculateLoader(false);
     }
@@ -418,15 +449,18 @@ const MyComponent = () => {
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center">
-        {loader && <Spinner />}
-        <div className="w-full p-4">
-          <OrdersDataTable
-            key={JSON.stringify(orderStatus)}
-            // key={orderStatus.toString()}
-            data={dataOrders}
-            orderStatus={orderStatus}
-          />
-        </div>
+        {loader ? (
+          <Spinner />
+        ) : (
+          <div className="w-full p-4">
+            <OrdersDataTable
+              key={JSON.stringify(orderStatus)}
+              // key={orderStatus.toString()}
+              data={dataOrders}
+              orderStatus={orderStatus}
+            />
+          </div>
+        )}
       </main>
       {isOpenPaymentAlert ? (
         <>

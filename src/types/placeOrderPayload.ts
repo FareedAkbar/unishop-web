@@ -35,6 +35,7 @@ interface OrderItem {
     upgrade_price: string;
   }>;
   applied_vouchers?: AppliedVoucher[];
+  cost_price?: number | string | null;
 }
 
 interface SplitPayment {

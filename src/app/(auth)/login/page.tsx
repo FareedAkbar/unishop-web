@@ -60,7 +60,7 @@ const MyComponent = () => {
       <main className="absolute z-10 mx-4 lg:right-10 lg:top-0 lg:mx-0 lg:w-1/3">
         <div className="relative">
           <button
-            onClick={() => router.back()}
+            onClick={() => router.push("/")}
             className="fixed left-5 top-5 rounded-full bg-transparent p-2 transition hover:bg-gray-200 dark:hover:bg-slate-700 lg:left-10 lg:top-10"
           >
             <FaArrowLeft className="text-black dark:text-white" />

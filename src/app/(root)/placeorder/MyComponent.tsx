@@ -97,13 +97,12 @@ const MyComponent = () => {
     });
   }, []);
 
-  // get and set cart items
   useEffect(() => {
     const itemsCart: DataCart[] =
       typeof cartItems === "string"
         ? (JSON.parse(cartItems) as DataCart[])
         : cartItems!;
-    setItems(itemsCart);
+    setItems(itemsCart ?? []);
   }, [cartItems]);
 
   // Clear voucher and reset totals when cart becomes empty
@@ -142,7 +141,7 @@ const MyComponent = () => {
   //   setShipping(shippnig);
   // }, [checkoutData, shippingOptions]);
 
-  const mergedArray = items.map((item1) => {
+  const mergedArray = (items ?? []).map((item1) => {
     const matchingItem = totalAfterCalculation?.items.find(
       (item2) => item2.item_id === item1.item_id,
     );
@@ -165,7 +164,7 @@ const MyComponent = () => {
     setTotalOriginal(amount + totalAfterCalculation?.original_price);
     const x = mergedArray;
     setNewItems(x);
-  }, [totalAfterCalculation]);
+  }, [totalAfterCalculation, shipping]);
 
   const createItemsPayload = (
     dataArray1: DataCart[],
@@ -399,7 +398,7 @@ const MyComponent = () => {
 
     try {
       await getLinkForPayment(x);
-      // placeOrderApi(null);
+      // await placeOrderApi(null);
       console.log(x);
     } catch (error) {
       console.error("Failed to load data:", error);
@@ -435,11 +434,31 @@ const MyComponent = () => {
         },
       );
 
-      const result: ApiResponseForTransactionLink =
-        (await response.json()) as ApiResponseForTransactionLink;
+      interface BackendErrorDetails {
+        invalidFields?: string[];
+        requiredFields?: string[];
+      }
+
+      interface BackendResponse {
+        status?: boolean;
+        code?: string;
+        message?: string;
+        details?: BackendErrorDetails;
+        data?: {
+          order_id?: number;
+          tracking_id?: number;
+        };
+      }
+
+      let result: BackendResponse | null = null;
+      try {
+        result = (await response.json()) as BackendResponse;
+      } catch (e) {
+        result = null;
+      }
 
       // Check if result has the expected structure
-      if (result?.status) {
+      if (response.ok && result?.status) {
         toast({
           title: "Order Successful",
           variant: "success",
@@ -465,16 +484,27 @@ const MyComponent = () => {
         }
         router.push("/order-confirmed");
       } else {
+        const errorTitle = result?.code ? result.code.replace(/_/g, " ") : "Order Failed";
+        const baseMessage = result?.message ?? "Unfortunately, your order could not be processed. Please try again.";
+        const invalidFields = result?.details?.invalidFields;
+        const detailsMessage = Array.isArray(invalidFields) && invalidFields.length > 0
+          ? ` Invalid fields: ${invalidFields.map((f: string) => f.replace("body.order_items.", "item ").replace("body.", "")).join(", ")}`
+          : "";
+
         toast({
-          title: "Payment Declined",
+          title: errorTitle.charAt(0).toUpperCase() + errorTitle.slice(1).toLowerCase(),
           variant: "destructive",
-          description:
-            "Unfortunately, your order could not be processed. Please try again.",
+          description: `${baseMessage}${detailsMessage}`,
         });
         console.error("Unexpected result structure placeOrderApiCall:", result);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+      toast({
+        title: "Order Failed",
+        variant: "destructive",
+        description: "An unexpected network error occurred. Please try again.",
+      });
     } finally {
       // setCalculateLoader(false);
     }
@@ -512,7 +542,6 @@ const MyComponent = () => {
         runningVoucherValue -= itemVoucherAmount;
       }
 
-      console.log("item", item)
       return {
         item_id: item.item_id,
         deal_id: null,
@@ -532,11 +561,14 @@ const MyComponent = () => {
         type: "Normal",
         stock_id: item?.stock?.stock_id ?? 0,
         discounts: item.discounts,
+        cost_price: item.selected_variation?.items_variable_items_id
+          ? (item.selected_variation?.items_variable_items_cost_price ?? 0)
+          : (item.cost_price ? Number(item.cost_price) : 0),
         ...(applied_vouchers ? { applied_vouchers } : {})
       };
     });
 
-    console.log("x", x)
+    console.log("order items", x)
 
     return x;
   }
@@ -613,7 +645,7 @@ const MyComponent = () => {
       splits,
     };
     try {
-      console.log(x);
+      console.log("place order api payload", x);
       await placeOrderApiCall(x);
     } catch (error) {
       console.error("Failed to load data:", error);
@@ -737,15 +769,6 @@ const MyComponent = () => {
     }
 
     setShipping(val);
-    if (Number(val.amount) > 0) {
-      setTotal(Number(val.amount) + total);
-      setTotalOriginal(Number(val.amount) + totalOriginal);
-    } else {
-      setTotal(totalAfterCalculation?.final_price_including_tax ?? total - 10);
-      setTotalOriginal(
-        totalAfterCalculation?.original_price ?? totalOriginal - 10,
-      );
-    }
   };
 
   const tabs = [
@@ -1356,7 +1379,7 @@ const MyComponent = () => {
   }
   const calculateWeight = () => {
     let totalWeight = 0;
-    items.forEach((item) => {
+    (items ?? []).forEach((item) => {
       if (item?.selected_variation?.weight && item.weighable == 1) {
         totalWeight +=
           parseFloat(item?.selected_variation?.weight) * item.quantity;
@@ -1723,9 +1746,22 @@ const MyComponent = () => {
                         onChangeQuantity={(id, number) =>
                           onChangeQuantity(id, number)
                         }
-                        onIncrease={() =>
-                          handleIncrease(item.item_id, item.quantity + 1)
-                        }
+                        onIncrease={() => {
+                          const currentStock = item?.selected_variation?.stock ?? item?.stock;
+                          const stockQty = currentStock?.quantity ?? 0;
+                          if (
+                            item.quantity >= stockQty &&
+                            item.allow_special_order == 0
+                          ) {
+                            toast({
+                              title: "Stock Limit Reached",
+                              variant: "destructive",
+                              description: `Only ${stockQty} items are available in stock.`,
+                            });
+                          } else {
+                            void handleIncrease(item.item_id, item.quantity + 1);
+                          }
+                        }}
                         onDecrease={() =>
                           handleDecrease(item.item_id, item.quantity - 1)
                         }
@@ -1881,7 +1917,7 @@ const MyComponent = () => {
                     <Button
                       onClick={() => handlePlaceOrder()}
                       disabled={
-                        totalAfterCalculation && items?.[0] ? false : true || calculateLoader || placeOrderLoader
+                        !(totalAfterCalculation && items?.[0]) || calculateLoader || placeOrderLoader
                       }
                       width="w-full"
                       title="Place Order"

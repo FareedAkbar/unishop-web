@@ -234,31 +234,27 @@ input[type="radio"]:focus {
   /* Firefox */
 }
 
-.dark input:-webkit-autofill {
-  background-color: rgba(70, 90, 126, 0.4) !important;
-  /* Optional: Desired background color */
-  color: white !important;
-  /* Text color in dark mode */
-  border: 1px solid rgba(70, 90, 126, 0.4) !important;
-  /* Optional: Change border color */
-  box-shadow: 0 0 0 30px rgba(70, 90, 126, 0.4) inset !important;
-  /* Optional: Inner shadow for autofill */
-}
-
-.dark input:-internal-autofill-selected {
-  background-color: rgba(56, 71, 98, 0.4) !important;
-  /* Dark mode background color */
-  color: white !important;
-  /* Text color in dark mode */
-  border: 1px solid rgba(70, 90, 126, 0.4) !important;
-  /* Optional: Change border color */
-  appearance: none !important;
-  /* Remove default appearance */
-}
-
-/* Reset properties for autofill input in light mode */
+/* Autofill highlight styles */
+input:autofill,
+select:autofill,
+textarea:autofill,
 input:-webkit-autofill,
-input:-internal-autofill-selected {
-  background-image: none !important;
-  /* Remove any background image */
+select:-webkit-autofill,
+textarea:-webkit-autofill {
+  -webkit-text-fill-color: #0f172a !important;
+  box-shadow: 0 0 0 1000px #cbd5e1 inset !important;
+  border: 1px solid #94a3b8 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.dark input:autofill,
+.dark select:autofill,
+.dark textarea:autofill,
+.dark input:-webkit-autofill,
+.dark select:-webkit-autofill,
+.dark textarea:-webkit-autofill {
+  -webkit-text-fill-color: #f8fafc !important;
+  box-shadow: 0 0 0 1000px #09090b inset !important;
+  border: 1px solid #3f3f46 !important;
+  transition: background-color 5000s ease-in-out 0s;
 }

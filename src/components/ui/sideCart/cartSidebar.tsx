@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { CgClose } from "react-icons/cg";
 import { useAuthContext } from "~/Context/AuthContext";
+import { useToast } from "~/hooks/use-toast";
 import CartItemCard from "./cartItemCard";
 import { useRouter } from "next/navigation";
 import AlertBox from "~/components/alertBox/alert";
@@ -17,6 +18,7 @@ interface SidebarCartProps {
 }
 
 const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
+  const { toast } = useToast();
   const {
     cartItems,
     removeCartItems,
@@ -214,11 +216,17 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
                       onChangeQuantity(id, number)
                     }
                     onIncrease={() => {
+                      const currentStock = item?.selected_variation?.stock ?? item?.stock;
+                      const stockQty = currentStock?.quantity ?? 0;
                       if (
-                        item.quantity >= (item?.stock?.quantity ?? 0) &&
+                        item.quantity >= stockQty &&
                         item.allow_special_order == 0
                       ) {
-                        console.log("Stock limit reached");
+                        toast({
+                          title: "Stock Limit Reached",
+                          variant: "destructive",
+                          description: `Only ${stockQty} items are available in stock.`,
+                        });
                       } else {
                         void handleIncrease(
                           item.item_id,
@@ -227,13 +235,18 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
                         );
                       }
                     }}
-                    onDecrease={() =>
-                      handleDecrease(
-                        item.item_id,
-                        item.quantity - 1,
-                        item?.selected_variation?.items_variable_items_id,
-                      )
-                    }
+                    onDecrease={() => {
+                      if (item.quantity - 1 === 0) {
+                        setRemoveItem(item);
+                        setIsOpenDeleteAlert(true);
+                      } else {
+                        void handleDecrease(
+                          item.item_id,
+                          item.quantity - 1,
+                          item?.selected_variation?.items_variable_items_id,
+                        );
+                      }
+                    }}
                     itemQuantity={item.quantity}
                     showQuantityIncrement={true}
                     stock={item.stock}
