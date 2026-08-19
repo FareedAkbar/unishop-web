@@ -295,6 +295,9 @@ const MyComponent = () => {
     if (gen) {
       setGenre(gen);
     }
+    if (!cat && !gen) {
+      setLoader(false);
+    }
   }, [params]);
 
   const isItemInCart = (itemId: number) => {
@@ -721,7 +724,7 @@ const MyComponent = () => {
   };
 
 
-  if (!isLoaded || !itemDetail) {
+  if (!isLoaded || !itemDetail || loader) {
     return <Spinner />;
   }
 

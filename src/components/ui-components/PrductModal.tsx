@@ -351,7 +351,7 @@ const ProductModal = ({
               )}
             </div>
           )}
-          {itemDetail?.barcode && (
+          {/* {itemDetail?.barcode && (
             <div className="flex items-center justify-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">
                 Barcode:
@@ -360,7 +360,7 @@ const ProductModal = ({
                 {itemDetail.barcode}
               </span>
             </div>
-          )}
+          )} */}
           {itemDetail?.shelf_location && (
             <div className="flex items-center">
               <span className="text-sm font-bold text-neutral-700 dark:text-neutral-300">

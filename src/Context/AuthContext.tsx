@@ -785,6 +785,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCookie("IS_LOGGED_IN", isLoggedIn ? "true" : "false", 7);
+    }
+  }, [isLoggedIn]);
+
   const setProductForDetail = async (
     payload: DataCart | null,
   ): Promise<void> => {

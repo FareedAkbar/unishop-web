@@ -6,13 +6,18 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Input = React.forwardRef<
   HTMLInputElement,
-  React.InputHTMLAttributes<HTMLInputElement>
->(({ className, id, type = "text", ...props }, ref) => {
+  React.InputHTMLAttributes<HTMLInputElement> & {
+    showPassword?: boolean;
+    onToggleShowPassword?: () => void;
+    showEyeIcon?: boolean;
+  }
+>(({ className, id, type = "text", showPassword: showPasswordProp, onToggleShowPassword, showEyeIcon = true, ...props }, ref) => {
   const radius = 100;
   const [visible, setVisible] = React.useState(false);
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPasswordInternal, setShowPasswordInternal] = React.useState(false);
 
   const isPassword = type === "password";
+  const showPassword = showPasswordProp ?? showPasswordInternal;
   const inputType = isPassword ? (showPassword ? "text" : "password") : type;
 
   const mouseX = useMotionValue(0);
@@ -58,10 +63,16 @@ const Input = React.forwardRef<
           {...props}
         />
       </div>
-      {isPassword && (
+      {isPassword && showEyeIcon && (
         <button
           type="button"
-          onClick={() => setShowPassword((prev) => !prev)}
+          onClick={() => {
+            if (onToggleShowPassword) {
+              onToggleShowPassword();
+            } else {
+              setShowPasswordInternal((prev) => !prev);
+            }
+          }}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black focus:outline-none dark:text-gray-300 dark:hover:text-white"
           tabIndex={-1} // prevent stealing focus
         >

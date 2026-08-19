@@ -410,13 +410,17 @@ const Header = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const html = document.documentElement;
       if (isMobileMenuOpen) {
         document.body.classList.add("overflow-hidden");
+        html.classList.add("overflow-hidden");
       } else {
         document.body.classList.remove("overflow-hidden");
+        html.classList.remove("overflow-hidden");
       }
       return () => {
         document.body.classList.remove("overflow-hidden");
+        html.classList.remove("overflow-hidden");
       };
     }
   }, [isMobileMenuOpen]);
@@ -913,9 +917,9 @@ const Header = () => {
 
   return (
     <nav className=" left-0 top-0 z-10 h-fit w-full">
-      <header className="flex flex-col bg-white px-4 pb-2 pt-4 backdrop-blur dark:bg-slate-900 lg:flex-row lg:items-center lg:pb-0">
+      <header className="flex flex-col bg-white px-4 mb-2 pt-4 backdrop-blur dark:bg-slate-900 lg:flex-row lg:items-center lg:pb-0">
         {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
-        <div className="flex items-center justify-between border-b pb-4 lg:hidden">
+        <div className="flex items-center justify-between border-b border-gray-500 pb-4 lg:hidden">
           <div
             className="flex-grow cursor-pointer text-center"
             onClick={() => {
@@ -1094,12 +1098,12 @@ const Header = () => {
             {/* Overlay to reduce opacity */}
             {isMobileMenuOpen && (
               <div
-                className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50"
+                className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50 touch-none"
                 onClick={() => setMobileMenuOpen(false)}
               />
             )}
             <button
-              className={`fixed right-7 top-7 z-40 sm:block lg:hidden ${isMobileMenuOpen ? "bg-white dark:bg-slate-700" : ""}`}
+              className={`fixed right-7 top-7 z-40 sm:block rounded-full lg:hidden ${isMobileMenuOpen ? "bg-white dark:bg-slate-700 " : ""}`}
               onClick={() => {
                 setOpenDropdown(null);
                 setMobileMenuOpen(false);
@@ -1116,18 +1120,18 @@ const Header = () => {
                   <FaHome size={16} />
                   <span className="text-xs">Home</span>
                 </Link>
-
-                <Link
-                  href="/my-orders"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setOpenDropdown(null);
-                  }}
-                  className="flex w-1/3 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
-                >
-                  <FaShoppingBag size={16} />
-                  <span className="text-xs">My Orders</span>
-                </Link>
+                {userInfo?.customer_id && (
+                  <Link
+                    href="/my-orders"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setOpenDropdown(null);
+                    }}
+                    className="flex w-1/3 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
+                  >
+                    <FaShoppingBag size={16} />
+                    <span className="text-xs">My Orders</span>
+                  </Link>)}
                 {/* 
                 <Link
                   href="/contact-us"
@@ -1211,7 +1215,7 @@ const Header = () => {
                             {subItem.label}
                           </a>
                         ))}
-                        {item.label === "Books" && genre && (
+                        {/* {item.label === "Books" && genre && (
                           <ScrollArea className="h-[25vh]">
                             {genre?.map((subItem) => (
                               <Link
@@ -1228,7 +1232,7 @@ const Header = () => {
                               </Link>
                             ))}
                           </ScrollArea>
-                        )}
+                        )} */}
                       </div>
                     )}
                     {item.label === "Pulse" && openDropdown === item.label && (
@@ -1260,7 +1264,7 @@ const Header = () => {
         )}
 
         {/* Desktop Layout */}
-        <div className="hidden w-full flex-col border-b pb-4 lg:flex lg:items-center lg:justify-between">
+        <div className="hidden w-full flex-col border-b border-gray-500 pb-4 lg:flex lg:items-center lg:justify-between">
           <div className="flex w-full items-center">
             <div
               className="flex-grow cursor-pointer text-left"

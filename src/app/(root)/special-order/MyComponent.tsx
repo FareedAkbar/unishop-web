@@ -237,131 +237,128 @@ const MyComponent = () => {
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center">
-        {loader && <Spinner />}
-        {!dataDetail && (
+        {loader ? (
+          <Spinner />
+        ) : (
           <>
-            <div className="flex flex-col items-center justify-center pt-32">
-              <h1 className="text-md mb-6 text-center font-semibold text-gray-800 md:text-3xl">
-                Discover Your Next Favourite Book
-              </h1>
-              <div className="w-full">
-                <SearchInput
-                  placeholder="Search books..."
-                  onChange={(val) => setSearchValue(val.target.value)}
-                  onIconClick={() => handleSearch()}
-                  width="w-full"
-                  icon={<FiSearch />}
-                />
-              </div>
-            </div>
+            {!dataDetail && (
+              <>
+                <div className="flex flex-col items-center justify-center pt-32">
+                  <h1 className="text-md mb-6 text-center font-semibold text-gray-800 md:text-3xl">
+                    Discover Your Next Favourite Book
+                  </h1>
+                  <div className="w-full">
+                    <SearchInput
+                      placeholder="Search books..."
+                      onChange={(val) => setSearchValue(val.target.value)}
+                      onIconClick={() => handleSearch()}
+                      width="w-full"
+                      icon={<FiSearch />}
+                    />
+                  </div>
+                </div>
 
-            <div className="flex flex-wrap items-center justify-center py-10">
-              {data?.map((item: SpecialBookType) => (
-                <SpecialOrderCard
-                  key={item.link}
-                  // stock={item.stock}
-                  item={item}
-                  openDetail={() => handleDetail(item)}
-                />
-              ))}
-            </div>
+                <div className="flex flex-wrap items-center justify-center py-10">
+                  {data?.map((item: SpecialBookType) => (
+                    <SpecialOrderCard
+                      key={item.link}
+                      // stock={item.stock}
+                      item={item}
+                      openDetail={() => handleDetail(item)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+
+            {dataDetail && (
+              <div className="w-full rounded-lg bg-white p-4 dark:bg-gray-800">
+                <div className="mb-6 flex items-center justify-between">
+                  <button
+                    className="transform p-2 transition-transform duration-200 ease-in-out hover:scale-105 dark:text-gray-300 md:p-3 lg:p-4"
+                    onClick={() => setDataDetail(null)}
+                  >
+                    <AiOutlineArrowLeft size={24} />
+                  </button>
+                  <h4 className="mx-4 flex-1 text-center font-bold dark:text-neutral-100 lg:text-lg">
+                    {dataDetail?.title}
+                  </h4>
+                  <button
+                    className="transform p-2 transition-transform duration-200 ease-in-out hover:scale-105 dark:text-gray-300 md:p-3 lg:p-4"
+                    onClick={() => setDataDetail(null)}
+                  >
+                    <AiOutlineClose size={24} />
+                  </button>
+                </div>
+
+                <h5 className="mb-4 text-center text-sm text-neutral-800 dark:text-neutral-100 md:text-lg lg:px-10">
+                  {dataDetail?.mainDescription}
+                </h5>
+                <h5 className="md:text-md mb-6 text-center text-sm text-neutral-600 dark:text-neutral-100 lg:px-16">
+                  {dataDetail?.shortDescription}
+                </h5>
+
+                <div className="flex flex-col justify-between md:flex-row lg:items-start lg:justify-between">
+                  {/* Details Section */}
+                  <div className="flex flex-col items-start justify-start gap-y-2 lg:w-1/2">
+                    <motion.div
+                      key={"images"}
+                      style={{ rotate: Math.random() * 25 - 10 }}
+                      whileHover={{ scale: 1.1, rotate: 0, zIndex: 100 }}
+                      whileTap={{ scale: 1.1, rotate: 0, zIndex: 100 }}
+                      className="mb-4 self-center overflow-hidden rounded-xl border border-neutral-100 bg-white dark:border-neutral-700 dark:bg-neutral-800 md:mb-0"
+                    >
+                      <img
+                        src={dataDetail?.coverImageUrl ?? ""}
+                        alt={dataDetail?.title ?? "Cover Image"}
+                        width="500"
+                        height="500"
+                        className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-64 md:w-48"
+                      />
+                    </motion.div>
+                    <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
+                      {bookSearched ? getPriceRange(bookSearched) : ""}
+                    </span>
+                    <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
+                      <span className="font-bold">Format:</span>
+                      {dataDetail?.format}
+                    </span>
+                    <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                      <span className="font-bold">Series:</span>
+                      {dataDetail?.edition}
+                    </span>
+                    <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                      <span className="font-bold">Published:</span>
+                      {dataDetail?.publicationDate
+                        ? moment(dataDetail.publicationDate).format("Do MMMM, YYYY")
+                        : ""}
+                    </span>
+                    <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                      <span className="font-bold">Subject:</span>
+                      {dataDetail?.subject}
+                    </span>
+                    <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                      <span className="font-bold">Number of Pages:</span>
+                      {dataDetail?.numberOfPages}
+                    </span>
+                    <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                      <span className="font-bold">Publisher:</span>
+                      {dataDetail?.originalPublisher}
+                    </span>
+                    <span className="text-sm text-neutral-700 dark:text-neutral-300">
+                      <span className="font-bold">Author:</span>
+                      {dataDetail?.author}
+                    </span>
+                  </div>
+
+                  {/* Tabs Section */}
+                  <div className="mb-4 mt-10 lg:w-1/2 lg:px-10">
+                    {showCheckout && <Tabs tabs={tabs} />}
+                  </div>
+                </div>
+              </div>
+            )}
           </>
-        )}
-
-        {dataDetail && (
-          <div className="w-full rounded-lg bg-white p-4 dark:bg-gray-800">
-            <div className="mb-6 flex items-center justify-between">
-              <button
-                className="transform p-2 transition-transform duration-200 ease-in-out hover:scale-105 dark:text-gray-300 md:p-3 lg:p-4"
-                onClick={() => setDataDetail(null)}
-              >
-                <AiOutlineArrowLeft size={24} />
-              </button>
-              <h4 className="mx-4 flex-1 text-center font-bold dark:text-neutral-100 lg:text-lg">
-                {dataDetail?.title}
-              </h4>
-              <button
-                className="transform p-2 transition-transform duration-200 ease-in-out hover:scale-105 dark:text-gray-300 md:p-3 lg:p-4"
-                onClick={() => setDataDetail(null)}
-              >
-                <AiOutlineClose size={24} />
-              </button>
-            </div>
-
-            <h5 className="mb-4 text-center text-sm text-neutral-800 dark:text-neutral-100 md:text-lg lg:px-10">
-              {dataDetail?.mainDescription}
-            </h5>
-            <h5 className="md:text-md mb-6 text-center text-sm text-neutral-600 dark:text-neutral-100 lg:px-16">
-              {dataDetail?.shortDescription}
-            </h5>
-
-            <div className="flex flex-col justify-between md:flex-row lg:items-start lg:justify-between">
-              {/* Details Section */}
-              <div className="flex flex-col items-start justify-start gap-y-2 lg:w-1/2">
-                <motion.div
-                  key={"images"}
-                  style={{ rotate: Math.random() * 25 - 10 }}
-                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 100 }}
-                  whileTap={{ scale: 1.1, rotate: 0, zIndex: 100 }}
-                  className="mb-4 self-center overflow-hidden rounded-xl border border-neutral-100 bg-white dark:border-neutral-700 dark:bg-neutral-800 md:mb-0"
-                >
-                  <img
-                    src={dataDetail?.coverImageUrl ?? ""}
-                    alt={dataDetail?.title ?? "Cover Image"}
-                    width="500"
-                    height="500"
-                    className="h-36 w-36 flex-shrink-0 rounded-lg object-cover md:h-64 md:w-48"
-                  />
-                </motion.div>
-                <span className="font-serif text-2xl font-bold text-red-500 dark:text-neutral-300">
-                  {bookSearched ? getPriceRange(bookSearched) : ""}
-                </span>
-                <span className="font-serif text-lg text-zinc-500 dark:text-neutral-300">
-                  <span className="font-bold">Format:</span>
-                  {dataDetail?.format}
-                </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  <span className="font-bold">Series:</span>
-                  {dataDetail?.edition}
-                </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  <span className="font-bold">Published:</span>
-                  {dataDetail?.publicationDate
-                    ? moment(dataDetail.publicationDate).format("Do MMMM, YYYY")
-                    : ""}
-                </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  <span className="font-bold">Subject:</span>
-                  {dataDetail?.subject}
-                </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  <span className="font-bold">Number of Pages:</span>
-                  {dataDetail?.numberOfPages}
-                </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  <span className="font-bold">Publisher:</span>
-                  {dataDetail?.originalPublisher}
-                </span>
-                <span className="text-sm text-neutral-700 dark:text-neutral-300">
-                  <span className="font-bold">Author:</span>
-                  {dataDetail?.author}
-                </span>
-
-                {/* <button
-                  className="mt-4 flex items-center space-x-1 self-center rounded bg-green-500 p-2 text-xs font-bold text-white hover:bg-green-600 dark:bg-zinc-800"
-                  onClick={() => handleCreateOrder(dataDetail)}
-                >
-                  <FaCartPlus className="text-lg" />
-                  <div className="pl-2">Make Special Order</div>
-                </button> */}
-              </div>
-
-              {/* Tabs Section */}
-              <div className="mb-4 mt-10 lg:w-1/2 lg:px-10">
-                {showCheckout && <Tabs tabs={tabs} />}
-              </div>
-            </div>
-          </div>
         )}
       </main>
     </div>

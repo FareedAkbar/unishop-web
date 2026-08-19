@@ -112,17 +112,20 @@ const MyComponent = () => {
     const currentPage = params.get("page");
 
     if (currentPage) {
-      setCurrentPage(parseInt(currentPage));
+      const parsedPage = parseInt(currentPage);
+      setCurrentPage(isNaN(parsedPage) ? 1 : parsedPage);
     } else {
       setCurrentPage(1);
     }
     if (d) {
-      setDetail(parseInt(d));
+      const parsedD = parseInt(d);
+      setDetail(isNaN(parsedD) ? -1 : parsedD);
     } else {
       setDetail(-1);
     }
     if (parentCat !== null) {
-      setParent(parseInt(parentCat));
+      const parsedParent = parseInt(parentCat);
+      setParent(isNaN(parsedParent) ? -1 : parsedParent);
     } else {
       setParent(-1);
     }
@@ -521,7 +524,7 @@ const MyComponent = () => {
         <div className="flex w-full flex-grow flex-row">
           <div className="flex w-full flex-col">
             {/* Header Section */}
-            <div className="flex w-full flex-wrap items-end justify-between gap-2 py-4 pl-2">
+            <div className="flex w-full flex-wrap items-end justify-between gap-2 lg:py-4 pl-2">
               <div className="text-left lg:pl-16">
                 <h2 className="text-xl font-bold capitalize">
                   {" "}

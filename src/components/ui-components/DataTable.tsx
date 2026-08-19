@@ -310,7 +310,7 @@ const DataTable: React.FC<DataTableProps> = ({
           </div>
         </div>
         <div className="mb-4 flex flex-col justify-between gap-2 lg:flex-row lg:gap-0">
-          <div className="flex items-center">
+          <div className="flex items-center flex-wrap">
             <span className="font-bold">Columns:</span>
             {columns.map((column) => (
               <span key={column.key} className="ml-2 text-sm">
@@ -342,63 +342,65 @@ const DataTable: React.FC<DataTableProps> = ({
             </button>
           </div>
         </div>
-        <table className="min-w-full border border-gray-500">
-          <thead>
-            <tr>
-              {columns.map((column) =>
-                column.isVisible && (
-                  <th
-                    key={column.key}
-                    className="cursor-pointer border-b border-gray-500 p-2 text-left "
-                    onClick={() => column.isSortable && handleSort(column.key)}
-                  >
-                    {column.header}
-                    {sortOptions.find((sort) => sort.key === column.key)
-                      ?.mode === "asc" && <FaAngleUp className="ml-1 inline" />}
-                    {sortOptions.find((sort) => sort.key === column.key)
-                      ?.mode === "desc" && (
-                        <FaAngleDown className="ml-1 inline" />
-                      )}
-                  </th>
-                )
-              )}
-              <th className="border-b border-gray-500 p-2"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayedData?.map((row) => (
-              <tr key={row.id} className="border-b border-gray-500">
+        <div className="w-full overflow-x-auto custom-scrollbar">
+          <table className="min-w-full border border-gray-500">
+            <thead>
+              <tr>
                 {columns.map((column) =>
                   column.isVisible && (
-                    <td key={column.key} className="p-2 text-sm">
-                      {column.cell ? column.cell(row) : row[column.key]}
-                    </td>
+                    <th
+                      key={column.key}
+                      className="cursor-pointer border-b border-gray-500 p-2 text-left "
+                      onClick={() => column.isSortable && handleSort(column.key)}
+                    >
+                      {column.header}
+                      {sortOptions.find((sort) => sort.key === column.key)
+                        ?.mode === "asc" && <FaAngleUp className="ml-1 inline" />}
+                      {sortOptions.find((sort) => sort.key === column.key)
+                        ?.mode === "desc" && (
+                          <FaAngleDown className="ml-1 inline" />
+                        )}
+                    </th>
                   )
                 )}
-                <td className="p-2">
-                  <FaEye
-                    className="cursor-pointer text-red-500 hover:text-red-600"
-                    onClick={() => onClickView(row)}
-                  />
-                </td>
+                <th className="border-b border-gray-500 p-2"></th>
               </tr>
-            ))}
-            {displayedData?.length === 0 && (
-              <tr>
-                <td colSpan={columns.length + 1} className="p-4 text-center">
-                  No data available
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {displayedData?.map((row) => (
+                <tr key={row.id} className="border-b border-gray-500">
+                  {columns.map((column) =>
+                    column.isVisible && (
+                      <td key={column.key} className="p-2 text-sm">
+                        {column.cell ? column.cell(row) : row[column.key]}
+                      </td>
+                    )
+                  )}
+                  <td className="p-2">
+                    <FaEye
+                      className="cursor-pointer text-red-500 hover:text-red-600"
+                      onClick={() => onClickView(row)}
+                    />
+                  </td>
+                </tr>
+              ))}
+              {displayedData?.length === 0 && (
+                <tr>
+                  <td colSpan={columns.length + 1} className="p-4 text-center">
+                    No data available
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
         {totalPages > 0 && (
           <div className="z-5 flex justify-end px-4 py-4 w-full">
             <div className="flex items-center gap-1 sm:gap-2">
               <button
                 className={`rounded-md p-2 text-sm border flex items-center justify-center transition-all ${currentPage === 1
-                    ? "cursor-not-allowed bg-gray-100 text-gray-400 border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-gray-600"
-                    : "cursor-pointer bg-white text-gray-700 border-gray-300 hover:border-red-500 hover:text-red-500 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-200 dark:hover:border-red-500"
+                  ? "cursor-not-allowed bg-gray-100 text-gray-400 border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-gray-600"
+                  : "cursor-pointer bg-white text-gray-700 border-gray-300 hover:border-red-500 hover:text-red-500 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-200 dark:hover:border-red-500"
                   }`}
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -426,8 +428,8 @@ const DataTable: React.FC<DataTableProps> = ({
                     key={`page-${pageNum}`}
                     onClick={() => setCurrentPage(pageNum)}
                     className={`rounded-md px-3 py-1.5 text-sm font-medium transition-all ${isActive
-                        ? "bg-red-500 text-white"
-                        : "bg-white text-gray-700 border border-gray-300 hover:border-red-500 hover:text-red-500 dark:bg-slate-700 dark:text-gray-200 dark:border-slate-600 dark:hover:border-red-500"
+                      ? "bg-red-500 text-white"
+                      : "bg-white text-gray-700 border border-gray-300 hover:border-red-500 hover:text-red-500 dark:bg-slate-700 dark:text-gray-200 dark:border-slate-600 dark:hover:border-red-500"
                       }`}
                   >
                     {pageNum}
@@ -437,8 +439,8 @@ const DataTable: React.FC<DataTableProps> = ({
 
               <button
                 className={`rounded-md p-2 text-sm border flex items-center justify-center transition-all ${totalPages === 0 || currentPage === totalPages
-                    ? "cursor-not-allowed bg-gray-100 text-gray-400 border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-gray-600"
-                    : "cursor-pointer bg-white text-gray-700 border-gray-300 hover:border-red-500 hover:text-red-500 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-200 dark:hover:border-red-500"
+                  ? "cursor-not-allowed bg-gray-100 text-gray-400 border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-gray-600"
+                  : "cursor-pointer bg-white text-gray-700 border-gray-300 hover:border-red-500 hover:text-red-500 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-200 dark:hover:border-red-500"
                   }`}
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={totalPages === 0 || currentPage === totalPages}

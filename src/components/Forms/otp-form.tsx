@@ -15,7 +15,7 @@ interface Props {
 const OTPVerificationForm = ({ loginResponse, onSuccess, isSignup }: Props) => {
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
   const [loader, setLoader] = useState(false);
-  const { verifyOTP, sendOTP, verifySignupOTP } = useAuthContext();
+  const { verifyOTP, sendOTP, verifySignupOTP, resetPasswordOTP } = useAuthContext();
   const router = useRouter();
   const firstInputRef = useRef<HTMLInputElement>(null);
 
@@ -116,16 +116,30 @@ const OTPVerificationForm = ({ loginResponse, onSuccess, isSignup }: Props) => {
   const ResendOtp = async () => {
     try {
       setLoader(true);
-      const response = await sendOTP({
-        customer_id: loginResponse?.data.customer_id,
-        email: loginResponse?.data.email,
-      });
-
-      if (typeof response !== "boolean" && response.status) {
-        toast({
-          title: "OTP Resent",
-          variant: "default",
+      if (isSignup) {
+        if (!loginResponse?.data.email) {
+          throw new Error("Email is required to resend OTP");
+        }
+        const response = await resetPasswordOTP(loginResponse.data.email);
+        if (response.status) {
+          toast({
+            title: "OTP Resent",
+            variant: "default",
+            description: response.message || "A new OTP code has been sent.",
+          });
+        }
+      } else {
+        const response = await sendOTP({
+          customer_id: loginResponse?.data.customer_id,
+          email: loginResponse?.data.email,
         });
+
+        if (typeof response !== "boolean" && response.status) {
+          toast({
+            title: "OTP Resent",
+            variant: "default",
+          });
+        }
       }
       setLoader(false);
     } catch (err) {

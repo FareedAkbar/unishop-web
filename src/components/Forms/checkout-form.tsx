@@ -136,6 +136,8 @@ export default function CheckoutForm({
       (country) => country.name === selectedCountryName,
     );
     setSelectedCountry(selectedCountryName);
+    setValue("state", "");
+    setValue("city", "");
     if (selectedCountry) {
       const states = selectedCountry.states.map((state) => ({
         value: state.id,
