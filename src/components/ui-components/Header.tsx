@@ -214,16 +214,19 @@ const Header = () => {
   }, [category, subCategory]);
 
   const userDropdownRef = useRef<HTMLDivElement>(null);
+  const mobileUserDropdownRef = useRef<HTMLDivElement>(null);
   const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
 
-      if (
-        userDropdownRef.current &&
-        !userDropdownRef.current.contains(target)
-      ) {
+      const clickedOutsideDesktop =
+        !userDropdownRef.current?.contains(target);
+      const clickedOutsideMobile =
+        !mobileUserDropdownRef.current?.contains(target);
+
+      if (clickedOutsideDesktop && clickedOutsideMobile) {
         setUserDropdownOpen(false);
       }
     };
@@ -958,10 +961,13 @@ const Header = () => {
                 ""
               )}
             </div>
-            <div className="relative" ref={userDropdownRef}>
+            <div className="relative" ref={mobileUserDropdownRef}>
               <IoPersonOutline
                 className="cursor-pointer text-xl"
-                onClick={() => setUserDropdownOpen((prev) => !prev)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setUserDropdownOpen((prev) => !prev);
+                }}
               />
 
               {isUserDropdownOpen && (
@@ -1370,7 +1376,10 @@ const Header = () => {
                 ref={userDropdownRef}
               >
                 <div
-                  onClick={() => setUserDropdownOpen((prev) => !prev)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setUserDropdownOpen((prev) => !prev);
+                  }}
                   title={userInfo ? "Profile" : "Sign in"}
                   className="relative flex cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
                 >

@@ -175,7 +175,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Cart Items Scrollable Area */}
-          <div className="h-[calc(100vh-30vh)] overflow-y-auto p-4 lg:h-[calc(100vh-160px)]">
+          <div className="h-[calc(100vh-40vh)] overflow-y-auto p-4 lg:h-[calc(100vh-160px)]">
             {items.length === 0 ? (
               <div className="flex h-full flex-col items-center justify-center p-4">
                 <span className="text-lg font-medium text-red-600 dark:text-white">
