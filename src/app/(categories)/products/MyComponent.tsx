@@ -60,9 +60,25 @@ const MyComponent = () => {
   const [searchText, setSearchText] = useState("");
   const params = useSearchParams();
   const { setOpen } = useModal();
-  const [detail, setDetail] = useState<number>(-1);
-  const [parent, setParent] = useState<number>(-1);
-  const [name, setName] = useState<string>("");
+  const [detail, setDetail] = useState<number>(() => {
+    const d = params.get("detail");
+    if (d) {
+      const parsedD = parseInt(d);
+      return isNaN(parsedD) ? -1 : parsedD;
+    }
+    return -1;
+  });
+  const [parent, setParent] = useState<number>(() => {
+    const parentCat = params.get("category");
+    if (parentCat) {
+      const parsedParent = parseInt(parentCat);
+      return isNaN(parsedParent) ? -1 : parsedParent;
+    }
+    return -1;
+  });
+  const [name, setName] = useState<string>(() => {
+    return params.get("name") ?? "";
+  });
   const [categoryType, setCategoryType] = useState<SuperCategory | null>(null);
   const [subcategoryTypes, setSubcategoryTypes] = useState<Category[] | null>(
     null,
@@ -74,11 +90,14 @@ const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
     Record<string, string | undefined>
   >({});
-  const [currentPage, setCurrentPage] = useState(
-    (pagination?.page ?? params.get("page"))
-      ? parseInt(params.get("page")!)
-      : 1,
-  );
+  const [currentPage, setCurrentPage] = useState(() => {
+    const p = params.get("page");
+    if (p) {
+      const parsedPage = parseInt(p);
+      return isNaN(parsedPage) ? 1 : parsedPage;
+    }
+    return 1;
+  });
   const [pageSize, setPageSize] = useState(pagination?.limit ?? 15);
   const [totalPages, setTotalPages] = useState(pagination?.pages ?? 1);
   const [displayData, setDisplayData] = useState<DataCart[] | null>(null);
@@ -194,7 +213,7 @@ const MyComponent = () => {
       // Fetch products based on `detail` or `parent`
       if (detail !== -1 && (genId || catId)) {
         await getProducts(currentPage, detail, 0);
-      } else if (detail === -1 && parent) {
+      } else if (detail === -1 && parent !== -1) {
         await getProducts(currentPage, 0, parent);
       } else {
         setLoader(false);
