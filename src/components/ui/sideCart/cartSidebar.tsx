@@ -165,7 +165,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
           <div className="flex-shrink-0 border-b border-gray-500 bg-gray-100 p-4 dark:bg-slate-700">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold text-red-500">
-                Cart Items
+                Cart Items ({items.length})
               </h2>
 
               <button
