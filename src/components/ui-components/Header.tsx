@@ -20,6 +20,7 @@ import { useAuthContext } from "~/Context/AuthContext";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import SidebarCart from "../ui/sideCart/cartSidebar";
 import Link from "next/link";
+import type DataCart from "~/types/book";
 
 import { ScrollArea } from "../ui/scroll-area";
 import type {
@@ -39,6 +40,16 @@ import {
 } from "~/components/ui/select";
 import { BsTelephone } from "react-icons/bs";
 import Button from "./Button";
+
+interface CustomCategoryItem {
+  id: string;
+  label: string;
+  isDynamic: boolean;
+  category_type_id?: number;
+  type?: string;
+  children?: CAT[] | null;
+  href?: string;
+}
 
 const Header = () => {
   const {
@@ -61,6 +72,7 @@ const Header = () => {
     subCategory,
     getCheckoutFormData,
     getTextBookType,
+    totalAfterCalculation,
   } = useAuthContext();
   const router = useRouter();
 
@@ -81,6 +93,9 @@ const Header = () => {
   const dropdownRef = useRef<HTMLButtonElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+
+  const [hoveredAllCategories, setHoveredAllCategories] = useState(false);
+  const [hoveredPath, setHoveredPath] = useState<Array<string | number>>([]);
 
   const toggleUserDropdown = () => {
     setUserDropdownOpen((prevState) => !prevState);
@@ -110,7 +125,6 @@ const Header = () => {
     return acc;
   }, {} as CategoriesMap);
 
-  // Link each item in subCategory to its respective category in categoriesMap
   subCategory?.forEach((item) => {
     const { category_type_id, outlet } = item;
     const targetCategory = categoriesMap[category_type_id];
@@ -124,7 +138,6 @@ const Header = () => {
   }
 
   const buildCategoryTree = (categories: CAT[]): CategoryTreeNode2[] => {
-    // Filter to ensure only active categories (web_visibility === 1) are built in the tree
     const isCategoryActive = (catId: number): boolean => {
       const cat = categories.find((c) => c.id === catId);
       if (!cat) return false;
@@ -149,8 +162,6 @@ const Header = () => {
         const rootCategory = categoriesMap[key];
         if (rootCategory) categoryTree.push(rootCategory);
       } else {
-        // Parent ka bhi correct composite key dhoondna hoga - parent ki apni category_type_id
-        // is liye hume ek dusra map chahiye jo sirf category id se parent lookup kare
         const parentEntry = activeCategories.find((c) => c.id === cat.parent);
         const parentKey = parentEntry ? `${parentEntry.id}-${parentEntry.category_type_id}` : null;
         const parentCategory = parentKey ? categoriesMap[parentKey] : null;
@@ -170,7 +181,6 @@ const Header = () => {
   useEffect(() => {
     if (!category || !subCategory) return;
 
-    // Safety check: Filter out non-visible categories
     const isCategoryActive = (catId: number): boolean => {
       const cat = subCategory.find((c) => c.id === catId);
       if (!cat) return false;
@@ -262,7 +272,6 @@ const Header = () => {
     loadData().catch((error) => {
       console.error("Failed to load data in useEffect:", error);
     });
-    // console.log("textBookType in Header:", textBookType);
   }, [checkoutData]);
 
 
@@ -333,7 +342,6 @@ const Header = () => {
                 ))}
             </div>
 
-            {/* Render children if open */}
             {openCategories.some((cat) =>
               cat.endsWith(`${item}/${subItem.category_name}`),
             ) &&
@@ -374,25 +382,6 @@ const Header = () => {
               </button>
             </div>
           ))}
-        {/* {item == "Books" &&
-          genre?.map((subItem) => (
-            <div key={subItem.genre} className="relative pl-2">
-              <button
-                onClick={() => {
-                  router.push(`books?detail=${subItem.genre}`);
-                  toggleCategory(`books?detail=${subItem.genre}`);
-                }}
-                className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
-              >
-                <span
-                  className="mr-2 truncate text-left capitalize"
-                  title={subItem.genre}
-                >
-                  {subItem.genre}
-                </span>
-              </button>
-            </div>
-          ))} */}
       </div>
     );
   };
@@ -471,457 +460,437 @@ const Header = () => {
     children?: SliderCategoryChild[] | null;
   }
 
-  // Modified USBCategoryList1 component
-  const USBCategoryList1 = () => {
-    const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-      new Set(),
-    );
-    const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
-    const [hoveredRect, setHoveredRect] = useState<DOMRect | null>(null);
-    const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-    const handleMouseEnter = (label: string, rect: DOMRect) => {
-      if (closeTimeoutRef.current) {
-        clearTimeout(closeTimeoutRef.current);
-        closeTimeoutRef.current = null;
+  // Calculate parsed cart items & values for display
+  const [parsedCartItems, setParsedCartItems] = useState<DataCart[]>([]);
+  useEffect(() => {
+    let itemsCart: DataCart[] = [];
+    if (typeof cartItems === "string") {
+      try {
+        itemsCart = JSON.parse(cartItems) as DataCart[];
+      } catch {
+        itemsCart = [];
       }
-      setHoveredCategory(label);
-      setHoveredRect(rect);
-    };
+    } else if (cartItems) {
+      itemsCart = cartItems;
+    }
+    setParsedCartItems(itemsCart);
+  }, [cartItems]);
 
-    const handleMouseLeave = () => {
-      closeTimeoutRef.current = setTimeout(() => {
-        setHoveredCategory(null);
-        setHoveredRect(null);
-      }, 150);
-    };
+  const cartCount = parsedCartItems.reduce((acc, item) => acc + (item.quantity ?? 0), 0);
+  const cartSubTotal = parsedCartItems.reduce(
+    (acc, item) => acc + ((item.item_sale_price ?? 0) * (item.quantity ?? 0)),
+    0
+  );
+  const cartTotal = totalAfterCalculation
+    ? (totalAfterCalculation as { final_price_including_tax: number }).final_price_including_tax
+    : cartSubTotal;
 
-    useEffect(() => {
-      return () => {
-        if (closeTimeoutRef.current) {
-          clearTimeout(closeTimeoutRef.current);
-        }
-      };
-    }, []);
+  const allCategoriesList = React.useMemo<CustomCategoryItem[]>(() => {
+    const list: CustomCategoryItem[] = [];
 
-    const combinedCategories = React.useMemo(() => {
-      const list: Array<{
-        id: string;
-        label: string;
-        isDynamic: boolean;
-        category_type_id?: number;
-        type?: string;
-        children?: SliderCategoryChild[] | null;
-        href?: string;
-        subItems?: { label: string; href: string }[];
-      }> = [];
-
-      headerCategory?.forEach((item) => {
-        list.push({
-          id: `dynamic-${item.category_type_id}`,
-          label: item.type,
-          isDynamic: true,
-          category_type_id: item.category_type_id,
-          type: item.type,
-          children: (item.children as SliderCategoryChild[] | null) ?? undefined,
-        });
+    const textbooks = headerCategory?.find(c => c.type.toLowerCase() === "textbooks");
+    if (textbooks) {
+      list.push({
+        id: `dynamic-${textbooks.category_type_id}`,
+        label: "TEXTBOOKS",
+        isDynamic: true,
+        category_type_id: textbooks.category_type_id,
+        type: textbooks.type,
+        children: textbooks.children
       });
-
-      categories.forEach((item, idx) => {
-        list.push({
-          id: `custom-${idx}`,
-          label: item.label,
-          isDynamic: false,
-          href: item.href,
-          subItems: item.subItems,
-        });
-      });
-
-      return list;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [headerCategory]);
-
-
-
-    const toggleCategory = (id: string | number) => {
-      const newSet = new Set(expandedCategories);
-      const key = String(id);
-      if (newSet.has(key)) {
-        newSet.delete(key);
-      } else {
-        newSet.add(key);
-      }
-      setExpandedCategories(newSet);
-    };
-
-    const renderSubcategories = (
-      subItems: SliderCategoryChild[] | null | undefined,
-      level = 1,
-      type?: string,
-    ) => {
-      if (!subItems) return null;
-      return (
-        <div
-          className={`ml-${level * 2} mt-1`}
-          style={{ marginLeft: `${level / 2}rem` }}
-        >
-          {subItems.map((subItem) => {
-            const hasChildren = subItem.children && subItem.children.length > 0;
-            const isExpanded = expandedCategories.has(String(subItem.id));
-            return (
-              <div key={subItem.id} className="group py-1">
-                <div className="flex cursor-pointer items-center justify-between gap-2 text-sm uppercase text-gray-700 group-hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500">
-                  <Link
-                    href={`/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`}
-                    className="block"
-                  >
-                    {subItem.category_name}
-                  </Link>
-                  {hasChildren && (
-                    <span
-                      className={`mr-1 ${isExpanded ? "rotate-180" : ""}`}
-                      onClick={() => toggleCategory(subItem.id)}
-                    >
-                      <FaChevronDown className="text-xs" />
-                    </span>
-                  )}
-                </div>
-                {hasChildren &&
-                  isExpanded &&
-                  renderSubcategories(subItem.children, level + 1)}
-              </div>
-            );
-          })}
-          {type == "Gifts" &&
-            StaticGiftsRoutes.map((subItem) => (
-              <div key={subItem.label} className="relative py-1">
-                <button
-                  onClick={() => {
-                    router.push(subItem.href);
-                    toggleCategory(subItem.href);
-                  }}
-                  className="flex cursor-pointer items-center justify-between gap-2 text-sm capitalize text-gray-700 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
-                >
-                  <span
-                    className="mr-2 truncate text-left uppercase"
-                    title={subItem.label}
-                  >
-                    {subItem.label}
-                  </span>
-                </button>
-              </div>
-            ))}
-        </div>
-      );
-    };
-
-    const hoveredItem = combinedCategories.find((item) => item.label === hoveredCategory);
-
-    if (combinedCategories.length <= 5) {
-      return (
-        <div className="hidden lg:block w-full">
-          <div className="flex w-full items-center justify-between pt-4 pb-2 px-4 max-w-6xl mx-auto">
-            {/* Left Spacer to align center */}
-            <div className="w-28 flex-shrink-0"></div>
-
-            {/* Centered list of categories */}
-            <nav className="flex gap-8 whitespace-nowrap justify-center items-center flex-grow">
-              {combinedCategories.map((item) => {
-                if (item.isDynamic) {
-                  const hasChildren = item.children && item.children.length > 0;
-                  return (
-                    <div
-                      key={item.id}
-                      className="relative inline-block px-1 min-w-0"
-                      onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
-                      onMouseLeave={handleMouseLeave}
-                    >
-                      <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center gap-1">
-                        <Link
-                          href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
-                          className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
-                        >
-                          {item.type}
-                        </Link>
-
-                        {hasChildren ? (
-                          <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
-                        ) : item.type == "Gifts" ? (
-                          <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
-                        ) : null}
-                      </div>
-                    </div>
-                  );
-                } else {
-                  const hasChildren = item.subItems && item.subItems.length > 0;
-                  return (
-                    <div
-                      key={item.id}
-                      className="relative inline-block px-1 min-w-0"
-                      onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
-                      onMouseLeave={handleMouseLeave}
-                    >
-                      <div className="group flex cursor-pointer items-center py-1 max-w-full min-w-0 justify-center gap-1">
-                        {item.href ? (
-                          <Link
-                            href={item.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]"
-                          >
-                            {item.label}
-                          </Link>
-                        ) : (
-                          <span className="text-base font-medium capitalize text-gray-700 hover:text-red-500 dark:text-gray-200 truncate block max-w-[calc(100%-16px)]">
-                            {item.label}
-                          </span>
-                        )}
-                        {hasChildren ? (
-                          <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
-                        ) : null}
-                      </div>
-                    </div>
-                  );
-                }
-              })}
-            </nav>
-
-            {/* Right Orders Button */}
-            <div className="w-28 flex-shrink-0 flex justify-end">
-              {userInfo?.customer_id ? (
-                <Button
-                  onClick={() => router.push("/my-orders")}
-                  title="My Orders"
-                  className="whitespace-nowrap"
-                />
-              ) : null}
-            </div>
-          </div>
-
-          {/* Floating Category Dropdown */}
-          {hoveredItem && hoveredRect && (
-            hoveredItem.isDynamic && hoveredItem.children && hoveredItem.children.length > 0 ? (
-              <div
-                style={{
-                  position: "fixed",
-                  top: `${hoveredRect.bottom}px`,
-                  left: `${hoveredRect.left}px`,
-                }}
-                className="z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
-                onMouseEnter={() => {
-                  if (closeTimeoutRef.current) {
-                    clearTimeout(closeTimeoutRef.current);
-                    closeTimeoutRef.current = null;
-                  }
-                }}
-                onMouseLeave={handleMouseLeave}
-              >
-                {renderSubcategories(hoveredItem.children, 1, hoveredItem.type)}
-              </div>
-            ) : hoveredItem.isDynamic && hoveredItem.type === "Gifts" ? (
-              <div
-                style={{
-                  position: "fixed",
-                  top: `${hoveredRect.bottom}px`,
-                  left: `${hoveredRect.left}px`,
-                }}
-                className="z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
-                onMouseEnter={() => {
-                  if (closeTimeoutRef.current) {
-                    clearTimeout(closeTimeoutRef.current);
-                    closeTimeoutRef.current = null;
-                  }
-                }}
-                onMouseLeave={handleMouseLeave}
-              >
-                {renderSubcategories([], 1, "Gifts")}
-              </div>
-            ) : !hoveredItem.isDynamic && hoveredItem.subItems && hoveredItem.subItems.length > 0 ? (
-              <div
-                style={{
-                  position: "fixed",
-                  top: `${hoveredRect.bottom}px`,
-                  left: `${hoveredRect.left}px`,
-                }}
-                className="z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
-                onMouseEnter={() => {
-                  if (closeTimeoutRef.current) {
-                    clearTimeout(closeTimeoutRef.current);
-                    closeTimeoutRef.current = null;
-                  }
-                }}
-                onMouseLeave={handleMouseLeave}
-              >
-                {hoveredItem.subItems.map((sub, subIdx) => (
-                  <Link
-                    key={subIdx}
-                    href={sub.href}
-                    className="block px-3 py-1 text-sm text-gray-700 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500"
-                  >
-                    {sub.label}
-                  </Link>
-                ))}
-              </div>
-            ) : null
-          )}
-        </div>
-      );
     }
 
-    return (
-      <div className="hidden lg:block w-full">
-        <div className="flex w-full items-start justify-between  pb-2 px-4 max-w-10xl mx-auto">
-          {/* Left Spacer to align center */}
-          <div className="w-28 flex-shrink-0"></div>
+    const vitalSourceItem = categories.find(c => c.label === "E-Text Book");
+    list.push({
+      id: "custom-vitalsource",
+      label: "E-TEXTBOOKS",
+      isDynamic: false,
+      href: vitalSourceItem?.href ?? "https://unishopuow.vitalsource.com/",
+      type: "E-TEXTBOOKS",
+      children: []
+    });
 
-          {/* Categories Grid (replaces slider) */}
-          <div className="flex flex-wrap justify-center items-center gap-y-2 gap-x-4  flex-grow max-w-[95vw] sm:max-w-[90vw] px-4 sm:px-6 mx-auto">
-            {combinedCategories.map((item) => {
-              if (item.isDynamic) {
-                const hasChildren = item.children && item.children.length > 0;
-                return (
-                  <div
-                    key={item.id}
-                    className="relative flex justify-center items-center px-1"
-                    onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    <div className="group flex cursor-pointer items-center py-1 gap-1 whitespace-nowrap">
-                      <Link
-                        href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
-                        className="text-sm sm:text-base font-medium  text-gray-700 hover:text-red-500 dark:text-gray-200 uppercase"
-                      >
-                        {item.type}
-                      </Link>
+    const books = headerCategory?.find(c => c.type.toLowerCase() === "books");
+    if (books) {
+      list.push({
+        id: `dynamic-${books.category_type_id}`,
+        label: "BOOKS",
+        isDynamic: true,
+        category_type_id: books.category_type_id,
+        type: books.type,
+        children: books.children
+      });
+    }
 
-                      {hasChildren ? (
-                        <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
-                      ) : item.type == "Gifts" ? (
-                        <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
-                      ) : null}
-                    </div>
-                  </div>
-                );
-              } else {
-                const hasChildren = item.subItems && item.subItems.length > 0;
-                return (
-                  <div
-                    key={item.id}
-                    className="relative flex justify-center items-center px-1"
-                    onMouseEnter={(e) => handleMouseEnter(item.label, e.currentTarget.getBoundingClientRect())}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    <div className="group flex cursor-pointer items-center py-1 gap-1 whitespace-nowrap">
-                      {item.href ? (
-                        <Link
-                          href={item.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm sm:text-base font-medium uppercase text-gray-700 hover:text-red-500 dark:text-gray-200"
-                        >
-                          {item.label}
-                        </Link>
-                      ) : (
-                        <span className="text-sm sm:text-base font-medium uppercase text-gray-700 hover:text-red-500 dark:text-gray-200">
-                          {item.label}
-                        </span>
-                      )}
-                      {hasChildren ? (
-                        <FaChevronDown className="text-xs text-gray-500 transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
-                      ) : null}
-                    </div>
-                  </div>
-                );
-              }
-            })}
-          </div>
+    const clothing = headerCategory?.find(c => c.type.toLowerCase().includes("merch") || c.type.toLowerCase().includes("clothing"));
+    if (clothing) {
+      list.push({
+        id: `dynamic-${clothing.category_type_id}`,
+        label: "UOW Merch & Clothing",
+        isDynamic: true,
+        category_type_id: clothing.category_type_id,
+        type: clothing.type,
+        children: clothing.children
+      });
+    }
 
-          {/* Right Orders Button */}
-          <div className="w-28 flex-shrink-0 flex justify-end">
-            {userInfo?.customer_id ? (
-              <Button
-                onClick={() => router.push("/my-orders")}
-                title="My Orders"
-                className="whitespace-nowrap"
-              />
-            ) : null}
-          </div>
-        </div>
+    const art = headerCategory?.find(c => c.type.toLowerCase().includes("indigenous") || c.type.toLowerCase().includes("art"));
+    if (art) {
+      list.push({
+        id: `dynamic-${art.category_type_id}`,
+        label: "INDIGENOUS ART MERCH",
+        isDynamic: true,
+        category_type_id: art.category_type_id,
+        type: art.type,
+        children: art.children
+      });
+    }
 
-        {/* Floating Category Dropdown */}
-        {hoveredItem && hoveredRect && (
-          hoveredItem.isDynamic && hoveredItem.children && hoveredItem.children.length > 0 ? (
+    const stationery = headerCategory?.find(c => c.type.toLowerCase().includes("stationery") || c.type.toLowerCase().includes("tech"));
+    if (stationery) {
+      list.push({
+        id: `dynamic-${stationery.category_type_id}`,
+        label: "STATIONERY + TECH",
+        isDynamic: true,
+        category_type_id: stationery.category_type_id,
+        type: stationery.type,
+        children: stationery.children
+      });
+    }
+
+    const gifts = headerCategory?.find(c => c.type.toLowerCase() === "gifts");
+    if (gifts) {
+      list.push({
+        id: `dynamic-${gifts.category_type_id}`,
+        label: "GIFTS",
+        isDynamic: true,
+        category_type_id: gifts.category_type_id,
+        type: gifts.type,
+        children: gifts.children
+      });
+    }
+
+    const graduation = headerCategory?.find(c => c.type.toLowerCase() === "graduation");
+    if (graduation) {
+      list.push({
+        id: `dynamic-${graduation.category_type_id}`,
+        label: "GRADUATION",
+        isDynamic: true,
+        category_type_id: graduation.category_type_id,
+        type: graduation.type,
+        children: graduation.children
+      });
+    }
+
+    headerCategory?.forEach((c) => {
+      const alreadyAdded = list.some(item => item.category_type_id === c.category_type_id);
+      if (!alreadyAdded) {
+        list.push({
+          id: `dynamic-${c.category_type_id}`,
+          label: c.type,
+          isDynamic: true,
+          category_type_id: c.category_type_id,
+          type: c.type,
+          children: c.children
+        });
+      }
+    });
+
+    return list;
+  }, [headerCategory, categories]);
+
+  const navCategories = React.useMemo<CustomCategoryItem[]>(() => {
+    const targets = ["TEXTBOOKS", "E-TEXTBOOKS", "BOOKS", "UOW Merch & Clothing", "GIFTS"];
+    const result: CustomCategoryItem[] = [];
+    targets.forEach(target => {
+      const found = allCategoriesList.find(c => c.label === target);
+      if (found) {
+        result.push(found);
+      }
+    });
+    return result;
+  }, [allCategoriesList]);
+
+  const getChildren = (item: CustomCategoryItem): CAT[] => {
+    if (item.type === "GIFTS" || item.type === "Gifts") {
+      return StaticGiftsRoutes.map((gift, idx) => ({
+        id: idx + 9999,
+        outlet: 0,
+        category_name: gift.label,
+        category_description: "",
+        category_type_id: item.category_type_id ?? 0,
+        deleted: 0,
+        parent: 0,
+        media_id: 0,
+        booknet: 0,
+        gifts: 1,
+        arts: 0,
+        object_path: "",
+        clothings: null,
+        children: [] as CAT[],
+        till_visibility: 0,
+        web_visibility: 1,
+        app_visibility: 0,
+        type: "Gifts"
+      } as CAT));
+    }
+    return item.children ?? [];
+  };
+
+  const renderNestedPanes = () => {
+    const columns: React.ReactNode[] = [];
+
+    // Column 1: Main Categories
+    columns.push(
+      <div key="col-0" className="w-64 max-h-[500px] overflow-y-auto custom-scrollbar border-r border-gray-200 bg-white py-2 dark:border-gray-700 dark:bg-slate-800">
+        {allCategoriesList.map((item) => {
+          const hasChildren = ((item.children?.length ?? 0) > 0) || ["Gifts", "GIFTS"].includes(item.type ?? "");
+          const isHovered = hoveredPath[0] === item.id;
+          return (
             <div
-              style={{
-                position: "fixed",
-                top: `${hoveredRect.bottom}px`,
-                left: `${hoveredRect.left}px`,
-              }}
-              className="z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
-              onMouseEnter={() => {
-                if (closeTimeoutRef.current) {
-                  clearTimeout(closeTimeoutRef.current);
-                  closeTimeoutRef.current = null;
-                }
-              }}
-              onMouseLeave={handleMouseLeave}
+              key={item.id}
+              onMouseEnter={() => setHoveredPath([item.id])}
+              className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm font-medium transition-colors ${isHovered
+                ? "bg-red-50 text-red-500 dark:bg-slate-700 "
+                : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700"
+                }`}
             >
-              {renderSubcategories(hoveredItem.children, 1, hoveredItem.type)}
-            </div>
-          ) : hoveredItem.isDynamic && hoveredItem.type === "Gifts" ? (
-            <div
-              style={{
-                position: "fixed",
-                top: `${hoveredRect.bottom}px`,
-                left: `${hoveredRect.left}px`,
-              }}
-              className="z-50 min-w-[200px] rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
-              onMouseEnter={() => {
-                if (closeTimeoutRef.current) {
-                  clearTimeout(closeTimeoutRef.current);
-                  closeTimeoutRef.current = null;
-                }
-              }}
-              onMouseLeave={handleMouseLeave}
-            >
-              {renderSubcategories([], 1, "Gifts")}
-            </div>
-          ) : !hoveredItem.isDynamic && hoveredItem.subItems && hoveredItem.subItems.length > 0 ? (
-            <div
-              style={{
-                position: "fixed",
-                top: `${hoveredRect.bottom}px`,
-                left: `${hoveredRect.left}px`,
-              }}
-              className="z-50 max-h-[60vh] min-w-[200px] overflow-y-auto rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-slate-800"
-              onMouseEnter={() => {
-                if (closeTimeoutRef.current) {
-                  clearTimeout(closeTimeoutRef.current);
-                  closeTimeoutRef.current = null;
-                }
-              }}
-              onMouseLeave={handleMouseLeave}
-            >
-              {hoveredItem.subItems.map((sub, subIdx) => (
+              {item.isDynamic ? (
                 <Link
-                  key={subIdx}
-                  href={sub.href}
-                  className="block px-3 py-1 text-sm text-gray-700 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500"
+                  href={`/products?category=${item.category_type_id ?? 0}&name=${item.type ?? ""}&page=1`}
+                  className="flex-grow block uppercase"
                 >
-                  {sub.label}
+                  {item.label}
                 </Link>
-              ))}
+              ) : (
+                <a
+                  href={item.href ?? "#"}
+                  target={item.href?.startsWith("http") ? "_blank" : undefined}
+                  rel={item.href?.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="flex-grow block uppercase"
+                >
+                  {item.label}
+                </a>
+              )}
+              {hasChildren && <FaChevronRight className="text-xs opacity-75" />}
             </div>
-          ) : null
-        )}
+          );
+        })}
       </div>
     );
+
+    // Column 2: Subcategories
+    if (hoveredPath[0]) {
+      const parentItem = allCategoriesList.find((item) => item.id === hoveredPath[0]);
+      let subItems: CAT[] = [];
+      if (parentItem) {
+        if (parentItem.isDynamic) {
+          subItems = parentItem.children ?? [];
+        } else if (parentItem.type === "Gifts" || parentItem.type === "GIFTS") {
+          subItems = StaticGiftsRoutes.map((gift, idx) => ({
+            id: idx + 9999,
+            outlet: 0,
+            category_name: gift.label,
+            category_description: "",
+            category_type_id: parentItem.category_type_id ?? 0,
+            deleted: 0,
+            parent: 0,
+            media_id: 0,
+            booknet: 0,
+            gifts: 1,
+            arts: 0,
+            object_path: "",
+            clothings: null,
+            children: [] as CAT[],
+            till_visibility: 0,
+            web_visibility: 1,
+            app_visibility: 0,
+            type: "Gifts"
+          } as CAT));
+        }
+      }
+
+      if (subItems.length > 0) {
+        columns.push(
+          <div key="col-1" className="w-64 max-h-[500px] overflow-y-auto custom-scrollbar border-r border-gray-200 bg-white py-2 dark:border-gray-700 dark:bg-slate-800">
+            {subItems.map((subItem) => {
+              const hasChildren = (subItem.children?.length ?? 0) > 0;
+              const isHovered = hoveredPath[1] === subItem.id;
+              const isGift = subItem.gifts === 1;
+              return (
+                <div
+                  key={subItem.id}
+                  onMouseEnter={() => setHoveredPath([hoveredPath[0]!, subItem.id])}
+                  className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${isHovered
+                    ? "bg-red-50 text-red-500 dark:bg-slate-700 "
+                    : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700"
+                    }`}
+                >
+                  {isGift ? (
+                    <Link
+                      href={StaticGiftsRoutes.find(g => g.label === subItem.category_name)?.href ?? "#"}
+                      className="flex-grow block uppercase"
+                    >
+                      {subItem.category_name}
+                    </Link>
+                  ) : (
+                    <Link
+                      href={`/products?category=${subItem.category_type_id ?? parentItem?.category_type_id ?? 0}&name=${subItem.category_name}&detail=${subItem.id}&page=1`}
+                      className="flex-grow block uppercase"
+                    >
+                      {subItem.category_name}
+                    </Link>
+                  )}
+                  {hasChildren && <FaChevronRight className="text-xs opacity-75" />}
+                </div>
+              );
+            })}
+          </div>
+        );
+      }
+    }
+
+    // Column 3: Sub-subcategories
+    if (hoveredPath[0] && hoveredPath[1]) {
+      const parentItem = allCategoriesList.find((item) => item.id === hoveredPath[0]);
+      let subItems: CAT[] = [];
+      if (parentItem) {
+        if (parentItem.isDynamic) {
+          subItems = parentItem.children ?? [];
+        } else if (parentItem.type === "Gifts" || parentItem.type === "GIFTS") {
+          subItems = StaticGiftsRoutes.map((gift, idx) => ({
+            id: idx + 9999,
+            outlet: 0,
+            category_name: gift.label,
+            category_description: "",
+            category_type_id: parentItem.category_type_id ?? 0,
+            deleted: 0,
+            parent: 0,
+            media_id: 0,
+            booknet: 0,
+            gifts: 1,
+            arts: 0,
+            object_path: "",
+            clothings: null,
+            children: [] as CAT[],
+            till_visibility: 0,
+            web_visibility: 1,
+            app_visibility: 0,
+            type: "Gifts"
+          } as CAT));
+        }
+      }
+      const subItem = subItems.find((item) => String(item.id) === String(hoveredPath[1]));
+      const subSubItems = subItem?.children ?? [];
+
+      if (subSubItems.length > 0) {
+        columns.push(
+          <div key="col-2" className="w-64 max-h-[500px] overflow-y-auto custom-scrollbar border-r border-gray-200 bg-white py-2 dark:border-gray-700 dark:bg-slate-800">
+            {subSubItems.map((subSubItem) => {
+              const hasChildren = (subSubItem.children?.length ?? 0) > 0;
+              const isHovered = hoveredPath[2] === subSubItem.id;
+              return (
+                <div
+                  key={subSubItem.id}
+                  onMouseEnter={() => setHoveredPath([hoveredPath[0]!, hoveredPath[1]!, subSubItem.id])}
+                  className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${isHovered
+                    ? "bg-red-50 text-red-500 dark:bg-slate-700 "
+                    : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700"
+                    }`}
+                >
+                  <Link
+                    href={`/products?category=${subSubItem.category_type_id ?? parentItem?.category_type_id ?? 0}&name=${subSubItem.category_name}&detail=${subSubItem.id}&page=1`}
+                    className="flex-grow block capitalize"
+                  >
+                    {subSubItem.category_name}
+                  </Link>
+                  {hasChildren && <FaChevronRight className="text-xs opacity-75" />}
+                </div>
+              );
+            })}
+          </div>
+        );
+      }
+    }
+
+    // Column 4: Sub-sub-subcategories
+    if (hoveredPath[0] && hoveredPath[1] && hoveredPath[2]) {
+      const parentItem = allCategoriesList.find((item) => item.id === hoveredPath[0]);
+      let subItems: CAT[] = [];
+      if (parentItem) {
+        if (parentItem.isDynamic) {
+          subItems = parentItem.children ?? [];
+        } else if (parentItem.type === "Gifts" || parentItem.type === "GIFTS") {
+          subItems = StaticGiftsRoutes.map((gift, idx) => ({
+            id: idx + 9999,
+            outlet: 0,
+            category_name: gift.label,
+            category_description: "",
+            category_type_id: parentItem.category_type_id ?? 0,
+            deleted: 0,
+            parent: 0,
+            media_id: 0,
+            booknet: 0,
+            gifts: 1,
+            arts: 0,
+            object_path: "",
+            clothings: null,
+            children: [] as CAT[],
+            till_visibility: 0,
+            web_visibility: 1,
+            app_visibility: 0,
+            type: "Gifts"
+          } as CAT));
+        }
+      }
+      const subItem = subItems.find((item) => String(item.id) === String(hoveredPath[1]));
+      const subSubItems = subItem?.children ?? [];
+      const subSubSubItem = subSubItems.find((item) => String(item.id) === String(hoveredPath[2]));
+      const subSubSubItems = subSubSubItem?.children ?? [];
+
+      if (subSubSubItems.length > 0) {
+        columns.push(
+          <div key="col-3" className="w-64 max-h-[500px] overflow-y-auto custom-scrollbar bg-white py-2 dark:bg-slate-800">
+            {subSubSubItems.map((item) => (
+              <div
+                key={item.id}
+                className="flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700 transition-colors"
+              >
+                <Link
+                  href={`/products?category=${item.category_type_id ?? parentItem?.category_type_id ?? 0}&name=${item.category_name}&detail=${item.id}&page=1`}
+                  className="flex-grow block capitalize"
+                >
+                  {item.category_name}
+                </Link>
+              </div>
+            ))}
+          </div>
+        );
+      }
+    }
+
+    return columns;
   };
 
   return (
-    <nav className=" left-0 top-0 z-10 h-fit w-full">
-      <header className="flex flex-col bg-white px-4 mb-2 pt-4 backdrop-blur dark:bg-slate-900 lg:flex-row lg:items-center lg:pb-0">
-        {/* Top Row: Hamburger, Logo, and Icons (Mobile View) */}
+    <nav className="left-0 top-0 z-10 h-fit w-full">
+      <div className="hidden lg:flex w-full bg-[#f8f9fa] border-b border-gray-200 px-8 py-2 text-xs text-gray-500 dark:bg-slate-950 dark:border-gray-800">
+        <div className="max-w-7xl mx-auto text-red-500 flex w-full justify-between items-center">
+          <div>Call us: (02) 4221 8050</div>
+          <div className="flex space-x-4">
+            <Link href="/favorites" className="   font-medium 0">
+              <GoHeart className="inline-block mr-1 " />
+              Wishlist
+            </Link>
+            <Link href="/contact-us" className="   font-medium 0">
+              <BsTelephone className="inline-block mr-1 " />
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <header className="flex flex-col bg-white px-4 mb-2 pt-4 backdrop-blur dark:bg-slate-900 lg:flex-col lg:items-center lg:pb-0">
         <div className="flex items-center justify-between border-b border-gray-500 pb-4 lg:hidden">
           <div
             className="flex-grow cursor-pointer text-center"
@@ -938,7 +907,6 @@ const Header = () => {
             />
           </div>
 
-          {/* Right Section: Heart, Cart, and User Dropdown Icons */}
           <div className="flex items-center space-x-2 lg:space-x-4">
             <div className="relative" onClick={() => router.push("/favorites")}>
               <GoHeart className="cursor-pointer text-xl" />
@@ -985,12 +953,6 @@ const Header = () => {
                         onClick={handleLogout}
                         className="w-full"
                       />
-                      {/* <button
-                        onClick={handleLogout}
-                        className="w-full rounded bg-red-500 px-3 py-1.5 text-sm text-white hover:bg-red-600"
-                      >
-                        Logout
-                      </button> */}
                     </>
                   ) : (
                     <div className="space-y-2">
@@ -1011,27 +973,11 @@ const Header = () => {
                         className="w-full"
                       />
                     </div>
-                    // <button
-                    //   onClick={() => {
-                    //     setUserDropdownOpen(false);
-                    //     router.push("/login");
-                    //   }}
-                    //   className="w-full rounded bg-blue-500 px-3 py-1.5 text-sm text-white hover:bg-blue-600"
-                    // >
-                    //   Login
-                    // </button>
                   )}
                 </div>
               )}
             </div>
 
-            {/* <div
-              className="relative"
-              ref={userDropdownRef}
-              onClick={handleLogout}
-            >
-              <IoPersonOutline className="cursor-pointer text-xl" />
-            </div> */}
             <div
               className="relative"
               onClick={() => router.push("/contact-us")}
@@ -1047,61 +993,8 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Search Bar (Visible on Small Screens) */}
-        {!path.includes("/products") && (
-          <div className="mt-2 w-full lg:hidden">
-            <RadixSelect
-              value={selectedCategory?.value ?? ""}
-              onValueChange={(val) => {
-                const options = newCat?.map((cat) => ({
-                  value:
-                    "category_type_id" in cat
-                      ? cat.category_type_id.toString()
-                      : cat.value,
-                  label: "type" in cat ? cat.type.toString() : cat.label,
-                })) ?? [];
-                const selectedOption = options.find((opt) => opt.value === val);
-                if (selectedOption) {
-                  setSelectedCategory(selectedOption);
-                  setSearchTerm("");
-                  setTimeout(() => searchInputRef.current?.focus(), 0);
-                }
-              }}
-            >
-              <SelectTrigger className="w-full h-10 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700 capitalize rounded-md text-sm">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                {newCat?.map((cat) => {
-                  const val = "category_type_id" in cat ? cat.category_type_id.toString() : cat.value;
-                  const label = "type" in cat ? cat.type.toString() : cat.label;
-                  return (
-                    <SelectItem key={val} value={val}>
-                      {label}
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </RadixSelect>
-            <div className="mt-2">
-              <Input
-                ref={searchInputRef}
-                placeholder="Enter keywords to search..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                icon={<FiSearch size={26} />}
-                animateOnClick={false}
-                onIconClick={() => handleSearchApi()}
-                error={searchError}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Mobile Menu for Navigation Items */}
         {isMobileMenuOpen && (
           <>
-            {/* Overlay to reduce opacity */}
             {isMobileMenuOpen && (
               <div
                 className="fixed inset-0 z-20 h-screen bg-black bg-opacity-50 touch-none"
@@ -1138,14 +1031,6 @@ const Header = () => {
                     <FaShoppingBag size={16} />
                     <span className="text-xs">My Orders</span>
                   </Link>)}
-                {/* 
-                <Link
-                  href="/contact-us"
-                  className="flex w-1/3 flex-row items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 p-2 text-white transition-transform hover:scale-105"
-                >
-                  <FaPhoneAlt size={16} />
-                  <span className="text-xs">Contact Us</span>
-                </Link> */}
               </div>
               <nav className="custom-scrollbar overflow-auto">
                 {headerCategory?.map((item) => (
@@ -1221,24 +1106,6 @@ const Header = () => {
                             {subItem.label}
                           </a>
                         ))}
-                        {/* {item.label === "Books" && genre && (
-                          <ScrollArea className="h-[25vh]">
-                            {genre?.map((subItem) => (
-                              <Link
-                                key={subItem.genre}
-                                href={`books?detail=${subItem.genre}`}
-                                className="block py-1 text-sm hover:underline"
-                                onClick={() => {
-                                  setOpenDropdown(null);
-                                  setMobileMenuOpen(false);
-                                }}
-                                passHref
-                              >
-                                {subItem.genre}
-                              </Link>
-                            ))}
-                          </ScrollArea>
-                        )} */}
                       </div>
                     )}
                     {item.label === "Pulse" && openDropdown === item.label && (
@@ -1269,218 +1136,261 @@ const Header = () => {
           </>
         )}
 
-        {/* Desktop Layout */}
-        <div className="hidden w-full flex-col border-b border-gray-500 pb-4 lg:flex lg:items-center lg:justify-between">
-          <div className="flex w-full items-center">
-            <div
-              className="flex-grow cursor-pointer text-left"
-              onClick={() => {
-                router.push("/");
+        <div className="hidden w-full max-w-7xl mx-auto items-center justify-center py-5 lg:flex border-b border-gray-100 dark:border-gray-800">
+          <div
+            className="cursor-pointer flex-shrink-0"
+            onClick={() => router.push("/")}
+          >
+            <Image
+              src={Logo}
+              width={220}
+              height={65}
+              alt="Logo"
+              className="h-16 w-52 object-contain"
+            />
+          </div>
+
+          <div className="flex h-11 w-[500px] items-center rounded-full border border-gray-300 bg-[#f8f9fa] px-4 py-1 dark:border-gray-700 dark:bg-slate-800">
+            <div className="flex-shrink-0">
+              <RadixSelect
+                value={selectedCategory?.value ?? ""}
+                onValueChange={(val) => {
+                  const options = newCat?.map((cat) => ({
+                    value:
+                      "category_type_id" in cat
+                        ? cat.category_type_id.toString()
+                        : cat.value,
+                    label: "type" in cat ? cat.type.toString() : cat.label,
+                  })) ?? [];
+                  const selectedOption = options.find((opt) => opt.value === val);
+                  if (selectedOption) {
+                    setSelectedCategory(selectedOption);
+                    setSearchTerm("");
+                    searchInputRef.current?.focus();
+                  }
+                }}
+              >
+                <SelectTrigger className="h-full border-none bg-transparent shadow-none focus:ring-0 focus:ring-offset-0 capitalize text-sm text-gray-700 dark:text-gray-200">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  {newCat?.map((cat) => {
+                    const val = "category_type_id" in cat ? cat.category_type_id.toString() : cat.value;
+                    const label = "type" in cat ? cat.type.toString() : cat.label;
+                    return (
+                      <SelectItem key={val} value={val}>
+                        {label}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </RadixSelect>
+            </div>
+            <div className="mx-2 h-5 w-[1px] bg-gray-300 dark:bg-gray-600"></div>
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Enter keywords to search..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") void handleSearchApi();
               }}
-            >
-              <Image
-                src={Logo}
-                width={1000}
-                height={1000}
-                alt="Logo"
-                className="h-20 w-56 flex-shrink-0 object-contain"
-              />
+              className="h-full flex-grow bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400 dark:text-gray-200"
+            />
+            <button onClick={() => void handleSearchApi()} className="text-gray-500 hover:text-red-500 p-1">
+              <FiSearch className="text-xl" />
+            </button>
+          </div>
+
+          <div className="flex items-center space-x-6 px-2">
+            <div className="flex items-center gap-3">
+              <div
+                onClick={() => void router.push(userInfo ? "/my-orders" : "/login")}
+                className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-slate-800"
+              >
+                <IoPersonOutline className="text-xl" />
+              </div>
+              <div className="flex flex-col text-left text-xs text-gray-500 dark:text-gray-400">
+                {userInfo ? (
+                  <>
+                    <span className="font-semibold text-gray-800 dark:text-gray-200 capitalize">
+                      Hi, {userInfo.first_name}
+                    </span>
+                    <button onClick={() => void handleLogout()} className="hover:text-red-500 text-left">
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login" className="font-semibold text-gray-800 hover:text-red-500 dark:text-gray-200">
+                      Sign In
+                    </Link>
+                    <Link href="/signup" className="hover:text-red-500">
+                      Create An Account
+                    </Link>
+                  </>
+                )}
+              </div>
             </div>
 
-            {/* Right Section: Search Bar and Icons */}
-            <div className="flex items-center space-x-2">
-              <div className="hidden lg:block">
-                <RadixSelect
-                  value={selectedCategory?.value ?? ""}
-                  onValueChange={(val) => {
-                    const options = newCat?.map((cat) => ({
-                      value:
-                        "category_type_id" in cat
-                          ? cat.category_type_id.toString()
-                          : cat.value,
-                      label: "type" in cat ? cat.type.toString() : cat.label,
-                    })) ?? [];
-                    const selectedOption = options.find((opt) => opt.value === val);
-                    if (selectedOption) {
-                      setSelectedCategory(selectedOption);
-                      setSearchTerm("");
-                      searchInputRef.current?.focus();
-                    }
-                  }}
-                >
-                  <SelectTrigger className="w-[180px] h-10 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700 capitalize rounded-md text-sm">
-                    <SelectValue placeholder="All Categories" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {newCat?.map((cat) => {
-                      const val = "category_type_id" in cat ? cat.category_type_id.toString() : cat.value;
-                      const label = "type" in cat ? cat.type.toString() : cat.label;
-                      return (
-                        <SelectItem key={val} value={val}>
-                          {label}
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </RadixSelect>
-              </div>
-              <Input
-                ref={searchInputRef}
-                placeholder="Enter keywords to search..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                icon={<FiSearch size={26} />}
-                width="w-56"
-                animateOnClick={false}
-                onIconClick={() => handleSearchApi()}
-                error={searchError}
-              />
-              <div
-                className="relative cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
-                onClick={() => router.push("/favorites")}
-                title="Wishlist"
-              >
-                <GoHeart className="text-xl" />
-                {favItems?.length && favItems?.length > 0 ? (
-                  <span className="absolute -bottom-0 -left-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
-                    {favItems?.length}
-                  </span>
-                ) : (
-                  ""
-                )}
-              </div>
-              <div
-                onClick={() => toggleSidebar()}
-                title={`Cart`}
-                className="relative cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
-              >
-                <IoCartOutline className="cursor-pointer text-xl" />
-                {cartItems?.length && cartItems?.length > 0 ? (
-                  <span className="absolute -bottom-0 -left-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
-                    {cartItems?.length}
-                  </span>
-                ) : (
-                  ""
-                )}
-              </div>
-
-              <div
-                onClick={() => router.push("/contact-us")}
-                title={"Contact Us"}
-                className="relative cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
-              >
-                <BsTelephone className="text-xl" />
-              </div>
-              <div
-                className="relative flex items-center space-x-2"
-                ref={userDropdownRef}
-              >
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setUserDropdownOpen((prev) => !prev);
-                  }}
-                  title={userInfo ? "Profile" : "Sign in"}
-                  className="relative flex cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
-                >
-                  {userInfo ? (
-                    <IoPerson className="text-xl" />
-                  ) : (
-                    <IoPersonOutline className="text-xl" />
-                  )}
+            <div className="flex flex-col items-start gap-1">
+              <div onClick={toggleSidebar} className="flex cursor-pointer items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-slate-800">
+                  <IoCartOutline className="text-xl" />
                 </div>
-
-                {userInfo && (
-                  <div className="text-sm font-medium capitalize text-gray-800 dark:text-gray-300">
-                    Welcome!
-                    <p className="font-bold">
-                      {userInfo.first_name} {userInfo.last_name}
-                    </p>
-                  </div>
-                )}
-
-                {isUserDropdownOpen && (
-                  <div className="absolute right-0 top-12 z-50 w-48 rounded-lg border bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-900">
-                    {userInfo ? (
-                      <>
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white capitalize">
-                          {userInfo.first_name} {userInfo.last_name}
-                        </p>
-                        <p className="mb-3 text-xs text-gray-600 dark:text-gray-400">
-                          {userInfo.email}
-                        </p>
-                        <Button
-                          title="Logout"
-                          onClick={handleLogout}
-                          className="w-full"
-                        />
-                        {/* <button
-                          onClick={handleLogout}
-                          className="w-full rounded bg-red-500 px-3 py-1.5 text-sm text-white hover:bg-red-600"
-                        >
-                          Logout
-                        </button> */}
-                      </>
-                    ) : (
-                      <div className="space-y-2">
-                        <Button
-                          title="Login"
-                          onClick={() => {
-                            setUserDropdownOpen(false);
-                            router.push("/login");
-                          }}
-                          className="w-full"
-                        />
-                        <Button
-                          title="Sign Up"
-                          onClick={() => {
-                            setUserDropdownOpen(false);
-                            router.push("/signup");
-                          }}
-                          className="w-full"
-                        />
-                      </div>
-                      // <button
-                      //   onClick={() => {
-                      //     setUserDropdownOpen(false);
-                      //     router.push("/login");
-                      //   }}
-                      //   className="w-full rounded bg-blue-500 px-3 py-1.5 text-sm text-white hover:bg-blue-600"
-                      // >
-                      //   Login
-                      // </button>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* <div className="flex items-center space-x-2">
-                <div
-                  onClick={handleLogout}
-                  title={userInfo ? "Logout" : "Signin"}
-                  className="relative flex cursor-pointer rounded-full p-1.5 hover:border-transparent hover:bg-red-500 hover:text-white"
-                >
-                  {userInfo ? (
-                    <IoPerson className="text-xl" />
-                  ) : (
-                    <IoPersonOutline className="text-xl" />
-                  )}
+                <div className="flex flex-col text-left">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    My Cart - {cartItems?.length!} {cartItems?.length! === 1 ? 'item' : 'items'}
+                  </span>
+                  <span className="text-sm font-bold text-red-500">
+                    ${cartTotal.toFixed(2)}
+                  </span>
                 </div>
-
-                {userInfo && (
-                  <div className="text-sm font-medium capitalize text-gray-800 dark:text-gray-300">
-                    Welcome!
-                    <p className="font-bold">
-                      {userInfo.first_name} {userInfo.last_name}
-                    </p>
-                  </div>
-                )}
-              </div> */}
+              </div>
+              {userInfo?.customer_id && (
+                <Link
+                  href="/my-orders"
+                  className="text-xs text-red-500 underline hover:text-red-600 ml-14 font-medium"
+                >
+                  View Orders
+                </Link>
+              )}
             </div>
           </div>
-          <USBCategoryList1 />
+        </div>
+
+        <div className="hidden w-full max-w-7xl mx-auto py-2 lg:flex items-center justify-center relative">
+          <div className="flex items-center gap-8">
+            <div
+              className="relative py-2"
+              onMouseEnter={() => {
+                setHoveredAllCategories(true);
+                if (allCategoriesList[0]) {
+                  setHoveredPath([allCategoriesList[0].id]);
+                }
+              }}
+              onMouseLeave={() => {
+                setHoveredAllCategories(false);
+                setHoveredPath([]);
+              }}
+            >
+              <button className="flex items-center gap-2 bg-red-500 hover:brightness-110 text-white px-5 py-2.5 rounded font-bold text-sm tracking-wide transition-colors">
+                <span>ALL CATEGORIES</span>
+                <FaChevronDown className="text-xs" />
+              </button>
+
+              {hoveredAllCategories && (
+                <div className="absolute top-full left-0 z-50 flex shadow-2xl border border-gray-200 rounded-b bg-white dark:border-gray-700 dark:bg-slate-800">
+                  {renderNestedPanes()}
+                </div>
+              )}
+            </div>
+
+            <nav className="flex items-center gap-6">
+              <Link
+                href="/"
+                className="text-sm  uppercase text-gray-700 hover:text-red-500 dark:text-gray-200"
+              >
+                HOME
+              </Link>
+
+              {navCategories.map((item) => {
+                const hasChildren = ((item.children?.length ?? 0) > 0) || item.type === "Gifts" || item.type === "GIFTS";
+                const childrenItems = getChildren(item);
+
+                return (
+                  <div key={item.id} className="relative group py-2">
+                    <div className="flex items-center gap-1 cursor-pointer">
+                      {item.isDynamic ? (
+                        <Link
+                          href={`/products?category=${item.category_type_id ?? 0}&name=${item.type ?? ""}&page=1`}
+                          className="text-sm  uppercase text-gray-700 group-hover:text-red-500 dark:text-gray-200"
+                        >
+                          {item.label ?? item.type ?? ""}
+                        </Link>
+                      ) : (
+                        <a
+                          href={item.href ?? "#"}
+                          target={item.href?.startsWith("http") ? "_blank" : undefined}
+                          rel={item.href?.startsWith("http") ? "noopener noreferrer" : undefined}
+                          className="text-sm  uppercase text-gray-700 group-hover:text-red-500 dark:text-gray-200"
+                        >
+                          {item.label}
+                        </a>
+                      )}
+                      {hasChildren && <FaChevronDown className="text-xs text-gray-400 group-hover:text-red-500" />}
+                    </div>
+
+                    {hasChildren && childrenItems.length > 0 && (
+                      <div className="absolute top-full left-0 z-50 hidden group-hover:block min-w-[220px] bg-white border border-gray-200 shadow-xl rounded py-2 dark:bg-slate-800 dark:border-gray-700">
+                        {childrenItems.map((child: CAT) => {
+                          const hasSubChildren = (child.children?.length ?? 0) > 0;
+                          const isGift = child.gifts === 1;
+                          return (
+                            <div key={child.id} className="relative group/sub px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-700">
+                              <div className="flex items-center justify-between">
+                                {isGift ? (
+                                  <Link
+                                    href={StaticGiftsRoutes.find(g => g.label === child.category_name)?.href ?? "#"}
+                                    className="text-xs  text-gray-700 hover:text-red-500 dark:text-gray-200 block uppercase w-full"
+                                  >
+                                    {child.category_name}
+                                  </Link>
+                                ) : (
+                                  <Link
+                                    href={`/products?category=${child.category_type_id ?? item.category_type_id ?? 0}&name=${child.category_name}&detail=${child.id}&page=1`}
+                                    className="text-xs  text-gray-700 uppercase hover:text-red-500 dark:text-gray-200 block  w-full"
+                                  >
+                                    {child.category_name}
+                                  </Link>
+                                )}
+                                {hasSubChildren && <FaChevronRight className="text-[10px] text-gray-400" />}
+                              </div>
+
+                              {hasSubChildren && (
+                                <div className="absolute top-0 left-full z-50 hidden group-hover/sub:block min-w-[200px] bg-white border border-gray-200 shadow-xl rounded py-2 dark:bg-slate-800 dark:border-gray-700">
+                                  {child.children.map((subChild: CAT) => (
+                                    <Link
+                                      key={subChild.id}
+                                      href={`/products?category=${subChild.category_type_id ?? item.category_type_id ?? 0}&name=${subChild.category_name}&detail=${subChild.id}&page=1`}
+                                      className="text-xs  text-gray-700 hover:text-red-500 dark:text-gray-200 block capitalize px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-700"
+                                    >
+                                      {subChild.category_name}
+                                    </Link>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </nav>
+          </div>
+
+          <div></div>
         </div>
       </header>
+      {/* Floating Cart Button (visible on both large and small screens when cart is closed) */}
+      {!isSidebarOpen && !path.includes("/checkout") && !path.includes("/placeorder") && (
+        <button
+          onClick={toggleSidebar}
+          className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-red-500 hover:brightness-110 text-white shadow-2xl transition-all hover:scale-110 active:scale-95 animate-pulse-subtle group"
+          title="Open Cart"
+        >
+          <IoCartOutline className="text-2xl group-hover:animate-wiggle" />
+          {cartItems?.length! > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow animate-bounce">
+              {cartItems?.length}
+            </span>
+          )}
+        </button>
+      )}
+
       <SidebarCart
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
