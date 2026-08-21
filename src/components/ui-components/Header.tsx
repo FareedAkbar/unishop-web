@@ -476,7 +476,7 @@ const Header = () => {
     setParsedCartItems(itemsCart);
   }, [cartItems]);
 
-  const cartCount = parsedCartItems.reduce((acc, item) => acc + (item.quantity ?? 0), 0);
+  const cartCount = parsedCartItems.length;
   const cartSubTotal = parsedCartItems.reduce(
     (acc, item) => acc + ((item.item_sale_price ?? 0) * (item.quantity ?? 0)),
     0
@@ -921,12 +921,10 @@ const Header = () => {
 
             <div className="relative" onClick={() => toggleSidebar()}>
               <IoCartOutline className="cursor-pointer text-xl" />
-              {cartItems?.length && cartItems?.length > 0 ? (
+              {cartCount > 0 && (
                 <span className="absolute -bottom-0 -left-0 flex h-3 w-3 items-center justify-center rounded-full bg-red-500 text-[8px] text-white">
-                  {cartItems?.length}
+                  {cartCount}
                 </span>
-              ) : (
-                ""
               )}
             </div>
             <div className="relative" ref={mobileUserDropdownRef}>
@@ -1241,7 +1239,7 @@ const Header = () => {
                 </div>
                 <div className="flex flex-col text-left">
                   <span className="text-xs text-gray-500 dark:text-gray-400">
-                    My Cart - {cartItems?.length!} {cartItems?.length! === 1 ? 'item' : 'items'}
+                    My Cart - {cartCount} {cartCount === 1 ? 'item' : 'items'}
                   </span>
                   <span className="text-sm font-bold text-red-500">
                     ${cartTotal.toFixed(2)}
@@ -1379,13 +1377,13 @@ const Header = () => {
       {!isSidebarOpen && !path.includes("/checkout") && !path.includes("/placeorder") && (
         <button
           onClick={toggleSidebar}
-          className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-red-500 hover:brightness-110 text-white shadow-2xl transition-all hover:scale-110 active:scale-95 animate-pulse-subtle group"
+          className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#1890ff] hover:bg-blue-600 text-white shadow-2xl transition-all hover:scale-110 active:scale-95 animate-pulse-subtle group"
           title="Open Cart"
         >
           <IoCartOutline className="text-2xl group-hover:animate-wiggle" />
-          {cartItems?.length! > 0 && (
+          {cartCount > 0 && (
             <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow animate-bounce">
-              {cartItems?.length}
+              {cartCount}
             </span>
           )}
         </button>
