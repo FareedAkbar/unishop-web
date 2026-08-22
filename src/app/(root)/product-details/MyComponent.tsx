@@ -121,6 +121,15 @@ const MyComponent = () => {
   const [selectedValues, setSelectedValues] = useState<
     Record<string, string | undefined>
   >({});
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(document.documentElement.classList.contains("dark"));
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains("dark"));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
   const {
     cartItems,
     addCartItems,
@@ -788,7 +797,9 @@ const MyComponent = () => {
               <ImageMagnifier
                 src={currentImage
                   ? `https://ipos-storage.s3.amazonaws.com/${currentImage}`
-                  : "/assets/images/products/product.jpg"}
+                  : isDarkMode
+                    ? "/assets/images/products/img.png"
+                    : "/assets/images/products/img light.png"}
                 width="100%"
                 height="100%"
                 magnifierHeight={200}
@@ -1429,7 +1440,7 @@ const MyComponent = () => {
                   //   ? `https://ipos-storage.s3.amazonaws.com/${selectedVariation.media[currentImageIndex].object_path}`
                   //   : itemDetail?.object_path
                   //     ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                  //     : "/assets/images/products/product.jpg"
+                  //     : "/assets/images/products/img.png"
                 }
                 style={{
                   position: "absolute",

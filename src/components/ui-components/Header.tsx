@@ -1377,7 +1377,7 @@ const Header = () => {
       {!isSidebarOpen && !path.includes("/checkout") && !path.includes("/placeorder") && (
         <button
           onClick={toggleSidebar}
-          className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#1890ff] hover:bg-blue-600 text-white shadow-2xl transition-all hover:scale-110 active:scale-95 animate-pulse-subtle group"
+          className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-red-500 hover:brightness-110 text-white shadow-2xl transition-all hover:scale-110 active:scale-95 animate-pulse-subtle group"
           title="Open Cart"
         >
           <IoCartOutline className="text-2xl group-hover:animate-wiggle" />

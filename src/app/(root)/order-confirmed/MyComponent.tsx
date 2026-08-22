@@ -75,7 +75,7 @@ const OrderConfirmed = () => {
         </div>
 
         <motion.div
-          className="flex h-fit flex-1 flex-col justify-center rounded-lg border p-3 shadow-md dark:bg-slate-800"
+          className="flex h-fit flex-1 flex-col justify-center rounded-lg border border-gray-500 p-3 shadow-md dark:bg-slate-800"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}

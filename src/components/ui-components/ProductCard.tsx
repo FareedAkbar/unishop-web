@@ -115,7 +115,7 @@ const ProductCard = ({
       // (the hover icons, the "no stock" overlay, etc.) can ever render above
       // page-level UI like an open cart drawer, regardless of the z-[n]
       // values used internally.
-      className="group isolate relative flex w-full cursor-pointer flex-shrink-0 grow-0 flex-col rounded-md border border-gray-400 p-2 shadow-sm  shadow-gray-500 dark:border-gray-600 dark:bg-slate-900 xs:w-56 sm:w-64 lg:w-72"
+      className="group isolate relative flex w-full cursor-pointer flex-shrink-0 grow-0 flex-col rounded-xl border border-slate-200/80 bg-white p-3 shadow-md  transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.01] hover:border-red-500/20 hover:shadow-xl dark:border-slate-800 dark:bg-slate-950 dark:shadow-black/50 dark:hover:shadow-black/80 xs:w-56 sm:w-64 lg:w-72"
     >
       {((product?.items_type === 1 && !product?.variations?.[0]) ??
         product?.item_sale_price) && (
@@ -143,7 +143,7 @@ const ProductCard = ({
           </div>
         )}
 
-      <div className="relative my-4 flex h-40 grow-0 flex-col items-center justify-center rounded-sm bg-white dark:bg-slate-900 sm:h-48 md:h-72">
+      <div className="relative my-3 flex h-40 grow-0 flex-col items-center justify-center rounded-lg bg-slate-50/50 p-2 border border-slate-100 dark:border-slate-800/30 dark:bg-slate-900/40 sm:h-48 md:h-72">
         {tagNames.length > 0 ? (
           <div className="absolute left-2 top-0 flex flex-col">
             {tagNames.map((tag, index) => {
@@ -162,19 +162,36 @@ const ProductCard = ({
         ) : (
           ""
         )}
-        <Image
-          src={
-            product?.object_path
-              ? `https://ipos-storage.s3.amazonaws.com/${product.object_path}`
-              : product?.media && product?.media.length > 0
-                ? `https://ipos-storage.s3.amazonaws.com/${product.media[0]?.object_path}`
-                : "/assets/images/products/product.jpg"
-          }
-          alt={product?.SKU_title ?? ""}
-          width={1000}
-          height={1000}
-          className="my-2 h-full w-full object-contain transition-transform duration-300 hover:scale-105"
-        />
+        {product?.object_path || (product?.media && product?.media.length > 0) ? (
+          <Image
+            src={
+              product?.object_path
+                ? `https://ipos-storage.s3.amazonaws.com/${product.object_path}`
+                : `https://ipos-storage.s3.amazonaws.com/${product.media[0]?.object_path}`
+            }
+            alt={product?.SKU_title ?? ""}
+            width={1000}
+            height={1000}
+            className="my-2 h-full w-full object-contain transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1"
+          />
+        ) : (
+          <>
+            <Image
+              src="/assets/images/products/img light.png"
+              alt={product?.SKU_title ?? ""}
+              width={1000}
+              height={1000}
+              className="my-2 h-full w-full object-contain transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1 dark:hidden"
+            />
+            <Image
+              src="/assets/images/products/img.png"
+              alt={product?.SKU_title ?? ""}
+              width={1000}
+              height={1000}
+              className="my-2 h-full w-full object-contain transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1 hidden dark:block"
+            />
+          </>
+        )}
         <div className="absolute right-5 top-2 flex">
           {showButton && !showAddToCart && (
             <p className="rounded-full border-none bg-red-500 p-0.5 text-sm text-white sm:p-1 sm:text-xl">
@@ -186,7 +203,7 @@ const ProductCard = ({
           <button
             disabled={wishListLoader}
             onClick={stop(handleFavourite)}
-            className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
+            className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-500 sm:p-1 sm:text-xl"
           >
             {product?.item_id &&
               favItems?.some((favItem) => favItem.item_id === product.item_id) ? (
@@ -197,7 +214,7 @@ const ProductCard = ({
           </button>
           <button
             onClick={stop(openDetail)}
-            className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-400 sm:p-1 sm:text-xl"
+            className="rounded-full border-none bg-transparent bg-white p-0.5 text-sm hover:text-red-500 dark:bg-slate-500 sm:p-1 sm:text-xl"
           >
             <AiOutlineEye />
           </button>

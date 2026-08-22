@@ -38,11 +38,18 @@ export default function SpecialOrderCard({
       {/* Main Product Image Section */}
       <div className="relative flex h-40 items-center justify-center rounded-sm bg-gray-200 sm:h-48 lg:h-64">
         <Image
-          src="/assets/images/products/product.jpg" // Assuming placeholder book image
+          src="/assets/images/products/img light.png"
           alt={item.title}
           layout="fill"
           objectFit="contain"
-          className="rounded-lg"
+          className="rounded-lg dark:hidden"
+        />
+        <Image
+          src="/assets/images/products/img.png"
+          alt={item.title}
+          layout="fill"
+          objectFit="contain"
+          className="rounded-lg hidden dark:block"
         />
 
         {/* Conditional badge or sale price */}
