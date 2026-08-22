@@ -397,8 +397,8 @@ const MyComponent = () => {
     };
 
     try {
-      await getLinkForPayment(x);
-      // await placeOrderApi(null);
+      // await getLinkForPayment(x);
+      await placeOrderApi(null);
       console.log(x);
     } catch (error) {
       console.error("Failed to load data:", error);

@@ -30,7 +30,7 @@ const CategoriesSection: FC<CategoriesSectionProps> = ({ categories }) => {
           <Link
             key={item.category_type_id}
             href={`/products?category=${item.category_type_id}&name=${item.type}&page=1`}
-            className="flex cursor-pointer gap-5 rounded-lg border border-gray-300 bg-white p-4 shadow-sm transition hover:shadow-lg dark:border-gray-700 dark:bg-gray-900 dark:shadow-gray-800"
+            className="flex cursor-pointer gap-5 rounded-lg border border-gray-300 bg-white transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.01] p-4 shadow-sm  hover:shadow-lg dark:border-gray-700/50 dark:bg-gray-900 dark:shadow-gray-800"
           // onClick={() => handleClick(item)}
           >
             <div className="relative h-24 w-24 overflow-hidden rounded-md">

@@ -166,19 +166,36 @@ const CompareProductsPage = () => {
                             onClick={() => goToDetail(prod)}
                             className="cursor-pointer overflow-hidden rounded-md border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 h-32 w-28 relative flex items-center justify-center p-2 hover:scale-[1.02] transition-transform"
                           >
-                            <Image
-                              src={
-                                prod?.object_path
-                                  ? `https://ipos-storage.s3.amazonaws.com/${prod.object_path}`
-                                  : prod?.media && prod?.media.length > 0
-                                    ? `https://ipos-storage.s3.amazonaws.com/${prod.media[0]?.object_path}`
-                                    : "/assets/images/products/product.jpg"
-                              }
-                              alt={productTitle}
-                              fill
-                              sizes="(max-width: 120px) 100vw"
-                              className="object-contain p-1"
-                            />
+                            {prod?.object_path || (prod?.media && prod?.media.length > 0) ? (
+                              <Image
+                                src={
+                                  prod?.object_path
+                                    ? `https://ipos-storage.s3.amazonaws.com/${prod.object_path}`
+                                    : `https://ipos-storage.s3.amazonaws.com/${prod.media[0]?.object_path}`
+                                }
+                                alt={productTitle}
+                                fill
+                                sizes="(max-width: 120px) 100vw"
+                                className="object-contain p-1"
+                              />
+                            ) : (
+                              <>
+                                <Image
+                                  src="/assets/images/products/img light.png"
+                                  alt={productTitle}
+                                  fill
+                                  sizes="(max-width: 120px) 100vw"
+                                  className="object-contain p-1 dark:hidden"
+                                />
+                                <Image
+                                  src="/assets/images/products/img.png"
+                                  alt={productTitle}
+                                  fill
+                                  sizes="(max-width: 120px) 100vw"
+                                  className="object-contain p-1 hidden dark:block"
+                                />
+                              </>
+                            )}
                           </div>
                         </div>
                       )}

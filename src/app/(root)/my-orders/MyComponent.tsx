@@ -448,11 +448,11 @@ const MyComponent = () => {
 
   return (
     <div>
-      <main className="flex min-h-screen flex-col items-center">
+      <main className="flex min-h-screen flex-col items-center mx-auto">
         {loader ? (
           <Spinner />
         ) : (
-          <div className="w-full p-4">
+          <div className="w-full p-4 mx-auto">
             <OrdersDataTable
               key={JSON.stringify(orderStatus)}
               // key={orderStatus.toString()}

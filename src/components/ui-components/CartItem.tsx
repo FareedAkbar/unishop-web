@@ -51,20 +51,39 @@ const CartItem: React.FC<CartItemProps> = ({
   return (
     <div className="border-b border-gray-700 pr-3 dark:border-b dark:border-gray-400">
       <div className="flex flex-row items-start space-x-4 bg-white py-2 dark:bg-slate-800">
-        <Image
-          src={
-            item?.selected_variation?.media?.length &&
-              item?.selected_variation?.media[0]?.object_path
-              ? `https://ipos-storage.s3.amazonaws.com/${item?.selected_variation?.media[0]?.object_path}`
-              : imageSrc
-                ? `https://ipos-storage.s3.amazonaws.com/${imageSrc}`
-                : "/assets/images/products/product.jpg"
-          }
-          alt={title || "Product"}
-          className="mb-4 h-20 w-20 rounded bg-white object-contain dark:bg-slate-800 md:mb-0"
-          width={800}
-          height={800}
-        />
+        {(item?.selected_variation?.media?.length &&
+          item?.selected_variation?.media[0]?.object_path) ||
+          imageSrc ? (
+          <Image
+            src={
+              item?.selected_variation?.media?.length &&
+                item?.selected_variation?.media[0]?.object_path
+                ? `https://ipos-storage.s3.amazonaws.com/${item?.selected_variation?.media[0]?.object_path}`
+                : `https://ipos-storage.s3.amazonaws.com/${imageSrc}`
+            }
+            alt={title || "Product"}
+            className="mb-4 h-20 w-20 rounded bg-white object-contain dark:bg-slate-800 md:mb-0"
+            width={800}
+            height={800}
+          />
+        ) : (
+          <>
+            <Image
+              src="/assets/images/products/img light.png"
+              alt={title || "Product"}
+              className="mb-4 h-20 w-20 rounded bg-white object-contain dark:bg-slate-800 md:mb-0 dark:hidden"
+              width={800}
+              height={800}
+            />
+            <Image
+              src="/assets/images/products/img.png"
+              alt={title || "Product"}
+              className="mb-4 h-20 w-20 rounded bg-white object-contain dark:bg-slate-800 md:mb-0 hidden dark:block"
+              width={800}
+              height={800}
+            />
+          </>
+        )}
         <div className="flex-1">
           <h3 className="text-sm font-semibold capitalize">
             {title.split("¥").join(" ")}

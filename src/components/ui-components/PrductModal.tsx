@@ -182,23 +182,48 @@ const ProductModal = ({
             }}
             className="mr-4 mt-4 flex-shrink-0 overflow-hidden rounded-xl m-3 border bg-white p-1 dark:border-slate-900 dark:bg-slate-700"
           > */}
-          <Image
-            src={
-              activeImages[currentImageIndex]?.object_path
-                ? `https://ipos-storage.s3.amazonaws.com/${activeImages[currentImageIndex].object_path}`
-                : itemDetail?.object_path
-                  ? `https://ipos-storage.s3.amazonaws.com/${itemDetail.object_path}`
-                  : "/assets/images/products/product.jpg"
-            }
-            alt={
-              selectedVariation?.media?.[0]?.object_path
-                ? `${itemDetail?.item_name} - ${selectedValues?.size ?? ""} ${selectedValues?.color ?? ""}`
-                : (itemDetail?.item_name ?? "Product image")
-            }
-            width={800}
-            height={800}
-            className="h-48 w-44 flex-shrink-0 rounded-lg object-contain md:h-56 md:w-48"
-          />
+          {activeImages[currentImageIndex]?.object_path || itemDetail?.object_path ? (
+            <Image
+              src={
+                activeImages[currentImageIndex]?.object_path
+                  ? `https://ipos-storage.s3.amazonaws.com/${activeImages[currentImageIndex].object_path}`
+                  : `https://ipos-storage.s3.amazonaws.com/${itemDetail?.object_path}`
+              }
+              alt={
+                selectedVariation?.media?.[0]?.object_path
+                  ? `${itemDetail?.item_name} - ${selectedValues?.size ?? ""} ${selectedValues?.color ?? ""}`
+                  : (itemDetail?.item_name ?? "Product image")
+              }
+              width={800}
+              height={800}
+              className="h-48 w-44 flex-shrink-0 rounded-lg object-contain md:h-56 md:w-48"
+            />
+          ) : (
+            <>
+              <Image
+                src="/assets/images/products/img light.png"
+                alt={
+                  selectedVariation?.media?.[0]?.object_path
+                    ? `${itemDetail?.item_name} - ${selectedValues?.size ?? ""} ${selectedValues?.color ?? ""}`
+                    : (itemDetail?.item_name ?? "Product image")
+                }
+                width={800}
+                height={800}
+                className="h-48 w-44 flex-shrink-0 rounded-lg object-contain md:h-56 md:w-48 dark:hidden"
+              />
+              <Image
+                src="/assets/images/products/img.png"
+                alt={
+                  selectedVariation?.media?.[0]?.object_path
+                    ? `${itemDetail?.item_name} - ${selectedValues?.size ?? ""} ${selectedValues?.color ?? ""}`
+                    : (itemDetail?.item_name ?? "Product image")
+                }
+                width={800}
+                height={800}
+                className="h-48 w-44 flex-shrink-0 rounded-lg object-contain md:h-56 md:w-48 hidden dark:block"
+              />
+            </>
+          )}
           {/* </motion.div> */}
           {activeImages.length > 1 && (
             <div className="mt-2 flex gap-2 overflow-x-auto py-2">
