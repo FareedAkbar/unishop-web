@@ -380,7 +380,7 @@ const MyComponent = () => {
         <div className="flex flex-row">
           <div className="flex flex-col px-4">
             {/* <ScrollArea className="max-h-[75vh] pb-5"> */}
-            <div className="flex flex-wrap justify-center gap-5 overflow-y-auto py-3">
+            <div className="flex flex-wrap justify-center gap-5 py-3">
               {loader
                 ? Array.from({ length: 2 }, (_, index) => (
                   <div key={index} className="p-2">

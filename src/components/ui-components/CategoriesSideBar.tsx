@@ -147,7 +147,7 @@ const SubcategoryList1 = ({
             )}
         </div>
       ))}
-      {item == "Gifts" &&
+      {item?.toLowerCase() === "gifts" &&
         StaticGiftsRoutes.map((subItem) => (
           <div key={subItem.label} className="relative">
             <button
@@ -411,7 +411,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
                   {item.type}
                 </span>
               </div>
-              {(item.children?.[0] ?? item.type === "Gifts") && (
+              {(item.children?.[0] ?? item.type?.toLowerCase() === "gifts") && (
                 <div
                   onClick={() => toggleCategory(item.type)}
                   className="w-full"
@@ -431,7 +431,7 @@ const CategoriesSidebar = ({ className }: CategoriesSidebarProps) => {
             <div className="my-1 ml-2 h-px w-[85%] border-t border-gray-400" />
 
             {openCategories.includes(item.type) &&
-              (item.children?.[0] ?? item.type === "Gifts") && (
+              (item.children?.[0] ?? item.type?.toLowerCase() === "gifts") && (
                 <SubcategoryList1
                   subItems={item.children}
                   openCategories={openCategories}

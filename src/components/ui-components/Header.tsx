@@ -360,7 +360,7 @@ const Header = () => {
               )}
           </div>
         ))}
-        {item == "Gifts" &&
+        {item?.toLowerCase() === "gifts" &&
           StaticGiftsRoutes.map((subItem) => (
             <div key={subItem.label} className="relative pl-2">
               <button
@@ -612,8 +612,9 @@ const Header = () => {
   }, [allCategoriesList]);
 
   const getChildren = (item: CustomCategoryItem): CAT[] => {
-    if (item.type === "GIFTS" || item.type === "Gifts") {
-      return StaticGiftsRoutes.map((gift, idx) => ({
+    if (item.type?.toLowerCase() === "gifts") {
+      const backendChildren = item.children ?? [];
+      const staticGifts = StaticGiftsRoutes.map((gift, idx) => ({
         id: idx + 9999,
         outlet: 0,
         category_name: gift.label,
@@ -633,6 +634,7 @@ const Header = () => {
         app_visibility: 0,
         type: "Gifts"
       } as CAT));
+      return [...backendChildren, ...staticGifts];
     }
     return item.children ?? [];
   };
@@ -684,10 +686,9 @@ const Header = () => {
       const parentItem = allCategoriesList.find((item) => item.id === hoveredPath[0]);
       let subItems: CAT[] = [];
       if (parentItem) {
-        if (parentItem.isDynamic) {
-          subItems = parentItem.children ?? [];
-        } else if (parentItem.type === "Gifts" || parentItem.type === "GIFTS") {
-          subItems = StaticGiftsRoutes.map((gift, idx) => ({
+        if (parentItem.type?.toLowerCase() === "gifts") {
+          const backendChildren = parentItem.children ?? [];
+          const staticGifts = StaticGiftsRoutes.map((gift, idx) => ({
             id: idx + 9999,
             outlet: 0,
             category_name: gift.label,
@@ -707,6 +708,9 @@ const Header = () => {
             app_visibility: 0,
             type: "Gifts"
           } as CAT));
+          subItems = [...backendChildren, ...staticGifts];
+        } else if (parentItem.isDynamic) {
+          subItems = parentItem.children ?? [];
         }
       }
 
@@ -755,10 +759,9 @@ const Header = () => {
       const parentItem = allCategoriesList.find((item) => item.id === hoveredPath[0]);
       let subItems: CAT[] = [];
       if (parentItem) {
-        if (parentItem.isDynamic) {
-          subItems = parentItem.children ?? [];
-        } else if (parentItem.type === "Gifts" || parentItem.type === "GIFTS") {
-          subItems = StaticGiftsRoutes.map((gift, idx) => ({
+        if (parentItem.type?.toLowerCase() === "gifts") {
+          const backendChildren = parentItem.children ?? [];
+          const staticGifts = StaticGiftsRoutes.map((gift, idx) => ({
             id: idx + 9999,
             outlet: 0,
             category_name: gift.label,
@@ -778,6 +781,9 @@ const Header = () => {
             app_visibility: 0,
             type: "Gifts"
           } as CAT));
+          subItems = [...backendChildren, ...staticGifts];
+        } else if (parentItem.isDynamic) {
+          subItems = parentItem.children ?? [];
         }
       }
       const subItem = subItems.find((item) => String(item.id) === String(hoveredPath[1]));
@@ -800,11 +806,11 @@ const Header = () => {
                 >
                   <Link
                     href={`/products?category=${subSubItem.category_type_id ?? parentItem?.category_type_id ?? 0}&name=${subSubItem.category_name}&detail=${subSubItem.id}&page=1`}
-                    className="flex-grow block capitalize"
+                    className="flex-grow block uppercase"
                   >
                     {subSubItem.category_name}
                   </Link>
-                  {hasChildren && <FaChevronRight className="text-xs opacity-75" />}
+                  {hasChildren && <FaChevronRight className="text-sm opacity-75" />}
                 </div>
               );
             })}
@@ -818,10 +824,9 @@ const Header = () => {
       const parentItem = allCategoriesList.find((item) => item.id === hoveredPath[0]);
       let subItems: CAT[] = [];
       if (parentItem) {
-        if (parentItem.isDynamic) {
-          subItems = parentItem.children ?? [];
-        } else if (parentItem.type === "Gifts" || parentItem.type === "GIFTS") {
-          subItems = StaticGiftsRoutes.map((gift, idx) => ({
+        if (parentItem.type?.toLowerCase() === "gifts") {
+          const backendChildren = parentItem.children ?? [];
+          const staticGifts = StaticGiftsRoutes.map((gift, idx) => ({
             id: idx + 9999,
             outlet: 0,
             category_name: gift.label,
@@ -841,6 +846,9 @@ const Header = () => {
             app_visibility: 0,
             type: "Gifts"
           } as CAT));
+          subItems = [...backendChildren, ...staticGifts];
+        } else if (parentItem.isDynamic) {
+          subItems = parentItem.children ?? [];
         }
       }
       const subItem = subItems.find((item) => String(item.id) === String(hoveredPath[1]));
@@ -858,7 +866,7 @@ const Header = () => {
               >
                 <Link
                   href={`/products?category=${item.category_type_id ?? parentItem?.category_type_id ?? 0}&name=${item.category_name}&detail=${item.id}&page=1`}
-                  className="flex-grow block capitalize"
+                  className="flex-grow block uppercase"
                 >
                   {item.category_name}
                 </Link>
@@ -886,6 +894,14 @@ const Header = () => {
               <BsTelephone className="inline-block mr-1 " />
               Contact Us
             </Link>
+            {userInfo?.customer_id && (
+              <Link
+                href="/my-orders"
+                className="text-xs text-red-500 underline hover:text-red-600 ml-14 font-medium"
+              >
+                View Orders
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -990,6 +1006,55 @@ const Header = () => {
             </button>
           </div>
         </div>
+        {!path.includes("/products") && (
+          <div className="mt-2 w-full lg:hidden">
+            <RadixSelect
+              value={selectedCategory?.value ?? ""}
+              onValueChange={(val) => {
+                const options = newCat?.map((cat) => ({
+                  value:
+                    "category_type_id" in cat
+                      ? cat.category_type_id.toString()
+                      : cat.value,
+                  label: "type" in cat ? cat.type.toString() : cat.label,
+                })) ?? [];
+                const selectedOption = options.find((opt) => opt.value === val);
+                if (selectedOption) {
+                  setSelectedCategory(selectedOption);
+                  setSearchTerm("");
+                  setTimeout(() => searchInputRef.current?.focus(), 0);
+                }
+              }}
+            >
+              <SelectTrigger className="w-full h-10 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700 capitalize rounded-md text-sm">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                {newCat?.map((cat) => {
+                  const val = "category_type_id" in cat ? cat.category_type_id.toString() : cat.value;
+                  const label = "type" in cat ? cat.type.toString() : cat.label;
+                  return (
+                    <SelectItem key={val} value={val}>
+                      {label}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </RadixSelect>
+            <div className="mt-2">
+              <Input
+                ref={searchInputRef}
+                placeholder="Enter keywords to search..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                icon={<FiSearch size={26} />}
+                animateOnClick={false}
+                onIconClick={() => handleSearchApi()}
+                error={searchError}
+              />
+            </div>
+          </div>
+        )}
 
         {isMobileMenuOpen && (
           <>
@@ -1046,7 +1111,7 @@ const Header = () => {
                       >
                         {item.type}
                       </div>{" "}
-                      {(item.children?.[0] ?? item.type == "Gifts") ? (
+                      {(item.children?.[0] ?? item.type?.toLowerCase() === "gifts") ? (
                         <div onClick={() => toggleCategory(item.type)}>
                           {openCategories.includes(item.type) ? (
                             <FaChevronDown />
@@ -1057,7 +1122,7 @@ const Header = () => {
                       ) : null}
                     </button>
                     {openCategories.includes(item.type) &&
-                      (item.children?.[0] ?? item.type == "Gifts") && (
+                      (item.children?.[0] ?? item.type?.toLowerCase() === "gifts") && (
                         <SubcategoryList1
                           subItems={item.children}
                           openCategories={openCategories}
@@ -1194,7 +1259,7 @@ const Header = () => {
               onKeyDown={(e) => {
                 if (e.key === "Enter") void handleSearchApi();
               }}
-              className="h-full flex-grow bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400 dark:text-gray-200"
+              className="flex-grow bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400 dark:text-gray-200 py-1 leading-normal"
             />
             <button onClick={() => void handleSearchApi()} className="text-gray-500 hover:text-red-500 p-1">
               <FiSearch className="text-xl" />
@@ -1246,14 +1311,7 @@ const Header = () => {
                   </span>
                 </div>
               </div>
-              {userInfo?.customer_id && (
-                <Link
-                  href="/my-orders"
-                  className="text-xs text-red-500 underline hover:text-red-600 ml-14 font-medium"
-                >
-                  View Orders
-                </Link>
-              )}
+
             </div>
           </div>
         </div>
@@ -1317,7 +1375,7 @@ const Header = () => {
                           {item.label}
                         </a>
                       )}
-                      {hasChildren && <FaChevronDown className="text-xs text-gray-400 group-hover:text-red-500" />}
+                      {hasChildren && <FaChevronDown className="text-sm text-gray-400 group-hover:text-red-500" />}
                     </div>
 
                     {hasChildren && childrenItems.length > 0 && (
@@ -1331,14 +1389,14 @@ const Header = () => {
                                 {isGift ? (
                                   <Link
                                     href={StaticGiftsRoutes.find(g => g.label === child.category_name)?.href ?? "#"}
-                                    className="text-xs  text-gray-700 hover:text-red-500 dark:text-gray-200 block uppercase w-full"
+                                    className="text-sm text-gray-700 hover:text-red-500 dark:text-gray-200 block uppercase w-full"
                                   >
                                     {child.category_name}
                                   </Link>
                                 ) : (
                                   <Link
                                     href={`/products?category=${child.category_type_id ?? item.category_type_id ?? 0}&name=${child.category_name}&detail=${child.id}&page=1`}
-                                    className="text-xs  text-gray-700 uppercase hover:text-red-500 dark:text-gray-200 block  w-full"
+                                    className="text-sm text-gray-700 uppercase hover:text-red-500 dark:text-gray-200 block  w-full"
                                   >
                                     {child.category_name}
                                   </Link>
@@ -1352,7 +1410,7 @@ const Header = () => {
                                     <Link
                                       key={subChild.id}
                                       href={`/products?category=${subChild.category_type_id ?? item.category_type_id ?? 0}&name=${subChild.category_name}&detail=${subChild.id}&page=1`}
-                                      className="text-xs  text-gray-700 hover:text-red-500 dark:text-gray-200 block capitalize px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-700"
+                                      className="text-sm  text-gray-700 hover:text-red-500 dark:text-gray-200 block uppercase px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-700"
                                     >
                                       {subChild.category_name}
                                     </Link>
