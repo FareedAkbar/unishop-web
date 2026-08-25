@@ -1935,13 +1935,13 @@ const MyComponent = () => {
       {isOpenPaymentAlert && (
         <>
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="relative w-full max-w-4xl rounded-lg bg-white shadow-lg">
+            <div className="relative w-full max-w-4xl rounded-lg bg-white dark:bg-slate-700 shadow-lg">
               {/* Header */}
-              <div className="flex items-center justify-between border-b p-4">
+              <div className="flex items-center justify-between border-b border-gray-500/70 p-4">
                 <h3 className="text-xl font-semibold">Payment</h3>
                 <button
                   onClick={() => setIsOpenPaymentAlert(false)}
-                  className="text-2xl font-bold text-gray-500 hover:text-black"
+                  className="text-2xl font-bold text-gray-600 dark:text-gray-400 hover:text-black hover:scale-110 transition-all duration-300 dark:hover:text-white focus:outline-none"
                 >
                   ×
                 </button>
@@ -1950,7 +1950,7 @@ const MyComponent = () => {
               {/* Loader and Iframe */}
               <div className="relative h-[80vh] w-full">
                 {loading && (
-                  <div className="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80">
+                  <div className="absolute inset-0 z-50 flex items-center justify-center bg-white dark:bg-slate-700 bg-opacity-80">
                     <Spinner />
                   </div>
                 )}
@@ -1965,7 +1965,7 @@ const MyComponent = () => {
               </div>
 
               {/* Footer */}
-              <div className="flex justify-end border-t p-4">
+              <div className="flex justify-end border-t border-gray-500/70 p-4">
                 <button
                   className="px-4 py-2 text-sm font-semibold text-red-500 hover:underline"
                   onClick={closeModal}

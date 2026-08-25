@@ -1006,6 +1006,55 @@ const Header = () => {
             </button>
           </div>
         </div>
+        {!path.includes("/products") && (
+          <div className="mt-2 w-full lg:hidden">
+            <RadixSelect
+              value={selectedCategory?.value ?? ""}
+              onValueChange={(val) => {
+                const options = newCat?.map((cat) => ({
+                  value:
+                    "category_type_id" in cat
+                      ? cat.category_type_id.toString()
+                      : cat.value,
+                  label: "type" in cat ? cat.type.toString() : cat.label,
+                })) ?? [];
+                const selectedOption = options.find((opt) => opt.value === val);
+                if (selectedOption) {
+                  setSelectedCategory(selectedOption);
+                  setSearchTerm("");
+                  setTimeout(() => searchInputRef.current?.focus(), 0);
+                }
+              }}
+            >
+              <SelectTrigger className="w-full h-10 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-700 capitalize rounded-md text-sm">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                {newCat?.map((cat) => {
+                  const val = "category_type_id" in cat ? cat.category_type_id.toString() : cat.value;
+                  const label = "type" in cat ? cat.type.toString() : cat.label;
+                  return (
+                    <SelectItem key={val} value={val}>
+                      {label}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </RadixSelect>
+            <div className="mt-2">
+              <Input
+                ref={searchInputRef}
+                placeholder="Enter keywords to search..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                icon={<FiSearch size={26} />}
+                animateOnClick={false}
+                onIconClick={() => handleSearchApi()}
+                error={searchError}
+              />
+            </div>
+          </div>
+        )}
 
         {isMobileMenuOpen && (
           <>
