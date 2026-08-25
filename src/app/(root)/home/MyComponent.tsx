@@ -84,7 +84,7 @@ const HomePage: React.FC = () => {
                 `/assets/images/home/hom${index + 1}.png`;
 
               const imageEl = (
-                <div className="relative aspect-[570/350] w-full max-w-[570px] mx-auto overflow-hidden rounded-lg">
+                <div className="relative aspect-[570/350] w-full max-w-[570px] mx-auto overflow-hidden ">
                   <Image
                     src={src}
                     alt={`Featured ${index + 1}`}
