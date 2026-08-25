@@ -1259,7 +1259,7 @@ const Header = () => {
               onKeyDown={(e) => {
                 if (e.key === "Enter") void handleSearchApi();
               }}
-              className="h-full flex-grow bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400 dark:text-gray-200"
+              className="flex-grow bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400 dark:text-gray-200 py-1 leading-normal"
             />
             <button onClick={() => void handleSearchApi()} className="text-gray-500 hover:text-red-500 p-1">
               <FiSearch className="text-xl" />
