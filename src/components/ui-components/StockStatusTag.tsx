@@ -46,7 +46,7 @@ const StockStatusTag: React.FC<StockStatusTagProps> = ({
     finalStatus = "variable-item";
   } else {
     // Determine from stock properties
-    const actualStock = stock || {
+    const actualStock = stock ?? {
       quantity: quantity ?? null,
       lowest_level: String(lowestLevel ?? "0"),
     };
