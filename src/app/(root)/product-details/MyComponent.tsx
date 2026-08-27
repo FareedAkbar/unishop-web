@@ -2,11 +2,8 @@
 import React, { useState, useEffect, Suspense, useRef } from "react";
 import Image from "next/image";
 import {
-  FaArrowCircleLeft,
-  FaCheckCircle,
   FaChevronLeft,
   FaChevronRight,
-  FaExclamationTriangle,
   FaRegStar,
   FaStar,
 } from "react-icons/fa";
@@ -39,7 +36,7 @@ import Spinner from "~/components/spinner";
 import { Tabs } from "~/components/ui/tabs";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { RxCrossCircled } from "react-icons/rx";
-import { IoIosCloseCircle } from "react-icons/io";
+import StockStatusTag from "~/components/ui-components/StockStatusTag";
 import Button from "~/components/ui-components/Button";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
@@ -935,46 +932,20 @@ const MyComponent = () => {
           <div className="flex w-full gap-10 border-b border-dashed border-gray-400 pb-4 dark:border-gray-600">
             {hasVariations ? (
               allTagsSelected && (
-                selectedVariation?.stock?.quantity && selectedVariation?.stock?.quantity > 0 ? (
-                  selectedVariation?.stock?.quantity > parseInt(selectedVariation?.stock?.lowest_level) ? (
-                    <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
-                      <FaCheckCircle /> In stock
-                    </span>
-                  ) : (
-                    <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
-                      <FaExclamationTriangle /> Low Stock
-                    </span>
-                  )
-                ) : itemDetail?.allow_special_order == 1 ? (
-                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
-                    <FaArrowCircleLeft /> Backorder
-                  </span>
-                ) : (
-                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-sm text-red-500">
-                    <IoIosCloseCircle /> Out of stock
-                  </span>
-                )
+                <StockStatusTag
+                  quantity={selectedVariation?.stock?.quantity}
+                  lowestLevel={selectedVariation?.stock?.lowest_level}
+                  allowSpecialOrder={itemDetail?.allow_special_order}
+                  size="sm"
+                />
               )
             ) : (
-              itemDetail?.stock?.quantity && itemDetail?.stock?.quantity > 0 ? (
-                itemDetail?.stock?.quantity > parseInt(itemDetail?.stock?.lowest_level) ? (
-                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
-                    <FaCheckCircle /> In stock
-                  </span>
-                ) : (
-                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
-                    <FaExclamationTriangle /> Low Stock
-                  </span>
-                )
-              ) : itemDetail?.allow_special_order == 1 ? (
-                <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
-                  <FaArrowCircleLeft /> Backorder
-                </span>
-              ) : (
-                <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-sm text-red-500">
-                  <IoIosCloseCircle /> Out of stock
-                </span>
-              )
+              <StockStatusTag
+                quantity={itemDetail?.stock?.quantity}
+                lowestLevel={itemDetail?.stock?.lowest_level}
+                allowSpecialOrder={itemDetail?.allow_special_order}
+                size="sm"
+              />
             )}
 
             {hasVariations ? (
@@ -1397,7 +1368,7 @@ const MyComponent = () => {
               />
 
               {compareProducts.length > 0 && (
-                <div className="mt-2 p-4 border border-gray-200 dark:border-slate-700 rounded-lg bg-gray-50 dark:bg-slate-800/50 w-full">
+                <div className="mt-2 p-4 border border-gray-500/50 rounded-lg bg-gray-50 dark:bg-slate-800/50 w-full">
                   <h4 className="text-sm font-bold mb-3 text-neutral-800 dark:text-neutral-200">
                     Compare Products ({compareProducts.length}/5)
                   </h4>
@@ -1613,7 +1584,7 @@ const MyComponent = () => {
           </div>
         ) : itemDetail?.detail && itemDetail?.detail.trim().length > 0 ? (
           <div className="flex h-[500px] w-full flex-col items-center justify-center">
-            <div className="w-full rounded-lg border border-gray-500 bg-white p-6 shadow-md dark:bg-slate-800">
+            <div className="w-full rounded-lg border border-gray-500/50 bg-white p-6 shadow-md dark:bg-slate-800">
               <h3 className="mb-4 text-2xl font-bold text-red-600">Details</h3>
 
               <ScrollArea className="h-72 overflow-y-auto">
@@ -1640,7 +1611,7 @@ const MyComponent = () => {
           </div>
         ) : reviews && reviews?.length > 0 ? (
           <div className="flex h-[500px] w-full flex-col items-center justify-center">
-            <div className="w-full rounded-lg border border-gray-500 bg-white p-6 shadow-md dark:bg-slate-800">
+            <div className="w-full rounded-lg border border-gray-500/50 bg-white p-6 shadow-md dark:bg-slate-800">
               <h3 className="mb-4 text-2xl font-bold text-red-600">Reviews</h3>
 
               <ScrollArea className="h-72 overflow-y-auto">
