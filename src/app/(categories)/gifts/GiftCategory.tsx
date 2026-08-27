@@ -49,7 +49,7 @@ const GiftCategoryInfo: React.FC<GiftCategoryInfoProps> = ({ category }) => {
         </div>
 
         {category.featuredProducts && category.featuredProducts.length > 0 && (
-          <div className="w-full max-w-sm rounded-lg border bg-red-100 p-4 shadow-md dark:bg-slate-700 md:w-1/3">
+          <div className="w-full max-w-sm rounded-lg border border-gray-500/50 bg-red-100 p-4 shadow-md dark:bg-slate-700 md:w-1/3">
             <h3 className="mb-2 text-center text-2xl font-bold text-red-600">
               Featured Products
             </h3>
