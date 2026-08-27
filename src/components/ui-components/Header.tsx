@@ -1274,10 +1274,10 @@ const Header = () => {
               >
                 <IoPersonOutline className="text-xl" />
               </div>
-              <div className="flex flex-col text-left text-xs text-gray-500 dark:text-gray-400">
+              <div className="flex flex-col text-left  text-gray-500 dark:text-gray-400">
                 {userInfo ? (
                   <>
-                    <span className="font-semibold text-gray-800 dark:text-gray-200 capitalize">
+                    <span className="font-semibold  text-gray-800 dark:text-gray-200 capitalize">
                       Hi, {userInfo.first_name}
                     </span>
                     <button onClick={() => void handleLogout()} className="hover:text-red-500 text-left">
@@ -1303,10 +1303,10 @@ const Header = () => {
                   <IoCartOutline className="text-xl" />
                 </div>
                 <div className="flex flex-col text-left">
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
                     My Cart - {cartCount} {cartCount === 1 ? 'item' : 'items'}
                   </span>
-                  <span className="text-sm font-bold text-red-500">
+                  <span className=" font-bold text-red-500">
                     ${cartTotal.toFixed(2)}
                   </span>
                 </div>
