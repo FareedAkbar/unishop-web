@@ -101,7 +101,7 @@ const MyComponent = () => {
         setIsOpenPaymentAlert(true);
         setLoading(true);
         // window.open(result.data.link);
-        console.log(result);
+        // console.log(result);
       } else {
         console.error("Unexpected result structure getLinkForPayment:", result);
         // Handle unexpected structure here
@@ -168,7 +168,7 @@ const MyComponent = () => {
     try {
       const x = await getMyOrders(customerId);
       if (typeof x !== "boolean" && x.status) {
-        console.log(x.data);
+        // console.log(x.data);
         setDataOrders(x.data);
       }
     } catch (error) {

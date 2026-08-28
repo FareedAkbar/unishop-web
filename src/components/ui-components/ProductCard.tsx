@@ -12,10 +12,9 @@ import { useAuthContext } from "~/Context/AuthContext";
 import type DataCart from "~/types/book";
 import type { ItemSpecialTag } from "~/types/productTags";
 import type { SpecialTag } from "~/types/book";
-import { FaArrowCircleLeft, FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
 import { RxCrossCircled } from "react-icons/rx";
-import { IoIosCloseCircle } from "react-icons/io";
 import Button from "./Button";
+import StockStatusTag from "./StockStatusTag";
 
 interface ProductProps {
   showAddToCart?: boolean;
@@ -285,45 +284,33 @@ const ProductCard = ({
         </span>
       )}
 
-      <div className="mt-1 flex gap-1 sm:mt-2 sm:gap-2">
-        {product?.variations?.[0]?.items_variable_items_sale_price ? (
-          <span className="text-sm font-bold text-red-500 sm:text-lg">
-            $
-            {product?.variations?.[0]?.items_variable_items_sale_price.toFixed(
-              2,
-            )}
-          </span>
-        ) : product?.item_sale_price ? (
-          <span className="text-sm font-bold text-red-500 sm:text-lg">
-            ${product?.item_sale_price.toFixed(2)}
-          </span>
-        ) : (
-          ""
+      <div className="mt-auto pt-2 flex flex-col gap-2">
+        <div className="flex gap-1 sm:gap-2">
+          {product?.variations?.[0]?.items_variable_items_sale_price ? (
+            <span className="text-sm font-bold text-red-500 sm:text-lg">
+              $
+              {product?.variations?.[0]?.items_variable_items_sale_price.toFixed(
+                2,
+              )}
+            </span>
+          ) : product?.item_sale_price ? (
+            <span className="text-sm font-bold text-red-500 sm:text-lg">
+              ${product?.item_sale_price.toFixed(2)}
+            </span>
+          ) : (
+            ""
+          )}
+        </div>
+        {product && (
+          <StockStatusTag
+            quantity={product.stock?.quantity}
+            lowestLevel={product.stock?.lowest_level}
+            allowSpecialOrder={product.allow_special_order}
+            itemsType={product.items_type}
+            size="xs"
+          />
         )}
       </div>
-      {product?.items_type != 1 &&
-        (product?.stock?.quantity && product?.stock?.quantity > 0 ? (
-          product?.stock?.quantity > parseInt(product?.stock?.lowest_level) ?
-            (<span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
-              <FaCheckCircle /> In stock
-            </span>) :
-            (<span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
-              <FaExclamationTriangle /> Low Stock
-            </span>)
-        ) : product?.allow_special_order == 1 ? (
-          <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
-            <FaArrowCircleLeft /> Backorder
-          </span>
-        ) : (
-          <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-xs text-red-500">
-            <IoIosCloseCircle /> Out of stock
-          </span>
-        ))}
-      {product?.items_type === 1 && (
-        <span className="flex w-fit flex-row items-center gap-1 rounded bg-red-500 p-1 px-2 font-serif text-xs text-white">
-          Variable Item
-        </span>
-      )}
     </div>
   );
 };

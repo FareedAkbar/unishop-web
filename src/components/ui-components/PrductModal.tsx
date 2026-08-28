@@ -12,15 +12,15 @@ import {
 
 import { useAuthContext } from "~/Context/AuthContext";
 
-import { FaArrowCircleLeft, FaCheckCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
 
-import { IoIosArrowRoundForward, IoIosCloseCircle } from "react-icons/io";
+import { IoIosArrowRoundForward } from "react-icons/io";
 import { type Variation } from "~/types/book";
 import type DataCart from "~/types/book";
 import moment from "moment";
 import { BsFillCartCheckFill } from "react-icons/bs";
 import Button from "./Button";
+import StockStatusTag from "./StockStatusTag";
 
 interface ProductProps {
   itemDetail: DataCart | null;
@@ -284,34 +284,20 @@ const ProductModal = ({
             <div className="flex w-full flex-col border-b border-dashed border-gray-400 pb-4 dark:border-gray-600 sm:flex-row sm:gap-10">
               {hasVariations ? (
                 allTagsSelected && (
-                  selectedVariation?.stock?.quantity && selectedVariation?.stock?.quantity > 0 ? (
-                    <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-sm text-green-500">
-                      <FaCheckCircle /> In stock
-                    </span>
-                  ) : itemDetail?.allow_special_order == 1 ? (
-                    <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
-                      <FaCheckCircle /> Backorder
-                    </span>
-                  ) : (
-                    <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-sm text-red-500">
-                      <IoIosCloseCircle /> Out of stock
-                    </span>
-                  )
+                  <StockStatusTag
+                    quantity={selectedVariation?.stock?.quantity}
+                    lowestLevel={selectedVariation?.stock?.lowest_level}
+                    allowSpecialOrder={itemDetail?.allow_special_order}
+                    size="sm"
+                  />
                 )
               ) : (
-                itemDetail?.stock?.quantity && itemDetail?.stock?.quantity > 0 ? (
-                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-sm text-green-500">
-                    <FaCheckCircle /> In stock
-                  </span>
-                ) : itemDetail?.allow_special_order == 1 ? (
-                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-sm text-yellow-500">
-                    <FaCheckCircle /> Backorder
-                  </span>
-                ) : (
-                  <span className="flex w-fit flex-row items-center gap-1 rounded border border-red-500 p-1 font-serif text-sm text-red-500">
-                    <IoIosCloseCircle /> Out of stock
-                  </span>
-                )
+                <StockStatusTag
+                  quantity={itemDetail?.stock?.quantity}
+                  lowestLevel={itemDetail?.stock?.lowest_level}
+                  allowSpecialOrder={itemDetail?.allow_special_order}
+                  size="sm"
+                />
               )}
 
               {hasVariations ? (

@@ -137,7 +137,7 @@ class OrderStatus {
       case OrderStatus.backorderCompleted:
       case OrderStatus.restockComplete:
       case OrderStatus.manualCompleted:
-        return "bg-green-500";
+        return "bg-green-300/60 dark:bg-green-800/60 text-green-800 dark:text-green-300";
 
       // Blue - accepted/approved/ready
       case OrderStatus.acknowledged:
@@ -145,7 +145,7 @@ class OrderStatus {
       case OrderStatus.backorderApproved:
       case OrderStatus.readyForPickup:
       case OrderStatus.backorderReady:
-        return "bg-blue-500";
+        return "bg-blue-300/60 dark:bg-blue-800/60 text-blue-800 dark:text-blue-300";
 
       // Yellow - pending/in progress
       case OrderStatus.orderInitiated:
@@ -159,35 +159,35 @@ class OrderStatus {
       case OrderStatus.backorderPayment:
       case OrderStatus.backorderPickup:
       case OrderStatus.restockInitiated:
-        return "bg-yellow-500";
+        return "bg-yellow-300/60 dark:bg-yellow-800/60 text-yellow-800 dark:text-yellow-300";
 
       // Red - cancelled
       case OrderStatus.orderCancelled:
       case OrderStatus.specialOrderCancelled:
       case OrderStatus.backorderCancelled:
       case OrderStatus.restockCancelled:
-        return "bg-red-500";
+        return "bg-red-300/60 dark:bg-red-800/60 text-red-800 dark:text-red-300";
 
       // Orange - refunded/reversed
       case OrderStatus.orderReversed:
       case OrderStatus.paymentReversed:
       case OrderStatus.partiallyReversed:
-        return "bg-orange-500";
+        return "bg-orange-300/60 dark:bg-orange-800/60 text-orange-800 dark:text-orange-300";
 
       // Purple - special states
       case OrderStatus.partiallyCompleted:
       case OrderStatus.creditNoteInitiated:
       case OrderStatus.restockPartially:
-        return "bg-purple-500";
+        return "bg-purple-300/60 dark:bg-purple-800/60 text-purple-800 dark:text-purple-300";
 
       // Gray - drafts/deleted/unknown
       case OrderStatus.restockDrafted:
       case OrderStatus.restockDeleted:
       case OrderStatus.manualDrafted:
-        return "bg-gray-500";
+        return "bg-gray-300/60 dark:bg-gray-800/60 text-gray-800 dark:text-gray-300";
 
       default:
-        return "bg-gray-500";
+        return "bg-gray-300/60 dark:bg-gray-800/60 text-gray-800 dark:text-gray-300";
     }
   }
 }

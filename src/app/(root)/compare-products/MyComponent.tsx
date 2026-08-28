@@ -6,9 +6,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { RxCrossCircled } from "react-icons/rx";
 import { HiArrowNarrowLeft } from "react-icons/hi";
-import { FaCheckCircle, FaArrowCircleLeft, FaExclamationTriangle } from "react-icons/fa";
-import { IoIosCloseCircle } from "react-icons/io";
 import type DataCart from "~/types/book";
+import StockStatusTag from "~/components/ui-components/StockStatusTag";
 import Button from "~/components/ui-components/Button";
 import { useAuthContext } from "~/Context/AuthContext";
 import { useToast } from "~/hooks/use-toast";
@@ -258,45 +257,12 @@ const CompareProductsPage = () => {
 
                       {attr.key === "stock" && (
                         <div className="flex items-center gap-1.5">
-                          {prod.variations?.[0] ? (
-                            prod.variations[0].stock?.quantity && prod.variations[0].stock.quantity > 0 ? (
-                              prod.variations[0].stock.quantity > parseInt(prod.variations[0].stock.lowest_level ?? "0") ? (
-                                <span className="flex items-center gap-1 rounded border border-green-500 px-2 py-0.5 text-xs text-green-500 font-medium">
-                                  <FaCheckCircle /> In stock
-                                </span>
-                              ) : (
-                                <span className="flex items-center gap-1 rounded border border-yellow-500 px-2 py-0.5 text-xs text-yellow-500 font-medium">
-                                  <FaExclamationTriangle /> Low Stock
-                                </span>
-                              )
-                            ) : prod.allow_special_order === 1 ? (
-                              <span className="flex items-center gap-1 rounded border border-yellow-500 px-2 py-0.5 text-xs text-yellow-500 font-medium">
-                                <FaArrowCircleLeft /> Backorder
-                              </span>
-                            ) : (
-                              <span className="flex items-center gap-1 rounded border border-red-500 px-2 py-0.5 text-xs text-red-500 font-medium">
-                                <IoIosCloseCircle /> Out of stock
-                              </span>
-                            )
-                          ) : prod.stock?.quantity && prod.stock.quantity > 0 ? (
-                            prod.stock.quantity > parseInt(prod.stock.lowest_level ?? "0") ? (
-                              <span className="flex items-center gap-1 rounded border border-green-500 px-2 py-0.5 text-xs text-green-500 font-medium">
-                                <FaCheckCircle /> In stock
-                              </span>
-                            ) : (
-                              <span className="flex items-center gap-1 rounded border border-yellow-500 px-2 py-0.5 text-xs text-yellow-500 font-medium">
-                                <FaExclamationTriangle /> Low Stock
-                              </span>
-                            )
-                          ) : prod.allow_special_order === 1 ? (
-                            <span className="flex items-center gap-1 rounded border border-yellow-500 px-2 py-0.5 text-xs text-yellow-500 font-medium">
-                              <FaArrowCircleLeft /> Backorder
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-1 rounded border border-red-500 px-2 py-0.5 text-xs text-red-500 font-medium">
-                              <IoIosCloseCircle /> Out of stock
-                            </span>
-                          )}
+                          <StockStatusTag
+                            quantity={prod.variations?.[0]?.stock?.quantity ?? prod.stock?.quantity}
+                            lowestLevel={prod.variations?.[0]?.stock?.lowest_level ?? prod.stock?.lowest_level}
+                            allowSpecialOrder={prod.allow_special_order}
+                            size="xs"
+                          />
                         </div>
                       )}
 

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import Image from "next/image";
-import React from "react";
-import { FaArrowCircleLeft, FaCheckCircle, FaExclamationTriangle, FaTrashAlt } from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
 import { HiOutlineMinus, HiOutlinePlus } from "react-icons/hi";
 import type { Stock } from "~/types/book";
 import type DataCart from "~/types/book";
+import StockStatusTag from "./StockStatusTag";
 
 interface CartItemProps {
   title: string;
@@ -111,21 +111,14 @@ const CartItem: React.FC<CartItemProps> = ({
             </div>
           )}
 
-          {quantity && quantity > 0 && quantity >= itemQuantity ? (
-            quantity > parseInt(currentStock?.lowest_level ?? "0") ? (
-              <span className="my-1 flex w-fit flex-row items-center gap-1 rounded border border-green-500 p-1 font-serif text-xs text-green-500">
-                <FaCheckCircle /> In stock
-              </span>
-            ) : (
-              <span className="my-1 flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
-                <FaExclamationTriangle /> Low Stock
-              </span>
-            )
-          ) : (
-            <span className="my-1 flex w-fit flex-row items-center gap-1 rounded border border-yellow-500 p-1 font-serif text-xs text-yellow-500">
-              <FaArrowCircleLeft /> Backorder
-            </span>
-          )}
+          <StockStatusTag
+            quantity={quantity}
+            lowestLevel={currentStock?.lowest_level}
+            allowSpecialOrder={item?.allow_special_order}
+            requiredQuantity={itemQuantity}
+            size="xs"
+            className="my-1"
+          />
 
           {(newPrice == 0 || !newPrice || price == newPrice) && (
             <p className="text-md font-bold">${price.toFixed(2)}</p>

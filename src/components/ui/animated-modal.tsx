@@ -71,12 +71,12 @@ export const ModalBody = ({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
+      if (open) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "auto";
+      }
     }
-  }
   }, [open]);
 
   const modalRef = useRef(null);
@@ -103,7 +103,7 @@ export const ModalBody = ({
           <motion.div
             ref={modalRef}
             className={cn(
-              "relative z-50 flex max-h-[85vh] w-full md:max-w-[50%] flex-col overflow-hidden border border-transparent bg-white dark:border-neutral-800 dark:bg-slate-800 md:rounded-2xl",
+              "relative z-50 flex max-h-[85vh] w-full md:max-w-[50%] flex-col overflow-hidden border border-gray-500/50 bg-white dark:bg-slate-800 md:rounded-2xl",
               className,
             )}
             initial={{
@@ -228,7 +228,7 @@ export const useOutsideClick = (
       if (!ref.current || ref.current.contains(event.target as Node)) {
         return;
       }
-      
+
       // DO NOTHING if clicking on a Radix Select portal element
       let el = event.target as Node | null;
       while (el) {
@@ -250,13 +250,13 @@ export const useOutsideClick = (
       callback();
     };
     if (typeof window !== "undefined") {
-    document.addEventListener("mousedown", listener);
-    document.addEventListener("touchstart", listener);
+      document.addEventListener("mousedown", listener);
+      document.addEventListener("touchstart", listener);
     }
     return () => {
       if (typeof window !== "undefined") {
-      document.removeEventListener("mousedown", listener);
-      document.removeEventListener("touchstart", listener);
+        document.removeEventListener("mousedown", listener);
+        document.removeEventListener("touchstart", listener);
       }
     };
   }, [ref, callback]);
