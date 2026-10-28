@@ -1393,7 +1393,7 @@ const Header = () => {
                     </div>
 
                     {hasChildren && childrenItems.length > 0 && (
-                      <div className="absolute top-full left-0 z-50 hidden group-hover:block min-w-[220px] bg-white border border-gray-200 shadow-xl rounded py-2 dark:bg-slate-800 dark:border-gray-700">
+                      <div className="absolute top-full left-0 z-50 hidden group-hover:block min-w-[220px] max-h-64 overflow-auto custom-scrollbar bg-white border border-gray-200 shadow-xl rounded py-2 dark:bg-slate-800 dark:border-gray-700">
                         {childrenItems.map((child: CAT) => {
                           const childChildren = getCategoryChildren(child);
                           const hasSubChildren = childChildren.length > 0;
@@ -1422,7 +1422,7 @@ const Header = () => {
                               </div>
 
                               {hasSubChildren && (
-                                <div className="absolute top-0 left-full z-50 hidden group-hover/sub:block min-w-[200px] bg-white border border-gray-200 shadow-xl rounded py-2 dark:bg-slate-800 dark:border-gray-700">
+                                <div className="absolute top-0 left-full z-50 hidden group-hover/sub:block min-w-[200px] max-h-64 overflow-auto custom-scrollbar bg-white border border-gray-200 shadow-xl rounded py-2 dark:bg-slate-800 dark:border-gray-700">
                                   {childChildren.map((subChild: CAT) => {
                                     const subStaticRoute = getStaticGiftRoute(subChild);
                                     const isSubStaticGift = Boolean(subStaticRoute);

@@ -116,7 +116,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
     --font-serif: 'Libre Baskerville', serif;
-    --font-sans: 'Lato', sans-serif;
+    --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --brand-red: #E10600;
   }
 
@@ -186,7 +186,11 @@ input[type="radio"]:focus {
 
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-weissenhof), sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .font-helvetica, .font-sans {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
