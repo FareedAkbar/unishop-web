@@ -298,6 +298,7 @@ export default function CheckoutForm({
       account_type: "Layby Account",
       web_checkout: true,
       web_signup: true,
+      item_condition_type: "Normal"
     };
 
     try {
