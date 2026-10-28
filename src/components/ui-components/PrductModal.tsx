@@ -634,6 +634,7 @@ const ProductModal = ({
             <Button
               variant="secondary"
               title={"Remove from Cart"}
+              className="mt-2"
               onClick={() => {
                 handleRemoveFromCart({
                   ...itemDetail,
@@ -659,6 +660,7 @@ const ProductModal = ({
                 title={"Add to Cart"}
                 icon={<BsFillCartCheckFill className="text-lg" />}
                 onClick={() => handleAddToCart(itemDetail)}
+                className="mt-2"
               />
             ) : (
               ""
@@ -672,6 +674,7 @@ const ProductModal = ({
                 title={"Add to Cart"}
                 icon={<BsFillCartCheckFill className="text-lg" />}
                 onClick={() => handleAddToCart(itemDetail)}
+                className="mt-2"
               />
             ) : (
               ""
@@ -686,6 +689,7 @@ const ProductModal = ({
               variant="secondary"
               title={"Remove from Cart"}
               onClick={() => handleRemoveFromCart(itemDetail)}
+              className="mt-2"
             />
           ) : (
             ""

@@ -281,7 +281,7 @@ const Header = () => {
   };
 
   interface SubcategoryListProps1 {
-    subItems: CategoryTreeNode[] | null;
+    subItems: CAT[] | null;
     openCategories: string[];
     toggleCategory: (label: string) => void;
     setOpenCategories: React.Dispatch<React.SetStateAction<string[]>>;
@@ -302,6 +302,99 @@ const Header = () => {
     { label: "Eliza Jade Candles", icon: FaGift, href: "/gifts?desc=Candles" },
   ];
 
+  const getStaticGiftRoute = (categoryItem?: {
+    category_name?: string;
+    label?: string;
+  } | null) => {
+    if (!categoryItem) return null;
+    const name = (categoryItem.category_name ?? categoryItem.label ?? "").trim().toLowerCase();
+    return (
+      StaticGiftsRoutes.find(
+        (g) => g.label.trim().toLowerCase() === name,
+      ) ?? null
+    );
+  };
+
+  const isStaticGiftItem = (categoryItem?: {
+    category_name?: string;
+    label?: string;
+  } | null): boolean => {
+    return Boolean(getStaticGiftRoute(categoryItem));
+  };
+
+  const isGiftCategory = (categoryItem?: {
+    category_name?: string;
+    type?: string;
+    label?: string;
+  } | null): boolean => {
+    if (!categoryItem) return false;
+    // Static gift items are leaf links, NEVER gift parent categories
+    if (isStaticGiftItem(categoryItem)) return false;
+
+    // Check category_name first (for subcategories at any level)
+    if (categoryItem.category_name) {
+      const name = categoryItem.category_name.trim().toLowerCase();
+      return name === "gifts" || name === "gift";
+    }
+
+    // For top-level items without category_name (e.g. CustomCategoryItem or SideBarCategory), check label or type
+    const labelOrType = (categoryItem.label ?? categoryItem.type ?? "").trim().toLowerCase();
+    return labelOrType === "gifts" || labelOrType === "gift";
+  };
+
+  const getCategoryChildren = (categoryItem?: {
+    category_name?: string;
+    type?: string;
+    label?: string;
+    category_type_id?: number;
+    children?: CAT[] | null;
+  } | null): CAT[] => {
+    if (!categoryItem) return [];
+
+    // Static gifts never have children
+    if (isStaticGiftItem(categoryItem)) {
+      return [];
+    }
+
+    const backendChildren = categoryItem.children ?? [];
+
+    if (isGiftCategory(categoryItem)) {
+      // Check if static gifts are already present in backendChildren to ensure mapping only once
+      const alreadyHasStaticGifts = backendChildren.some((child) =>
+        isStaticGiftItem(child),
+      );
+
+      if (alreadyHasStaticGifts) {
+        return backendChildren;
+      }
+
+      const staticGifts: CAT[] = StaticGiftsRoutes.map((gift, idx) => ({
+        id: idx + 9999,
+        outlet: 0,
+        category_name: gift.label,
+        category_description: "",
+        category_type_id: categoryItem.category_type_id ?? 0,
+        deleted: 0,
+        parent: 0,
+        media_id: 0,
+        booknet: 0,
+        gifts: 1,
+        arts: 0,
+        object_path: "",
+        clothings: null,
+        children: [] as CAT[],
+        till_visibility: 0,
+        web_visibility: 1,
+        app_visibility: 0,
+        type: "StaticGift",
+      }));
+
+      return [...backendChildren, ...staticGifts];
+    }
+
+    return backendChildren;
+  };
+
   const SubcategoryList1 = ({
     subItems,
     openCategories,
@@ -311,77 +404,66 @@ const Header = () => {
   }: SubcategoryListProps1) => {
     return (
       <div className="">
-        {subItems?.map((subItem) => (
-          <div key={subItem.category_name} className="relative">
-            <div className="flex w-full items-center justify-between pl-2">
-              <button
-                onClick={() => {
-                  router.push(
-                    `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`,
-                  );
-                  setTimeout(() => {
-                    setOpenCategories([]);
-                    setMobileMenuOpen(false);
-                  }, 1000);
-                }}
-                className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
-              >
-                <span className="mr-2 text-left capitalize">
-                  {subItem.category_name}
-                </span>
-              </button>
-              {subItem.children?.[0] &&
-                (openCategories.includes(`${item}/${subItem.category_name}`) ? (
-                  <FaChevronDown
-                    onClick={() => toggleCategory(`${subItem.category_name}`)}
-                  />
-                ) : (
-                  <FaChevronRight
-                    onClick={() => toggleCategory(`${subItem.category_name}`)}
-                  />
-                ))}
-            </div>
+        {subItems?.map((subItem) => {
+          const subItemChildren = getCategoryChildren(subItem);
+          const hasChildren = subItemChildren.length > 0;
+          const staticRoute = getStaticGiftRoute(subItem);
+          const isStaticGift = Boolean(staticRoute);
 
-            {openCategories.some((cat) =>
-              cat.endsWith(`${item}/${subItem.category_name}`),
-            ) &&
-              subItem.children?.[0] && (
-                <div className="ml-4 mt-2">
-                  <SubcategoryList1
-                    subItems={subItem.children}
-                    item={subItem.category_name}
-                    openCategories={openCategories}
-                    toggleCategory={(val) =>
-                      toggleCategory(`${subItem.category_name}/${val}`)
+          return (
+            <div key={`${subItem.id}-${subItem.category_name}`} className="relative">
+              <div className="flex w-full items-center justify-between pl-2">
+                <button
+                  onClick={() => {
+                    if (isStaticGift) {
+                      router.push(staticRoute?.href ?? "#");
+                    } else {
+                      router.push(
+                        `/products?category=${subItem.category_type_id}&name=${subItem.category_name}&detail=${subItem.id}&page=1`,
+                      );
                     }
-                    setOpenCategories={setOpenCategories}
-                  />
-                </div>
-              )}
-          </div>
-        ))}
-        {item?.toLowerCase() === "gifts" &&
-          StaticGiftsRoutes.map((subItem) => (
-            <div key={subItem.label} className="relative pl-2">
-              <button
-                onClick={() => {
-                  router.push(subItem.href);
-                  setTimeout(() => {
-                    setOpenCategories([]);
-                    setMobileMenuOpen(false);
-                  }, 500);
-                }}
-                className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
-              >
-                <span
-                  className="mr-2 truncate text-left capitalize"
-                  title={subItem.label}
+                    setTimeout(() => {
+                      setOpenCategories([]);
+                      setMobileMenuOpen(false);
+                    }, 1000);
+                  }}
+                  className="flex w-full items-center justify-between py-1 text-sm hover:underline focus:outline-none"
                 >
-                  {subItem.label}
-                </span>
-              </button>
+                  <span className="mr-2 text-left capitalize">
+                    {subItem.category_name}
+                  </span>
+                </button>
+                {hasChildren &&
+                  (openCategories.includes(`${item}/${subItem.category_name}`) ? (
+                    <FaChevronDown
+                      onClick={() => toggleCategory(`${subItem.category_name}`)}
+                    />
+                  ) : (
+                    <FaChevronRight
+                      onClick={() => toggleCategory(`${subItem.category_name}`)}
+                    />
+                  ))}
+              </div>
+
+              {openCategories.some((cat) =>
+                cat.endsWith(`${item}/${subItem.category_name}`),
+              ) &&
+                hasChildren && (
+                  <div className="ml-4 mt-2">
+                    <SubcategoryList1
+                      subItems={subItemChildren}
+                      item={subItem.category_name}
+                      openCategories={openCategories}
+                      toggleCategory={(val) =>
+                        toggleCategory(`${subItem.category_name}/${val}`)
+                      }
+                      setOpenCategories={setOpenCategories}
+                    />
+                  </div>
+                )}
             </div>
-          ))}
+          );
+        })}
       </div>
     );
   };
@@ -514,7 +596,7 @@ const Header = () => {
     if (books) {
       list.push({
         id: `dynamic-${books.category_type_id}`,
-        label: "BOOKS",
+        label: books.type.toUpperCase(),
         isDynamic: true,
         category_type_id: books.category_type_id,
         type: books.type,
@@ -526,7 +608,7 @@ const Header = () => {
     if (clothing) {
       list.push({
         id: `dynamic-${clothing.category_type_id}`,
-        label: "UOW Merch & Clothing",
+        label: clothing.type.toUpperCase(),
         isDynamic: true,
         category_type_id: clothing.category_type_id,
         type: clothing.type,
@@ -550,7 +632,7 @@ const Header = () => {
     if (stationery) {
       list.push({
         id: `dynamic-${stationery.category_type_id}`,
-        label: "STATIONERY + TECH",
+        label: "STATIONERY",
         isDynamic: true,
         category_type_id: stationery.category_type_id,
         type: stationery.type,
@@ -558,7 +640,11 @@ const Header = () => {
       });
     }
 
-    const gifts = headerCategory?.find(c => c.type.toLowerCase() === "gifts");
+    const gifts = headerCategory?.find(
+      (c) =>
+        c.type?.toLowerCase() === "gifts" ||
+        c.type?.toLowerCase() === "gift",
+    );
     if (gifts) {
       list.push({
         id: `dynamic-${gifts.category_type_id}`,
@@ -600,7 +686,7 @@ const Header = () => {
   }, [headerCategory, categories]);
 
   const navCategories = React.useMemo<CustomCategoryItem[]>(() => {
-    const targets = ["TEXTBOOKS", "E-TEXTBOOKS", "BOOKS", "UOW Merch & Clothing", "GIFTS"];
+    const targets = ["TEXTBOOKS", "E-TEXTBOOKS", "BOOKS", "GIFTS", "MERCHANDISE"];
     const result: CustomCategoryItem[] = [];
     targets.forEach(target => {
       const found = allCategoriesList.find(c => c.label === target);
@@ -611,33 +697,8 @@ const Header = () => {
     return result;
   }, [allCategoriesList]);
 
-  const getChildren = (item: CustomCategoryItem): CAT[] => {
-    if (item.type?.toLowerCase() === "gifts") {
-      const backendChildren = item.children ?? [];
-      const staticGifts = StaticGiftsRoutes.map((gift, idx) => ({
-        id: idx + 9999,
-        outlet: 0,
-        category_name: gift.label,
-        category_description: "",
-        category_type_id: item.category_type_id ?? 0,
-        deleted: 0,
-        parent: 0,
-        media_id: 0,
-        booknet: 0,
-        gifts: 1,
-        arts: 0,
-        object_path: "",
-        clothings: null,
-        children: [] as CAT[],
-        till_visibility: 0,
-        web_visibility: 1,
-        app_visibility: 0,
-        type: "Gifts"
-      } as CAT));
-      return [...backendChildren, ...staticGifts];
-    }
-    return item.children ?? [];
-  };
+  const getChildren = (item: CustomCategoryItem | CAT): CAT[] =>
+    getCategoryChildren(item);
 
   const renderNestedPanes = () => {
     const columns: React.ReactNode[] = [];
@@ -646,7 +707,8 @@ const Header = () => {
     columns.push(
       <div key="col-0" className="w-64 max-h-[500px] overflow-y-auto custom-scrollbar border-r border-gray-200 bg-white py-2 dark:border-gray-700 dark:bg-slate-800">
         {allCategoriesList.map((item) => {
-          const hasChildren = ((item.children?.length ?? 0) > 0) || ["Gifts", "GIFTS"].includes(item.type ?? "");
+          const itemChildren = getCategoryChildren(item);
+          const hasChildren = itemChildren.length > 0;
           const isHovered = hoveredPath[0] === item.id;
           return (
             <div
@@ -684,55 +746,30 @@ const Header = () => {
     // Column 2: Subcategories
     if (hoveredPath[0]) {
       const parentItem = allCategoriesList.find((item) => item.id === hoveredPath[0]);
-      let subItems: CAT[] = [];
-      if (parentItem) {
-        if (parentItem.type?.toLowerCase() === "gifts") {
-          const backendChildren = parentItem.children ?? [];
-          const staticGifts = StaticGiftsRoutes.map((gift, idx) => ({
-            id: idx + 9999,
-            outlet: 0,
-            category_name: gift.label,
-            category_description: "",
-            category_type_id: parentItem.category_type_id ?? 0,
-            deleted: 0,
-            parent: 0,
-            media_id: 0,
-            booknet: 0,
-            gifts: 1,
-            arts: 0,
-            object_path: "",
-            clothings: null,
-            children: [] as CAT[],
-            till_visibility: 0,
-            web_visibility: 1,
-            app_visibility: 0,
-            type: "Gifts"
-          } as CAT));
-          subItems = [...backendChildren, ...staticGifts];
-        } else if (parentItem.isDynamic) {
-          subItems = parentItem.children ?? [];
-        }
-      }
+      const subItems: CAT[] = parentItem ? getCategoryChildren(parentItem) : [];
 
       if (subItems.length > 0) {
         columns.push(
           <div key="col-1" className="w-64 max-h-[500px] overflow-y-auto custom-scrollbar border-r border-gray-200 bg-white py-2 dark:border-gray-700 dark:bg-slate-800">
             {subItems.map((subItem) => {
-              const hasChildren = (subItem.children?.length ?? 0) > 0;
+              const subItemChildren = getCategoryChildren(subItem);
+              const hasChildren = subItemChildren.length > 0;
               const isHovered = hoveredPath[1] === subItem.id;
-              const isGift = subItem.gifts === 1;
+              const staticRoute = getStaticGiftRoute(subItem);
+              const isStaticGift = Boolean(staticRoute);
+
               return (
                 <div
-                  key={subItem.id}
+                  key={`${subItem.id}-${subItem.category_name}`}
                   onMouseEnter={() => setHoveredPath([hoveredPath[0]!, subItem.id])}
                   className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${isHovered
                     ? "bg-red-50 text-red-500 dark:bg-slate-700 "
                     : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700"
                     }`}
                 >
-                  {isGift ? (
+                  {isStaticGift ? (
                     <Link
-                      href={StaticGiftsRoutes.find(g => g.label === subItem.category_name)?.href ?? "#"}
+                      href={staticRoute?.href ?? "#"}
                       className="flex-grow block uppercase"
                     >
                       {subItem.category_name}
@@ -757,59 +794,44 @@ const Header = () => {
     // Column 3: Sub-subcategories
     if (hoveredPath[0] && hoveredPath[1]) {
       const parentItem = allCategoriesList.find((item) => item.id === hoveredPath[0]);
-      let subItems: CAT[] = [];
-      if (parentItem) {
-        if (parentItem.type?.toLowerCase() === "gifts") {
-          const backendChildren = parentItem.children ?? [];
-          const staticGifts = StaticGiftsRoutes.map((gift, idx) => ({
-            id: idx + 9999,
-            outlet: 0,
-            category_name: gift.label,
-            category_description: "",
-            category_type_id: parentItem.category_type_id ?? 0,
-            deleted: 0,
-            parent: 0,
-            media_id: 0,
-            booknet: 0,
-            gifts: 1,
-            arts: 0,
-            object_path: "",
-            clothings: null,
-            children: [] as CAT[],
-            till_visibility: 0,
-            web_visibility: 1,
-            app_visibility: 0,
-            type: "Gifts"
-          } as CAT));
-          subItems = [...backendChildren, ...staticGifts];
-        } else if (parentItem.isDynamic) {
-          subItems = parentItem.children ?? [];
-        }
-      }
+      const subItems: CAT[] = parentItem ? getCategoryChildren(parentItem) : [];
       const subItem = subItems.find((item) => String(item.id) === String(hoveredPath[1]));
-      const subSubItems = subItem?.children ?? [];
+      const subSubItems: CAT[] = subItem ? getCategoryChildren(subItem) : [];
 
       if (subSubItems.length > 0) {
         columns.push(
           <div key="col-2" className="w-64 max-h-[500px] overflow-y-auto custom-scrollbar border-r border-gray-200 bg-white py-2 dark:border-gray-700 dark:bg-slate-800">
             {subSubItems.map((subSubItem) => {
-              const hasChildren = (subSubItem.children?.length ?? 0) > 0;
+              const subSubItemChildren = getCategoryChildren(subSubItem);
+              const hasChildren = subSubItemChildren.length > 0;
               const isHovered = hoveredPath[2] === subSubItem.id;
+              const staticRoute = getStaticGiftRoute(subSubItem);
+              const isStaticGift = Boolean(staticRoute);
+
               return (
                 <div
-                  key={subSubItem.id}
+                  key={`${subSubItem.id}-${subSubItem.category_name}`}
                   onMouseEnter={() => setHoveredPath([hoveredPath[0]!, hoveredPath[1]!, subSubItem.id])}
                   className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${isHovered
                     ? "bg-red-50 text-red-500 dark:bg-slate-700 "
                     : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700"
                     }`}
                 >
-                  <Link
-                    href={`/products?category=${subSubItem.category_type_id ?? parentItem?.category_type_id ?? 0}&name=${subSubItem.category_name}&detail=${subSubItem.id}&page=1`}
-                    className="flex-grow block uppercase"
-                  >
-                    {subSubItem.category_name}
-                  </Link>
+                  {isStaticGift ? (
+                    <Link
+                      href={staticRoute?.href ?? "#"}
+                      className="flex-grow block uppercase"
+                    >
+                      {subSubItem.category_name}
+                    </Link>
+                  ) : (
+                    <Link
+                      href={`/products?category=${subSubItem.category_type_id ?? parentItem?.category_type_id ?? 0}&name=${subSubItem.category_name}&detail=${subSubItem.id}&page=1`}
+                      className="flex-grow block uppercase"
+                    >
+                      {subSubItem.category_name}
+                    </Link>
+                  )}
                   {hasChildren && <FaChevronRight className="text-sm opacity-75" />}
                 </div>
               );
@@ -822,56 +844,45 @@ const Header = () => {
     // Column 4: Sub-sub-subcategories
     if (hoveredPath[0] && hoveredPath[1] && hoveredPath[2]) {
       const parentItem = allCategoriesList.find((item) => item.id === hoveredPath[0]);
-      let subItems: CAT[] = [];
-      if (parentItem) {
-        if (parentItem.type?.toLowerCase() === "gifts") {
-          const backendChildren = parentItem.children ?? [];
-          const staticGifts = StaticGiftsRoutes.map((gift, idx) => ({
-            id: idx + 9999,
-            outlet: 0,
-            category_name: gift.label,
-            category_description: "",
-            category_type_id: parentItem.category_type_id ?? 0,
-            deleted: 0,
-            parent: 0,
-            media_id: 0,
-            booknet: 0,
-            gifts: 1,
-            arts: 0,
-            object_path: "",
-            clothings: null,
-            children: [] as CAT[],
-            till_visibility: 0,
-            web_visibility: 1,
-            app_visibility: 0,
-            type: "Gifts"
-          } as CAT));
-          subItems = [...backendChildren, ...staticGifts];
-        } else if (parentItem.isDynamic) {
-          subItems = parentItem.children ?? [];
-        }
-      }
+      const subItems: CAT[] = parentItem ? getCategoryChildren(parentItem) : [];
       const subItem = subItems.find((item) => String(item.id) === String(hoveredPath[1]));
-      const subSubItems = subItem?.children ?? [];
+      const subSubItems: CAT[] = subItem ? getCategoryChildren(subItem) : [];
       const subSubSubItem = subSubItems.find((item) => String(item.id) === String(hoveredPath[2]));
-      const subSubSubItems = subSubSubItem?.children ?? [];
+      const subSubSubItems: CAT[] = subSubSubItem ? getCategoryChildren(subSubSubItem) : [];
 
       if (subSubSubItems.length > 0) {
         columns.push(
           <div key="col-3" className="w-64 max-h-[500px] overflow-y-auto custom-scrollbar bg-white py-2 dark:bg-slate-800">
-            {subSubSubItems.map((item) => (
-              <div
-                key={item.id}
-                className="flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700 transition-colors"
-              >
-                <Link
-                  href={`/products?category=${item.category_type_id ?? parentItem?.category_type_id ?? 0}&name=${item.category_name}&detail=${item.id}&page=1`}
-                  className="flex-grow block uppercase"
+            {subSubSubItems.map((item) => {
+              const itemChildren = getCategoryChildren(item);
+              const hasChildren = itemChildren.length > 0;
+              const staticRoute = getStaticGiftRoute(item);
+              const isStaticGift = Boolean(staticRoute);
+
+              return (
+                <div
+                  key={`${item.id}-${item.category_name}`}
+                  className="flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700 transition-colors"
                 >
-                  {item.category_name}
-                </Link>
-              </div>
-            ))}
+                  {isStaticGift ? (
+                    <Link
+                      href={staticRoute?.href ?? "#"}
+                      className="flex-grow block uppercase"
+                    >
+                      {item.category_name}
+                    </Link>
+                  ) : (
+                    <Link
+                      href={`/products?category=${item.category_type_id ?? parentItem?.category_type_id ?? 0}&name=${item.category_name}&detail=${item.id}&page=1`}
+                      className="flex-grow block uppercase"
+                    >
+                      {item.category_name}
+                    </Link>
+                  )}
+                  {hasChildren && <FaChevronRight className="text-xs opacity-75" />}
+                </div>
+              );
+            })}
           </div>
         );
       }
@@ -1096,35 +1107,37 @@ const Header = () => {
                   </Link>)}
               </div>
               <nav className="custom-scrollbar overflow-auto">
-                {headerCategory?.map((item) => (
-                  <div key={item.type} className="mb-4 mr-3">
-                    <button className="flex w-full items-center justify-between text-lg focus:outline-none">
-                      <div
-                        className="flex items-center capitalize"
-                        onClick={() => {
-                          router.push(
-                            `/products?category=${item.category_type_id}&name=${item.type}&page=1`,
-                          );
-                          setMobileMenuOpen(false);
-                          setOpenDropdown(null);
-                        }}
-                      >
-                        {item.type}
-                      </div>{" "}
-                      {(item.children?.[0] ?? item.type?.toLowerCase() === "gifts") ? (
-                        <div onClick={() => toggleCategory(item.type)}>
-                          {openCategories.includes(item.type) ? (
-                            <FaChevronDown />
-                          ) : (
-                            <FaChevronRight />
-                          )}
-                        </div>
-                      ) : null}
-                    </button>
-                    {openCategories.includes(item.type) &&
-                      (item.children?.[0] ?? item.type?.toLowerCase() === "gifts") && (
+                {headerCategory?.map((item) => {
+                  const itemChildren = getCategoryChildren(item);
+                  const hasChildren = itemChildren.length > 0;
+                  return (
+                    <div key={item.type} className="mb-4 mr-3">
+                      <button className="flex w-full items-center justify-between text-lg focus:outline-none">
+                        <div
+                          className="flex items-center capitalize"
+                          onClick={() => {
+                            router.push(
+                              `/products?category=${item.category_type_id}&name=${item.type}&page=1`,
+                            );
+                            setMobileMenuOpen(false);
+                            setOpenDropdown(null);
+                          }}
+                        >
+                          {item.type}
+                        </div>{" "}
+                        {hasChildren ? (
+                          <div onClick={() => toggleCategory(item.type)}>
+                            {openCategories.includes(item.type) ? (
+                              <FaChevronDown />
+                            ) : (
+                              <FaChevronRight />
+                            )}
+                          </div>
+                        ) : null}
+                      </button>
+                      {openCategories.includes(item.type) && hasChildren && (
                         <SubcategoryList1
-                          subItems={item.children}
+                          subItems={itemChildren}
                           openCategories={openCategories}
                           item={item.type}
                           toggleCategory={(val) =>
@@ -1133,8 +1146,9 @@ const Header = () => {
                           setOpenCategories={setOpenCategories}
                         />
                       )}
-                  </div>
-                ))}
+                    </div>
+                  );
+                })}
                 {categories.map((item) => (
                   <div key={item.label} className="mb-4 mr-3">
                     <button
@@ -1346,14 +1360,14 @@ const Header = () => {
             <nav className="flex items-center gap-6">
               <Link
                 href="/"
-                className="text-sm  uppercase text-gray-700 hover:text-red-500 dark:text-gray-200"
+                className="text-sm  uppercase text-gray-700 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500 "
               >
                 HOME
               </Link>
 
               {navCategories.map((item) => {
-                const hasChildren = ((item.children?.length ?? 0) > 0) || item.type === "Gifts" || item.type === "GIFTS";
-                const childrenItems = getChildren(item);
+                const childrenItems = getCategoryChildren(item);
+                const hasChildren = childrenItems.length > 0;
 
                 return (
                   <div key={item.id} className="relative group py-2">
@@ -1379,16 +1393,19 @@ const Header = () => {
                     </div>
 
                     {hasChildren && childrenItems.length > 0 && (
-                      <div className="absolute top-full left-0 z-50 hidden group-hover:block min-w-[220px] bg-white border border-gray-200 shadow-xl rounded py-2 dark:bg-slate-800 dark:border-gray-700">
+                      <div className="absolute top-full left-0 z-50 hidden group-hover:block min-w-[220px] max-h-64 overflow-auto custom-scrollbar bg-white border border-gray-200 shadow-xl rounded py-2 dark:bg-slate-800 dark:border-gray-700">
                         {childrenItems.map((child: CAT) => {
-                          const hasSubChildren = (child.children?.length ?? 0) > 0;
-                          const isGift = child.gifts === 1;
+                          const childChildren = getCategoryChildren(child);
+                          const hasSubChildren = childChildren.length > 0;
+                          const staticRoute = getStaticGiftRoute(child);
+                          const isStaticGift = Boolean(staticRoute);
+
                           return (
-                            <div key={child.id} className="relative group/sub px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-700">
+                            <div key={`${child.id}-${child.category_name}`} className="relative group/sub px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-700">
                               <div className="flex items-center justify-between">
-                                {isGift ? (
+                                {isStaticGift ? (
                                   <Link
-                                    href={StaticGiftsRoutes.find(g => g.label === child.category_name)?.href ?? "#"}
+                                    href={staticRoute?.href ?? "#"}
                                     className="text-sm text-gray-700 hover:text-red-500 dark:text-gray-200 block uppercase w-full"
                                   >
                                     {child.category_name}
@@ -1405,16 +1422,29 @@ const Header = () => {
                               </div>
 
                               {hasSubChildren && (
-                                <div className="absolute top-0 left-full z-50 hidden group-hover/sub:block min-w-[200px] bg-white border border-gray-200 shadow-xl rounded py-2 dark:bg-slate-800 dark:border-gray-700">
-                                  {child.children.map((subChild: CAT) => (
-                                    <Link
-                                      key={subChild.id}
-                                      href={`/products?category=${subChild.category_type_id ?? item.category_type_id ?? 0}&name=${subChild.category_name}&detail=${subChild.id}&page=1`}
-                                      className="text-sm  text-gray-700 hover:text-red-500 dark:text-gray-200 block uppercase px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-700"
-                                    >
-                                      {subChild.category_name}
-                                    </Link>
-                                  ))}
+                                <div className="absolute top-0 left-full z-50 hidden group-hover/sub:block min-w-[200px] max-h-64 overflow-auto custom-scrollbar bg-white border border-gray-200 shadow-xl rounded py-2 dark:bg-slate-800 dark:border-gray-700">
+                                  {childChildren.map((subChild: CAT) => {
+                                    const subStaticRoute = getStaticGiftRoute(subChild);
+                                    const isSubStaticGift = Boolean(subStaticRoute);
+
+                                    return isSubStaticGift ? (
+                                      <Link
+                                        key={`${subChild.id}-${subChild.category_name}`}
+                                        href={subStaticRoute?.href ?? "#"}
+                                        className="text-sm  text-gray-700 hover:text-red-500 dark:text-gray-200 block uppercase px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-700"
+                                      >
+                                        {subChild.category_name}
+                                      </Link>
+                                    ) : (
+                                      <Link
+                                        key={`${subChild.id}-${subChild.category_name}`}
+                                        href={`/products?category=${subChild.category_type_id ?? item.category_type_id ?? 0}&name=${subChild.category_name}&detail=${subChild.id}&page=1`}
+                                        className="text-sm  text-gray-700 hover:text-red-500 dark:text-gray-200 block uppercase px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-700"
+                                      >
+                                        {subChild.category_name}
+                                      </Link>
+                                    );
+                                  })}
                                 </div>
                               )}
                             </div>

@@ -58,11 +58,11 @@ function Footer() {
   const email = footer?.email ?? "uow-bookshop@uow.edu.au";
 
   return (
-    <footer className="border-t bg-white dark:bg-slate-900">
+    <footer className="border-t bg-white dark:bg-slate-900 font-sans">
       <div className="container mx-auto pb-2 pt-8">
-        <div className="grid grid-cols-1 gap-8 px-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 px-5 sm:grid-cols-2 lg:grid-cols-12">
           <div
-            className="flex flex-col items-center gap-3 md:col-span-1 md:items-start"
+            className="flex flex-col items-center gap-3 sm:items-start lg:col-span-3"
           >
             <p className="font-serif text-lg font-bold">Customer Service</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
@@ -80,7 +80,7 @@ function Footer() {
             ))}
           </div>
 
-          <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
+          <div className="flex flex-col items-center gap-3 sm:items-start lg:col-span-2">
             <p className="font-serif text-lg font-bold">Shop Online</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             {category?.map(
@@ -97,7 +97,7 @@ function Footer() {
             )}
           </div>
 
-          <div className="flex flex-col items-center gap-3 md:col-span-1 md:items-start">
+          <div className="flex flex-col items-center gap-3 sm:items-start lg:col-span-3">
             <p className="font-serif text-lg font-bold">Opening Hours</p>
             <span className="mb-2 block h-[4px] w-20 bg-red-500" />
             <p className="text-sm font-medium text-[#646464] dark:text-gray-300 dark:hover:text-red-500">
@@ -117,17 +117,17 @@ function Footer() {
             </p>
           </div>
 
-          <div className="flex flex-col items-center justify-end gap-2 text-center md:col-span-1 md:items-end md:text-right">
+          <div className="flex flex-col sm:items-start items-center justify-center text-center sm:justify-start gap-4 sm:text-left lg:col-span-4">
             <Image
               src={Logo}
               alt="footer_logo"
               width={1000}
               height={1000}
-              className="h-fit w-[10rem] sm:w-[16rem] xl:w-[18rem]"
+              className="h-fit w-[10rem] sm:w-[14rem] xl:w-[16rem]"
             />
 
             {iconsTab.length > 0 && (
-              <div className="flex w-full justify-center gap-4 text-xl text-[#646464] md:justify-end">
+              <div className="flex w-full lg:justify-start gap-4 text-xl text-[#646464]">
                 {iconsTab.map(({ icon, link, label }, index) => (
                   <Link
                     key={index}
@@ -135,53 +135,64 @@ function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     title={label}
-                    className="cursor-pointer rounded-full bg-red-500 p-2 text-white transition-all"
+                    className="cursor-pointer rounded-full bg-red-500 p-2 text-white transition-all hover:bg-red-600"
                   >
                     <div>{icon}</div>
                   </Link>
                 ))}
               </div>
             )}
-            <div className="flex flex-col items-end gap-3 text-right">
-              <p className="text-sm">{abn}</p>
 
+            {abn && (
+              <p className="text-xs sm:text-sm text-[#646464] dark:text-gray-400 text-left">
+                {abn}
+              </p>
+            )}
+
+            <div className="flex flex-col lg:items-start gap-3 w-fit lg:text-left">
               <a
                 href="https://www.google.com/maps?q=-34.40755818806117,150.87911127658157"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-row-reverse items-center gap-2 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
+                className="group flex items-center gap-3 text-xs sm:text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500 whitespace-nowrap"
               >
-                <FaMapMarkerAlt className="text-md text-[#646464] dark:text-gray-300" />
-                {address}
+                <div className="flex h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-[#646464] group-hover:bg-red-50 group-hover:text-red-500 dark:bg-slate-800 dark:text-gray-300 dark:group-hover:bg-slate-700 transition-colors">
+                  <FaMapMarkerAlt className="text-xs" />
+                </div>
+                <span className="whitespace-nowrap">{address}</span>
               </a>
 
               <a
                 href={`tel:${phone.replace(/\s/g, "")}`}
-                className="flex flex-row-reverse items-center gap-2 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
+                className="group flex items-center gap-3 text-xs sm:text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500 whitespace-nowrap"
               >
-                <FaPhoneAlt className="text-[#646464] dark:text-gray-300" />
-                {phone}
+                <div className="flex h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-[#646464] group-hover:bg-red-50 group-hover:text-red-500 dark:bg-slate-800 dark:text-gray-300 dark:group-hover:bg-slate-700 transition-colors">
+                  <FaPhoneAlt className="text-xs" />
+                </div>
+                <span className="whitespace-nowrap">{phone}</span>
               </a>
 
               <a
                 href={`mailto:${email}`}
-                className="flex flex-row-reverse items-center gap-2 text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500"
+                className="group flex items-center gap-3 text-xs sm:text-sm font-medium text-[#646464] hover:text-red-500 dark:text-gray-300 dark:hover:text-red-500 whitespace-nowrap"
               >
-                <FaEnvelope className="text-[#646464] dark:text-gray-300" />
-                {email}
+                <div className="flex h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-[#646464] group-hover:bg-red-50 group-hover:text-red-500 dark:bg-slate-800 dark:text-gray-300 dark:group-hover:bg-slate-700 transition-colors">
+                  <FaEnvelope className="text-xs" />
+                </div>
+                <span className="whitespace-nowrap">{email}</span>
               </a>
             </div>
 
             <Image
               src={"/assets/images/home/charity-logo.png"}
               alt="charity-logo"
-              className="h-36 w-36 object-contain"
+              className="h-28 w-28 object-contain sm:self-start self-auto"
               width={1000}
               height={1000}
             />
           </div>
         </div>
-        <div className="flex flex-col items-center pt-3 text-center">
+        <div className="flex flex-col items-center pt-3 text-center border-t border-gray-100 dark:border-gray-800 mt-6 font-sans">
           <p className="text-xs font-medium text-[#646464] dark:text-gray-300">
             <a
               rel="noreferrer"

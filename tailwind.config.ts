@@ -41,9 +41,10 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-weissenhof)", ...fontFamily.sans],
+        sans: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        helvetica: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
         serif: ["var(--font-ramaslab)", ...fontFamily.serif],
-        poppins: ["var(--font-weissenhof)", "sans-serif"],
+        poppins: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
       },
       screens: {
         xs: "475px", // Small screen
