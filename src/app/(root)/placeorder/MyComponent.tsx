@@ -147,10 +147,17 @@ const MyComponent = () => {
     );
 
     if (matchingItem) {
+      const disc = matchingItem.discounts as { disc_id?: number; discount_type?: string } | undefined;
+      const hasDiscount =
+        Boolean(disc) &&
+        typeof disc === "object" &&
+        Object.keys(disc).length > 0 &&
+        Boolean(disc.disc_id ?? disc.discount_type);
+
       return {
         ...item1,
         final_price_including_tax: matchingItem.final_price_including_tax,
-        discounts: matchingItem.discounts ?? {},
+        discounts: hasDiscount ? matchingItem.discounts : null,
       };
     }
     return item1;
@@ -164,6 +171,7 @@ const MyComponent = () => {
     setTotalOriginal(amount + totalAfterCalculation?.original_price);
     const x = mergedArray;
     setNewItems(x);
+    console.log("newItems", x);
   }, [totalAfterCalculation, shipping]);
 
   const createItemsPayload = (
@@ -561,15 +569,21 @@ const MyComponent = () => {
         premium_upgrades: [],
         type: "Normal",
         stock_id: item?.stock?.stock_id ?? 0,
-        discounts: item.discounts,
+        discounts: (() => {
+          const disc = item.discounts as { disc_id?: number; discount_type?: string } | undefined;
+          const hasDiscount =
+            Boolean(disc) &&
+            typeof disc === "object" &&
+            Object.keys(disc).length > 0 &&
+            Boolean(disc.disc_id ?? disc.discount_type);
+          return hasDiscount ? item.discounts : null;
+        })(),
         cost_price: item.selected_variation?.items_variable_items_id
           ? (item.selected_variation?.items_variable_items_cost_price ?? 0)
           : (item.cost_price ? Number(item.cost_price) : 0),
         ...(applied_vouchers ? { applied_vouchers } : {})
       };
     });
-
-    console.log("order items", x)
 
     return x;
   }
