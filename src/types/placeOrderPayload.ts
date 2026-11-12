@@ -1,3 +1,5 @@
+import type { DiscountInfo } from "./taxCalculationApiResponse";
+
 interface EftPosDetails {
   card_type: string;
   card_pan: string;
@@ -36,6 +38,7 @@ interface OrderItem {
   }>;
   applied_vouchers?: AppliedVoucher[];
   cost_price?: number | string | null;
+  discounts?: DiscountInfo | null;
 }
 
 interface SplitPayment {
