@@ -23,7 +23,6 @@ import type PayloadForTransactionLink from "~/types/payloadForTransactionLink";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import CartItem from "~/components/ui-components/CartItem";
 import AlertBox from "~/components/alertBox/alert";
-import moment from "moment";
 import TableRates from "~/components/constants/tablerates";
 import { type ShippingRate } from "~/types/taxCalculationApiResponse";
 import { Countries_States } from "~/components/constants/countries_states";
@@ -78,6 +77,8 @@ const MyComponent = () => {
   const [totalAfterCalculation, setTotalAfterCalculation] =
     useState<TaxCalculationApiResponse>();
   const [shippingRates, setShippingRates] = useState<ShippingRate[]>([]);
+  const [shippingRatesLoading, setShippingRatesLoading] = useState<boolean>(true);
+  const [isCheckoutDataLoaded, setIsCheckoutDataLoaded] = useState<boolean>(false);
   const router = useRouter();
   // const NAMESPACE = uuidv5('uniShop', uuidv5.URL);
   // const myuuid = uuidv4();
@@ -90,10 +91,17 @@ const MyComponent = () => {
         await getCheckoutFormData();
       } catch (error) {
         console.error("Failed to load data:", error);
+      } finally {
+        setIsCheckoutDataLoaded(true);
       }
     };
     loadData().catch((error) => {
       console.error("Failed to load data in useEffect:", error);
+      setIsCheckoutDataLoaded(true);
+    });
+
+    fetchShippingRates().catch((error) => {
+      console.error("Failed to fetch shipping rates on mount:", error);
     });
   }, []);
 
@@ -234,8 +242,6 @@ const MyComponent = () => {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-    } finally {
-      setCalculateLoader(false);
     }
   };
 
@@ -246,6 +252,7 @@ const MyComponent = () => {
   }
 
   const fetchShippingRates = async () => {
+    setShippingRatesLoading(true);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/shipping_rates`,
@@ -254,23 +261,22 @@ const MyComponent = () => {
           headers: {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_PASSKEY_TOKEN}`,
           },
-
         },
       );
 
-      const result: ApiResponseShippingRates = (await response.json()) as ApiResponseShippingRates;
+      const result: ApiResponseShippingRates =
+        (await response.json()) as ApiResponseShippingRates;
 
       // Check if result has the expected structure
-      if (result?.status) {
+      if (result?.status && Array.isArray(result?.data)) {
         setShippingRates(result?.data);
-
       } else {
-        console.error("Unexpected result structure fetchData:", result);
+        console.error("Unexpected result structure fetchShippingRates:", result);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching shipping rates:", error);
     } finally {
-      setCalculateLoader(false);
+      setShippingRatesLoading(false);
     }
   };
 
@@ -290,10 +296,13 @@ const MyComponent = () => {
         if (!itemsPayload[0]) return;
         setCalculateLoader(true);
 
-        await fetchData(itemsPayload);
-        await fetchShippingRates();
+        await Promise.all([
+          fetchData(itemsPayload),
+          fetchShippingRates(),
+        ]);
       } catch (error) {
         console.error("Failed to load data:", error);
+      } finally {
         setCalculateLoader(false);
       }
     };
@@ -301,7 +310,7 @@ const MyComponent = () => {
       console.error("Failed to load data in useEffect:", error);
       setCalculateLoader(false);
     });
-  }, [items, uuidLocal, userInfo]);
+  }, [items, uuidLocal, userInfo, checkoutData]);
 
   type transactionResponse = {
     amount: number | null;
@@ -367,6 +376,7 @@ const MyComponent = () => {
     };
   }, [isOpenPaymentAlert]);
   const handlePlaceOrder = async () => {
+    console.log("handlePlaceOrder", shipping, collectCampus, items);
     if (shipping?.value !== "free") {
       const disabledItems = items?.filter((item) => item.disable_shipping === 1) || [];
       if (disabledItems.length > 0) {
@@ -1407,6 +1417,32 @@ const MyComponent = () => {
 
   const calcOriginalPrice = totalAfterCalculation?.original_price ?? 0;
   const calcFinalPrice = totalAfterCalculation?.final_price_including_tax ?? 0;
+  const shippingPrice = getShippingPrice(
+    checkoutData?.address?.[0]?.country ?? "",
+    calculateWeight(),
+  );
+  const isShippingCalculating =
+    !isCheckoutDataLoaded ||
+    shippingRatesLoading ||
+    calculateLoader;
+
+  // Keep shipping.amount in sync when Delivery is selected and rates/weights update
+  useEffect(() => {
+    if (
+      shipping?.value === "Delivery" &&
+      shippingPrice !== null &&
+      shipping?.amount !== shippingPrice
+    ) {
+      setShipping((prev) =>
+        prev
+          ? {
+            ...prev,
+            amount: shippingPrice,
+          }
+          : null,
+      );
+    }
+  }, [shippingPrice, shipping?.value, shipping?.amount]);
 
   return (
     <div>
@@ -1660,10 +1696,17 @@ const MyComponent = () => {
                         </label>
                       </div>
 
-                      {getShippingPrice(
-                        checkoutData?.address?.[0]?.country ?? "",
-                        calculateWeight()
-                      ) ? (
+                      {isShippingCalculating ? (
+                        <div className="flex min-h-[220px] flex-col items-center justify-center gap-3 rounded-3xl border border-gray-500 p-4 text-center dark:border-white/30 dark:bg-gray-800">
+                          <div className="h-8 w-8 animate-spin rounded-full border-2 border-red-500 border-t-transparent" />
+                          <div className="text-center text-xl font-medium text-neutral-800 dark:text-neutral-200">
+                            Calculating shipping...
+                          </div>
+                          <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                            Please wait while we check shipping options for your address.
+                          </div>
+                        </div>
+                      ) : shippingPrice !== null ? (
                         <div
                           className={`rounded-3xl border border-gray-500 p-4 ${shipping?.value === "Delivery"
                             ? "bg-[#F2FFE4] dark:bg-green-500/20"
@@ -1678,11 +1721,7 @@ const MyComponent = () => {
                               onChange={() =>
                                 onChange({
                                   value: "Delivery",
-                                  amount:
-                                    getShippingPrice(
-                                      checkoutData?.address?.[0]
-                                        ?.country ?? "",
-                                      calculateWeight()) ?? 0,
+                                  amount: shippingPrice ?? 0,
                                   type: "Delivery",
                                   label:
                                     "Shipping cost is calculated based on the total weight of your order.",
@@ -1692,11 +1731,7 @@ const MyComponent = () => {
                               style={{ height: "20px", width: "20px" }}
                             />
                             <div className="text-center text-3xl font-medium">
-                              $
-                              {(getShippingPrice(
-                                checkoutData?.address?.[0]?.country ?? "",
-                                calculateWeight()
-                              ) ?? 0).toFixed(2)}
+                              ${(shippingPrice ?? 0).toFixed(2)}
                             </div>
                             <div className="my-4 text-left text-xl font-medium capitalize">
                               Delivery
@@ -1715,7 +1750,7 @@ const MyComponent = () => {
                           </label>
                         </div>
                       ) : (
-                        <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-gray-500 p-4 text-center dark:border-white/30 dark:bg-gray-800">
+                        <div className="flex min-h-[220px] flex-col items-center justify-center gap-4 rounded-3xl border border-gray-500 p-4 text-center dark:border-white/30 dark:bg-gray-800">
                           <div className="text-center text-3xl font-medium">
                             No shipping available
                           </div>
@@ -1734,7 +1769,7 @@ const MyComponent = () => {
               </h2>
 
               <ScrollArea
-                className={`relative h-full flex-1 overflow-hidden rounded-lg border border-gray-500 bg-white p-4 shadow transition-all duration-300 dark:bg-slate-800 ${isExpanded ? "max-h-[28rem]" : "max-h-[17rem]"
+                className={`relative h-full flex-1 overflow-hidden rounded-xl border border-gray-500 bg-white p-4 shadow transition-all duration-300 dark:bg-slate-800 ${isExpanded ? "max-h-[28rem]" : "max-h-[17rem]"
                   }`}
               >
                 {items?.[0] ? (

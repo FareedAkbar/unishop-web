@@ -386,7 +386,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const responsePayload: { status: boolean; data: DataCart[] } =
       response as ApiResponse;
     if (!responsePayload.status) return false;
-    console.log(responsePayload.data);
+    console.log(responsePayload.data, "ddd");
     setSearchItems(responsePayload.data);
 
     return true;
