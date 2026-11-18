@@ -70,7 +70,7 @@ export async function getItemsBySearch(val: string, id: string): Promise<ApiResp
 
         if (result?.status) {
             // setMeta(result.meta);
-            console.log(result)
+            console.log(result, "dddd")
             return result
         } else {
             console.error("Unexpected result getItemsByCategory:", result);

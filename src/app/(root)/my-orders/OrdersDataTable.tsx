@@ -85,7 +85,7 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
       isSortable: true,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: (info: any) => (
-        <span>{`$${info.total_discounted_price.toFixed(2)}`}</span>
+        <span>{`$${info?.total_discounted_price?.toFixed(2)}`}</span>
       ), // Changed to JSX element
     },
   ];
