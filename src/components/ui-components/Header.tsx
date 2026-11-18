@@ -51,6 +51,329 @@ interface CustomCategoryItem {
   href?: string;
 }
 
+const NavCategoryDropdownItem: React.FC<{
+  item: CustomCategoryItem;
+  getCategoryChildren: (categoryItem?: {
+    category_name?: string;
+    type?: string;
+    label?: string;
+    category_type_id?: number;
+    children?: CAT[] | null;
+  } | null) => CAT[];
+  getStaticGiftRoute: (categoryItem?: {
+    category_name?: string;
+    label?: string;
+  } | null) => { label: string; icon: unknown; href: string } | null;
+}> = ({ item, getCategoryChildren, getStaticGiftRoute }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [hoveredPath, setHoveredPath] = useState<Array<number | string>>([]);
+  const childrenItems = getCategoryChildren(item);
+  const hasChildren = childrenItems.length > 0;
+
+  const handleLinkClick = () => {
+    setIsOpen(false);
+    setHoveredPath([]);
+  };
+
+  const renderPanes = () => {
+    const columns: React.ReactNode[] = [];
+
+    // Check if Column 2 will be shown
+    let subSubItems: CAT[] = [];
+    if (hoveredPath[0]) {
+      const parentChild = childrenItems.find(
+        (c) => String(c.id) === String(hoveredPath[0]),
+      );
+      subSubItems = parentChild ? getCategoryChildren(parentChild) : [];
+    }
+
+    // Column 1: Subcategories of this nav category (e.g. TEXTBOOKS)
+    columns.push(
+      <div
+        key="nav-col-0"
+        className={`w-64 max-h-[500px] overflow-y-auto custom-scrollbar bg-white py-2 dark:bg-slate-800 ${
+          subSubItems.length > 0
+            ? "border-r border-gray-200 dark:border-gray-700"
+            : ""
+        }`}
+      >
+        {childrenItems.map((child: CAT) => {
+          const childChildren = getCategoryChildren(child);
+          const hasSubChildren = childChildren.length > 0;
+          const isHovered = String(hoveredPath[0]) === String(child.id);
+          const staticRoute = getStaticGiftRoute(child);
+          const isStaticGift = Boolean(staticRoute);
+
+          return (
+            <div
+              key={`${child.id}-${child.category_name}`}
+              onMouseEnter={() => setHoveredPath([child.id])}
+              className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${
+                isHovered
+                  ? "bg-red-50 text-red-500 dark:bg-slate-700"
+                  : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700"
+              }`}
+            >
+              {isStaticGift ? (
+                <Link
+                  href={staticRoute?.href ?? "#"}
+                  onClick={handleLinkClick}
+                  className="flex-grow block uppercase"
+                >
+                  {child.category_name}
+                </Link>
+              ) : (
+                <Link
+                  href={`/products?category=${child.category_type_id ?? item.category_type_id ?? 0}&name=${child.category_name}&detail=${child.id}&page=1`}
+                  onClick={handleLinkClick}
+                  className="flex-grow block uppercase"
+                >
+                  {child.category_name}
+                </Link>
+              )}
+              {hasSubChildren && (
+                <FaChevronRight className="text-xs opacity-75" />
+              )}
+            </div>
+          );
+        })}
+      </div>,
+    );
+
+    // Column 2: Sub-subcategories (e.g. children of NEW TEXTBOOK)
+    if (subSubItems.length > 0) {
+      let grandChildren: CAT[] = [];
+      if (hoveredPath[1]) {
+        const parentSubChild = subSubItems.find(
+          (c) => String(c.id) === String(hoveredPath[1]),
+        );
+        grandChildren = parentSubChild
+          ? getCategoryChildren(parentSubChild)
+          : [];
+      }
+
+      columns.push(
+        <div
+          key="nav-col-1"
+          className={`w-64 max-h-[500px] overflow-y-auto custom-scrollbar bg-white py-2 dark:bg-slate-800 ${
+            grandChildren.length > 0
+              ? "border-r border-gray-200 dark:border-gray-700"
+              : ""
+          }`}
+        >
+          {subSubItems.map((subChild: CAT) => {
+            const subChildChildren = getCategoryChildren(subChild);
+            const hasGrandChildren = subChildChildren.length > 0;
+            const isHovered = String(hoveredPath[1]) === String(subChild.id);
+            const staticRoute = getStaticGiftRoute(subChild);
+            const isStaticGift = Boolean(staticRoute);
+
+            return (
+              <div
+                key={`${subChild.id}-${subChild.category_name}`}
+                onMouseEnter={() =>
+                  setHoveredPath([hoveredPath[0]!, subChild.id])
+                }
+                className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${
+                  isHovered
+                    ? "bg-red-50 text-red-500 dark:bg-slate-700"
+                    : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700"
+                }`}
+              >
+                {isStaticGift ? (
+                  <Link
+                    href={staticRoute?.href ?? "#"}
+                    onClick={handleLinkClick}
+                    className="flex-grow block uppercase"
+                  >
+                    {subChild.category_name}
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/products?category=${subChild.category_type_id ?? item.category_type_id ?? 0}&name=${subChild.category_name}&detail=${subChild.id}&page=1`}
+                    onClick={handleLinkClick}
+                    className="flex-grow block uppercase"
+                  >
+                    {subChild.category_name}
+                  </Link>
+                )}
+                {hasGrandChildren && (
+                  <FaChevronRight className="text-xs opacity-75" />
+                )}
+              </div>
+            );
+          })}
+        </div>,
+      );
+
+      // Column 3: Grandchildren (Level 3)
+      if (grandChildren.length > 0) {
+        let greatGrandChildren: CAT[] = [];
+        if (hoveredPath[2]) {
+          const parentGChild = grandChildren.find(
+            (c) => String(c.id) === String(hoveredPath[2]),
+          );
+          greatGrandChildren = parentGChild
+            ? getCategoryChildren(parentGChild)
+            : [];
+        }
+
+        columns.push(
+          <div
+            key="nav-col-2"
+            className={`w-64 max-h-[500px] overflow-y-auto custom-scrollbar bg-white py-2 dark:bg-slate-800 ${
+              greatGrandChildren.length > 0
+                ? "border-r border-gray-200 dark:border-gray-700"
+                : ""
+            }`}
+          >
+            {grandChildren.map((gChild: CAT) => {
+              const gChildChildren = getCategoryChildren(gChild);
+              const hasGreatGrandChildren = gChildChildren.length > 0;
+              const isHovered = String(hoveredPath[2]) === String(gChild.id);
+              const staticRoute = getStaticGiftRoute(gChild);
+              const isStaticGift = Boolean(staticRoute);
+
+              return (
+                <div
+                  key={`${gChild.id}-${gChild.category_name}`}
+                  onMouseEnter={() =>
+                    setHoveredPath([
+                      hoveredPath[0]!,
+                      hoveredPath[1]!,
+                      gChild.id,
+                    ])
+                  }
+                  className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${
+                    isHovered
+                      ? "bg-red-50 text-red-500 dark:bg-slate-700"
+                      : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700"
+                  }`}
+                >
+                  {isStaticGift ? (
+                    <Link
+                      href={staticRoute?.href ?? "#"}
+                      onClick={handleLinkClick}
+                      className="flex-grow block uppercase"
+                    >
+                      {gChild.category_name}
+                    </Link>
+                  ) : (
+                    <Link
+                      href={`/products?category=${gChild.category_type_id ?? item.category_type_id ?? 0}&name=${gChild.category_name}&detail=${gChild.id}&page=1`}
+                      onClick={handleLinkClick}
+                      className="flex-grow block uppercase"
+                    >
+                      {gChild.category_name}
+                    </Link>
+                  )}
+                  {hasGreatGrandChildren && (
+                    <FaChevronRight className="text-xs opacity-75" />
+                  )}
+                </div>
+              );
+            })}
+          </div>,
+        );
+
+        // Column 4: Level 4
+        if (greatGrandChildren.length > 0) {
+          columns.push(
+            <div
+              key="nav-col-3"
+              className="w-64 max-h-[500px] overflow-y-auto custom-scrollbar bg-white py-2 dark:bg-slate-800"
+            >
+              {greatGrandChildren.map((ggChild: CAT) => {
+                const staticRoute = getStaticGiftRoute(ggChild);
+                const isStaticGift = Boolean(staticRoute);
+
+                return (
+                  <div
+                    key={`${ggChild.id}-${ggChild.category_name}`}
+                    className="flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700 transition-colors"
+                  >
+                    {isStaticGift ? (
+                      <Link
+                        href={staticRoute?.href ?? "#"}
+                        onClick={handleLinkClick}
+                        className="flex-grow block uppercase"
+                      >
+                        {ggChild.category_name}
+                      </Link>
+                    ) : (
+                      <Link
+                        href={`/products?category=${ggChild.category_type_id ?? item.category_type_id ?? 0}&name=${ggChild.category_name}&detail=${ggChild.id}&page=1`}
+                        onClick={handleLinkClick}
+                        className="flex-grow block uppercase"
+                      >
+                        {ggChild.category_name}
+                      </Link>
+                    )}
+                  </div>
+                );
+              })}
+            </div>,
+          );
+        }
+      }
+    }
+
+    return columns;
+  };
+
+  return (
+    <div
+      className="relative py-2"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => {
+        setIsOpen(false);
+        setHoveredPath([]);
+      }}
+    >
+      <div className="flex items-center gap-1 cursor-pointer">
+        {item.isDynamic ? (
+          <Link
+            href={`/products?category=${item.category_type_id ?? 0}&name=${item.type ?? ""}&page=1`}
+            className={`text-sm uppercase transition-colors ${
+              isOpen
+                ? "text-red-500"
+                : "text-gray-700 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500"
+            }`}
+          >
+            {item.label ?? item.type ?? ""}
+          </Link>
+        ) : (
+          <a
+            href={item.href ?? "#"}
+            target={item.href?.startsWith("http") ? "_blank" : undefined}
+            rel={item.href?.startsWith("http") ? "noopener noreferrer" : undefined}
+            className={`text-sm uppercase transition-colors ${
+              isOpen
+                ? "text-red-500"
+                : "text-gray-700 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500"
+            }`}
+          >
+            {item.label}
+          </a>
+        )}
+        {hasChildren && (
+          <FaChevronDown
+            className={`text-sm transition-colors ${
+              isOpen ? "text-red-500" : "text-gray-400"
+            }`}
+          />
+        )}
+      </div>
+
+      {isOpen && hasChildren && childrenItems.length > 0 && (
+        <div className="absolute top-full left-0 z-50 flex shadow-2xl border border-gray-200 rounded-b bg-white dark:border-gray-700 dark:bg-slate-800">
+          {renderPanes()}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const Header = () => {
   const {
     logout,
@@ -1365,96 +1688,14 @@ const Header = () => {
                 HOME
               </Link>
 
-              {navCategories.map((item) => {
-                const childrenItems = getCategoryChildren(item);
-                const hasChildren = childrenItems.length > 0;
-
-                return (
-                  <div key={item.id} className="relative group py-2">
-                    <div className="flex items-center gap-1 cursor-pointer">
-                      {item.isDynamic ? (
-                        <Link
-                          href={`/products?category=${item.category_type_id ?? 0}&name=${item.type ?? ""}&page=1`}
-                          className="text-sm  uppercase text-gray-700 group-hover:text-red-500 dark:text-gray-200"
-                        >
-                          {item.label ?? item.type ?? ""}
-                        </Link>
-                      ) : (
-                        <a
-                          href={item.href ?? "#"}
-                          target={item.href?.startsWith("http") ? "_blank" : undefined}
-                          rel={item.href?.startsWith("http") ? "noopener noreferrer" : undefined}
-                          className="text-sm  uppercase text-gray-700 group-hover:text-red-500 dark:text-gray-200"
-                        >
-                          {item.label}
-                        </a>
-                      )}
-                      {hasChildren && <FaChevronDown className="text-sm text-gray-400 group-hover:text-red-500" />}
-                    </div>
-
-                    {hasChildren && childrenItems.length > 0 && (
-                      <div className="absolute top-full left-0 z-50 hidden group-hover:block min-w-[220px] max-h-64 overflow-auto custom-scrollbar bg-white border border-gray-200 shadow-xl rounded py-2 dark:bg-slate-800 dark:border-gray-700">
-                        {childrenItems.map((child: CAT) => {
-                          const childChildren = getCategoryChildren(child);
-                          const hasSubChildren = childChildren.length > 0;
-                          const staticRoute = getStaticGiftRoute(child);
-                          const isStaticGift = Boolean(staticRoute);
-
-                          return (
-                            <div key={`${child.id}-${child.category_name}`} className="relative group/sub px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-700">
-                              <div className="flex items-center justify-between">
-                                {isStaticGift ? (
-                                  <Link
-                                    href={staticRoute?.href ?? "#"}
-                                    className="text-sm text-gray-700 hover:text-red-500 dark:text-gray-200 block uppercase w-full"
-                                  >
-                                    {child.category_name}
-                                  </Link>
-                                ) : (
-                                  <Link
-                                    href={`/products?category=${child.category_type_id ?? item.category_type_id ?? 0}&name=${child.category_name}&detail=${child.id}&page=1`}
-                                    className="text-sm text-gray-700 uppercase hover:text-red-500 dark:text-gray-200 block  w-full"
-                                  >
-                                    {child.category_name}
-                                  </Link>
-                                )}
-                                {hasSubChildren && <FaChevronRight className="text-[10px] text-gray-400" />}
-                              </div>
-
-                              {hasSubChildren && (
-                                <div className="absolute top-0 left-full z-50 hidden group-hover/sub:block min-w-[200px] max-h-64 overflow-auto custom-scrollbar bg-white border border-gray-200 shadow-xl rounded py-2 dark:bg-slate-800 dark:border-gray-700">
-                                  {childChildren.map((subChild: CAT) => {
-                                    const subStaticRoute = getStaticGiftRoute(subChild);
-                                    const isSubStaticGift = Boolean(subStaticRoute);
-
-                                    return isSubStaticGift ? (
-                                      <Link
-                                        key={`${subChild.id}-${subChild.category_name}`}
-                                        href={subStaticRoute?.href ?? "#"}
-                                        className="text-sm  text-gray-700 hover:text-red-500 dark:text-gray-200 block uppercase px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-700"
-                                      >
-                                        {subChild.category_name}
-                                      </Link>
-                                    ) : (
-                                      <Link
-                                        key={`${subChild.id}-${subChild.category_name}`}
-                                        href={`/products?category=${subChild.category_type_id ?? item.category_type_id ?? 0}&name=${subChild.category_name}&detail=${subChild.id}&page=1`}
-                                        className="text-sm  text-gray-700 hover:text-red-500 dark:text-gray-200 block uppercase px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-700"
-                                      >
-                                        {subChild.category_name}
-                                      </Link>
-                                    );
-                                  })}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              {navCategories.map((item) => (
+                <NavCategoryDropdownItem
+                  key={item.id}
+                  item={item}
+                  getCategoryChildren={getCategoryChildren}
+                  getStaticGiftRoute={getStaticGiftRoute}
+                />
+              ))}
             </nav>
           </div>
 
