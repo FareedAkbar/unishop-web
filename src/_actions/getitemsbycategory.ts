@@ -22,13 +22,14 @@ const requestOptions: RequestInit = {
 
 export async function getItemsByCategory(id: number | null, page: number, category_type: number): Promise<ApiResponse | boolean> {
     let x = ""
-    console.log("API CALL ENV", process.env.NEXT_PUBLIC_PASSKEY_BOOKNET)
     if (category_type != 0) {
-        x = `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=0&book=0&category=${id}&page=${page}&images=1&detailed=1&special_tags_only=1&category_type=${category_type}`
+        x = `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/items_web?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=0&book=0&category=${id}&page=${page}&images=1&detailed=1&special_tags_only=1&category_type=${category_type}`
+
     }
     else {
-        x = `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/items?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=0&book=0&category=${id}&page=${page}&images=1&detailed=1&special_tags_only=1`
+        x = `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/books/items_web?pagination=1&limit=15&entries=1&default_supplier_details=1&supplier_details=1&food=0&book=0&category=${id}&page=${page}&images=1&detailed=1&special_tags_only=1`
     }
+    console.log("API CALL", x);
 
     try {
         const response = await fetch(
