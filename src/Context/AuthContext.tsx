@@ -201,6 +201,21 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     try {
       setCalculateLoader(true);
+      const userFromStorage =
+        typeof window !== "undefined"
+          ? lsClient.getItem("USER_INFO")
+          : null;
+      const effectiveMemberId =
+        currentCheckout?.customer_id ??
+        userInfo?.customer_id ??
+        userFromStorage?.customer_id ??
+        null;
+      const effectiveCustomerTypeId =
+        currentCheckout?.customer_type ??
+        userInfo?.customer_type ??
+        userFromStorage?.customer_type ??
+        null;
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/calculate?check_availability=0`,
         {
@@ -211,8 +226,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           },
           body: JSON.stringify({
             items: itemsPayload,
-            member_id: currentCheckout?.customer_id ?? null,
-            customer_type_id: currentCheckout?.customer_type ?? null,
+            member_id: effectiveMemberId,
+            customer_type_id: effectiveCustomerTypeId,
           }),
         },
       );
@@ -236,7 +251,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       setTotalAfterCalculation(null);
     }
-  }, [cartItems, checkoutData]);
+  }, [cartItems, checkoutData, userInfo]);
 
   const router = useRouter();
 

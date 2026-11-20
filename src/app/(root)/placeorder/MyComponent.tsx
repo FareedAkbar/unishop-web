@@ -33,6 +33,7 @@ import {
   SelectContent,
   SelectItem,
 } from "~/components/ui/select";
+import { localStorageClient } from "~/clients/localstorage-client";
 // import { v4 as uuidv4, v5 as uuidv5 } from "uuid";
 
 const MyComponent = () => {
@@ -160,7 +161,7 @@ const MyComponent = () => {
         Boolean(disc) &&
         typeof disc === "object" &&
         Object.keys(disc).length > 0 &&
-        Boolean(disc.disc_id ?? disc.discount_type);
+        (Boolean(disc.discount_type) || (typeof disc.disc_id === "number" && disc.disc_id > 0));
 
       return {
         ...item1,
@@ -215,6 +216,21 @@ const MyComponent = () => {
 
   const fetchData = async (requestOptions: CreatePayloadBooksForTax[]) => {
     try {
+      const userFromStorage =
+        typeof window !== "undefined"
+          ? localStorageClient().getItem("USER_INFO")
+          : null;
+      const effectiveMemberId =
+        checkoutData?.customer_id ??
+        userInfo?.customer_id ??
+        userFromStorage?.customer_id ??
+        null;
+      const effectiveCustomerTypeId =
+        checkoutData?.customer_type ??
+        userInfo?.customer_type ??
+        userFromStorage?.customer_type ??
+        null;
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_PASSKEY_BOOKNET}api/calculate?check_availability=0`,
         {
@@ -225,8 +241,8 @@ const MyComponent = () => {
           },
           body: JSON.stringify({
             items: requestOptions,
-            member_id: checkoutData?.customer_id ?? null,
-            customer_type_id: checkoutData?.customer_type ?? null,
+            member_id: effectiveMemberId,
+            customer_type_id: effectiveCustomerTypeId,
           }),
         },
       );
@@ -408,16 +424,24 @@ const MyComponent = () => {
       return;
     }
 
+    const effectiveCusId =
+      checkoutData?.customer_id ??
+      userInfo?.customer_id ??
+      (typeof window !== "undefined"
+        ? localStorageClient().getItem("USER_INFO")?.customer_id
+        : null) ??
+      null;
+
     const x = {
-      customer_id: checkoutData?.customer_id,
-      guest_id: checkoutData?.customer_id ? null : checkoutData?.uuid,
+      customer_id: effectiveCusId,
+      guest_id: effectiveCusId ? null : (checkoutData?.uuid ?? uuidLocal ?? null),
       amount: payable,
     };
 
     try {
       // testing check
-      await getLinkForPayment(x);
-      // await placeOrderApi(null);
+      // await getLinkForPayment(x);
+      await placeOrderApi(null);
       console.log(x);
     } catch (error) {
       console.error("Failed to load data:", error);
@@ -585,7 +609,7 @@ const MyComponent = () => {
             Boolean(disc) &&
             typeof disc === "object" &&
             Object.keys(disc).length > 0 &&
-            Boolean(disc.disc_id ?? disc.discount_type);
+            (Boolean(disc.discount_type) || (typeof disc.disc_id === "number" && disc.disc_id > 0));
           return hasDiscount ? item.discounts : null;
         })(),
         cost_price: item.selected_variation?.items_variable_items_id
@@ -659,7 +683,13 @@ const MyComponent = () => {
         card_pan: cardDetails?.card_pan ?? "N.A.",
         ref_no: cardDetails?.ref_no ?? "N.A.",
       },
-      member_id: checkoutData?.customer_id ?? null,
+      member_id:
+        checkoutData?.customer_id ??
+        userInfo?.customer_id ??
+        (typeof window !== "undefined"
+          ? localStorageClient().getItem("USER_INFO")?.customer_id
+          : null) ??
+        null,
       transaction_id: id !== null ? id.toString() : null,
       booknet_customer_id: booknetCustomerId,
       // guest: checkoutData?.uuid ? checkoutData?.uuid : null,
@@ -694,20 +724,22 @@ const MyComponent = () => {
 
   useEffect(() => {
     console.log(checkoutData, "checkoutData");
-    if (!checkoutData?.uuid && !checkoutData?.customer_id) return;
+    const studentId =
+      checkoutData?.customer_id ??
+      userInfo?.customer_id ??
+      checkoutData?.uuid ??
+      uuidLocal;
+    if (!studentId) return;
     socket.disconnect();
     socket.connect();
     const connectHandler = () => {
       console.log("Connected to server", socket.id);
-      console.log(
-        "Connected to Id",
-        checkoutData?.customer_id ?? checkoutData?.uuid,
-      );
+      console.log("Connected to Id", studentId);
 
       socket.emit(
         "/studentHandshake",
         {
-          student_id: checkoutData?.customer_id ?? checkoutData?.uuid,
+          student_id: studentId,
         },
         () => {
           console.log("studentHandshake");
@@ -720,10 +752,15 @@ const MyComponent = () => {
       socket.off("connect", connectHandler);
       socket.disconnect();
     };
-  }, [checkoutData]);
+  }, [checkoutData, userInfo, uuidLocal]);
 
   const PaymentStatus = useCallback(() => {
-    if (!checkoutData?.uuid && !checkoutData?.customer_id) return;
+    const studentId =
+      checkoutData?.customer_id ??
+      userInfo?.customer_id ??
+      checkoutData?.uuid ??
+      uuidLocal;
+    if (!studentId) return;
 
     console.log("Payment Socket");
 
@@ -762,15 +799,20 @@ const MyComponent = () => {
     return () => {
       socket.off("paymentStatus", handlePaymentStatus);
     };
-  }, [checkoutData, transactionData]);
+  }, [checkoutData, userInfo, uuidLocal, transactionData]);
 
   useEffect(() => {
-    if (!checkoutData?.uuid && !checkoutData?.customer_id) return;
+    const studentId =
+      checkoutData?.customer_id ??
+      userInfo?.customer_id ??
+      checkoutData?.uuid ??
+      uuidLocal;
+    if (!studentId) return;
     console.log("Payment socket initiated");
     const cleanupPaymentStatus = PaymentStatus();
 
     return cleanupPaymentStatus;
-  }, [checkoutData, transactionData]);
+  }, [checkoutData, userInfo, uuidLocal, transactionData, PaymentStatus]);
 
   const closeModal = () => {
     setIsOpenPaymentAlert(false);
