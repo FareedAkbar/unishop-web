@@ -160,7 +160,6 @@ const MyComponent = () => {
       setLoader(true);
       setDisplayData(null); // Reset display data before fetching new data
       const x = await getItemsByCategory(id ?? 0, page, category_type);
-      console.log("cateeeee", x);
 
       if (typeof x !== "boolean" && x.status) {
         setPagination(x.meta);
