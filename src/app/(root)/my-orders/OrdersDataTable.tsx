@@ -12,9 +12,11 @@ import OrderStatus from "./OrderStatus";
 interface dataTable {
   data: GetSpecialOrder[];
   orderStatus: OrderStatus[];
+  onRefresh?: () => void;
+  isLoading?: boolean;
 }
 
-const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
+const OrdersDataTable = ({ data, orderStatus, onRefresh, isLoading }: dataTable) => {
   function formatToSydneyDateOnly(
     date: string | Date | number | null | undefined,
     format = "MM/DD/YYYY",
@@ -29,25 +31,6 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
     return moment(safe).format(format);
     //  return moment.parseZone(date).local().format(format);
   }
-  const getBadgeColor = (status: string) => {
-    switch (status) {
-      case "COMPLETED":
-      case "CONFIRMED":
-        return "bg-green-500";
-
-      case "ACCEPTED":
-        return "bg-blue-500";
-
-      case "INITIATED":
-        return "bg-yellow-500";
-
-      case "ORDER CANCELLED":
-        return "bg-red-500";
-
-      default:
-        return "bg-gray-500";
-    }
-  };
   const columns = [
     { key: "order_id", header: "Order ID", isSortable: false },
     { key: "tracking_id", header: "Tracking ID", isSortable: false },
@@ -60,7 +43,7 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
 
         return (
           <span
-            className={`inline-block rounded px-2 py-1 text-white ${OrderStatus.getBadgeColor(
+            className={`inline-block rounded px-2.5 py-1 text-xs font-semibold ${OrderStatus.getBadgeColor(
               status
             )}`}
           >
@@ -90,7 +73,14 @@ const OrdersDataTable = ({ data, orderStatus }: dataTable) => {
     },
   ];
 
-  return <DataTable tableData={data} columns={columns} isLoading={false} />;
+  return (
+    <DataTable
+      tableData={data}
+      columns={columns}
+      isLoading={isLoading ?? false}
+      onRefresh={onRefresh}
+    />
+  );
 };
 
 export default OrdersDataTable;

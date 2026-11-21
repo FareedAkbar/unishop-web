@@ -130,64 +130,93 @@ class OrderStatus {
   }
   static getBadgeColor(statusId: number | null | undefined): string {
     switch (statusId) {
-      // Green - successful/completed
+      // Blue - Initiated
+      case OrderStatus.orderInitiated:
+      case OrderStatus.creditNoteInitiated:
+      case OrderStatus.specialOrderInitiated:
+      case OrderStatus.restockInitiated:
+        return "bg-blue-600 text-white";
+
+      // Light Blue - Acknowledged / Pickup
+      case OrderStatus.acknowledged:
+      case OrderStatus.backorderPickup:
+        return "bg-sky-500 text-white";
+
+      // Purple - Confirmed / Under Review / Approved
       case OrderStatus.confirmed:
+      case OrderStatus.underReview:
+      case OrderStatus.specialOrderApproved:
+        return "bg-purple-600 text-white";
+
+      // Yellow - Under Process
+      case OrderStatus.underProcess:
+        return "bg-yellow-400 text-gray-900";
+
+      // Teal - Processing Complete
       case OrderStatus.processingComplete:
+        return "bg-teal-600 text-white";
+
+      // Deep Orange - Out for Delivery / Delivery
+      case OrderStatus.outForDelivery:
+      case OrderStatus.backorderDelivery:
+        return "bg-orange-600 text-white";
+
+      // Green - Closed / Ready / Completed
       case OrderStatus.closed:
+      case OrderStatus.backorderReady:
       case OrderStatus.backorderCompleted:
       case OrderStatus.restockComplete:
       case OrderStatus.manualCompleted:
-        return "bg-green-300/60 dark:bg-green-800/60 text-green-800 dark:text-green-300";
+        return "bg-green-600 text-white";
 
-      // Blue - accepted/approved/ready
-      case OrderStatus.acknowledged:
-      case OrderStatus.specialOrderApproved:
-      case OrderStatus.backorderApproved:
-      case OrderStatus.readyForPickup:
-      case OrderStatus.backorderReady:
-        return "bg-blue-300/60 dark:bg-blue-800/60 text-blue-800 dark:text-blue-300";
-
-      // Yellow - pending/in progress
-      case OrderStatus.orderInitiated:
-      case OrderStatus.underProcess:
-      case OrderStatus.outForDelivery:
-      case OrderStatus.inCart:
-      case OrderStatus.underReview:
-      case OrderStatus.checkoutPending:
-      case OrderStatus.tabOpened:
-      case OrderStatus.backorderInitiated:
-      case OrderStatus.backorderPayment:
-      case OrderStatus.backorderPickup:
-      case OrderStatus.restockInitiated:
-        return "bg-yellow-300/60 dark:bg-yellow-800/60 text-yellow-800 dark:text-yellow-300";
-
-      // Red - cancelled
+      // Red - Cancelled / Deleted
       case OrderStatus.orderCancelled:
       case OrderStatus.specialOrderCancelled:
       case OrderStatus.backorderCancelled:
       case OrderStatus.restockCancelled:
-        return "bg-red-300/60 dark:bg-red-800/60 text-red-800 dark:text-red-300";
+      case OrderStatus.restockDeleted:
+        return "bg-red-600 text-white";
 
-      // Orange - refunded/reversed
+      // Grey - In Cart
+      case OrderStatus.inCart:
+        return "bg-gray-500 text-white";
+
+      // Orange Accent - Checkout Pending
+      case OrderStatus.checkoutPending:
+        return "bg-orange-400 text-white";
+
+      // Pink - Order Reversed
       case OrderStatus.orderReversed:
+        return "bg-pink-500 text-white";
+
+      // Red Accent - Payment Reversed / Partially Reversed
       case OrderStatus.paymentReversed:
       case OrderStatus.partiallyReversed:
-        return "bg-orange-300/60 dark:bg-orange-800/60 text-orange-800 dark:text-orange-300";
+        return "bg-rose-500 text-white";
 
-      // Purple - special states
+      // Indigo - Tab Opened
+      case OrderStatus.tabOpened:
+        return "bg-indigo-600 text-white";
+
+      // Cyan - Ready for Pickup / Partially Completed / Approved
+      case OrderStatus.readyForPickup:
       case OrderStatus.partiallyCompleted:
-      case OrderStatus.creditNoteInitiated:
-      case OrderStatus.restockPartially:
-        return "bg-purple-300/60 dark:bg-purple-800/60 text-purple-800 dark:text-purple-300";
+      case OrderStatus.backorderApproved:
+        return "bg-cyan-600 text-white";
 
-      // Gray - drafts/deleted/unknown
-      case OrderStatus.restockDrafted:
-      case OrderStatus.restockDeleted:
+      // Orange - Backorder Initiated / Payment / Drafted
+      case OrderStatus.backorderInitiated:
+      case OrderStatus.backorderPayment:
+      case OrderStatus.restockPartially:
       case OrderStatus.manualDrafted:
-        return "bg-gray-300/60 dark:bg-gray-800/60 text-gray-800 dark:text-gray-300";
+        return "bg-orange-500 text-white";
+
+      // Amber - Restock Drafted
+      case OrderStatus.restockDrafted:
+        return "bg-amber-500 text-white";
 
       default:
-        return "bg-gray-300/60 dark:bg-gray-800/60 text-gray-800 dark:text-gray-300";
+        return "bg-gray-800 text-white";
     }
   }
 }

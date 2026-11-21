@@ -118,7 +118,7 @@ const ProductCard = ({
     >
       {((product?.items_type === 1 && !product?.variations?.[0]) ??
         product?.item_sale_price) && (
-          <div className="absolute inset-0 z-[1] flex items-center justify-center rounded bg-black/30 dark:bg-white/30">
+          <div className="absolute inset-0 z-[1] flex items-center justify-center rounded-xl bg-black/30 dark:bg-white/30">
             <span className="-rotate-45 font-semibold text-white dark:text-black">
               Currently no variation is available
             </span>

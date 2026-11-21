@@ -440,8 +440,8 @@ const MyComponent = () => {
 
     try {
       // testing check
-      await getLinkForPayment(x);
-      // await placeOrderApi(null);
+      // await getLinkForPayment(x);
+      await placeOrderApi(null);
       console.log(x);
     } catch (error) {
       console.error("Failed to load data:", error);
@@ -999,6 +999,7 @@ const MyComponent = () => {
     id?: number;
     category_id?: number;
     cat_id?: number;
+    category_name?: string;
   }
 
   interface VoucherData {
@@ -1120,13 +1121,46 @@ const MyComponent = () => {
 
   const isCategoryEligible = (item: DataCart, categories: VoucherCategory[]): boolean => {
     if (!categories || categories.length === 0) return true;
-    const itemCat = item.category !== undefined && item.category !== null ? Number(item.category) : null;
-    const detailCat = item.category_detail?.id !== undefined && item.category_detail?.id !== null ? Number(item.category_detail.id) : null;
+
+    // Collect all category IDs and names associated with this item
+    const itemCatIds = new Set<number>();
+    const itemCatNames = new Set<string>();
+
+    if (item.category !== undefined && item.category !== null) {
+      itemCatIds.add(Number(item.category));
+    }
+    if (item.category_detail?.id !== undefined && item.category_detail?.id !== null) {
+      itemCatIds.add(Number(item.category_detail.id));
+    }
+    if (item.category_detail?.parent !== undefined && item.category_detail?.parent !== null) {
+      itemCatIds.add(Number(item.category_detail.parent));
+    }
+    if (item.category_detail?.category_name) {
+      itemCatNames.add(item.category_detail.category_name.trim().toLowerCase());
+    }
+
+    // Check multi-category array
+    const multiCategories = (item as unknown as { categories?: Array<{ id?: number; category_id?: number; cat_id?: number; parent?: number; category_name?: string }> })?.categories;
+    if (Array.isArray(multiCategories)) {
+      multiCategories.forEach((c) => {
+        if (!c) return;
+        const cId = c.category_id ?? c.cat_id ?? c.id;
+        if (cId !== undefined && cId !== null && !isNaN(Number(cId))) {
+          itemCatIds.add(Number(cId));
+        }
+        if (c.parent !== undefined && c.parent !== null && !isNaN(Number(c.parent))) {
+          itemCatIds.add(Number(c.parent));
+        }
+        if (c.category_name) {
+          itemCatNames.add(String(c.category_name).trim().toLowerCase());
+        }
+      });
+    }
 
     return categories.some((cat) => {
       let catId: number | null = null;
       if (cat && typeof cat === "object") {
-        const temp = cat.id ?? cat.category_id ?? cat.cat_id;
+        const temp = cat.cat_id ?? cat.category_id ?? cat.id;
         if (temp !== undefined && temp !== null) {
           catId = Number(temp);
         }
@@ -1134,8 +1168,18 @@ const MyComponent = () => {
         catId = Number(cat);
       }
 
-      if (catId === null || isNaN(catId)) return false;
-      return (itemCat !== null && itemCat === catId) || (detailCat !== null && detailCat === catId);
+      if (catId !== null && !isNaN(catId) && itemCatIds.has(catId)) {
+        return true;
+      }
+
+      if (cat && typeof cat === "object" && cat.category_name) {
+        const catName = String(cat.category_name).trim().toLowerCase();
+        if (catName && itemCatNames.has(catName)) {
+          return true;
+        }
+      }
+
+      return false;
     });
   };
 
@@ -1375,13 +1419,20 @@ const MyComponent = () => {
       let usedSum = 0;
       if (isGuestCase) {
         // Subtract used values by all customers
+        console.log("guest");
+
         usedSum = logsList.reduce((acc: number, log: VoucherLog) => acc + (Number(log.dl_used_value) || 0), 0);
       } else {
         // Subtract used values by this customer
+        console.log("not guest");
+        console.log("logs list", logsList);
+
         usedSum = logsList
           .filter((log: VoucherLog) => currentCusId !== null && Number(log.dl_cus_id) === Number(currentCusId))
           .reduce((acc: number, log: VoucherLog) => acc + (Number(log.dl_used_value) || 0), 0);
+
       }
+      console.log("usedSum", usedSum);
 
       const remaining = baseValue - usedSum;
 
@@ -1393,6 +1444,28 @@ const MyComponent = () => {
         });
         setVoucherLoading(false);
         return;
+      }
+
+      // Check if any cart items match voucher categories
+      const voucherCategories = vData.categories ?? [];
+      if (voucherCategories.length > 0) {
+        const currentCartItems = newItems && newItems.length > 0 ? newItems : (items ?? []);
+        const hasEligibleItem = currentCartItems.some((item) =>
+          isCategoryEligible(item, voucherCategories)
+        );
+        if (!hasEligibleItem) {
+          const catNames = voucherCategories
+            .map((c) => c.category_name ?? `Category ${c.cat_id ?? c.category_id ?? c.id}`)
+            .filter(Boolean)
+            .join(", ");
+          toast({
+            title: "Voucher Declined",
+            variant: "destructive",
+            description: `This voucher is only valid for items in: ${catNames ? catNames : "specific categories"}. None of the items in your cart match.`,
+          });
+          setVoucherLoading(false);
+          return;
+        }
       }
 
       setVoucherInfo({
