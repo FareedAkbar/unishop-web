@@ -18,7 +18,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ModalBody, ModalContent, useModal } from "../ui/animated-modal";
 import { type GetSpecialOrder } from "~/types/getSpecialBackOrders";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiRefreshCw } from "react-icons/fi";
+import OrderStatus from "~/app/(root)/my-orders/OrderStatus";
 
 interface DataTableProps {
   tableData: any[];
@@ -29,12 +30,14 @@ interface DataTableProps {
     cell?: (info: any) => JSX.Element;
   }[];
   isLoading: boolean;
+  onRefresh?: () => void;
 }
 
 const DataTable: React.FC<DataTableProps> = ({
   tableData,
   columns: tableColumns,
   isLoading,
+  onRefresh,
 }) => {
   const [selectedDateRange, setSelectedDateRange] = useState<
     [Date | null, Date | null]
@@ -273,9 +276,27 @@ const DataTable: React.FC<DataTableProps> = ({
         className={`flex flex-col rounded bg-white p-3 dark:bg-slate-900`}
         id="tableContainer"
       >
-        <h1 className="pb-3 text-center text-2xl font-bold text-red-500">
-          My Orders
-        </h1>
+        <div className="relative mb-3 flex items-center justify-center">
+          <h1 className="text-center text-2xl font-bold text-red-500">
+            My Orders
+          </h1>
+          {onRefresh && (
+            <button
+              type="button"
+              onClick={onRefresh}
+              disabled={isLoading}
+              title="Refresh Orders"
+              aria-label="Refresh Orders"
+              className="ml-3 rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-red-500 dark:text-gray-300 dark:hover:bg-slate-800 disabled:opacity-50"
+            >
+              <FiRefreshCw
+                className={`h-5 w-5 transition-transform ${
+                  isLoading ? "animate-spin text-red-500" : ""
+                }`}
+              />
+            </button>
+          )}
+        </div>
         <div className="mb-4 flex justify-between">
           <div className="flex items-center">
             <div className="ml-4" />
@@ -337,6 +358,22 @@ const DataTable: React.FC<DataTableProps> = ({
                 </option>
               ))}
             </select>
+            {onRefresh && (
+              <button
+                type="button"
+                onClick={onRefresh}
+                disabled={isLoading}
+                title="Refresh Orders"
+                aria-label="Refresh Orders"
+                className="ml-2 text-gray-600 transition-colors hover:text-red-500 dark:text-gray-300 disabled:opacity-50"
+              >
+                <FiRefreshCw
+                  className={`h-4 w-4 ${
+                    isLoading ? "animate-spin text-red-500" : ""
+                  }`}
+                />
+              </button>
+            )}
             <button onClick={toggleFullScreen} className="ml-2">
               {isFullScreen ? <FaCompress /> : <FaExpand />}
             </button>
@@ -481,6 +518,18 @@ const DataTable: React.FC<DataTableProps> = ({
                   <p className="text-lg font-medium">
                     {selectedItem?.tracking_id}
                   </p>
+                </div>
+                <div className="mt-2 flex items-center">
+                  <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">
+                    Order Status:
+                  </p>
+                  <span
+                    className={`inline-block rounded px-2.5 py-1 text-xs font-semibold ${OrderStatus.getBadgeColor(
+                      selectedItem?.order_status
+                    )}`}
+                  >
+                    {OrderStatus.getDisplayStatus(selectedItem?.order_status)?.toUpperCase() || "STATUS"}
+                  </span>
                 </div>
                 <div className="mt-2 flex items-center">
                   <p className="mr-2 text-sm text-gray-600 dark:text-gray-300">

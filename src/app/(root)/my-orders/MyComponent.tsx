@@ -201,7 +201,7 @@ const MyComponent = () => {
     });
 
     // void fetchDataSpecialOrders();
-  }, [booknetCustomerId, checkoutData?.customer_id]);
+  }, [booknetCustomerId, checkoutData?.customer_id, userInfo?.customer_id]);
 
   function getOrderStatusById(orderStatusId: number) {
     return orderStatus.find((status) => status.status_id === orderStatusId);
@@ -449,7 +449,7 @@ const MyComponent = () => {
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center mx-auto">
-        {loader ? (
+        {loader && dataOrders.length === 0 ? (
           <Spinner />
         ) : (
           <div className="w-full p-4 mx-auto">
@@ -458,6 +458,8 @@ const MyComponent = () => {
               // key={orderStatus.toString()}
               data={dataOrders}
               orderStatus={orderStatus}
+              isLoading={loader}
+              onRefresh={fetchDataOrders}
             />
           </div>
         )}
