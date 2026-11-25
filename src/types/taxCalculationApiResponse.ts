@@ -49,6 +49,23 @@ interface DiscountItem {
   discounts: DiscountInfo;
 }
 
+export interface BackOrderCalculationItem {
+  price: number;
+  quantity: number;
+  item_id: number;
+  cat_id: number;
+  textbook_id?: number | null;
+  is_textbook?: number;
+  variationId?: number | null;
+  variable_item?: number;
+  availability?: boolean;
+  apply_zero_discount?: number;
+  discountable_cat?: number;
+  discountable_item?: number;
+  discounts?: unknown;
+  tax_exempted?: number;
+}
+
 interface TaxCalculationApiResponse {
   status: boolean;
   original_price: number;
@@ -61,6 +78,7 @@ interface TaxCalculationApiResponse {
   final_price_excluding_tax: number;
   item_tax_price: number;
   items: DiscountItem[];
+  back_order?: BackOrderCalculationItem[];
 }
 
 export interface ShippingRate {

@@ -91,11 +91,10 @@ const NavCategoryDropdownItem: React.FC<{
     columns.push(
       <div
         key="nav-col-0"
-        className={`w-64 max-h-[500px] overflow-y-auto custom-scrollbar bg-white py-2 dark:bg-slate-800 ${
-          subSubItems.length > 0
+        className={`w-64 max-h-[500px] overflow-y-auto custom-scrollbar bg-white py-2 dark:bg-slate-800 ${subSubItems.length > 0
             ? "border-r border-gray-200 dark:border-gray-700"
             : ""
-        }`}
+          }`}
       >
         {childrenItems.map((child: CAT) => {
           const childChildren = getCategoryChildren(child);
@@ -108,11 +107,10 @@ const NavCategoryDropdownItem: React.FC<{
             <div
               key={`${child.id}-${child.category_name}`}
               onMouseEnter={() => setHoveredPath([child.id])}
-              className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${
-                isHovered
+              className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${isHovered
                   ? "bg-red-50 text-red-500 dark:bg-slate-700"
                   : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700"
-              }`}
+                }`}
             >
               {isStaticGift ? (
                 <Link
@@ -155,11 +153,10 @@ const NavCategoryDropdownItem: React.FC<{
       columns.push(
         <div
           key="nav-col-1"
-          className={`w-64 max-h-[500px] overflow-y-auto custom-scrollbar bg-white py-2 dark:bg-slate-800 ${
-            grandChildren.length > 0
+          className={`w-64 max-h-[500px] overflow-y-auto custom-scrollbar bg-white py-2 dark:bg-slate-800 ${grandChildren.length > 0
               ? "border-r border-gray-200 dark:border-gray-700"
               : ""
-          }`}
+            }`}
         >
           {subSubItems.map((subChild: CAT) => {
             const subChildChildren = getCategoryChildren(subChild);
@@ -174,11 +171,10 @@ const NavCategoryDropdownItem: React.FC<{
                 onMouseEnter={() =>
                   setHoveredPath([hoveredPath[0]!, subChild.id])
                 }
-                className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${
-                  isHovered
+                className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${isHovered
                     ? "bg-red-50 text-red-500 dark:bg-slate-700"
                     : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700"
-                }`}
+                  }`}
               >
                 {isStaticGift ? (
                   <Link
@@ -221,11 +217,10 @@ const NavCategoryDropdownItem: React.FC<{
         columns.push(
           <div
             key="nav-col-2"
-            className={`w-64 max-h-[500px] overflow-y-auto custom-scrollbar bg-white py-2 dark:bg-slate-800 ${
-              greatGrandChildren.length > 0
+            className={`w-64 max-h-[500px] overflow-y-auto custom-scrollbar bg-white py-2 dark:bg-slate-800 ${greatGrandChildren.length > 0
                 ? "border-r border-gray-200 dark:border-gray-700"
                 : ""
-            }`}
+              }`}
           >
             {grandChildren.map((gChild: CAT) => {
               const gChildChildren = getCategoryChildren(gChild);
@@ -244,11 +239,10 @@ const NavCategoryDropdownItem: React.FC<{
                       gChild.id,
                     ])
                   }
-                  className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${
-                    isHovered
+                  className={`flex cursor-pointer items-center justify-between px-4 py-2.5 text-sm transition-colors ${isHovered
                       ? "bg-red-50 text-red-500 dark:bg-slate-700"
                       : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-slate-700"
-                  }`}
+                    }`}
                 >
                   {isStaticGift ? (
                     <Link
@@ -334,11 +328,10 @@ const NavCategoryDropdownItem: React.FC<{
         {item.isDynamic ? (
           <Link
             href={`/products?category=${item.category_type_id ?? 0}&name=${item.type ?? ""}&page=1`}
-            className={`text-sm uppercase transition-colors ${
-              isOpen
+            className={`text-sm uppercase transition-colors ${isOpen
                 ? "text-red-500"
                 : "text-gray-700 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500"
-            }`}
+              }`}
           >
             {item.label ?? item.type ?? ""}
           </Link>
@@ -347,20 +340,18 @@ const NavCategoryDropdownItem: React.FC<{
             href={item.href ?? "#"}
             target={item.href?.startsWith("http") ? "_blank" : undefined}
             rel={item.href?.startsWith("http") ? "noopener noreferrer" : undefined}
-            className={`text-sm uppercase transition-colors ${
-              isOpen
+            className={`text-sm uppercase transition-colors ${isOpen
                 ? "text-red-500"
                 : "text-gray-700 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500"
-            }`}
+              }`}
           >
             {item.label}
           </a>
         )}
         {hasChildren && (
           <FaChevronDown
-            className={`text-sm transition-colors ${
-              isOpen ? "text-red-500" : "text-gray-400"
-            }`}
+            className={`text-sm transition-colors ${isOpen ? "text-red-500" : "text-gray-400"
+              }`}
           />
         )}
       </div>

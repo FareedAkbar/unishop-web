@@ -129,12 +129,20 @@ const MyComponent = () => {
   };
 
   // Handlers for increasing, decreasing, and removing items
-  const handleIncrease = async (id: number, number: number) => {
-    await increaseCartItemQuantity(id, number);
+  const handleIncrease = async (
+    id: number,
+    number: number,
+    variable_id?: number,
+  ) => {
+    await increaseCartItemQuantity(id, number, variable_id);
   };
 
-  const handleDecrease = async (id: number, number: number) => {
-    await increaseCartItemQuantity(id, number);
+  const handleDecrease = async (
+    id: number,
+    number: number,
+    variable_id?: number,
+  ) => {
+    await increaseCartItemQuantity(id, number, variable_id);
   };
 
   const handleRemoveFromCart = async (item: DataCart) => {
@@ -217,18 +225,31 @@ const MyComponent = () => {
                           description: `Only ${stockQty} items are available in stock.`,
                         });
                       } else {
-                        void handleIncrease(item.item_id, item.quantity + 1);
+                        void handleIncrease(
+                          item.item_id,
+                          item.quantity + 1,
+                          item?.selected_variation?.items_variable_items_id,
+                        );
                       }
                     }}
-                    onDecrease={() =>
-                      handleDecrease(item.item_id, item.quantity - 1)
-                    }
+                    onDecrease={() => {
+                      if (item.quantity - 1 <= 0) {
+                        setRemoveItem(item);
+                        void handleRemoveFromCart(item);
+                      } else {
+                        void handleDecrease(
+                          item.item_id,
+                          item.quantity - 1,
+                          item?.selected_variation?.items_variable_items_id,
+                        );
+                      }
+                    }}
                     itemQuantity={item.quantity}
                     showQuantityIncrement={true}
                     stock={item.stock}
                     onRemove={() => {
                       setRemoveItem(item);
-                      setIsOpenDeleteAlert(true);
+                      void handleRemoveFromCart(item);
                     }}
                     item={item}
                   />
