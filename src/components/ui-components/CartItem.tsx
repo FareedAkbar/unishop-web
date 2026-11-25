@@ -120,18 +120,19 @@ const CartItem: React.FC<CartItemProps> = ({
             className="my-1"
           />
 
-          {(newPrice == 0 || !newPrice || price == newPrice) && (
+          {/* {(newPrice == 0 || !newPrice || price == newPrice) && (
             <p className="text-md font-bold">${price.toFixed(2)}</p>
-          )}
+          )} */}
 
-          {newPrice && price != newPrice && newPrice != 0 && (
+          {price != newPrice ? (
             <div className="flex flex-row items-center gap-2">
               <p className="text-sm font-bold text-red-500 line-through">
                 ${price.toFixed(2)}
               </p>
               <p className="text-md font-bold">${newPrice?.toFixed(2)}</p>
             </div>
-          )}
+          ) : <p className="text-md font-bold">${price.toFixed(2)}</p>
+          }
         </div>
 
         <div className="flex w-auto flex-col items-end gap-6">
@@ -145,7 +146,7 @@ const CartItem: React.FC<CartItemProps> = ({
           <div className="mt-auto flex w-auto items-center justify-between space-x-2 rounded bg-gray-200 p-1 dark:bg-gray-500">
             <button
               className="p-1"
-              disabled={itemQuantity < 2}
+              disabled={itemQuantity < 1}
               onClick={onDecrease}
             >
               <HiOutlineMinus size={14} />
@@ -167,16 +168,14 @@ const CartItem: React.FC<CartItemProps> = ({
           </p>
         )
         : ""}
-      {quantity && quantity > -1
+      {/* {quantity && quantity > -1
         ? quantity < itemQuantity && (
           <p className="mb-2 rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-700">
-            {/* <MdWarning size={23} /> */}
-            {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity - quantity}.`} */}
-            {`This item is currently on backorder. It may take longer than usual to be ready for shipping/collection.`}
+           {`This item is currently on backorder. It may take longer than usual to be ready for shipping/collection.`}
           </p>
         )
-        : ""}
-      {(quantity == 0 || quantity == null) && (
+        : ""} */}
+      {(quantity <= 0 || quantity == null || quantity < itemQuantity) && (
         <p className="mb-2 rounded bg-yellow-200 p-3 text-sm dark:bg-yellow-700">
           {/* <MdWarning size={23} /> */}
           {/* {`Although we can't fulfill your request for quantity, we'll back-order the remaining ${itemQuantity}.`} */}

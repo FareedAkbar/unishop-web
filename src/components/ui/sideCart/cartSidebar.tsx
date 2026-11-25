@@ -245,9 +245,9 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
                       }
                     }}
                     onDecrease={() => {
-                      if (item.quantity - 1 === 0) {
+                      if (item.quantity - 1 <= 0) {
                         setRemoveItem(item);
-                        setIsOpenDeleteAlert(true);
+                        void handleRemoveFromCart(item);
                       } else {
                         void handleDecrease(
                           item.item_id,
@@ -261,7 +261,7 @@ const SidebarCart: React.FC<SidebarCartProps> = ({ isOpen, onClose }) => {
                     stock={item.stock}
                     onRemove={() => {
                       setRemoveItem(item);
-                      setIsOpenDeleteAlert(true);
+                      void handleRemoveFromCart(item);
                     }}
                     item={item}
                   />
